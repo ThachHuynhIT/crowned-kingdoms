@@ -1,4 +1,5 @@
 import type Phaser from 'phaser';
+import { BATTLE } from '../data/battle';
 import { PALETTE } from '../data/palette';
 import type { CardDef, CardId, UnitId } from '../data/types';
 import type { Content } from '../game/cards/registry';
@@ -16,6 +17,14 @@ import {
   paintStun,
 } from './fxArt';
 import { ICON_IDS, paintIcon, type IconId } from './iconArt';
+import {
+  GRASS_FILES,
+  IMAGE_ART_SCALE,
+  IMAGE_BUILDINGS,
+  IMAGE_UNITS,
+  imageArtKey,
+  spearmanFile,
+} from './imageArt';
 import { PixelCanvas } from './pixel';
 import { paintPlot, type PlotState } from './plotArt';
 import { UI_DECOR_IDS, UI_FRAME_IDS, paintUiDecor, paintUiFrame, type UiFrame } from './uiArt';
@@ -190,13 +199,54 @@ export const spriteList = (content: Content): { name: string; art: PixelCanvas }
   return out;
 };
 
+/** Frames whose art came from `imageArt` (2 art px per world unit); filled by `withImageArt`. */
+const IMAGE_FRAMES = new Set<string>();
+
+/** Display scale of a sprite frame: 0.5 for image art, 1 for generated art. */
+export const imageFrameScale = (frame: string): number => (IMAGE_FRAMES.has(frame) ? IMAGE_ART_SCALE : 1);
+
+/** Pixels of a loaded image texture by file name, or null when it did not load. */
+const imageFile = (textures: Phaser.Textures.TextureManager, file: string): PixelCanvas | null => {
+  const key = imageArtKey(file);
+  if (!textures.exists(key)) return null;
+  return imageToPixelCanvas(textures.get(key).getSourceImage() as CanvasImageSource & { width: number; height: number });
+};
+
+/** `list` with the frames of `imageArt` replaced by their PNGs (those that loaded; the rest keep generated art). */
+export const withImageArt = (
+  textures: Phaser.Textures.TextureManager,
+  list: { name: string; art: PixelCanvas }[],
+): { name: string; art: PixelCanvas }[] => {
+  IMAGE_FRAMES.clear();
+  const wanted = new Map<string, string>();
+  for (const unit of IMAGE_UNITS)
+    for (const team of ['ally', 'foe'] as const)
+      for (const anim of ['idle', 'walk', 'attack'] as const)
+        for (let n = 0; n < UNIT_FRAME_COUNT; n++)
+          wanted.set(unitFrame(unit, team, anim, n), spearmanFile(team, anim, n));
+  for (const card of IMAGE_BUILDINGS) wanted.set(buildingFrame(card as CardId), 'cottage');
+  return list.map((s) => {
+    const file = wanted.get(s.name);
+    const art = file === undefined ? null : imageFile(textures, file);
+    if (art === null) return s;
+    IMAGE_FRAMES.add(s.name);
+    return { name: s.name, art };
+  });
+};
+
+/** The three grass PNGs as pixels, or null unless all loaded. */
+export const grassArt = (textures: Phaser.Textures.TextureManager): PixelCanvas[] | null => {
+  const tiles = GRASS_FILES.map((f) => imageFile(textures, f));
+  return tiles.every((t) => t !== null) ? (tiles as PixelCanvas[]) : null;
+};
+
 /** Build the `sprites` atlas once (no-op if it already exists). */
 export const buildSpritesTexture = (
   textures: Phaser.Textures.TextureManager,
   content: Content,
 ): void => {
   if (textures.exists(SPRITES_KEY)) return;
-  const { placed, height } = packShelves(spriteList(content), SPRITES_WIDTH);
+  const { placed, height } = packShelves(withImageArt(textures, spriteList(content)), SPRITES_WIDTH);
   const sheet = new PixelCanvas(SPRITES_WIDTH, height);
   for (const p of placed) sheet.blit(p.art, p.x, p.y);
   const texture = textures.addCanvas(SPRITES_KEY, toCanvas(sheet));
@@ -208,9 +258,17 @@ export const GROUND_KEY = 'field-ground';
 
 /** The tiling grass ground texture under every field (painted once, never removed). */
 export const ensureGroundTexture = (textures: Phaser.Textures.TextureManager): string => {
-  if (!textures.exists(GROUND_KEY)) addPixelTexture(textures, GROUND_KEY, paintGroundTile());
+  if (!textures.exists(GROUND_KEY)) addPixelTexture(textures, GROUND_KEY, grassArt(textures)?.[0] ?? paintGroundTile());
   return GROUND_KEY;
 };
+
+/** Display scale of the painted field (`field-<seed>`): 0.5 when it was painted from the 2×-density grass art. */
+export const fieldTextureScale = (textures: Phaser.Textures.TextureManager, key: string): number =>
+  textures.get(key).getSourceImage().width > BATTLE.field ? IMAGE_ART_SCALE : 1;
+
+/** Display scale of the tiling ground: 0.5 when it is the grass art. */
+export const groundTextureScale = (textures: Phaser.Textures.TextureManager): number =>
+  grassArt(textures) === null ? 1 : IMAGE_ART_SCALE;
 
 /**
  * Make sure the painted field for `seed` exists (painted only if missing) and return its
@@ -222,6 +280,6 @@ export const ensureFieldTexture = (
   seed: number,
 ): string => {
   const key = fieldKey(seed);
-  if (!textures.exists(key)) addPixelTexture(textures, key, paintField(seed));
+  if (!textures.exists(key)) addPixelTexture(textures, key, paintField(seed, grassArt(textures) ?? undefined));
   return key;
 };

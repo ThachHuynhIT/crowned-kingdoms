@@ -10,4 +10,6 @@
 Most art is procedurally generated placeholder art (`src/render/*Art.ts`).
 
 - UI frames (panel, tooltip, button, card): [Pixel UI Pack](https://kenney.nl/assets/pixel-ui-pack) by Kenney — CC0 (credit not required, given with thanks). Unmodified; see `docs/licenses/kenney-pixel-ui-pack/`.
+- Spearman, thatched cottage and grass tiles (`public/assets/art/ai-v1/`): AI-assisted images supplied by the project owner, sliced and recoloured in-repo (`docs/art-review/g3e/ai-v1/`). Custom, not third-party; tool and prompt not recorded.
+
 Add every third-party asset here with its author, source URL and license (CC0 / CC-BY …) when it is imported.

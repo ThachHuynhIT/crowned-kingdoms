@@ -1,6 +1,6 @@
 import type Phaser from 'phaser';
 import { BATTLE } from '../data/battle';
-import { ensureFieldTexture, ensureGroundTexture } from './atlas';
+import { ensureFieldTexture, ensureGroundTexture, fieldTextureScale, groundTextureScale } from './atlas';
 
 /** The ground tile spans this many world px each way around the field (covers any zoom ≥ 1). */
 const GROUND_SPAN = 4096;
@@ -21,8 +21,13 @@ export class FieldRenderer {
     const mid = BATTLE.field / 2;
     this.ground = scene.add
       .tileSprite(mid, mid, GROUND_SPAN, GROUND_SPAN, ensureGroundTexture(scene.textures))
+      .setTileScale(groundTextureScale(scene.textures))
       .setDepth(-1);
-    this.image = scene.add.image(0, 0, this.key).setOrigin(0, 0).setDepth(0);
+    this.image = scene.add
+      .image(0, 0, this.key)
+      .setOrigin(0, 0)
+      .setScale(fieldTextureScale(scene.textures, this.key))
+      .setDepth(0);
   }
 
   /** Destroys the images, then removes the `field-<seed>` texture (nothing else uses it). */

@@ -85,3 +85,227 @@ assets:
     nativeSize: 48x48
     finalSize: 48x48
     notes: 9-slice (slice 8). Outline/red: cardSelected; see src/render/uiKit.ts
+  - id: world_ai_v1_spearman_0
+    path: public/assets/art/ai-v1/spearman_0.png
+    category: world
+    origin: custom
+    source: docs/art-review/g3e/ai-v1/source-sheet.webp
+    creator: Project owner (AI-assisted image, tool and prompt not recorded)
+    license: project-owned
+    attribution: false
+    redistribute: true
+    evidence: docs/art-review/g3e/ai-v1/
+    modified: true
+    nativeSize: ~24x32
+    finalSize: 48x34
+    notes: Spearman pose 0; block-downsampled from the source sheet and padded to a feet-aligned canvas; drawn at scale 0.5 (see src/render/imageArt.ts)
+  - id: world_ai_v1_spearman_foe_0
+    path: public/assets/art/ai-v1/spearman_foe_0.png
+    category: world
+    origin: custom
+    source: docs/art-review/g3e/ai-v1/source-sheet.webp
+    creator: Project owner (AI-assisted image, tool and prompt not recorded)
+    license: project-owned
+    attribution: false
+    redistribute: true
+    evidence: docs/art-review/g3e/ai-v1/
+    modified: true
+    nativeSize: ~24x32
+    finalSize: 48x34
+    notes: Foe recolour of spearman pose 0 (blue sash made red) by docs/art-review/g3e/ai-v1/make_assets.py
+  - id: world_ai_v1_spearman_1
+    path: public/assets/art/ai-v1/spearman_1.png
+    category: world
+    origin: custom
+    source: docs/art-review/g3e/ai-v1/source-sheet.webp
+    creator: Project owner (AI-assisted image, tool and prompt not recorded)
+    license: project-owned
+    attribution: false
+    redistribute: true
+    evidence: docs/art-review/g3e/ai-v1/
+    modified: true
+    nativeSize: ~24x32
+    finalSize: 48x34
+    notes: Spearman pose 1; block-downsampled from the source sheet and padded to a feet-aligned canvas; drawn at scale 0.5 (see src/render/imageArt.ts)
+  - id: world_ai_v1_spearman_foe_1
+    path: public/assets/art/ai-v1/spearman_foe_1.png
+    category: world
+    origin: custom
+    source: docs/art-review/g3e/ai-v1/source-sheet.webp
+    creator: Project owner (AI-assisted image, tool and prompt not recorded)
+    license: project-owned
+    attribution: false
+    redistribute: true
+    evidence: docs/art-review/g3e/ai-v1/
+    modified: true
+    nativeSize: ~24x32
+    finalSize: 48x34
+    notes: Foe recolour of spearman pose 1 (blue sash made red) by docs/art-review/g3e/ai-v1/make_assets.py
+  - id: world_ai_v1_spearman_2
+    path: public/assets/art/ai-v1/spearman_2.png
+    category: world
+    origin: custom
+    source: docs/art-review/g3e/ai-v1/source-sheet.webp
+    creator: Project owner (AI-assisted image, tool and prompt not recorded)
+    license: project-owned
+    attribution: false
+    redistribute: true
+    evidence: docs/art-review/g3e/ai-v1/
+    modified: true
+    nativeSize: ~24x32
+    finalSize: 48x34
+    notes: Spearman pose 2; block-downsampled from the source sheet and padded to a feet-aligned canvas; drawn at scale 0.5 (see src/render/imageArt.ts)
+  - id: world_ai_v1_spearman_foe_2
+    path: public/assets/art/ai-v1/spearman_foe_2.png
+    category: world
+    origin: custom
+    source: docs/art-review/g3e/ai-v1/source-sheet.webp
+    creator: Project owner (AI-assisted image, tool and prompt not recorded)
+    license: project-owned
+    attribution: false
+    redistribute: true
+    evidence: docs/art-review/g3e/ai-v1/
+    modified: true
+    nativeSize: ~24x32
+    finalSize: 48x34
+    notes: Foe recolour of spearman pose 2 (blue sash made red) by docs/art-review/g3e/ai-v1/make_assets.py
+  - id: world_ai_v1_spearman_3
+    path: public/assets/art/ai-v1/spearman_3.png
+    category: world
+    origin: custom
+    source: docs/art-review/g3e/ai-v1/source-sheet.webp
+    creator: Project owner (AI-assisted image, tool and prompt not recorded)
+    license: project-owned
+    attribution: false
+    redistribute: true
+    evidence: docs/art-review/g3e/ai-v1/
+    modified: true
+    nativeSize: ~24x32
+    finalSize: 48x34
+    notes: Spearman pose 3; block-downsampled from the source sheet and padded to a feet-aligned canvas; drawn at scale 0.5 (see src/render/imageArt.ts)
+  - id: world_ai_v1_spearman_foe_3
+    path: public/assets/art/ai-v1/spearman_foe_3.png
+    category: world
+    origin: custom
+    source: docs/art-review/g3e/ai-v1/source-sheet.webp
+    creator: Project owner (AI-assisted image, tool and prompt not recorded)
+    license: project-owned
+    attribution: false
+    redistribute: true
+    evidence: docs/art-review/g3e/ai-v1/
+    modified: true
+    nativeSize: ~24x32
+    finalSize: 48x34
+    notes: Foe recolour of spearman pose 3 (blue sash made red) by docs/art-review/g3e/ai-v1/make_assets.py
+  - id: world_ai_v1_spearman_4
+    path: public/assets/art/ai-v1/spearman_4.png
+    category: world
+    origin: custom
+    source: docs/art-review/g3e/ai-v1/source-sheet.webp
+    creator: Project owner (AI-assisted image, tool and prompt not recorded)
+    license: project-owned
+    attribution: false
+    redistribute: true
+    evidence: docs/art-review/g3e/ai-v1/
+    modified: true
+    nativeSize: ~24x32
+    finalSize: 48x34
+    notes: Spearman pose 4; block-downsampled from the source sheet and padded to a feet-aligned canvas; drawn at scale 0.5 (see src/render/imageArt.ts)
+  - id: world_ai_v1_spearman_foe_4
+    path: public/assets/art/ai-v1/spearman_foe_4.png
+    category: world
+    origin: custom
+    source: docs/art-review/g3e/ai-v1/source-sheet.webp
+    creator: Project owner (AI-assisted image, tool and prompt not recorded)
+    license: project-owned
+    attribution: false
+    redistribute: true
+    evidence: docs/art-review/g3e/ai-v1/
+    modified: true
+    nativeSize: ~24x32
+    finalSize: 48x34
+    notes: Foe recolour of spearman pose 4 (blue sash made red) by docs/art-review/g3e/ai-v1/make_assets.py
+  - id: world_ai_v1_spearman_5
+    path: public/assets/art/ai-v1/spearman_5.png
+    category: world
+    origin: custom
+    source: docs/art-review/g3e/ai-v1/source-sheet.webp
+    creator: Project owner (AI-assisted image, tool and prompt not recorded)
+    license: project-owned
+    attribution: false
+    redistribute: true
+    evidence: docs/art-review/g3e/ai-v1/
+    modified: true
+    nativeSize: ~24x32
+    finalSize: 48x34
+    notes: Spearman pose 5; block-downsampled from the source sheet and padded to a feet-aligned canvas; drawn at scale 0.5 (see src/render/imageArt.ts)
+  - id: world_ai_v1_spearman_foe_5
+    path: public/assets/art/ai-v1/spearman_foe_5.png
+    category: world
+    origin: custom
+    source: docs/art-review/g3e/ai-v1/source-sheet.webp
+    creator: Project owner (AI-assisted image, tool and prompt not recorded)
+    license: project-owned
+    attribution: false
+    redistribute: true
+    evidence: docs/art-review/g3e/ai-v1/
+    modified: true
+    nativeSize: ~24x32
+    finalSize: 48x34
+    notes: Foe recolour of spearman pose 5 (blue sash made red) by docs/art-review/g3e/ai-v1/make_assets.py
+  - id: world_ai_v1_cottage
+    path: public/assets/art/ai-v1/cottage.png
+    category: world
+    origin: custom
+    source: docs/art-review/g3e/ai-v1/source-sheet.webp
+    creator: Project owner (AI-assisted image, tool and prompt not recorded)
+    license: project-owned
+    attribution: false
+    redistribute: true
+    evidence: docs/art-review/g3e/ai-v1/
+    modified: true
+    nativeSize: 94x80
+    finalSize: 64x54
+    notes: Thatched cottage shrunk to 64 px wide; frame building_wheat_militia, scale 0.5
+  - id: world_ai_v1_grass_0
+    path: public/assets/art/ai-v1/grass_0.png
+    category: world
+    origin: custom
+    source: docs/art-review/g3e/ai-v1/source-sheet.webp
+    creator: Project owner (AI-assisted image, tool and prompt not recorded)
+    license: project-owned
+    attribution: false
+    redistribute: true
+    evidence: docs/art-review/g3e/ai-v1/
+    modified: true
+    nativeSize: 32x31
+    finalSize: 32x32
+    notes: Grass ground tile 0; field painted at 2x density, scale 0.5
+  - id: world_ai_v1_grass_1
+    path: public/assets/art/ai-v1/grass_1.png
+    category: world
+    origin: custom
+    source: docs/art-review/g3e/ai-v1/source-sheet.webp
+    creator: Project owner (AI-assisted image, tool and prompt not recorded)
+    license: project-owned
+    attribution: false
+    redistribute: true
+    evidence: docs/art-review/g3e/ai-v1/
+    modified: true
+    nativeSize: 32x31
+    finalSize: 32x32
+    notes: Grass ground tile 1; field painted at 2x density, scale 0.5
+  - id: world_ai_v1_grass_2
+    path: public/assets/art/ai-v1/grass_2.png
+    category: world
+    origin: custom
+    source: docs/art-review/g3e/ai-v1/source-sheet.webp
+    creator: Project owner (AI-assisted image, tool and prompt not recorded)
+    license: project-owned
+    attribution: false
+    redistribute: true
+    evidence: docs/art-review/g3e/ai-v1/
+    modified: true
+    nativeSize: 32x31
+    finalSize: 32x32
+    notes: Grass ground tile 2; field painted at 2x density, scale 0.5

@@ -2,6 +2,7 @@ import Phaser from 'phaser';
 import { UI_PALETTE } from '../data/uiPalette';
 import { CONTENT } from '../game/cards/registry';
 import { buildSpritesTexture, buildUiTexture } from '../render/atlas';
+import { IMAGE_ART_DIR, IMAGE_ART_FILES, imageArtKey } from '../render/imageArt';
 import type { UiFrame } from '../render/uiArt';
 import { UI_KIT_DIR, UI_KIT_FILES, kitTextureKey } from '../render/uiKit';
 import { textStyle } from '../ui/theme';
@@ -27,6 +28,8 @@ export class PreloadScene extends Phaser.Scene {
     for (const [frame, file] of Object.entries(UI_KIT_FILES) as [UiFrame, string][]) {
       this.load.image(kitTextureKey(frame), UI_KIT_DIR + file);
     }
+    // Image art (G3e ai-v1); a file that fails to load leaves the generated art in its place.
+    for (const file of IMAGE_ART_FILES) this.load.image(imageArtKey(file), `${IMAGE_ART_DIR}${file}.png`);
     // Real assets (atlases, audio) will be queued here with this.load.*.
   }
 

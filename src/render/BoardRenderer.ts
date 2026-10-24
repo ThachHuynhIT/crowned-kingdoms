@@ -10,7 +10,7 @@ import { unlockCost } from '../data/run';
 import { THRONE_PLOT, adjacentToUnlocked } from '../game/run/board';
 import type { RunState } from '../game/run/state';
 import { FONT_UI } from '../ui/theme';
-import { SPRITES_KEY, buildingFrame, plotFrame } from './atlas';
+import { SPRITES_KEY, buildingFrame, imageFrameScale, plotFrame } from './atlas';
 
 const SIZE = 5;
 const PLOTS = SIZE * SIZE;
@@ -242,10 +242,11 @@ export class BoardRenderer {
       img = this.scene.add
         .image(c.x, foot, SPRITES_KEY, buildingFrame(cardId))
         .setOrigin(0.5, 1)
+        .setScale(imageFrameScale(buildingFrame(cardId)))
         .setDepth(foot);
       this.buildings[plot] = img;
     } else if (shown !== cardId) {
-      img.setFrame(buildingFrame(cardId));
+      img.setFrame(buildingFrame(cardId)).setScale(imageFrameScale(buildingFrame(cardId)));
     }
     img.setVisible(this.buildingsVisible);
   }
