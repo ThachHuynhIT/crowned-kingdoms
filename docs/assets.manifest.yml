@@ -309,3 +309,185 @@ assets:
     nativeSize: 32x31
     finalSize: 32x32
     notes: Grass ground tile 2; field painted at 2x density, scale 0.5
+  - id: world_ai_v1_footman_0
+    path: public/assets/art/ai-v1/footman_0.png
+    category: world
+    origin: custom
+    source: docs/art-review/g3e/batch-01-barracks/source.png
+    creator: Project owner (OpenAI imagegen via Codex; prompt in docs/art-review/g3e/batch-01-barracks/prompt.md)
+    license: project-owned
+    attribution: false
+    redistribute: true
+    evidence: docs/art-review/g3e/batch-01-barracks/
+    modified: true
+    nativeSize: ~26x32
+    finalSize: 48x34
+    notes: Footman pose 0; background removed and block-downsampled by batch-01-barracks/make_assets.py; scale 0.5
+  - id: world_ai_v1_footman_foe_0
+    path: public/assets/art/ai-v1/footman_foe_0.png
+    category: world
+    origin: custom
+    source: docs/art-review/g3e/batch-01-barracks/source.png
+    creator: Project owner (OpenAI imagegen via Codex; prompt in docs/art-review/g3e/batch-01-barracks/prompt.md)
+    license: project-owned
+    attribution: false
+    redistribute: true
+    evidence: docs/art-review/g3e/batch-01-barracks/
+    modified: true
+    nativeSize: ~26x32
+    finalSize: 48x34
+    notes: Foe recolour (blue to red) of footman pose 0
+  - id: world_ai_v1_footman_1
+    path: public/assets/art/ai-v1/footman_1.png
+    category: world
+    origin: custom
+    source: docs/art-review/g3e/batch-01-barracks/source.png
+    creator: Project owner (OpenAI imagegen via Codex; prompt in docs/art-review/g3e/batch-01-barracks/prompt.md)
+    license: project-owned
+    attribution: false
+    redistribute: true
+    evidence: docs/art-review/g3e/batch-01-barracks/
+    modified: true
+    nativeSize: ~26x32
+    finalSize: 48x34
+    notes: Footman pose 1; background removed and block-downsampled by batch-01-barracks/make_assets.py; scale 0.5
+  - id: world_ai_v1_footman_foe_1
+    path: public/assets/art/ai-v1/footman_foe_1.png
+    category: world
+    origin: custom
+    source: docs/art-review/g3e/batch-01-barracks/source.png
+    creator: Project owner (OpenAI imagegen via Codex; prompt in docs/art-review/g3e/batch-01-barracks/prompt.md)
+    license: project-owned
+    attribution: false
+    redistribute: true
+    evidence: docs/art-review/g3e/batch-01-barracks/
+    modified: true
+    nativeSize: ~26x32
+    finalSize: 48x34
+    notes: Foe recolour (blue to red) of footman pose 1
+  - id: world_ai_v1_footman_2
+    path: public/assets/art/ai-v1/footman_2.png
+    category: world
+    origin: custom
+    source: docs/art-review/g3e/batch-01-barracks/source.png
+    creator: Project owner (OpenAI imagegen via Codex; prompt in docs/art-review/g3e/batch-01-barracks/prompt.md)
+    license: project-owned
+    attribution: false
+    redistribute: true
+    evidence: docs/art-review/g3e/batch-01-barracks/
+    modified: true
+    nativeSize: ~26x32
+    finalSize: 48x34
+    notes: Footman pose 2; background removed and block-downsampled by batch-01-barracks/make_assets.py; scale 0.5
+  - id: world_ai_v1_footman_foe_2
+    path: public/assets/art/ai-v1/footman_foe_2.png
+    category: world
+    origin: custom
+    source: docs/art-review/g3e/batch-01-barracks/source.png
+    creator: Project owner (OpenAI imagegen via Codex; prompt in docs/art-review/g3e/batch-01-barracks/prompt.md)
+    license: project-owned
+    attribution: false
+    redistribute: true
+    evidence: docs/art-review/g3e/batch-01-barracks/
+    modified: true
+    nativeSize: ~26x32
+    finalSize: 48x34
+    notes: Foe recolour (blue to red) of footman pose 2
+  - id: world_ai_v1_footman_3
+    path: public/assets/art/ai-v1/footman_3.png
+    category: world
+    origin: custom
+    source: docs/art-review/g3e/batch-01-barracks/source.png
+    creator: Project owner (OpenAI imagegen via Codex; prompt in docs/art-review/g3e/batch-01-barracks/prompt.md)
+    license: project-owned
+    attribution: false
+    redistribute: true
+    evidence: docs/art-review/g3e/batch-01-barracks/
+    modified: true
+    nativeSize: ~26x32
+    finalSize: 48x34
+    notes: Footman pose 3; background removed and block-downsampled by batch-01-barracks/make_assets.py; scale 0.5
+  - id: world_ai_v1_footman_foe_3
+    path: public/assets/art/ai-v1/footman_foe_3.png
+    category: world
+    origin: custom
+    source: docs/art-review/g3e/batch-01-barracks/source.png
+    creator: Project owner (OpenAI imagegen via Codex; prompt in docs/art-review/g3e/batch-01-barracks/prompt.md)
+    license: project-owned
+    attribution: false
+    redistribute: true
+    evidence: docs/art-review/g3e/batch-01-barracks/
+    modified: true
+    nativeSize: ~26x32
+    finalSize: 48x34
+    notes: Foe recolour (blue to red) of footman pose 3
+  - id: world_ai_v1_footman_4
+    path: public/assets/art/ai-v1/footman_4.png
+    category: world
+    origin: custom
+    source: docs/art-review/g3e/batch-01-barracks/source.png
+    creator: Project owner (OpenAI imagegen via Codex; prompt in docs/art-review/g3e/batch-01-barracks/prompt.md)
+    license: project-owned
+    attribution: false
+    redistribute: true
+    evidence: docs/art-review/g3e/batch-01-barracks/
+    modified: true
+    nativeSize: ~26x32
+    finalSize: 48x34
+    notes: Footman pose 4; background removed and block-downsampled by batch-01-barracks/make_assets.py; scale 0.5
+  - id: world_ai_v1_footman_foe_4
+    path: public/assets/art/ai-v1/footman_foe_4.png
+    category: world
+    origin: custom
+    source: docs/art-review/g3e/batch-01-barracks/source.png
+    creator: Project owner (OpenAI imagegen via Codex; prompt in docs/art-review/g3e/batch-01-barracks/prompt.md)
+    license: project-owned
+    attribution: false
+    redistribute: true
+    evidence: docs/art-review/g3e/batch-01-barracks/
+    modified: true
+    nativeSize: ~26x32
+    finalSize: 48x34
+    notes: Foe recolour (blue to red) of footman pose 4
+  - id: world_ai_v1_footman_5
+    path: public/assets/art/ai-v1/footman_5.png
+    category: world
+    origin: custom
+    source: docs/art-review/g3e/batch-01-barracks/source.png
+    creator: Project owner (OpenAI imagegen via Codex; prompt in docs/art-review/g3e/batch-01-barracks/prompt.md)
+    license: project-owned
+    attribution: false
+    redistribute: true
+    evidence: docs/art-review/g3e/batch-01-barracks/
+    modified: true
+    nativeSize: ~26x32
+    finalSize: 48x34
+    notes: Footman pose 5; background removed and block-downsampled by batch-01-barracks/make_assets.py; scale 0.5
+  - id: world_ai_v1_footman_foe_5
+    path: public/assets/art/ai-v1/footman_foe_5.png
+    category: world
+    origin: custom
+    source: docs/art-review/g3e/batch-01-barracks/source.png
+    creator: Project owner (OpenAI imagegen via Codex; prompt in docs/art-review/g3e/batch-01-barracks/prompt.md)
+    license: project-owned
+    attribution: false
+    redistribute: true
+    evidence: docs/art-review/g3e/batch-01-barracks/
+    modified: true
+    nativeSize: ~26x32
+    finalSize: 48x34
+    notes: Foe recolour (blue to red) of footman pose 5
+  - id: world_ai_v1_barracks
+    path: public/assets/art/ai-v1/barracks.png
+    category: world
+    origin: custom
+    source: docs/art-review/g3e/batch-01-barracks/source.png
+    creator: Project owner (OpenAI imagegen via Codex; prompt in docs/art-review/g3e/batch-01-barracks/prompt.md)
+    license: project-owned
+    attribution: false
+    redistribute: true
+    evidence: docs/art-review/g3e/batch-01-barracks/
+    modified: true
+    nativeSize: ~110x90
+    finalSize: 64x~55
+    notes: Barracks shrunk to 64 px wide; frame building_neutral_barracks, scale 0.5

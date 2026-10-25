@@ -23,7 +23,7 @@ import {
   IMAGE_BUILDINGS,
   IMAGE_UNITS,
   imageArtKey,
-  spearmanFile,
+  unitPoseFile,
 } from './imageArt';
 import { PixelCanvas } from './pixel';
 import { paintPlot, type PlotState } from './plotArt';
@@ -219,12 +219,12 @@ export const withImageArt = (
 ): { name: string; art: PixelCanvas }[] => {
   IMAGE_FRAMES.clear();
   const wanted = new Map<string, string>();
-  for (const unit of IMAGE_UNITS)
+  for (const unit of Object.keys(IMAGE_UNITS))
     for (const team of ['ally', 'foe'] as const)
       for (const anim of ['idle', 'walk', 'attack'] as const)
         for (let n = 0; n < UNIT_FRAME_COUNT; n++)
-          wanted.set(unitFrame(unit, team, anim, n), spearmanFile(team, anim, n));
-  for (const card of IMAGE_BUILDINGS) wanted.set(buildingFrame(card as CardId), 'cottage');
+          wanted.set(unitFrame(unit, team, anim, n), unitPoseFile(unit, team, anim, n));
+  for (const [card, file] of Object.entries(IMAGE_BUILDINGS)) wanted.set(buildingFrame(card as CardId), file);
   return list.map((s) => {
     const file = wanted.get(s.name);
     const art = file === undefined ? null : imageFile(textures, file);

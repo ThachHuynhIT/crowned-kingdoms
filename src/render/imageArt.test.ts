@@ -1,6 +1,6 @@
 import { describe, expect, it } from 'vitest';
 import { generateField, paintField } from './fieldArt';
-import { GRASS_FILES, IMAGE_ART_FILES, IMAGE_ART_SCALE, POSES, spearmanFile } from './imageArt';
+import { GRASS_FILES, IMAGE_ART_FILES, IMAGE_ART_SCALE, IMAGE_BUILDINGS, IMAGE_UNITS, POSES, unitPoseFile } from './imageArt';
 import { PixelCanvas, upscale } from './pixel';
 
 describe('image art mapping', () => {
@@ -9,9 +9,12 @@ describe('image art mapping', () => {
   });
 
   it('every pose of every animation maps to a listed file, ally and foe', () => {
-    for (const team of ['ally', 'foe'] as const)
-      for (const anim of ['idle', 'walk', 'attack'] as const)
-        for (const n of [0, 1]) expect(IMAGE_ART_FILES, `${team} ${anim} ${n}`).toContain(spearmanFile(team, anim, n));
+    for (const unit of Object.keys(IMAGE_UNITS))
+      for (const team of ['ally', 'foe'] as const)
+        for (const anim of ['idle', 'walk', 'attack'] as const)
+          for (const n of [0, 1])
+            expect(IMAGE_ART_FILES, `${unit} ${team} ${anim} ${n}`).toContain(unitPoseFile(unit, team, anim, n));
+    for (const file of Object.values(IMAGE_BUILDINGS)) expect(IMAGE_ART_FILES).toContain(file);
   });
 
   it('idle, walk and attack use six different poses', () => {
