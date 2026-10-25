@@ -132,6 +132,8 @@ Nguyên tắc: **luật tách khỏi hiển thị**, tick cố định 10/s, det
 
 - [docs/GDD.md](docs/GDD.md) — thiết kế game rút gọn
 - [docs/ART_STYLE.md](docs/ART_STYLE.md) — quy chuẩn pixel art, bảng màu Hearth 32, UI kiểu Stardew
+- [docs/ASSET_INVENTORY.md](docs/ASSET_INVENTORY.md) — kiểm kê asset, danh mục còn thiếu và yêu cầu sản xuất
+- [docs/ASSET_REQUIREMENTS.md](docs/ASSET_REQUIREMENTS.md) — yêu cầu từng bộ nhà–quân–đạn, animation, cấp 1–5 và số lượng sản xuất
 - [docs/ROADMAP.md](docs/ROADMAP.md) — dự án con G0–G5
 
 ## Trạng thái
