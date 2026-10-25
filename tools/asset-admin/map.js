@@ -189,7 +189,7 @@ function validate(data) {
 function replaceMap(data) { const next = validate(data); edit(() => { state = next; selected.clear(); deduplicateTiles(); }); update(); }
 $('load').onclick = () => { try { const data = readSaved()[$('saved').value]; if (!data) throw new Error('Chưa chọn bản lưu'); replaceMap(data); $('name').value = $('saved').value; message('Đã tải bản đồ. Có thể hoàn tác để quay lại.'); } catch (error) { message(`Không tải được: ${error.message}`); } };
 $('remove').onclick = () => { try { const data = readSaved(); delete data[$('saved').value]; localStorage.setItem(storageKey, JSON.stringify(data)); refreshSaved(); } catch (error) { message(`Không xoá được: ${error.message}`); } };
-const filename = () => ($('name').value.trim() || 'ban-do').replace(/[<>:"/\\|?*\u0000-\u001f]/g, '_');
+const filename = () => ($('name').value.trim() || 'ban-do').replace(/[<>:"/\\|?*]/g, '_').replace(/\p{Cc}/gu, '_');
 $('export').onclick = () => download(new Blob([JSON.stringify(state, null, 2)], { type: 'application/json' }), `${filename()}.json`);
 $('import').onclick = () => $('file').click();
 $('file').onchange = async () => { const file = $('file').files[0]; if (!file) return; try { if (file.size > 15 * 1024 * 1024) throw new Error('Tệp vượt quá 15 MB'); replaceMap(JSON.parse(await file.text())); message('Đã nhập JSON.'); } catch (error) { message(`Không nhập được: ${error.message}`); } $('file').value = ''; };
