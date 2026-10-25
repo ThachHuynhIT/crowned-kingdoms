@@ -1,0 +1,936 @@
+{
+ "version": 1,
+ "pixelScale": 2,
+ "categories": [
+  {
+   "id": "units",
+   "label": "Lính",
+   "items": [
+    {
+     "id": "unit_militia",
+     "label": "Dân Quân (lính giáo)",
+     "src": "/public/assets/art/ai-v1/spearman_0.png",
+     "w": 48,
+     "h": 34,
+     "kind": "unit",
+     "group": "unit",
+     "tags": [
+      "militia"
+     ],
+     "units": {
+      "ally": {
+       "idle": [
+        "/public/assets/art/ai-v1/spearman_0.png",
+        "/public/assets/art/ai-v1/spearman_1.png"
+       ],
+       "walk": [
+        "/public/assets/art/ai-v1/spearman_2.png",
+        "/public/assets/art/ai-v1/spearman_3.png"
+       ],
+       "attack": [
+        "/public/assets/art/ai-v1/spearman_4.png",
+        "/public/assets/art/ai-v1/spearman_5.png"
+       ]
+      },
+      "foe": {
+       "idle": [
+        "/public/assets/art/ai-v1/spearman_foe_0.png",
+        "/public/assets/art/ai-v1/spearman_foe_1.png"
+       ],
+       "walk": [
+        "/public/assets/art/ai-v1/spearman_foe_2.png",
+        "/public/assets/art/ai-v1/spearman_foe_3.png"
+       ],
+       "attack": [
+        "/public/assets/art/ai-v1/spearman_foe_4.png",
+        "/public/assets/art/ai-v1/spearman_foe_5.png"
+       ]
+      }
+     }
+    },
+    {
+     "id": "unit_footman",
+     "label": "Lính Bộ",
+     "src": "/public/assets/art/ai-v1/footman_0.png",
+     "w": 48,
+     "h": 34,
+     "kind": "unit",
+     "group": "unit",
+     "tags": [
+      "footman"
+     ],
+     "units": {
+      "ally": {
+       "idle": [
+        "/public/assets/art/ai-v1/footman_0.png",
+        "/public/assets/art/ai-v1/footman_1.png"
+       ],
+       "walk": [
+        "/public/assets/art/ai-v1/footman_2.png",
+        "/public/assets/art/ai-v1/footman_3.png"
+       ],
+       "attack": [
+        "/public/assets/art/ai-v1/footman_4.png",
+        "/public/assets/art/ai-v1/footman_5.png"
+       ]
+      },
+      "foe": {
+       "idle": [
+        "/public/assets/art/ai-v1/footman_foe_0.png",
+        "/public/assets/art/ai-v1/footman_foe_1.png"
+       ],
+       "walk": [
+        "/public/assets/art/ai-v1/footman_foe_2.png",
+        "/public/assets/art/ai-v1/footman_foe_3.png"
+       ],
+       "attack": [
+        "/public/assets/art/ai-v1/footman_foe_4.png",
+        "/public/assets/art/ai-v1/footman_foe_5.png"
+       ]
+      }
+     }
+    }
+   ]
+  },
+  {
+   "id": "buildings",
+   "label": "Công trình",
+   "items": [
+    {
+     "id": "building_wheat_militia",
+     "label": "Nhà Dân Quân (nhà tranh)",
+     "src": "/public/assets/art/ai-v1/cottage.png",
+     "w": 64,
+     "h": 54,
+     "kind": "object",
+     "group": "building",
+     "tags": [
+      "wheat_militia"
+     ]
+    },
+    {
+     "id": "building_neutral_barracks",
+     "label": "Trại Lính",
+     "src": "/public/assets/art/ai-v1/barracks.png",
+     "w": 64,
+     "h": 50,
+     "kind": "object",
+     "group": "building",
+     "tags": [
+      "neutral_barracks"
+     ]
+    }
+   ]
+  },
+  {
+   "id": "terrain",
+   "label": "Nền đất",
+   "items": [
+    {
+     "id": "terrain_path_0",
+     "label": "path 0",
+     "src": "/public/assets/art/ai-v1/terrain/path_0.png",
+     "w": 32,
+     "h": 32,
+     "kind": "tile",
+     "group": "path",
+     "tags": [
+      "path"
+     ]
+    },
+    {
+     "id": "terrain_path_1",
+     "label": "path 1",
+     "src": "/public/assets/art/ai-v1/terrain/path_1.png",
+     "w": 32,
+     "h": 32,
+     "kind": "tile",
+     "group": "path",
+     "tags": [
+      "path"
+     ]
+    },
+    {
+     "id": "terrain_path_2",
+     "label": "path 2",
+     "src": "/public/assets/art/ai-v1/terrain/path_2.png",
+     "w": 32,
+     "h": 32,
+     "kind": "tile",
+     "group": "path",
+     "tags": [
+      "path"
+     ]
+    },
+    {
+     "id": "terrain_path_3",
+     "label": "path 3",
+     "src": "/public/assets/art/ai-v1/terrain/path_3.png",
+     "w": 32,
+     "h": 32,
+     "kind": "tile",
+     "group": "path",
+     "tags": [
+      "path"
+     ]
+    },
+    {
+     "id": "terrain_path_4",
+     "label": "path 4",
+     "src": "/public/assets/art/ai-v1/terrain/path_4.png",
+     "w": 32,
+     "h": 32,
+     "kind": "tile",
+     "group": "path",
+     "tags": [
+      "path"
+     ]
+    },
+    {
+     "id": "terrain_path_5",
+     "label": "path 5",
+     "src": "/public/assets/art/ai-v1/terrain/path_5.png",
+     "w": 32,
+     "h": 32,
+     "kind": "tile",
+     "group": "path",
+     "tags": [
+      "path"
+     ]
+    },
+    {
+     "id": "terrain_sand_0",
+     "label": "sand 0",
+     "src": "/public/assets/art/ai-v1/terrain/sand_0.png",
+     "w": 32,
+     "h": 32,
+     "kind": "tile",
+     "group": "sand",
+     "tags": [
+      "sand"
+     ]
+    },
+    {
+     "id": "terrain_sand_1",
+     "label": "sand 1",
+     "src": "/public/assets/art/ai-v1/terrain/sand_1.png",
+     "w": 32,
+     "h": 32,
+     "kind": "tile",
+     "group": "sand",
+     "tags": [
+      "sand"
+     ]
+    },
+    {
+     "id": "terrain_sand_2",
+     "label": "sand 2",
+     "src": "/public/assets/art/ai-v1/terrain/sand_2.png",
+     "w": 32,
+     "h": 32,
+     "kind": "tile",
+     "group": "sand",
+     "tags": [
+      "sand"
+     ]
+    },
+    {
+     "id": "terrain_sand_3",
+     "label": "sand 3",
+     "src": "/public/assets/art/ai-v1/terrain/sand_3.png",
+     "w": 32,
+     "h": 32,
+     "kind": "tile",
+     "group": "sand",
+     "tags": [
+      "sand"
+     ]
+    },
+    {
+     "id": "terrain_sand_4",
+     "label": "sand 4",
+     "src": "/public/assets/art/ai-v1/terrain/sand_4.png",
+     "w": 32,
+     "h": 32,
+     "kind": "tile",
+     "group": "sand",
+     "tags": [
+      "sand"
+     ]
+    },
+    {
+     "id": "terrain_sand_5",
+     "label": "sand 5",
+     "src": "/public/assets/art/ai-v1/terrain/sand_5.png",
+     "w": 32,
+     "h": 32,
+     "kind": "tile",
+     "group": "sand",
+     "tags": [
+      "sand"
+     ]
+    },
+    {
+     "id": "terrain_meadow_flowers_0",
+     "label": "meadow flowers 0",
+     "src": "/public/assets/art/ai-v1/terrain/meadow_flowers_0.png",
+     "w": 32,
+     "h": 32,
+     "kind": "tile",
+     "group": "meadow_flowers",
+     "tags": [
+      "meadow"
+     ]
+    },
+    {
+     "id": "terrain_meadow_flowers_1",
+     "label": "meadow flowers 1",
+     "src": "/public/assets/art/ai-v1/terrain/meadow_flowers_1.png",
+     "w": 32,
+     "h": 32,
+     "kind": "tile",
+     "group": "meadow_flowers",
+     "tags": [
+      "meadow"
+     ]
+    },
+    {
+     "id": "terrain_meadow_flowers_2",
+     "label": "meadow flowers 2",
+     "src": "/public/assets/art/ai-v1/terrain/meadow_flowers_2.png",
+     "w": 32,
+     "h": 32,
+     "kind": "tile",
+     "group": "meadow_flowers",
+     "tags": [
+      "meadow"
+     ]
+    },
+    {
+     "id": "terrain_meadow_tall_0",
+     "label": "meadow tall 0",
+     "src": "/public/assets/art/ai-v1/terrain/meadow_tall_0.png",
+     "w": 32,
+     "h": 32,
+     "kind": "tile",
+     "group": "meadow_tall",
+     "tags": [
+      "meadow"
+     ]
+    },
+    {
+     "id": "terrain_meadow_tall_1",
+     "label": "meadow tall 1",
+     "src": "/public/assets/art/ai-v1/terrain/meadow_tall_1.png",
+     "w": 32,
+     "h": 32,
+     "kind": "tile",
+     "group": "meadow_tall",
+     "tags": [
+      "meadow"
+     ]
+    },
+    {
+     "id": "terrain_meadow_tall_2",
+     "label": "meadow tall 2",
+     "src": "/public/assets/art/ai-v1/terrain/meadow_tall_2.png",
+     "w": 32,
+     "h": 32,
+     "kind": "tile",
+     "group": "meadow_tall",
+     "tags": [
+      "meadow"
+     ]
+    },
+    {
+     "id": "terrain_water_a_0",
+     "label": "water a 0",
+     "src": "/public/assets/art/ai-v1/terrain/water_a_0.png",
+     "w": 32,
+     "h": 32,
+     "kind": "tile",
+     "group": "water_a",
+     "tags": [
+      "water"
+     ]
+    },
+    {
+     "id": "terrain_water_a_1",
+     "label": "water a 1",
+     "src": "/public/assets/art/ai-v1/terrain/water_a_1.png",
+     "w": 32,
+     "h": 32,
+     "kind": "tile",
+     "group": "water_a",
+     "tags": [
+      "water"
+     ]
+    },
+    {
+     "id": "terrain_water_a_2",
+     "label": "water a 2",
+     "src": "/public/assets/art/ai-v1/terrain/water_a_2.png",
+     "w": 32,
+     "h": 32,
+     "kind": "tile",
+     "group": "water_a",
+     "tags": [
+      "water"
+     ]
+    },
+    {
+     "id": "terrain_water_b_0",
+     "label": "water b 0",
+     "src": "/public/assets/art/ai-v1/terrain/water_b_0.png",
+     "w": 32,
+     "h": 32,
+     "kind": "tile",
+     "group": "water_b",
+     "tags": [
+      "water"
+     ]
+    },
+    {
+     "id": "terrain_water_b_1",
+     "label": "water b 1",
+     "src": "/public/assets/art/ai-v1/terrain/water_b_1.png",
+     "w": 32,
+     "h": 32,
+     "kind": "tile",
+     "group": "water_b",
+     "tags": [
+      "water"
+     ]
+    },
+    {
+     "id": "terrain_water_b_2",
+     "label": "water b 2",
+     "src": "/public/assets/art/ai-v1/terrain/water_b_2.png",
+     "w": 32,
+     "h": 32,
+     "kind": "tile",
+     "group": "water_b",
+     "tags": [
+      "water"
+     ]
+    },
+    {
+     "id": "terrain_grass_0",
+     "label": "grass 0",
+     "src": "/public/assets/art/ai-v1/grass_0.png",
+     "w": 32,
+     "h": 32,
+     "kind": "tile",
+     "group": "grass",
+     "tags": [
+      "grass"
+     ]
+    },
+    {
+     "id": "terrain_grass_1",
+     "label": "grass 1",
+     "src": "/public/assets/art/ai-v1/grass_1.png",
+     "w": 32,
+     "h": 32,
+     "kind": "tile",
+     "group": "grass",
+     "tags": [
+      "grass"
+     ]
+    },
+    {
+     "id": "terrain_grass_2",
+     "label": "grass 2",
+     "src": "/public/assets/art/ai-v1/grass_2.png",
+     "w": 32,
+     "h": 32,
+     "kind": "tile",
+     "group": "grass",
+     "tags": [
+      "grass"
+     ]
+    }
+   ]
+  },
+  {
+   "id": "plots",
+   "label": "Ô bàn cờ",
+   "items": [
+    {
+     "id": "plot_wheat_locked",
+     "label": "wheat — locked",
+     "src": "/public/assets/art/ai-v1/plots/wheat_locked.png",
+     "w": 64,
+     "h": 64,
+     "kind": "tile",
+     "group": "wheat",
+     "tags": [
+      "locked"
+     ]
+    },
+    {
+     "id": "plot_wheat_open",
+     "label": "wheat — open",
+     "src": "/public/assets/art/ai-v1/plots/wheat_open.png",
+     "w": 64,
+     "h": 64,
+     "kind": "tile",
+     "group": "wheat",
+     "tags": [
+      "open"
+     ]
+    },
+    {
+     "id": "plot_wheat_throne",
+     "label": "wheat — throne",
+     "src": "/public/assets/art/ai-v1/plots/wheat_throne.png",
+     "w": 64,
+     "h": 64,
+     "kind": "tile",
+     "group": "wheat",
+     "tags": [
+      "throne"
+     ]
+    },
+    {
+     "id": "plot_stone_locked",
+     "label": "stone — locked",
+     "src": "/public/assets/art/ai-v1/plots/stone_locked.png",
+     "w": 64,
+     "h": 64,
+     "kind": "tile",
+     "group": "stone",
+     "tags": [
+      "locked"
+     ]
+    },
+    {
+     "id": "plot_stone_open",
+     "label": "stone — open",
+     "src": "/public/assets/art/ai-v1/plots/stone_open.png",
+     "w": 64,
+     "h": 64,
+     "kind": "tile",
+     "group": "stone",
+     "tags": [
+      "open"
+     ]
+    },
+    {
+     "id": "plot_stone_throne",
+     "label": "stone — throne",
+     "src": "/public/assets/art/ai-v1/plots/stone_throne.png",
+     "w": 64,
+     "h": 64,
+     "kind": "tile",
+     "group": "stone",
+     "tags": [
+      "throne"
+     ]
+    },
+    {
+     "id": "plot_arcane_locked",
+     "label": "arcane — locked",
+     "src": "/public/assets/art/ai-v1/plots/arcane_locked.png",
+     "w": 64,
+     "h": 64,
+     "kind": "tile",
+     "group": "arcane",
+     "tags": [
+      "locked"
+     ]
+    },
+    {
+     "id": "plot_arcane_open",
+     "label": "arcane — open",
+     "src": "/public/assets/art/ai-v1/plots/arcane_open.png",
+     "w": 64,
+     "h": 64,
+     "kind": "tile",
+     "group": "arcane",
+     "tags": [
+      "open"
+     ]
+    },
+    {
+     "id": "plot_arcane_throne",
+     "label": "arcane — throne",
+     "src": "/public/assets/art/ai-v1/plots/arcane_throne.png",
+     "w": 64,
+     "h": 64,
+     "kind": "tile",
+     "group": "arcane",
+     "tags": [
+      "throne"
+     ]
+    },
+    {
+     "id": "plot_grove_locked",
+     "label": "grove — locked",
+     "src": "/public/assets/art/ai-v1/plots/grove_locked.png",
+     "w": 64,
+     "h": 64,
+     "kind": "tile",
+     "group": "grove",
+     "tags": [
+      "locked"
+     ]
+    },
+    {
+     "id": "plot_grove_open",
+     "label": "grove — open",
+     "src": "/public/assets/art/ai-v1/plots/grove_open.png",
+     "w": 64,
+     "h": 64,
+     "kind": "tile",
+     "group": "grove",
+     "tags": [
+      "open"
+     ]
+    },
+    {
+     "id": "plot_grove_throne",
+     "label": "grove — throne",
+     "src": "/public/assets/art/ai-v1/plots/grove_throne.png",
+     "w": 64,
+     "h": 64,
+     "kind": "tile",
+     "group": "grove",
+     "tags": [
+      "throne"
+     ]
+    },
+    {
+     "id": "plot_tide_locked",
+     "label": "tide — locked",
+     "src": "/public/assets/art/ai-v1/plots/tide_locked.png",
+     "w": 64,
+     "h": 64,
+     "kind": "tile",
+     "group": "tide",
+     "tags": [
+      "locked"
+     ]
+    },
+    {
+     "id": "plot_tide_open",
+     "label": "tide — open",
+     "src": "/public/assets/art/ai-v1/plots/tide_open.png",
+     "w": 64,
+     "h": 64,
+     "kind": "tile",
+     "group": "tide",
+     "tags": [
+      "open"
+     ]
+    },
+    {
+     "id": "plot_tide_throne",
+     "label": "tide — throne",
+     "src": "/public/assets/art/ai-v1/plots/tide_throne.png",
+     "w": 64,
+     "h": 64,
+     "kind": "tile",
+     "group": "tide",
+     "tags": [
+      "throne"
+     ]
+    },
+    {
+     "id": "plot_forge_locked",
+     "label": "forge — locked",
+     "src": "/public/assets/art/ai-v1/plots/forge_locked.png",
+     "w": 64,
+     "h": 64,
+     "kind": "tile",
+     "group": "forge",
+     "tags": [
+      "locked"
+     ]
+    },
+    {
+     "id": "plot_forge_open",
+     "label": "forge — open",
+     "src": "/public/assets/art/ai-v1/plots/forge_open.png",
+     "w": 64,
+     "h": 64,
+     "kind": "tile",
+     "group": "forge",
+     "tags": [
+      "open"
+     ]
+    },
+    {
+     "id": "plot_forge_throne",
+     "label": "forge — throne",
+     "src": "/public/assets/art/ai-v1/plots/forge_throne.png",
+     "w": 64,
+     "h": 64,
+     "kind": "tile",
+     "group": "forge",
+     "tags": [
+      "throne"
+     ]
+    },
+    {
+     "id": "plot_clock_locked",
+     "label": "clock — locked",
+     "src": "/public/assets/art/ai-v1/plots/clock_locked.png",
+     "w": 64,
+     "h": 64,
+     "kind": "tile",
+     "group": "clock",
+     "tags": [
+      "locked"
+     ]
+    },
+    {
+     "id": "plot_clock_open",
+     "label": "clock — open",
+     "src": "/public/assets/art/ai-v1/plots/clock_open.png",
+     "w": 64,
+     "h": 64,
+     "kind": "tile",
+     "group": "clock",
+     "tags": [
+      "open"
+     ]
+    },
+    {
+     "id": "plot_clock_throne",
+     "label": "clock — throne",
+     "src": "/public/assets/art/ai-v1/plots/clock_throne.png",
+     "w": 64,
+     "h": 64,
+     "kind": "tile",
+     "group": "clock",
+     "tags": [
+      "throne"
+     ]
+    },
+    {
+     "id": "plot_moon_locked",
+     "label": "moon — locked",
+     "src": "/public/assets/art/ai-v1/plots/moon_locked.png",
+     "w": 64,
+     "h": 64,
+     "kind": "tile",
+     "group": "moon",
+     "tags": [
+      "locked"
+     ]
+    },
+    {
+     "id": "plot_moon_open",
+     "label": "moon — open",
+     "src": "/public/assets/art/ai-v1/plots/moon_open.png",
+     "w": 64,
+     "h": 64,
+     "kind": "tile",
+     "group": "moon",
+     "tags": [
+      "open"
+     ]
+    },
+    {
+     "id": "plot_moon_throne",
+     "label": "moon — throne",
+     "src": "/public/assets/art/ai-v1/plots/moon_throne.png",
+     "w": 64,
+     "h": 64,
+     "kind": "tile",
+     "group": "moon",
+     "tags": [
+      "throne"
+     ]
+    }
+   ]
+  },
+  {
+   "id": "wilds",
+   "label": "Hoang dã",
+   "items": [
+    {
+     "id": "wild_tree_pine_dark",
+     "label": "tree pine dark",
+     "src": "/public/assets/art/ai-v1/wilds/tree_pine_dark.png",
+     "w": 44,
+     "h": 58,
+     "kind": "object",
+     "group": "tree",
+     "tags": [
+      "tree"
+     ]
+    },
+    {
+     "id": "wild_tree_pine_light",
+     "label": "tree pine light",
+     "src": "/public/assets/art/ai-v1/wilds/tree_pine_light.png",
+     "w": 42,
+     "h": 58,
+     "kind": "object",
+     "group": "tree",
+     "tags": [
+      "tree"
+     ]
+    },
+    {
+     "id": "wild_tree_oak",
+     "label": "tree oak",
+     "src": "/public/assets/art/ai-v1/wilds/tree_oak.png",
+     "w": 54,
+     "h": 57,
+     "kind": "object",
+     "group": "tree",
+     "tags": [
+      "tree"
+     ]
+    },
+    {
+     "id": "wild_tree_autumn",
+     "label": "tree autumn",
+     "src": "/public/assets/art/ai-v1/wilds/tree_autumn.png",
+     "w": 54,
+     "h": 55,
+     "kind": "object",
+     "group": "tree",
+     "tags": [
+      "tree"
+     ]
+    },
+    {
+     "id": "wild_mountain_snow",
+     "label": "mountain snow",
+     "src": "/public/assets/art/ai-v1/wilds/mountain_snow.png",
+     "w": 69,
+     "h": 50,
+     "kind": "object",
+     "group": "mountain",
+     "tags": [
+      "mountain"
+     ]
+    },
+    {
+     "id": "wild_cliff_mossy",
+     "label": "cliff mossy",
+     "src": "/public/assets/art/ai-v1/wilds/cliff_mossy.png",
+     "w": 62,
+     "h": 49,
+     "kind": "object",
+     "group": "cliff",
+     "tags": [
+      "cliff"
+     ]
+    },
+    {
+     "id": "wild_boulders_big",
+     "label": "boulders big",
+     "src": "/public/assets/art/ai-v1/wilds/boulders_big.png",
+     "w": 74,
+     "h": 48,
+     "kind": "object",
+     "group": "boulders",
+     "tags": [
+      "boulders"
+     ]
+    },
+    {
+     "id": "wild_bush_green",
+     "label": "bush green",
+     "src": "/public/assets/art/ai-v1/wilds/bush_green.png",
+     "w": 23,
+     "h": 18,
+     "kind": "object",
+     "group": "bush",
+     "tags": [
+      "bush"
+     ]
+    },
+    {
+     "id": "wild_bush_berry",
+     "label": "bush berry",
+     "src": "/public/assets/art/ai-v1/wilds/bush_berry.png",
+     "w": 24,
+     "h": 17,
+     "kind": "object",
+     "group": "bush",
+     "tags": [
+      "bush"
+     ]
+    },
+    {
+     "id": "wild_bush_dry",
+     "label": "bush dry",
+     "src": "/public/assets/art/ai-v1/wilds/bush_dry.png",
+     "w": 23,
+     "h": 19,
+     "kind": "object",
+     "group": "bush",
+     "tags": [
+      "bush"
+     ]
+    },
+    {
+     "id": "wild_rock_large",
+     "label": "rock large",
+     "src": "/public/assets/art/ai-v1/wilds/rock_large.png",
+     "w": 30,
+     "h": 19,
+     "kind": "object",
+     "group": "rock",
+     "tags": [
+      "rock"
+     ]
+    },
+    {
+     "id": "wild_rock_medium",
+     "label": "rock medium",
+     "src": "/public/assets/art/ai-v1/wilds/rock_medium.png",
+     "w": 20,
+     "h": 14,
+     "kind": "object",
+     "group": "rock",
+     "tags": [
+      "rock"
+     ]
+    },
+    {
+     "id": "wild_rock_small",
+     "label": "rock small",
+     "src": "/public/assets/art/ai-v1/wilds/rock_small.png",
+     "w": 17,
+     "h": 11,
+     "kind": "object",
+     "group": "rock",
+     "tags": [
+      "rock"
+     ]
+    },
+    {
+     "id": "wild_stump",
+     "label": "stump",
+     "src": "/public/assets/art/ai-v1/wilds/stump.png",
+     "w": 23,
+     "h": 17,
+     "kind": "object",
+     "group": "stump",
+     "tags": [
+      "stump"
+     ]
+    },
+    {
+     "id": "wild_log",
+     "label": "log",
+     "src": "/public/assets/art/ai-v1/wilds/log.png",
+     "w": 36,
+     "h": 19,
+     "kind": "object",
+     "group": "log",
+     "tags": [
+      "log"
+     ]
+    }
+   ]
+  }
+ ]
+}
