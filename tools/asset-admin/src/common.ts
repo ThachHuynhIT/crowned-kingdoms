@@ -85,7 +85,7 @@ function normalizeManifest(value: unknown): unknown {
 }
 export async function loadManifest(): Promise<LoadedManifest> {
   try {
-    const response = await fetch('./manifest.json', { cache: 'no-store' });
+    const response = await fetch('/tools/asset-admin/manifest.json', { cache: 'no-store' });
     if (!response.ok) throw new Error('Không tìm thấy manifest.json');
     const parsed: unknown = await response.json();
     const data = normalizeManifest(parsed);

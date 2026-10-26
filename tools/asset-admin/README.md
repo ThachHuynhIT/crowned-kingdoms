@@ -8,8 +8,8 @@ Vite hiện có chỉ biên dịch TypeScript lúc phát triển; không cần b
 Từ gốc repo: `npm run admin`.
 
 Vite dùng riêng `tools/asset-admin/vite.config.ts`, cổng 5180 (`strictPort`), tự mở
-http://localhost:5180/tools/asset-admin/index.html. Trang dựng bản đồ ở
-http://localhost:5180/tools/asset-admin/map.html.
+http://localhost:5180/admin. Trang dựng bản đồ ở
+http://localhost:5180/admin/map.
 
 Đổi cổng nếu cần: `npm run admin -- --port 5181`.
 `root` là gốc repo, `publicDir: false`: URL ảnh `/public/assets/art/ai-v1/...`
