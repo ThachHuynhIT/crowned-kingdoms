@@ -29,3 +29,13 @@ Một số ca bot đánh lệnh `play` bất hợp pháp (`lastLife`), có cả 
 - `determinism.test.ts`: SETUP cả hai đợt từ mép S; điểm can thiệp (192, 100) → (192, 290) để tảng đá thực sự trúng kỵ lợn ở tick 36 (assert `knocked > 0` đã có sẵn, vẫn pass).
 - `benchmark.test.ts`: stress chính 120 địch từ S (trước: 30 × bốn mép); trần 2 ms/tick vẫn pass.
 - Không có bảng hash cố định để cập nhật.
+
+## Đo lại sau khi đổi wallY 64 → 88 (26/10/2026)
+`after_wally88.log` (cùng harness, 600 ca, seed 1..100). So với baseline trước T1:
+
+| Bot | Thắng trước → sau | Median năm |
+|---|---|---|
+| random | 0,0% → 0,0% | 12,5 → 10,0 |
+| scripted | 0,3% → 12,3% (+12,0 điểm) | 20 → 22 |
+
+Scripted theo vua: arcane 14%, stone 21% (+20), wheat 2%. So với lần đo `wallY` 64: scripted tổng +1,0 điểm, stone +3, các số khác đứng yên, số lần bot lỗi lệnh vẫn 3. Người dùng đã chấp nhận mức lệch của lần đo trước; `wallY` 88 chỉ thêm khoảng 1 điểm, không đổi kết luận. Cổng (10 điểm tổng, 15 mỗi vua) vẫn vượt như trước.
