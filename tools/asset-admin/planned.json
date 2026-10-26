@@ -9468,6 +9468,244 @@
       "note": "Ngân sách dual-grid tùy chọn, pipeline xuất chưa chốt: mask không rỗng. Manifest chỉ có biến thể, chưa xác nhận topology/mask; cần kiểm mép trước tích hợp."
     },
     {
+      "id": "terrain_mountain_wall_attach_boulder",
+      "label": "Tường núi — Đá lăn gắn chân vách",
+      "category": "terrain",
+      "w": 0,
+      "h": 0,
+      "kind": "object",
+      "group": "mountain_wall",
+      "tags": [
+        "mountain_wall",
+        "attachment"
+      ],
+      "source": "docs/ASSET_REQUIREMENTS.md:352 (§9.1)",
+      "priority": "P2",
+      "frames": 1,
+      "note": "Chưa có ảnh được duyệt (approval: none). Kích thước đề xuất 256×256 px ảnh, không giới hạn nguồn; đường chân và mật độ 2 px/đơn vị theo ASSET_REQUIREMENTS §9.1."
+    },
+    {
+      "id": "terrain_mountain_wall_attach_cave",
+      "label": "Tường núi — Hang tối trên vách",
+      "category": "terrain",
+      "w": 0,
+      "h": 0,
+      "kind": "object",
+      "group": "mountain_wall",
+      "tags": [
+        "mountain_wall",
+        "attachment"
+      ],
+      "source": "docs/ASSET_REQUIREMENTS.md:352 (§9.1)",
+      "priority": "P2",
+      "frames": 1,
+      "note": "Chưa có ảnh được duyệt (approval: none). Kích thước đề xuất 256×256 px ảnh, không giới hạn nguồn; đường chân và mật độ 2 px/đơn vị theo ASSET_REQUIREMENTS §9.1."
+    },
+    {
+      "id": "terrain_mountain_wall_attach_tree",
+      "label": "Tường núi — Cây mọc ngang vách",
+      "category": "terrain",
+      "w": 0,
+      "h": 0,
+      "kind": "object",
+      "group": "mountain_wall",
+      "tags": [
+        "mountain_wall",
+        "attachment"
+      ],
+      "source": "docs/ASSET_REQUIREMENTS.md:352 (§9.1)",
+      "priority": "P2",
+      "frames": 1,
+      "note": "Chưa có ảnh được duyệt (approval: none). Kích thước đề xuất 256×256 px ảnh, không giới hạn nguồn; đường chân và mật độ 2 px/đơn vị theo ASSET_REQUIREMENTS §9.1."
+    },
+    {
+      "id": "terrain_mountain_wall_attach_waterfall",
+      "label": "Tường núi — Thác nước nhỏ gắn vách",
+      "category": "terrain",
+      "w": 0,
+      "h": 0,
+      "kind": "object",
+      "group": "mountain_wall",
+      "tags": [
+        "mountain_wall",
+        "attachment"
+      ],
+      "source": "docs/ASSET_REQUIREMENTS.md:352 (§9.1)",
+      "priority": "P2",
+      "frames": 1,
+      "note": "Chưa có ảnh được duyệt (approval: none). Kích thước đề xuất 256×256 px ảnh, không giới hạn nguồn; đường chân và mật độ 2 px/đơn vị theo ASSET_REQUIREMENTS §9.1."
+    },
+    {
+      "id": "terrain_mountain_wall_cap_left",
+      "label": "Tường núi — Đầu nối trái",
+      "category": "terrain",
+      "w": 0,
+      "h": 0,
+      "kind": "object",
+      "group": "mountain_wall",
+      "tags": [
+        "mountain_wall",
+        "left"
+      ],
+      "source": "docs/ASSET_REQUIREMENTS.md:352 (§9.1)",
+      "priority": "P0",
+      "frames": 1,
+      "note": "Chưa có ảnh được duyệt (approval: none). Kích thước đề xuất 256×256 px ảnh, không giới hạn nguồn; đường chân và mật độ 2 px/đơn vị theo ASSET_REQUIREMENTS §9.1."
+    },
+    {
+      "id": "terrain_mountain_wall_cap_right",
+      "label": "Tường núi — Đầu nối phải",
+      "category": "terrain",
+      "w": 0,
+      "h": 0,
+      "kind": "object",
+      "group": "mountain_wall",
+      "tags": [
+        "mountain_wall",
+        "right"
+      ],
+      "source": "docs/ASSET_REQUIREMENTS.md:352 (§9.1)",
+      "priority": "P0",
+      "frames": 1,
+      "note": "Chưa có ảnh được duyệt (approval: none). Kích thước đề xuất 256×256 px ảnh, không giới hạn nguồn; đường chân và mật độ 2 px/đơn vị theo ASSET_REQUIREMENTS §9.1."
+    },
+    {
+      "id": "terrain_mountain_wall_far_0",
+      "label": "Tường núi — Lớp đỉnh núi xa",
+      "category": "terrain",
+      "w": 0,
+      "h": 0,
+      "kind": "object",
+      "group": "mountain_wall",
+      "tags": [
+        "mountain_wall",
+        "far"
+      ],
+      "source": "docs/ASSET_REQUIREMENTS.md:352 (§9.1)",
+      "priority": "P2",
+      "frames": 1,
+      "note": "Chưa có ảnh được duyệt (approval: none). Kích thước đề xuất 256×256 px ảnh, không giới hạn nguồn; đường chân và mật độ 2 px/đơn vị theo ASSET_REQUIREMENTS §9.1."
+    },
+    {
+      "id": "terrain_mountain_wall_foot_0",
+      "label": "Tường núi — Dải chân núi A",
+      "category": "terrain",
+      "w": 0,
+      "h": 0,
+      "kind": "object",
+      "group": "mountain_wall",
+      "tags": [
+        "mountain_wall",
+        "foot"
+      ],
+      "source": "docs/ASSET_REQUIREMENTS.md:352 (§9.1)",
+      "priority": "P0",
+      "frames": 1,
+      "note": "Chưa có ảnh được duyệt (approval: none). Kích thước đề xuất 512×64 px ảnh, không giới hạn nguồn; đường chân và mật độ 2 px/đơn vị theo ASSET_REQUIREMENTS §9.1."
+    },
+    {
+      "id": "terrain_mountain_wall_foot_1",
+      "label": "Tường núi — Dải chân núi B",
+      "category": "terrain",
+      "w": 0,
+      "h": 0,
+      "kind": "object",
+      "group": "mountain_wall",
+      "tags": [
+        "mountain_wall",
+        "foot"
+      ],
+      "source": "docs/ASSET_REQUIREMENTS.md:352 (§9.1)",
+      "priority": "P0",
+      "frames": 1,
+      "note": "Chưa có ảnh được duyệt (approval: none). Kích thước đề xuất 512×64 px ảnh, không giới hạn nguồn; đường chân và mật độ 2 px/đơn vị theo ASSET_REQUIREMENTS §9.1."
+    },
+    {
+      "id": "terrain_mountain_wall_foot_2",
+      "label": "Tường núi — Dải chân núi C",
+      "category": "terrain",
+      "w": 0,
+      "h": 0,
+      "kind": "object",
+      "group": "mountain_wall",
+      "tags": [
+        "mountain_wall",
+        "foot"
+      ],
+      "source": "docs/ASSET_REQUIREMENTS.md:352 (§9.1)",
+      "priority": "P0",
+      "frames": 1,
+      "note": "Chưa có ảnh được duyệt (approval: none). Kích thước đề xuất 512×64 px ảnh, không giới hạn nguồn; đường chân và mật độ 2 px/đơn vị theo ASSET_REQUIREMENTS §9.1."
+    },
+    {
+      "id": "terrain_mountain_wall_mid_0",
+      "label": "Tường núi — Đoạn giữa A",
+      "category": "terrain",
+      "w": 0,
+      "h": 0,
+      "kind": "object",
+      "group": "mountain_wall",
+      "tags": [
+        "mountain_wall",
+        "middle"
+      ],
+      "source": "docs/ASSET_REQUIREMENTS.md:352 (§9.1)",
+      "priority": "P0",
+      "frames": 1,
+      "note": "Chưa có ảnh được duyệt (approval: none). Kích thước đề xuất 512×256 px ảnh, không giới hạn nguồn; đường chân và mật độ 2 px/đơn vị theo ASSET_REQUIREMENTS §9.1."
+    },
+    {
+      "id": "terrain_mountain_wall_mid_1",
+      "label": "Tường núi — Đoạn giữa B",
+      "category": "terrain",
+      "w": 0,
+      "h": 0,
+      "kind": "object",
+      "group": "mountain_wall",
+      "tags": [
+        "mountain_wall",
+        "middle"
+      ],
+      "source": "docs/ASSET_REQUIREMENTS.md:352 (§9.1)",
+      "priority": "P0",
+      "frames": 1,
+      "note": "Chưa có ảnh được duyệt (approval: none). Kích thước đề xuất 512×256 px ảnh, không giới hạn nguồn; đường chân và mật độ 2 px/đơn vị theo ASSET_REQUIREMENTS §9.1."
+    },
+    {
+      "id": "terrain_mountain_wall_mid_2",
+      "label": "Tường núi — Đoạn giữa C",
+      "category": "terrain",
+      "w": 0,
+      "h": 0,
+      "kind": "object",
+      "group": "mountain_wall",
+      "tags": [
+        "mountain_wall",
+        "middle"
+      ],
+      "source": "docs/ASSET_REQUIREMENTS.md:352 (§9.1)",
+      "priority": "P0",
+      "frames": 1,
+      "note": "Chưa có ảnh được duyệt (approval: none). Kích thước đề xuất 512×256 px ảnh, không giới hạn nguồn; đường chân và mật độ 2 px/đơn vị theo ASSET_REQUIREMENTS §9.1."
+    },
+    {
+      "id": "terrain_mountain_wall_mid_3",
+      "label": "Tường núi — Đoạn giữa D",
+      "category": "terrain",
+      "w": 0,
+      "h": 0,
+      "kind": "object",
+      "group": "mountain_wall",
+      "tags": [
+        "mountain_wall",
+        "middle"
+      ],
+      "source": "docs/ASSET_REQUIREMENTS.md:352 (§9.1)",
+      "priority": "P0",
+      "frames": 1,
+      "note": "Chưa có ảnh được duyệt (approval: none). Kích thước đề xuất 512×256 px ảnh, không giới hạn nguồn; đường chân và mật độ 2 px/đơn vị theo ASSET_REQUIREMENTS §9.1."
+    },
+    {
       "id": "terrain_path_mask_01",
       "label": "Nền Đường đất — mặt nạ 0001",
       "category": "terrain",
@@ -10492,7 +10730,7 @@
       "tags": [
         "armor"
       ],
-      "source": "docs/ASSET_REQUIREMENTS.md:352 (§10)",
+      "source": "docs/ASSET_REQUIREMENTS.md:373 (§10)",
       "priority": "P0",
       "frames": 1
     },
@@ -10507,7 +10745,7 @@
       "tags": [
         "attack"
       ],
-      "source": "docs/ASSET_REQUIREMENTS.md:352 (§10)",
+      "source": "docs/ASSET_REQUIREMENTS.md:373 (§10)",
       "priority": "P0",
       "frames": 1
     },
@@ -10522,7 +10760,7 @@
       "tags": [
         "boulder"
       ],
-      "source": "docs/ASSET_REQUIREMENTS.md:352 (§10)",
+      "source": "docs/ASSET_REQUIREMENTS.md:373 (§10)",
       "priority": "P0",
       "frames": 1
     },
@@ -10537,7 +10775,7 @@
       "tags": [
         "burn"
       ],
-      "source": "docs/ASSET_REQUIREMENTS.md:352 (§10)",
+      "source": "docs/ASSET_REQUIREMENTS.md:373 (§10)",
       "priority": "P0",
       "frames": 1
     },
@@ -10552,7 +10790,7 @@
       "tags": [
         "conquest"
       ],
-      "source": "docs/ASSET_REQUIREMENTS.md:352 (§10)",
+      "source": "docs/ASSET_REQUIREMENTS.md:373 (§10)",
       "priority": "P0",
       "frames": 1
     },
@@ -10567,7 +10805,7 @@
       "tags": [
         "cooldown"
       ],
-      "source": "docs/ASSET_REQUIREMENTS.md:352 (§10)",
+      "source": "docs/ASSET_REQUIREMENTS.md:373 (§10)",
       "priority": "P0",
       "frames": 1
     },
@@ -10582,7 +10820,7 @@
       "tags": [
         "crown"
       ],
-      "source": "docs/ASSET_REQUIREMENTS.md:352 (§10)",
+      "source": "docs/ASSET_REQUIREMENTS.md:373 (§10)",
       "priority": "P0",
       "frames": 1
     },
@@ -10597,7 +10835,7 @@
       "tags": [
         "decree"
       ],
-      "source": "docs/ASSET_REQUIREMENTS.md:352 (§10)",
+      "source": "docs/ASSET_REQUIREMENTS.md:373 (§10)",
       "priority": "P0",
       "frames": 1
     },
@@ -10613,7 +10851,7 @@
         "decree_academy",
         "optional"
       ],
-      "source": "src/data/decrees.ts:138; docs/ASSET_REQUIREMENTS.md:352 (§10)",
+      "source": "src/data/decrees.ts:138; docs/ASSET_REQUIREMENTS.md:373 (§10)",
       "priority": "P2",
       "frames": 1,
       "note": "Ảnh riêng tùy chọn; mặc định tái dùng icon chung."
@@ -10630,7 +10868,7 @@
         "decree_amnesty",
         "optional"
       ],
-      "source": "src/data/decrees.ts:124; docs/ASSET_REQUIREMENTS.md:352 (§10)",
+      "source": "src/data/decrees.ts:124; docs/ASSET_REQUIREMENTS.md:373 (§10)",
       "priority": "P2",
       "frames": 1,
       "note": "Ảnh riêng tùy chọn; mặc định tái dùng icon chung."
@@ -10647,7 +10885,7 @@
         "decree_bigger_boulder",
         "optional"
       ],
-      "source": "src/data/decrees.ts:110; docs/ASSET_REQUIREMENTS.md:352 (§10)",
+      "source": "src/data/decrees.ts:110; docs/ASSET_REQUIREMENTS.md:373 (§10)",
       "priority": "P2",
       "frames": 1,
       "note": "Ảnh riêng tùy chọn; mặc định tái dùng icon chung."
@@ -10664,7 +10902,7 @@
         "decree_expand_borders",
         "optional"
       ],
-      "source": "src/data/decrees.ts:54; docs/ASSET_REQUIREMENTS.md:352 (§10)",
+      "source": "src/data/decrees.ts:54; docs/ASSET_REQUIREMENTS.md:373 (§10)",
       "priority": "P2",
       "frames": 1,
       "note": "Ảnh riêng tùy chọn; mặc định tái dùng icon chung."
@@ -10681,7 +10919,7 @@
         "decree_fourth_hand",
         "optional"
       ],
-      "source": "src/data/decrees.ts:103; docs/ASSET_REQUIREMENTS.md:352 (§10)",
+      "source": "src/data/decrees.ts:103; docs/ASSET_REQUIREMENTS.md:373 (§10)",
       "priority": "P2",
       "frames": 1,
       "note": "Ảnh riêng tùy chọn; mặc định tái dùng icon chung."
@@ -10698,7 +10936,7 @@
         "decree_harvest_tax",
         "optional"
       ],
-      "source": "src/data/decrees.ts:47; docs/ASSET_REQUIREMENTS.md:352 (§10)",
+      "source": "src/data/decrees.ts:47; docs/ASSET_REQUIREMENTS.md:373 (§10)",
       "priority": "P2",
       "frames": 1,
       "note": "Ảnh riêng tùy chọn; mặc định tái dùng icon chung."
@@ -10715,7 +10953,7 @@
         "decree_merchant_guild",
         "optional"
       ],
-      "source": "src/data/decrees.ts:96; docs/ASSET_REQUIREMENTS.md:352 (§10)",
+      "source": "src/data/decrees.ts:96; docs/ASSET_REQUIREMENTS.md:373 (§10)",
       "priority": "P2",
       "frames": 1,
       "note": "Ảnh riêng tùy chọn; mặc định tái dùng icon chung."
@@ -10732,7 +10970,7 @@
         "decree_moat",
         "optional"
       ],
-      "source": "src/data/decrees.ts:166; docs/ASSET_REQUIREMENTS.md:352 (§10)",
+      "source": "src/data/decrees.ts:166; docs/ASSET_REQUIREMENTS.md:373 (§10)",
       "priority": "P2",
       "frames": 1,
       "note": "Ảnh riêng tùy chọn; mặc định tái dùng icon chung."
@@ -10749,7 +10987,7 @@
         "decree_mobilize",
         "optional"
       ],
-      "source": "src/data/decrees.ts:61; docs/ASSET_REQUIREMENTS.md:352 (§10)",
+      "source": "src/data/decrees.ts:61; docs/ASSET_REQUIREMENTS.md:373 (§10)",
       "priority": "P2",
       "frames": 1,
       "note": "Ảnh riêng tùy chọn; mặc định tái dùng icon chung."
@@ -10766,7 +11004,7 @@
         "decree_new_armor",
         "optional"
       ],
-      "source": "src/data/decrees.ts:82; docs/ASSET_REQUIREMENTS.md:352 (§10)",
+      "source": "src/data/decrees.ts:82; docs/ASSET_REQUIREMENTS.md:373 (§10)",
       "priority": "P2",
       "frames": 1,
       "note": "Ảnh riêng tùy chọn; mặc định tái dùng icon chung."
@@ -10783,7 +11021,7 @@
         "decree_purge",
         "optional"
       ],
-      "source": "src/data/decrees.ts:145; docs/ASSET_REQUIREMENTS.md:352 (§10)",
+      "source": "src/data/decrees.ts:145; docs/ASSET_REQUIREMENTS.md:373 (§10)",
       "priority": "P2",
       "frames": 1,
       "note": "Ảnh riêng tùy chọn; mặc định tái dùng icon chung."
@@ -10800,7 +11038,7 @@
         "decree_quick_reflex",
         "optional"
       ],
-      "source": "src/data/decrees.ts:117; docs/ASSET_REQUIREMENTS.md:352 (§10)",
+      "source": "src/data/decrees.ts:117; docs/ASSET_REQUIREMENTS.md:373 (§10)",
       "priority": "P2",
       "frames": 1,
       "note": "Ảnh riêng tùy chọn; mặc định tái dùng icon chung."
@@ -10817,7 +11055,7 @@
         "decree_recast_crown",
         "optional"
       ],
-      "source": "src/data/decrees.ts:68; docs/ASSET_REQUIREMENTS.md:352 (§10)",
+      "source": "src/data/decrees.ts:68; docs/ASSET_REQUIREMENTS.md:373 (§10)",
       "priority": "P2",
       "frames": 1,
       "note": "Ảnh riêng tùy chọn; mặc định tái dùng icon chung."
@@ -10834,7 +11072,7 @@
         "decree_royal_archers",
         "optional"
       ],
-      "source": "src/data/decrees.ts:89; docs/ASSET_REQUIREMENTS.md:352 (§10)",
+      "source": "src/data/decrees.ts:89; docs/ASSET_REQUIREMENTS.md:373 (§10)",
       "priority": "P2",
       "frames": 1,
       "note": "Ảnh riêng tùy chọn; mặc định tái dùng icon chung."
@@ -10851,7 +11089,7 @@
         "decree_royal_armory",
         "optional"
       ],
-      "source": "src/data/decrees.ts:75; docs/ASSET_REQUIREMENTS.md:352 (§10)",
+      "source": "src/data/decrees.ts:75; docs/ASSET_REQUIREMENTS.md:373 (§10)",
       "priority": "P2",
       "frames": 1,
       "note": "Ảnh riêng tùy chọn; mặc định tái dùng icon chung."
@@ -10868,7 +11106,7 @@
         "decree_rune_festival",
         "optional"
       ],
-      "source": "src/data/decrees.ts:159; docs/ASSET_REQUIREMENTS.md:352 (§10)",
+      "source": "src/data/decrees.ts:159; docs/ASSET_REQUIREMENTS.md:373 (§10)",
       "priority": "P2",
       "frames": 1,
       "note": "Ảnh riêng tùy chọn; mặc định tái dùng icon chung."
@@ -10885,7 +11123,7 @@
         "decree_trade",
         "optional"
       ],
-      "source": "src/data/decrees.ts:152; docs/ASSET_REQUIREMENTS.md:352 (§10)",
+      "source": "src/data/decrees.ts:152; docs/ASSET_REQUIREMENTS.md:373 (§10)",
       "priority": "P2",
       "frames": 1,
       "note": "Ảnh riêng tùy chọn; mặc định tái dùng icon chung."
@@ -10902,7 +11140,7 @@
         "decree_treasury",
         "optional"
       ],
-      "source": "src/data/decrees.ts:131; docs/ASSET_REQUIREMENTS.md:352 (§10)",
+      "source": "src/data/decrees.ts:131; docs/ASSET_REQUIREMENTS.md:373 (§10)",
       "priority": "P2",
       "frames": 1,
       "note": "Ảnh riêng tùy chọn; mặc định tái dùng icon chung."
@@ -10918,7 +11156,7 @@
       "tags": [
         "difficulty"
       ],
-      "source": "docs/ASSET_REQUIREMENTS.md:352 (§10)",
+      "source": "docs/ASSET_REQUIREMENTS.md:373 (§10)",
       "priority": "P1",
       "frames": 1
     },
@@ -10933,7 +11171,7 @@
       "tags": [
         "disabled"
       ],
-      "source": "docs/ASSET_REQUIREMENTS.md:352 (§10)",
+      "source": "docs/ASSET_REQUIREMENTS.md:373 (§10)",
       "priority": "P0",
       "frames": 1
     },
@@ -10948,7 +11186,7 @@
       "tags": [
         "economy"
       ],
-      "source": "docs/ASSET_REQUIREMENTS.md:352 (§10)",
+      "source": "docs/ASSET_REQUIREMENTS.md:373 (§10)",
       "priority": "P0",
       "frames": 1
     },
@@ -10963,7 +11201,7 @@
       "tags": [
         "enchant_stack"
       ],
-      "source": "docs/ASSET_REQUIREMENTS.md:352 (§10)",
+      "source": "docs/ASSET_REQUIREMENTS.md:373 (§10)",
       "priority": "P0",
       "frames": 1
     },
@@ -10978,7 +11216,7 @@
       "tags": [
         "enchantment"
       ],
-      "source": "docs/ASSET_REQUIREMENTS.md:352 (§10)",
+      "source": "docs/ASSET_REQUIREMENTS.md:373 (§10)",
       "priority": "P0",
       "frames": 1
     },
@@ -10993,7 +11231,7 @@
       "tags": [
         "flying"
       ],
-      "source": "docs/ASSET_REQUIREMENTS.md:352 (§10)",
+      "source": "docs/ASSET_REQUIREMENTS.md:373 (§10)",
       "priority": "P0",
       "frames": 1
     },
@@ -11008,7 +11246,7 @@
       "tags": [
         "gold"
       ],
-      "source": "docs/ASSET_REQUIREMENTS.md:352 (§10)",
+      "source": "docs/ASSET_REQUIREMENTS.md:373 (§10)",
       "priority": "P0",
       "frames": 1
     },
@@ -11023,7 +11261,7 @@
       "tags": [
         "heal"
       ],
-      "source": "docs/ASSET_REQUIREMENTS.md:352 (§10)",
+      "source": "docs/ASSET_REQUIREMENTS.md:373 (§10)",
       "priority": "P0",
       "frames": 1
     },
@@ -11173,7 +11411,7 @@
       "tags": [
         "level"
       ],
-      "source": "docs/ASSET_REQUIREMENTS.md:352 (§10)",
+      "source": "docs/ASSET_REQUIREMENTS.md:373 (§10)",
       "priority": "P0",
       "frames": 1
     },
@@ -11188,7 +11426,7 @@
       "tags": [
         "life"
       ],
-      "source": "docs/ASSET_REQUIREMENTS.md:352 (§10)",
+      "source": "docs/ASSET_REQUIREMENTS.md:373 (§10)",
       "priority": "P0",
       "frames": 1
     },
@@ -11203,7 +11441,7 @@
       "tags": [
         "lock"
       ],
-      "source": "docs/ASSET_REQUIREMENTS.md:352 (§10)",
+      "source": "docs/ASSET_REQUIREMENTS.md:373 (§10)",
       "priority": "P0",
       "frames": 1
     },
@@ -11218,7 +11456,7 @@
       "tags": [
         "move"
       ],
-      "source": "docs/ASSET_REQUIREMENTS.md:352 (§10)",
+      "source": "docs/ASSET_REQUIREMENTS.md:373 (§10)",
       "priority": "P0",
       "frames": 1
     },
@@ -11233,7 +11471,7 @@
       "tags": [
         "music"
       ],
-      "source": "docs/ASSET_REQUIREMENTS.md:352 (§10)",
+      "source": "docs/ASSET_REQUIREMENTS.md:373 (§10)",
       "priority": "P2",
       "frames": 1
     },
@@ -11248,7 +11486,7 @@
       "tags": [
         "pause"
       ],
-      "source": "docs/ASSET_REQUIREMENTS.md:352 (§10)",
+      "source": "docs/ASSET_REQUIREMENTS.md:373 (§10)",
       "priority": "P0",
       "frames": 1
     },
@@ -11265,7 +11503,7 @@
         "optional",
         "unfinalized"
       ],
-      "source": "docs/ASSET_REQUIREMENTS.md:352 (§10); docs/ASSET_INVENTORY.md:353 (§7)",
+      "source": "docs/ASSET_REQUIREMENTS.md:373 (§10); docs/ASSET_INVENTORY.md:353 (§7)",
       "priority": "P2",
       "frames": 27,
       "note": "Tùy chọn 27 icon độc lập; chưa có PerkId trong src/data, tên ID/canvas chưa chốt. Dùng icon chung trước; không giả tạo 27 runtime ID."
@@ -11281,7 +11519,7 @@
       "tags": [
         "poison"
       ],
-      "source": "docs/ASSET_REQUIREMENTS.md:352 (§10)",
+      "source": "docs/ASSET_REQUIREMENTS.md:373 (§10)",
       "priority": "P0",
       "frames": 1
     },
@@ -11296,7 +11534,7 @@
       "tags": [
         "quest"
       ],
-      "source": "docs/ASSET_REQUIREMENTS.md:352 (§10)",
+      "source": "docs/ASSET_REQUIREMENTS.md:373 (§10)",
       "priority": "P0",
       "frames": 1
     },
@@ -11312,7 +11550,7 @@
         "quest_blitz",
         "optional"
       ],
-      "source": "src/data/quests.ts:100; docs/ASSET_REQUIREMENTS.md:352 (§10)",
+      "source": "src/data/quests.ts:100; docs/ASSET_REQUIREMENTS.md:373 (§10)",
       "priority": "P2",
       "frames": 1,
       "note": "Ảnh riêng tùy chọn; mặc định tái dùng icon chung."
@@ -11329,7 +11567,7 @@
         "quest_diversity",
         "optional"
       ],
-      "source": "src/data/quests.ts:132; docs/ASSET_REQUIREMENTS.md:352 (§10)",
+      "source": "src/data/quests.ts:132; docs/ASSET_REQUIREMENTS.md:373 (§10)",
       "priority": "P2",
       "frames": 1,
       "note": "Ảnh riêng tùy chọn; mặc định tái dùng icon chung."
@@ -11346,7 +11584,7 @@
         "quest_double_rune",
         "optional"
       ],
-      "source": "src/data/quests.ts:76; docs/ASSET_REQUIREMENTS.md:352 (§10)",
+      "source": "src/data/quests.ts:76; docs/ASSET_REQUIREMENTS.md:373 (§10)",
       "priority": "P2",
       "frames": 1,
       "note": "Ảnh riêng tùy chọn; mặc định tái dùng icon chung."
@@ -11363,7 +11601,7 @@
         "quest_hoard",
         "optional"
       ],
-      "source": "src/data/quests.ts:108; docs/ASSET_REQUIREMENTS.md:352 (§10)",
+      "source": "src/data/quests.ts:108; docs/ASSET_REQUIREMENTS.md:373 (§10)",
       "priority": "P2",
       "frames": 1,
       "note": "Ảnh riêng tùy chọn; mặc định tái dùng icon chung."
@@ -11380,7 +11618,7 @@
         "quest_land_grab",
         "optional"
       ],
-      "source": "src/data/quests.ts:84; docs/ASSET_REQUIREMENTS.md:352 (§10)",
+      "source": "src/data/quests.ts:84; docs/ASSET_REQUIREMENTS.md:373 (§10)",
       "priority": "P2",
       "frames": 1,
       "note": "Ảnh riêng tùy chọn; mặc định tái dùng icon chung."
@@ -11397,7 +11635,7 @@
         "quest_master_builder",
         "optional"
       ],
-      "source": "src/data/quests.ts:92; docs/ASSET_REQUIREMENTS.md:352 (§10)",
+      "source": "src/data/quests.ts:92; docs/ASSET_REQUIREMENTS.md:373 (§10)",
       "priority": "P2",
       "frames": 1,
       "note": "Ảnh riêng tùy chọn; mặc định tái dùng icon chung."
@@ -11414,7 +11652,7 @@
         "quest_no_help",
         "optional"
       ],
-      "source": "src/data/quests.ts:116; docs/ASSET_REQUIREMENTS.md:352 (§10)",
+      "source": "src/data/quests.ts:116; docs/ASSET_REQUIREMENTS.md:373 (§10)",
       "priority": "P2",
       "frames": 1,
       "note": "Ảnh riêng tùy chọn; mặc định tái dùng icon chung."
@@ -11431,7 +11669,7 @@
         "quest_no_reroll",
         "optional"
       ],
-      "source": "src/data/quests.ts:60; docs/ASSET_REQUIREMENTS.md:352 (§10)",
+      "source": "src/data/quests.ts:60; docs/ASSET_REQUIREMENTS.md:373 (§10)",
       "priority": "P2",
       "frames": 1,
       "note": "Ảnh riêng tùy chọn; mặc định tái dùng icon chung."
@@ -11448,7 +11686,7 @@
         "quest_offering",
         "optional"
       ],
-      "source": "src/data/quests.ts:124; docs/ASSET_REQUIREMENTS.md:352 (§10)",
+      "source": "src/data/quests.ts:124; docs/ASSET_REQUIREMENTS.md:373 (§10)",
       "priority": "P2",
       "frames": 1,
       "note": "Ảnh riêng tùy chọn; mặc định tái dùng icon chung."
@@ -11465,7 +11703,7 @@
         "quest_slaughter",
         "optional"
       ],
-      "source": "src/data/quests.ts:68; docs/ASSET_REQUIREMENTS.md:352 (§10)",
+      "source": "src/data/quests.ts:68; docs/ASSET_REQUIREMENTS.md:373 (§10)",
       "priority": "P2",
       "frames": 1,
       "note": "Ảnh riêng tùy chọn; mặc định tái dùng icon chung."
@@ -11482,7 +11720,7 @@
         "quest_three_barracks",
         "optional"
       ],
-      "source": "src/data/quests.ts:52; docs/ASSET_REQUIREMENTS.md:352 (§10)",
+      "source": "src/data/quests.ts:52; docs/ASSET_REQUIREMENTS.md:373 (§10)",
       "priority": "P2",
       "frames": 1,
       "note": "Ảnh riêng tùy chọn; mặc định tái dùng icon chung."
@@ -11499,7 +11737,7 @@
         "quest_untouched",
         "optional"
       ],
-      "source": "src/data/quests.ts:44; docs/ASSET_REQUIREMENTS.md:352 (§10)",
+      "source": "src/data/quests.ts:44; docs/ASSET_REQUIREMENTS.md:373 (§10)",
       "priority": "P2",
       "frames": 1,
       "note": "Ảnh riêng tùy chọn; mặc định tái dùng icon chung."
@@ -11516,7 +11754,7 @@
         "quest_wager",
         "optional"
       ],
-      "source": "src/data/quests.ts:140; docs/ASSET_REQUIREMENTS.md:352 (§10)",
+      "source": "src/data/quests.ts:140; docs/ASSET_REQUIREMENTS.md:373 (§10)",
       "priority": "P2",
       "frames": 1,
       "note": "Ảnh riêng tùy chọn; mặc định tái dùng icon chung."
@@ -11532,7 +11770,7 @@
       "tags": [
         "range"
       ],
-      "source": "docs/ASSET_REQUIREMENTS.md:352 (§10)",
+      "source": "docs/ASSET_REQUIREMENTS.md:373 (§10)",
       "priority": "P0",
       "frames": 1
     },
@@ -11547,7 +11785,7 @@
       "tags": [
         "reroll"
       ],
-      "source": "docs/ASSET_REQUIREMENTS.md:352 (§10)",
+      "source": "docs/ASSET_REQUIREMENTS.md:373 (§10)",
       "priority": "P0",
       "frames": 1
     },
@@ -11562,7 +11800,7 @@
       "tags": [
         "revive"
       ],
-      "source": "docs/ASSET_REQUIREMENTS.md:352 (§10)",
+      "source": "docs/ASSET_REQUIREMENTS.md:373 (§10)",
       "priority": "P0",
       "frames": 1
     },
@@ -11577,7 +11815,7 @@
       "tags": [
         "sacrifice"
       ],
-      "source": "docs/ASSET_REQUIREMENTS.md:352 (§10)",
+      "source": "docs/ASSET_REQUIREMENTS.md:373 (§10)",
       "priority": "P0",
       "frames": 1
     },
@@ -11592,7 +11830,7 @@
       "tags": [
         "save"
       ],
-      "source": "docs/ASSET_REQUIREMENTS.md:352 (§10)",
+      "source": "docs/ASSET_REQUIREMENTS.md:373 (§10)",
       "priority": "P0",
       "frames": 1
     },
@@ -11607,7 +11845,7 @@
       "tags": [
         "settings"
       ],
-      "source": "docs/ASSET_REQUIREMENTS.md:352 (§10)",
+      "source": "docs/ASSET_REQUIREMENTS.md:373 (§10)",
       "priority": "P2",
       "frames": 1
     },
@@ -11622,7 +11860,7 @@
       "tags": [
         "shield"
       ],
-      "source": "docs/ASSET_REQUIREMENTS.md:352 (§10)",
+      "source": "docs/ASSET_REQUIREMENTS.md:373 (§10)",
       "priority": "P0",
       "frames": 1
     },
@@ -11637,7 +11875,7 @@
       "tags": [
         "skull"
       ],
-      "source": "docs/ASSET_REQUIREMENTS.md:352 (§10)",
+      "source": "docs/ASSET_REQUIREMENTS.md:373 (§10)",
       "priority": "P0",
       "frames": 1
     },
@@ -11652,7 +11890,7 @@
       "tags": [
         "slow"
       ],
-      "source": "docs/ASSET_REQUIREMENTS.md:352 (§10)",
+      "source": "docs/ASSET_REQUIREMENTS.md:373 (§10)",
       "priority": "P0",
       "frames": 1
     },
@@ -11667,7 +11905,7 @@
       "tags": [
         "soul"
       ],
-      "source": "docs/ASSET_REQUIREMENTS.md:352 (§10)",
+      "source": "docs/ASSET_REQUIREMENTS.md:373 (§10)",
       "priority": "P0",
       "frames": 1
     },
@@ -11682,7 +11920,7 @@
       "tags": [
         "sound"
       ],
-      "source": "docs/ASSET_REQUIREMENTS.md:352 (§10)",
+      "source": "docs/ASSET_REQUIREMENTS.md:373 (§10)",
       "priority": "P2",
       "frames": 1
     },
@@ -11697,7 +11935,7 @@
       "tags": [
         "speed"
       ],
-      "source": "docs/ASSET_REQUIREMENTS.md:352 (§10)",
+      "source": "docs/ASSET_REQUIREMENTS.md:373 (§10)",
       "priority": "P0",
       "frames": 1
     },
@@ -11712,7 +11950,7 @@
       "tags": [
         "stun"
       ],
-      "source": "docs/ASSET_REQUIREMENTS.md:352 (§10)",
+      "source": "docs/ASSET_REQUIREMENTS.md:373 (§10)",
       "priority": "P0",
       "frames": 1
     },
@@ -11727,7 +11965,7 @@
       "tags": [
         "support"
       ],
-      "source": "docs/ASSET_REQUIREMENTS.md:352 (§10)",
+      "source": "docs/ASSET_REQUIREMENTS.md:373 (§10)",
       "priority": "P0",
       "frames": 1
     },
@@ -11742,7 +11980,7 @@
       "tags": [
         "throne"
       ],
-      "source": "docs/ASSET_REQUIREMENTS.md:352 (§10)",
+      "source": "docs/ASSET_REQUIREMENTS.md:373 (§10)",
       "priority": "P0",
       "frames": 1
     },
@@ -11757,7 +11995,7 @@
       "tags": [
         "tome"
       ],
-      "source": "docs/ASSET_REQUIREMENTS.md:352 (§10)",
+      "source": "docs/ASSET_REQUIREMENTS.md:373 (§10)",
       "priority": "P0",
       "frames": 1
     },
@@ -11772,7 +12010,7 @@
       "tags": [
         "tower"
       ],
-      "source": "docs/ASSET_REQUIREMENTS.md:352 (§10)",
+      "source": "docs/ASSET_REQUIREMENTS.md:373 (§10)",
       "priority": "P0",
       "frames": 1
     },
@@ -11787,7 +12025,7 @@
       "tags": [
         "troop"
       ],
-      "source": "docs/ASSET_REQUIREMENTS.md:352 (§10)",
+      "source": "docs/ASSET_REQUIREMENTS.md:373 (§10)",
       "priority": "P0",
       "frames": 1
     },
@@ -11802,7 +12040,7 @@
       "tags": [
         "unlock"
       ],
-      "source": "docs/ASSET_REQUIREMENTS.md:352 (§10)",
+      "source": "docs/ASSET_REQUIREMENTS.md:373 (§10)",
       "priority": "P0",
       "frames": 1
     },
@@ -11817,7 +12055,7 @@
       "tags": [
         "upgrade"
       ],
-      "source": "docs/ASSET_REQUIREMENTS.md:352 (§10)",
+      "source": "docs/ASSET_REQUIREMENTS.md:373 (§10)",
       "priority": "P0",
       "frames": 1
     },
@@ -12230,7 +12468,7 @@
       "tags": [
         "optional"
       ],
-      "source": "docs/ASSET_REQUIREMENTS.md:352 (§10)",
+      "source": "docs/ASSET_REQUIREMENTS.md:373 (§10)",
       "priority": "P2",
       "frames": 1,
       "note": "Xuất phát hành tùy chọn; canvas/kích thước chốt theo kênh, không giả định store."
@@ -12246,7 +12484,7 @@
       "tags": [
         "optional"
       ],
-      "source": "docs/ASSET_REQUIREMENTS.md:352 (§10)",
+      "source": "docs/ASSET_REQUIREMENTS.md:373 (§10)",
       "priority": "P2",
       "frames": 1,
       "note": "Xuất phát hành tùy chọn; canvas/kích thước chốt theo kênh, không giả định store."
@@ -12262,7 +12500,7 @@
       "tags": [
         "optional"
       ],
-      "source": "docs/ASSET_REQUIREMENTS.md:352 (§10)",
+      "source": "docs/ASSET_REQUIREMENTS.md:373 (§10)",
       "priority": "P2",
       "frames": 1,
       "note": "Xuất phát hành tùy chọn; canvas/kích thước chốt theo kênh, không giả định store."
@@ -12278,7 +12516,7 @@
       "tags": [
         "optional"
       ],
-      "source": "docs/ASSET_REQUIREMENTS.md:352 (§10)",
+      "source": "docs/ASSET_REQUIREMENTS.md:373 (§10)",
       "priority": "P2",
       "frames": 1,
       "note": "Xuất phát hành tùy chọn; canvas/kích thước chốt theo kênh, không giả định store."
@@ -12294,7 +12532,7 @@
       "tags": [
         "optional"
       ],
-      "source": "docs/ASSET_REQUIREMENTS.md:352 (§10)",
+      "source": "docs/ASSET_REQUIREMENTS.md:373 (§10)",
       "priority": "P2",
       "frames": 1,
       "note": "Xuất phát hành tùy chọn; canvas/kích thước chốt theo kênh, không giả định store."

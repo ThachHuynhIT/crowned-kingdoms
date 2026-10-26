@@ -5,10 +5,13 @@ parsed as data, never executed. Counts and source shapes deliberately fail close
 """
 from pathlib import Path
 import json
+import sys
 import re
 from collections import Counter
 
 ROOT = Path(__file__).resolve().parents[1]
+sys.path.insert(0, str(Path(__file__).resolve().parent))
+from slice_mountain_wall import wall_covered  # noqa: E402
 REQ = 'docs/ASSET_REQUIREMENTS.md'
 INV = 'docs/ASSET_INVENTORY.md'
 
@@ -106,11 +109,11 @@ def records(path):
     return result
 
 
-def build():
+def build(manifest_path='tools/asset-admin/manifest.json', catalog_path='docs/art-review/oblique-wall/catalog.json'):
     # Read all four policy sources every run; availability alone comes from manifest.
     for path in (REQ, INV, 'docs/ASSET_PRODUCTION_RULES.md', 'docs/ART_STYLE.md'):
         require(read(path).strip(), f'{path}: empty source')
-    manifest = json.loads(read('tools/asset-admin/manifest.json'))
+    manifest = json.loads(read(manifest_path))
     require(isinstance(manifest, dict) and manifest.get('version') == 1
             and isinstance(manifest.get('categories'), list), 'Invalid manifest schema/version')
     available = {}
@@ -248,6 +251,16 @@ def build():
     for label, ids in [('3 cây',['wild_tree_pine_dark','wild_tree_pine_light','wild_tree_oak']), ('3 bụi',['wild_bush_green','wild_bush_berry','wild_bush_dry']), ('3 đá',['wild_rock_large','wild_rock_medium','wild_rock_small'])]:
         require(all(i in available for i in ids), 'Wild aliases changed')
         aliases.append(dict(requirement=label, available=ids, note='Ánh xạ thủ công theo mục đích §9; không sản xuất bộ trùng. Cây autumn và wild khác là ảnh bổ sung hiện có.'))
+    # Tường núi sau lưng lâu đài (spec 26/10/2026): mỗi ảnh một mục; chỉ loại khi đủ mọi part đã duyệt nằm trong manifest.
+    wall_catalog = json.loads(read(catalog_path))
+    done = wall_covered(wall_catalog, available.keys())
+    for entry in wall_catalog['items']:
+        if entry['id'] in done:
+            continue
+        prop = entry['proposed']
+        add(entry['id'], entry['label'], 'terrain', (0, 0), entry['priority'], f'{REQ}:§9.1', kind='object', group='mountain_wall',
+            note=f'Chưa có ảnh được duyệt (approval: {entry["approval"]}). Kích thước đề xuất {prop["w"]}×{prop["h"]} px ảnh, không giới hạn nguồn; đường chân và mật độ 2 px/đơn vị theo ASSET_REQUIREMENTS §9.1.',
+            tags=('mountain_wall', entry['role']))
     decor = [('fence_horizontal','Hàng rào ngang'),('fence_vertical','Hàng rào dọc'),('fence_ne','Góc rào đông bắc'),('fence_nw','Góc rào tây bắc'),('fence_se','Góc rào đông nam'),('fence_sw','Góc rào tây nam'),('gate','Cổng'),('wheat_cart','Xe lúa'),('barrel','Thùng'),('haystack','Đống rơm'),('sign','Biển')]
     for ident, label in decor:
         add('wild_'+ident, label, 'wilds', source=f'{REQ}:§9', priority='P2', note='Canvas chưa chốt; đồ nhỏ đề xuất 16×16 world →32×32 ảnh, neo chân/y-sort.', tags=('decor','optional'))

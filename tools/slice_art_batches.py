@@ -7,6 +7,7 @@ Run from the repo root: python tools/slice_art_batches.py
 from pathlib import Path
 from collections import deque
 import json
+import sys
 import numpy as np
 from PIL import Image, ImageFilter
 
@@ -163,6 +164,13 @@ for card, f, label in (('wheat_militia', 'cottage', 'Nhà Dân Quân (nhà tranh
 for i in range(3):
     im = Image.open(OUT / f'grass_{i}.png')
     add('terrain', 'Nền đất', tile_item(f'terrain_grass_{i}', f'grass {i}', f'{URL}/grass_{i}.png', im.size, 'grass', ['grass']))
+
+# ---- mountain wall (adopted, hash-checked parts only; plan 26/10/2026 T8) ----
+sys.path.insert(0, str(Path(__file__).resolve().parent))
+from slice_mountain_wall import adopted_wall_items  # noqa: E402
+wall_catalog = json.loads((ROOT / 'docs/art-review/oblique-wall/catalog.json').read_text(encoding='utf-8'))
+for item in adopted_wall_items(wall_catalog, ROOT):
+    add('terrain', 'Nền đất', item)
 
 order = ['units', 'buildings', 'terrain', 'plots', 'wilds']
 manifest = {'version': 1, 'pixelScale': 2, 'categories': [categories[c] for c in order if c in categories]}
