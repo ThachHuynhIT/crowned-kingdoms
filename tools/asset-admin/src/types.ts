@@ -25,6 +25,23 @@ export interface LoadedManifest extends Manifest {
   items: Item[];
   error?: string;
 }
+export type AssetPriority = 'P0' | 'P1' | 'P2';
+export interface PlannedItem {
+  id: string;
+  label: string;
+  category: string;
+  w: number;
+  h: number;
+  kind: Item['kind'];
+  group: string;
+  tags: string[];
+  frames?: number;
+  source: string;
+  priority: AssetPriority;
+  note?: string;
+}
+export interface PlannedFile { version: 1; items: PlannedItem[] }
+export interface LoadedPlanned extends PlannedFile { error?: string }
 export interface Point { x: number; y: number }
 export interface Rect extends Point { w: number; h: number }
 export interface MapItem extends Point { id: string; flip: boolean; team: Team }
@@ -35,6 +52,32 @@ export function isRecord(value: unknown): value is Record<string, unknown> {
 }
 function isStringArray(value: unknown): value is string[] {
   return Array.isArray(value) && value.every((entry: unknown) => typeof entry === 'string');
+}
+function isPlannedItem(value: unknown): value is PlannedItem {
+  if (!isRecord(value)) return false;
+  return typeof value.id === 'string' && value.id.trim().length > 0
+    && typeof value.label === 'string' && value.label.trim().length > 0
+    && typeof value.category === 'string' && value.category.trim().length > 0
+    && typeof value.w === 'number' && typeof value.h === 'number'
+    && Number.isInteger(value.w) && Number.isInteger(value.h) && value.w >= 0 && value.h >= 0
+    && (value.kind === 'tile' || value.kind === 'object' || value.kind === 'unit')
+    && typeof value.group === 'string' && isStringArray(value.tags)
+    && (value.frames === undefined || (typeof value.frames === 'number' && Number.isInteger(value.frames) && value.frames > 0))
+    && typeof value.source === 'string' && value.source.trim().length > 0
+    && (value.priority === 'P0' || value.priority === 'P1' || value.priority === 'P2')
+    && (value.note === undefined || typeof value.note === 'string')
+    && ((value.w > 0 && value.h > 0) || (typeof value.note === 'string' && value.note.trim().length > 0));
+}
+export function isPlannedFile(value: unknown): value is PlannedFile {
+  if (!isRecord(value) || value.version !== 1 || !Array.isArray(value.items)) return false;
+  const items: unknown[] = value.items;
+  if (!items.every(isPlannedItem)) return false;
+  const ids = new Set<string>();
+  for (const item of items) {
+    if (ids.has(item.id)) return false;
+    ids.add(item.id);
+  }
+  return true;
 }
 function isUnitFrames(value: unknown): value is UnitFrames {
   if (!isRecord(value)) return false;

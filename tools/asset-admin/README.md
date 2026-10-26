@@ -97,3 +97,46 @@ Claude cần chạy `npm run typecheck`, `npm run lint`, `npm run admin`, sau đ
 
 Cần xác nhận đường dẫn root Windows và chính sách truy cập tệp của Vite thực tế;
 không dùng kết quả rà server cũ để khẳng định bảo mật server mới.
+
+## Danh sách asset chưa có ảnh
+
+`planned.json` tách riêng khỏi `manifest.json`: manifest là ảnh đã có trong danh
+mục quản trị, planned là các bộ ảnh/frame còn thiếu. Sinh lại từ gốc repo bằng
+`python tools/build_planned_assets.py` (Python 3, chỉ thư viện chuẩn).
+Script chỉ ghi `tools/asset-admin/planned.json`, đọc tài liệu yêu cầu/kiểm kê,
+quy chuẩn và ID/kích thước thật trong `src/data`; không chạy mã TypeScript.
+Nó kiểm cấu trúc nguồn và ID, sắp xếp ổn định, loại ID đã có trong manifest;
+ánh xạ tên khác và lý do dùng lại được ghi trong `metadata.aliases`.
+Không chỉnh tay file sinh ra và không đưa planned vào script cắt manifest.
+
+- P0: ảnh cần cho nội dung G1–G3 hiện có, gồm quân địch và 54 thẻ chinh phục
+  của sáu phe sau; mốc G4 ở một số bảng tài liệu cũ không phản ánh việc này.
+- P1: nội dung người chơi G4 (Ngai sáu vua sau, hai thẻ meta, biểu tượng độ khó).
+- P2: đề xuất/tùy chọn: kiến trúc L2/L3, animation bổ sung, dual-grid chưa chốt
+  pipeline, skin UI, icon nội dung riêng và hình nền/phát hành. Không coi đây là việc
+  đang chặn chơi game hay mặc định renderer đã hỗ trợ.
+
+Kích thước dùng px ảnh (world ×2); `0×0` và `note` chỉ rõ phần cần chốt.
+Canvas bộ bổ sung của quân đã có giữ metadata ảnh hiện tại. Một mục là một
+bộ/thiết kế, không phải một PNG hoặc một frame: `frames` là dự trù; ví dụ bộ
+animation bổ sung của quân là 14 frame để nâng 6 lên 20, không phải thêm 20.
+Perk chưa có ID runtime được gom một bộ tùy chọn 27 mục, không bịa 27 ID game.
+Ô Ngai `plot_*_throne` không thay sprite công trình `building_*_throne`.
+Procedural/Kenney và hình đã render trong game không mặc định nằm trong manifest;
+các ghi chú tương ứng phân biệt thiếu ảnh kiểm kê với thiếu chức năng UI.
+
+Trang `/admin` gộp hai nguồn để hiện ô nét đứt “Chưa có”, không tạo yêu cầu ảnh.
+Tab mới chỉ có planned vẫn hiện. Bộ lọc trạng thái/nhóm/tìm kiếm kết hợp nhau;
+chọn P0/P1/P2 chỉ hiện mục chưa có với ưu tiên đó vì ảnh đã có không có priority.
+Đếm tab/tổng luôn là toàn bộ danh mục, không đổi theo bộ lọc. Cả hai nút sao chép
+Markdown và tải `planned-missing.json` xuất toàn bộ mục thiếu, không phụ thuộc
+bộ lọc. Nếu nạp planned/manifest lỗi, có cảnh báo riêng; nút xuất bị vô hiệu để
+tránh giao danh sách thiếu dữ liệu. Ảnh đã có vẫn dùng được khi chỉ planned lỗi.
+
+Trang `/admin/map` tiếp tục chỉ đọc manifest: planned bị ẩn hoàn toàn, không thể
+kéo/chọn/rải hoặc lọt vào JSON/PNG bản đồ. Không thay đổi schema export bản đồ.
+
+Lượt này đã kiểm generator bằng Python và rà kiểu/import/DOM tĩnh; chưa chạy
+Node/npm, lint/typecheck/test hay Vite/trình duyệt. Cần thử tab chỉ có planned,
+kết hợp bộ lọc, clipboard bị chặn, tải JSON, planned 404/sai JSON/trùng ID,
+ảnh vừa bổ sung vào manifest, animation cũ và JSON/PNG của bản đồ.

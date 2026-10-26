@@ -1,5 +1,5 @@
-import { isManifest, isRecord } from './types';
-import type { Animation, Item, LoadedManifest, Team } from './types';
+import { isManifest, isPlannedFile, isRecord } from './types';
+import type { Animation, Item, LoadedManifest, LoadedPlanned, Team } from './types';
 
 type ElementClass<T extends Element> = { new(): T };
 export function $<T extends HTMLElement>(id: string, expected: ElementClass<T>): T {
@@ -93,13 +93,29 @@ export async function loadManifest(): Promise<LoadedManifest> {
     return { ...data, pixelScale: data.pixelScale ?? 2, items: data.categories.flatMap((category) => category.items) };
   } catch (error) { return { version: 1, pixelScale: 2, categories: [], items: [], error: errorText(error) }; }
 }
+export async function loadPlanned(): Promise<LoadedPlanned> {
+  try {
+    const response = await fetch('/tools/asset-admin/planned.json', { cache: 'no-store' });
+    if (!response.ok) throw new Error(`Không nạp được planned.json (HTTP ${response.status})`);
+    const data: unknown = await response.json();
+    if (!isPlannedFile(data)) throw new Error('planned.json sai định dạng hoặc trùng ID');
+    return data;
+  } catch (error) {
+    return { version: 1, items: [], error: `Không có dữ liệu asset dự kiến: ${errorText(error)}. Danh mục đã có vẫn hoạt động.` };
+  }
+}
 export function frames(item: Item, team: Team = 'ally', anim: Animation = 'idle'): string[] {
   const list = item.units?.[team]?.[anim];
   return list?.length ? list : [item.src];
 }
-export function matches(item: Item, query: string): boolean { return [item.id, item.label, item.group || '', ...item.tags].join(' ').toLocaleLowerCase('vi').includes(query.toLocaleLowerCase('vi')); }
+export function matches(item: Pick<Item, 'id' | 'label' | 'group' | 'tags'>, query: string): boolean { return [item.id, item.label, item.group || '', ...item.tags].join(' ').toLocaleLowerCase('vi').includes(query.toLocaleLowerCase('vi')); }
 export function sizeText(item: Item): string { return `${item.w}×${item.h} px ảnh · ${item.w / 2}×${item.h / 2} đơn vị thế giới`; }
 const groupLabels: Record<string, string> = {
+  units: 'Lính dự kiến', buildings: 'Công trình dự kiến', thrones: 'Ngai', 'card-art': 'Tranh thẻ',
+  portraits: 'Chân dung vua', 'king-badges': 'Huy hiệu vua', projectiles: 'Đạn', vfx: 'Hiệu ứng',
+  terrain: 'Bộ nền dự kiến', wilds: 'Trang trí dự kiến', 'ui-icons': 'Biểu tượng',
+  'ui-frames': 'Khung giao diện', 'ui-decor': 'Trang trí giao diện', 'content-icons': 'Biểu tượng nội dung riêng',
+  menu: 'Nền và minh hoạ menu', release: 'Hình phát hành',
   wheat: 'Vua Lúa Mì', stone: 'Vua Đá Núi', arcane: 'Vua Phép Thuật', grove: 'Vua Rừng',
   tide: 'Vua Thuỷ Triều', forge: 'Vua Lò Rèn', clock: 'Vua Đồng Hồ', moon: 'Vua Mặt Trăng', nomad: 'Vua Du Mục',
   tree: 'Cây', rock: 'Đá nhỏ', boulders: 'Đá tảng', bush: 'Bụi cây', mountain: 'Núi', cliff: 'Vách đá',
@@ -107,7 +123,7 @@ const groupLabels: Record<string, string> = {
   grass: 'Cỏ', meadow_flowers: 'Đồng cỏ hoa', meadow_tall: 'Cỏ cao', path: 'Đường đất', sand: 'Cát',
   water_a: 'Nước A', water_b: 'Nước B',
 };
-export function groupOptions(select: HTMLSelectElement, items: Item[]): void {
+export function groupOptions(select: HTMLSelectElement, items: ReadonlyArray<{ group?: string }>): void {
   const groups = [...new Set(items.map((item) => item.group || '').filter(Boolean))].sort();
   const all = el('option', 'Tất cả nhóm'); all.value = '';
   select.replaceChildren(all, ...groups.map((group) => {
