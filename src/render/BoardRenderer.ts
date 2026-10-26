@@ -117,7 +117,7 @@ export class BoardRenderer {
   }
 
   /**
-   * Gold arrows pointing at the middle of each board side the next army comes from. They sit
+   * A gold arrow pointing at the middle of the board's south side, where the next army comes from. They sit
    * just outside the board rather than at the field edge: the planning view crops the
    * field (§10.7 allows 48 px; the zoom-2 planning camera crops more, on mobile all sides),
    * while the board itself is always on screen.
@@ -129,27 +129,14 @@ export class BoardRenderer {
     const hi = BATTLE.boardOrigin + BATTLE.plot * SIZE;
     const mid = (lo + hi) / 2;
     const h = ARROW_HALF;
-    const n = lo - ARROW_GAP; // tip of an arrow above / left of the board
-    const s = hi + ARROW_GAP; // tip of an arrow below / right of the board
-    for (const edge of new Set(edges)) {
-      // Triangle tip points at the board; drawn twice for a 1 px outline.
-      const tri = ((): [number, number, number, number, number, number] => {
-        switch (edge) {
-          case 'N':
-            return [mid - h, n - h, mid + h, n - h, mid, n];
-          case 'S':
-            return [mid - h, s + h, mid + h, s + h, mid, s];
-          case 'W':
-            return [n - h, mid - h, n - h, mid + h, n, mid];
-          case 'E':
-            return [s + h, mid - h, s + h, mid + h, s, mid];
-        }
-      })();
-      g.fillStyle(UI_PALETTE.gold, 1);
-      g.fillTriangle(...tri);
-      g.lineStyle(1, UI_PALETTE.outline, 1);
-      g.strokeTriangle(...tri);
-    }
+    const s = hi + ARROW_GAP; // tip of the arrow below the board
+    // Enemies only march in from the front (south): every non-empty input shows one arrow there.
+    if (edges.length === 0) return;
+    const tri: [number, number, number, number, number, number] = [mid - h, s + h, mid + h, s + h, mid, s];
+    g.fillStyle(UI_PALETTE.gold, 1);
+    g.fillTriangle(...tri);
+    g.lineStyle(1, UI_PALETTE.outline, 1);
+    g.strokeTriangle(...tri);
   }
 
   /** Plot index (row × 5 + col) under a world point, null outside the board. */
