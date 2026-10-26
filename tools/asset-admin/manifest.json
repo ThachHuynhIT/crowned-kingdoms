@@ -631,6 +631,240 @@
       "foot",
       "mountain_wall"
      ]
+    },
+    {
+     "id": "terrain_mountain_wall_mid_wheat_a",
+     "label": "Tường núi — Đoạn bổ trợ A nền vua Lúa Mì",
+     "src": "/public/assets/art/ai-v1/mountain-wall/terrain_mountain_wall_mid_wheat_a.png",
+     "w": 384,
+     "h": 192,
+     "kind": "object",
+     "group": "mountain_wall",
+     "tags": [
+      "middle",
+      "mountain_wall"
+     ]
+    },
+    {
+     "id": "terrain_mountain_wall_mid_wheat_b",
+     "label": "Tường núi — Đoạn bổ trợ B nền vua Lúa Mì",
+     "src": "/public/assets/art/ai-v1/mountain-wall/terrain_mountain_wall_mid_wheat_b.png",
+     "w": 384,
+     "h": 192,
+     "kind": "object",
+     "group": "mountain_wall",
+     "tags": [
+      "middle",
+      "mountain_wall"
+     ]
+    },
+    {
+     "id": "terrain_mountain_wall_mid_stone_a",
+     "label": "Tường núi — Đoạn bổ trợ A nền vua Đá",
+     "src": "/public/assets/art/ai-v1/mountain-wall/terrain_mountain_wall_mid_stone_a.png",
+     "w": 384,
+     "h": 192,
+     "kind": "object",
+     "group": "mountain_wall",
+     "tags": [
+      "middle",
+      "mountain_wall"
+     ]
+    },
+    {
+     "id": "terrain_mountain_wall_mid_stone_b",
+     "label": "Tường núi — Đoạn bổ trợ B nền vua Đá",
+     "src": "/public/assets/art/ai-v1/mountain-wall/terrain_mountain_wall_mid_stone_b.png",
+     "w": 384,
+     "h": 192,
+     "kind": "object",
+     "group": "mountain_wall",
+     "tags": [
+      "middle",
+      "mountain_wall"
+     ]
+    },
+    {
+     "id": "terrain_mountain_wall_mid_arcane_a",
+     "label": "Tường núi — Đoạn bổ trợ A nền vua Pháp Thuật",
+     "src": "/public/assets/art/ai-v1/mountain-wall/terrain_mountain_wall_mid_arcane_a.png",
+     "w": 384,
+     "h": 192,
+     "kind": "object",
+     "group": "mountain_wall",
+     "tags": [
+      "middle",
+      "mountain_wall"
+     ]
+    },
+    {
+     "id": "terrain_mountain_wall_mid_arcane_b",
+     "label": "Tường núi — Đoạn bổ trợ B nền vua Pháp Thuật",
+     "src": "/public/assets/art/ai-v1/mountain-wall/terrain_mountain_wall_mid_arcane_b.png",
+     "w": 384,
+     "h": 192,
+     "kind": "object",
+     "group": "mountain_wall",
+     "tags": [
+      "middle",
+      "mountain_wall"
+     ]
+    },
+    {
+     "id": "terrain_mountain_wall_mid_grove_a",
+     "label": "Tường núi — Đoạn bổ trợ A nền vua Rừng",
+     "src": "/public/assets/art/ai-v1/mountain-wall/terrain_mountain_wall_mid_grove_a.png",
+     "w": 384,
+     "h": 192,
+     "kind": "object",
+     "group": "mountain_wall",
+     "tags": [
+      "middle",
+      "mountain_wall"
+     ]
+    },
+    {
+     "id": "terrain_mountain_wall_mid_grove_b",
+     "label": "Tường núi — Đoạn bổ trợ B nền vua Rừng",
+     "src": "/public/assets/art/ai-v1/mountain-wall/terrain_mountain_wall_mid_grove_b.png",
+     "w": 384,
+     "h": 192,
+     "kind": "object",
+     "group": "mountain_wall",
+     "tags": [
+      "middle",
+      "mountain_wall"
+     ]
+    },
+    {
+     "id": "terrain_mountain_wall_mid_tide_a",
+     "label": "Tường núi — Đoạn bổ trợ A nền vua Thủy Triều",
+     "src": "/public/assets/art/ai-v1/mountain-wall/terrain_mountain_wall_mid_tide_a.png",
+     "w": 384,
+     "h": 192,
+     "kind": "object",
+     "group": "mountain_wall",
+     "tags": [
+      "middle",
+      "mountain_wall"
+     ]
+    },
+    {
+     "id": "terrain_mountain_wall_mid_tide_b",
+     "label": "Tường núi — Đoạn bổ trợ B nền vua Thủy Triều",
+     "src": "/public/assets/art/ai-v1/mountain-wall/terrain_mountain_wall_mid_tide_b.png",
+     "w": 384,
+     "h": 192,
+     "kind": "object",
+     "group": "mountain_wall",
+     "tags": [
+      "middle",
+      "mountain_wall"
+     ]
+    },
+    {
+     "id": "terrain_mountain_wall_mid_forge_a",
+     "label": "Tường núi — Đoạn bổ trợ A nền vua Lò Rèn",
+     "src": "/public/assets/art/ai-v1/mountain-wall/terrain_mountain_wall_mid_forge_a.png",
+     "w": 384,
+     "h": 192,
+     "kind": "object",
+     "group": "mountain_wall",
+     "tags": [
+      "middle",
+      "mountain_wall"
+     ]
+    },
+    {
+     "id": "terrain_mountain_wall_mid_forge_b",
+     "label": "Tường núi — Đoạn bổ trợ B nền vua Lò Rèn",
+     "src": "/public/assets/art/ai-v1/mountain-wall/terrain_mountain_wall_mid_forge_b.png",
+     "w": 384,
+     "h": 192,
+     "kind": "object",
+     "group": "mountain_wall",
+     "tags": [
+      "middle",
+      "mountain_wall"
+     ]
+    },
+    {
+     "id": "terrain_mountain_wall_mid_clock_a",
+     "label": "Tường núi — Đoạn bổ trợ A nền vua Đồng Hồ",
+     "src": "/public/assets/art/ai-v1/mountain-wall/terrain_mountain_wall_mid_clock_a.png",
+     "w": 384,
+     "h": 192,
+     "kind": "object",
+     "group": "mountain_wall",
+     "tags": [
+      "middle",
+      "mountain_wall"
+     ]
+    },
+    {
+     "id": "terrain_mountain_wall_mid_clock_b",
+     "label": "Tường núi — Đoạn bổ trợ B nền vua Đồng Hồ",
+     "src": "/public/assets/art/ai-v1/mountain-wall/terrain_mountain_wall_mid_clock_b.png",
+     "w": 384,
+     "h": 192,
+     "kind": "object",
+     "group": "mountain_wall",
+     "tags": [
+      "middle",
+      "mountain_wall"
+     ]
+    },
+    {
+     "id": "terrain_mountain_wall_mid_moon_a",
+     "label": "Tường núi — Đoạn bổ trợ A nền vua Nguyệt",
+     "src": "/public/assets/art/ai-v1/mountain-wall/terrain_mountain_wall_mid_moon_a.png",
+     "w": 384,
+     "h": 192,
+     "kind": "object",
+     "group": "mountain_wall",
+     "tags": [
+      "middle",
+      "mountain_wall"
+     ]
+    },
+    {
+     "id": "terrain_mountain_wall_mid_moon_b",
+     "label": "Tường núi — Đoạn bổ trợ B nền vua Nguyệt",
+     "src": "/public/assets/art/ai-v1/mountain-wall/terrain_mountain_wall_mid_moon_b.png",
+     "w": 384,
+     "h": 192,
+     "kind": "object",
+     "group": "mountain_wall",
+     "tags": [
+      "middle",
+      "mountain_wall"
+     ]
+    },
+    {
+     "id": "terrain_mountain_wall_mid_nomad_a",
+     "label": "Tường núi — Đoạn bổ trợ A nền vua Du Mục",
+     "src": "/public/assets/art/ai-v1/mountain-wall/terrain_mountain_wall_mid_nomad_a.png",
+     "w": 384,
+     "h": 192,
+     "kind": "object",
+     "group": "mountain_wall",
+     "tags": [
+      "middle",
+      "mountain_wall"
+     ]
+    },
+    {
+     "id": "terrain_mountain_wall_mid_nomad_b",
+     "label": "Tường núi — Đoạn bổ trợ B nền vua Du Mục",
+     "src": "/public/assets/art/ai-v1/mountain-wall/terrain_mountain_wall_mid_nomad_b.png",
+     "w": 384,
+     "h": 192,
+     "kind": "object",
+     "group": "mountain_wall",
+     "tags": [
+      "middle",
+      "mountain_wall"
+     ]
     }
    ]
   },

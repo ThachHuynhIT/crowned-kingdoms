@@ -25,9 +25,10 @@ describe('wall images match the art catalog', () => {
     }
   });
 
-  it('there is exactly one middle image per king', () => {
-    const kings = WALL_IMAGES.filter((s) => s.role === 'middle').map((s) => s.king);
-    expect(new Set(kings).size).toBe(kings.length);
-    expect([...kings].sort()).toEqual([...ALL_KINGS].sort());
+  it('every king has a main middle image and two supporting variants', () => {
+    for (const king of ALL_KINGS) {
+      const ids = WALL_IMAGES.filter((s) => s.role === 'middle' && s.king === king).map((s) => s.id).sort();
+      expect(ids).toEqual([`terrain_mountain_wall_mid_${king}`, `terrain_mountain_wall_mid_${king}_a`, `terrain_mountain_wall_mid_${king}_b`].sort());
+    }
   });
 });

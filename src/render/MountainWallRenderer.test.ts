@@ -69,6 +69,13 @@ describe('MountainWallRenderer with approved art', () => {
     }
   });
 
+  it('uses every loaded variant of the king, so the wall does not repeat one picture', () => {
+    const keys = ['terrain_mountain_wall_mid_moon', 'terrain_mountain_wall_mid_moon_a', 'terrain_mountain_wall_mid_moon_b'].map(wallImageKey);
+    const { scene, images } = fakeScene(keys);
+    new MountainWallRenderer(scene, 9, 'moon');
+    expect(new Set(images.map((i) => i.texture)).size).toBe(3);
+  });
+
   it('another king, or an image that did not load, falls back to the placeholder wall', () => {
     const { scene, images } = fakeScene([wallImageKey('terrain_mountain_wall_mid_moon')]);
     new MountainWallRenderer(scene, 5, 'wheat');

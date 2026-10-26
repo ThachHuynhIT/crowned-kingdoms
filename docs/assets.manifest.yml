@@ -687,3 +687,255 @@ assets:
     nativeSize: 768x768
     finalSize: 192x192
     notes: Mountain wall right end cap; black background removed (docs/art-review/oblique-wall/make_alpha.py), alpha-aware downscale x4, drawn at scale 0.5 (see src/render/mountainWallAssets.ts)
+  - id: world_ai_v1_mountain_wall_mid_wheat_a
+    path: public/assets/art/ai-v1/mountain-wall/terrain_mountain_wall_mid_wheat_a.png
+    category: world
+    origin: custom
+    source: docs/art-review/oblique-wall/terrain_mountain_wall_mid_0/source_wheat_a.png
+    creator: Project owner (OpenAI imagegen via Codex; prompt in .superpowers/codex-wallvar-wheat-a.md, approved 26/10/2026)
+    license: project-owned
+    attribution: false
+    redistribute: true
+    evidence: docs/art-review/oblique-wall/
+    modified: true
+    nativeSize: 1536x768
+    finalSize: 384x192
+    notes: Supporting wall variant A for the wheat king; edges fitted to the main segment (docs/art-review/oblique-wall/fit_edges.py), box-downscaled x4, drawn at scale 1 (see src/render/mountainWallAssets.ts)
+  - id: world_ai_v1_mountain_wall_mid_wheat_b
+    path: public/assets/art/ai-v1/mountain-wall/terrain_mountain_wall_mid_wheat_b.png
+    category: world
+    origin: custom
+    source: docs/art-review/oblique-wall/terrain_mountain_wall_mid_0/source_wheat_b.png
+    creator: Project owner (OpenAI imagegen via Codex; prompt in .superpowers/codex-wallvar-wheat-b.md, approved 26/10/2026)
+    license: project-owned
+    attribution: false
+    redistribute: true
+    evidence: docs/art-review/oblique-wall/
+    modified: true
+    nativeSize: 1536x768
+    finalSize: 384x192
+    notes: Supporting wall variant B for the wheat king; edges fitted to the main segment (docs/art-review/oblique-wall/fit_edges.py), box-downscaled x4, drawn at scale 1 (see src/render/mountainWallAssets.ts)
+  - id: world_ai_v1_mountain_wall_mid_stone_a
+    path: public/assets/art/ai-v1/mountain-wall/terrain_mountain_wall_mid_stone_a.png
+    category: world
+    origin: custom
+    source: docs/art-review/oblique-wall/terrain_mountain_wall_mid_0/source_stone_a.png
+    creator: Project owner (OpenAI imagegen via Codex; prompt in .superpowers/codex-wallvar-stone-a.md, approved 26/10/2026)
+    license: project-owned
+    attribution: false
+    redistribute: true
+    evidence: docs/art-review/oblique-wall/
+    modified: true
+    nativeSize: 1536x768
+    finalSize: 384x192
+    notes: Supporting wall variant A for the stone king; edges fitted to the main segment (docs/art-review/oblique-wall/fit_edges.py), box-downscaled x4, drawn at scale 1 (see src/render/mountainWallAssets.ts)
+  - id: world_ai_v1_mountain_wall_mid_stone_b
+    path: public/assets/art/ai-v1/mountain-wall/terrain_mountain_wall_mid_stone_b.png
+    category: world
+    origin: custom
+    source: docs/art-review/oblique-wall/terrain_mountain_wall_mid_0/source_stone_b.png
+    creator: Project owner (OpenAI imagegen via Codex; prompt in .superpowers/codex-wallvar-stone-b.md, approved 26/10/2026)
+    license: project-owned
+    attribution: false
+    redistribute: true
+    evidence: docs/art-review/oblique-wall/
+    modified: true
+    nativeSize: 1536x768
+    finalSize: 384x192
+    notes: Supporting wall variant B for the stone king; edges fitted to the main segment (docs/art-review/oblique-wall/fit_edges.py), box-downscaled x4, drawn at scale 1 (see src/render/mountainWallAssets.ts)
+  - id: world_ai_v1_mountain_wall_mid_arcane_a
+    path: public/assets/art/ai-v1/mountain-wall/terrain_mountain_wall_mid_arcane_a.png
+    category: world
+    origin: custom
+    source: docs/art-review/oblique-wall/terrain_mountain_wall_mid_0/source_arcane_a.png
+    creator: Project owner (OpenAI imagegen via Codex; prompt in .superpowers/codex-wallvar-arcane-a.md, approved 26/10/2026)
+    license: project-owned
+    attribution: false
+    redistribute: true
+    evidence: docs/art-review/oblique-wall/
+    modified: true
+    nativeSize: 1536x768
+    finalSize: 384x192
+    notes: Supporting wall variant A for the arcane king; edges fitted to the main segment (docs/art-review/oblique-wall/fit_edges.py), box-downscaled x4, drawn at scale 1 (see src/render/mountainWallAssets.ts)
+  - id: world_ai_v1_mountain_wall_mid_arcane_b
+    path: public/assets/art/ai-v1/mountain-wall/terrain_mountain_wall_mid_arcane_b.png
+    category: world
+    origin: custom
+    source: docs/art-review/oblique-wall/terrain_mountain_wall_mid_0/source_arcane_b.png
+    creator: Project owner (OpenAI imagegen via Codex; prompt in .superpowers/codex-wallvar-arcane-b.md, approved 26/10/2026)
+    license: project-owned
+    attribution: false
+    redistribute: true
+    evidence: docs/art-review/oblique-wall/
+    modified: true
+    nativeSize: 1536x768
+    finalSize: 384x192
+    notes: Supporting wall variant B for the arcane king; edges fitted to the main segment (docs/art-review/oblique-wall/fit_edges.py), box-downscaled x4, drawn at scale 1 (see src/render/mountainWallAssets.ts)
+  - id: world_ai_v1_mountain_wall_mid_grove_a
+    path: public/assets/art/ai-v1/mountain-wall/terrain_mountain_wall_mid_grove_a.png
+    category: world
+    origin: custom
+    source: docs/art-review/oblique-wall/terrain_mountain_wall_mid_0/source_grove_a.png
+    creator: Project owner (OpenAI imagegen via Codex; prompt in .superpowers/codex-wallvar-grove-a.md, approved 26/10/2026)
+    license: project-owned
+    attribution: false
+    redistribute: true
+    evidence: docs/art-review/oblique-wall/
+    modified: true
+    nativeSize: 1536x768
+    finalSize: 384x192
+    notes: Supporting wall variant A for the grove king; edges fitted to the main segment (docs/art-review/oblique-wall/fit_edges.py), box-downscaled x4, drawn at scale 1 (see src/render/mountainWallAssets.ts)
+  - id: world_ai_v1_mountain_wall_mid_grove_b
+    path: public/assets/art/ai-v1/mountain-wall/terrain_mountain_wall_mid_grove_b.png
+    category: world
+    origin: custom
+    source: docs/art-review/oblique-wall/terrain_mountain_wall_mid_0/source_grove_b.png
+    creator: Project owner (OpenAI imagegen via Codex; prompt in .superpowers/codex-wallvar-grove-b.md, approved 26/10/2026)
+    license: project-owned
+    attribution: false
+    redistribute: true
+    evidence: docs/art-review/oblique-wall/
+    modified: true
+    nativeSize: 1536x768
+    finalSize: 384x192
+    notes: Supporting wall variant B for the grove king; edges fitted to the main segment (docs/art-review/oblique-wall/fit_edges.py), box-downscaled x4, drawn at scale 1 (see src/render/mountainWallAssets.ts)
+  - id: world_ai_v1_mountain_wall_mid_tide_a
+    path: public/assets/art/ai-v1/mountain-wall/terrain_mountain_wall_mid_tide_a.png
+    category: world
+    origin: custom
+    source: docs/art-review/oblique-wall/terrain_mountain_wall_mid_0/source_tide_a.png
+    creator: Project owner (OpenAI imagegen via Codex; prompt in .superpowers/codex-wallvar-tide-a.md, approved 26/10/2026)
+    license: project-owned
+    attribution: false
+    redistribute: true
+    evidence: docs/art-review/oblique-wall/
+    modified: true
+    nativeSize: 1536x768
+    finalSize: 384x192
+    notes: Supporting wall variant A for the tide king; edges fitted to the main segment (docs/art-review/oblique-wall/fit_edges.py), box-downscaled x4, drawn at scale 1 (see src/render/mountainWallAssets.ts)
+  - id: world_ai_v1_mountain_wall_mid_tide_b
+    path: public/assets/art/ai-v1/mountain-wall/terrain_mountain_wall_mid_tide_b.png
+    category: world
+    origin: custom
+    source: docs/art-review/oblique-wall/terrain_mountain_wall_mid_0/source_tide_b.png
+    creator: Project owner (OpenAI imagegen via Codex; prompt in .superpowers/codex-wallvar-tide-b.md, approved 26/10/2026)
+    license: project-owned
+    attribution: false
+    redistribute: true
+    evidence: docs/art-review/oblique-wall/
+    modified: true
+    nativeSize: 1536x768
+    finalSize: 384x192
+    notes: Supporting wall variant B for the tide king; edges fitted to the main segment (docs/art-review/oblique-wall/fit_edges.py), box-downscaled x4, drawn at scale 1 (see src/render/mountainWallAssets.ts)
+  - id: world_ai_v1_mountain_wall_mid_forge_a
+    path: public/assets/art/ai-v1/mountain-wall/terrain_mountain_wall_mid_forge_a.png
+    category: world
+    origin: custom
+    source: docs/art-review/oblique-wall/terrain_mountain_wall_mid_0/source_forge_a.png
+    creator: Project owner (OpenAI imagegen via Codex; prompt in .superpowers/codex-wallvar-forge-a.md, approved 26/10/2026)
+    license: project-owned
+    attribution: false
+    redistribute: true
+    evidence: docs/art-review/oblique-wall/
+    modified: true
+    nativeSize: 1536x768
+    finalSize: 384x192
+    notes: Supporting wall variant A for the forge king; edges fitted to the main segment (docs/art-review/oblique-wall/fit_edges.py), box-downscaled x4, drawn at scale 1 (see src/render/mountainWallAssets.ts)
+  - id: world_ai_v1_mountain_wall_mid_forge_b
+    path: public/assets/art/ai-v1/mountain-wall/terrain_mountain_wall_mid_forge_b.png
+    category: world
+    origin: custom
+    source: docs/art-review/oblique-wall/terrain_mountain_wall_mid_0/source_forge_b.png
+    creator: Project owner (OpenAI imagegen via Codex; prompt in .superpowers/codex-wallvar-forge-b.md, approved 26/10/2026)
+    license: project-owned
+    attribution: false
+    redistribute: true
+    evidence: docs/art-review/oblique-wall/
+    modified: true
+    nativeSize: 1536x768
+    finalSize: 384x192
+    notes: Supporting wall variant B for the forge king; edges fitted to the main segment (docs/art-review/oblique-wall/fit_edges.py), box-downscaled x4, drawn at scale 1 (see src/render/mountainWallAssets.ts)
+  - id: world_ai_v1_mountain_wall_mid_clock_a
+    path: public/assets/art/ai-v1/mountain-wall/terrain_mountain_wall_mid_clock_a.png
+    category: world
+    origin: custom
+    source: docs/art-review/oblique-wall/terrain_mountain_wall_mid_0/source_clock_a.png
+    creator: Project owner (OpenAI imagegen via Codex; prompt in .superpowers/codex-wallvar-clock-a.md, approved 26/10/2026)
+    license: project-owned
+    attribution: false
+    redistribute: true
+    evidence: docs/art-review/oblique-wall/
+    modified: true
+    nativeSize: 1536x768
+    finalSize: 384x192
+    notes: Supporting wall variant A for the clock king; edges fitted to the main segment (docs/art-review/oblique-wall/fit_edges.py), box-downscaled x4, drawn at scale 1 (see src/render/mountainWallAssets.ts)
+  - id: world_ai_v1_mountain_wall_mid_clock_b
+    path: public/assets/art/ai-v1/mountain-wall/terrain_mountain_wall_mid_clock_b.png
+    category: world
+    origin: custom
+    source: docs/art-review/oblique-wall/terrain_mountain_wall_mid_0/source_clock_b.png
+    creator: Project owner (OpenAI imagegen via Codex; prompt in .superpowers/codex-wallvar-clock-b.md, approved 26/10/2026)
+    license: project-owned
+    attribution: false
+    redistribute: true
+    evidence: docs/art-review/oblique-wall/
+    modified: true
+    nativeSize: 1536x768
+    finalSize: 384x192
+    notes: Supporting wall variant B for the clock king; edges fitted to the main segment (docs/art-review/oblique-wall/fit_edges.py), box-downscaled x4, drawn at scale 1 (see src/render/mountainWallAssets.ts)
+  - id: world_ai_v1_mountain_wall_mid_moon_a
+    path: public/assets/art/ai-v1/mountain-wall/terrain_mountain_wall_mid_moon_a.png
+    category: world
+    origin: custom
+    source: docs/art-review/oblique-wall/terrain_mountain_wall_mid_0/source_moon_a.png
+    creator: Project owner (OpenAI imagegen via Codex; prompt in .superpowers/codex-wallvar-moon-a.md, approved 26/10/2026)
+    license: project-owned
+    attribution: false
+    redistribute: true
+    evidence: docs/art-review/oblique-wall/
+    modified: true
+    nativeSize: 1536x768
+    finalSize: 384x192
+    notes: Supporting wall variant A for the moon king; edges fitted to the main segment (docs/art-review/oblique-wall/fit_edges.py), box-downscaled x4, drawn at scale 1 (see src/render/mountainWallAssets.ts)
+  - id: world_ai_v1_mountain_wall_mid_moon_b
+    path: public/assets/art/ai-v1/mountain-wall/terrain_mountain_wall_mid_moon_b.png
+    category: world
+    origin: custom
+    source: docs/art-review/oblique-wall/terrain_mountain_wall_mid_0/source_moon_b.png
+    creator: Project owner (OpenAI imagegen via Codex; prompt in .superpowers/codex-wallvar-moon-b.md, approved 26/10/2026)
+    license: project-owned
+    attribution: false
+    redistribute: true
+    evidence: docs/art-review/oblique-wall/
+    modified: true
+    nativeSize: 1536x768
+    finalSize: 384x192
+    notes: Supporting wall variant B for the moon king; edges fitted to the main segment (docs/art-review/oblique-wall/fit_edges.py), box-downscaled x4, drawn at scale 1 (see src/render/mountainWallAssets.ts)
+  - id: world_ai_v1_mountain_wall_mid_nomad_a
+    path: public/assets/art/ai-v1/mountain-wall/terrain_mountain_wall_mid_nomad_a.png
+    category: world
+    origin: custom
+    source: docs/art-review/oblique-wall/terrain_mountain_wall_mid_0/source_nomad_a.png
+    creator: Project owner (OpenAI imagegen via Codex; prompt in .superpowers/codex-wallvar-nomad-a.md, approved 26/10/2026)
+    license: project-owned
+    attribution: false
+    redistribute: true
+    evidence: docs/art-review/oblique-wall/
+    modified: true
+    nativeSize: 1536x768
+    finalSize: 384x192
+    notes: Supporting wall variant A for the nomad king; edges fitted to the main segment (docs/art-review/oblique-wall/fit_edges.py), box-downscaled x4, drawn at scale 1 (see src/render/mountainWallAssets.ts)
+  - id: world_ai_v1_mountain_wall_mid_nomad_b
+    path: public/assets/art/ai-v1/mountain-wall/terrain_mountain_wall_mid_nomad_b.png
+    category: world
+    origin: custom
+    source: docs/art-review/oblique-wall/terrain_mountain_wall_mid_0/source_nomad_b.png
+    creator: Project owner (OpenAI imagegen via Codex; prompt in .superpowers/codex-wallvar-nomad-b.md, approved 26/10/2026)
+    license: project-owned
+    attribution: false
+    redistribute: true
+    evidence: docs/art-review/oblique-wall/
+    modified: true
+    nativeSize: 1536x768
+    finalSize: 384x192
+    notes: Supporting wall variant B for the nomad king; edges fitted to the main segment (docs/art-review/oblique-wall/fit_edges.py), box-downscaled x4, drawn at scale 1 (see src/render/mountainWallAssets.ts)
