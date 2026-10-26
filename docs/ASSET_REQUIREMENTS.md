@@ -356,15 +356,14 @@ Thiết kế: [spec 26/10/2026](superpowers/specs/2026-10-26-oblique-view-mounta
 - **Vai trò:** vật cản cứng chạy hết chiều ngang bản đồ ở mép trên, đồng thời là nền sau. Không có cổng, không có đường mòn xuyên qua.
 - **Kích thước: không giới hạn.** Không bị ràng buộc 32×32/64×64 hay trần 4096: được vẽ **dài và cao tùy ý** (ví dụ bề ngang cả bản đồ 768 px ảnh trở lên, cao 128–256 px ảnh, kể cả phần cao trội lên khỏi mép logic). Ràng buộc duy nhất là hợp đồng kỹ thuật §3 (không giới hạn màu, alpha 0/255, không anti-aliasing, 2 px ảnh = 1 đơn vị thế giới) và giới hạn thực tế của GPU: ảnh quá lớn thì cắt thành các đoạn ngang, đặt cạnh nhau.
 - **Nhìn xéo:** thấy mặt vách đá hướng về người chơi; chân vách phía dưới là đường tiếp xúc với đồng cỏ (đá vụn, rêu, bụi), đỉnh vách phía trên có thể có tuyết, thông, mỏm đá. Ánh sáng từ trên-trái.
-- **Bộ bàn giao:**
+- **Bộ bàn giao (đã chốt 26/10/2026):**
 
 | Thành phần | Số lượng | Ghi chú |
 |---|---:|---|
-| Đoạn tường giữa (ghép ngang) | 4 biến thể | Mép trái và phải khớp nhau để ghép liên tục; chiều rộng đoạn ≥ 256 px ảnh, mọi biến thể cùng chiều cao chân |
-| Đầu nối trái / phải | 2 | Tường chạy xuống hòa vào sườn đá ở hai bên (có thể chen cây/đá) |
-| Dải chân núi (viền tiếp xúc cỏ) | 3 biến thể | Ghép ngang, nửa trong suốt không dùng: alpha 0/255 |
-| Lớp xa (đỉnh núi nền, tùy chọn) | 1–2 | Phía sau tường, độ sâu thấp nhất |
-| Vật trang trí gắn tường (tùy chọn) | 4 | Thác nước nhỏ, hang tối, cây mọc ngang vách, đá lăn |
+| Đoạn giữa, nền biển riêng mỗi vua | 9 | Một ảnh 1536×768 mỗi vua (có thác, cây trên đá, biển/trời theo chủ đề vua), thu nhỏ ×4 còn 384×192 px ảnh; cạnh trái/phải khớp để ghép liên tục |
+| Dải chân núi | 3 | 1536×256 → 384×64, nền trong suốt, ghép ngang |
+| Đầu nối trái / phải | 2 | 768×768 → 192×192, nền trong suốt, hạ dần ra phía ngoài |
+| Lớp xa, thác, hang, cây, đá lăn | 0 | Đã bỏ (thác, cây và biển nằm sẵn trong ảnh đoạn giữa) |
 
 - **Neo và độ sâu:** chân vách trùng với `BATTLE.wallY` (neo mép dưới); mọi sprite lính/nhà luôn vẽ **trước** tường (độ sâu thấp hơn là tường). Không xoay; lật ngang được cho đoạn giữa.
 - **Quy trình duyệt:** như các batch trước. Codex tạo từng ảnh (một lần một ảnh), người dùng duyệt, rồi cắt/ghép và đăng ký vào `tools/asset-admin/manifest.json`; mục chưa có nằm trong `planned.json` (danh mục `terrain`, nhóm `mountain_wall`).

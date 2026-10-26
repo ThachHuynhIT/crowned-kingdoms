@@ -82,9 +82,17 @@ export interface WallImageSpec {
 }
 
 /** Every approved image; keep in sync with the catalog (wallImages.test.ts checks it). */
-export const WALL_IMAGES: readonly WallImageSpec[] = (
-  ['wheat', 'stone', 'arcane', 'grove', 'tide', 'forge', 'clock', 'moon', 'nomad'] as const
-).map((king) => ({ id: `terrain_mountain_wall_mid_${king}`, role: 'middle', king, w: 384, h: 192, baseline: 192 }));
+export const WALL_IMAGES: readonly WallImageSpec[] = [
+  ...(['wheat', 'stone', 'arcane', 'grove', 'tide', 'forge', 'clock', 'moon', 'nomad'] as const).map(
+    (king): WallImageSpec => ({ id: `terrain_mountain_wall_mid_${king}`, role: 'middle', king, w: 384, h: 192, baseline: 192 }),
+  ),
+  // Rubble strips along the cliff foot (they spill 7 art px below the wall line) and the two end caps.
+  ...([0, 1, 2] as const).map(
+    (n): WallImageSpec => ({ id: `terrain_mountain_wall_foot_${n}`, role: 'foot', w: 384, h: 64, baseline: 50 }),
+  ),
+  { id: 'terrain_mountain_wall_cap_left', role: 'left', w: 192, h: 192, baseline: 192 },
+  { id: 'terrain_mountain_wall_cap_right', role: 'right', w: 192, h: 192, baseline: 192 },
+];
 
 export const wallImageKey = (id: string): string => `wallimg-${id}`;
 

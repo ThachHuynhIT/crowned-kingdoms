@@ -8,8 +8,18 @@ import build_planned_assets as bpa
 from slice_mountain_wall import OUT_DIR, adopted_wall_items
 
 ROOT = Path(__file__).resolve().parents[1]
-CATALOG = json.loads((ROOT / 'docs/art-review/oblique-wall/catalog.json').read_text(encoding='utf-8'))
+REAL_CATALOG = json.loads((ROOT / 'docs/art-review/oblique-wall/catalog.json').read_text(encoding='utf-8'))
+# Synthetic catalog: the registration rules must not depend on which real pieces happen to be adopted today.
+CATALOG = {'version': 1, 'density': 2, 'items': [
+    {'id': 'terrain_mountain_wall_cap_left', 'role': 'left', 'label': 'Cap trái', 'priority': 'P0', 'proposed': {'w': 192, 'h': 192},
+     'approval': 'none', 'adopted': False, 'parts': []},
+    {'id': 'terrain_mountain_wall_cap_right', 'role': 'right', 'label': 'Cap phải', 'priority': 'P0', 'proposed': {'w': 192, 'h': 192},
+     'approval': 'none', 'adopted': False, 'parts': []},
+]}
 MANIFEST = json.loads((ROOT / 'tools/asset-admin/manifest.json').read_text(encoding='utf-8'))
+# Start from a manifest without any wall piece, whatever is adopted in the real one.
+for _c in MANIFEST['categories']:
+    _c['items'] = [i for i in _c['items'] if not i['id'].startswith('terrain_mountain_wall_')]
 
 
 def planned(manifest=None, catalog=None):
@@ -27,11 +37,19 @@ def wall_ids(result):
 class RegistrationTest(unittest.TestCase):
     def test_every_unadopted_wall_is_a_planned_work_item_in_terrain(self):
         result = planned()
-        self.assertEqual(len(wall_ids(result)), len(CATALOG['items']) - sum(1 for e in CATALOG['items'] if e['adopted']))
+        self.assertEqual(len(wall_ids(result)), 2)
         row = next(i for i in result['items'] if i['id'] == 'terrain_mountain_wall_cap_left')
         self.assertEqual((row['category'], row['group'], row['priority']), ('terrain', 'mountain_wall', 'P0'))
-        far = next(i for i in result['items'] if i['id'] == 'terrain_mountain_wall_far_0')
-        self.assertEqual(far['priority'], 'P2')
+        # the five optional pieces were dropped on 26/10/2026 and are no longer planned work
+        for dropped in ('far_0', 'attach_waterfall', 'attach_cave', 'attach_tree', 'attach_boulder'):
+            self.assertNotIn('terrain_mountain_wall_' + dropped, wall_ids(result))
+
+    def test_the_real_catalog_has_no_unapproved_or_dropped_pieces(self):
+        ids = {e['id'] for e in REAL_CATALOG['items']}
+        for dropped in ('far_0', 'attach_waterfall', 'attach_cave', 'attach_tree', 'attach_boulder'):
+            self.assertNotIn('terrain_mountain_wall_' + dropped, ids)
+        for e in REAL_CATALOG['items']:
+            self.assertEqual(e['approval'], 'approved', e['id'])
 
     def test_existing_assets_are_untouched_and_ids_unique(self):
         result = planned()

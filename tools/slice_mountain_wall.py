@@ -88,9 +88,15 @@ def slice_wall(source, recipe, output, max_texture_side=2048):
         # Box-average each factor x factor block (the AI sheets draw one art pixel as a block of source pixels).
         if w % factor or h % factor:
             raise WallError(f'{w}x{h} is not divisible by downscale {factor}')
-        small = Image.fromarray(arr, 'RGBA').resize((w // factor, h // factor), Image.BOX)
-        arr = np.array(small)
-        w, h = small.size
+        # Alpha-aware: colours average over the opaque pixels of a block only, and a block is opaque when at least
+        # half of it is, so transparent edges stay crisp (alpha stays 0/255) and no black bleeds into the colours.
+        blocks = arr.reshape(h // factor, factor, w // factor, factor, 4).astype(np.float64)
+        a = blocks[..., 3] / 255.0
+        weight = a.sum(axis=(1, 3))
+        rgb = (blocks[..., :3] * a[..., None]).sum(axis=(1, 3)) / np.maximum(weight, 1e-9)[..., None]
+        opaque = weight >= (factor * factor) / 2
+        arr = np.dstack([np.where(opaque[..., None], np.rint(rgb), 0), np.where(opaque, 255, 0)[..., None]]).astype(np.uint8)
+        h, w = h // factor, w // factor
         _check_alpha(arr)
     ident = recipe['id']
     cols = -(-w // max_texture_side)

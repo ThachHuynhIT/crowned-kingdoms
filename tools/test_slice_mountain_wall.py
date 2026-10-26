@@ -54,6 +54,22 @@ class SliceTest(unittest.TestCase):
             with self.assertRaises(WallError):
                 validate_wall_recipe({'id': 'w', 'baseLine': 8, 'downscale': 0}, (16, 8))
 
+    def test_downscale_keeps_transparency_crisp_and_colours_clean(self):
+        with tempfile.TemporaryDirectory() as d:
+            arr = np.zeros((8, 8, 4), dtype=np.uint8)
+            arr[:, :4] = (200, 100, 50, 255)  # left half opaque orange, right half transparent (black rgb)
+            arr[0:1, 4:8] = (10, 20, 30, 255)  # 4 of 16 pixels: less than half of the block
+            arr[4:6, 4:8] = (10, 20, 30, 255)  # 8 of 16 pixels: exactly half counts as opaque
+            path = Path(d) / 'source.png'
+            Image.fromarray(arr, 'RGBA').save(path)
+            slice_wall(path, {'id': 'w', 'baseLine': 8, 'downscale': 4}, Path(d) / 'o', 2048)
+            out = np.array(Image.open(Path(d) / 'o' / 'w.png').convert('RGBA'))
+            self.assertEqual(out.shape, (2, 2, 4))
+            self.assertEqual(out[0, 0].tolist(), [200, 100, 50, 255])
+            self.assertEqual(out[0, 1].tolist(), [0, 0, 0, 0])
+            self.assertEqual(out[1, 1].tolist(), [10, 20, 30, 255])
+            self.assertTrue(np.isin(out[..., 3], (0, 255)).all())
+
     def test_a_source_that_fits_is_a_single_file_named_by_id(self):
         with tempfile.TemporaryDirectory() as d:
             src, _ = make_source(d, 100, 60)

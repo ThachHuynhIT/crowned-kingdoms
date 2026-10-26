@@ -566,6 +566,71 @@
       "middle",
       "mountain_wall"
      ]
+    },
+    {
+     "id": "terrain_mountain_wall_cap_left",
+     "label": "Tường núi — Đầu nối trái",
+     "src": "/public/assets/art/ai-v1/mountain-wall/terrain_mountain_wall_cap_left.png",
+     "w": 192,
+     "h": 192,
+     "kind": "object",
+     "group": "mountain_wall",
+     "tags": [
+      "left",
+      "mountain_wall"
+     ]
+    },
+    {
+     "id": "terrain_mountain_wall_cap_right",
+     "label": "Tường núi — Đầu nối phải",
+     "src": "/public/assets/art/ai-v1/mountain-wall/terrain_mountain_wall_cap_right.png",
+     "w": 192,
+     "h": 192,
+     "kind": "object",
+     "group": "mountain_wall",
+     "tags": [
+      "right",
+      "mountain_wall"
+     ]
+    },
+    {
+     "id": "terrain_mountain_wall_foot_0",
+     "label": "Tường núi — Dải chân núi A",
+     "src": "/public/assets/art/ai-v1/mountain-wall/terrain_mountain_wall_foot_0.png",
+     "w": 384,
+     "h": 64,
+     "kind": "object",
+     "group": "mountain_wall",
+     "tags": [
+      "foot",
+      "mountain_wall"
+     ]
+    },
+    {
+     "id": "terrain_mountain_wall_foot_1",
+     "label": "Tường núi — Dải chân núi B",
+     "src": "/public/assets/art/ai-v1/mountain-wall/terrain_mountain_wall_foot_1.png",
+     "w": 384,
+     "h": 64,
+     "kind": "object",
+     "group": "mountain_wall",
+     "tags": [
+      "foot",
+      "mountain_wall"
+     ]
+    },
+    {
+     "id": "terrain_mountain_wall_foot_2",
+     "label": "Tường núi — Dải chân núi C",
+     "src": "/public/assets/art/ai-v1/mountain-wall/terrain_mountain_wall_foot_2.png",
+     "w": 384,
+     "h": 64,
+     "kind": "object",
+     "group": "mountain_wall",
+     "tags": [
+      "foot",
+      "mountain_wall"
+     ]
     }
    ]
   },

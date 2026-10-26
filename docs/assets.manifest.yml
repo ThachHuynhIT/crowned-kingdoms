@@ -617,3 +617,73 @@ assets:
     nativeSize: 1536x768
     finalSize: 384x192
     notes: Mountain wall middle segment with the nomad king's sea backdrop; box-downscaled x4, tiled along the north edge, drawn at scale 0.5 (see src/render/mountainWallAssets.ts)
+  - id: world_ai_v1_mountain_wall_foot_0
+    path: public/assets/art/ai-v1/mountain-wall/terrain_mountain_wall_foot_0.png
+    category: world
+    origin: custom
+    source: docs/art-review/oblique-wall/terrain_mountain_wall_foot_0/source.png
+    creator: Project owner (OpenAI imagegen via Codex; prompt in .superpowers/codex-terrain_mountain_wall_foot_0.md, approved 26/10/2026)
+    license: project-owned
+    attribution: false
+    redistribute: true
+    evidence: docs/art-review/oblique-wall/
+    modified: true
+    nativeSize: 1536x256
+    finalSize: 384x64
+    notes: Mountain wall foot strip A; black background removed (docs/art-review/oblique-wall/make_alpha.py), alpha-aware downscale x4, drawn at scale 0.5 (see src/render/mountainWallAssets.ts)
+  - id: world_ai_v1_mountain_wall_foot_1
+    path: public/assets/art/ai-v1/mountain-wall/terrain_mountain_wall_foot_1.png
+    category: world
+    origin: custom
+    source: docs/art-review/oblique-wall/terrain_mountain_wall_foot_1/source.png
+    creator: Project owner (OpenAI imagegen via Codex; prompt in .superpowers/codex-terrain_mountain_wall_foot_1.md, approved 26/10/2026)
+    license: project-owned
+    attribution: false
+    redistribute: true
+    evidence: docs/art-review/oblique-wall/
+    modified: true
+    nativeSize: 1536x256
+    finalSize: 384x64
+    notes: Mountain wall foot strip B; black background removed (docs/art-review/oblique-wall/make_alpha.py), alpha-aware downscale x4, drawn at scale 0.5 (see src/render/mountainWallAssets.ts)
+  - id: world_ai_v1_mountain_wall_foot_2
+    path: public/assets/art/ai-v1/mountain-wall/terrain_mountain_wall_foot_2.png
+    category: world
+    origin: custom
+    source: docs/art-review/oblique-wall/terrain_mountain_wall_foot_2/source.png
+    creator: Project owner (OpenAI imagegen via Codex; prompt in .superpowers/codex-terrain_mountain_wall_foot_2.md, approved 26/10/2026)
+    license: project-owned
+    attribution: false
+    redistribute: true
+    evidence: docs/art-review/oblique-wall/
+    modified: true
+    nativeSize: 1536x256
+    finalSize: 384x64
+    notes: Mountain wall foot strip C; black background removed (docs/art-review/oblique-wall/make_alpha.py), alpha-aware downscale x4, drawn at scale 0.5 (see src/render/mountainWallAssets.ts)
+  - id: world_ai_v1_mountain_wall_cap_left
+    path: public/assets/art/ai-v1/mountain-wall/terrain_mountain_wall_cap_left.png
+    category: world
+    origin: custom
+    source: docs/art-review/oblique-wall/terrain_mountain_wall_cap_left/source.png
+    creator: Project owner (OpenAI imagegen via Codex; prompt in .superpowers/codex-terrain_mountain_wall_cap_left.md, approved 26/10/2026)
+    license: project-owned
+    attribution: false
+    redistribute: true
+    evidence: docs/art-review/oblique-wall/
+    modified: true
+    nativeSize: 768x768
+    finalSize: 192x192
+    notes: Mountain wall left end cap; black background removed (docs/art-review/oblique-wall/make_alpha.py), alpha-aware downscale x4, drawn at scale 0.5 (see src/render/mountainWallAssets.ts)
+  - id: world_ai_v1_mountain_wall_cap_right
+    path: public/assets/art/ai-v1/mountain-wall/terrain_mountain_wall_cap_right.png
+    category: world
+    origin: custom
+    source: docs/art-review/oblique-wall/terrain_mountain_wall_cap_right/source.png
+    creator: Project owner (OpenAI imagegen via Codex; prompt in .superpowers/codex-terrain_mountain_wall_cap_right.md, approved 26/10/2026)
+    license: project-owned
+    attribution: false
+    redistribute: true
+    evidence: docs/art-review/oblique-wall/
+    modified: true
+    nativeSize: 768x768
+    finalSize: 192x192
+    notes: Mountain wall right end cap; black background removed (docs/art-review/oblique-wall/make_alpha.py), alpha-aware downscale x4, drawn at scale 0.5 (see src/render/mountainWallAssets.ts)

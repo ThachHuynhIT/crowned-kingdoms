@@ -1,7 +1,7 @@
 {
   "version": 1,
   "density": 2,
-  "note": "Catalog tường núi (plan 26/10/2026 T8). approval: none | pending | approved. Chỉ approved + adopted + đủ part (đúng hash) mới vào manifest. Đoạn giữa có một ảnh riêng cho mỗi vua (nền biển khác nhau); sourceFile tính từ docs/art-review/oblique-wall; downscale = hệ số thu nhỏ khối pixel; baseLine tính theo px ảnh sau thu nhỏ.",
+  "note": "Catalog tường núi (plan 26/10/2026 T8). approval: none | pending | approved. Chỉ approved + adopted + đủ part (đúng hash) mới vào manifest. Đoạn giữa có một ảnh riêng cho mỗi vua (nền biển khác nhau); sourceFile tính từ docs/art-review/oblique-wall; downscale = hệ số thu nhỏ khối pixel; baseLine tính theo px ảnh sau thu nhỏ. 5 ảnh tùy chọn (lớp xa, thác, hang, cây, đá lăn) đã bỏ theo yêu cầu 26/10/2026.",
   "items": [
     {
       "id": "terrain_mountain_wall_mid_wheat",
@@ -306,12 +306,31 @@
       "label": "Tường núi — Đầu nối trái",
       "priority": "P0",
       "proposed": {
-        "w": 256,
-        "h": 256
+        "w": 192,
+        "h": 192
       },
-      "approval": "none",
-      "adopted": false,
-      "parts": []
+      "approval": "approved",
+      "adopted": true,
+      "parts": [
+        {
+          "id": "terrain_mountain_wall_cap_left",
+          "file": "terrain_mountain_wall_cap_left.png",
+          "sourceX": 0,
+          "sourceY": 0,
+          "w": 192,
+          "h": 192,
+          "sha256": "a1566bd254c8c64ac33c7d226ddfd55293d15372dc6169dd1d38b943db6155af"
+        }
+      ],
+      "downscale": 4,
+      "sourceFile": "terrain_mountain_wall_cap_left/source_alpha.png",
+      "baseLine": 192,
+      "sourceHash": "0514c1f49012de96b748ffd815cb50d998bf0849d1035c83a98a3292c849833d",
+      "density": 2,
+      "sourceSize": [
+        768,
+        768
+      ]
     },
     {
       "id": "terrain_mountain_wall_cap_right",
@@ -319,12 +338,31 @@
       "label": "Tường núi — Đầu nối phải",
       "priority": "P0",
       "proposed": {
-        "w": 256,
-        "h": 256
+        "w": 192,
+        "h": 192
       },
-      "approval": "none",
-      "adopted": false,
-      "parts": []
+      "approval": "approved",
+      "adopted": true,
+      "parts": [
+        {
+          "id": "terrain_mountain_wall_cap_right",
+          "file": "terrain_mountain_wall_cap_right.png",
+          "sourceX": 0,
+          "sourceY": 0,
+          "w": 192,
+          "h": 192,
+          "sha256": "61c6e3f3abf74405842902346cebe28095fc61476d96d798385d39b6d006c2f2"
+        }
+      ],
+      "downscale": 4,
+      "sourceFile": "terrain_mountain_wall_cap_right/source_alpha.png",
+      "baseLine": 192,
+      "sourceHash": "261e57436259d257a0b6d8124b68806c460e58d8c90d12e4ac9c4135c57a1b5a",
+      "density": 2,
+      "sourceSize": [
+        768,
+        768
+      ]
     },
     {
       "id": "terrain_mountain_wall_foot_0",
@@ -332,12 +370,31 @@
       "label": "Tường núi — Dải chân núi A",
       "priority": "P0",
       "proposed": {
-        "w": 512,
+        "w": 384,
         "h": 64
       },
-      "approval": "none",
-      "adopted": false,
-      "parts": []
+      "approval": "approved",
+      "adopted": true,
+      "parts": [
+        {
+          "id": "terrain_mountain_wall_foot_0",
+          "file": "terrain_mountain_wall_foot_0.png",
+          "sourceX": 0,
+          "sourceY": 0,
+          "w": 384,
+          "h": 64,
+          "sha256": "08b3622e89391b2db684fcd5d1408860911491d4a64f323148c1ed83fd98ecb1"
+        }
+      ],
+      "downscale": 4,
+      "sourceFile": "terrain_mountain_wall_foot_0/source_alpha.png",
+      "baseLine": 50,
+      "sourceHash": "67f5a8e6de40493d74fbe41578fc771817f17a35e330fce369576ceee20e4946",
+      "density": 2,
+      "sourceSize": [
+        1536,
+        256
+      ]
     },
     {
       "id": "terrain_mountain_wall_foot_1",
@@ -345,12 +402,31 @@
       "label": "Tường núi — Dải chân núi B",
       "priority": "P0",
       "proposed": {
-        "w": 512,
+        "w": 384,
         "h": 64
       },
-      "approval": "none",
-      "adopted": false,
-      "parts": []
+      "approval": "approved",
+      "adopted": true,
+      "parts": [
+        {
+          "id": "terrain_mountain_wall_foot_1",
+          "file": "terrain_mountain_wall_foot_1.png",
+          "sourceX": 0,
+          "sourceY": 0,
+          "w": 384,
+          "h": 64,
+          "sha256": "76d55fbd32c6d342041fc2a293b54e04f68afd39e88577b5c55e26f3a1ab4dd6"
+        }
+      ],
+      "downscale": 4,
+      "sourceFile": "terrain_mountain_wall_foot_1/source_alpha.png",
+      "baseLine": 50,
+      "sourceHash": "1ffb782c1a01d10c9985375622481c692fd8798267c5c7a952790dead936e9ef",
+      "density": 2,
+      "sourceSize": [
+        1536,
+        256
+      ]
     },
     {
       "id": "terrain_mountain_wall_foot_2",
@@ -358,77 +434,31 @@
       "label": "Tường núi — Dải chân núi C",
       "priority": "P0",
       "proposed": {
-        "w": 512,
+        "w": 384,
         "h": 64
       },
-      "approval": "none",
-      "adopted": false,
-      "parts": []
-    },
-    {
-      "id": "terrain_mountain_wall_far_0",
-      "role": "far",
-      "label": "Tường núi — Lớp đỉnh núi xa",
-      "priority": "P2",
-      "proposed": {
-        "w": 256,
-        "h": 256
-      },
-      "approval": "none",
-      "adopted": false,
-      "parts": []
-    },
-    {
-      "id": "terrain_mountain_wall_attach_waterfall",
-      "role": "attachment",
-      "label": "Tường núi — Thác nước nhỏ gắn vách",
-      "priority": "P2",
-      "proposed": {
-        "w": 256,
-        "h": 256
-      },
-      "approval": "none",
-      "adopted": false,
-      "parts": []
-    },
-    {
-      "id": "terrain_mountain_wall_attach_cave",
-      "role": "attachment",
-      "label": "Tường núi — Hang tối trên vách",
-      "priority": "P2",
-      "proposed": {
-        "w": 256,
-        "h": 256
-      },
-      "approval": "none",
-      "adopted": false,
-      "parts": []
-    },
-    {
-      "id": "terrain_mountain_wall_attach_tree",
-      "role": "attachment",
-      "label": "Tường núi — Cây mọc ngang vách",
-      "priority": "P2",
-      "proposed": {
-        "w": 256,
-        "h": 256
-      },
-      "approval": "none",
-      "adopted": false,
-      "parts": []
-    },
-    {
-      "id": "terrain_mountain_wall_attach_boulder",
-      "role": "attachment",
-      "label": "Tường núi — Đá lăn gắn chân vách",
-      "priority": "P2",
-      "proposed": {
-        "w": 256,
-        "h": 256
-      },
-      "approval": "none",
-      "adopted": false,
-      "parts": []
+      "approval": "approved",
+      "adopted": true,
+      "parts": [
+        {
+          "id": "terrain_mountain_wall_foot_2",
+          "file": "terrain_mountain_wall_foot_2.png",
+          "sourceX": 0,
+          "sourceY": 0,
+          "w": 384,
+          "h": 64,
+          "sha256": "2c559e344edc8ca140acee1c1e169fcff969035635338d564ba2794e6e180e76"
+        }
+      ],
+      "downscale": 4,
+      "sourceFile": "terrain_mountain_wall_foot_2/source_alpha.png",
+      "baseLine": 50,
+      "sourceHash": "d645c205db617ecc160b80efdc53b9faa96d08a00caf076fe7e93274c25385bf",
+      "density": 2,
+      "sourceSize": [
+        1536,
+        256
+      ]
     }
   ]
 }
