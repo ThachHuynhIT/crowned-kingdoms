@@ -1,4 +1,4 @@
-"""Slice the approved art-review sheets (batches 02-07) into small PNGs and write the asset-admin manifest.
+"""Slice the art-review sheets (batches 02-08) into small PNGs and write the asset-admin manifest.
 
 Terrain/plots: tiles sit on a flat black background; each tile is cropped from its bounding box and block-downsampled
 (7 px source block = 1 art px). Wilds: objects on flat black, found as connected pieces, alpha = brighter than black.
@@ -84,12 +84,13 @@ for n, box in zip(names, tiles(img, 6, 4)):
     src, size = save(down(img, box, (32, 32)), f'terrain/{n}.png')
     add('terrain', 'Nền đất', tile_item(f'terrain_{n}', n.replace('_', ' '), src, size, n.rsplit('_', 1)[0], [n.split('_')[0]]))
 
-# ---- plots (batches 03-07): per king locked/open/throne at 64x64 ----
+# ---- plots (batches 03-08): per king locked/open/throne at 64x64 ----
 KINGS = {
     'batch-03-plots-wheat-stone': ['wheat', 'stone'],
     'batch-04-plots-arcane-grove': ['arcane', 'grove'],
     'batch-05-plots-tide-forge': ['tide', 'forge'],
     'batch-07-plots-clock-moon': ['clock', 'moon'],
+    'batch-08-plots-nomad': ['nomad'],  # Only row 1; row 2 is a border palette variant.
 }
 for folder, kings in KINGS.items():
     p = ART / folder / 'source.png'

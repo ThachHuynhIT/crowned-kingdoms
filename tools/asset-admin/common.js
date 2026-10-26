@@ -52,6 +52,25 @@ export function frames(item, team = 'ally', anim = 'idle') {
   return Array.isArray(list) && list.length ? list : [item.src];
 }
 export function matches(item, query) { return [item.id, item.label, item.group || '', ...item.tags].join(' ').toLocaleLowerCase('vi').includes(query.toLocaleLowerCase('vi')); }
+export function sizeText(item) { return `${item.w}×${item.h} px ảnh · ${item.w / 2}×${item.h / 2} đơn vị thế giới`; }
+const groupLabels = {
+  wheat: 'Vua Lúa Mì', stone: 'Vua Đá Núi', arcane: 'Vua Phép Thuật', grove: 'Vua Rừng',
+  tide: 'Vua Thuỷ Triều', forge: 'Vua Lò Rèn', clock: 'Vua Đồng Hồ', moon: 'Vua Mặt Trăng', nomad: 'Vua Du Mục',
+  tree: 'Cây', rock: 'Đá nhỏ', boulders: 'Đá tảng', bush: 'Bụi cây', mountain: 'Núi', cliff: 'Vách đá',
+  log: 'Thân cây đổ', stump: 'Gốc cây', unit: 'Lính', building: 'Công trình',
+  grass: 'Cỏ', meadow_flowers: 'Đồng cỏ hoa', meadow_tall: 'Cỏ cao', path: 'Đường đất', sand: 'Cát',
+  water_a: 'Nước A', water_b: 'Nước B',
+};
+// Đổi tab luôn trả về tất cả nhóm, tránh giữ bộ lọc không thuộc tab mới.
+export function groupOptions(select, items) {
+  const groups = [...new Set(items.map((item) => item.group || '').filter(Boolean))].sort();
+  const options = [el('option', 'Tất cả nhóm'), ...groups.map((group) => {
+    const option = el('option', `${groupLabels[group] || group} (${items.filter((item) => item.group === group).length})`);
+    option.value = group; return option;
+  })];
+  options[0].value = '';
+  select.replaceChildren(...options); select.value = ''; select.disabled = !groups.length;
+}
 export function tabs(container, manifest, onChange) {
   let current;
   const choices = [{ id: 'all', label: 'Tất cả', items: manifest.items }, ...manifest.categories];

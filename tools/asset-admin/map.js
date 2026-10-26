@@ -1,4 +1,4 @@
-import { $, el, loadManifest, tabs, matches, drawImage, frames, imageFor, download, message } from './common.js';
+import { $, el, loadManifest, tabs, matches, drawImage, frames, imageFor, download, message, groupOptions, sizeText } from './common.js';
 const manifest = await loadManifest(), assets = new Map(manifest.items.map((a) => [a.id, a]));
 const canvas = $('map'), ctx = canvas.getContext('2d'), viewport = $('viewport');
 let state = { version: 1, cols: 12, rows: 8, cell: 64, items: [] };
@@ -18,6 +18,8 @@ function update() {
   selected = new Set([...selected].filter((i) => i < state.items.length));
   $('selection').textContent = `${selected.size} mục được chọn`;
   const first = state.items[[...selected][0]]; if (first) $('team').value = first.team;
+  if (first) $('selection').textContent += ` · ${sizeText(assets.get(first.id))}`;
+  $('dimensions').textContent = `${state.cols * 64}×${state.rows * 64} px ảnh · ${state.cols * 32}×${state.rows * 32} đơn vị thế giới; 1 ô = 64 px ảnh = 32 đơn vị thế giới`;
   $('undo').disabled = !history.length; $('redo').disabled = !future.length;
 }
 function bounds(item) {
@@ -54,12 +56,13 @@ function tick(now) {
 }
 function palette() {
   $('thumbs').replaceChildren();
-  for (const a of category.filter((item) => matches(item, $('search').value))) {
+  for (const a of category.filter((item) => matches(item, $('search').value) && (!$('group').value || item.group === $('group').value))) {
     const card = el('div', undefined, 'thumb'); card.draggable = true; card.classList.toggle('active', chosen === a.id);
+    card.title = `${a.label} · ${sizeText(a)}`;
     const check = el('input'); check.type = 'checkbox'; check.checked = checked.has(a.id); check.disabled = a.kind === 'tile'; check.setAttribute('aria-label', `Rải ${a.label}`);
     check.onclick = (event) => event.stopPropagation(); check.onchange = () => { if (check.checked) checked.add(a.id); else checked.delete(a.id); };
     const thumb = el('canvas'); thumb.width = thumb.height = 64; thumb.dataset.id = a.id;
-    card.append(check, thumb, el('small', a.label)); card.tabIndex = 0;
+    card.append(check, thumb, el('small', a.label), el('small', sizeText(a))); card.tabIndex = 0;
     card.onclick = () => { chosen = a.id; palette(); message(`Đang chọn: ${a.label}. Kéo thả hoặc dùng công cụ đặt.`); };
     card.onkeydown = (event) => { if (event.key === 'Enter' && event.target === card) card.click(); };
     card.ondragstart = (event) => { event.dataTransfer.setData('text/plain', a.id); event.dataTransfer.effectAllowed = 'copy'; chosen = a.id; };
@@ -206,7 +209,74 @@ $('png').onclick = async () => {
   } catch (error) { message(`Không xuất được PNG: ${error.message}`); } finally { b.disabled = false; }
 };
 $('search').oninput = palette;
-tabs($('tabs'), manifest, (items) => { category = items; palette(); });
+// Chỉ đưa vua có đủ ba trạng thái 64 px vào bản xem trước.
+const plotGroups = new Map();
+for (const a of manifest.categories.find((c) => c.id === 'plots')?.items || []) {
+  if (a.kind !== 'tile' || a.w !== 64 || a.h !== 64) continue;
+  if (!plotGroups.has(a.group)) plotGroups.set(a.group, {});
+  for (const name of ['locked', 'open', 'throne']) if (a.tags.includes(name)) plotGroups.get(a.group)[name] = a.id;
+}
+for (const [king, plots] of plotGroups) {
+  if (!plots.locked || !plots.open || !plots.throne) continue;
+  const option = el('option', king); option.value = king; $('king').append(option);
+}
+$('preview').disabled = !$('king').options.length;
+$('preview').onclick = () => {
+  const plots = plotGroups.get($('king').value); if (!plots) return;
+  edit(() => {
+    state.cols = Math.max(7, state.cols); state.rows = Math.max(7, state.rows);
+    state.items = []; selected.clear();
+    const left = Math.floor((state.cols - 5) / 2), top = Math.floor((state.rows - 5) / 2);
+    for (let row = 0; row < 5; row++) for (let col = 0; col < 5; col++) {
+      const distance = Math.abs(col - 2) + Math.abs(row - 2);
+      place(plots[distance === 0 ? 'throne' : distance === 1 ? 'open' : 'locked'], { x: (left + col) * 64, y: (top + row) * 64 });
+    }
+    $('emptyX').value = left; $('emptyY').value = top; $('emptyW').value = $('emptyH').value = 5;
+  });
+  message('Đã tạo 25 ô: Ngai giữa, 4 ô mở, 20 ô khoá. Có thể hoàn tác.');
+};
+function intersects(a, b) { return a.x < b.x + b.w && a.x + a.w > b.x && a.y < b.y + b.h && a.y + a.h > b.y; }
+$('forest').onclick = () => {
+  const values = ['emptyX', 'emptyY', 'emptyW', 'emptyH'].map((id) => Number($(id).value));
+  const [x, y, w, h] = values, count = Number($('count').value);
+  if (!values.every(Number.isInteger) || x < 0 || y < 0 || w < 1 || h < 1 || x + w > state.cols || y + h > state.rows) { message('Vùng trống phải nằm trong bản đồ, dùng số nguyên theo ô.'); return; }
+  if (!Number.isInteger(count) || count < 1 || count > 2000) { message('N phải là số nguyên từ 1 đến 2000.'); return; }
+  const groups = ['tree', 'rock', 'mountain', 'cliff', 'boulders', 'bush'];
+  const pool = (manifest.categories.find((c) => c.id === 'wilds')?.items || []).filter((a) => a.kind === 'object' && groups.includes(a.group)).sort((a, b) => a.id < b.id ? -1 : a.id > b.id ? 1 : 0);
+  if (!pool.length) { message('Manifest chưa có cây/đá/núi/bụi để rải.'); return; }
+  const clearing = { x: x * 64, y: y * 64, w: w * 64, h: h * 64 };
+  const random = seeded($('seed').value), width = state.cols * 64, height = state.rows * 64;
+  // Xen đá/bụi giữa các cây; xử lý vật cao trước, ưu tiên mép trên.
+  const small = pool.filter((a) => ['rock', 'bush'].includes(a.group));
+  const tall = pool.filter((a) => !['rock', 'bush'].includes(a.group));
+  const plans = Array.from({ length: count }, (_, i) => {
+    const choices = (i % 2 ? small : tall); const list = choices.length ? choices : pool;
+    return { asset: list[Math.floor(random() * list.length)], order: i };
+  }).sort((a, b) => b.asset.h - a.asset.h || a.order - b.order);
+  let added = 0;
+  edit(() => {
+    selected.clear();
+    const occupied = state.items.filter((item) => assets.get(item.id).kind !== 'tile').map(bounds);
+    for (const { asset: a } of plans) {
+      if (a.w > width || a.h > height) continue;
+      for (let attempt = 0; attempt < 200; attempt++) {
+        const px = Math.floor(random() * (width - a.w + 1));
+        const ry = random(), bias = ['tree', 'mountain', 'cliff', 'boulders'].includes(a.group) ? Math.min(ry, random()) : ry;
+        const py = Math.floor(bias * (height - a.h + 1));
+        const box = { x: px, y: py, w: a.w, h: a.h };
+        if (intersects(box, clearing) || occupied.some((other) => intersects(box, other))) continue;
+        // Anchor ở chân, x nguyên để JSON round-trip; tránh cắt mép ảnh lẻ.
+        const item = { id: a.id, x: px + Math.ceil(a.w / 2), y: py + a.h, flip: random() < .5, team: 'ally' };
+        const actual = bounds(item);
+        if (actual.x + actual.w > width || intersects(actual, clearing) || occupied.some((other) => intersects(actual, other))) continue;
+        state.items.push(item); occupied.push(actual); added++; break;
+      }
+    }
+  });
+  message(`Đã rải ${added}/${count} mục với seed “${$('seed').value}”; khung ảnh nằm ngoài vùng trống. Thiếu chỗ sẽ rải ít hơn N. Có thể hoàn tác.`);
+};
+$('group').onchange = palette;
+tabs($('tabs'), manifest, (items) => { category = items; groupOptions($('group'), items); palette(); });
 refreshSaved(); update(); message(manifest.error || (manifest.sample ? 'Manifest mẫu rỗng. Thay bằng manifest thật để dùng asset.' : `${manifest.items.length} asset sẵn sàng.`)); if (!document.hidden) animationFrame = requestAnimationFrame(tick);
 
 document.addEventListener('visibilitychange', () => {

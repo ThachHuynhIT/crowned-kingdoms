@@ -63,6 +63,43 @@ hiện tại được giữ nguyên. Không ghi tệp bản đồ lên server.
 5. Xem bố cục tại 1280×720 và 1920×1080.
 6. `npm run lint`, `npm run typecheck`, `npm test`, `npm run build`.
 
-Đã thử gọi cả bốn lệnh kiểm tra: đều không chạy vì không tìm thấy npm.
-`git diff --check` chạy được và không báo lỗi. Chưa xác nhận cú pháp bằng Node,
-chưa chạy server hay xác nhận thao tác thực tế trong trình duyệt.
+Lượt trước đã thử gọi bốn lệnh kiểm tra nhưng không tìm thấy npm. Lượt rà ngày
+26/10/2026 không gọi node/npm/npx/Python theo yêu cầu. Chưa xác nhận cú pháp bằng
+Node, chưa chạy server hay xác nhận thao tác thực tế trong trình duyệt.
+
+## Bổ sung sau rà tĩnh 26/10/2026
+
+Kế hoạch thực hiện: tách commit fix cho các luồng hiện có, sau đó commit feat cho
+lọc nhóm, xem trước bàn cờ, rải rừng và đơn vị thế giới. Giữ nguyên JSON version 1,
+không tích hợp `src/`, không sinh lại manifest trong môi trường này.
+
+- Tab Tất cả có sẵn; cả hai trang nay lọc `group` kết hợp tìm kiếm. Đổi tab reset
+  nhóm. Plots lọc theo vua, wilds theo cây/đá/bụi/núi và các group còn lại.
+- Kích thước hiển thị gồm px ảnh và đơn vị thế giới = px ảnh ÷ 2. Ô bản đồ là
+  64 px ảnh = 32 đơn vị thế giới; terrain 32 px vẫn dùng lưới con 32 px để lát kín.
+- Tạo bàn cờ thay bản đồ hiện tại (có undo), giữ kích thước tối thiểu 7×7 ô;
+  bàn 5×5 ở giữa có Ngai chính giữa, 4 ô mở cạnh Ngai, 20 ô khoá.
+- Rải rừng dùng N/seed, vùng trống X/Y/rộng/cao tính bằng ô. Vật cao đặt trước,
+  thiên về mép trên; đá nhỏ/bụi xen kẽ. Cả khung ảnh phải nằm trong canvas, ngoài
+  vùng trống, không chồng object/lính có sẵn. Không xoá mục cũ. Cùng seed, N,
+  manifest, vùng trống và trạng thái ban đầu cho cùng kết quả. Thiếu chỗ rải ít hơn N.
+- Alt+kéo bắt đầu chọn vùng ngay cả trên nền tile kín. Pointerup lấy vị trí cuối;
+  phím sửa bản đồ bị bỏ qua khi đang kéo, Esc huỷ. Ẩn tab huỷ kéo và dừng RAF.
+- PNG dùng snapshot riêng gồm nội dung/kích thước/nền lúc bấm, frame idle đầu,
+  nearest sampling; ảnh chờ quá 5 giây báo lỗi để thử lại.
+
+Đã rà mọi file trong thư mục, đối chiếu HTML IDs, JSON export/import, snap,
+y-sort, undo/redo, rubber-band và FPS đứng/đi/đánh 6/6/10 bằng đọc mã. Đối chiếu
+70 asset: 94 tham chiếu, 92 URL ảnh duy nhất đều tồn tại, header PNG khớp w/h
+manifest. Server có kiểm decode, traversal và realpath; chưa thấy lỗ hổng tĩnh.
+
+Chưa kiểm chứng: cú pháp/lint/typecheck/test/build, DOM/sự kiện thực tế, JSON và PNG
+round-trip, undo trong trình duyệt, seed thực chạy, bố cục và hiệu năng khi nhiều
+asset, HTTP traversal/symlink, so ảnh. Cần chạy checklist phía trên và thêm các ca:
+ẩn/hiện tab khi patrol hoặc đang kéo; đổi bản đồ khi PNG đang chờ ảnh; undo/redo
+sau preview/rải rừng; seed giống nhau từ cùng trạng thái; vùng trống phủ cả canvas;
+vùng trống sát mép; bản đồ quá nhỏ cho cây; lọc nhóm rồi đổi tab.
+
+Sheet Nomad nằm ở `docs/art-review/g3e/batch-08-plots-nomad/`. Cần chạy
+`python tools/slice_art_batches.py`; script chỉ lấy hàng đầu. Chưa xác nhận bounding
+box 448 px/gutter 40 px và khối pixel 7 px; cần duyệt ảnh/cắt trước khi dùng.

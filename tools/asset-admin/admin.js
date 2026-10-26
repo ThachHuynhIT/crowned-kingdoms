@@ -1,9 +1,8 @@
-import { $, el, button, loadManifest, tabs, matches, frames, drawImage, safeSrc, message } from './common.js';
+import { $, el, button, loadManifest, tabs, matches, frames, drawImage, safeSrc, message, groupOptions, sizeText } from './common.js';
 const manifest = await loadManifest();
 let category = [], players = [], detail = null;
 const visible = new Set();
 const observer = new IntersectionObserver((entries) => { for (const entry of entries) { if (entry.isIntersecting) visible.add(entry.target); else visible.delete(entry.target); } });
-function sizeText(item) { return `${item.w}×${item.h} px ảnh · ${item.w / manifest.pixelScale}×${item.h / manifest.pixelScale} đơn vị thế giới`; }
 function showDetail(item) {
   const pane = $('detail'); pane.replaceChildren(el('h2', item.label));
   const stage = el('div', undefined, `stage ${$('background').value}`), canvas = el('canvas');
@@ -18,7 +17,7 @@ function showDetail(item) {
 }
 function render() {
   observer.disconnect(); visible.clear(); players = [];
-  const list = category.filter((item) => matches(item, $('search').value));
+  const list = category.filter((item) => (!$('group').value || item.group === $('group').value) && matches(item, $('search').value));
   $('cards').replaceChildren();
   for (const item of list) {
     const card = el('article', undefined, 'card'), stage = el('div', undefined, `stage ${$('background').value}`), canvas = el('canvas');
@@ -72,9 +71,10 @@ function tick(now) {
     }
     if (detail) { const ctx = detail.canvas.getContext('2d'); ctx.clearRect(0, 0, detail.item.w, detail.item.h); drawImage(ctx, detail.item.src, 0, 0, detail.item.w, detail.item.h); }
   }
-  animationFrame = requestAnimationFrame(tick);
+  if (!document.hidden) animationFrame = requestAnimationFrame(tick);
 }
 $('search').oninput = render;
+$('group').onchange = render;
 $('zoom').oninput = () => { $('zoomLabel').value = `${$('zoom').value}×`; for (const p of players) { p.canvas.style.width = `${p.canvas.width * Number($('zoom').value)}px`; p.canvas.style.height = `${p.canvas.height * Number($('zoom').value)}px`; } };
 $('background').onchange = () => { for (const stage of document.querySelectorAll('.stage')) stage.className = `stage ${$('background').value}`; };
-tabs($('tabs'), manifest, (items) => { category = items; render(); }); if (!document.hidden) animationFrame = requestAnimationFrame(tick);
+tabs($('tabs'), manifest, (items) => { category = items; groupOptions($('group'), items); render(); }); if (!document.hidden) animationFrame = requestAnimationFrame(tick);
