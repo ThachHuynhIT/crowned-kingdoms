@@ -1,59 +1,304 @@
 {
   "version": 1,
   "density": 2,
-  "note": "Catalog tường núi (plan 26/10/2026 T8). approval: none | pending | approved. Chỉ approved + adopted + đủ part (đúng hash) mới vào manifest.",
+  "note": "Catalog tường núi (plan 26/10/2026 T8). approval: none | pending | approved. Chỉ approved + adopted + đủ part (đúng hash) mới vào manifest. Đoạn giữa có một ảnh riêng cho mỗi vua (nền biển khác nhau); sourceFile tính từ docs/art-review/oblique-wall; downscale = hệ số thu nhỏ khối pixel; baseLine tính theo px ảnh sau thu nhỏ.",
   "items": [
     {
-      "id": "terrain_mountain_wall_mid_0",
+      "id": "terrain_mountain_wall_mid_wheat",
       "role": "middle",
-      "label": "Tường núi — Đoạn giữa A",
+      "label": "Tường núi — Đoạn giữa nền vua Lúa Mì",
       "priority": "P0",
       "proposed": {
-        "w": 512,
-        "h": 256
+        "w": 384,
+        "h": 192
       },
-      "approval": "none",
-      "adopted": false,
-      "parts": []
+      "approval": "approved",
+      "adopted": true,
+      "king": "wheat",
+      "sourceFile": "terrain_mountain_wall_mid_0/source_wheat_v2.png",
+      "downscale": 4,
+      "baseLine": 192,
+      "parts": [
+        {
+          "id": "terrain_mountain_wall_mid_wheat",
+          "file": "terrain_mountain_wall_mid_wheat.png",
+          "sourceX": 0,
+          "sourceY": 0,
+          "w": 384,
+          "h": 192,
+          "sha256": "e1fe23ed5484711a3e8312c6e7d65304229ce3f3b440979721e3adb946674473"
+        }
+      ],
+      "sourceHash": "c135ca705f1fc6ec5e400c6c4ae59ae283f64a98fcc8a40cf1400e37742fe9e5",
+      "density": 2,
+      "sourceSize": [
+        1536,
+        768
+      ]
     },
     {
-      "id": "terrain_mountain_wall_mid_1",
+      "id": "terrain_mountain_wall_mid_stone",
       "role": "middle",
-      "label": "Tường núi — Đoạn giữa B",
+      "label": "Tường núi — Đoạn giữa nền vua Đá",
       "priority": "P0",
       "proposed": {
-        "w": 512,
-        "h": 256
+        "w": 384,
+        "h": 192
       },
-      "approval": "none",
-      "adopted": false,
-      "parts": []
+      "approval": "approved",
+      "adopted": true,
+      "king": "stone",
+      "sourceFile": "terrain_mountain_wall_mid_0/source_stone.png",
+      "downscale": 4,
+      "baseLine": 192,
+      "parts": [
+        {
+          "id": "terrain_mountain_wall_mid_stone",
+          "file": "terrain_mountain_wall_mid_stone.png",
+          "sourceX": 0,
+          "sourceY": 0,
+          "w": 384,
+          "h": 192,
+          "sha256": "4b23a0bcdb5d5457f06ae51d87cee8db2e754ec4ec16709ed144cf2813d744d1"
+        }
+      ],
+      "sourceHash": "544393115bd737cc0db3b74fd9e06251c5983331d57010ae548910cb0f5b1bc5",
+      "density": 2,
+      "sourceSize": [
+        1536,
+        768
+      ]
     },
     {
-      "id": "terrain_mountain_wall_mid_2",
+      "id": "terrain_mountain_wall_mid_arcane",
       "role": "middle",
-      "label": "Tường núi — Đoạn giữa C",
+      "label": "Tường núi — Đoạn giữa nền vua Pháp Thuật",
       "priority": "P0",
       "proposed": {
-        "w": 512,
-        "h": 256
+        "w": 384,
+        "h": 192
       },
-      "approval": "none",
-      "adopted": false,
-      "parts": []
+      "approval": "approved",
+      "adopted": true,
+      "king": "arcane",
+      "sourceFile": "terrain_mountain_wall_mid_0/source_arcane.png",
+      "downscale": 4,
+      "baseLine": 192,
+      "parts": [
+        {
+          "id": "terrain_mountain_wall_mid_arcane",
+          "file": "terrain_mountain_wall_mid_arcane.png",
+          "sourceX": 0,
+          "sourceY": 0,
+          "w": 384,
+          "h": 192,
+          "sha256": "a7f0a644174a897795af3b5fbca057ae0b3ae2ff89c7f18cef040360b121381f"
+        }
+      ],
+      "sourceHash": "b9c5bc62ffb78ef72d3d82b15bf8557e734cf6a3d654c9fd482b4467f1326931",
+      "density": 2,
+      "sourceSize": [
+        1536,
+        768
+      ]
     },
     {
-      "id": "terrain_mountain_wall_mid_3",
+      "id": "terrain_mountain_wall_mid_grove",
       "role": "middle",
-      "label": "Tường núi — Đoạn giữa D",
+      "label": "Tường núi — Đoạn giữa nền vua Rừng",
       "priority": "P0",
       "proposed": {
-        "w": 512,
-        "h": 256
+        "w": 384,
+        "h": 192
       },
-      "approval": "none",
-      "adopted": false,
-      "parts": []
+      "approval": "approved",
+      "adopted": true,
+      "king": "grove",
+      "sourceFile": "terrain_mountain_wall_mid_0/source_grove.png",
+      "downscale": 4,
+      "baseLine": 192,
+      "parts": [
+        {
+          "id": "terrain_mountain_wall_mid_grove",
+          "file": "terrain_mountain_wall_mid_grove.png",
+          "sourceX": 0,
+          "sourceY": 0,
+          "w": 384,
+          "h": 192,
+          "sha256": "47e5adc3034403f7d75804d7c3be333a6be18afc244e857068e7e39b82f7e5d4"
+        }
+      ],
+      "sourceHash": "a27fb935bcef964e480895afae620cc3cde6af6b8d1d20056cec837463fed818",
+      "density": 2,
+      "sourceSize": [
+        1536,
+        768
+      ]
+    },
+    {
+      "id": "terrain_mountain_wall_mid_tide",
+      "role": "middle",
+      "label": "Tường núi — Đoạn giữa nền vua Thủy Triều",
+      "priority": "P0",
+      "proposed": {
+        "w": 384,
+        "h": 192
+      },
+      "approval": "approved",
+      "adopted": true,
+      "king": "tide",
+      "sourceFile": "terrain_mountain_wall_mid_0/source_tide.png",
+      "downscale": 4,
+      "baseLine": 192,
+      "parts": [
+        {
+          "id": "terrain_mountain_wall_mid_tide",
+          "file": "terrain_mountain_wall_mid_tide.png",
+          "sourceX": 0,
+          "sourceY": 0,
+          "w": 384,
+          "h": 192,
+          "sha256": "fd8c0f10a0f0890f7a61db803d0f66fdb4ffd8e8a5aa713f4877a6e080e23429"
+        }
+      ],
+      "sourceHash": "218da5e6c798d1b9496f36cabd0444903a08ee435002b8b850eff0622ce32a63",
+      "density": 2,
+      "sourceSize": [
+        1536,
+        768
+      ]
+    },
+    {
+      "id": "terrain_mountain_wall_mid_forge",
+      "role": "middle",
+      "label": "Tường núi — Đoạn giữa nền vua Lò Rèn",
+      "priority": "P0",
+      "proposed": {
+        "w": 384,
+        "h": 192
+      },
+      "approval": "approved",
+      "adopted": true,
+      "king": "forge",
+      "sourceFile": "terrain_mountain_wall_mid_0/source_forge.png",
+      "downscale": 4,
+      "baseLine": 192,
+      "parts": [
+        {
+          "id": "terrain_mountain_wall_mid_forge",
+          "file": "terrain_mountain_wall_mid_forge.png",
+          "sourceX": 0,
+          "sourceY": 0,
+          "w": 384,
+          "h": 192,
+          "sha256": "f5b512ef84315cd7ce7a79c68ecc238f0d94acec5b1e27cec83fcfbc6d7b6fc8"
+        }
+      ],
+      "sourceHash": "add92b405027b5668ba47751095fa13ae9c360aa02b89dd2fb8a1cb1d0823a92",
+      "density": 2,
+      "sourceSize": [
+        1536,
+        768
+      ]
+    },
+    {
+      "id": "terrain_mountain_wall_mid_clock",
+      "role": "middle",
+      "label": "Tường núi — Đoạn giữa nền vua Đồng Hồ",
+      "priority": "P0",
+      "proposed": {
+        "w": 384,
+        "h": 192
+      },
+      "approval": "approved",
+      "adopted": true,
+      "king": "clock",
+      "sourceFile": "terrain_mountain_wall_mid_0/source_clock.png",
+      "downscale": 4,
+      "baseLine": 192,
+      "parts": [
+        {
+          "id": "terrain_mountain_wall_mid_clock",
+          "file": "terrain_mountain_wall_mid_clock.png",
+          "sourceX": 0,
+          "sourceY": 0,
+          "w": 384,
+          "h": 192,
+          "sha256": "e730e7443aec0b0bb3275d4c5a464bb9712267062a98c56a059ae24a7af88405"
+        }
+      ],
+      "sourceHash": "e821c59f5fd8dc8ee8d3d4afb60706063f642f763ac0b03ab13d258dbbf4cef6",
+      "density": 2,
+      "sourceSize": [
+        1536,
+        768
+      ]
+    },
+    {
+      "id": "terrain_mountain_wall_mid_moon",
+      "role": "middle",
+      "label": "Tường núi — Đoạn giữa nền vua Nguyệt",
+      "priority": "P0",
+      "proposed": {
+        "w": 384,
+        "h": 192
+      },
+      "approval": "approved",
+      "adopted": true,
+      "king": "moon",
+      "sourceFile": "terrain_mountain_wall_mid_0/source_moon.png",
+      "downscale": 4,
+      "baseLine": 192,
+      "parts": [
+        {
+          "id": "terrain_mountain_wall_mid_moon",
+          "file": "terrain_mountain_wall_mid_moon.png",
+          "sourceX": 0,
+          "sourceY": 0,
+          "w": 384,
+          "h": 192,
+          "sha256": "286063084c028b95d598ba56136159030273e9babd5080723d4a92b0a196e4a9"
+        }
+      ],
+      "sourceHash": "10d21aa9a65a3a4cbe4ac7425c62fbf7781682066c1d0975ae03a6ec50478182",
+      "density": 2,
+      "sourceSize": [
+        1536,
+        768
+      ]
+    },
+    {
+      "id": "terrain_mountain_wall_mid_nomad",
+      "role": "middle",
+      "label": "Tường núi — Đoạn giữa nền vua Du Mục",
+      "priority": "P0",
+      "proposed": {
+        "w": 384,
+        "h": 192
+      },
+      "approval": "approved",
+      "adopted": true,
+      "king": "nomad",
+      "sourceFile": "terrain_mountain_wall_mid_0/source_nomad.png",
+      "downscale": 4,
+      "baseLine": 192,
+      "parts": [
+        {
+          "id": "terrain_mountain_wall_mid_nomad",
+          "file": "terrain_mountain_wall_mid_nomad.png",
+          "sourceX": 0,
+          "sourceY": 0,
+          "w": 384,
+          "h": 192,
+          "sha256": "989289f010ad78329c8a2465991f5c30c7b7276051a2343c771fc59a151aa010"
+        }
+      ],
+      "sourceHash": "a14d0e05b93cf5ec96ea88e1c85b0568b9c2475640830517ee975c511de47289",
+      "density": 2,
+      "sourceSize": [
+        1536,
+        768
+      ]
     },
     {
       "id": "terrain_mountain_wall_cap_left",

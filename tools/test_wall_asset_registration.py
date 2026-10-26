@@ -25,11 +25,11 @@ def wall_ids(result):
 
 
 class RegistrationTest(unittest.TestCase):
-    def test_all_14_logical_walls_are_planned_work_items_in_terrain(self):
+    def test_every_unadopted_wall_is_a_planned_work_item_in_terrain(self):
         result = planned()
-        self.assertEqual(len(wall_ids(result)), 14)
-        row = next(i for i in result['items'] if i['id'] == 'terrain_mountain_wall_mid_0')
-        self.assertEqual((row['category'], row['group'], row['priority'], row['w'], row['h']), ('terrain', 'mountain_wall', 'P0', 0, 0))
+        self.assertEqual(len(wall_ids(result)), len(CATALOG['items']) - sum(1 for e in CATALOG['items'] if e['adopted']))
+        row = next(i for i in result['items'] if i['id'] == 'terrain_mountain_wall_cap_left')
+        self.assertEqual((row['category'], row['group'], row['priority']), ('terrain', 'mountain_wall', 'P0'))
         far = next(i for i in result['items'] if i['id'] == 'terrain_mountain_wall_far_0')
         self.assertEqual(far['priority'], 'P2')
 
@@ -42,15 +42,16 @@ class RegistrationTest(unittest.TestCase):
 
     def test_approved_but_not_adopted_stays_planned(self):
         cat = json.loads(json.dumps(CATALOG))
-        cat['items'][0].update(approval='approved')
-        self.assertIn('terrain_mountain_wall_mid_0', wall_ids(planned(catalog=cat)))
+        next(i for i in cat['items'] if i['id'] == 'terrain_mountain_wall_cap_left').update(approval='approved')
+        self.assertIn('terrain_mountain_wall_cap_left', wall_ids(planned(catalog=cat)))
 
     def test_adopted_with_all_parts_in_the_manifest_is_no_longer_planned(self):
         cat = json.loads(json.dumps(CATALOG))
-        e = cat['items'][0]
+        e = next(i for i in cat['items'] if i['id'] == 'terrain_mountain_wall_cap_left')
         e.update(approval='approved', adopted=True, parts=[{'id': e['id'] + '_part_000', 'file': 'a.png', 'w': 1, 'h': 1, 'sha256': 'x'},
                                                           {'id': e['id'] + '_part_001', 'file': 'b.png', 'w': 1, 'h': 1, 'sha256': 'x'}])
         man = json.loads(json.dumps(MANIFEST))
+        man['categories'][0]['items'] = [i for i in man['categories'][0]['items'] if not i['id'].startswith(e['id'])]
         man['categories'][0]['items'].append({'id': e['id'] + '_part_000', 'label': 'p0', 'src': '/a.png', 'w': 1, 'h': 1, 'kind': 'object', 'tags': []})
         self.assertIn(e['id'], wall_ids(planned(man, cat)))  # one part missing: still planned
         man['categories'][0]['items'].append({'id': e['id'] + '_part_001', 'label': 'p1', 'src': '/b.png', 'w': 1, 'h': 1, 'kind': 'object', 'tags': []})

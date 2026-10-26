@@ -48,9 +48,11 @@ describe('layoutWall', () => {
     expect(WALL_DEPTH.foot).toBeLessThan(WALL_DEPTH.attachment);
   });
 
-  it('returns nothing when the assets are incomplete (no middle or no cap)', () => {
+  it('needs a middle segment; caps and feet are optional', () => {
     expect(layoutWall(L, R, 64, 1, assets.filter((a) => a.role !== 'middle'))).toEqual([]);
-    expect(layoutWall(L, R, 64, 1, assets.filter((a) => a.role !== 'left'))).toEqual([]);
+    const bare = layoutWall(L, R, 64, 1, assets.filter((a) => a.role === 'middle'));
+    expect(bare.length).toBeGreaterThan(0);
+    expect(bare.every((p) => byId.get(p.assetId)!.role === 'middle')).toBe(true);
   });
 
   it('a very wide source split into parts keeps every part inside the asset and each part within the GPU limit', () => {

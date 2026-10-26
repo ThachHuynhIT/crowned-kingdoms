@@ -20,7 +20,7 @@
       "release"
     ],
     "coverage": {
-      "manifestItems": 73,
+      "manifestItems": 82,
       "cards": 93,
       "cardArtIncludingThrones": 102,
       "buildingBases": 65,
@@ -9636,74 +9636,6 @@
       "priority": "P0",
       "frames": 1,
       "note": "Chưa có ảnh được duyệt (approval: none). Kích thước đề xuất 512×64 px ảnh, không giới hạn nguồn; đường chân và mật độ 2 px/đơn vị theo ASSET_REQUIREMENTS §9.1."
-    },
-    {
-      "id": "terrain_mountain_wall_mid_0",
-      "label": "Tường núi — Đoạn giữa A",
-      "category": "terrain",
-      "w": 0,
-      "h": 0,
-      "kind": "object",
-      "group": "mountain_wall",
-      "tags": [
-        "mountain_wall",
-        "middle"
-      ],
-      "source": "docs/ASSET_REQUIREMENTS.md:352 (§9.1)",
-      "priority": "P0",
-      "frames": 1,
-      "note": "Chưa có ảnh được duyệt (approval: none). Kích thước đề xuất 512×256 px ảnh, không giới hạn nguồn; đường chân và mật độ 2 px/đơn vị theo ASSET_REQUIREMENTS §9.1."
-    },
-    {
-      "id": "terrain_mountain_wall_mid_1",
-      "label": "Tường núi — Đoạn giữa B",
-      "category": "terrain",
-      "w": 0,
-      "h": 0,
-      "kind": "object",
-      "group": "mountain_wall",
-      "tags": [
-        "mountain_wall",
-        "middle"
-      ],
-      "source": "docs/ASSET_REQUIREMENTS.md:352 (§9.1)",
-      "priority": "P0",
-      "frames": 1,
-      "note": "Chưa có ảnh được duyệt (approval: none). Kích thước đề xuất 512×256 px ảnh, không giới hạn nguồn; đường chân và mật độ 2 px/đơn vị theo ASSET_REQUIREMENTS §9.1."
-    },
-    {
-      "id": "terrain_mountain_wall_mid_2",
-      "label": "Tường núi — Đoạn giữa C",
-      "category": "terrain",
-      "w": 0,
-      "h": 0,
-      "kind": "object",
-      "group": "mountain_wall",
-      "tags": [
-        "mountain_wall",
-        "middle"
-      ],
-      "source": "docs/ASSET_REQUIREMENTS.md:352 (§9.1)",
-      "priority": "P0",
-      "frames": 1,
-      "note": "Chưa có ảnh được duyệt (approval: none). Kích thước đề xuất 512×256 px ảnh, không giới hạn nguồn; đường chân và mật độ 2 px/đơn vị theo ASSET_REQUIREMENTS §9.1."
-    },
-    {
-      "id": "terrain_mountain_wall_mid_3",
-      "label": "Tường núi — Đoạn giữa D",
-      "category": "terrain",
-      "w": 0,
-      "h": 0,
-      "kind": "object",
-      "group": "mountain_wall",
-      "tags": [
-        "mountain_wall",
-        "middle"
-      ],
-      "source": "docs/ASSET_REQUIREMENTS.md:352 (§9.1)",
-      "priority": "P0",
-      "frames": 1,
-      "note": "Chưa có ảnh được duyệt (approval: none). Kích thước đề xuất 512×256 px ảnh, không giới hạn nguồn; đường chân và mật độ 2 px/đơn vị theo ASSET_REQUIREMENTS §9.1."
     },
     {
       "id": "terrain_path_mask_01",

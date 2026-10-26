@@ -1,5 +1,6 @@
 import type Phaser from 'phaser';
 import { BATTLE } from '../data/battle';
+import type { KingId } from '../data/types';
 import { ensureMountainWallTextures } from './mountainWallAssets';
 import { layoutWall } from './mountainWallModel';
 
@@ -14,8 +15,8 @@ export const WALL_EXTENT = 1024;
 export class MountainWallRenderer {
   private images: Phaser.GameObjects.Image[] = [];
 
-  constructor(scene: Phaser.Scene, seed: number) {
-    const assets = ensureMountainWallTextures(scene.textures);
+  constructor(scene: Phaser.Scene, seed: number, kingId?: KingId) {
+    const assets = ensureMountainWallTextures(scene.textures, kingId);
     const byId = new Map(assets.map((a) => [a.id, a]));
     for (const p of layoutWall(-WALL_EXTENT, BATTLE.field + WALL_EXTENT, BATTLE.wallY, seed, assets)) {
       const asset = byId.get(p.assetId)!;

@@ -18,8 +18,8 @@ const pick = (pool: readonly WallAsset[], i: number, seed: number, salt: number)
 
 /**
  * Lays out the wall along [left, right] (world x): end caps just outside the span, middle segments
- * and foot strips in between, deterministic for `seed` (variants only; the span never changes). Returns
- * [] when the assets lack a middle or an end cap.
+ * and foot strips in between, deterministic for `seed` (variants only; the span never changes). End caps and
+ * feet are optional; returns [] when the assets lack a middle.
  */
 export const layoutWall = (
   left: number,
@@ -32,7 +32,7 @@ export const layoutWall = (
   const feet = assets.filter((a) => a.role === 'foot');
   const capL = assets.find((a) => a.role === 'left');
   const capR = assets.find((a) => a.role === 'right');
-  if (middles.length === 0 || capL === undefined || capR === undefined) return [];
+  if (middles.length === 0) return [];
   const out: WallPlacement[] = [];
   let x = left;
   for (let i = 0; x < right; i++) {
@@ -40,8 +40,10 @@ export const layoutWall = (
     out.push({ assetId: a.id, x, footY: wallY, flip: pixelHash(i, 5, seed) > 0.5, depth: WALL_DEPTH.body });
     x += a.w * a.imageScale;
   }
-  out.push({ assetId: capL.id, x: left - capL.w * capL.imageScale, footY: wallY, flip: false, depth: WALL_DEPTH.body });
-  out.push({ assetId: capR.id, x, footY: wallY, flip: false, depth: WALL_DEPTH.body });
+  if (capL !== undefined) {
+    out.push({ assetId: capL.id, x: left - capL.w * capL.imageScale, footY: wallY, flip: false, depth: WALL_DEPTH.body });
+  }
+  if (capR !== undefined) out.push({ assetId: capR.id, x, footY: wallY, flip: false, depth: WALL_DEPTH.body });
   if (feet.length > 0) {
     let fx = left;
     for (let i = 0; fx < x; i++) {

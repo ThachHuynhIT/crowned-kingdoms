@@ -1,5 +1,6 @@
 import type Phaser from 'phaser';
 import { BATTLE } from '../data/battle';
+import type { KingId } from '../data/types';
 import { MountainWallRenderer } from './MountainWallRenderer';
 import { ensureFieldTexture, ensureGroundTexture, fieldTextureScale, groundTextureScale } from './atlas';
 
@@ -17,7 +18,7 @@ export class FieldRenderer {
   private ground: Phaser.GameObjects.TileSprite | null;
   private wall: MountainWallRenderer | null;
 
-  constructor(scene: Phaser.Scene, seed: number) {
+  constructor(scene: Phaser.Scene, seed: number, kingId?: KingId) {
     this.textures = scene.textures;
     this.key = ensureFieldTexture(scene.textures, seed);
     const mid = BATTLE.field / 2;
@@ -30,7 +31,7 @@ export class FieldRenderer {
       .setOrigin(0, 0)
       .setScale(fieldTextureScale(scene.textures, this.key))
       .setDepth(0);
-    this.wall = new MountainWallRenderer(scene, seed);
+    this.wall = new MountainWallRenderer(scene, seed, kingId);
   }
 
   /** Destroys the images, then removes the `field-<seed>` texture (nothing else uses it). */

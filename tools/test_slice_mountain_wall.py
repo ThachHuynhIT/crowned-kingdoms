@@ -39,6 +39,21 @@ class SliceTest(unittest.TestCase):
             self.assertEqual(len(parts), 3 * 2)
             self.assertEqual(sum(p['w'] * p['h'] for p in parts), 300 * 250)
 
+    def test_downscale_box_averages_blocks_and_must_divide_the_size(self):
+        with tempfile.TemporaryDirectory() as d:
+            src, arr = make_source(d, 16, 8)
+            parts = slice_wall(src, {'id': 'w', 'baseLine': 8, 'downscale': 4}, Path(d) / 'o', 2048)
+            self.assertEqual((parts[0]['w'], parts[0]['h']), (4, 2))
+            out = np.array(Image.open(Path(d) / 'o' / 'w.png').convert('RGBA'))
+            self.assertEqual(out.shape, (2, 4, 4))
+            self.assertTrue((out[..., 3] == 255).all())
+            expect = arr[:4, :4, :3].astype(float).mean(axis=(0, 1))
+            self.assertTrue(np.abs(out[0, 0, :3].astype(float) - expect).max() <= 1.0)
+            with self.assertRaises(WallError):
+                slice_wall(src, {'id': 'w', 'baseLine': 8, 'downscale': 3}, Path(d) / 'o2', 2048)
+            with self.assertRaises(WallError):
+                validate_wall_recipe({'id': 'w', 'baseLine': 8, 'downscale': 0}, (16, 8))
+
     def test_a_source_that_fits_is_a_single_file_named_by_id(self):
         with tempfile.TemporaryDirectory() as d:
             src, _ = make_source(d, 100, 60)

@@ -491,3 +491,129 @@ assets:
     nativeSize: ~110x90
     finalSize: 64x~55
     notes: Barracks shrunk to 64 px wide; frame building_neutral_barracks, scale 0.5
+  - id: world_ai_v1_mountain_wall_mid_wheat
+    path: public/assets/art/ai-v1/mountain-wall/terrain_mountain_wall_mid_wheat.png
+    category: world
+    origin: custom
+    source: docs/art-review/oblique-wall/terrain_mountain_wall_mid_0/source_wheat_v2.png
+    creator: Project owner (OpenAI imagegen via Codex; prompt in .superpowers/codex-wall-mid0-v2.md, approved 26/10/2026)
+    license: project-owned
+    attribution: false
+    redistribute: true
+    evidence: docs/art-review/oblique-wall/
+    modified: true
+    nativeSize: 1536x768
+    finalSize: 384x192
+    notes: Mountain wall middle segment with the wheat king's sea backdrop; box-downscaled x4, tiled along the north edge, drawn at scale 0.5 (see src/render/mountainWallAssets.ts)
+  - id: world_ai_v1_mountain_wall_mid_stone
+    path: public/assets/art/ai-v1/mountain-wall/terrain_mountain_wall_mid_stone.png
+    category: world
+    origin: custom
+    source: docs/art-review/oblique-wall/terrain_mountain_wall_mid_0/source_stone.png
+    creator: Project owner (OpenAI imagegen via Codex; prompt in .superpowers/codex-wall-stone.md, approved 26/10/2026)
+    license: project-owned
+    attribution: false
+    redistribute: true
+    evidence: docs/art-review/oblique-wall/
+    modified: true
+    nativeSize: 1536x768
+    finalSize: 384x192
+    notes: Mountain wall middle segment with the stone king's sea backdrop; box-downscaled x4, tiled along the north edge, drawn at scale 0.5 (see src/render/mountainWallAssets.ts)
+  - id: world_ai_v1_mountain_wall_mid_arcane
+    path: public/assets/art/ai-v1/mountain-wall/terrain_mountain_wall_mid_arcane.png
+    category: world
+    origin: custom
+    source: docs/art-review/oblique-wall/terrain_mountain_wall_mid_0/source_arcane.png
+    creator: Project owner (OpenAI imagegen via Codex; prompt in .superpowers/codex-wall-arcane.md, approved 26/10/2026)
+    license: project-owned
+    attribution: false
+    redistribute: true
+    evidence: docs/art-review/oblique-wall/
+    modified: true
+    nativeSize: 1536x768
+    finalSize: 384x192
+    notes: Mountain wall middle segment with the arcane king's sea backdrop; box-downscaled x4, tiled along the north edge, drawn at scale 0.5 (see src/render/mountainWallAssets.ts)
+  - id: world_ai_v1_mountain_wall_mid_grove
+    path: public/assets/art/ai-v1/mountain-wall/terrain_mountain_wall_mid_grove.png
+    category: world
+    origin: custom
+    source: docs/art-review/oblique-wall/terrain_mountain_wall_mid_0/source_grove.png
+    creator: Project owner (OpenAI imagegen via Codex; prompt in .superpowers/codex-wall-grove.md, approved 26/10/2026)
+    license: project-owned
+    attribution: false
+    redistribute: true
+    evidence: docs/art-review/oblique-wall/
+    modified: true
+    nativeSize: 1536x768
+    finalSize: 384x192
+    notes: Mountain wall middle segment with the grove king's sea backdrop; box-downscaled x4, tiled along the north edge, drawn at scale 0.5 (see src/render/mountainWallAssets.ts)
+  - id: world_ai_v1_mountain_wall_mid_tide
+    path: public/assets/art/ai-v1/mountain-wall/terrain_mountain_wall_mid_tide.png
+    category: world
+    origin: custom
+    source: docs/art-review/oblique-wall/terrain_mountain_wall_mid_0/source_tide.png
+    creator: Project owner (OpenAI imagegen via Codex; prompt in .superpowers/codex-wall-tide.md, approved 26/10/2026)
+    license: project-owned
+    attribution: false
+    redistribute: true
+    evidence: docs/art-review/oblique-wall/
+    modified: true
+    nativeSize: 1536x768
+    finalSize: 384x192
+    notes: Mountain wall middle segment with the tide king's sea backdrop; box-downscaled x4, tiled along the north edge, drawn at scale 0.5 (see src/render/mountainWallAssets.ts)
+  - id: world_ai_v1_mountain_wall_mid_forge
+    path: public/assets/art/ai-v1/mountain-wall/terrain_mountain_wall_mid_forge.png
+    category: world
+    origin: custom
+    source: docs/art-review/oblique-wall/terrain_mountain_wall_mid_0/source_forge.png
+    creator: Project owner (OpenAI imagegen via Codex; prompt in .superpowers/codex-wall-forge.md, approved 26/10/2026)
+    license: project-owned
+    attribution: false
+    redistribute: true
+    evidence: docs/art-review/oblique-wall/
+    modified: true
+    nativeSize: 1536x768
+    finalSize: 384x192
+    notes: Mountain wall middle segment with the forge king's sea backdrop; box-downscaled x4, tiled along the north edge, drawn at scale 0.5 (see src/render/mountainWallAssets.ts)
+  - id: world_ai_v1_mountain_wall_mid_clock
+    path: public/assets/art/ai-v1/mountain-wall/terrain_mountain_wall_mid_clock.png
+    category: world
+    origin: custom
+    source: docs/art-review/oblique-wall/terrain_mountain_wall_mid_0/source_clock.png
+    creator: Project owner (OpenAI imagegen via Codex; prompt in .superpowers/codex-wall-clock.md, approved 26/10/2026)
+    license: project-owned
+    attribution: false
+    redistribute: true
+    evidence: docs/art-review/oblique-wall/
+    modified: true
+    nativeSize: 1536x768
+    finalSize: 384x192
+    notes: Mountain wall middle segment with the clock king's sea backdrop; box-downscaled x4, tiled along the north edge, drawn at scale 0.5 (see src/render/mountainWallAssets.ts)
+  - id: world_ai_v1_mountain_wall_mid_moon
+    path: public/assets/art/ai-v1/mountain-wall/terrain_mountain_wall_mid_moon.png
+    category: world
+    origin: custom
+    source: docs/art-review/oblique-wall/terrain_mountain_wall_mid_0/source_moon.png
+    creator: Project owner (OpenAI imagegen via Codex; prompt in .superpowers/codex-wall-moon.md, approved 26/10/2026)
+    license: project-owned
+    attribution: false
+    redistribute: true
+    evidence: docs/art-review/oblique-wall/
+    modified: true
+    nativeSize: 1536x768
+    finalSize: 384x192
+    notes: Mountain wall middle segment with the moon king's sea backdrop; box-downscaled x4, tiled along the north edge, drawn at scale 0.5 (see src/render/mountainWallAssets.ts)
+  - id: world_ai_v1_mountain_wall_mid_nomad
+    path: public/assets/art/ai-v1/mountain-wall/terrain_mountain_wall_mid_nomad.png
+    category: world
+    origin: custom
+    source: docs/art-review/oblique-wall/terrain_mountain_wall_mid_0/source_nomad.png
+    creator: Project owner (OpenAI imagegen via Codex; prompt in .superpowers/codex-wall-nomad.md, approved 26/10/2026)
+    license: project-owned
+    attribution: false
+    redistribute: true
+    evidence: docs/art-review/oblique-wall/
+    modified: true
+    nativeSize: 1536x768
+    finalSize: 384x192
+    notes: Mountain wall middle segment with the nomad king's sea backdrop; box-downscaled x4, tiled along the north edge, drawn at scale 0.5 (see src/render/mountainWallAssets.ts)

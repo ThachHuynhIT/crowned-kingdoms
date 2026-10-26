@@ -2,6 +2,7 @@ import Phaser from 'phaser';
 import { UI_PALETTE } from '../data/uiPalette';
 import { CONTENT } from '../game/cards/registry';
 import { buildSpritesTexture, buildUiTexture } from '../render/atlas';
+import { WALL_IMAGES, WALL_IMAGE_DIR, wallImageKey } from '../render/mountainWallAssets';
 import { IMAGE_ART_DIR, IMAGE_ART_FILES, imageArtKey } from '../render/imageArt';
 import type { UiFrame } from '../render/uiArt';
 import { UI_KIT_DIR, UI_KIT_FILES, kitTextureKey } from '../render/uiKit';
@@ -30,6 +31,8 @@ export class PreloadScene extends Phaser.Scene {
     }
     // Image art (G3e ai-v1); a file that fails to load leaves the generated art in its place.
     for (const file of IMAGE_ART_FILES) this.load.image(imageArtKey(file), `${IMAGE_ART_DIR}${file}.png`);
+    // Mountain wall backdrop per king (G3e); a file that fails to load leaves the placeholder wall.
+    for (const s of WALL_IMAGES) this.load.image(wallImageKey(s.id), `${WALL_IMAGE_DIR}${s.id}.png`);
     // Real assets (atlases, audio) will be queued here with this.load.*.
   }
 

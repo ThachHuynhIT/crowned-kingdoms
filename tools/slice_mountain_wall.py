@@ -39,6 +39,9 @@ def validate_wall_recipe(recipe, source_size):
     base = recipe['baseLine']
     if type(base) is not int or not 0 <= base <= sh:
         raise WallError(f'baseLine {base!r} outside the source height {sh}')
+    factor = recipe.get('downscale', 1)
+    if type(factor) is not int or factor < 1:
+        raise WallError(f'downscale must be an integer >= 1, got {factor!r}')
     crop = recipe.get('crop')
     if crop is not None:
         x, y, w, h = (crop.get(k) for k in ('x', 'y', 'w', 'h'))
@@ -80,6 +83,15 @@ def slice_wall(source, recipe, output, max_texture_side=2048):
     w, h = (crop['w'], crop['h']) if crop else img.size
     arr = arr[y0:y0 + h, x0:x0 + w]
     _check_alpha(arr)
+    factor = recipe.get('downscale', 1)
+    if factor > 1:
+        # Box-average each factor x factor block (the AI sheets draw one art pixel as a block of source pixels).
+        if w % factor or h % factor:
+            raise WallError(f'{w}x{h} is not divisible by downscale {factor}')
+        small = Image.fromarray(arr, 'RGBA').resize((w // factor, h // factor), Image.BOX)
+        arr = np.array(small)
+        w, h = small.size
+        _check_alpha(arr)
     ident = recipe['id']
     cols = -(-w // max_texture_side)
     rows = -(-h // max_texture_side)
@@ -147,11 +159,12 @@ def main(argv=None):
     if entry is None:
         print(f'FAIL: {args.id} is not in the catalog')
         return 1
-    source = ROOT / 'docs/art-review/oblique-wall' / args.id / 'source.png'
+    source = ROOT / 'docs/art-review/oblique-wall' / entry.get('sourceFile', f'{args.id}/source.png')
     if not source.exists():
         print(f'FAIL: {source} does not exist (art not generated or approved yet)')
         return 1
-    recipe = {'id': args.id, 'baseLine': entry.get('baseLine', 0), **({'crop': entry['crop']} if 'crop' in entry else {})}
+    recipe = {'id': args.id, 'baseLine': entry.get('baseLine', 0) * entry.get('downscale', 1), 'downscale': entry.get('downscale', 1),
+              **({'crop': entry['crop']} if 'crop' in entry else {})}
     try:
         parts = slice_wall(source, recipe, ROOT / OUT_DIR, args.max_texture_side)
     except WallError as e:
@@ -161,8 +174,10 @@ def main(argv=None):
         p['sha256'] = sha256(ROOT / OUT_DIR / p['file'])
     entry['parts'] = parts
     entry['sourceHash'] = sha256(source)
+    entry['density'] = catalog['density']
+    entry['sourceSize'] = list(Image.open(source).size)
     (ROOT / args.catalog).write_text(json.dumps(catalog, ensure_ascii=False, indent=2) + '\n', encoding='utf-8')
-    print(f'{args.id}: {len(parts)} part(s); approval stays "{entry.get("approval")}" until you set it in the catalog')
+    print(f'{args.id}: {len(parts)} part(s), approval "{entry.get("approval")}", adopted {entry.get("adopted")}')
     if args.preview:
         im = Image.open(source).convert('RGBA')
         w, h = im.size
