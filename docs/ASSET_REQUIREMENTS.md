@@ -349,6 +349,27 @@ Impact mũi tên có thể dùng physical_hit, impact băng dùng magic_hit + sl
 - Decor 20 mẫu đề xuất: 3 cây, 3 bụi, 3 đá, 6 hàng rào (ngang/dọc/4 góc), 1 cổng, 1 xe lúa, 1 thùng, 1 đống rơm, 1 biển. Cây 16×24/32×40; đồ nhỏ 16×16; neo chân và y-sort. Chuyển động lá không bắt buộc ở gói đầu.
 - Nền menu: 1 trời + 3 lớp xa/trung/gần nếu xuất ảnh; không đếm mỗi màn UI là một background mới. Logo 1; tranh thắng/thua 2 là tùy chọn. Kích thước nền chốt theo layout.
 
+### 9.1 Tường núi sau lưng lâu đài (góc nhìn xéo)
+
+Thiết kế: [spec 26/10/2026](superpowers/specs/2026-10-26-oblique-view-mountain-wall-design.md). Phía bắc (sau lưng lâu đài) là vách núi liền, địch không vào từ đây; địch chỉ tiến từ phía trước.
+
+- **Vai trò:** vật cản cứng chạy hết chiều ngang bản đồ ở mép trên, đồng thời là nền sau. Không có cổng, không có đường mòn xuyên qua.
+- **Kích thước: không giới hạn.** Không bị ràng buộc 32×32/64×64 hay trần 4096: được vẽ **dài và cao tùy ý** (ví dụ bề ngang cả bản đồ 768 px ảnh trở lên, cao 128–256 px ảnh, kể cả phần cao trội lên khỏi mép logic). Ràng buộc duy nhất là hợp đồng kỹ thuật §3 (không giới hạn màu, alpha 0/255, không anti-aliasing, 2 px ảnh = 1 đơn vị thế giới) và giới hạn thực tế của GPU: ảnh quá lớn thì cắt thành các đoạn ngang, đặt cạnh nhau.
+- **Nhìn xéo:** thấy mặt vách đá hướng về người chơi; chân vách phía dưới là đường tiếp xúc với đồng cỏ (đá vụn, rêu, bụi), đỉnh vách phía trên có thể có tuyết, thông, mỏm đá. Ánh sáng từ trên-trái.
+- **Bộ bàn giao:**
+
+| Thành phần | Số lượng | Ghi chú |
+|---|---:|---|
+| Đoạn tường giữa (ghép ngang) | 4 biến thể | Mép trái và phải khớp nhau để ghép liên tục; chiều rộng đoạn ≥ 256 px ảnh, mọi biến thể cùng chiều cao chân |
+| Đầu nối trái / phải | 2 | Tường chạy xuống hòa vào sườn đá ở hai bên (có thể chen cây/đá) |
+| Dải chân núi (viền tiếp xúc cỏ) | 3 biến thể | Ghép ngang, nửa trong suốt không dùng: alpha 0/255 |
+| Lớp xa (đỉnh núi nền, tùy chọn) | 1–2 | Phía sau tường, độ sâu thấp nhất |
+| Vật trang trí gắn tường (tùy chọn) | 4 | Thác nước nhỏ, hang tối, cây mọc ngang vách, đá lăn |
+
+- **Neo và độ sâu:** chân vách trùng với `BATTLE.wallY` (neo mép dưới); mọi sprite lính/nhà luôn vẽ **trước** tường (độ sâu thấp hơn là tường). Không xoay; lật ngang được cho đoạn giữa.
+- **Quy trình duyệt:** như các batch trước. Codex tạo từng ảnh (một lần một ảnh), người dùng duyệt, rồi cắt/ghép và đăng ký vào `tools/asset-admin/manifest.json`; mục chưa có nằm trong `planned.json` (danh mục `terrain`, nhóm `mountain_wall`).
+- **Nghiệm thu:** ghép liên tục 3 đoạn bất kỳ không lộ đường nối; chạy ở zoom 1 và 2 không méo pixel; không có điểm trong suốt giữa chân tường và cỏ.
+
 ## 10. UI, icon và phát hành
 
 - Giữ 14 frame khung hiện hành và 2 trang trí theo ART_STYLE; panel/card/button là 9-slice. Không gen nguyên ảnh chứa chữ cho từng màn.

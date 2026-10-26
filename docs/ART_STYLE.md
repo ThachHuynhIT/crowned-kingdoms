@@ -69,6 +69,10 @@ Khung thẻ theo độ hiếm (thêm vào texture `ui` từ G1): thường = vi�
 - **Không xoay sprite**; lật ngang để quay trái/phải được phép. **Neo ở chân** (origin 0.5, 1) và xếp chiều sâu theo y của chân (y-sort).
 - Chi tiết 1 px trên tile phải thưa (≤ 10% diện tích) để đơn vị đứng trên vẫn đọc được.
 
+## Góc nhìn
+
+Từ 26/10/2026 cảnh được vẽ theo **góc nhìn xéo (3/4) kiểu Stardew Valley**, không còn nhìn thẳng từ trên xuống: nhà, lính, cây và vách đá thấy mặt trước và có chiều cao; ô nền vẫn là lưới vuông. Không phải isometric (không ô thoi 2:1) và không xoay camera. Phía bắc (sau lưng lâu đài) là tường núi liền, địch chỉ tiến từ phía trước; xem [thiết kế](superpowers/specs/2026-10-26-oblique-view-mountain-wall-design.md) và [ASSET_REQUIREMENTS §9.1](ASSET_REQUIREMENTS.md). Riêng tường núi **không giới hạn kích thước ảnh** (dài, cao tùy ý, chia đoạn nếu quá lớn).
+
 ## Hiển thị
 
 - Game chạy `pixelArt: true` (nearest-neighbour) và **zoom số nguyên** (vương quốc: zoom 2; trận: `max(1, floor(min(width, height + 96) / 384))`). Không bao giờ scale lẻ; sprite/scroll hiển thị snap pixel, không sửa float của world để snap render. Chữ `FONT_UI` vẽ ở kích thước hiển thị gốc, không scale texture text theo tỷ lệ lẻ; kiểm độ rõ/glyph tiếng Việt bằng browser.
