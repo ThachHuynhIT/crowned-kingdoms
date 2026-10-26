@@ -70,7 +70,7 @@ def to_asset(src):
 
 
 def main(group):
-    items = sorted(p for p in (B / group).iterdir() if (p / 'source.png').exists())
+    items = sorted(p for p in (B / group).iterdir() if not p.name.startswith('_') and (p / 'source.png').exists())
     assets = []
     for d in items:
         asset = to_asset(d / 'source.png')

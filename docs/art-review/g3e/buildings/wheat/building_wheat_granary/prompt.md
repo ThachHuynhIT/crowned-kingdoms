@@ -1,10 +1,21 @@
 Tạo MỘT ảnh pixel art bằng công cụ tạo ảnh (imagegen) và lưu đúng một file PNG vào `docs/art-review/g3e/buildings/wheat/building_wheat_granary/source.png` (sao chép vào đó nếu ảnh tạo ra nằm ngoài repo; tạo thư mục nếu chưa có). Không sửa file khác, không commit, không chạy node/npm.
 
-Ảnh tham chiếu: `docs/art-review/g3e/ai-v1/source-sheet.webp` (nhà tranh, ô cỏ: chuẩn phong cách) và `docs/art-review/g3e/batch-01-barracks/source.png` (trại lính). Giữ ĐÚNG phong cách và GÓC NHÌN của hai ảnh tham chiếu: pixel art fantasy ấm áp, "pixel" lớn khoảng 7×7 điểm ảnh, ánh sáng từ TRÊN-TRÁI, viền tối nâu đỏ 1 pixel quanh công trình, không anti-aliasing, không làm mờ, không chữ.
+BẮT BUỘC TRƯỚC KHI VẼ: mở và đọc `docs/ART_STYLE.md` — mục "Góc nhìn" (khung BẮT BUỘC, quy ước công trình, mẫu đã duyệt, kiểm trước khi duyệt) và mục "Quy tắc vẽ". Ảnh tham chiếu đã duyệt được đính kèm (`docs/art-review/style-references/harvester-house-front-approved.png`): lấy GÓC NHÌN, cách đổ khối mái/mặt tiền, mức chi tiết và phong cách từ đó; KHÔNG sao chép nguyên hình dạng của nó cho công trình khác.
 
-GÓC NHÌN (RẤT QUAN TRỌNG — giống Stardew Valley và giống nhà tranh/trại lính tham chiếu): MẶT TIỀN của công trình QUAY THẲNG VỀ PHÍA NGƯỜI XEM, các cạnh ngang của mặt tiền nằm NGANG và các cạnh đứng nằm ĐỨNG trong ảnh. Camera nhìn hơi từ trên xuống nên thấy mặt tiền (lớn) và mặt mái phía trên (dẹt), KHÔNG thấy mặt bên. TUYỆT ĐỐI KHÔNG vẽ isometric: không xoay công trình 45°, không nhìn vào góc nhà, không thấy hai mặt tường cùng lúc, không có hình thoi/kim cương, không có đường chéo 2:1. Công trình phẳng đặt trên mặt đất cũng nhìn theo cách đó (ví dụ ruộng: một hình chữ nhật nằm ngang, các luống chạy ngang hoặc dọc song song với cạnh ảnh, nhìn hơi từ trên xuống).
-Ảnh 1024×1024, nền ĐEN PHẲNG #000000 hoàn toàn (KHÔNG quầng sáng, KHÔNG bóng đổ lên nền, KHÔNG nền đất/cỏ dưới chân, KHÔNG viền ô). MỘT công trình duy nhất đứng giữa ảnh theo chiều ngang, rộng khoảng 440–460 px, chân công trình chạm một đường nằm ngang ở khoảng y = 900; chiều cao TỐI ĐA 520 px (không cao hơn). Trong công trình KHÔNG có điểm đen thuần.
+Create one isolated pixel-art building for Crowned Kingdoms: Kho Thóc (granary, support).
+Use the attached approved harvester house as the camera and style reference.
+STRICT straight-on FRONT VIEW with a high downward viewpoint, orthographic game-art styling.
+Front facade faces the viewer exactly; horizontal beams, sills, foundation and eaves stay horizontal;
+vertical posts stay vertical; both front corners have the same height. No visible side walls.
+NO diagonal building rotation, NO isometric view, NO diamond ground base.
+Roof ridge runs LEFT TO RIGHT, parallel to the facade. Show a broad front roof plane and a
+smaller rear roof strip above the ridge, matching the reference's stylized roof geometry.
+Keep the house front-facing while revealing the roof; do not turn it sideways.
+Compact readable silhouette, cozy warm medieval pixel art, crisp square pixel clusters,
+upper-left lighting, dark material-colored outlines. a wooden granary raised on posts with a ladder, thatched or tiled broad roof, sacks of grain at the door, hanging wheat bundles. Theme: farm kingdom: warm bright wood, golden straw, clay tiles, grain sacks, wooden fences, gold and earth tones.
+Whole building visible, transparent background, padding around roof and feet.
+No people, text, labels, UI, watermark, blur or antialiasing.
+Concept preview only; native sprite size and pixel cleanup are a separate production step.
 
-CÔNG TRÌNH: Kho Thóc — kho thóc bằng gỗ dựng trên cột cao, mái rơm, bao lúa chất ở cửa, thang gỗ nhỏ; hỗ trợ.
-Chủ đề kiến trúc của vua Lúa Mì: nông trại ấm áp, gỗ sáng màu, mái rơm vàng, bao lúa, hàng rào gỗ, tông vàng và nâu đất.
+YÊU CẦU SẢN XUẤT (ghi đè phần "transparent background" ở trên): ảnh 1024×1024, nền ĐEN PHẲNG #000000 hoàn toàn (không quầng sáng, không bóng đổ lên nền, không nền đất/cỏ dưới chân, không viền ô; trong công trình không có điểm đen thuần). MỘT công trình duy nhất đứng giữa ảnh theo chiều ngang, rộng khoảng 440–460 px, chân công trình chạm một đường nằm ngang ở khoảng y = 900, chiều cao tối đa 520 px. "Pixel" lớn khoảng 7×7 điểm ảnh.
 Khi xong, in đường dẫn file đã lưu và kích thước ảnh.
