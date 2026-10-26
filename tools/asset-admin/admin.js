@@ -21,7 +21,7 @@ function render() {
   $('cards').replaceChildren();
   for (const item of list) {
     const card = el('article', undefined, 'card'), stage = el('div', undefined, `stage ${$('background').value}`), canvas = el('canvas');
-    const unit = item.kind === 'unit'; canvas.width = unit ? Math.max(item.w, 240) : item.w; canvas.height = unit ? Math.max(item.h + 16, 120) : item.h;
+    const unit = item.kind === 'unit'; canvas.width = unit ? Math.max(item.w, 112) : item.w; canvas.height = unit ? Math.max(item.h + 16, 50) : item.h;
     canvas.style.width = `${canvas.width * Number($('zoom').value)}px`; canvas.style.height = `${canvas.height * Number($('zoom').value)}px`;
     stage.append(canvas); card.append(stage, el('h3', item.label), el('code', item.id), el('small', sizeText(item)), el('p', item.tags.join(' · '), 'muted'));
     card.tabIndex = 0; card.setAttribute('aria-label', `Chi tiết ${item.label}`);

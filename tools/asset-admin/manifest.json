@@ -743,6 +743,42 @@
      "tags": [
       "throne"
      ]
+    },
+    {
+     "id": "plot_nomad_locked",
+     "label": "nomad — locked",
+     "src": "/public/assets/art/ai-v1/plots/nomad_locked.png",
+     "w": 64,
+     "h": 64,
+     "kind": "tile",
+     "group": "nomad",
+     "tags": [
+      "locked"
+     ]
+    },
+    {
+     "id": "plot_nomad_open",
+     "label": "nomad — open",
+     "src": "/public/assets/art/ai-v1/plots/nomad_open.png",
+     "w": 64,
+     "h": 64,
+     "kind": "tile",
+     "group": "nomad",
+     "tags": [
+      "open"
+     ]
+    },
+    {
+     "id": "plot_nomad_throne",
+     "label": "nomad — throne",
+     "src": "/public/assets/art/ai-v1/plots/nomad_throne.png",
+     "w": 64,
+     "h": 64,
+     "kind": "tile",
+     "group": "nomad",
+     "tags": [
+      "throne"
+     ]
     }
    ]
   },
