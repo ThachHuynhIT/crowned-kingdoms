@@ -68,7 +68,8 @@ const toAsset = (s: PlaceholderSpec): WallAsset => ({
 
 /** Folder (under the site root) of the approved wall PNGs, and the world units per art px of those images. */
 export const WALL_IMAGE_DIR = 'assets/art/ai-v1/mountain-wall/';
-export const WALL_IMAGE_SCALE = 0.5;
+/** The backdrop is drawn at 1 world unit per art px (twice the size of the 0.5 sprites): a tall, far mountain. */
+export const WALL_IMAGE_SCALE = 1;
 
 /** An approved wall image (docs/art-review/oblique-wall/catalog.json): size and baseline are in art px. */
 export interface WallImageSpec {
@@ -88,7 +89,7 @@ export const WALL_IMAGES: readonly WallImageSpec[] = [
   ),
   // Rubble strips along the cliff foot (they spill 7 art px below the wall line) and the two end caps.
   ...([0, 1, 2] as const).map(
-    (n): WallImageSpec => ({ id: `terrain_mountain_wall_foot_${n}`, role: 'foot', w: 384, h: 64, baseline: 50 }),
+    (n): WallImageSpec => ({ id: `terrain_mountain_wall_foot_${n}`, role: 'foot', w: 384, h: 64, baseline: 56 }),
   ),
   { id: 'terrain_mountain_wall_cap_left', role: 'left', w: 192, h: 192, baseline: 192 },
   { id: 'terrain_mountain_wall_cap_right', role: 'right', w: 192, h: 192, baseline: 192 },

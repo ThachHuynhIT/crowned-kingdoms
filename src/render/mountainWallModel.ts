@@ -45,9 +45,10 @@ export const layoutWall = (
   }
   if (capR !== undefined) out.push({ assetId: capR.id, x, footY: wallY, flip: false, depth: WALL_DEPTH.body });
   if (feet.length > 0) {
+    // One rubble variant along the whole wall: the strips tile with themselves, not with each other.
+    const a = pick(feet, 0, seed, 2);
     let fx = left;
     for (let i = 0; fx < x; i++) {
-      const a = pick(feet, i, seed, 2);
       out.push({ assetId: a.id, x: fx, footY: wallY, flip: pixelHash(i, 6, seed) > 0.5, depth: WALL_DEPTH.foot });
       fx += a.w * a.imageScale;
     }

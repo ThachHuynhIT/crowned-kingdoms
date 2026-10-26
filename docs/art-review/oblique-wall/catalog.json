@@ -388,7 +388,7 @@
       ],
       "downscale": 4,
       "sourceFile": "terrain_mountain_wall_foot_0/source_alpha.png",
-      "baseLine": 50,
+      "baseLine": 56,
       "sourceHash": "67f5a8e6de40493d74fbe41578fc771817f17a35e330fce369576ceee20e4946",
       "density": 2,
       "sourceSize": [
@@ -420,7 +420,7 @@
       ],
       "downscale": 4,
       "sourceFile": "terrain_mountain_wall_foot_1/source_alpha.png",
-      "baseLine": 50,
+      "baseLine": 56,
       "sourceHash": "1ffb782c1a01d10c9985375622481c692fd8798267c5c7a952790dead936e9ef",
       "density": 2,
       "sourceSize": [
@@ -452,7 +452,7 @@
       ],
       "downscale": 4,
       "sourceFile": "terrain_mountain_wall_foot_2/source_alpha.png",
-      "baseLine": 50,
+      "baseLine": 56,
       "sourceHash": "d645c205db617ecc160b80efdc53b9faa96d08a00caf076fe7e93274c25385bf",
       "density": 2,
       "sourceSize": [

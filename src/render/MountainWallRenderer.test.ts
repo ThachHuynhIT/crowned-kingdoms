@@ -6,7 +6,7 @@ import { BATTLE } from '../data/battle';
 vi.mock('./atlas', () => ({ addPixelTexture: vi.fn() }));
 
 import { MountainWallRenderer, WALL_EXTENT } from './MountainWallRenderer';
-import { wallImageKey } from './mountainWallAssets';
+import { WALL_IMAGE_SCALE, wallImageKey } from './mountainWallAssets';
 
 class FakeImage {
   destroyed = false;
@@ -54,15 +54,16 @@ const fakeScene = (loaded: readonly string[] = []) => {
 };
 
 describe('MountainWallRenderer with approved art', () => {
-  it('uses the king image at scale 0.5, on integer pixels, standing on the wall line, and no placeholders', () => {
+  it('uses the king image at the wall image scale, on integer pixels, standing on the wall line, and no placeholders', () => {
     const { scene, images } = fakeScene([wallImageKey('terrain_mountain_wall_mid_moon')]);
     new MountainWallRenderer(scene, 5, 'moon');
-    expect(images.length).toBeGreaterThan(10);
+    expect(images.length).toBeGreaterThan(5);
     for (const i of images) {
       expect(i.texture).toBe(wallImageKey('terrain_mountain_wall_mid_moon'));
-      expect(i.scale).toBe(0.5);
+      expect(i.scale).toBe(WALL_IMAGE_SCALE);
+      expect(Number.isInteger(WALL_IMAGE_SCALE)).toBe(true); // integer scale only (CLAUDE.md pixel-art rule)
       expect(Number.isInteger(i.x) && Number.isInteger(i.y)).toBe(true);
-      expect(i.y + 192 * 0.5).toBe(BATTLE.wallY); // 192 art px tall, baseline at the bottom
+      expect(i.y + 192 * WALL_IMAGE_SCALE).toBe(BATTLE.wallY); // 192 art px tall, baseline at the bottom
       expect(i.depth).toBeGreaterThan(0);
       expect(i.depth).toBeLessThan(1);
     }
