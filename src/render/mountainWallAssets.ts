@@ -118,9 +118,10 @@ export const ensureMountainWallTextures = (
   kingId?: KingId,
 ): readonly WallAsset[] => {
   const loaded = WALL_IMAGES.filter((s) => textures.exists(wallImageKey(s.id)));
-  const middle = loaded.find((s) => s.role === 'middle' && s.king === kingId);
-  if (middle !== undefined) {
-    return [middle, ...loaded.filter((s) => s.role !== 'middle')].map(imageAsset);
+  // Every loaded middle segment of this king (the main one and its supporting variants) goes into the pool.
+  const middles = loaded.filter((s) => s.role === 'middle' && s.king === kingId);
+  if (middles.length > 0) {
+    return [...middles, ...loaded.filter((s) => s.role !== 'middle')].map(imageAsset);
   }
   for (const s of PLACEHOLDERS) {
     if (!textures.exists(wallTextureKey(s.id))) addPixelTexture(textures, wallTextureKey(s.id), paintMountainWall(s.id, s.w, s.h));
