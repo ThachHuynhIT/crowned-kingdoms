@@ -63,7 +63,9 @@ export const BATTLE = {
   spawnSpacing: 10,
   spawnOutside: 12,
   spawnRowGap: 10,
-  fieldClampMargin: 32, // đơn vị bị kẹp trong [−32, field + 32]
+  fieldClampMargin: 32, // đơn vị bị kẹp trong [−32, field + 32] (phía bắc thay bằng wallY, phía nam mở rộng theo hàng xuất quân)
+  /** Chân tường núi phía bắc (spec 26/10/2026): không ai đi lên bắc của y = wallY + bán kính. */
+  wallY: 64,
   separationPushMax: 1,
   /** Trần đẩy giữa hai đơn vị khác phe: địch chen vào chỉ nhích lính ra, không hất văng. */
   separationPushCross: 0.2,

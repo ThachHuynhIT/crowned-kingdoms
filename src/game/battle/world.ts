@@ -4,6 +4,8 @@
  * theo thứ tự tạo, không tái dùng. Không dùng Rng; mọi thứ tự theo plot / thứ tự setup.
  */
 import { BATTLE, INTERVENTION, SPAWN_OFFSETS } from '../../data/battle';
+import { clampNorthY, spawnMaxY } from './bounds';
+import { edgePositions } from './spawnLayout';
 import type { DamageType, TargetMode } from '../../data/types';
 import type {
   AttackStats,
@@ -14,6 +16,8 @@ import type {
   StructureSetup,
   UnitStats,
 } from './types';
+
+export { edgePositions };
 
 export const TEAM_ALLY = 0;
 export const TEAM_FOE = 1;
@@ -349,8 +353,12 @@ export class BattleWorld {
   /** Tick trong đó trận kết thúc (BattleResult.ticks), −1 khi chưa. */
   endTick = -1;
 
+  /** Biên nam của đơn vị (y lớn nhất): đủ chứa mọi hàng xuất quân; suy ra từ setup, không lưu. */
+  maxY: number;
+
   constructor(setup: BattleSetup) {
     this.setup = setup;
+    this.maxY = spawnMaxY(setup);
     this.autoFire = setup.autoFire ?? false;
     if (setup.intervention) {
       this.boulderDmgPct = setup.intervention.dmgPct;
@@ -411,39 +419,6 @@ export const plotCenter = (plot: number): { x: number; y: number } => {
     x: BATTLE.boardOrigin + BATTLE.plot * col + half,
     y: BATTLE.boardOrigin + BATTLE.plot * row + half,
   };
-};
-
-/**
- * Vị trí xuất hiện của `count` lính trên một mép (§8.2): hàng `perRow` lính cách nhau
- * spawnSpacing, căn giữa quanh trung điểm mép, ngoài cánh đồng spawnOutside; hàng sau
- * lùi ra thêm spawnRowGap.
- */
-export const edgePositions = (edge: Edge, count: number): { x: number; y: number }[] => {
-  const field = BATTLE.field;
-  const perRow = Math.floor((BATTLE.edgeSpan * field) / BATTLE.spawnSpacing) + 1;
-  const mid = field / 2;
-  const out: { x: number; y: number }[] = [];
-  for (let i = 0; i < count; i++) {
-    const row = Math.floor(i / perRow);
-    const inRow = Math.min(perRow, count - row * perRow);
-    const along = mid + (i - row * perRow - (inRow - 1) / 2) * BATTLE.spawnSpacing;
-    const depth = BATTLE.spawnOutside + row * BATTLE.spawnRowGap;
-    switch (edge) {
-      case 'N':
-        out.push({ x: along, y: -depth });
-        break;
-      case 'S':
-        out.push({ x: along, y: field + depth });
-        break;
-      case 'W':
-        out.push({ x: -depth, y: along });
-        break;
-      case 'E':
-        out.push({ x: field + depth, y: along });
-        break;
-    }
-  }
-  return out;
 };
 
 const setAttack = (w: BattleWorld, id: number, a: AttackStats | null): void => {
@@ -598,9 +573,9 @@ export const addUnit = (
 ): number => {
   const id = w.addEntity();
   if (id < 0) return id;
-  place(w, id, x, y);
+  place(w, id, x, clampNorthY(y, stats.radius));
   w.homeX[id] = homeX;
-  w.homeY[id] = homeY;
+  w.homeY[id] = clampNorthY(homeY, stats.radius);
   w.team[id] = team;
   w.kind[id] = KIND_UNIT;
   w.hp[id] = stats.hp;

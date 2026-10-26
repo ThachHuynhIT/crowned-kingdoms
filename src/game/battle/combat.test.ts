@@ -148,10 +148,10 @@ describe('instant melee damage', () => {
 });
 
 describe('projectiles', () => {
-  /** Tháp id 1 ở (192,160) r12; địch r4 cách mép–mép 80 px → tâm (192, 64). */
+  /** Tháp id 1 ở (192,160) r12; địch r4 cách mép–mép 76 px → tâm (192, 68), sát chân tường núi. */
   const setupShot = () => {
     const w = world([archerTower()]);
-    const f = unit(w, TEAM_FOE, 192, 64, { hp: 100, dmg: 0, speed: 0 });
+    const f = unit(w, TEAM_FOE, 192, 68, { hp: 100, dmg: 0, speed: 0 });
     return { w, f, tower: 1 };
   };
 
@@ -173,7 +173,7 @@ describe('projectiles', () => {
       applyDamagePhase(w);
       if (w.hp[f]! < before) hits.push(t);
     }
-    // tâm cách 96 px → 12 lần bay
+    // tâm cách 92 px → 12 lần bay
     expect(hits).toEqual([11]);
     expect(w.hp[f]).toBe(93);
     expect(w.projectileCount).toBe(0);
@@ -184,7 +184,7 @@ describe('projectiles', () => {
     attackPhase(w);
     projectilePhase(w);
     expect([w.projectiles.px[0], w.projectiles.py[0]]).toEqual([192, 152]);
-    w.x[f] = 192 + 88; // mục tiêu sang ngang: (280, 64) → hướng (88, −88)/√2·88
+    w.x[f] = 192 + 84; // mục tiêu sang ngang: (276, 68) → hướng (84, −84)/√2·84
     projectilePhase(w);
     const s = 8 / Math.sqrt(2);
     expect(w.projectiles.px[0]).toBeCloseTo(192 + s, 10);

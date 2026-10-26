@@ -6,6 +6,7 @@
  */
 import { BATTLE, INTERVENTION } from '../../data/battle';
 import { BOSS_RULES } from '../../data/bosses';
+import { clampNorthY } from './bounds';
 import { queueDamage } from './combat';
 import type { AutoFireInput, BattleInput } from './types';
 import { DMG_MAGIC, KIND_UNIT, TEAM_FOE, type BattleWorld, type Boulder } from './world';
@@ -40,8 +41,9 @@ export const tryIntervene = (world: BattleWorld, input: BattleInput): boolean =>
   if (!Number.isFinite(x) || !Number.isFinite(y)) return false;
   if (x < 0 || x > BATTLE.field || y < 0 || y > BATTLE.field) return false;
   if (tick < INTERVENTION.firstReadyTick || tick < world.readyTick) return false;
-  scheduleBoulder(world, tick, x, y);
-  world.inputs.push({ tick, x, y });
+  const clampedY = clampNorthY(y, 0); // điểm rơi không nằm trong tường núi
+  scheduleBoulder(world, tick, x, clampedY);
+  world.inputs.push({ tick, x, y: clampedY });
   return true;
 };
 
@@ -83,7 +85,7 @@ export const pickAutoTarget = (world: BattleWorld): { x: number; y: number } | n
   if (best < 0) return null;
   return {
     x: Math.min(Math.max(world.x[best]!, 0), BATTLE.field),
-    y: Math.min(Math.max(world.y[best]!, 0), BATTLE.field),
+    y: Math.min(Math.max(world.y[best]!, BATTLE.wallY), BATTLE.field),
   };
 };
 

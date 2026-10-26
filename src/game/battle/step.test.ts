@@ -79,10 +79,10 @@ describe('stepBattle', () => {
     const w = createBattle(battleSetup({ waves: [wave(1, 0, { speed: 0 })] }));
     for (let i = 0; i < 30; i++) stepBattle(w, []);
     stepBattle(w, [
-      { tick: 30, x: 50, y: 60 },
+      { tick: 30, x: 50, y: 70 },
       { tick: 30, x: 70, y: 80 },
     ]);
-    expect(w.inputs).toEqual([{ tick: 30, x: 50, y: 60 }]); // lệnh thứ hai gặp hồi chiêu
+    expect(w.inputs).toEqual([{ tick: 30, x: 50, y: 70 }]); // lệnh thứ hai gặp hồi chiêu
     expect(w.interventionsUsed).toBe(1);
   });
 
