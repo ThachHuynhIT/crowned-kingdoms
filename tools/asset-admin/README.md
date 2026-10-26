@@ -1,105 +1,99 @@
-# Asset admin — kế hoạch và hướng dẫn
+# Asset admin — TypeScript + DOM thuần
 
-Công cụ độc lập, HTML/CSS/ES module; không phụ thuộc Phaser, thư viện hay build.
-Đặc tả: yêu cầu người dùng trong phiên làm việc ngày 2026-10-26.
-
-## Cấu trúc và kế hoạch thực hiện
-
-- [x] `serve.mjs`: phục vụ gốc repo tại loopback, MIME, no-store, kiểm tra traversal và realpath để chặn symlink ra ngoài.
-- [x] `common.js`: đọc/kiểm tra manifest, cache ảnh, placeholder ảnh lỗi, vẽ pixel, tab và tải tệp.
-- [x] `index.html`, `admin.js`, `admin.css`: danh mục động, tìm kiếm, xem ảnh, animation riêng từng thẻ; chỉ chạy thẻ trong viewport và khi tab trình duyệt hiện.
-- [x] `map.html`, `map.js`: tọa độ pixel ảnh, tile snap, y-sort, chọn/kéo nhóm, 100 bước lịch sử, fill chữ nhật, scatter seed, localStorage, nhập/xuất JSON và PNG.
-- [x] Chỉ thêm script `admin` trong package.json; không commit.
-- [x] Đọc lại mã và kiểm tra diff/phạm vi thay đổi.
-- [ ] Chạy trên Node 24 và thử giao diện trong trình duyệt: môi trường viết mã không có node/npm trong PATH.
+Công cụ độc lập với game/Phaser, không dùng React/TSX hay thư viện runtime mới.
+Vite hiện có chỉ biên dịch TypeScript lúc phát triển; không cần build công cụ.
 
 ## Chạy
 
-Tại gốc repo: `npm run admin`.
+Từ gốc repo: `npm run admin`.
 
-Mở http://localhost:5180/tools/asset-admin/index.html hoặc theo liên kết Dựng bản đồ.
-Đổi cổng trong PowerShell: `$env:PORT=5181; npm run admin`.
-Server chỉ lắng nghe 127.0.0.1, phục vụ gốc repo để ảnh `/public/...` hoạt động.
-Không cần cài thêm package hoặc chạy build.
+Vite dùng riêng `tools/asset-admin/vite.config.ts`, cổng 5180 (`strictPort`), tự mở
+http://localhost:5180/tools/asset-admin/index.html. Trang dựng bản đồ ở
+http://localhost:5180/tools/asset-admin/map.html.
 
-`manifest.json` là dữ liệu đầu vào do quy trình asset khác sinh. Khi bắt đầu chưa có
-manifest nên đã tạo mẫu rỗng; trong lúc thực hiện manifest thật đã xuất hiện từ quy
-trình khác. Công cụ chỉ đọc dữ liệu này, không ghi manifest qua trình duyệt.
-Không có asset giả hay ảnh được tải từ mạng.
+Đổi cổng nếu cần: `npm run admin -- --port 5181`.
+`root` là gốc repo, `publicDir: false`: URL ảnh `/public/assets/art/ai-v1/...`
+trong manifest vẫn giữ nguyên. Không dùng cấu hình Vite/build của game.
+Server và cơ chế kiểm đường dẫn nay do Vite quản lý; `serve.mjs` đã được bỏ.
 
-## Cách dùng bản đồ
+## Cấu trúc
 
-Chọn asset rồi kéo vào canvas, hoặc chọn công cụ Đặt asset và click. Tick nhiều
-object/lính để tạo nhóm rải; nhập N và seed rồi dùng công cụ Rải ngẫu nhiên kéo
-vùng chữ nhật. Lấp đầy ô cũng dùng vùng chữ nhật; chọn một tile trước khi kéo.
+- `src/types.ts`: Manifest/Category/Item/UnitFrames, MapFile/MapItem và guard JSON.
+- `src/common.ts`: helper DOM kiểm thiếu/sai loại, context canvas, đọc/chuẩn hoá
+  manifest, cache ảnh, placeholder lỗi, vẽ pixel, tab, lọc nhóm và tải tệp.
+- `src/admin.ts`: danh mục, tìm kiếm, lọc, chi tiết và animation riêng từng thẻ.
+- `src/map.ts`: dựng bản đồ, lịch sử, lưu cục bộ và nhập/xuất.
+- `index.html`, `map.html`: nạp trực tiếp entry `.ts` qua Vite.
+- `admin.css`, `manifest.json`: giao diện và dữ liệu ảnh hiện có, giữ nguyên.
+- `vite.config.ts`, `tsconfig.json`: cấu hình riêng; TypeScript strict, noEmit,
+  kế thừa cả noUncheckedIndexedAccess/noUnused từ cấu hình repo.
 
-Ở chế độ Chọn, kéo trên vùng trống để chọn nhiều; Shift click thêm/bớt lựa chọn.
-Kéo một mục trong nhóm để di chuyển cả nhóm. Nhóm có tile dùng độ dời chung khớp
-lưới tile; nhóm object/lính dùng Shift để snap độ dời 8 px. Tile trùng vị trí được
-thay thế. Chọn mục rồi dùng Lật ngang, Phe, Đưa lên/xuống (chỉ đổi thứ tự cùng y).
+Không còn `admin.js`, `common.js`, `map.js` hoặc `serve.mjs`.
+ESLint hiện tại dùng cấu hình TypeScript recommended toàn repo, không bỏ qua
+`tools/`; không nới luật. `npm run typecheck` kiểm game trước rồi công cụ bằng
+`tsc --noEmit -p tools/asset-admin/tsconfig.json`.
 
-Space + kéo để cuộn; Ctrl+Z/Y hoàn tác/làm lại, Ctrl+D nhân bản, Delete xoá,
-Esc bỏ chọn. Phím tắt không chiếm thao tác nhập trong ô văn bản.
-Đổi kích thước bản đồ giữ các mục bên ngoài vùng mới để có thể khôi phục lại.
-PNG xuất đúng kích thước pixel ảnh, có màu nền hiện tại, không có lưới/viền chọn;
-lính dùng frame idle đầu tiên. Ảnh lỗi được thay bằng khung Thiếu ảnh.
+`manifest.json` do `python tools/slice_art_batches.py` sinh; trình duyệt chỉ đọc.
+Dữ liệu đọc từ manifest, localStorage và file nhập bắt đầu bằng `unknown`.
+Guard kiểm schema trước khi dùng; map còn kiểm id asset và snap. Không dùng
+`any`, type assertion hoặc non-null assertion để bỏ qua kiểm tra.
 
-Bản lưu đặt tên trong localStorage của origin (đổi cổng sẽ dùng kho riêng).
-Lưu lại cùng tên thay thế bản lưu đó. Xoá bản lưu chỉ tác động bản lưu được chọn;
-Xoá hết tác động bản đồ đang mở và có thể hoàn tác.
-JSON có id lạ, tọa độ sai hoặc tile lệch lưới bị từ chối kèm thông báo; trạng thái
-hiện tại được giữ nguyên. Không ghi tệp bản đồ lên server.
+## Hành vi giữ nguyên
 
-## Kiểm tra cần chạy trên máy có Node
+Kho asset có tab danh mục/Tất cả, bộ lọc group kết hợp tìm kiếm, zoom nguyên,
+đổi nền, lưới 32 đơn vị thế giới, khung chi tiết và kích thước ảnh÷2.
+Lính giữ canvas tối thiểu 112×50 px ảnh, Ta/Địch, Đứng/Đi/Đánh 6/6/10 fps,
+tốc độ, lật, đi qua lại, đánh liên tục và dừng; chỉ animate thẻ trong viewport,
+dừng RAF khi tab ẩn.
 
-1. `npm run admin`: mở cả hai trang; kiểm tra MIME/no-store, ảnh trong public,
-   đường dẫn không tồn tại, `/%2e%2e/package.json`, symlink ra ngoài repo.
-2. Với manifest thật: thử mọi tab/hash, tìm tags/group, zoom, nền, ảnh thiếu;
-   animation hai thẻ độc lập, phe/flip/patrol, cuộn thẻ khuất và ẩn tab trình duyệt.
-3. Tile 32/64 px, object/unit: kéo thả, snap, kéo nhóm, thay tile, y-sort cùng chân,
-   đổi phe, 100 thao tác rồi undo/redo, Ctrl+D, pan tại zoom 1–4.
-4. Tô vùng, rải cùng seed/vùng/N, lưu/tải/xoá, JSON round-trip, JSON hỏng/id lạ,
-   localStorage bị chặn hoặc đầy, PNG không lưới và kích thước đúng.
-5. Xem bố cục tại 1280×720 và 1920×1080.
-6. `npm run lint`, `npm run typecheck`, `npm test`, `npm run build`.
+Bản đồ dùng tọa độ px ảnh; ô bản đồ 64 px ảnh = 32 đơn vị thế giới. Plot snap
+64 px; terrain 32 px vẫn giữ lưới con 32 px để lát kín như bản trước. Object/lính
+neo giữa-đáy, y-sort theo chân; lên/xuống chỉ đổi thứ tự cùng y.
 
-Lượt trước đã thử gọi bốn lệnh kiểm tra nhưng không tìm thấy npm. Lượt rà ngày
-26/10/2026 không gọi node/npm/npx/Python theo yêu cầu. Chưa xác nhận cú pháp bằng
-Node, chưa chạy server hay xác nhận thao tác thực tế trong trình duyệt.
+Chọn asset rồi kéo thả hoặc dùng công cụ Đặt. Chọn mục để kéo nhóm, xoá,
+nhân bản, lật và đổi phe. Shift thêm/bớt lựa chọn; nhóm có tile di chuyển theo
+độ dời chung khớp lưới; nhóm object/lính dùng Shift snap 8 px ảnh. Tile trùng vị trí
+được thay thế. Kéo vùng trống để rubber-band, hoặc Alt+kéo khi nền tile phủ kín.
+Tô vùng dùng tile đã chọn; rải ngẫu nhiên dùng các object/lính được tick và N/seed.
 
-## Bổ sung sau rà tĩnh 26/10/2026
+Space+kéo để cuộn; Esc huỷ kéo/bỏ chọn; Delete xoá; Ctrl+D nhân bản;
+Ctrl+Z/Y (hoặc Ctrl+Shift+Z) undo/redo, giữ 100 bước lịch sử.
+Phím tắt không chiếm nhập liệu. Resize giữ mục ngoài vùng mới để khôi phục.
 
-Kế hoạch thực hiện: tách commit fix cho các luồng hiện có, sau đó commit feat cho
-lọc nhóm, xem trước bàn cờ, rải rừng và đơn vị thế giới. Giữ nguyên JSON version 1,
-không tích hợp `src/`, không sinh lại manifest trong môi trường này.
+Tạo bàn cờ 5×5 thay bản đồ hiện tại, có undo: Ngai giữa, 4 ô mở và 20 ô khoá.
+Rải rừng bao quanh dùng vùng trống X/Y/rộng/cao theo ô; vật cao đặt trước và
+thiên về mép trên, xen đá nhỏ/bụi. Cả khung ảnh tránh vùng trống, mép canvas và
+object/lính sẵn có; thiếu chỗ rải ít hơn N. Cùng manifest/trạng thái đầu/vùng/N/seed
+cho cùng kết quả; RNG mulberry32 và thứ tự lấy số ngẫu nhiên giữ nguyên.
 
-- Tab Tất cả có sẵn; cả hai trang nay lọc `group` kết hợp tìm kiếm. Đổi tab reset
-  nhóm. Plots lọc theo vua, wilds theo cây/đá/bụi/núi và các group còn lại.
-- Kích thước hiển thị gồm px ảnh và đơn vị thế giới = px ảnh ÷ 2. Ô bản đồ là
-  64 px ảnh = 32 đơn vị thế giới; terrain 32 px vẫn dùng lưới con 32 px để lát kín.
-- Tạo bàn cờ thay bản đồ hiện tại (có undo), giữ kích thước tối thiểu 7×7 ô;
-  bàn 5×5 ở giữa có Ngai chính giữa, 4 ô mở cạnh Ngai, 20 ô khoá.
-- Rải rừng dùng N/seed, vùng trống X/Y/rộng/cao tính bằng ô. Vật cao đặt trước,
-  thiên về mép trên; đá nhỏ/bụi xen kẽ. Cả khung ảnh phải nằm trong canvas, ngoài
-  vùng trống, không chồng object/lính có sẵn. Không xoá mục cũ. Cùng seed, N,
-  manifest, vùng trống và trạng thái ban đầu cho cùng kết quả. Thiếu chỗ rải ít hơn N.
-- Alt+kéo bắt đầu chọn vùng ngay cả trên nền tile kín. Pointerup lấy vị trí cuối;
-  phím sửa bản đồ bị bỏ qua khi đang kéo, Esc huỷ. Ẩn tab huỷ kéo và dừng RAF.
-- PNG dùng snapshot riêng gồm nội dung/kích thước/nền lúc bấm, frame idle đầu,
-  nearest sampling; ảnh chờ quá 5 giây báo lỗi để thử lại.
+Lưu theo tên trong localStorage của origin; cùng tên ghi đè. Đổi cổng sẽ dùng
+kho lưu khác. Có tải/xoá bản lưu, xoá hết bản đồ hiện tại và undo.
+JSON giữ đúng `{version:1, cols, rows, cell:64, items:[{id,x,y,flip,team}]}`;
+JSON hỏng/id lạ/tile lệch lưới bị từ chối, giữ trạng thái hiện tại.
+PNG dùng snapshot nội dung/kích thước/nền lúc bấm; frame idle đầu của lính,
+nearest sampling, không lưới/viền chọn. Ảnh lỗi có placeholder; ảnh chờ quá 5 giây
+báo lỗi để thử lại. Không ghi bản đồ lên server.
 
-Đã rà mọi file trong thư mục, đối chiếu HTML IDs, JSON export/import, snap,
-y-sort, undo/redo, rubber-band và FPS đứng/đi/đánh 6/6/10 bằng đọc mã. Đối chiếu
-70 asset: 94 tham chiếu, 92 URL ảnh duy nhất đều tồn tại, header PNG khớp w/h
-manifest. Server có kiểm decode, traversal và realpath; chưa thấy lỗ hổng tĩnh.
+## Kiểm tra và phần chưa kiểm chứng
 
-Chưa kiểm chứng: cú pháp/lint/typecheck/test/build, DOM/sự kiện thực tế, JSON và PNG
-round-trip, undo trong trình duyệt, seed thực chạy, bố cục và hiệu năng khi nhiều
-asset, HTTP traversal/symlink, so ảnh. Cần chạy checklist phía trên và thêm các ca:
-ẩn/hiện tab khi patrol hoặc đang kéo; đổi bản đồ khi PNG đang chờ ảnh; undo/redo
-sau preview/rải rừng; seed giống nhau từ cùng trạng thái; vùng trống phủ cả canvas;
-vùng trống sát mép; bản đồ quá nhỏ cho cây; lọc nhóm rồi đổi tab.
+Lượt chuyển TypeScript chỉ đọc mã, đối chiếu tĩnh và tự mô phỏng luồng sự kiện.
+Không chạy node/npm/npx, typecheck/lint/build hay trình duyệt trong môi trường này.
+Không coi báo cáo subagent là bằng chứng đã chạy.
 
-Sheet Nomad nằm ở `docs/art-review/g3e/batch-08-plots-nomad/`. Cần chạy
-`python tools/slice_art_batches.py`; script chỉ lấy hàng đầu. Chưa xác nhận bounding
-box 448 px/gutter 40 px và khối pixel 7 px; cần duyệt ảnh/cắt trước khi dùng.
+Claude cần chạy `npm run typecheck`, `npm run lint`, `npm run admin`, sau đó thử:
+
+1. Cả hai entry `.ts`, đường dẫn ảnh `/public/...`, tab/hash sai hoặc rỗng,
+   tìm kiếm kết hợp group rồi đổi tab, manifest rỗng/ảnh lỗi.
+2. Zoom/nền/lưới/chi tiết, hai thẻ lính độc lập, FPS, dừng/lật/phe/patrol;
+   cuộn thẻ ra ngoài viewport và ẩn/hiện tab.
+3. Kéo thả, snap 32/64, anchor/y-sort, kéo nhóm, thay tile, rubber-band/Alt,
+   tô vùng, seed và Ctrl+D; undo/redo qua 100 thao tác, Esc/blur/ẩn tab khi kéo.
+4. Preview theo từng vua, undo/redo, rải rừng cùng seed từ cùng trạng thái;
+   vùng trống phủ canvas/sát mép, không đủ chỗ và N lớn.
+5. LocalStorage bị chặn/đầy/hỏng; lưu/tải/xoá; JSON round-trip, JSON hỏng,
+   id lạ/tọa độ sai; kiểm thông báo guard JSON vì dữ liệu lỗi có thể bị từ chối sớm.
+6. PNG đúng kích thước và không làm mờ, xuất khi ảnh đang tải hoặc đang sửa bản đồ;
+   bố cục 1280×720/1920×1080 và console không lỗi.
+
+Cần xác nhận đường dẫn root Windows và chính sách truy cập tệp của Vite thực tế;
+không dùng kết quả rà server cũ để khẳng định bảo mật server mới.
