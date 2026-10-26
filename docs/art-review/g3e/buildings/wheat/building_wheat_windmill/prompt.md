@@ -12,7 +12,7 @@ Roof ridge runs LEFT TO RIGHT, parallel to the facade. Show a broad front roof p
 smaller rear roof strip above the ridge, matching the reference's stylized roof geometry.
 Keep the house front-facing while revealing the roof; do not turn it sideways.
 Compact readable silhouette, cozy warm medieval pixel art, crisp square pixel clusters,
-upper-left lighting, dark material-colored outlines. a stone-and-timber windmill with four cloth-sail blades facing the viewer (the blades are seen frontally, not turned), a small thatched cap, a door at the front center and flour sacks. Keep the facade straight-on. Theme: farm kingdom: warm bright wood, golden straw, clay tiles, grain sacks, wooden fences, gold and earth tones.
+upper-left lighting, dark material-colored outlines. a stone-and-timber windmill whose body is straight and upright, seen from a HIGH viewpoint looking DOWN: the viewer clearly sees the TOP of the windmill, i.e. the upper surface of its large rounded thatched cap/dome (a visible oval-ish roof plane with rows of straw, seen from above), not just its side profile and not a pointed tip seen sideways. Four cloth-sail blades are mounted on the front of the cap, frontal to the viewer (not turned). A door at the front center, a short stone base and flour sacks. Keep the facade straight-on; do not rotate or tilt the body. Theme: farm kingdom: warm bright wood, golden straw, clay tiles, grain sacks, wooden fences, gold and earth tones.
 Whole building visible, transparent background, padding around roof and feet.
 No people, text, labels, UI, watermark, blur or antialiasing.
 Concept preview only; native sprite size and pixel cleanup are a separate production step.

@@ -114,7 +114,9 @@ Concept preview only; native sprite size and pixel cleanup are a separate produc
 
 > Khi tạo qua Codex/imagegen để cắt sprite trong repo, thay dòng "transparent background" bằng nền **đen phẳng #000000** (không quầng sáng, không bóng, không nền đất): công cụ `make_assets.py` tách nền đen thành alpha 0/255 rồi thu nhỏ về 64 px ảnh rộng. Chiều cao tối đa 80 px ảnh (một ô bàn cờ); công trình thấp (ruộng) có thể thấp hơn.
 
-**Kiểm trước khi duyệt:** mặt tiền thẳng · không lộ tường bên · mái có chiều sâu mà nhà không xoay · nhận ra chức năng · đủ mái/chân · đọc được khi thu nhỏ. Nếu ảnh bị xéo, sửa hướng nhà trước khi thêm chi tiết.
+**Công trình không phải nhà mái dốc (tháp, cối xay, đài, lò…):** vẫn đúng một quy tắc — mặt tiền thẳng, điểm nhìn CAO nhìn xuống nên PHẢI THẤY PHẦN NÓC/ĐỈNH: thấy mặt trên của mái nón, mái vòm, nắp tháp, mặt bục hoặc miệng lò từ trên xuống (đỉnh là một hình bầu dục/chữ nhật dẹt có chiều rộng nhìn thấy, không phải chỉ một đường nét hay chóp nhọn nhìn ngang). Đỉnh công trình hướng lên và hơi ra phía người xem; thân công trình thẳng đứng, không xiên, không nghiêng sang bên. Cánh cối xay, cờ, cột nhô lên chỉ là phụ kiện gắn trên phần nóc/thân, không thay thế phần nóc đó.
+
+**Kiểm trước khi duyệt:** mặt tiền thẳng · thấy được phần nóc/mái từ trên xuống (kể cả tháp, cối xay) · không lộ tường bên · mái có chiều sâu mà nhà không xoay · nhận ra chức năng · đủ mái/chân · đọc được khi thu nhỏ. Nếu ảnh bị xéo, sửa hướng nhà trước khi thêm chi tiết.
 
 ## Hiển thị
 

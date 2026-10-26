@@ -39,7 +39,7 @@ GROUPS = {
         ('building_wheat_scarecrow', 'Bù Nhìn Gác (scarecrow watch tower, tower, TALL building but at most 520 px)',
          'a short wooden watch platform with a small straw roof and a big straw-hat scarecrow standing on it holding a sling, ladder at the front, sacks on the rail.'),
         ('building_wheat_windmill', 'Cối Xay Gió (windmill, economy)',
-         'a stone-and-timber windmill with four cloth-sail blades facing the viewer (the blades are seen frontally, not turned), a small thatched cap, a door at the front center and flour sacks. Keep the facade straight-on.'),
+         'a stone-and-timber windmill whose body is straight and upright, seen from a HIGH viewpoint looking DOWN: the viewer clearly sees the TOP of the windmill, i.e. the upper surface of its large rounded thatched cap/dome (a visible oval-ish roof plane with rows of straw, seen from above), not just its side profile and not a pointed tip seen sideways. Four cloth-sail blades are mounted on the front of the cap, frontal to the viewer (not turned). A door at the front center, a short stone base and flour sacks. Keep the facade straight-on; do not rotate or tilt the body.'),
     ]),
 }
 
