@@ -198,6 +198,8 @@ export interface BossSetup {
 export interface WaveSetup {
   spawnTick: number;
   spawns: readonly { stats: UnitStats; edge: Edge }[];
+  /** Số hàng dàn quân ở mép (runtime, không lưu vào ArmyPlan/RunState); vắng = 1 hàng. */
+  formationRows?: number;
 }
 
 /** Mọi thứ trận cần biết, dựng từ RunState (Task 9). */

@@ -734,10 +734,10 @@ export const spawnWave = (world: BattleWorld, index: number): void => {
     perEdge[s.edge] += 1;
   }
   const slots: Record<Edge, { x: number; y: number }[]> = {
-    N: edgePositions('N', perEdge.N),
-    E: edgePositions('E', perEdge.E),
-    S: edgePositions('S', perEdge.S),
-    W: edgePositions('W', perEdge.W),
+    N: edgePositions('N', perEdge.N, wave.formationRows),
+    E: edgePositions('E', perEdge.E, wave.formationRows),
+    S: edgePositions('S', perEdge.S, wave.formationRows),
+    W: edgePositions('W', perEdge.W, wave.formationRows),
   };
   const used: Record<Edge, number> = { N: 0, E: 0, S: 0, W: 0 };
   for (const s of wave.spawns) {
