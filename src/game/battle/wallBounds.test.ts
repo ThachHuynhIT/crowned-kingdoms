@@ -6,7 +6,7 @@ import { pickAutoTarget, tryIntervene } from './intervention';
 import { moveEntities } from './movement';
 import { stepBattle } from './step';
 import type { BattleSetup } from './types';
-import { TEAM_ALLY, TEAM_FOE, addUnit, createBattle, type BattleWorld } from './world';
+import { TEAM_ALLY, TEAM_FOE, addUnit, createBattle, spawnWave, type BattleWorld } from './world';
 
 const NORTH = (r: number): number => BATTLE.wallY + r;
 
@@ -91,10 +91,26 @@ describe('north mountain wall', () => {
     expect(w.inputs[0]).toMatchObject({ y: BATTLE.wallY });
     const w2 = make();
     w2.tick = 40;
-    for (const y of [-1, Number.NaN, Number.POSITIVE_INFINITY, BATTLE.field + 1]) {
+    for (const y of [-1, Number.NaN, Number.POSITIVE_INFINITY, w2.maxY + 1]) {
       expect(tryIntervene(w2, { tick: 40, x: 100, y })).toBe(false);
     }
     expect(w2.boulders.length).toBe(0);
+  });
+
+  it('boulder_reaches_deep_southern_rows: manual and auto-fire may target below the field line', () => {
+    const spawn = () => ({ edge: 'S' as const, stats: unitStats({ speed: 0 }) });
+    const wave = { spawnTick: 0, spawns: Array.from({ length: 120 }, spawn), formationRows: 7 };
+    const w = make({ waves: [wave] });
+    w.tick = 40;
+    const deep = BATTLE.field + 60; // inside the deepest rank, below the field line
+    expect(deep).toBeLessThanOrEqual(w.maxY);
+    expect(tryIntervene(w, { tick: 40, x: 192, y: deep })).toBe(true);
+    expect(w.boulders[0]!.y).toBe(deep);
+    const w2 = make({ waves: [wave] });
+    spawnWave(w2, 0);
+    const t = pickAutoTarget(w2);
+    expect(t).not.toBeNull();
+    expect(t!.y).toBeGreaterThan(BATTLE.field); // the densest cluster is in the ranks below the field
   });
 
   it('auto-fire never targets a point north of the wall', () => {

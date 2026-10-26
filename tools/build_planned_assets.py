@@ -257,7 +257,7 @@ def build(manifest_path='tools/asset-admin/manifest.json', catalog_path='docs/ar
     for entry in wall_catalog['items']:
         if entry['id'] in done:
             continue
-        prop = entry['proposed']
+        prop = entry.get('proposed') or {'w': 0, 'h': 0}
         add(entry['id'], entry['label'], 'terrain', (0, 0), entry['priority'], f'{REQ}:§9.1', kind='object', group='mountain_wall',
             note=f'Chưa có ảnh được duyệt (approval: {entry["approval"]}). Kích thước đề xuất {prop["w"]}×{prop["h"]} px ảnh, không giới hạn nguồn; đường chân và mật độ 2 px/đơn vị theo ASSET_REQUIREMENTS §9.1.',
             tags=('mountain_wall', entry['role']))

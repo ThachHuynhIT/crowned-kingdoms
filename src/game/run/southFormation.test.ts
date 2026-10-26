@@ -4,6 +4,7 @@ import { RULES_FULL } from '../../data/rules';
 import { composeArmy } from '../battle/compose';
 import { formationRowsFor } from '../battle/bounds';
 import { edgePositions } from '../battle/spawnLayout';
+import { stepBattle } from '../battle/step';
 import { createBattle, spawnWave } from '../battle/world';
 import { battleSetup, unitStats } from '../testing/fixtures';
 import { CONTENT } from '../cards/registry';
@@ -101,6 +102,17 @@ describe('south_spawn_progress', () => {
     for (let i = 0; i < w.count; i++) if (w.team[i] === 1) ys.add(w.y[i]!);
     expect(ys.size).toBe(6);
     expect(Math.max(...ys)).toBeLessThanOrEqual(w.maxY);
+    const y0 = Math.min(...ys);
+    for (let t = 0; t < 30; t++) stepBattle(w, []);
+    let front = Infinity;
+    let back = -Infinity;
+    for (let i = 0; i < w.count; i++) {
+      if (w.team[i] !== 1) continue;
+      front = Math.min(front, w.y[i]!);
+      back = Math.max(back, w.y[i]!);
+    }
+    expect(front).toBeLessThan(y0); // they advance instead of piling against the clamp
+    expect(back - front).toBeGreaterThan(30); // the ranks are still spread out after walking (they started 50 apart)
   });
 
   it('spawnWave honours formationRows', () => {

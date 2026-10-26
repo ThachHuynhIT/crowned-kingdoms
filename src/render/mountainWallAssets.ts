@@ -121,7 +121,9 @@ export const ensureMountainWallTextures = (
   if (middle !== undefined) {
     return [middle, ...loaded.filter((s) => s.role !== 'middle')].map(imageAsset);
   }
-  for (const s of PLACEHOLDERS) addPixelTexture(textures, wallTextureKey(s.id), paintMountainWall(s.id, s.w, s.h));
+  for (const s of PLACEHOLDERS) {
+    if (!textures.exists(wallTextureKey(s.id))) addPixelTexture(textures, wallTextureKey(s.id), paintMountainWall(s.id, s.w, s.h));
+  }
   return PLACEHOLDERS.map(toAsset);
 };
 

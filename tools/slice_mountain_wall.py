@@ -99,6 +99,11 @@ def slice_wall(source, recipe, output, max_texture_side=2048):
         h, w = h // factor, w // factor
         _check_alpha(arr)
     ident = recipe['id']
+    # Drop pieces of an earlier slicing of the same id so a re-slice into fewer parts leaves no orphan PNG behind.
+    if output.is_dir() and Path(ident).name == ident:
+        for old in list(output.glob(f'{ident}_part_*.png')) + [output / f'{ident}.png']:
+            if old.exists() and old.resolve() != source.resolve() and _inside(old, output):
+                old.unlink()
     cols = -(-w // max_texture_side)
     rows = -(-h // max_texture_side)
     single = cols == 1 and rows == 1
@@ -180,7 +185,7 @@ def main(argv=None):
         p['sha256'] = sha256(ROOT / OUT_DIR / p['file'])
     entry['parts'] = parts
     entry['sourceHash'] = sha256(source)
-    entry['density'] = catalog['density']
+    entry['density'] = catalog.get('density', 2)
     entry['sourceSize'] = list(Image.open(source).size)
     (ROOT / args.catalog).write_text(json.dumps(catalog, ensure_ascii=False, indent=2) + '\n', encoding='utf-8')
     print(f'{args.id}: {len(parts)} part(s), approval "{entry.get("approval")}", adopted {entry.get("adopted")}')
