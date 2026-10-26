@@ -244,7 +244,10 @@ export function decodeRun(raw: unknown, content: Content): LoadRunResult {
     }
     const migrated = migrateRunState(structuredClone(state));
     validate(migrated, content);
-    return { kind: 'ok', state: migrated };
+    const run = migrated as RunState;
+    // Địch chỉ tiến từ phía trước: army cũ lưu mép N/E/W được chuẩn hoá về S sau khi hợp lệ (bản sao, không đổi dữ liệu gốc).
+    if (run.army !== null) for (const w of run.army.waves) for (const u of w.units) u.edge = 'S';
+    return { kind: 'ok', state: run };
   } catch (e) {
     if (e instanceof Invalid) return bad;
     return bad; // dữ liệu lạ làm ném lỗi khác (ví dụ không sao chép được): vẫn là không tương thích

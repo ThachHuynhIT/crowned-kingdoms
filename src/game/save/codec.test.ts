@@ -237,3 +237,58 @@ describe('meta_untouched', () => {
     expect(await store.loadMeta()).toEqual({ crowns: 42 });
   });
 });
+
+describe('legacy_edges_normalize_to_south', () => {
+  const withArmy = (): RunState => {
+    const s = trail(1, 'wheat').find((x) => x.army !== null && x.army.waves.some((w) => w.units.length > 0));
+    if (s === undefined) throw new Error('no state with an army');
+    return s;
+  };
+  const setEdges = (raw: { state: RunState }, edges: readonly string[]): void => {
+    let n = 0;
+    for (const w of raw.state.army!.waves) {
+      for (const u of w.units) (u as { edge: string }).edge = edges[n++ % edges.length]!;
+    }
+  };
+
+  it('N, E, W and S in a saved army all decode as S; everything else is kept', () => {
+    const state = withArmy();
+    const raw = env(state);
+    setEdges(raw, ['N', 'E', 'W', 'S']);
+    const before = structuredClone(raw);
+    const out = ok(raw);
+    for (const w of out.army!.waves) for (const u of w.units) expect(u.edge).toBe('S');
+    expect(out).toEqual(state); // the original state already has S, so only edges changed
+    expect(raw).toEqual(before); // decode does not touch the raw data (decode_does_not_mutate)
+  });
+
+  it('v4 state without the envelope works too, and decoding is idempotent', () => {
+    const state = withArmy();
+    const bare = structuredClone(state) as RunState;
+    setEdges({ state: bare }, ['W']);
+    const once = ok(bare);
+    expect(once.army!.waves.every((w) => w.units.every((u) => u.edge === 'S'))).toBe(true);
+    expect(ok(wire(once))).toEqual(once);
+  });
+
+  it('a state without an army (null) is unchanged', () => {
+    const state: RunState = { ...withArmy(), army: null };
+    expect(ok(wire(state))).toEqual(state);
+  });
+
+  it('bad_edge_still_rejected: unknown edge values are not turned into S', () => {
+    for (const bad of ['Q', null, 7, '']) {
+      const raw = env(withArmy());
+      (raw.state.army!.waves.find((w) => w.units.length > 0)!.units[0] as { edge: unknown }).edge = bad;
+      expect(incompatible(raw)).toBe(true);
+    }
+  });
+
+  it('an old battle save rebuilds its setup from the south', () => {
+    const raw = env(withArmy());
+    setEdges(raw, ['N', 'E']);
+    const state = ok(raw);
+    const setup = buildBattleSetup({ ...state, phase: 'battle' }, CONTENT);
+    expect(setup.waves.flatMap((w) => w.spawns.map((s) => s.edge)).every((e) => e === 'S')).toBe(true);
+  });
+});
