@@ -71,7 +71,13 @@ Khung thẻ theo độ hiếm (thêm vào texture `ui` từ G1): thường = vi�
 
 ## Góc nhìn
 
-Từ 26/10/2026 cảnh được vẽ theo **góc nhìn xéo (3/4) kiểu Stardew Valley**, không còn nhìn thẳng từ trên xuống: nhà, lính, cây và vách đá thấy mặt trước và có chiều cao; ô nền vẫn là lưới vuông. Không phải isometric (không ô thoi 2:1) và không xoay camera. Phía bắc (sau lưng lâu đài) là tường núi liền, địch chỉ tiến từ phía trước; xem [thiết kế](superpowers/specs/2026-10-26-oblique-view-mountain-wall-design.md) và [ASSET_REQUIREMENTS §9.1](ASSET_REQUIREMENTS.md). Riêng tường núi **không giới hạn kích thước ảnh** (dài, cao tùy ý, chia đoạn nếu quá lớn).
+Từ 26/10/2026 cảnh theo **Stardew Valley 2.5D** (đã chốt với chủ dự án), không còn nhìn thẳng từ trên xuống và không phải isometric. Camera nhìn xuống ~60°, mặt đất là lưới vuông; vật đứng được vẽ như sau:
+
+- **Công trình = mái lớn + mặt tiền ngắn:** mái chiếm ~50% chiều cao sprite, nhìn từ trên xuống, thấy rõ mặt phẳng mái dốc với từng hàng ngói/rơm/ván chạy ngang; mặt tiền ngắn hơn mái (~35–40%), cửa chính ở giữa, có đổ bóng dưới mái lên tường; chân móng ngắn. **Không thấy tường bên**, không xoay công trình, không hình thoi 2:1. Cạnh ngang nằm ngang, cạnh đứng nằm đứng, hình dáng gần đối xứng trái–phải.
+- **Vật phẳng trên đất** (ruộng, vòng pháp thuật, hồ): thấy mặt đất là hình chữ nhật rộng, phần nhô lên (hàng rào, bậc) có chiều cao thấy rõ.
+- **Vách núi và tường đá:** thấy mặt vách hướng về người chơi, đỉnh vách và biển/trời phía sau (xem [spec](superpowers/specs/2026-10-26-oblique-view-mountain-wall-design.md)).
+- **Quy ước chung:** ánh sáng trên-trái; viền là màu tối hơn của chính vật liệu (không viền đen thuần); bão hòa ấm; họa tiết chất liệu (ngói, ván, đá) rõ; neo chân công trình ở đáy sprite và y-sort.
+- Hai nhà tranh/trại lính của lô `ai-v1` đầu tiên (thấy hai mặt) sẽ được vẽ lại theo quy ước này; các nhóm công trình mới đều theo quy ước này.
 
 ## Hiển thị
 
