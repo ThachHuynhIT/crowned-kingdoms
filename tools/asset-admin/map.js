@@ -5,9 +5,9 @@ let state = { version: 1, cols: 12, rows: 8, cell: 64, items: [] };
 let selected = new Set(), chosen = null, category = [], drag = null, space = false, animationTime = 0, previousTime = performance.now();
 const checked = new Set(), history = [], future = [], storageKey = 'crowned-kingdoms.asset-admin.maps.v1';
 const clone = (value) => JSON.parse(JSON.stringify(value));
-const zoom = () => Number($('zoom').value);
+let animationFrame; const zoom = () => Number($('zoom').value);
 function record(before) {
-  if (JSON.stringify(before) === JSON.stringify(state)) return;
+  if (JSON.stringify(before) === JSON.stringify(state)) { update(); return; }
   history.push(before); if (history.length > 100) history.shift(); future.length = 0; update();
 }
 function edit(fn) { const before = clone(state); fn(); record(before); }
@@ -24,17 +24,17 @@ function bounds(item) {
   const a = assets.get(item.id);
   return a.kind === 'tile' ? { x: item.x, y: item.y, w: a.w, h: a.h } : { x: item.x - a.w / 2, y: item.y - a.h, w: a.w, h: a.h };
 }
-function ordered() {
-  return state.items.map((item, index) => ({ item, index, a: assets.get(item.id) })).sort((a, b) => {
+function ordered(scene = state) {
+  return scene.items.map((item, index) => ({ item, index, a: assets.get(item.id) })).sort((a, b) => {
     if ((a.a.kind === 'tile') !== (b.a.kind === 'tile')) return a.a.kind === 'tile' ? -1 : 1;
     return a.a.kind === 'tile' ? a.index - b.index : a.item.y - b.item.y || a.index - b.index;
   });
 }
-function draw(target, overlays = true) {
+function draw(target, overlays = true, scene = state, background = $('bg').value) {
   target.imageSmoothingEnabled = false;
-  target.fillStyle = $('bg').value; target.fillRect(0, 0, canvas.width, canvas.height);
-  for (const { item, index, a } of ordered()) {
-    const b = bounds(item), list = frames(a, item.team), frame = $('animate').checked ? Math.floor(animationTime * 6 / 1000) % list.length : 0;
+  target.fillStyle = background; target.fillRect(0, 0, scene.cols * 64, scene.rows * 64);
+  for (const { item, index, a } of ordered(scene)) {
+    const b = bounds(item), list = frames(a, item.team), frame = overlays && $('animate').checked ? Math.floor(animationTime * 6 / 1000) % list.length : 0;
     drawImage(target, a.kind === 'unit' ? list[frame] : a.src, Math.round(b.x), Math.round(b.y), a.w, a.h, item.flip);
     if (overlays && selected.has(index)) { target.strokeStyle = '#ffe49b'; target.lineWidth = 2; target.strokeRect(b.x + 1, b.y + 1, b.w - 2, b.h - 2); target.fillStyle = '#ffe49b'; target.fillRect(item.x - 2, item.y - 2, 4, 4); }
   }
@@ -50,7 +50,7 @@ function draw(target, overlays = true) {
 function tick(now) {
   const delta = Math.min(100, now - previousTime); previousTime = now;
   if (!document.hidden) { animationTime += delta; draw(ctx); for (const thumb of document.querySelectorAll('.thumb canvas')) { const a = assets.get(thumb.dataset.id); const c = thumb.getContext('2d'); c.clearRect(0, 0, 64, 64); const scale = Math.min(64 / a.w, 64 / a.h, 1); drawImage(c, a.src, Math.floor((64 - a.w * scale) / 2), Math.floor((64 - a.h * scale) / 2), Math.max(1, Math.round(a.w * scale)), Math.max(1, Math.round(a.h * scale))); } }
-  requestAnimationFrame(tick);
+  if (!document.hidden) animationFrame = requestAnimationFrame(tick);
 }
 function palette() {
   $('thumbs').replaceChildren();
@@ -88,7 +88,7 @@ canvas.onpointerdown = (event) => {
   if (space || event.button === 1) { drag = { mode: 'pan', clientX: event.clientX, clientY: event.clientY, left: viewport.scrollLeft, top: viewport.scrollTop }; return; }
   if (tool === 'place') { if (chosen) edit(() => { selected.clear(); place(chosen, p, event.shiftKey); selected.add(state.items.length - 1); }); else message('Chọn một asset trước.'); return; }
   if (tool === 'fill' || tool === 'scatter') { drag = { mode: tool, start: p, end: p }; return; }
-  const index = hit(p);
+  const index = event.altKey ? undefined : hit(p);
   if (index === undefined) { if (!event.shiftKey) selected.clear(); drag = { mode: 'box', start: p, end: p, additive: event.shiftKey }; }
   else {
     if (event.shiftKey && selected.has(index)) { selected.delete(index); update(); return; }
@@ -141,7 +141,7 @@ function deduplicateTiles() {
   state.items.forEach((item, i) => { if (keep.has(`remove:${i}`)) return; if (selected.has(i)) selection.add(result.length); result.push(item); });
   state.items = result; selected = selection;
 }
-canvas.onpointerup = finish;
+canvas.onpointerup = (event) => { canvas.onpointermove(event); finish(event); };
 canvas.onpointercancel = () => { if (drag?.before) state = drag.before; drag = null; update(); };
 function undo() { if (!history.length) return; future.push(clone(state)); state = history.pop(); selected.clear(); update(); }
 function redo() { if (!future.length) return; history.push(clone(state)); state = future.pop(); selected.clear(); update(); }
@@ -166,7 +166,7 @@ addEventListener('keydown', (event) => {
   if (event.target.closest('input,select,textarea')) return;
   if (event.code === 'Space') { event.preventDefault(); space = true; }
   if (event.key === 'Escape') { if (drag?.before) state = drag.before; drag = null; selected.clear(); update(); }
-  if (event.key === 'Delete') { event.preventDefault(); removeSelected(); }
+  if (drag && event.key !== 'Escape') return; if (event.key === 'Delete') { event.preventDefault(); removeSelected(); }
   if (event.ctrlKey || event.metaKey) { const key = event.key.toLowerCase(); if (['z', 'y', 'd'].includes(key)) event.preventDefault(); if (key === 'z') { if (event.shiftKey) redo(); else undo(); } if (key === 'y') redo(); if (key === 'd') duplicate(); }
 });
 addEventListener('keyup', (event) => { if (event.code === 'Space') space = false; });
@@ -195,15 +195,22 @@ $('import').onclick = () => $('file').click();
 $('file').onchange = async () => { const file = $('file').files[0]; if (!file) return; try { if (file.size > 15 * 1024 * 1024) throw new Error('Tệp vượt quá 15 MB'); replaceMap(JSON.parse(await file.text())); message('Đã nhập JSON.'); } catch (error) { message(`Không nhập được: ${error.message}`); } $('file').value = ''; };
 $('png').onclick = async () => {
   const b = $('png'); b.disabled = true;
+  const snapshot = clone(state), background = $('bg').value;
   try {
-    const sources = new Set(state.items.map((item) => { const a = assets.get(item.id); return a.kind === 'unit' ? frames(a, item.team)[0] : a.src; }));
-    await Promise.all([...sources].map((src) => new Promise((resolve) => { const entry = imageFor(src); if (entry.ready || entry.failed) return resolve(); const timer = setTimeout(resolve, 5000); const done = () => { clearTimeout(timer); resolve(); }; entry.image.addEventListener('load', done, { once: true }); entry.image.addEventListener('error', done, { once: true }); })));
-    const out = document.createElement('canvas'); out.width = canvas.width; out.height = canvas.height;
+    const sources = new Set(snapshot.items.map((item) => { const a = assets.get(item.id); return a.kind === 'unit' ? frames(a, item.team)[0] : a.src; }));
+    await Promise.all([...sources].map((src) => new Promise((resolve, reject) => { const entry = imageFor(src); if (entry.ready || entry.failed) return resolve(); const timer = setTimeout(() => reject(new Error('Ảnh chưa tải xong; hãy thử xuất lại.')), 5000); const done = () => { clearTimeout(timer); resolve(); }; entry.image.addEventListener('load', done, { once: true }); entry.image.addEventListener('error', done, { once: true }); })));
+    const out = document.createElement('canvas'); out.width = snapshot.cols * 64; out.height = snapshot.rows * 64;
     // PNG giữ kích thước pixel ảnh, bỏ lưới và viền chọn; lấy frame idle đầu tiên.
-    const wasAnimated = $('animate').checked; $('animate').checked = false; draw(out.getContext('2d'), false); $('animate').checked = wasAnimated;
+    draw(out.getContext('2d'), false, snapshot, background);
     out.toBlob((blob) => { if (blob) download(blob, `${filename()}.png`); else message('Không tạo được PNG.'); }, 'image/png');
   } catch (error) { message(`Không xuất được PNG: ${error.message}`); } finally { b.disabled = false; }
 };
 $('search').oninput = palette;
 tabs($('tabs'), manifest, (items) => { category = items; palette(); });
-refreshSaved(); update(); message(manifest.error || (manifest.sample ? 'Manifest mẫu rỗng. Thay bằng manifest thật để dùng asset.' : `${manifest.items.length} asset sẵn sàng.`)); requestAnimationFrame(tick);
+refreshSaved(); update(); message(manifest.error || (manifest.sample ? 'Manifest mẫu rỗng. Thay bằng manifest thật để dùng asset.' : `${manifest.items.length} asset sẵn sàng.`)); if (!document.hidden) animationFrame = requestAnimationFrame(tick);
+
+document.addEventListener('visibilitychange', () => {
+  cancelAnimationFrame(animationFrame);
+  if (document.hidden) { space = false; if (drag?.before) state = drag.before; drag = null; update(); }
+  else { previousTime = performance.now(); animationFrame = requestAnimationFrame(tick); }
+});

@@ -31,14 +31,14 @@ function render() {
     if (unit) {
       const controls = el('div', undefined, 'unit-controls'); controls.onclick = (event) => event.stopPropagation();
       const actions = [];
-      function action(label, fn) { const b = button(label, () => { fn(); player.elapsed = 0; sync(); }); actions.push(b); controls.append(b); return b; }
+      function action(label, fn, restart = false) { const b = button(label, () => { fn(); if (restart) player.elapsed = 0; sync(); }); actions.push(b); controls.append(b); return b; }
       const ally = action('Ta', () => { player.team = 'ally'; }), foe = action('Địch', () => { player.team = 'foe'; });
       const animButtons = new Map();
-      for (const [label, anim] of [['Đứng', 'idle'], ['Đi', 'walk'], ['Đánh', 'attack']]) animButtons.set(anim, action(label, () => { player.anim = anim; player.fps = anim === 'attack' ? 10 : 6; speed.value = player.fps; player.paused = false; player.patrol = false; }));
+      for (const [label, anim] of [['Đứng', 'idle'], ['Đi', 'walk'], ['Đánh', 'attack']]) animButtons.set(anim, action(label, () => { player.anim = anim; player.fps = anim === 'attack' ? 10 : 6; speed.value = player.fps; player.paused = false; player.patrol = false; }, true));
       action('Dừng', () => { player.paused = true; });
       const flip = action('Lật ngang', () => { player.flip = !player.flip; });
-      const patrol = action('Đi qua lại', () => { player.anim = 'walk'; player.patrol = true; player.paused = false; player.fps = 6; speed.value = 6; });
-      action('Đánh liên tục', () => { player.anim = 'attack'; player.patrol = false; player.paused = false; player.fps = 10; speed.value = 10; });
+      const patrol = action('Đi qua lại', () => { player.anim = 'walk'; player.patrol = true; player.paused = false; player.fps = 6; speed.value = 6; }, true);
+      action('Đánh liên tục', () => { player.anim = 'attack'; player.patrol = false; player.paused = false; player.fps = 10; speed.value = 10; }, true);
       const speed = el('input'); speed.type = 'range'; speed.min = 1; speed.max = 24; speed.value = 6; speed.setAttribute('aria-label', 'Tốc độ animation'); speed.oninput = () => { player.fps = Number(speed.value); };
       controls.append(el('span', 'FPS'), speed); player.info = el('small'); controls.append(player.info); card.append(controls);
       function sync() { ally.classList.toggle('active', player.team === 'ally'); foe.classList.toggle('active', player.team === 'foe'); flip.classList.toggle('active', player.flip); patrol.classList.toggle('active', player.patrol); for (const [anim, b] of animButtons) b.classList.toggle('active', anim === player.anim && !player.paused); }
@@ -48,7 +48,12 @@ function render() {
   }
   message(manifest.error || (manifest.sample ? 'Manifest mẫu rỗng. Thay manifest.json bằng dữ liệu thật để xem asset.' : `${list.length} asset`));
 }
-let last = performance.now();
+let last = performance.now(), animationFrame = 0;
+// Không cộng thời gian tab ẩn vào animation khi quay lại.
+addEventListener('visibilitychange', () => {
+  cancelAnimationFrame(animationFrame);
+  if (!document.hidden) { last = performance.now(); animationFrame = requestAnimationFrame(tick); }
+});
 function tick(now) {
   const dt = Math.min(now - last, 100); last = now;
   if (!document.hidden) {
@@ -67,9 +72,9 @@ function tick(now) {
     }
     if (detail) { const ctx = detail.canvas.getContext('2d'); ctx.clearRect(0, 0, detail.item.w, detail.item.h); drawImage(ctx, detail.item.src, 0, 0, detail.item.w, detail.item.h); }
   }
-  requestAnimationFrame(tick);
+  animationFrame = requestAnimationFrame(tick);
 }
 $('search').oninput = render;
 $('zoom').oninput = () => { $('zoomLabel').value = `${$('zoom').value}×`; for (const p of players) { p.canvas.style.width = `${p.canvas.width * Number($('zoom').value)}px`; p.canvas.style.height = `${p.canvas.height * Number($('zoom').value)}px`; } };
 $('background').onchange = () => { for (const stage of document.querySelectorAll('.stage')) stage.className = `stage ${$('background').value}`; };
-tabs($('tabs'), manifest, (items) => { category = items; render(); }); requestAnimationFrame(tick);
+tabs($('tabs'), manifest, (items) => { category = items; render(); }); if (!document.hidden) animationFrame = requestAnimationFrame(tick);
