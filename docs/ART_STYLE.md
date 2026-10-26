@@ -73,9 +73,9 @@ Khung thẻ theo độ hiếm (thêm vào texture `ui` từ G1): thường = vi�
 
 > **BẮT BUỘC cho mọi lần tạo ảnh (người hay AI/Codex).** Trước khi tạo hoặc yêu cầu tạo BẤT KỲ ảnh nào cho game (công trình, lính, địa hình, vật trang trí, tường núi, icon…), phải: (1) đọc hết mục "Góc nhìn" này và mục "Quy tắc vẽ" ở trên; (2) đính kèm ảnh tham chiếu đã duyệt `art-review/style-references/harvester-house-front-approved.png` cho mọi công trình, và ảnh đã duyệt cùng loại (nếu có) cho loại khác; (3) dựng prompt từ **Prompt mẫu dùng lại** bên dưới (công cụ `docs/art-review/g3e/buildings/make_prompts.py` lấy đúng khối này, không tự chép lại); (4) duyệt kết quả bằng **Kiểm trước khi duyệt**. Prompt không dẫn tới tài liệu này hoặc thiếu ảnh tham chiếu thì không được chạy. Ảnh đi ngược các điểm trên bị loại, không "sửa dần" sau khi đã thêm chi tiết.
 
-Từ 26/10/2026 cảnh theo **Stardew Valley 2.5D** (đã chốt với chủ dự án), không còn nhìn thẳng từ trên xuống và không phải isometric. Camera nhìn xuống ~60°, mặt đất là lưới vuông; vật đứng được vẽ như sau:
+Từ 26/10/2026 cảnh theo **Stardew Valley 2.5D** (đã chốt với chủ dự án), không còn nhìn thẳng từ trên xuống và không phải isometric. Camera nhìn xuống **45°** (chủ dự án chốt 26/10/2026: nhìn xéo xuống 45°), mặt đất là lưới vuông; vật đứng được vẽ như sau:
 
-- **Công trình = mái lớn + mặt tiền ngắn:** mái chiếm ~50% chiều cao sprite, nhìn từ trên xuống, thấy rõ mặt phẳng mái dốc với từng hàng ngói/rơm/ván chạy ngang; mặt tiền ngắn hơn mái (~35–40%), cửa chính ở giữa, có đổ bóng dưới mái lên tường; chân móng ngắn. **Không thấy tường bên**, không xoay công trình, không hình thoi 2:1. Cạnh ngang nằm ngang, cạnh đứng nằm đứng, hình dáng gần đối xứng trái–phải.
+- **Công trình = mái + mặt tiền, hai phần cao ngang nhau:** ở 45° mặt phẳng mái nằm ngang và mặt tiền thẳng đứng bị rút ngắn như nhau (cos 45° = sin 45°), nên mái chiếm khoảng 45% và mặt tiền khoảng 45% chiều cao sprite (phần móng/chân ~10%); mái nhìn từ trên xuống, thấy rõ mặt phẳng mái dốc với từng hàng ngói/rơm/ván chạy ngang; mặt tiền KHÔNG được vẽ cao hơn mái, cửa chính ở giữa, có đổ bóng dưới mái lên tường; chân móng ngắn. **Không thấy tường bên**, không xoay công trình, không hình thoi 2:1. Cạnh ngang nằm ngang, cạnh đứng nằm đứng, hình dáng gần đối xứng trái–phải.
 - **Vật phẳng trên đất** (ruộng, vòng pháp thuật, hồ): thấy mặt đất là hình chữ nhật rộng, phần nhô lên (hàng rào, bậc) có chiều cao thấy rõ.
 - **Vách núi và tường đá:** thấy mặt vách hướng về người chơi, đỉnh vách và biển/trời phía sau (xem [spec](superpowers/specs/2026-10-26-oblique-view-mountain-wall-design.md)).
 - **Quy ước chung:** ánh sáng trên-trái; viền là màu tối hơn của chính vật liệu (không viền đen thuần); bão hòa ấm; họa tiết chất liệu (ngói, ván, đá) rõ; neo chân công trình ở đáy sprite và y-sort.
@@ -88,7 +88,7 @@ Từ 26/10/2026 cảnh theo **Stardew Valley 2.5D** (đã chốt với chủ d�
 Ảnh trên là **mẫu phong cách đã được chủ dự án duyệt trong chat**, dùng làm tham chiếu cho các lần tạo công trình sau. Đây là concept phóng lớn, chưa phải sprite native đã kiểm pixel/alpha và chưa được đưa vào game. Tên đúng là **Thợ Gặt** (thu hoạch lúa), không phải Thợ Gạch. Ảnh này do AI tạo cho chủ dự án (không phải ảnh của game khác), lưu trong repo chỉ để làm tham chiếu và không được đưa vào game.
 
 - **Hướng nhà luôn thẳng chính diện:** mặt tiền đối diện người xem; hai chân góc mặt tiền cùng cao độ; xà ngang, bậu cửa và chân móng nằm ngang; cột đứng thẳng. Không thấy tường bên trái/phải, không xoay chéo, không isometric.
-- **Điểm nhìn cao, không nghiêng sang bên:** thấy mái từ trên xuống nhưng mặt tiền vẫn thẳng. Góc khoảng 60° trong quy ước chung là gợi ý; ảnh tham chiếu và các dấu hiệu hình học này là tiêu chí duyệt, không phải phép đo camera chính xác.
+- **Điểm nhìn xéo xuống 45°, không nghiêng sang bên:** thấy mái từ trên xuống nhưng mặt tiền vẫn thẳng, hai mặt cao ngang nhau. Góc 45° trong quy ước chung là mục tiêu; ảnh tham chiếu và các dấu hiệu hình học này là tiêu chí duyệt, không phải phép đo camera chính xác.
 - **Mái chạy ngang:** sống mái từ trái sang phải, song song mặt tiền; mặt mái trước rộng, có dải mái phía sau sống mái ở phía trên như ảnh mẫu. Thể hiện phần mái sau bằng cách vẽ cách điệu, không xoay cả ngôi nhà để lộ mái. Tránh mái có sống chạy chéo sâu vào màn hình hoặc đầu hồi cao che hết mái sau.
 - Hình khối gọn, gần cân đối; cửa chính ở giữa, đồ nghề có thể lệch hai bên. Ngói đất nung, gỗ nâu, tường vữa ấm; bó lúa vàng, liềm, cào, giỏ thóc và bao hạt nhận diện đội Thợ Gặt. Công trình khác thay vật liệu/đồ nghề theo chức năng, giữ cùng góc nhìn.
 - Pixel rõ cụm, ánh sáng trên-trái, nền trong suốt, toàn bộ mái và chân nhà nằm trong ảnh có khoảng đệm. Khi làm sprite thật phải giảm chi tiết theo kích thước native; không coi số pixel của concept là kích thước sản xuất.
@@ -98,7 +98,9 @@ Từ 26/10/2026 cảnh theo **Stardew Valley 2.5D** (đã chốt với chủ d�
 ```text
 Create one isolated pixel-art building for Crowned Kingdoms: [building and function].
 Use the attached approved harvester house as the camera and style reference.
-STRICT straight-on FRONT VIEW with a high downward viewpoint, orthographic game-art styling.
+STRICT straight-on FRONT VIEW with the camera pitched 45 degrees DOWN (a 45-degree downward oblique view),
+orthographic game-art styling: the roof plane (or the top of a tower or windmill) and the front facade
+appear about EQUALLY tall because of the 45-degree pitch.
 Front facade faces the viewer exactly; horizontal beams, sills, foundation and eaves stay horizontal;
 vertical posts stay vertical; both front corners have the same height. No visible side walls.
 NO diagonal building rotation, NO isometric view, NO diamond ground base.

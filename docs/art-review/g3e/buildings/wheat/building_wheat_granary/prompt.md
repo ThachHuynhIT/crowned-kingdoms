@@ -4,7 +4,9 @@ BẮT BUỘC TRƯỚC KHI VẼ: mở và đọc `docs/ART_STYLE.md` — mục "G
 
 Create one isolated pixel-art building for Crowned Kingdoms: Kho Thóc (granary, support).
 Use the attached approved harvester house as the camera and style reference.
-STRICT straight-on FRONT VIEW with a high downward viewpoint, orthographic game-art styling.
+STRICT straight-on FRONT VIEW with the camera pitched 45 degrees DOWN (a 45-degree downward oblique view),
+orthographic game-art styling: the roof plane (or the top of a tower or windmill) and the front facade
+appear about EQUALLY tall because of the 45-degree pitch.
 Front facade faces the viewer exactly; horizontal beams, sills, foundation and eaves stay horizontal;
 vertical posts stay vertical; both front corners have the same height. No visible side walls.
 NO diagonal building rotation, NO isometric view, NO diamond ground base.
