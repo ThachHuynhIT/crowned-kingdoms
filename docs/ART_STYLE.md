@@ -71,6 +71,8 @@ Khung thẻ theo độ hiếm (thêm vào texture `ui` từ G1): thường = vi�
 
 ## Góc nhìn
 
+> **BẮT BUỘC cho mọi lần tạo ảnh (người hay AI/Codex).** Trước khi tạo hoặc yêu cầu tạo BẤT KỲ ảnh nào cho game (công trình, lính, địa hình, vật trang trí, tường núi, icon…), phải: (1) đọc hết mục "Góc nhìn" này và mục "Quy tắc vẽ" ở trên; (2) đính kèm ảnh tham chiếu đã duyệt `art-review/style-references/harvester-house-front-approved.png` cho mọi công trình, và ảnh đã duyệt cùng loại (nếu có) cho loại khác; (3) dựng prompt từ **Prompt mẫu dùng lại** bên dưới (công cụ `docs/art-review/g3e/buildings/make_prompts.py` lấy đúng khối này, không tự chép lại); (4) duyệt kết quả bằng **Kiểm trước khi duyệt**. Prompt không dẫn tới tài liệu này hoặc thiếu ảnh tham chiếu thì không được chạy. Ảnh đi ngược các điểm trên bị loại, không "sửa dần" sau khi đã thêm chi tiết.
+
 Từ 26/10/2026 cảnh theo **Stardew Valley 2.5D** (đã chốt với chủ dự án), không còn nhìn thẳng từ trên xuống và không phải isometric. Camera nhìn xuống ~60°, mặt đất là lưới vuông; vật đứng được vẽ như sau:
 
 - **Công trình = mái lớn + mặt tiền ngắn:** mái chiếm ~50% chiều cao sprite, nhìn từ trên xuống, thấy rõ mặt phẳng mái dốc với từng hàng ngói/rơm/ván chạy ngang; mặt tiền ngắn hơn mái (~35–40%), cửa chính ở giữa, có đổ bóng dưới mái lên tường; chân móng ngắn. **Không thấy tường bên**, không xoay công trình, không hình thoi 2:1. Cạnh ngang nằm ngang, cạnh đứng nằm đứng, hình dáng gần đối xứng trái–phải.
@@ -78,6 +80,41 @@ Từ 26/10/2026 cảnh theo **Stardew Valley 2.5D** (đã chốt với chủ d�
 - **Vách núi và tường đá:** thấy mặt vách hướng về người chơi, đỉnh vách và biển/trời phía sau (xem [spec](superpowers/specs/2026-10-26-oblique-view-mountain-wall-design.md)).
 - **Quy ước chung:** ánh sáng trên-trái; viền là màu tối hơn của chính vật liệu (không viền đen thuần); bão hòa ấm; họa tiết chất liệu (ngói, ván, đá) rõ; neo chân công trình ở đáy sprite và y-sort.
 - Hai nhà tranh/trại lính của lô `ai-v1` đầu tiên (thấy hai mặt) sẽ được vẽ lại theo quy ước này; các nhóm công trình mới đều theo quy ước này.
+
+### Mẫu công trình chính diện đã duyệt — nhà đội Thợ Gặt (26/10/2026)
+
+![Nhà đội Thợ Gặt: nhìn thẳng chính diện, điểm nhìn cao thấy mái](art-review/style-references/harvester-house-front-approved.png)
+
+Ảnh trên là **mẫu phong cách đã được chủ dự án duyệt trong chat**, dùng làm tham chiếu cho các lần tạo công trình sau. Đây là concept phóng lớn, chưa phải sprite native đã kiểm pixel/alpha và chưa được đưa vào game. Tên đúng là **Thợ Gặt** (thu hoạch lúa), không phải Thợ Gạch. Ảnh này do AI tạo cho chủ dự án (không phải ảnh của game khác), lưu trong repo chỉ để làm tham chiếu và không được đưa vào game.
+
+- **Hướng nhà luôn thẳng chính diện:** mặt tiền đối diện người xem; hai chân góc mặt tiền cùng cao độ; xà ngang, bậu cửa và chân móng nằm ngang; cột đứng thẳng. Không thấy tường bên trái/phải, không xoay chéo, không isometric.
+- **Điểm nhìn cao, không nghiêng sang bên:** thấy mái từ trên xuống nhưng mặt tiền vẫn thẳng. Góc khoảng 60° trong quy ước chung là gợi ý; ảnh tham chiếu và các dấu hiệu hình học này là tiêu chí duyệt, không phải phép đo camera chính xác.
+- **Mái chạy ngang:** sống mái từ trái sang phải, song song mặt tiền; mặt mái trước rộng, có dải mái phía sau sống mái ở phía trên như ảnh mẫu. Thể hiện phần mái sau bằng cách vẽ cách điệu, không xoay cả ngôi nhà để lộ mái. Tránh mái có sống chạy chéo sâu vào màn hình hoặc đầu hồi cao che hết mái sau.
+- Hình khối gọn, gần cân đối; cửa chính ở giữa, đồ nghề có thể lệch hai bên. Ngói đất nung, gỗ nâu, tường vữa ấm; bó lúa vàng, liềm, cào, giỏ thóc và bao hạt nhận diện đội Thợ Gặt. Công trình khác thay vật liệu/đồ nghề theo chức năng, giữ cùng góc nhìn.
+- Pixel rõ cụm, ánh sáng trên-trái, nền trong suốt, toàn bộ mái và chân nhà nằm trong ảnh có khoảng đệm. Khi làm sprite thật phải giảm chi tiết theo kích thước native; không coi số pixel của concept là kích thước sản xuất.
+
+**Prompt mẫu dùng lại** (đính kèm ảnh tham chiếu trên; thay phần trong ngoặc vuông):
+
+```text
+Create one isolated pixel-art building for Crowned Kingdoms: [building and function].
+Use the attached approved harvester house as the camera and style reference.
+STRICT straight-on FRONT VIEW with a high downward viewpoint, orthographic game-art styling.
+Front facade faces the viewer exactly; horizontal beams, sills, foundation and eaves stay horizontal;
+vertical posts stay vertical; both front corners have the same height. No visible side walls.
+NO diagonal building rotation, NO isometric view, NO diamond ground base.
+Roof ridge runs LEFT TO RIGHT, parallel to the facade. Show a broad front roof plane and a
+smaller rear roof strip above the ridge, matching the reference's stylized roof geometry.
+Keep the house front-facing while revealing the roof; do not turn it sideways.
+Compact readable silhouette, cozy warm medieval pixel art, crisp square pixel clusters,
+upper-left lighting, dark material-colored outlines. [Materials and identifying tools.]
+Whole building visible, transparent background, padding around roof and feet.
+No people, text, labels, UI, watermark, blur or antialiasing.
+Concept preview only; native sprite size and pixel cleanup are a separate production step.
+```
+
+> Khi tạo qua Codex/imagegen để cắt sprite trong repo, thay dòng "transparent background" bằng nền **đen phẳng #000000** (không quầng sáng, không bóng, không nền đất): công cụ `make_assets.py` tách nền đen thành alpha 0/255 rồi thu nhỏ về 64 px ảnh rộng. Chiều cao tối đa 80 px ảnh (một ô bàn cờ); công trình thấp (ruộng) có thể thấp hơn.
+
+**Kiểm trước khi duyệt:** mặt tiền thẳng · không lộ tường bên · mái có chiều sâu mà nhà không xoay · nhận ra chức năng · đủ mái/chân · đọc được khi thu nhỏ. Nếu ảnh bị xéo, sửa hướng nhà trước khi thêm chi tiết.
 
 ## Hiển thị
 
@@ -94,11 +131,11 @@ Hợp đồng **từ G1** (spec §11.4): mọi chỗ dùng sprite chỉ gọi fr
 
 ## Nguồn asset tạm
 
-Pack CC0/CC-BY từ itch.io, Kenney, OpenGameArt — ghi vào `CREDITS.md` kèm license. AI chỉ dùng cho moodboard/concept, không dùng làm sprite cuối.
+Pack CC0/CC-BY từ itch.io, Kenney, OpenGameArt — ghi vào `CREDITS.md` kèm license. Ảnh AI do chủ dự án cung cấp là nguồn hợp lệ cho sprite cuối (xem mục "Asset ngoài & AI"), phải đi qua quy trình duyệt từng nhóm.
 
 ## Asset ngoài & AI
 
 - Mọi asset ngoài phải qua [ASSET_LICENSES.md](ASSET_LICENSES.md) và được ghi vào [ASSET_MANIFEST.md](ASSET_MANIFEST.md) (dữ liệu ở `docs/assets.manifest.yml`) + `CREDITS.md` trước khi commit. Không tự tải rồi commit chỉ vì thấy URL.
-- AI chỉ dùng cho moodboard/concept/silhouette/color/sprite draft; không đưa thẳng vào atlas. Pipeline: `concept → native-size draft → color cleanup → manual pixel cleanup → animation → review → atlas`.
+- Ảnh AI (OpenAI imagegen qua Codex, do chủ dự án cung cấp và duyệt từng nhóm) dùng làm nguồn cho sprite cuối: không đưa nguyên ảnh vào atlas mà phải `ảnh nguồn → tách nền → thu nhỏ về native size → kiểm alpha/pixel → duyệt → đăng ký (assets.manifest.yml, CREDITS.md)`; nguồn và prompt lưu trong `docs/art-review/`. Mọi lần tạo ảnh tuân thủ khung BẮT BUỘC ở mục "Góc nhìn".
 - Asset chưa đạt yêu cầu: đánh dấu TODO, không tự ý đổi native size/projection, không xoay sprite, giữ nguyên frame name khi thay art.
 - Checklist nghiệm thu: đúng native size theo metadata · đúng projection · màu mở, phân biệt phe/trạng thái · mép alpha 0/255, bóng riêng alpha 128 có khai báo · không anti-aliasing/blur/gradient mượt · ánh sáng trên-trái · silhouette đọc được ở 1× · origin (0.5, 1) · đúng frame name · license đã ghi.
