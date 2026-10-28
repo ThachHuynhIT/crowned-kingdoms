@@ -1,4 +1,5 @@
 import { describe, expect, it } from 'vitest';
+import { cardLayout, fitArt } from '../cards/cardLayout';
 import { CARD_LIFT, type Rect, type Size } from '../hud/layout';
 import {
   PLANNING_ZOOM,
@@ -55,7 +56,7 @@ describe('planningLayout', () => {
     expect(l.year).toEqual({ x: 560, y: 10, w: 160, h: 52 });
     expect(l.board).toEqual({ x: 480, y: 200, w: 320, h: 320 });
     expect(l.zoom).toBe(2);
-    expect(l.scout).toMatchObject({ x: 1010, w: 260, y: 92, h: 428 });
+    expect(l.scout).toMatchObject({ x: 1010, w: 260, y: 92, h: 426 });
     expect(l.scoutButton).toBeNull();
     expect(l.gold).toEqual({ x: 134, y: 10, w: 120, h: 52 });
     expect(l.calendar[0]).toEqual({ x: 994, y: 10, w: 52, h: 52 });
@@ -63,7 +64,7 @@ describe('planningLayout', () => {
     expect(l.reroll).toEqual({ x: 296, y: 598, w: 140, h: 52 });
     expect(l.deck).toEqual({ x: 844, y: 658, w: 140, h: 52 });
     expect(l.hand).toHaveLength(3);
-    expect(l.hand[0]).toEqual({ x: 448, y: 542, w: 120, h: 168 });
+    expect(l.hand[0]).toEqual({ x: 448, y: 534, w: 120, h: 176 });
     expect(l.hand[2]!.x).toBe(448 + 2 * 132);
     expect(l.fight.w).toBe(200);
     expect(l.fight.h).toBe(56);
@@ -79,7 +80,7 @@ describe('planningLayout', () => {
     expect(l.board).toEqual({ x: 28, y: 180, w: 320, h: 320 });
     expect(l.zoom).toBe(2);
     expect(l.hand).toHaveLength(3);
-    expect(l.hand[0]).toEqual({ x: 18, y: 650, w: 108, h: 152 });
+    expect(l.hand[0]).toEqual({ x: 18, y: 640, w: 108, h: 162 });
     expect(l.hand[1]!.x).toBe(134);
     expect(l.scout).toBeNull();
     expect(l.scoutButton).toEqual({ x: 313, y: 64, w: 52, h: 52 });
@@ -92,6 +93,14 @@ describe('planningLayout', () => {
   ] as const) {
     it(`leaves room for a lifted selected card under the panels above the hand (${name})`, () => {
       const l = planningLayout(screen);
+      for (const card of l.hand) {
+        const lifted = { ...card, y: card.y - CARD_LIFT };
+        expectSeparate({ lifted, board: l.board, sell: l.sell, reroll: l.reroll, deck: l.deck });
+      }
+    });
+
+    it(`selected_lift_clear_of_actions: with four cards too (${name})`, () => {
+      const l = planningLayout(screen, 4);
       for (const card of l.hand) {
         const lifted = { ...card, y: card.y - CARD_LIFT };
         expectSeparate({ lifted, board: l.board, sell: l.sell, reroll: l.reroll, deck: l.deck });
@@ -510,7 +519,21 @@ describe('hand of four (Bàn Tay Thứ Tư)', () => {
   it('shrinks the cards on mobile only as far as needed and keeps their proportions', () => {
     const [a] = planningLayout(MOBILE, 4).hand;
     expect(a!.w).toBeLessThan(108);
-    expect(a!.w / a!.h).toBeCloseTo(108 / 152, 1);
+    expect(a!.w / a!.h).toBeCloseTo(108 / 162, 1);
+  });
+
+  it('four_cards_fit_phone: every card of a four-card hand fits the vertical card layout in compact density', () => {
+    const { hand } = planningLayout(MOBILE, 4);
+    for (const r of hand) {
+      expect(r.w).toBeGreaterThanOrEqual(72);
+      expect(r.w).toBeLessThan(100); // compact density
+      const l = cardLayout({ w: r.w, h: r.h }, 4, 'compact');
+      for (const part of [l.header, l.art, l.badge, l.description]) {
+        expect(part.x + part.w).toBeLessThanOrEqual(r.w);
+        expect(part.y + part.h).toBeLessThanOrEqual(r.h);
+      }
+      expect(fitArt(l.art, { w: 32, h: 24 }).scale).toBeGreaterThanOrEqual(2);
+    }
   });
 
   it('centerHand centres a short hand on the four-slot row', () => {

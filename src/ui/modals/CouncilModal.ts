@@ -29,7 +29,7 @@ const MIN_CELL = 36;
 const CELL_GAP = 2;
 const CHIP_H = 44;
 const CHIP_GAP = 4;
-const RARE_CARD = { w: 100, h: 140 } as const;
+const RARE_CARD = { w: 100, h: 150 } as const;
 
 /** The title of the council panel. */
 export const councilTitle = (year: number): string => `Hội Đồng Hoàng Gia — Năm ${year}`;

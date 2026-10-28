@@ -124,7 +124,7 @@ export class CardView {
     this.place();
   }
 
-  /** New logical size (the hand switches 120×168 ↔ 108×152 between layouts). */
+  /** New logical size (the hand switches 120×176 ↔ 108×162 between layouts). */
   resize(size: Size): void {
     this.size = size;
     this.render();

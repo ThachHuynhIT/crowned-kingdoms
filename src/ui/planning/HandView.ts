@@ -13,7 +13,7 @@ export class HandView {
 
   constructor(scene: Phaser.Scene, content: Content, tooltip: TooltipHost, slots = 4) {
     this.cards = Array.from({ length: slots }, (_, i) => {
-      const card = new CardView(scene, content, { w: 120, h: 168 }, tooltip);
+      const card = new CardView(scene, content, { w: 120, h: 176 }, tooltip);
       card.onClick(() => this.handler?.(i));
       card.onDrop((x, y) => this.dropper?.(i, x, y));
       return card;

@@ -1,6 +1,7 @@
 import { describe, expect, it } from 'vitest';
 import type { Rect, Size } from '../hud/layout';
 import {
+  DECK_CARD,
   calendarModalLayout,
   centredPanel,
   councilLayout,
@@ -135,14 +136,14 @@ describe('deckModalLayout', () => {
     ['desktop', DESKTOP, 24, 6],
     ['mobile', MOBILE, 10, 3],
   ] as const) {
-    it(`has ${cols} columns of 96×134 cards in a viewport inside the panel (${name})`, () => {
+    it(`has ${cols} columns of 96×144 cards in a viewport inside the panel (${name})`, () => {
       const l = deckModalLayout(screen, inset, 20, 0);
       expect(contains({ x: 0, y: 0, ...screen }, l.panel)).toBe(true);
       expect(l.cols).toBe(cols);
       expect(l.cards).toHaveLength(20);
       for (const c of l.cards) {
         expect(c.w).toBe(96);
-        expect(c.h).toBe(134);
+        expect(c.h).toBe(144);
         // Horizontally always inside the viewport.
         expect(c.x).toBeGreaterThanOrEqual(l.viewport.x);
         expect(c.x + c.w).toBeLessThanOrEqual(l.viewport.x + l.viewport.w);
@@ -170,6 +171,22 @@ describe('deckModalLayout', () => {
       expect(past.visible).toContain(19);
       expect(top.visible).toContain(0);
       expect(top.visible).not.toContain(19);
+    });
+  }
+
+  for (const [name, screen, inset] of [
+    ['desktop', DESKTOP, 24],
+    ['mobile', MOBILE, 10],
+  ] as const) {
+    it(`deck_last_row_reachable: at least one row shows and the last row scrolls fully into view (${name})`, () => {
+      for (let count = 1; count <= 60; count++) {
+        const top = deckModalLayout(screen, inset, count, 0);
+        expect(top.viewport.h, `count ${count}`).toBeGreaterThanOrEqual(DECK_CARD.h);
+        const end = deckModalLayout(screen, inset, count, 99999);
+        const last = end.cards[count - 1]!;
+        expect(last.y).toBeGreaterThanOrEqual(end.viewport.y);
+        expect(last.y + last.h).toBeLessThanOrEqual(end.viewport.y + end.viewport.h);
+      }
     });
   }
 

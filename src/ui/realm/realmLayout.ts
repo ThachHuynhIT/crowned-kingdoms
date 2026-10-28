@@ -35,7 +35,7 @@ const BUTTON_GAP = 8;
 const DESK = {
   top: { lives: 120, gold: 120, year: 160, h: 52 },
   scout: { w: 260, y: 92, bottom: 520 },
-  card: { w: 120, h: 168, gap: 12 },
+  card: { w: 120, h: 176, gap: 12 },
   button: { w: 140, h: 52 },
 } as const;
 
@@ -51,7 +51,7 @@ const PHONE = {
   boardY: 180,
   /** Deck / reroll / sell, one row under the board; ends well above the hand (y 650). */
   buttons: { w: 84, h: 48, y: 508 },
-  card: { w: 108, h: 152, gap: 8 },
+  card: { w: 108, h: 162, gap: 8 },
 } as const;
 
 const FIGHT = { w: 200, h: 56 } as const;

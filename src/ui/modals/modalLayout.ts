@@ -273,7 +273,7 @@ export interface DeckModalLayout {
   visible: readonly number[];
 }
 
-export const DECK_CARD = { w: 96, h: 134 } as const;
+export const DECK_CARD = { w: 96, h: 144 } as const;
 export const DECK_TAB_COUNT = 4;
 const DECK_GAP = 8;
 const DECK_TAB_H = 44;
