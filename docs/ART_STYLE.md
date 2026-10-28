@@ -120,6 +120,21 @@ Concept preview only; native sprite size and pixel cleanup are a separate produc
 
 **Kiểm trước khi duyệt:** mặt tiền thẳng · thấy được phần nóc/mái từ trên xuống (kể cả tháp, cối xay) · không lộ tường bên · mái có chiều sâu mà nhà không xoay · nhận ra chức năng · đủ mái/chân · đọc được khi thu nhỏ. Nếu ảnh bị xéo, sửa hướng nhà trước khi thêm chi tiết.
 
+## Chân dung vua
+
+![Chín chân dung vua đã duyệt](art-review/style-references/king-portraits-approved.png)
+
+Bộ chín chân dung **đã được chủ dự án duyệt trong chat (29/10/2026)**, thay mẫu vuông 64×64 cũ (cất ở `docs/art-review/g3e/portraits/_rejected_square/`). Ảnh nguồn nằm ở `docs/art-review/g3e/portraits/<vua>/source.png` (1024×1536, concept chưa phải sprite native); prompt sinh bằng `docs/art-review/g3e/portraits/make_prompts.py` và vẫn bắt buộc dẫn Codex đọc tài liệu này, đính kèm ảnh tham chiếu đã duyệt. Dùng cho thẻ vua dọc trong màn chọn vua.
+
+- **Khung:** bán thân dọc tỉ lệ 2:3 (thu về **96×144** px ảnh), nhìn từ đầu tới đầu gối hoặc thắt lưng, đứng hoặc ngồi uy nghi, nhìn thẳng. Đầu cao khoảng 22% ảnh.
+- **Thân hình:** chiến binh dạn dày trận mạc: vai rộng, cơ bắp, sẹo, giáp và áo bạc màu, vết trầy. Không phải nông dân hiền lành.
+- **Vật đặc trưng** đọc được ngay, hình khối lớn, đúng "vua của cái gì" (gậy tinh thể, liềm, búa đá, gậy rễ, mỏ neo, búa rèn, cờ lê, trăng khuyết, cung và kiếm cong).
+- **Trang phục:** Chất liệu thật của đồ vật, không dùng nguyên liệu chủ đề làm áo (vua Lúa Mì mặc vải len thêu hoa văn, không phải rơm hay lúa). Hoa văn thêu, viền, họa tiết rõ.
+- **Màu:** một tông chủ đạo riêng mỗi vua (tím, vàng cam, xám xanh, lục, xanh biển, đỏ than, đồng, chàm, cát vàng) cùng 2–3 sắc độ và một điểm nhấn ấm nhỏ; nhận ra khi thu nhỏ 24×36.
+- **Nền:** cảnh fantasy theo chủ đề của vua (đồng lúa và cối xay, núi và đá rune, kệ sách và vòng rune, rừng cổ thụ, biển bão và hải đăng, lò rèn và dung nham, bánh răng và đồng hồ, trăng khuyết và cổng đá, thảo nguyên và lều), vẽ nhạt và mềm hơn nhân vật để vua là tâm điểm; không khung, viền hay vignette.
+- **Cấm:** chữ, số, khung thẻ (do UI dựng), watermark, làm mờ, anti-aliasing, gradient mượt, nhân vật khác.
+- **Trước khi vào game:** `ảnh nguồn → thu về 96×144 → ép về bảng màu → kiểm → duyệt → đăng ký (assets.manifest.yml, CREDITS.md)`; chưa nối vào `src` khi chưa làm hết các bước này.
+
 ## Hiển thị
 
 - Game chạy `pixelArt: true` (nearest-neighbour) và **zoom số nguyên** (vương quốc: zoom 2; trận: `max(1, floor(min(width, height + 96) / 384))`). Không bao giờ scale lẻ; sprite/scroll hiển thị snap pixel, không sửa float của world để snap render. Chữ `FONT_UI` vẽ ở kích thước hiển thị gốc, không scale texture text theo tỷ lệ lẻ; kiểm độ rõ/glyph tiếng Việt bằng browser.

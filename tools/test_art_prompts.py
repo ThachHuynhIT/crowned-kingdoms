@@ -55,5 +55,45 @@ class ArtPromptGateTest(unittest.TestCase):
             mp.ROOT = old_root
 
 
+pspec = importlib.util.spec_from_file_location('portrait_prompts', ROOT / 'docs/art-review/g3e/portraits/make_prompts.py')
+pp = importlib.util.module_from_spec(pspec)
+pspec.loader.exec_module(pp)
+
+
+class PortraitPromptGateTest(unittest.TestCase):
+    def test_reference_and_style_doc_exist(self):
+        self.assertTrue((ROOT / pp.REFERENCE).exists())
+        self.assertTrue((ROOT / pp.STYLE_DOC).exists())
+        self.assertIn('## Chân dung vua', (ROOT / pp.STYLE_DOC).read_text(encoding='utf-8'))
+
+    def test_all_nine_kings_have_a_prompt_from_the_doc(self):
+        self.assertEqual(len(pp.KINGS), 9)
+        for king in pp.KINGS:
+            p = pp.build_prompt(f'x/{king}/source.png', king)
+            self.assertIn('docs/ART_STYLE.md', p, king)
+            self.assertIn('BẮT BUỘC TRƯỚC KHI VẼ', p, king)
+            self.assertIn(pp.REFERENCE, p, king)
+            self.assertIn('aspect ratio 2:3', p, king)
+            self.assertIn('96x144', p, king)
+            self.assertIn('themed fantasy scene', p, king)
+            self.assertIn('No text', p, king)
+            self.assertIn('NOT a gentle farmer', p, king)
+
+    def test_wheat_king_wears_cloth_not_straw(self):
+        p = pp.build_prompt('x/wheat/source.png', 'wheat')
+        self.assertIn('NO straw', p)
+        self.assertIn('embroidered', p)
+
+    def test_generation_is_refused_without_the_doc_or_reference(self):
+        old_root = pp.ROOT
+        try:
+            with tempfile.TemporaryDirectory() as d:
+                pp.ROOT = Path(d)
+                with self.assertRaises(SystemExit):
+                    pp.build_prompt('x.png', 'wheat')
+        finally:
+            pp.ROOT = old_root
+
+
 if __name__ == '__main__':
     unittest.main()
