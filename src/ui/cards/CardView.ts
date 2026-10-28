@@ -3,11 +3,12 @@ import type { CardDef, CardId } from '../../data/types';
 import { UI_PALETTE } from '../../data/uiPalette';
 import { describeCard } from '../../game/cards/describe';
 import type { Content } from '../../game/cards/registry';
-import { SPRITES_KEY, cardArtFrame, iconFrame } from '../../render/atlas';
+import { SPRITES_KEY, iconFrame } from '../../render/atlas';
 import type { IconId } from '../../render/iconArt';
-import { CARD_ART } from '../../render/cardArt';
 import type { UiFrame } from '../../render/uiArt';
 import { CARD_LIFT, DRAG_SLOP, type Size, type TooltipContent } from '../hud/layout';
+import { VERTICAL_CARD_ART, resolveCardImage } from './cardImage';
+import { cardLayout, fitArt, type CardDensity } from './cardLayout';
 import { clampLines, nextLevelLine } from './cardText';
 import {
   addUiText,
@@ -23,7 +24,8 @@ import {
 const DIMMED_ALPHA = 0.55;
 /** Space between the frame border and the card's contents. */
 const PAD = 2;
-const ICON = 16;
+/** Width from which a card uses the `full` density when the caller does not pick one. */
+const FULL_FROM_WIDTH = 100;
 
 /** Icon of each card kind until G2c adds dedicated art for the new kinds. */
 const KIND_ICON: Record<CardDef['kind'], IconId> = {
@@ -35,7 +37,6 @@ const KIND_ICON: Record<CardDef['kind'], IconId> = {
   enchantment: 'enchant',
   tome: 'tome',
 };
-const MAX_ART_SCALE = 3;
 /** A dragged card floats above the rest of the HUD. */
 const DRAG_DEPTH = 500;
 const DRAG_ALPHA = 0.85;
@@ -47,9 +48,10 @@ const RARITY_FRAME: Record<CardDef['rarity'], UiFrame> = {
 };
 
 /**
- * One card face (§10.4): rarity frame (`cardSelected` while selected), name band, the 32×24
- * picture at an integer scale, kind icon top-left, first description line cut to two lines,
- * optional "Lên cấp" badge. Hover / 400 ms long-press shows the full text in the shared
+ * One vertical card face (§10.4, geometry in `cardLayout`): rarity frame (`cardSelected` while
+ * selected), header with the kind icon and the name, the picture at an integer scale (from
+ * `resolveCardImage`), an optional "Lên cấp" badge line, and the first description line(s).
+ * `compact` cards show one description line, `full` as many as fit. Hover / 400 ms long-press shows the full text in the shared
  * Tooltip; clicks go through bindPress (same drag-slop rules as buttons). Pure display: it
  * never touches game state. Selecting lifts the card CARD_LIFT (12) px above its set position.
  */
@@ -74,6 +76,7 @@ export class CardView {
     private readonly content: Content,
     private size: Size,
     tooltip?: TooltipHost,
+    private readonly density?: CardDensity,
   ) {
     this.box = createPanel(scene, 'card', size.w, size.h);
     this.container = scene.add.container(0, 0, [this.box.image]).setSize(size.w, size.h);
@@ -194,50 +197,42 @@ export class CardView {
     this.container.setAlpha(this.dimmed ? DIMMED_ALPHA : 1);
 
     const inset = frameBorder(this.scene, frame) + PAD;
-    const inner = Math.max(1, w - 2 * inset);
-    const big = w >= 100;
-    // Mini cards (king-select card row): just the name and the picture; the tooltip has the text.
-    const compact = w < 80;
+    const density = this.density ?? (w >= FULL_FROM_WIDTH ? 'full' : 'compact');
+    const full = density === 'full';
+    const l = cardLayout(this.size, inset, density);
 
-    // Name band: wraps to up to two lines in the space right of the kind icon (top-left).
-    const nameWidth = Math.max(1, compact ? inner : inner - ICON - PAD);
-    const nameX = compact ? w / 2 : inset + ICON + PAD + nameWidth / 2;
-    const name = addUiText(this.scene, nameX, inset, '', big ? 12 : compact ? 9 : 10)
-      .setOrigin(0.5, 0)
+    this.addAtlasImage(iconFrame(KIND_ICON[def.kind]), l.icon.x, l.icon.y)?.setOrigin(0, 0);
+
+    const name = addUiText(this.scene, l.name.x + l.name.w / 2, l.header.y + l.header.h / 2, '', full ? 12 : w < 80 ? 9 : 10)
+      .setOrigin(0.5)
       .setAlign('center')
       .setFontStyle('bold');
     const measureName = (s: string): number => name.setText(s).width;
-    name.setText(clampLines(def.nameVi, nameWidth, 2, measureName).join('\n'));
+    name.setText(clampLines(def.nameVi, l.name.w, 2, measureName).join('\n'));
     this.add(name);
 
-    const icon = compact ? null : this.addImage(iconFrame(KIND_ICON[def.kind]), inset, inset)?.setOrigin(0, 0);
-    const bandBottom = inset + Math.max(name.height, icon?.displayHeight ?? 0) + PAD;
-
-    // Picture: largest integer scale (≤ 3) that fits the inner width.
-    const scale = Math.max(1, Math.min(MAX_ART_SCALE, Math.floor(inner / CARD_ART.w)));
-    const art = this.addImage(cardArtFrame(def.id), w / 2, bandBottom)
-      ?.setOrigin(0.5, 0)
-      .setScale(scale);
-    let y = bandBottom + (art?.displayHeight ?? CARD_ART.h * scale) + PAD;
-
-    if (this.badge) {
-      const badge = addUiText(this.scene, w / 2, y, this.badge, big ? 12 : 10, UI_PALETTE.good)
-        .setOrigin(0.5, 0)
-        .setFontStyle('bold');
-      this.add(badge);
-      y += badge.height;
+    const ref = resolveCardImage(def.id, VERTICAL_CARD_ART);
+    const fit = fitArt(l.art, ref);
+    if (this.scene.textures.exists(ref.key) && this.scene.textures.get(ref.key).has(ref.frame)) {
+      this.add(this.scene.add.image(fit.x, fit.y, ref.key, ref.frame).setOrigin(0, 0).setScale(fit.scale));
     }
 
-    if (compact) return;
-    const first = describeCard(def).lines[0] ?? '';
-    const text = addUiText(this.scene, w / 2, y, '', big ? 11 : 10).setOrigin(0.5, 0);
+    if (this.badge) {
+      const badge = addUiText(this.scene, l.badge.x + l.badge.w / 2, l.badge.y + l.badge.h / 2, this.badge, full ? 12 : 10, UI_PALETTE.good)
+        .setOrigin(0.5)
+        .setFontStyle('bold');
+      this.add(badge);
+    }
+
+    const lines = full ? Math.max(2, Math.floor(l.description.h / 13)) : 1;
+    const text = addUiText(this.scene, l.description.x + l.description.w / 2, l.description.y, '', full ? 11 : 10).setOrigin(0.5, 0);
     const measure = (s: string): number => text.setText(s).width;
-    text.setAlign('center').setText(clampLines(first, inner, 2, measure).join('\n'));
+    text.setAlign('center').setText(clampLines(describeCard(def).lines[0] ?? '', l.description.w, lines, measure).join('\n'));
     this.add(text);
   }
 
   /** Image from the sprites atlas, or null (nothing drawn) if the frame is missing. */
-  private addImage(frame: string, x: number, y: number): Phaser.GameObjects.Image | null {
+  private addAtlasImage(frame: string, x: number, y: number): Phaser.GameObjects.Image | null {
     const textures = this.scene.textures;
     if (!textures.exists(SPRITES_KEY) || !textures.get(SPRITES_KEY).has(frame)) return null;
     const image = this.scene.add.image(x, y, SPRITES_KEY, frame);
