@@ -5,8 +5,8 @@ Bạn là kiến trúc sư/lập kế hoạch cho repo Crowned Kingdoms (Phaser 
 
 ## Đọc trước (theo thứ tự)
 1. `CLAUDE.md` (luật kiến trúc: tầng, xác định, UI chỉ đọc state và gửi intent qua EventBus, nine-slice từ texture `ui`, `FONT_UI`, mục tiêu cảm ứng >= 44x44, desktop 1280x720 / mobile 375x812, width >= 768 dùng desktop, layout tính trong file thuần có test).
-2. `docs/ART_STYLE.md` (phong cách, bảng màu `PALETTE` Hearth 32 cho thế giới, `UI_PALETTE` cho giao diện).
-3. `docs/superpowers/specs/2026-10-28-king-select-redesign-design.md` (spec màn chọn vua, ĐÃ có; mở rộng phạm vi ở dưới).
+2. `docs/ART_STYLE.md` (phong cách, bảng màu `PALETTE` Hearth 32 cho thế giới, `UI_PALETTE` cho giao diện, mục "Chân dung vua").
+3. `docs/superpowers/specs/2026-10-28-king-select-redesign-design.md` (spec màn chọn vua, ĐÃ được chủ dự án duyệt 29/10/2026; mở rộng phạm vi ở dưới).
 4. `docs/art-review/HANDOFF.md` và `docs/ROADMAP.md`.
 5. Code giao diện hiện tại: `src/scenes/{KingSelectScene,MainMenuScene,BattleHudScene,PlanningHudScene,RealmScene,RunEndScene}.ts`, `src/ui/theme.ts`, `src/ui/hud/layout.ts`, `src/ui/kingSelectLayout.ts`, `src/ui/cards/CardView.ts`, `src/ui/modals/*` (nhất là `RewardModal.ts`, `modalLayout.ts`), `src/ui/planning/CalendarStrip.ts`, `src/render/uiArt.ts`, `src/data/uiPalette.ts`, `src/ui/input/shortcuts.ts`.
 6. Xem 5 ảnh tham chiếu trong `.superpowers/ui_refs/` (chỉ lấy BỐ CỤC, nhịp và cách đổi màu theo vua; KHÔNG sao chép hình, nhân vật, thẻ, font hay màu y nguyên của game khác):
@@ -24,7 +24,7 @@ E. Bảng màu theo vua: `KING_THEMES` trong `src/data/uiPalette.ts` áp cho mà
 F. Các màn khác (menu chính, tạm dừng, kết thúc ván, trợ giúp, hội đồng, nhiệm vụ, kho bài): chỉ cần kiểu khung/nút/tiêu đề đồng bộ với A–E; ở mỗi màn nêu mức thay đổi tối thiểu.
 
 ## Ràng buộc đã chốt với chủ dự án
-- Chân dung vua 96x144 (2:3), đang được vẽ (`docs/art-review/g3e/portraits/`); CHƯA nối vào `src` khi chưa duyệt, nên plan dùng art tạm.
+- Chân dung vua 96x144 (2:3): 9 ảnh nguồn 1024x1536 ĐÃ duyệt (`docs/art-review/g3e/portraits/<vua>/source.png`) nhưng CHƯA thu nhỏ/ép bảng màu/nối vào `src`; plan phải có task nối chúng (hoặc nêu rõ art tạm `paintPortrait` cho tới khi bước đó xong) và nêu cách đổi nguồn ảnh.
 - Thẻ trong lưới 3x3 dùng thẻ dọc MỚI; tranh thẻ dọc cho 94 thẻ là dự án art riêng (plan chỉ ghi phụ thuộc và cách đổi nguồn ảnh, không đổi bố cục khi art về). Plan phải nói rõ art tạm là gì.
 - Không có hệ thống cấp vua, Perks, độ khó thật: chỉ chừa chỗ.
 - Công trình đang tạm dừng; không vẽ công trình.
