@@ -275,7 +275,11 @@ Mỗi task có một chu kỳ RED → GREEN → kiểm view → commit riêng. L
 - [ ] Cổng nhóm F: `npm run lint && npm run typecheck && npm test && npm run build`, exit 0; kiểm deterministic/benchmark trong suite không thay kết quả do UI; nếu FAIL thì task chưa xong. Ghi lệnh/kết quả thật, viewport, screenshot, trạng thái A4 và quyết định Q1/Q2 vào HANDOFF.
 - [ ] Commit `docs(ui): record redesign acceptance evidence` (và commit fix riêng cho mỗi lỗi tái hiện được, không gom gameplay vào commit skin). PR sau này chỉ vào develop theo workflow repo; phiên lập plan không tạo commit/PR.
 
-## Câu hỏi mở cho chủ dự án
+## Quyết định đã chốt (29/10/2026) — trước đây là câu hỏi mở
+
+Chủ dự án chốt cả hai theo đề xuất: **Q1** giữ "ĐỔI THƯỞNG — Sắp có" vô hiệu hóa; **Q2** thanh phe địch là HP tổng quân đang hiện diện, nhãn "Máu quân địch", có tooltip; số địch còn/đợt hiện riêng.
+
+### Nội dung câu hỏi gốc
 
 1. **Đổi phần thưởng bằng vàng:** có muốn mở rộng luật để thực sự đổi thưởng không? **Đề xuất:** trong đợt UI này giữ dòng “ĐỔI THƯỞNG — Sắp có” disabled; nếu muốn hoạt động, lập spec riêng chốt giá, số lần, loại offer được đổi, RNG/save trước khi bật. Không lấy giá 10 từ game tham chiếu và không dùng reroll tay bài thay thế.
 2. **Ý nghĩa thanh máu phe địch ở trận thường:** chọn HP tổng quân đang hiện diện hay chỉ thanh tiến độ số quân còn lại? **Đề xuất:** dùng HP tổng quân đang hiện diện với nhãn “Máu quân địch” và tooltip rõ mẫu số thay đổi khi xuất quân; giữ số địch còn/đợt riêng, boss có thanh riêng. Phương án số quân phải ghi “Quân còn”, không gắn nhãn máu. B1 có thể làm/test readout trước; B3 chỉ nối phương án được chốt, không tự phát minh HP vua địch.
