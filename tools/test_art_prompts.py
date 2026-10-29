@@ -95,5 +95,63 @@ class PortraitPromptGateTest(unittest.TestCase):
             pp.ROOT = old_root
 
 
+cspec = importlib.util.spec_from_file_location('card_prompts', ROOT / 'docs/art-review/g3e/cards/make_prompts.py')
+cp = importlib.util.module_from_spec(cspec)
+cspec.loader.exec_module(cp)
+
+
+class CardPromptGateTest(unittest.TestCase):
+    def test_catalogue_is_the_whole_registry(self):
+        cards = cp.load_cards()
+        self.assertEqual(len(cards), 94)
+        self.assertEqual(sorted({c['kind'] for c in cards.values()}), ['economy', 'enchantment', 'support', 'throne', 'tome', 'tower', 'troop'])
+
+    def test_every_card_prompt_points_at_the_doc_and_carries_the_reference(self):
+        for cid, card in cp.load_cards().items():
+            p = cp.build_prompt(f'x/{cid}/source.png', card)
+            self.assertIn('docs/ART_STYLE.md', p, cid)
+            self.assertIn('BẮT BUỘC TRƯỚC KHI VẼ', p, cid)
+            self.assertIn(cp.REFERENCE, p, cid)
+            self.assertIn(card['nameVi'], p, cid)
+            self.assertIn('4:3', p, cid)
+            self.assertIn('No text' if card['kind'] not in cp.BUILDING_KINDS else 'Không chữ', p, cid)
+
+    def test_building_cards_use_the_template_block_of_the_style_doc_word_for_word(self):
+        template = cp._buildings.style_template()
+        for cid, card in cp.load_cards().items():
+            if card['kind'] not in cp.BUILDING_KINDS:
+                continue
+            p = cp.build_prompt(f'x/{cid}/source.png', card)
+            self.assertIn('STRICT straight-on FRONT VIEW', p, cid)
+            self.assertIn('NO isometric view', p, cid)
+            self.assertIn('Roof ridge runs LEFT TO RIGHT', p, cid)
+            self.assertNotIn('[building and function]', p, cid)
+            self.assertNotIn('[Materials', p, cid)
+            # the template's own sentences survive unchanged (only the two placeholders are filled)
+            self.assertIn(template.split('[building and function]')[0], p, cid)
+
+    def test_visual_hints_belong_to_real_cards_and_reach_the_prompt(self):
+        cards = cp.load_cards()
+        for cid, hint in cp.VISUAL.items():
+            self.assertIn(cid, cards)
+            self.assertIn(hint, cp.build_prompt(f'x/{cid}/source.png', cards[cid]), cid)
+        self.assertIn('SCARECROW', cp.build_prompt('x.png', cards['wheat_scarecrow']))
+
+    def test_king_cards_attach_the_approved_portrait_and_neutral_ones_do_not(self):
+        cards = cp.load_cards()
+        self.assertIn('portraits/wheat/source.png', cp.build_prompt('x.png', cards['wheat_field']))
+        self.assertNotIn('portraits/', cp.build_prompt('x.png', cards['neutral_barracks']))
+
+    def test_generation_is_refused_without_the_doc_or_reference(self):
+        old = cp.ROOT
+        try:
+            with tempfile.TemporaryDirectory() as d:
+                cp.ROOT = Path(d)
+                with self.assertRaises(SystemExit):
+                    cp.build_prompt('x.png', {'id': 'a', 'nameVi': 'A', 'owner': 'wheat', 'kind': 'tome', 'rarity': 'common', 'summary': 's'})
+        finally:
+            cp.ROOT = old
+
+
 if __name__ == '__main__':
     unittest.main()
