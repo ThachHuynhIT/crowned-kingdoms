@@ -75,6 +75,16 @@ THEMES = {
 
 # What the picture must show, per card, when the name and the function are not enough to draw the right subject.
 VISUAL = {
+    'arcane_apprentices': 'a small magic academy: a violet-roofed hall with a round window, an open book and a quill sign above the door, floating books drifting around it, and three tiny apprentice mages in pointed hats on the steps.',
+    'arcane_archmage': 'a tall slender archmage tower with a star-shaped observatory dome, a large violet crystal orb floating above the top, golden constellations engraved on the walls, and a robed archmage with a staff on the balcony.',
+    'arcane_frost_mages': 'a violet-stone tower coated with ice, icicles hanging from the eaves, pale blue frost crystals around its base, two small frost mages with glowing blue hands at the door; the top of the tower visible.',
+    'arcane_haste_rune': 'the SUBJECT is a haste rune charm: a glowing violet rune disc with swift wing-like streaks and trailing sparks, floating above a small stone pedestal; one iconic charm, no building, no people.',
+    'arcane_library': 'a grand arcane library: a violet-roofed hall with tall arched windows full of glowing books, a stack of floating tomes beside the door, a round rune window on the front, a lantern with a violet flame.',
+    'arcane_mage_tower': 'a compact mage tower with a pointed violet roof, a glowing purple crystal on the top, a lightning arc leaping from the crystal toward the right, rune bands around the tower body; the roof and top clearly visible.',
+    'arcane_mirror': 'the SUBJECT is a tall ornate mirror in a violet-gold frame standing on a small base, showing a duplicate glowing rune in its glass, two sparkles at the edges; one iconic object, no building, no people.',
+    'arcane_spark_rune': 'the SUBJECT is a spark rune charm: a violet rune stone with bright yellow-white lightning sparks bursting from it, small floating embers; one iconic charm, no building, no people.',
+    'arcane_throne': 'the SUBJECT is a star throne: a high-backed violet-and-silver throne decorated with gold stars and a crescent, a constellation banner behind it, small floating crystals, standing on a rune-circle dais; front facing, seen from the 45-degree downward view.',
+    'arcane_ward': 'a ward circle: a glowing violet rune ring on the ground around a short stone obelisk, a translucent blue-violet shield dome shimmering above it, small floating shield glyphs; flat ground ring seen from the 45-degree downward view.',
     'stone_catapult': 'a stout slate-stone tower whose top platform holds a large wooden-and-iron catapult arm loaded with a boulder; stacked stone blocks and spare boulders beside the base.',
     'stone_crystal': 'a slender slate tower crowned with a large glowing blue-white crystal on its top platform, thin crystal beams, crystal shards around the base, runes carved on the tower.',
     'stone_golem_forge': 'a slate-stone workshop with a broad slab roof and a big chimney, a half-built rune-carved stone golem standing in the open doorway, chisels, hammers and rock blocks outside, softly glowing runes.',
