@@ -119,6 +119,19 @@ const COUNCIL_TITLE_H = 36;
 /** "Ban hành", "Nhận" and "Từ chối". */
 export const COUNCIL_BUTTON = { w: 150, h: 48 } as const;
 
+/** Height of the header line of the council's detail area ("Chọn 3 ô khoá để mở …"). */
+export const COUNCIL_HEADER_H = 24;
+const COUNCIL_CELL = { size: 44, min: 36, gap: 2 } as const;
+
+/**
+ * Side of the plot cells of the council's unlock decree: a 44 px touch target whenever the detail
+ * area (`areaH`) has room for five rows under its header, down to 36 px on a very short screen.
+ */
+export const councilPlotSide = (areaH: number): number => {
+  const room = Math.floor((areaH - COUNCIL_HEADER_H - 4 - 4 * COUNCIL_CELL.gap) / 5);
+  return Math.max(COUNCIL_CELL.min, Math.min(COUNCIL_CELL.size, room));
+};
+
 /** §3.9 royal council: title, three decrees, the chosen decree's detail area, then "Ban hành". */
 export const councilLayout = (screen: Size, inset: number): CouncilLayout => {
   const desktop = isDesktop(screen.w);

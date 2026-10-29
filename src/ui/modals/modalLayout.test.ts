@@ -1,10 +1,12 @@
 import { describe, expect, it } from 'vitest';
 import type { Rect, Size } from '../hud/layout';
 import {
+  COUNCIL_HEADER_H,
   DECK_CARD,
   calendarModalLayout,
   centredPanel,
   councilLayout,
+  councilPlotSide,
   deckModalLayout,
   questLayout,
   resultLayout,
@@ -375,4 +377,50 @@ describe('councilLayout on short phones', () => {
       for (const c of l.choices) expect(c.h).toBeGreaterThanOrEqual(60);
     });
   }
+});
+
+describe('F1 layout fixes', () => {
+  const PHONES: readonly Size[] = [{ w: 375, h: 812 }, { w: 375, h: 667 }, { w: 390, h: 664 }, { w: 375, h: 635 }];
+
+  it('council_extra_selection_targets_at_least_44: the plot cells of the unlock decree are touch targets on every supported screen', () => {
+    for (const screen of [DESKTOP, ...PHONES]) {
+      const l = councilLayout(screen, screen.w >= 768 ? 24 : 9);
+      const side = councilPlotSide(l.area.h);
+      expect(side, `${screen.w}×${screen.h}`).toBe(44);
+      // five rows of cells and their gaps fit under the area header
+      expect(COUNCIL_HEADER_H + 4 + 5 * side + 4 * 2).toBeLessThanOrEqual(l.area.h);
+    }
+  });
+
+  it('a very short area keeps the old floor of 36 px instead of overflowing', () => {
+    expect(councilPlotSide(120)).toBe(36);
+    expect(councilPlotSide(400)).toBe(44);
+  });
+
+  it('long_quest_body_keeps_buttons_visible: body, Nhận and Từ chối stay inside the panel and the screen', () => {
+    for (const screen of [DESKTOP, MOBILE, { w: 360, h: 640 }, { w: 375, h: 568 }] as Size[]) {
+      const inset = screen.w >= 768 ? 24 : 10;
+      const l = questLayout(screen, inset);
+      expect(inside(screen, l.panel), `${screen.w}×${screen.h}`).toBe(true);
+      for (const r of [l.title, l.body, l.accept, l.decline]) expect(contains(l.panel, r), JSON.stringify(r)).toBe(true);
+      expect(l.body.h).toBeGreaterThanOrEqual(100);
+      expect(l.accept.y).toBeGreaterThanOrEqual(l.body.y + l.body.h);
+    }
+  });
+
+  it('run_result_long_lines_fit: twelve summary lines fit the panel on a short phone', () => {
+    const screen = { w: 375, h: 568 };
+    const l = resultLayout(screen, 10, 12, 2);
+    expect(inside(screen, l.panel)).toBe(true);
+    for (const r of [l.title, ...l.lines, ...l.buttons]) expect(contains(l.panel, r), JSON.stringify(r)).toBe(true);
+    for (const b of l.buttons) expect(b.h).toBeGreaterThanOrEqual(44);
+  });
+
+  it('help_and_deck_headers_clear_close: the title never runs under the close button and the tabs sit below both', () => {
+    for (const [screen, inset] of [[DESKTOP, 24], [MOBILE, 10]] as const) {
+      const l = deckModalLayout(screen, inset, 20, 0);
+      expect(overlaps(l.title, l.close)).toBe(false);
+      for (const t of l.tabs) expect(t.y).toBeGreaterThanOrEqual(Math.max(l.title.y + l.title.h, l.close.y + l.close.h));
+    }
+  });
 });

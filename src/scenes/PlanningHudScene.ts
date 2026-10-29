@@ -285,8 +285,17 @@ export class PlanningHudScene extends Phaser.Scene {
     this.scale.on(Phaser.Scale.Events.RESIZE, this.layout, this);
     this.events.once(Phaser.Scenes.Events.SHUTDOWN, this.teardown, this);
 
+    this.applySkin();
     this.layout();
     this.refresh(this.controller.state);
+  }
+
+  /** The playing king's colours on the HUD panels, buttons and hand. */
+  private applySkin(): void {
+    const king = this.controller.state.kingId;
+    for (const b of [this.sellBtn, this.rerollBtn, this.deckBtn, this.scoutBtn, this.helpBtn, this.fight, this.confirmBtn, this.cancelBtn]) b.setSkin(king);
+    for (const box of [this.livesBox, this.goldBox]) box.setSkin(king);
+    this.hand.setTheme(king);
   }
 
   // ---- state → widgets ---------------------------------------------------------------------
@@ -701,11 +710,11 @@ export class PlanningHudScene extends Phaser.Scene {
     else if (modal === 'calendar') {
       this.calendarModal = new CalendarModal(this, CONTENT, state, this.tooltip, () =>
         this.bus.emit('ui:close-modal', {}),
-      ).setDepth(MODAL_DEPTH);
+      state.kingId).setDepth(MODAL_DEPTH);
     } else {
       this.deckModal = new DeckModal(this, CONTENT, state.deck, this.tooltip, () =>
         this.bus.emit('ui:close-modal', {}),
-      ).setDepth(MODAL_DEPTH);
+      state.kingId).setDepth(MODAL_DEPTH);
     }
   }
 

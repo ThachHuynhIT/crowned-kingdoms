@@ -434,7 +434,7 @@ export class BattleHudScene extends Phaser.Scene {
   private openCalendar(): void {
     if (this.calendarModal || this.scoutModal || this.ended) return;
     this.setAiming(false);
-    this.calendarModal = new CalendarModal(this, CONTENT, this.controller.state, this.tooltip, () => this.closeCalendar()).setDepth(MODAL_DEPTH);
+    this.calendarModal = new CalendarModal(this, CONTENT, this.controller.state, this.tooltip, () => this.closeCalendar(), this.controller.state.kingId).setDepth(MODAL_DEPTH);
   }
 
   private closeCalendar(): void {

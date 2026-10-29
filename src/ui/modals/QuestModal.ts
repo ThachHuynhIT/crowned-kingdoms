@@ -5,6 +5,7 @@ import type { RunState } from '../../game/run/state';
 import { RUN } from '../../data/run';
 import { UI_PALETTE } from '../../data/uiPalette';
 import { addUiText, createButton, createPanel, frameBorder, type Button, type UiBox } from '../theme';
+import { largestFitting } from './fitText';
 import { questOfferView } from './councilModel';
 import { COUNCIL_BUTTON, questLayout } from './modalLayout';
 import { createOverlay, fitOverlay } from './overlay';
@@ -37,7 +38,8 @@ export class QuestModal {
     private state: RunState,
   ) {
     this.overlay = createOverlay(scene);
-    this.box = createPanel(scene, 'panel', 64, 64);
+    const skin = state.kingId;
+    this.box = createPanel(scene, 'panel', 64, 64, 0, 0, skin);
     this.box.image.setInteractive();
     this.title = addUiText(scene, 0, 0, QUEST_TITLE, 18).setOrigin(0.5, 0).setFontStyle('bold');
     this.body = addUiText(scene, 0, 0, '', 14);
@@ -47,18 +49,21 @@ export class QuestModal {
       height: COUNCIL_BUTTON.h,
       fontSize: 16,
       onClick: () => this.answer(true),
+      skin,
     });
     this.decline = createButton(scene, 0, 0, 'Từ chối', {
       width: COUNCIL_BUTTON.w,
       height: COUNCIL_BUTTON.h,
       fontSize: 16,
       onClick: () => this.answer(false),
+      skin,
     });
     this.howTo = createButton(scene, 0, 0, 'Xem cách làm', {
       width: 150,
       height: 44,
       fontSize: 14,
       onClick: () => this.bus.emit('ui:help', { open: true, tab: 'quests' }),
+      skin,
     });
     this.root = scene.add.container(0, 0, [
       this.overlay,
@@ -106,6 +111,9 @@ export class QuestModal {
     if (view.fee > 0) lines.push(`Phí nhận: ${view.fee} vàng`);
     lines.push('', `Vì sao có sứ giả: các năm ${RUN.questYears.join(', ')}, đầu năm, khi bạn có dưới ${RUN.maxActiveQuests} nhiệm vụ.`);
     this.body.setText(lines.join('\n')).setPosition(l.body.x, l.body.y).setWordWrapWidth(l.body.w);
+    // A long quest text shrinks (down to 11 px) to stay in its box, above the buttons.
+    const room = l.body.h - this.warn.height - 4;
+    this.body.setFontSize(largestFitting(14, 11, (size) => this.body.setFontSize(size).height <= room));
     this.warn.setText(view.canAccept ? '' : 'Không đủ vàng để nhận.');
     this.warn.setPosition(l.body.x, l.body.y + l.body.h - this.warn.height).setWordWrapWidth(l.body.w);
     this.accept.container.setPosition(l.accept.x + l.accept.w / 2, l.accept.y + l.accept.h / 2);
