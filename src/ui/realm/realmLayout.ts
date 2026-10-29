@@ -361,62 +361,95 @@ export const confirmFor = (
     : { confirm: { ...layout.confirm }, cancel: { ...layout.cancel } };
 
 export interface BattleLayout {
+  /** The battle clock (and "TẠM DỪNG"), a floating line under the year label. */
   clock: Rect;
   lives: Rect;
   gold: Rect;
   help: Rect;
+  /** Same five-year strip, bars and label as the planning HUD. */
+  calendar: readonly Rect[];
+  calendarLinks: readonly Rect[];
+  year: Rect;
+  /** "Địch còn" and the wave dots. */
   foes: Rect;
+  /** Pause, ×1, ×2, ×3: one row top-right on desktop, two rows of two bottom-right on phones. */
   speed: readonly Rect[];
+  /** Can Thiệp, bottom-left above the ally bar. */
   intervene: Rect;
-  /** "Tự bắn: Bật/Tắt" (§7.4): right-aligned just above the Can Thiệp button. */
+  /** "Tự bắn: Bật/Tắt" (§7.4), right beside Can Thiệp. */
   auto: Rect;
-  /** "Địch": opens the full scout report of this year's army; just below the foes panel. */
+  /** "Địch": opens the full scout report of this year's army. */
   waves: Rect;
+  /** Bottom-left: the throne's health bar with the king's name. */
+  allyStatus: Rect;
+  /** Bottom-right: the health bar of the enemy units on the field. */
+  foeStatus: Rect;
+  /** The boss bar, under the clock (empty while there is no live boss). */
+  bossStatus: Rect;
 }
 
-const CLOCK = { w: 260, h: 52 } as const;
+const CLOCK = { w: 200, h: 30 } as const;
+const CLOCK_PHONE = { w: 120, h: 30 } as const;
 const FOES = { w: 140, h: 52 } as const;
+const FOES_PHONE = { w: 120, h: 52 } as const;
 const INTERVENE = 72;
 const AUTO = { w: 104, h: 48 } as const;
 const WAVES = { w: 44, h: 44 } as const;
+const BOSS = { w: 340, h: 40 } as const;
+const HP_BAR = { desktop: { w: 300, h: 44 }, phone: { h: 40 } } as const;
 
-/** §10.7. On mobile the clock drops to a second row (the top row holds lives and foes). */
+/**
+ * §10.7. The top reuses the planning HUD (lives, gold, help, the five-year strip and the year
+ * label) with the clock under it; the speed controls go top-right (second row of the top when a
+ * narrow desktop window has no room beside the strip; two rows of two bottom-right on phones).
+ * Bottom corners: the throne's bar with Can Thiệp and Tự bắn above it (left), the enemy bar (right).
+ */
 export const battleLayout = (screen: Size): BattleLayout => {
   const { w, h } = screen;
   const desktop = isDesktop(w);
-  const { lives, gold, help } = planningLayout(screen);
-  const clock = {
-    x: Math.round((w - CLOCK.w) / 2),
-    y: desktop ? MARGIN : MARGIN + Math.max(lives.h, FOES.h) + GAP,
-    w: CLOCK.w,
-    h: CLOCK.h,
-  };
-  const foes = { x: w - MARGIN - FOES.w, y: MARGIN, w: FOES.w, h: FOES.h };
+  const plan = planningLayout(screen);
+  const { lives, gold, help, calendar, calendarLinks, year } = plan;
+  const centreX = year.x + year.w / 2;
+  const speedW = 4 * BUTTON + 3 * SPEED_GAP;
+
+  if (desktop) {
+    const clock = { x: Math.round(centreX - CLOCK.w / 2), y: year.y + year.h + 2, w: CLOCK.w, h: CLOCK.h };
+    const speedX = w - MARGIN - speedW;
+    const stripRight = calendar[calendar.length - 1]!.x + CELL;
+    const speedY = stripRight + GAP <= speedX ? MARGIN : MARGIN + CELL + GAP;
+    const speed = [0, 1, 2, 3].map((i) => ({ x: speedX + i * (BUTTON + SPEED_GAP), y: speedY, w: BUTTON, h: BUTTON }));
+    const foes = { x: w - MARGIN - FOES.w, y: speedY + BUTTON + GAP, w: FOES.w, h: FOES.h };
+    const waves = { x: foes.x + foes.w - WAVES.w, y: foes.y + foes.h + GAP, w: WAVES.w, h: WAVES.h };
+    // The boss bar is centred under the clock, narrowed if the foes panel stands beside it.
+    const bossW = Math.max(200, Math.min(BOSS.w, 2 * (foes.x - GAP - centreX)));
+    const bossStatus = { x: Math.round(centreX - bossW / 2), y: clock.y + clock.h + GAP, w: bossW, h: BOSS.h };
+    const allyStatus = { x: MARGIN, y: h - MARGIN - HP_BAR.desktop.h, w: HP_BAR.desktop.w, h: HP_BAR.desktop.h };
+    const foeStatus = { x: w - MARGIN - HP_BAR.desktop.w, y: allyStatus.y, w: HP_BAR.desktop.w, h: HP_BAR.desktop.h };
+    const intervene = { x: MARGIN, y: allyStatus.y - GAP - INTERVENE, w: INTERVENE, h: INTERVENE };
+    const auto = { x: intervene.x + intervene.w + GAP, y: intervene.y + intervene.h - AUTO.h, w: AUTO.w, h: AUTO.h };
+    return { clock, lives, gold, help, calendar, calendarLinks, year, foes, speed, intervene, auto, waves, allyStatus, foeStatus, bossStatus };
+  }
+
+  const rowY = calendar[0]!.y + CELL + GAP;
+  const clock = { x: MARGIN, y: rowY, w: CLOCK_PHONE.w, h: CLOCK_PHONE.h };
+  const foes = { x: w - MARGIN - FOES_PHONE.w, y: rowY, w: FOES_PHONE.w, h: FOES_PHONE.h };
+  const bossStatus = { x: MARGIN, y: foes.y + foes.h + GAP, w: w - 2 * MARGIN, h: BOSS.h };
+  const barW = Math.floor((w - 2 * MARGIN - GAP) / 2);
+  const allyStatus = { x: MARGIN, y: h - MARGIN - HP_BAR.phone.h, w: barW, h: HP_BAR.phone.h };
+  const foeStatus = { x: w - MARGIN - barW, y: allyStatus.y, w: barW, h: HP_BAR.phone.h };
+  const intervene = { x: MARGIN, y: allyStatus.y - GAP - INTERVENE, w: INTERVENE, h: INTERVENE };
+  const auto = { x: intervene.x + intervene.w + GAP, y: allyStatus.y - GAP - AUTO.h, w: AUTO.w, h: AUTO.h };
+  const blockW = 2 * BUTTON + SPEED_GAP;
+  const blockX = w - MARGIN - blockW;
+  const blockY = foeStatus.y - GAP - (2 * BUTTON + SPEED_GAP);
   const speed = [0, 1, 2, 3].map((i) => ({
-    x: MARGIN + i * (BUTTON + SPEED_GAP),
-    y: h - MARGIN - BUTTON,
+    x: blockX + (i % 2) * (BUTTON + SPEED_GAP),
+    y: blockY + Math.floor(i / 2) * (BUTTON + SPEED_GAP),
     w: BUTTON,
     h: BUTTON,
   }));
-  const intervene = {
-    x: w - MARGIN - INTERVENE,
-    y: h - MARGIN - INTERVENE,
-    w: INTERVENE,
-    h: INTERVENE,
-  };
-  const auto = {
-    x: intervene.x + intervene.w - AUTO.w,
-    y: intervene.y - GAP - AUTO.h,
-    w: AUTO.w,
-    h: AUTO.h,
-  };
-  const waves = {
-    x: foes.x + foes.w - WAVES.w,
-    y: foes.y + foes.h + GAP,
-    w: WAVES.w,
-    h: WAVES.h,
-  };
-  return { clock, lives, gold, help, foes, speed, intervene, auto, waves };
+  const waves = plan.scoutButton ?? { x: w - MARGIN - WAVES.w, y: rowY, w: WAVES.w, h: WAVES.h };
+  return { clock, lives, gold, help, calendar, calendarLinks, year, foes, speed, intervene, auto, waves, allyStatus, foeStatus, bossStatus };
 };
 
 /**

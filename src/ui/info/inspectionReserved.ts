@@ -11,5 +11,6 @@ export const planningControls = (l: PlanningLayout): Rect[] => [
 ];
 
 export const battleControls = (l: BattleLayout): Rect[] => [
-  l.clock, l.lives, l.gold, l.help, l.foes, ...l.speed, l.intervene, l.auto, l.waves,
+  l.clock, l.lives, l.gold, l.help, l.year, l.foes, ...l.speed, l.intervene, l.auto, l.waves,
+  l.allyStatus, l.foeStatus, l.bossStatus, ...l.calendar,
 ];

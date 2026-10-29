@@ -449,60 +449,111 @@ describe('battleZoom', () => {
 });
 
 describe('battleLayout', () => {
-  for (const [name, screen] of [
+  const SIZES: readonly [string, Size][] = [
     ['desktop', DESKTOP],
+    ['768', { w: 768, h: 1024 }],
+    ['odd 900×600', { w: 900, h: 600 }],
     ['mobile', MOBILE],
-  ] as const) {
-    it(`places the battle HUD on screen without overlaps (${name})`, () => {
+    ['767', { w: 767, h: 900 }],
+  ];
+  const partsOf = (l: ReturnType<typeof battleLayout>): Record<string, Rect> => ({
+    clock: l.clock,
+    lives: l.lives,
+    gold: l.gold,
+    help: l.help,
+    year: l.year,
+    foes: l.foes,
+    waves: l.waves,
+    intervene: l.intervene,
+    auto: l.auto,
+    allyStatus: l.allyStatus,
+    foeStatus: l.foeStatus,
+    bossStatus: l.bossStatus,
+    ...Object.fromEntries(l.speed.map((r, i) => [`speed${i}`, r])),
+    ...Object.fromEntries(l.calendar.map((r, i) => [`cal${i}`, r])),
+  });
+
+  for (const [name, screen] of SIZES) {
+    it(`battle_top_controls_fit: every part is on screen and apart (${name})`, () => {
       const l = battleLayout(screen);
-      expect(l.clock.w).toBe(260);
-      expect(l.clock.h).toBe(52);
-      expect(l.foes.w).toBe(140);
-      expect(l.foes.h).toBe(52);
+      const parts = partsOf(l);
+      for (const [n, r] of Object.entries(parts)) expect(inside(r, screen), `${n} ${JSON.stringify(r)}`).toBe(true);
+      expectSeparate(parts);
+      for (const link of l.calendarLinks) for (const c of l.calendar) expect(overlaps(link, c)).toBe(false);
       expect(l.speed).toHaveLength(4);
-      l.speed.forEach((b, i) => {
-        expect(b.w).toBe(48);
-        expect(b.h).toBe(48);
-        if (i > 0) expect(b.x - (l.speed[i - 1]!.x + 48)).toBe(2);
-        expect(b.y).toBe(l.speed[0]!.y);
-      });
-      expect(l.speed[0]!.x).toBe(10);
-      expect(l.speed[0]!.y + 48).toBe(screen.h - 10);
-      expect(l.intervene).toEqual({ x: screen.w - 10 - 72, y: screen.h - 10 - 72, w: 72, h: 72 });
-      for (const b of [l.auto, l.waves, l.intervene]) {
-        expect(b.w).toBeGreaterThanOrEqual(44);
-        expect(b.h).toBeGreaterThanOrEqual(44);
+      for (const b of [...l.speed, l.auto, l.waves, l.intervene, l.help]) {
+        expect(b.w, JSON.stringify(b)).toBeGreaterThanOrEqual(44);
+        expect(b.h, JSON.stringify(b)).toBeGreaterThanOrEqual(44);
       }
-      expect(l.auto.x + l.auto.w).toBe(l.intervene.x + l.intervene.w); // right-aligned above Can Thiệp
-      expect(l.auto.y + l.auto.h).toBeLessThanOrEqual(l.intervene.y);
-      expect(l.waves.x + l.waves.w).toBe(l.foes.x + l.foes.w); // right-aligned below the foes panel
-      expect(l.waves.y).toBeGreaterThanOrEqual(l.foes.y + l.foes.h);
-      const all = {
-        clock: l.clock,
-        lives: l.lives,
-        gold: l.gold,
-        foes: l.foes,
-        intervene: l.intervene,
-        auto: l.auto,
-        waves: l.waves,
-      };
-      l.speed.forEach((b, i) => Object.assign(all, { [`speed${i}`]: b }));
-      for (const r of Object.values(all)) expect(inside(r, screen), JSON.stringify(r)).toBe(true);
-      expectSeparate(all);
+      for (const b of l.speed) expect([b.w, b.h]).toEqual([48, 48]);
+    });
+
+    it(`bottom_health_bars_do_not_overlap: ally bar left, enemy bar right, at the bottom (${name})`, () => {
+      const l = battleLayout(screen);
+      expect(l.allyStatus.x).toBeLessThan(l.foeStatus.x);
+      expect(overlaps(l.allyStatus, l.foeStatus)).toBe(false);
+      for (const r of [l.allyStatus, l.foeStatus]) {
+        expect(r.y + r.h).toBe(screen.h - 10);
+        expect(r.w).toBeGreaterThanOrEqual(170);
+      }
+      expect(l.intervene.x).toBe(l.allyStatus.x);
+      expect(l.intervene.y + l.intervene.h).toBeLessThanOrEqual(l.allyStatus.y);
     });
   }
 
-  it('ends the intervene button 10 px from the bottom-right corner on desktop', () => {
-    const { intervene } = battleLayout(DESKTOP);
-    expect(intervene.x + intervene.w).toBe(1270);
-    expect(intervene.y + intervene.h).toBe(710);
+  it('desktop: the speed controls sit in the top-right corner', () => {
+    const l = battleLayout(DESKTOP);
+    expect(new Set(l.speed.map((b) => b.y)).size).toBe(1);
+    expect(l.speed[0]!.y).toBe(10);
+    expect(l.speed[3]!.x + l.speed[3]!.w).toBe(1270);
+    l.speed.forEach((b, i) => {
+      if (i > 0) expect(b.x - (l.speed[i - 1]!.x + 48)).toBe(2);
+    });
+    expect(l.waves.x + l.waves.w).toBe(l.foes.x + l.foes.w);
+    expect(l.waves.y).toBeGreaterThanOrEqual(l.foes.y + l.foes.h);
   });
 
-  it('reuses the planning lives and gold panels', () => {
-    expect(battleLayout(DESKTOP).gold).toEqual(planningLayout(DESKTOP).gold);
-    expect(battleLayout(MOBILE).gold).toEqual(planningLayout(MOBILE).gold);
-    expect(battleLayout(DESKTOP).lives).toEqual(planningLayout(DESKTOP).lives);
-    expect(battleLayout(MOBILE).lives).toEqual(planningLayout(MOBILE).lives);
+  it('phone_speed_wraps_into_two_rows: two rows of two on the right, above the enemy bar', () => {
+    const l = battleLayout(MOBILE);
+    expect(new Set(l.speed.map((b) => b.y)).size).toBe(2);
+    expect(new Set(l.speed.map((b) => b.x)).size).toBe(2);
+    for (const b of l.speed) expect(b.y + b.h).toBeLessThanOrEqual(l.foeStatus.y);
+    expect(l.speed[1]!.x + l.speed[1]!.w).toBe(MOBILE.w - 10);
+  });
+
+  it('shows the same year strip and year label as the planning HUD, with the clock under it', () => {
+    for (const screen of [DESKTOP, MOBILE]) {
+      const b = battleLayout(screen);
+      const p = planningLayout(screen);
+      expect(b.calendar).toEqual(p.calendar);
+      expect(b.year).toEqual(p.year);
+      expect(b.clock.y).toBeGreaterThanOrEqual(b.year.y + b.year.h);
+    }
+  });
+
+  it('boss_and_summary_clear_controls: the boss row is below the clock and apart from every control', () => {
+    for (const [, screen] of SIZES) {
+      const l = battleLayout(screen);
+      expect(l.bossStatus.y).toBeGreaterThanOrEqual(l.clock.y + l.clock.h);
+      for (const r of [...l.speed, l.auto, l.waves, l.intervene, l.foes, l.help]) expect(overlaps(l.bossStatus, r)).toBe(false);
+    }
+  });
+
+  it('puts Can Thiệp bottom-left with Tự bắn right beside it, above the ally bar', () => {
+    for (const screen of [DESKTOP, MOBILE]) {
+      const l = battleLayout(screen);
+      expect([l.intervene.w, l.intervene.h]).toEqual([72, 72]);
+      expect(l.auto.x).toBeGreaterThanOrEqual(l.intervene.x + l.intervene.w);
+      expect(l.auto.y + l.auto.h).toBeLessThanOrEqual(l.allyStatus.y);
+    }
+  });
+
+  it('reuses the planning lives, gold and help', () => {
+    for (const screen of [DESKTOP, MOBILE]) {
+      const b = battleLayout(screen);
+      const p = planningLayout(screen);
+      expect([b.lives, b.gold, b.help]).toEqual([p.lives, p.gold, p.help]);
+    }
   });
 });
 

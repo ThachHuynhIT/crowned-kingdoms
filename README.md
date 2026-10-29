@@ -92,6 +92,7 @@ Phím tắt:
 | 2 | Tốc độ ×2 |
 | 3 | Tốc độ ×3 |
 | Space / B | Can thiệp (ngắm tảng đá) |
+| L | Xem lịch |
 | Esc | Thôi ngắm / đóng bảng |
 | Enter / Space | Tiếp tục sau trận (khi bảng tóm tắt trận mở) |
 

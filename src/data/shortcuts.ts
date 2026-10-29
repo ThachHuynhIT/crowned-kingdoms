@@ -66,6 +66,7 @@ export const SHORTCUTS: readonly ShortcutDef[] = [
   { id: 'battle.speed2', contexts: ['battle'], keys: ['2'], labelVi: 'Tốc độ ×2', action: 'speed.2', priority: 10 },
   { id: 'battle.speed3', contexts: ['battle'], keys: ['3'], labelVi: 'Tốc độ ×3', action: 'speed.3', priority: 10 },
   { id: 'battle.intervene', contexts: ['battle'], keys: [' ', 'b'], labelVi: 'Can thiệp (ngắm tảng đá)', action: 'intervene', priority: 10 },
+  { id: 'battle.calendar', contexts: ['battle'], keys: ['l'], labelVi: 'Xem lịch', action: 'calendar', priority: 10 },
   { id: 'battle.cancel', contexts: ['battle'], keys: ['Escape'], labelVi: 'Thôi ngắm / đóng bảng', action: 'cancel', priority: 10 },
   { id: 'battle.continue', contexts: ['battle'], keys: ['Enter', ' '], labelVi: 'Tiếp tục sau trận', action: 'confirm', priority: 10, when: 'summary' },
 
