@@ -53,13 +53,13 @@ describe('planningLayout', () => {
     const l = planningLayout(DESKTOP);
     expect(l.desktop).toBe(true);
     expect(l.lives).toEqual({ x: 10, y: 10, w: 120, h: 52 });
-    expect(l.year).toEqual({ x: 560, y: 10, w: 160, h: 52 });
+    expect(l.year).toEqual({ x: 560, y: 66, w: 160, h: 26 });
     expect(l.board).toEqual({ x: 480, y: 200, w: 320, h: 320 });
     expect(l.zoom).toBe(2);
     expect(l.scout).toMatchObject({ x: 1010, w: 260, y: 92, h: 426 });
     expect(l.scoutButton).toBeNull();
     expect(l.gold).toEqual({ x: 134, y: 10, w: 120, h: 52 });
-    expect(l.calendar[0]).toEqual({ x: 994, y: 10, w: 52, h: 52 });
+    expect(l.calendar[0]).toEqual({ x: 502, y: 10, w: 52, h: 52 });
     expect(l.sell).toEqual({ x: 296, y: 658, w: 140, h: 52 });
     expect(l.reroll).toEqual({ x: 296, y: 598, w: 140, h: 52 });
     expect(l.deck).toEqual({ x: 844, y: 658, w: 140, h: 52 });
@@ -75,7 +75,8 @@ describe('planningLayout', () => {
     expect(l.desktop).toBe(false);
     expect(l.lives).toEqual({ x: 10, y: 10, w: 96, h: 48 });
     expect(l.gold).toEqual({ x: 110, y: 10, w: 96, h: 48 });
-    expect(l.year.x).toBe(210);
+    expect(l.help).toEqual({ x: 210, y: 10, w: 52, h: 48 });
+    expect(l.year.x).toBe(266);
     expect(l.year.x + l.year.w).toBe(365);
     expect(l.board).toEqual({ x: 28, y: 180, w: 320, h: 320 });
     expect(l.zoom).toBe(2);
@@ -128,6 +129,9 @@ describe('planningLayout', () => {
         reroll: l.reroll,
         deck: l.deck,
         ...Object.fromEntries(l.calendar.map((r, i) => [`cal${i}`, r])),
+        ...Object.fromEntries(l.calendarLinks.map((r, i) => [`link${i}`, r])),
+        allyStatus: l.allyStatus,
+        foeStatus: l.foeStatus,
       };
       if (l.scout) named.scout = l.scout;
       if (l.scoutButton) named.scoutButton = l.scoutButton;
@@ -164,6 +168,70 @@ describe('planningLayout', () => {
       { w: 600, h: 1400 },
     ])
       expect(() => planningLayout(s)).not.toThrow();
+  });
+});
+
+describe('planning header and status zones', () => {
+  const ODD: Size = { w: 900, h: 600 };
+  const SIZES: readonly [string, Size][] = [
+    ['desktop', DESKTOP],
+    ['768', { w: 768, h: 1024 }],
+    ['mobile', MOBILE],
+    ['767', { w: 767, h: 900 }],
+    ['odd 900×600', ODD],
+  ];
+
+  for (const [name, screen] of SIZES) {
+    it(`planning_header_zones_do_not_overlap: lives, gold, help, year, calendar and links (${name})`, () => {
+      const l = planningLayout(screen);
+      const zones: Record<string, Rect> = {
+        lives: l.lives, gold: l.gold, help: l.help, year: l.year,
+        ...Object.fromEntries(l.calendar.map((r, i) => [`cal${i}`, r])),
+      };
+      const names = Object.keys(zones);
+      for (let i = 0; i < names.length; i++) {
+        for (let j = i + 1; j < names.length; j++) expect(overlaps(zones[names[i]!]!, zones[names[j]!]!), `${names[i]} × ${names[j]}`).toBe(false);
+      }
+      for (const link of l.calendarLinks) {
+        expect(l.calendarLinks).toHaveLength(4);
+        for (const c of l.calendar) expect(overlaps(link, c)).toBe(false);
+      }
+    });
+  }
+
+  it('desktop: the five-year strip is centred on the screen with the year label right under it', () => {
+    const l = planningLayout(DESKTOP);
+    const first = l.calendar[0]!;
+    const last = l.calendar[4]!;
+    expect((first.x + last.x + last.w) / 2).toBeCloseTo(DESKTOP.w / 2, 0);
+    expect(l.year.y).toBeGreaterThanOrEqual(first.y + first.h);
+    expect(l.year.x + l.year.w / 2).toBeCloseTo(DESKTOP.w / 2, 0);
+  });
+
+  it('phone_board_is_320_square: the board keeps its size under the new header', () => {
+    const l = planningLayout(MOBILE);
+    expect([l.board.w, l.board.h]).toEqual([320, 320]);
+    for (const r of [...l.calendar, l.year, l.help]) expect(r.y + r.h).toBeLessThanOrEqual(l.board.y);
+  });
+
+  for (const [name, screen] of [['desktop', DESKTOP], ['mobile', MOBILE]] as const) {
+    it(`four_card_hand_and_actions_clear_board: status rows sit apart from the hand, the actions and the board (${name})`, () => {
+      const l = planningLayout(screen, 4);
+      for (const status of [l.allyStatus, l.foeStatus]) {
+        expect(inside(status, screen)).toBe(true);
+        for (const other of [l.board, l.reroll, l.sell, l.deck, ...l.hand.map((r) => ({ ...r, y: r.y - 12 }))]) {
+          expect(overlaps(status, other), JSON.stringify([status, other])).toBe(false);
+        }
+      }
+      expect(overlaps(l.allyStatus, l.foeStatus)).toBe(false);
+    });
+  }
+
+  it('the two status rows are on opposite sides: ally left, enemy right', () => {
+    for (const screen of [DESKTOP, MOBILE]) {
+      const l = planningLayout(screen);
+      expect(l.allyStatus.x).toBeLessThan(l.foeStatus.x);
+    }
   });
 });
 

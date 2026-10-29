@@ -2,6 +2,7 @@ import { BATTLE } from '../../data/battle';
 import { plotCenter } from '../../game/battle/world';
 import { THRONE_PLOT, plotCol, plotRow } from '../../game/run/board';
 import { CARD_LIFT, GAP, MARGIN, SPEED_GAP, type Point, type Rect, type Size } from '../hud/layout';
+import { calendarStripLayout } from '../planning/calendarStripLayout';
 
 /**
  * Pure layout maths of the realm screens (no Phaser): the planning HUD (§10.4), the battle
@@ -55,6 +56,11 @@ const PHONE = {
 } as const;
 
 const FIGHT = { w: 200, h: 56 } as const;
+/** The year label under the strip, and the two status rows at the bottom corners. */
+const YEAR_LABEL_H = 26;
+const STATUS_H = 44;
+const STATUS_H_PHONE = 40;
+const STATUS_W = 240;
 const HAND_BOTTOM = 10;
 
 export interface PlanningLayout {
@@ -68,6 +74,12 @@ export interface PlanningLayout {
   year: Rect;
   /** Five 52×52 cells: this year and the next four. */
   calendar: readonly Rect[];
+  /** The bars joining the five cells (drawn, not tappable). */
+  calendarLinks: readonly Rect[];
+  /** Bottom-left: the playing king. */
+  allyStatus: Rect;
+  /** Bottom-right: who attacks next. */
+  foeStatus: Rect;
   board: Rect;
   /** The scouting report column (desktop); null on mobile, where `scoutButton` opens it. */
   scout: Rect | null;
@@ -163,10 +175,6 @@ const besidePlot = (cell: Rect, screen: Size): { confirm: Rect; cancel: Rect } =
   };
 };
 
-/** `count` cells in a row from `x`, `CELL` wide with `GAP` between. */
-const cellRow = (x: number, y: number): Rect[] =>
-  Array.from({ length: CALENDAR_CELLS }, (_, i) => ({ x: x + i * (CELL + GAP), y, w: CELL, h: CELL }));
-
 /** From this width the decree / quest column fits between the board and the screen edge. */
 const WIDE_DESKTOP = 1100;
 const DECREE_PANEL_W = 260;
@@ -181,15 +189,20 @@ const desktopLayout = (screen: Size, handSize: number): PlanningLayout => {
   const boardPx = cell * BOARD_SIDE;
   const lives = { x: MARGIN, y: MARGIN, w: DESK.top.lives, h: DESK.top.h };
   const gold = { x: lives.x + lives.w + GAP, y: MARGIN, w: DESK.top.gold, h: DESK.top.h };
-  const year = {
-    x: Math.round((w - DESK.top.year) / 2),
-    y: MARGIN,
-    w: DESK.top.year,
-    h: DESK.top.h,
-  };
   const wide = w >= WIDE_DESKTOP;
-  const calendarW = CALENDAR_CELLS * CELL + (CALENDAR_CELLS - 1) * GAP;
-  const calendar = cellRow(w - MARGIN - calendarW, MARGIN);
+  // The year strip sits in the middle of the top edge (right of the help button on a narrow window),
+  // with the year label right under it.
+  const stripW = CALENDAR_CELLS * CELL + (CALENDAR_CELLS - 1) * GAP;
+  const helpEnd = helpRect(gold).x + 52;
+  const stripX = Math.max(Math.round((w - stripW) / 2), helpEnd + GAP);
+  const strip = calendarStripLayout({ x: stripX, y: MARGIN, w: stripW, h: CELL }, CALENDAR_CELLS);
+  const calendar = strip.cells;
+  const year = {
+    x: Math.round(stripX + stripW / 2 - DESK.top.year / 2),
+    y: MARGIN + CELL + GAP,
+    w: DESK.top.year,
+    h: YEAR_LABEL_H,
+  };
   const hand = handRow(screen, DESK.card, handSize);
   const first = hand[0]!;
   const last = hand[hand.length - 1]!;
@@ -215,6 +228,10 @@ const desktopLayout = (screen: Size, handSize: number): PlanningLayout => {
   const sell = { x: left, y: bottomY, w: DESK.button.w, h: DESK.button.h };
   const reroll = { ...sell, y: bottomY - GAP * 2 - DESK.button.h };
   const deck = { x: last.x + last.w + DESK.card.gap, y: bottomY, w: DESK.button.w, h: DESK.button.h };
+  const statusY = h - HAND_BOTTOM - STATUS_H;
+  const allyW = Math.max(0, Math.min(STATUS_W, sell.x - GAP - MARGIN));
+  const foeX = deck.x + deck.w + GAP;
+  const foeW = Math.max(0, Math.min(STATUS_W, w - MARGIN - foeX));
   const mid = Math.floor(BOARD_SIDE / 2) * cell;
   const centre = { x: board.x + mid, y: board.y + mid, w: cell, h: cell };
   return {
@@ -225,6 +242,9 @@ const desktopLayout = (screen: Size, handSize: number): PlanningLayout => {
     help: helpRect(gold),
     year,
     calendar,
+    calendarLinks: strip.links,
+    allyStatus: { x: MARGIN, y: statusY, w: allyW, h: STATUS_H },
+    foeStatus: { x: foeX, y: statusY, w: foeW, h: STATUS_H },
     board,
     scout,
     scoutButton: null,
@@ -252,10 +272,15 @@ const mobileLayout = (screen: Size, handSize: number): PlanningLayout => {
   const boardPx = BATTLE.plot * PLANNING_ZOOM * BOARD_SIDE;
   const lives = { x: MARGIN, y: MARGIN, w: PHONE.top.lives, h: PHONE.top.h };
   const gold = { x: lives.x + lives.w + GAP, y: MARGIN, w: PHONE.top.gold, h: PHONE.top.h };
-  const yearX = gold.x + gold.w + GAP;
+  const help = helpRect(gold);
+  const yearX = help.x + help.w + GAP;
   const year = { x: yearX, y: MARGIN, w: Math.max(0, w - MARGIN - yearX), h: PHONE.top.h };
-  const calendar = cellRow(MARGIN, PHONE.rowY);
   const scoutButton = { x: w - MARGIN - CELL, y: PHONE.rowY, w: CELL, h: CELL };
+  const strip = calendarStripLayout(
+    { x: MARGIN, y: PHONE.rowY, w: Math.max(0, scoutButton.x - GAP - MARGIN), h: CELL },
+    CALENDAR_CELLS,
+  );
+  const calendar = strip.cells;
   const board = {
     x: Math.round((w - boardPx) / 2),
     y: PHONE.boardY,
@@ -268,14 +293,19 @@ const mobileLayout = (screen: Size, handSize: number): PlanningLayout => {
   const sell = { x: w - MARGIN - b.w, y: b.y, w: b.w, h: b.h };
   const reroll = { x: sell.x - GAP - b.w, y: b.y, w: b.w, h: b.h };
   const deck = { x: reroll.x - GAP - b.w, y: b.y, w: b.w, h: b.h };
+  const statusY = b.y + b.h + 8;
+  const statusW = Math.floor((w - 2 * MARGIN - GAP) / 2);
   return {
     desktop: false,
     zoom: PLANNING_ZOOM,
     lives,
     gold,
-    help: helpRect(gold),
+    help,
     year,
     calendar,
+    calendarLinks: strip.links,
+    allyStatus: { x: MARGIN, y: statusY, w: statusW, h: STATUS_H_PHONE },
+    foeStatus: { x: MARGIN + statusW + GAP, y: statusY, w: statusW, h: STATUS_H_PHONE },
     board,
     scout: null,
     scoutButton,

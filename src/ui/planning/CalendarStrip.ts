@@ -178,29 +178,53 @@ export class CalendarCellView {
 /** The five-year calendar strip of the planning HUD (§10.4); pressing a cell opens the full calendar. */
 export class CalendarStrip {
   private readonly cells: CalendarCellView[];
+  /** Thin bars (not frames) joining each cell to the next, drawn under the cells. */
+  private readonly links: Phaser.GameObjects.Rectangle[];
+  private shown = 0;
+  private visible = true;
 
   constructor(scene: Phaser.Scene, content: Content, tooltip: TooltipHost, onOpen: () => void) {
+    this.links = Array.from({ length: 4 }, () =>
+      scene.add.rectangle(0, 0, 1, 1, UI_PALETTE.woodLight).setOrigin(0, 0).setStrokeStyle(1, UI_PALETTE.outline),
+    );
     this.cells = Array.from({ length: 5 }, () => new CalendarCellView(scene, content, tooltip, onOpen));
   }
 
   /** Cells to show (fewer than 5 near the last year). */
   setCells(cells: readonly CalendarCell[]): void {
     this.cells.forEach((view, i) => view.set(cells[i] ?? null));
+    this.shown = Math.min(cells.length, this.cells.length);
+    this.showLinks();
   }
 
-  layout(rects: readonly Rect[]): void {
+  /** Place the cells, and the bars of `links` between them (`calendarStripLayout`). */
+  layout(rects: readonly Rect[], links: readonly Rect[] = []): void {
     this.cells.forEach((view, i) => {
       const r = rects[i];
       if (r) view.layout(r);
     });
+    this.links.forEach((bar, i) => {
+      const r = links[i];
+      if (r) bar.setPosition(r.x, r.y).setSize(r.w, r.h);
+    });
+    this.showLinks();
   }
 
   setVisible(visible: boolean): void {
+    this.visible = visible;
     this.cells.forEach((v) => v.setVisible(visible));
+    this.showLinks();
+  }
+
+  /** A bar shows only between two cells that are both on show. */
+  private showLinks(): void {
+    this.links.forEach((bar, i) => bar.setVisible(this.visible && i + 1 < this.shown));
   }
 
   destroy(): void {
     for (const v of this.cells) v.destroy();
+    for (const l of this.links) l.destroy();
     this.cells.length = 0;
+    this.links.length = 0;
   }
 }

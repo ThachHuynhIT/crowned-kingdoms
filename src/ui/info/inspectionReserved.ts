@@ -5,7 +5,7 @@ import type { BattleLayout, PlanningLayout } from '../realm/realmLayout';
 const present = (...rects: (Rect | null)[]): Rect[] => rects.filter((r): r is Rect => r !== null);
 
 export const planningControls = (l: PlanningLayout): Rect[] => [
-  ...present(l.lives, l.gold, l.help, l.year, l.reroll, l.sell, l.deck, l.fight, l.scoutButton, l.decreeButton),
+  ...present(l.lives, l.gold, l.help, l.year, l.allyStatus, l.foeStatus, l.reroll, l.sell, l.deck, l.fight, l.scoutButton, l.decreeButton),
   ...l.calendar,
   ...l.hand,
 ];

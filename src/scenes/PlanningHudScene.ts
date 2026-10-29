@@ -1,6 +1,8 @@
 import Phaser from 'phaser';
 import type { EventBus } from '../core/events';
+import { toCss } from '../data/palette';
 import { RUN } from '../data/run';
+import { UI_PALETTE } from '../data/uiPalette';
 import { describeCard } from '../game/cards/describe';
 import { CONTENT } from '../game/cards/registry';
 import type { GameEvents } from '../game/events';
@@ -33,6 +35,7 @@ import { resolveShortcut, shortcutFlags, shortcutLabel } from '../ui/input/short
 import { openHelp } from './helpLauncher';
 import { cardBadge, willLevelUpTo } from '../ui/cards/cardText';
 import { CalendarStrip } from '../ui/planning/CalendarStrip';
+import { allyStatusText, foeStatusText } from '../ui/planning/statusText';
 import { HandView } from '../ui/planning/HandView';
 import { ScoutPanel } from '../ui/planning/ScoutPanel';
 import { canFight } from '../ui/planning/fightRule';
@@ -48,6 +51,7 @@ import {
 } from '../ui/realm/realmLayout';
 import {
   addUiText,
+  textStyle,
   createButton,
   createPanel,
   type Button,
@@ -93,8 +97,9 @@ export class PlanningHudScene extends Phaser.Scene {
   private livesBox!: UiBox;
   private livesIcon: Phaser.GameObjects.Image | null = null;
   private livesText!: Phaser.GameObjects.Text;
-  private yearBox!: UiBox;
   private yearText!: Phaser.GameObjects.Text;
+  private allyText!: Phaser.GameObjects.Text;
+  private foeText!: Phaser.GameObjects.Text;
   private scout!: ScoutPanel;
   private hand!: HandView;
   private goldBox!: UiBox;
@@ -179,8 +184,16 @@ export class PlanningHudScene extends Phaser.Scene {
         ? this.add.image(0, 0, SPRITES_KEY, iconFrame('crown')).setScale(2).setOrigin(0, 0.5)
         : null;
     this.livesText = addUiText(this, 0, 0, '', 18).setOrigin(0, 0.5).setFontStyle('bold');
-    this.yearBox = createPanel(this, 'panel', 160, 52);
-    this.yearText = addUiText(this, 0, 0, '', 18).setOrigin(0.5).setFontStyle('bold');
+    // Year label and the two status rows float over the world (light text, dark shadow) instead of sitting in frames.
+    const floating = (origin: number): Phaser.GameObjects.Text =>
+      this.add
+        .text(0, 0, '', textStyle(16, UI_PALETTE.creamLight))
+        .setOrigin(origin, 0.5)
+        .setFontStyle('bold')
+        .setShadow(2, 2, toCss(UI_PALETTE.outline), 0, false, true);
+    this.yearText = floating(0.5);
+    this.allyText = floating(0);
+    this.foeText = floating(1);
     this.goldBox = createPanel(this, 'panel', 120, 52);
     this.goldIcon =
       tex.exists(SPRITES_KEY) && tex.get(SPRITES_KEY).has(iconFrame('gold'))
@@ -285,7 +298,9 @@ export class PlanningHudScene extends Phaser.Scene {
     this.refreshModals(state);
     this.livesText.setText(`× ${state.lives}`);
     this.goldText.setText(`${state.gold}`);
-    this.yearText.setText(`Năm ${state.year} / ${state.rules.years}`);
+    this.yearText.setText(`NĂM ${state.year} / ${state.rules.years}`);
+    this.allyText.setText(allyStatusText(state.kingId, CONTENT));
+    this.foeText.setText(foeStatusText(calendarCells(state, 1)[0], CONTENT));
     this.calendar.setCells(calendarCells(state, 5));
     this.scout.setPlan(state.army);
     if (this.inspected !== null) {
@@ -789,22 +804,23 @@ export class PlanningHudScene extends Phaser.Scene {
     const iconX = l.lives.x + 12;
     this.livesIcon?.setPosition(iconX, midY);
     this.livesText.setPosition(iconX + (this.livesIcon ? 36 : 0), midY);
-    this.yearBox.resize(l.year.w, l.year.h);
-    this.yearBox.image.setPosition(l.year.x, l.year.y);
     this.yearText.setPosition(l.year.x + l.year.w / 2, l.year.y + l.year.h / 2);
-    this.yearText.setFontSize(l.desktop ? 18 : 16);
+    this.yearText.setFontSize(l.desktop ? 18 : 15);
+    const statusSize = l.desktop ? 15 : 13;
+    this.allyText.setFontSize(statusSize).setPosition(l.allyStatus.x + 4, l.allyStatus.y + l.allyStatus.h / 2).setVisible(l.allyStatus.w >= 100);
+    this.foeText.setFontSize(statusSize).setPosition(l.foeStatus.x + l.foeStatus.w - 4, l.foeStatus.y + l.foeStatus.h / 2).setVisible(l.foeStatus.w >= 100);
 
     this.goldBox.resize(l.gold.w, l.gold.h);
     this.goldBox.image.setPosition(l.gold.x, l.gold.y);
     const goldMid = l.gold.y + l.gold.h / 2;
     this.goldIcon?.setPosition(l.gold.x + 12, goldMid);
     this.goldText.setPosition(l.gold.x + 12 + (this.goldIcon ? 36 : 0), goldMid);
-    this.calendar.layout(l.calendar);
+    this.calendar.layout(l.calendar, l.calendarLinks);
     this.scout.setVisible(l.scout !== null);
     if (l.scout) this.scout.layout(l.scout, 'full');
     this.helpBtn.container.setPosition(l.help.x + l.help.w / 2, l.help.y + l.help.h / 2);
     const noticeX = l.help.x + l.help.w + 8;
-    const noticeW = Math.min(320, l.year.x - 8 - noticeX);
+    const noticeW = Math.min(320, l.calendar[0]!.x - 8 - noticeX);
     this.questNotice.layout(l.desktop && noticeW >= 160 ? { x: noticeX, y: l.help.y, w: noticeW, h: l.help.h } : null);
     this.scoutBtn.setVisible(l.scoutButton !== null);
     if (l.scoutButton) {
