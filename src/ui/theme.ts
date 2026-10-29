@@ -2,7 +2,7 @@ import type Phaser from 'phaser';
 import { toCss } from '../data/palette';
 import { UI_PALETTE } from '../data/uiPalette';
 import { UI_KEY } from '../render/atlas';
-import type { UiFrame } from '../render/uiArt';
+import type { AnyUiFrame, UiFrame } from '../render/uiArt';
 import { uiFrameDef } from '../render/uiKit';
 import {
   DRAG_SLOP,
@@ -12,6 +12,7 @@ import {
   type Rect,
   type TooltipContent,
 } from './hud/layout';
+import { skinFrame, type UiSkin } from './skin';
 
 export { TOUCH_TARGET };
 
@@ -55,7 +56,7 @@ export const uiScale = (scene: Phaser.Scene): 1 | 2 =>
   uiScaleFor(scene.scale.width, scene.scale.height);
 
 /** Screen px of a frame's decorative edge at the current uiScale. */
-export const frameBorder = (scene: Phaser.Scene, frame: UiFrame): number =>
+export const frameBorder = (scene: Phaser.Scene, frame: AnyUiFrame): number =>
   uiFrameDef(frame).border * uiScale(scene);
 
 export interface UiBox {
@@ -65,8 +66,10 @@ export interface UiBox {
   readonly height: number;
   /** Set the logical size; also picks up a uiScale change. */
   resize: (width: number, height: number) => void;
-  /** Swap to another frame of the same source size (hover/pressed/selected states). */
+  /** Swap to another frame of the same source size (hover/pressed/selected states), in the current skin. */
   setFrame: (frame: UiFrame) => void;
+  /** Repaint in another skin (a king's colours); the frame state stays. */
+  setSkin: (skin: UiSkin) => void;
 }
 
 /**
@@ -80,13 +83,16 @@ export const createPanel = (
   height: number,
   originX = 0,
   originY = 0,
+  skin: UiSkin = 'neutral',
 ): UiBox => {
-  const { slice } = uiFrameDef(frame);
+  const { slice } = uiFrameDef(skinFrame(frame, skin));
+  let current = frame;
+  let currentSkin = skin;
   let w = width;
   let h = height;
   const s = uiScale(scene);
   const image = scene.add
-    .nineslice(0, 0, UI_KEY, frame, w / s, h / s, slice, slice, slice, slice)
+    .nineslice(0, 0, UI_KEY, skinFrame(frame, skin), w / s, h / s, slice, slice, slice, slice)
     .setOrigin(originX, originY)
     .setScale(s);
   return {
@@ -104,7 +110,13 @@ export const createPanel = (
       image.setSize(w / scale, h / scale).setScale(scale);
     },
     setFrame: (next) => {
-      image.setFrame(next, false, false);
+      current = next;
+      image.setFrame(skinFrame(next, currentSkin), false, false);
+      image.updateUVs();
+    },
+    setSkin: (next) => {
+      currentSkin = next;
+      image.setFrame(skinFrame(current, next), false, false);
       image.updateUVs();
     },
   };
@@ -224,6 +236,8 @@ export interface ButtonOptions {
   onClick: () => void;
   /** Optional help shown on hover / long-press. */
   tooltip?: TooltipSource;
+  /** Colours of the frame (default neutral wood). */
+  skin?: UiSkin;
 }
 
 export interface Button {
@@ -238,6 +252,8 @@ export interface Button {
   setEnabled: (enabled: boolean) => void;
   /** New logical size (e.g. when the layout switches between desktop and phone). */
   resize: (width: number, height: number) => void;
+  /** Repaint the button in another skin (a king's colours). */
+  setSkin: (skin: UiSkin) => void;
 }
 
 /** Opacity of a disabled button. */
@@ -256,11 +272,12 @@ export const createButton = (
     icon,
     onClick,
     tooltip,
+    skin,
   }: ButtonOptions,
 ): Button => {
   let width = initialWidth;
   let height = initialHeight;
-  const box = createPanel(scene, 'button', width, height, 0.5, 0.5);
+  const box = createPanel(scene, 'button', width, height, 0.5, 0.5, skin);
   const children: Phaser.GameObjects.GameObject[] = [box.image];
   let text: Phaser.GameObjects.Text;
   if (icon) {
@@ -336,5 +353,6 @@ export const createButton = (
       if (!value) state = 'idle';
       refresh();
     },
+    setSkin: (value) => box.setSkin(value),
   };
 };

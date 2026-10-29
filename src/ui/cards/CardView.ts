@@ -1,5 +1,5 @@
 import type Phaser from 'phaser';
-import type { CardDef, CardId } from '../../data/types';
+import type { CardDef, CardId, KingId } from '../../data/types';
 import { UI_PALETTE } from '../../data/uiPalette';
 import { describeCard } from '../../game/cards/describe';
 import type { Content } from '../../game/cards/registry';
@@ -7,6 +7,7 @@ import { SPRITES_KEY, iconFrame } from '../../render/atlas';
 import type { IconId } from '../../render/iconArt';
 import type { UiFrame } from '../../render/uiArt';
 import { CARD_LIFT, DRAG_SLOP, type Size, type TooltipContent } from '../hud/layout';
+import { skinFrame, type UiSkin } from '../skin';
 import { VERTICAL_CARD_ART, resolveCardImage } from './cardImage';
 import { cardLayout, fitArt, type CardDensity } from './cardLayout';
 import { clampLines, nextLevelLine } from './cardText';
@@ -63,6 +64,7 @@ export class CardView {
   private badge: string | null = null;
   private selected = false;
   private dimmed = false;
+  private skin: UiSkin = 'neutral';
   private handler: (() => void) | null = null;
   private readonly press: PressHandle;
   private base = { x: 0, y: 0 };
@@ -104,6 +106,13 @@ export class CardView {
     this.def = cardId === null ? null : this.content.card(cardId);
     this.badge = opts.badge ?? null;
     this.press.cancel();
+    this.render();
+  }
+
+  /** Paint the frame in a king's colours (`null`: the neutral wood frame). */
+  setTheme(king: KingId | null): void {
+    this.skin = king ?? 'neutral';
+    this.box.setSkin(this.skin);
     this.render();
   }
 
@@ -196,7 +205,7 @@ export class CardView {
     this.box.resize(w, h);
     this.container.setAlpha(this.dimmed ? DIMMED_ALPHA : 1);
 
-    const inset = frameBorder(this.scene, frame) + PAD;
+    const inset = frameBorder(this.scene, skinFrame(frame, this.skin)) + PAD;
     const density = this.density ?? (w >= FULL_FROM_WIDTH ? 'full' : 'compact');
     const full = density === 'full';
     const l = cardLayout(this.size, inset, density);

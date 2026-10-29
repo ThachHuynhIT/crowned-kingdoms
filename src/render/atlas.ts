@@ -27,7 +27,14 @@ import {
 } from './imageArt';
 import { PixelCanvas } from './pixel';
 import { paintPlot, type PlotState } from './plotArt';
-import { UI_DECOR_IDS, UI_FRAME_IDS, paintUiDecor, paintUiFrame, type UiFrame } from './uiArt';
+import {
+  UI_DECOR_IDS,
+  UI_FRAME_IDS,
+  UI_THEMED_FRAME_IDS,
+  paintUiDecor,
+  paintUiFrame,
+  type UiFrame,
+} from './uiArt';
 import { UI_KIT_FILES, UI_KIT_FRAME, activateUiKitFrames, kitTextureKey } from './uiKit';
 import { UNIT_FRAME_COUNT, paintUnit, unitCloth, type UnitAnim, type UnitTeam } from './unitArt';
 
@@ -117,6 +124,7 @@ export const buildUiTexture = (textures: Phaser.Textures.TextureManager): void =
   };
   const sprites: { name: string; art: PixelCanvas }[] = [
     ...UI_FRAME_IDS.map((id) => ({ name: id, art: frameArt(id) })),
+    ...UI_THEMED_FRAME_IDS.map((id) => ({ name: id, art: paintUiFrame(id) })),
     ...UI_DECOR_IDS.map((id) => ({ name: id, art: paintUiDecor(id) })),
   ];
   const width = 128;
