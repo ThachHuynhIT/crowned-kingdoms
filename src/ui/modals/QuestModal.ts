@@ -111,10 +111,10 @@ export class QuestModal {
     if (view.fee > 0) lines.push(`Phí nhận: ${view.fee} vàng`);
     lines.push('', `Vì sao có sứ giả: các năm ${RUN.questYears.join(', ')}, đầu năm, khi bạn có dưới ${RUN.maxActiveQuests} nhiệm vụ.`);
     this.body.setText(lines.join('\n')).setPosition(l.body.x, l.body.y).setWordWrapWidth(l.body.w);
-    // A long quest text shrinks (down to 11 px) to stay in its box, above the buttons.
+    this.warn.setText(view.canAccept ? '' : 'Không đủ vàng để nhận.');
+    // A long quest text shrinks (down to 11 px) to stay in its box, above the warning and the buttons.
     const room = l.body.h - this.warn.height - 4;
     this.body.setFontSize(largestFitting(14, 11, (size) => this.body.setFontSize(size).height <= room));
-    this.warn.setText(view.canAccept ? '' : 'Không đủ vàng để nhận.');
     this.warn.setPosition(l.body.x, l.body.y + l.body.h - this.warn.height).setWordWrapWidth(l.body.w);
     this.accept.container.setPosition(l.accept.x + l.accept.w / 2, l.accept.y + l.accept.h / 2);
     this.decline.container.setPosition(l.decline.x + l.decline.w / 2, l.decline.y + l.decline.h / 2);

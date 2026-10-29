@@ -11,6 +11,7 @@ import {
   questLayout,
   resultLayout,
   rewardLayout,
+  visibleRewardCards,
 } from './modalLayout';
 
 const DESKTOP: Size = { w: 1280, h: 720 };
@@ -422,5 +423,17 @@ describe('F1 layout fixes', () => {
       expect(overlaps(l.title, l.close)).toBe(false);
       for (const t of l.tabs) expect(t.y).toBeGreaterThanOrEqual(Math.max(l.title.y + l.title.h, l.close.y + l.close.h));
     }
+  });
+});
+
+describe('visibleRewardCards', () => {
+  it('shows every card when the grid fits, and only the fully visible ones when it scrolls', () => {
+    const all = rewardLayout(MOBILE, 10, 4);
+    expect(visibleRewardCards(all)).toEqual([true, true, true, true]);
+    const SHORT: Size = { w: 375, h: 560 };
+    const top = rewardLayout(SHORT, 10, 4, 0);
+    expect(visibleRewardCards(top)).toEqual([true, true, false, false]);
+    const end = rewardLayout(SHORT, 10, 4, 99999);
+    expect(visibleRewardCards(end)).toEqual([false, false, true, true]);
   });
 });

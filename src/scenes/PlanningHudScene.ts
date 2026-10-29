@@ -261,7 +261,11 @@ export class PlanningHudScene extends Phaser.Scene {
         this.pending = { handIndex: p.handIndex, targets: [...p.targets], ready: p.ready };
         this.refreshPending();
       }),
-      bus.on('run:illegal', ({ reason }) => this.flashIllegal(reason)),
+      bus.on('run:illegal', ({ reason }) => {
+        // A refused pick (the offer is still open) must not leave Nhận disabled for good.
+        if (reason === 'wrongPhase' || reason === 'badTarget') this.reward?.retry();
+        this.flashIllegal(reason);
+      }),
       bus.on('log', ({ text }) => this.toasts.push(text)),
       bus.on('ui:pending-buy', ({ plot, price }) => {
         this.buy = plot === null ? null : { plot, price };

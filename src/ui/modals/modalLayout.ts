@@ -102,6 +102,10 @@ export const rewardLayout = (screen: Size, inset: number, count = 3, scroll = 0)
   };
 };
 
+/** Which reward cards lie fully inside the scrolling viewport (all of them when nothing scrolls). */
+export const visibleRewardCards = (l: RewardLayout): boolean[] =>
+  l.cards.map((r) => r.y >= l.viewport.y && r.y + r.h <= l.viewport.y + l.viewport.h);
+
 export interface CouncilLayout {
   panel: Rect;
   title: Rect;

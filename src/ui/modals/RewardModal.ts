@@ -7,7 +7,7 @@ import { textContent } from '../hud/layout';
 import { kingTheme } from '../kingSelect/kingTheme';
 import { createButton, textStyle, type Button, type TooltipHost } from '../theme';
 import { rewardRerollView } from './offerModel';
-import { rewardLayout, type RewardLayout } from './modalLayout';
+import { rewardLayout, visibleRewardCards, type RewardLayout } from './modalLayout';
 import { createOverlay, fitOverlay } from './overlay';
 import { canConfirmReward, selectReward } from './rewardSelection';
 
@@ -111,6 +111,12 @@ export class RewardModal {
     this.onPick(this.selected!);
   }
 
+  /** The command was refused (the offer is still open): Nhận works again with the same pick. */
+  retry(): void {
+    this.submitted = false;
+    this.take.setEnabled(canConfirmReward(this.selected, this.cards.length, this.submitted));
+  }
+
   setDepth(depth: number): this {
     this.root.setDepth(depth);
     return this;
@@ -145,13 +151,13 @@ export class RewardModal {
     this.fit(this.subtitle, l.subtitle.w, desktop ? 20 : 15);
     this.title.setPosition(l.title.x + l.title.w / 2, l.title.y);
     this.subtitle.setPosition(l.subtitle.x + l.subtitle.w / 2, l.subtitle.y);
+    const shown = visibleRewardCards(l);
     this.cards.forEach((card, i) => {
       const r = l.cards[i]!;
-      const shown = r.y >= l.viewport.y && r.y + r.h <= l.viewport.y + l.viewport.h;
-      card.container.setVisible(shown);
-      card.resize({ w: r.w, h: r.h });
+      card.resize({ w: r.w, h: r.h }); // resize() re-renders and re-shows the card: hide after it
       card.setPosition(r.x, r.y);
       card.setSelected(i === this.selected);
+      card.container.setVisible(shown[i]!);
     });
     this.reroll.resize(l.reroll.w, l.reroll.h);
     this.reroll.container.setPosition(l.reroll.x + l.reroll.w / 2, l.reroll.y + l.reroll.h / 2);

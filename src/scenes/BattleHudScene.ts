@@ -758,6 +758,8 @@ export class BattleHudScene extends Phaser.Scene {
     if (this.ended) return;
     this.ended = true;
     this.result = result;
+    this.closeCalendar(); // a side panel must not hide the banner and the summary
+    this.closeScout();
     this.setAiming(false);
     this.intervene.setEnabled(false);
     this.autoBtn.setEnabled(false);
