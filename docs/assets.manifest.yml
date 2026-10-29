@@ -939,3 +939,129 @@ assets:
     nativeSize: 1536x768
     finalSize: 384x192
     notes: Supporting wall variant B for the nomad king; edges fitted to the main segment (docs/art-review/oblique-wall/fit_edges.py), box-downscaled x4, drawn at scale 1 (see src/render/mountainWallAssets.ts)
+  - id: portrait_king_wheat
+    path: public/assets/art/ai-v1/portraits/wheat.png
+    category: ui
+    origin: custom
+    source: docs/art-review/g3e/portraits/wheat/source.png
+    creator: Project owner (OpenAI imagegen via Codex; prompt in docs/art-review/g3e/portraits/wheat/prompt.md, approved 29/10/2026)
+    license: project-owned
+    attribution: false
+    redistribute: true
+    evidence: docs/art-review/g3e/portraits/native-review.md
+    modified: true
+    nativeSize: 1024x1536
+    finalSize: 96x144
+    notes: Wheat King portrait; box-downscaled and snapped to a 24-colour palette by tools/prepare_king_portraits.py (variant A, approved 29/10/2026); drawn in the king card window (src/render/portraitAssets.ts)
+  - id: portrait_king_stone
+    path: public/assets/art/ai-v1/portraits/stone.png
+    category: ui
+    origin: custom
+    source: docs/art-review/g3e/portraits/stone/source.png
+    creator: Project owner (OpenAI imagegen via Codex; prompt in docs/art-review/g3e/portraits/stone/prompt.md, approved 29/10/2026)
+    license: project-owned
+    attribution: false
+    redistribute: true
+    evidence: docs/art-review/g3e/portraits/native-review.md
+    modified: true
+    nativeSize: 1024x1536
+    finalSize: 96x144
+    notes: Stone King portrait; box-downscaled and snapped to a 24-colour palette by tools/prepare_king_portraits.py (variant A, approved 29/10/2026); drawn in the king card window (src/render/portraitAssets.ts)
+  - id: portrait_king_arcane
+    path: public/assets/art/ai-v1/portraits/arcane.png
+    category: ui
+    origin: custom
+    source: docs/art-review/g3e/portraits/arcane/source.png
+    creator: Project owner (OpenAI imagegen via Codex; prompt in docs/art-review/g3e/portraits/arcane/prompt.md, approved 29/10/2026)
+    license: project-owned
+    attribution: false
+    redistribute: true
+    evidence: docs/art-review/g3e/portraits/native-review.md
+    modified: true
+    nativeSize: 1024x1536
+    finalSize: 96x144
+    notes: Arcane King portrait; box-downscaled and snapped to a 24-colour palette by tools/prepare_king_portraits.py (variant A, approved 29/10/2026); drawn in the king card window (src/render/portraitAssets.ts)
+  - id: portrait_king_grove
+    path: public/assets/art/ai-v1/portraits/grove.png
+    category: ui
+    origin: custom
+    source: docs/art-review/g3e/portraits/grove/source.png
+    creator: Project owner (OpenAI imagegen via Codex; prompt in docs/art-review/g3e/portraits/grove/prompt.md, approved 29/10/2026)
+    license: project-owned
+    attribution: false
+    redistribute: true
+    evidence: docs/art-review/g3e/portraits/native-review.md
+    modified: true
+    nativeSize: 1024x1536
+    finalSize: 96x144
+    notes: Grove King portrait; box-downscaled and snapped to a 24-colour palette by tools/prepare_king_portraits.py (variant A, approved 29/10/2026); drawn in the king card window (src/render/portraitAssets.ts)
+  - id: portrait_king_tide
+    path: public/assets/art/ai-v1/portraits/tide.png
+    category: ui
+    origin: custom
+    source: docs/art-review/g3e/portraits/tide/source.png
+    creator: Project owner (OpenAI imagegen via Codex; prompt in docs/art-review/g3e/portraits/tide/prompt.md, approved 29/10/2026)
+    license: project-owned
+    attribution: false
+    redistribute: true
+    evidence: docs/art-review/g3e/portraits/native-review.md
+    modified: true
+    nativeSize: 1024x1536
+    finalSize: 96x144
+    notes: Tide King portrait; box-downscaled and snapped to a 24-colour palette by tools/prepare_king_portraits.py (variant A, approved 29/10/2026); drawn in the king card window (src/render/portraitAssets.ts)
+  - id: portrait_king_forge
+    path: public/assets/art/ai-v1/portraits/forge.png
+    category: ui
+    origin: custom
+    source: docs/art-review/g3e/portraits/forge/source.png
+    creator: Project owner (OpenAI imagegen via Codex; prompt in docs/art-review/g3e/portraits/forge/prompt.md, approved 29/10/2026)
+    license: project-owned
+    attribution: false
+    redistribute: true
+    evidence: docs/art-review/g3e/portraits/native-review.md
+    modified: true
+    nativeSize: 1024x1536
+    finalSize: 96x144
+    notes: Forge King portrait; box-downscaled and snapped to a 24-colour palette by tools/prepare_king_portraits.py (variant A, approved 29/10/2026); drawn in the king card window (src/render/portraitAssets.ts)
+  - id: portrait_king_clock
+    path: public/assets/art/ai-v1/portraits/clock.png
+    category: ui
+    origin: custom
+    source: docs/art-review/g3e/portraits/clock/source.png
+    creator: Project owner (OpenAI imagegen via Codex; prompt in docs/art-review/g3e/portraits/clock/prompt.md, approved 29/10/2026)
+    license: project-owned
+    attribution: false
+    redistribute: true
+    evidence: docs/art-review/g3e/portraits/native-review.md
+    modified: true
+    nativeSize: 1024x1536
+    finalSize: 96x144
+    notes: Clockwork King portrait; box-downscaled and snapped to a 24-colour palette by tools/prepare_king_portraits.py (variant A, approved 29/10/2026); drawn in the king card window (src/render/portraitAssets.ts)
+  - id: portrait_king_moon
+    path: public/assets/art/ai-v1/portraits/moon.png
+    category: ui
+    origin: custom
+    source: docs/art-review/g3e/portraits/moon/source.png
+    creator: Project owner (OpenAI imagegen via Codex; prompt in docs/art-review/g3e/portraits/moon/prompt.md, approved 29/10/2026)
+    license: project-owned
+    attribution: false
+    redistribute: true
+    evidence: docs/art-review/g3e/portraits/native-review.md
+    modified: true
+    nativeSize: 1024x1536
+    finalSize: 96x144
+    notes: Moon King portrait; box-downscaled and snapped to a 24-colour palette by tools/prepare_king_portraits.py (variant A, approved 29/10/2026); drawn in the king card window (src/render/portraitAssets.ts)
+  - id: portrait_king_nomad
+    path: public/assets/art/ai-v1/portraits/nomad.png
+    category: ui
+    origin: custom
+    source: docs/art-review/g3e/portraits/nomad/source.png
+    creator: Project owner (OpenAI imagegen via Codex; prompt in docs/art-review/g3e/portraits/nomad/prompt.md, approved 29/10/2026)
+    license: project-owned
+    attribution: false
+    redistribute: true
+    evidence: docs/art-review/g3e/portraits/native-review.md
+    modified: true
+    nativeSize: 1024x1536
+    finalSize: 96x144
+    notes: Nomad Khan portrait; box-downscaled and snapped to a 24-colour palette by tools/prepare_king_portraits.py (variant A, approved 29/10/2026); drawn in the king card window (src/render/portraitAssets.ts)

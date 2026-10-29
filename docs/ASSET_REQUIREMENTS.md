@@ -391,7 +391,7 @@ Thiết kế: [spec 26/10/2026](superpowers/specs/2026-10-26-oblique-view-mounta
 | Địa hình, ô bàn cờ 9 vua, vật thể hoang dã | Batch 02–08 cắt xong và có trong `tools/asset-admin/manifest.json` (27 ô nền, 27 ô bàn cờ, 15 vật hoang dã) | Chưa nối vào `src`; chưa vẽ lại theo góc 45° |
 | Tường núi sau lưng lâu đài | Đã vào game (26/10/2026): 9 nền biển riêng mỗi vua × 3 đoạn (chính + 2 bổ trợ), 3 dải chân núi, 2 đầu nối; `wallY` 88, ảnh vẽ scale 1 | Xem mục 9.1; 5 ảnh tùy chọn đã bỏ |
 | Công trình P0, nhóm Lúa Mì | Ảnh nguồn thử theo mẫu Thợ Gặt: Kho Thóc, Cối Xay Gió (góc 45°) | Chờ duyệt; Ruộng Lúa, Khởi Nghĩa Nông Dân, Đội Thợ Gặt, Bù Nhìn Gác chưa vẽ; Nhà Tranh và Trại Lính cần vẽ lại theo góc mới; tạm dừng theo yêu cầu 27/10/2026 |
-| Chân dung vua | Đủ 9 vua, bán thân dọc 2:3, nền chủ đề, đã duyệt phong cách 29/10/2026 (`docs/art-review/g3e/portraits/<vua>/source.png`, 1024×1536; mẫu vuông cũ ở `_rejected_square/`) | Chưa thu về 96×144, chưa ép bảng màu/QA/đăng ký, chưa nối vào `src` (màn chọn vua mới dùng chúng) |
+| Chân dung vua | Đủ 9 vua, bán thân dọc 2:3, nền chủ đề, đã duyệt phong cách 29/10/2026 (`docs/art-review/g3e/portraits/<vua>/source.png`, 1024×1536; mẫu vuông cũ ở `_rejected_square/`) | Đã thu về 96×144 với bảng 24 màu riêng mỗi vua (`tools/prepare_king_portraits.py`, bản A đã duyệt 29/10/2026), đăng ký manifest/CREDITS, nằm ở `public/assets/art/ai-v1/portraits/` và hiện trên thẻ vua của màn chọn vua; thiếu ảnh thì dùng chân dung vuông tạm |
 
 Nguồn Trại Lính: `C:/Users/thach/.codex/generated_images/01a16eab-0fd1-7d42-ac89-eb6759526587/exec-2fb9b2c5-becf-4cd4-bb8e-08a88695fe75.png`.
 Nguồn Lính Bộ: `C:/Users/thach/.codex/generated_images/01a16eab-0fd1-7d42-ac89-eb6759526587/exec-45b85482-fcba-42fd-bfe5-4d3efae6b898.png`.

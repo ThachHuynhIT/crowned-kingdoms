@@ -83,11 +83,14 @@ class PrepareKingPortraitsTest(unittest.TestCase):
             self.assertLess(self.lone_pixels(art), 0.15 * 96 * 144, king)
 
     def test_main_writes_the_pictures_and_the_sheet_without_touching_public(self):
+        shipped = ROOT / 'public/assets/art/ai-v1/portraits'
+        before = {p.name: sha(p) for p in shipped.glob('*.png')} if shipped.exists() else {}
         with tempfile.TemporaryDirectory() as d:
             pk.main(['--out', d, 'wheat', 'stone'])
             self.assertEqual(sorted(p.name for p in Path(d).iterdir()), ['native-sheet.png', 'stone.png', 'wheat.png'])
             self.assertEqual(Image.open(Path(d) / 'wheat.png').size, (96, 144))
-        self.assertFalse((ROOT / 'public/assets/art/ai-v1/portraits').exists())
+        after = {p.name: sha(p) for p in shipped.glob('*.png')} if shipped.exists() else {}
+        self.assertEqual(after, before)
 
 
 if __name__ == '__main__':

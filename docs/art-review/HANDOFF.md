@@ -10,7 +10,7 @@ Nhánh `g3e-ux-and-art`, PR #12 vào `develop` (chưa merge). Đọc theo thứ 
 
 ## Đang chờ người dùng duyệt (chưa vào game, chưa đăng ký)
 - Công trình Lúa Mì thử: Kho Thóc, Cối Xay Gió (`docs/art-review/g3e/buildings/wheat/`). Các bản bị loại nằm trong `_rejected_*` và `_superseded_*`.
-- (Đã duyệt 29/10/2026) Chân dung 9 vua dạng bán thân dọc 2:3 trong `docs/art-review/g3e/portraits/<vua>/source.png` (1024×1536); phong cách đã vào `ART_STYLE.md` mục "Chân dung vua", prompt ở `make_prompts.py`, cổng ở `tools/test_art_prompts.py`. Còn lại: thu về 96×144, ép bảng màu, đăng ký, nối vào `src` cùng màn chọn vua mới. Mẫu vuông cũ ở `_rejected_square/`, bản Lúa Mì dùng rơm ở `_rejected_wheat_straw/`.
+- (Đã duyệt 29/10/2026) Chân dung 9 vua dạng bán thân dọc 2:3 trong `docs/art-review/g3e/portraits/<vua>/source.png` (1024×1536); phong cách đã vào `ART_STYLE.md` mục "Chân dung vua", prompt ở `make_prompts.py`, cổng ở `tools/test_art_prompts.py`. Đã thu về 96×144 (bản A), đăng ký và nối vào màn chọn vua mới (29/10/2026). Mẫu vuông cũ ở `_rejected_square/`, bản Lúa Mì dùng rơm ở `_rejected_wheat_straw/`.
 - Spec màn chọn vua `docs/superpowers/specs/2026-10-28-king-select-redesign-design.md` (chờ duyệt) và prompt cho Codex lập plan toàn bộ giao diện `docs/art-review/ui-redesign-codex-prompt.md` (kết quả: `docs/superpowers/plans/2026-10-28-ui-redesign.md`). Ảnh tham chiếu 9 Kings ở `.superpowers/ui_refs/` (git-ignored). Chọn: thẻ dọc mới (cần vẽ lại 94 tranh thẻ, dự án riêng), Đặc quyền vô hiệu hóa, bỏ thanh Cấp.
 
 ## Việc tiếp theo (người dùng chọn thứ tự)
