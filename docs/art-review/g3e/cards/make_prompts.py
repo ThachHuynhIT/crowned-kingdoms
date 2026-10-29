@@ -75,6 +75,16 @@ THEMES = {
 
 # What the picture must show, per card, when the name and the function are not enough to draw the right subject.
 VISUAL = {
+    'stone_catapult': 'a stout slate-stone tower whose top platform holds a large wooden-and-iron catapult arm loaded with a boulder; stacked stone blocks and spare boulders beside the base.',
+    'stone_crystal': 'a slender slate tower crowned with a large glowing blue-white crystal on its top platform, thin crystal beams, crystal shards around the base, runes carved on the tower.',
+    'stone_golem_forge': 'a slate-stone workshop with a broad slab roof and a big chimney, a half-built rune-carved stone golem standing in the open doorway, chisels, hammers and rock blocks outside, softly glowing runes.',
+    'stone_miners': 'a mining hall built into a rocky hillside with a timber-framed mine entrance, ore carts on rails, pickaxes on a rack and hanging lanterns; two small miners with helmets and pickaxes in front of it, a pile of rubble.',
+    'stone_mountain_heart': 'a squat stone shrine tower whose top holds a huge pulsing red-orange mountain-heart crystal inside a carved stone ring, cracks of light, shock rings on the ground around the base.',
+    'stone_quarry': 'an open stone quarry: stepped cut grey rock faces, a wooden crane and hoist, stacked blocks of cut stone, a small cart and a low timber shed; keep the same 45-degree downward view so the pit and its steps are visible.',
+    'stone_rune_carving': 'the SUBJECT is a slab of slate with a freshly carved glowing rune, a chisel and mallet resting beside it, glowing rune dust in the air; one iconic object, no building, no people.',
+    'stone_stoneskin': 'the SUBJECT is a stone-skin charm: a smooth round stone medallion with a glowing rune, overlapping stone plates forming around it like armour; one iconic charm, no building, no people.',
+    'stone_throne': 'the SUBJECT is a throne carved from a single block of slate with rune lines and a boulder-shaped backrest, standing on a stone dais with a mountain-emblem banner behind it; front facing, seen from the 45-degree downward view.',
+    'stone_wall': 'a sturdy slate-stone wall section with a gate and a crenelated top, stacked stone blocks and two wooden spikes, a torch on a post; thick and tough, front facing, its top visible.',
     'wheat_fertilizer': 'the SUBJECT is one burlap sack of rich dark compost tipped over a patch of young green sprouts, golden-green glowing motes drifting up from it; a small seedling growing; one iconic charm, no building, no people.',
     'wheat_field': 'a tidy plot of ripe golden wheat in neat rows with a low wooden fence and a small gate in front; the fence posts and the gate have visible height. This is flat farmland, not a house: keep the same 45-degree downward view so the rows recede, and show a few wheat sheaves.',
     'wheat_granary': 'a wooden granary raised on posts with a ladder, a broad thatched roof, sacks of grain at the door and hanging wheat bundles.',
