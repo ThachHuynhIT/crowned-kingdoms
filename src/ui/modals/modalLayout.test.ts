@@ -31,10 +31,10 @@ describe('centredPanel', () => {
 
 describe('rewardLayout', () => {
   for (const [name, screen, inset, card] of [
-    ['desktop', DESKTOP, 24, { w: 150, h: 210 }],
-    ['mobile', MOBILE, 10, { w: 108, h: 152 }],
+    ['desktop', DESKTOP, 24, { w: 180, h: 288 }],
+    ['mobile', MOBILE, 10, { w: 108, h: 180 }],
   ] as const) {
-    it(`fits title, 3 cards and the take button inside the panel (${name})`, () => {
+    it(`fits the headings, 3 vertical cards, the reroll line and the take button inside the panel (${name})`, () => {
       const l = rewardLayout(screen, inset);
       expect(contains({ x: 0, y: 0, ...screen }, l.panel)).toBe(true);
       expect(l.cards).toHaveLength(3);
@@ -44,27 +44,54 @@ describe('rewardLayout', () => {
         w: l.panel.w - 2 * inset,
         h: l.panel.h - 2 * inset,
       };
-      for (const r of [l.title, ...l.cards, l.take]) {
+      for (const r of [l.title, l.subtitle, l.viewport, ...l.cards, l.reroll, l.take]) {
         expect(contains(inner, r), JSON.stringify(r)).toBe(true);
       }
       for (const c of l.cards) {
         expect(c.w).toBe(card.w);
         expect(c.h).toBe(card.h);
-        // A selected card lifts 12 px: still below the title.
-        expect(c.y - 12).toBeGreaterThanOrEqual(l.title.y + l.title.h);
+        // A selected card lifts 12 px: still below the subtitle.
+        expect(c.y - 12).toBeGreaterThanOrEqual(l.subtitle.y + l.subtitle.h);
+        expect(contains(l.viewport, c)).toBe(true);
       }
-      for (const b of [l.take]) {
+      expect(new Set(l.cards.map((c) => c.y)).size).toBe(1);
+      for (const b of [l.take, l.reroll]) {
         expect(b.w).toBeGreaterThanOrEqual(44);
         expect(b.h).toBeGreaterThanOrEqual(44);
       }
-      const parts = [l.title, ...l.cards, l.take];
       expect('skip' in l).toBe(false);
+      expect(l.scrollMax).toBe(0);
       expect(l.take.x + l.take.w / 2).toBeCloseTo(l.panel.x + l.panel.w / 2, 0);
+      const parts = [l.title, l.subtitle, l.viewport, l.reroll, l.take];
       for (let i = 0; i < parts.length; i++)
         for (let j = i + 1; j < parts.length; j++)
-          expect(overlaps(parts[i]!, parts[j]!)).toBe(false);
+          expect(overlaps(parts[i]!, parts[j]!), `${i}×${j}`).toBe(false);
     });
   }
+
+  it('reward_desktop_three_180x288_cards_in_a_row_centred_on_the_screen', () => {
+    const l = rewardLayout(DESKTOP, 24);
+    const mid = (l.cards[0]!.x + l.cards[2]!.x + l.cards[2]!.w) / 2;
+    expect(mid).toBeCloseTo(DESKTOP.w / 2, 0);
+    expect(l.cards[1]!.x - (l.cards[0]!.x + 180)).toBe(24);
+    const centreY = (l.panel.y + l.panel.y + l.panel.h) / 2;
+    expect(Math.abs(centreY - DESKTOP.h / 2)).toBeLessThanOrEqual(1);
+  });
+
+  it('reward_phone_three_108x180_cards_in_a_row_with_a_small_gap', () => {
+    const l = rewardLayout(MOBILE, 10);
+    expect(l.cards[1]!.x - (l.cards[0]!.x + 108)).toBe(5);
+  });
+
+  it('count 0 is not turned into an empty card', () => {
+    expect(rewardLayout(DESKTOP, 24, 0).cards).toEqual([]);
+  });
+
+  it('the reroll line and the take button are separate rows below the cards', () => {
+    const l = rewardLayout(DESKTOP, 24);
+    expect(l.reroll.y).toBeGreaterThanOrEqual(l.viewport.y + l.viewport.h);
+    expect(l.take.y).toBeGreaterThanOrEqual(l.reroll.y + l.reroll.h);
+  });
 });
 
 describe('resultLayout', () => {
@@ -212,34 +239,48 @@ const SCREENS: readonly [string, Size, number][] = [
 const inside = (screen: Size, r: Rect): boolean => contains({ x: 0, y: 0, ...screen }, r);
 
 describe('rewardLayout with 4 cards', () => {
-  it('is one row of 150×210 cards on desktop', () => {
+  it('is one row of 180×288 cards on desktop', () => {
     const l = rewardLayout(DESKTOP, 24, 4);
     expect(l.cards).toHaveLength(4);
     expect(new Set(l.cards.map((c) => c.y)).size).toBe(1);
-    expect(l.cards.every((c) => c.w === 150 && c.h === 210)).toBe(true);
+    expect(l.cards.every((c) => c.w === 180 && c.h === 288)).toBe(true);
     expect(inside(DESKTOP, l.panel)).toBe(true);
   });
 
-  it('is a 2×2 grid of 108×152 cards on mobile, all inside the panel and the screen, none overlapping', () => {
+  it('four_cards_phone: a 2×2 grid of 108×180 cards, all inside the panel and the screen, none overlapping', () => {
     const inset = 10;
     const l = rewardLayout(MOBILE, inset, 4);
     expect(new Set(l.cards.map((c) => c.x)).size).toBe(2);
     expect(new Set(l.cards.map((c) => c.y)).size).toBe(2);
-    expect(l.cards.every((c) => c.w === 108 && c.h === 152)).toBe(true);
+    expect(l.cards.every((c) => c.w === 108 && c.h === 180)).toBe(true);
     expect(inside(MOBILE, l.panel)).toBe(true);
     const inner = { x: l.panel.x + inset, y: l.panel.y + inset, w: l.panel.w - 2 * inset, h: l.panel.h - 2 * inset };
-    for (const r of [l.title, ...l.cards, l.take]) expect(contains(inner, r), JSON.stringify(r)).toBe(true);
+    for (const r of [l.title, l.subtitle, ...l.cards, l.reroll, l.take]) expect(contains(inner, r), JSON.stringify(r)).toBe(true);
     for (let i = 0; i < l.cards.length; i++) {
       for (let j = i + 1; j < l.cards.length; j++) expect(overlaps(l.cards[i]!, l.cards[j]!)).toBe(false);
       expect(overlaps(l.cards[i]!, l.take)).toBe(false);
-      // a selected card lifts 12 px and must stay under the title
-      expect(l.cards[i]!.y - 12).toBeGreaterThanOrEqual(l.title.y + l.title.h);
+      expect(l.cards[i]!.y - 12).toBeGreaterThanOrEqual(l.subtitle.y + l.subtitle.h);
     }
+    expect(l.scrollMax).toBe(0);
   });
 
-  it('3 cards keep the old single row on mobile', () => {
+  it('3 cards keep a single row on mobile', () => {
     const l = rewardLayout(MOBILE, 10, 3);
     expect(new Set(l.cards.map((c) => c.y)).size).toBe(1);
+  });
+
+  it('a phone too short for two rows scrolls the cards and never loses the last one', () => {
+    const SHORT: Size = { w: 375, h: 560 };
+    const top = rewardLayout(SHORT, 10, 4, 0);
+    expect(top.scrollMax).toBeGreaterThan(0);
+    expect(inside(SHORT, top.panel)).toBe(true);
+    expect(overlaps(top.viewport, top.take)).toBe(false);
+    const end = rewardLayout(SHORT, 10, 4, 99999);
+    expect(end.cards).toHaveLength(4);
+    const last = end.cards[3]!;
+    expect(last.y).toBeGreaterThanOrEqual(end.viewport.y);
+    expect(last.y + last.h).toBeLessThanOrEqual(end.viewport.y + end.viewport.h);
+    expect(end.cards[0]!.y).toBe(top.cards[0]!.y - top.scrollMax);
   });
 });
 

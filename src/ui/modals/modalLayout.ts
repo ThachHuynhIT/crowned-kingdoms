@@ -22,51 +22,84 @@ export const centredPanel = (screen: Size, w: number, h: number): Rect => {
 };
 
 export interface RewardLayout {
+  /** The area the picker takes (headings, cards, reroll line and Nhận), padded by `inset`. */
   panel: Rect;
+  /** Big heading ("CHIẾN THẮNG"). */
   title: Rect;
-  /** Card slots at rest; a selected card lifts 12 px into the gap above. */
+  /** Second heading ("CHỌN PHẦN THƯỞNG"). */
+  subtitle: Rect;
+  /** Clips the card grid (including the 12 px a selected card lifts); taller grids scroll inside it. */
+  viewport: Rect;
+  /** Card slots at rest, scrolled by the `scroll` argument; a selected card lifts 12 px into the gap above. */
   cards: readonly Rect[];
+  /** The disabled "ĐỔI THƯỞNG" line under the cards. */
+  reroll: Rect;
   take: Rect;
+  /** How far the cards can scroll (0 when they all fit). */
+  scrollMax: number;
 }
 
-const TITLE_H = 28;
-const GAP_ABOVE_CARDS = 8;
-const GAP_BELOW_CARDS = 16;
+const TITLE_H = 32;
+const SUBTITLE_H = 26;
+const HEADING_GAP = 4;
+const GAP_ABOVE_CARDS = 12;
+const GAP_BELOW_CARDS = 12;
+const REROLL_GAP = 8;
 const BUTTON_GAP = 16;
 
 /** "Nhận" (the same size in both layouts). */
 export const REWARD_BUTTON = { w: 150, h: 48 } as const;
-const REWARD_DESK = { card: { w: 150, h: 210, gap: 16 }, button: REWARD_BUTTON } as const;
-const REWARD_PHONE = { card: { w: 108, h: 152, gap: 5 }, button: REWARD_BUTTON } as const;
+const REWARD_DESK = { card: { w: 180, h: 288, gap: 24 }, reroll: { w: 240, h: 44 } } as const;
+const REWARD_PHONE = { card: { w: 108, h: 180, gap: 5 }, reroll: { w: 220, h: 44 } } as const;
 
 /**
- * §10.6 reward picker: title, `count` cards, then "Nhận". Cards share one row, except on a
- * phone with 4 or more cards, which wrap into rows of two so the panel stays inside the screen.
+ * §10.6 reward picker: two headings, `count` vertical cards, the disabled reroll line, then
+ * "Nhận", centred as one block. Cards share one row, except on a phone with 4 or more cards,
+ * which wrap into rows of two; if the screen is still too short, the card grid scrolls inside
+ * `viewport` (`scroll` px, clamped) and `scrollMax` says how far.
  */
-export const rewardLayout = (screen: Size, inset: number, count = 3): RewardLayout => {
+export const rewardLayout = (screen: Size, inset: number, count = 3, scroll = 0): RewardLayout => {
   const desktop = isDesktop(screen.w);
-  const spec = desktop ? REWARD_DESK : REWARD_PHONE;
-  const { card, button } = spec;
-  const n = Math.max(1, count);
-  const cols = !desktop && n >= 4 ? 2 : n;
-  const rows = Math.ceil(n / cols);
+  const { card, reroll } = desktop ? REWARD_DESK : REWARD_PHONE;
+  const n = Math.max(0, count);
+  const slots = Math.max(1, n);
+  const cols = !desktop && slots >= 4 ? 2 : slots;
+  const rows = Math.ceil(slots / cols);
   const row = cols * card.w + (cols - 1) * card.gap;
   const grid = rows * card.h + (rows - 1) * card.gap;
-  const w = Math.max(row, button.w) + 2 * inset;
-  const h = inset + TITLE_H + GAP_ABOVE_CARDS + CARD_LIFT + grid + GAP_BELOW_CARDS + button.h + inset;
-  const panel = centredPanel(screen, w, h);
-  const title = { x: panel.x + inset, y: panel.y + inset, w: panel.w - 2 * inset, h: TITLE_H };
-  const cardY = title.y + TITLE_H + GAP_ABOVE_CARDS + CARD_LIFT;
+  const fixed = TITLE_H + HEADING_GAP + SUBTITLE_H + GAP_ABOVE_CARDS + CARD_LIFT + GAP_BELOW_CARDS + reroll.h + REROLL_GAP + REWARD_BUTTON.h;
+  const room = screen.h - 2 * MARGIN - 2 * inset - fixed;
+  const visible = Math.max(card.h, Math.min(grid, room));
+  const scrollMax = Math.max(0, grid - visible);
+  const at = Math.max(0, Math.min(scroll, scrollMax));
+  const w = Math.max(row, reroll.w, REWARD_BUTTON.w) + 2 * inset;
+  const panel = centredPanel(screen, w, fixed + visible + 2 * inset);
+  const x = panel.x + inset;
+  const innerW = panel.w - 2 * inset;
+  const title = { x, y: panel.y + inset, w: innerW, h: TITLE_H };
+  const subtitle = { x, y: title.y + TITLE_H + HEADING_GAP, w: innerW, h: SUBTITLE_H };
+  const vy = subtitle.y + SUBTITLE_H + GAP_ABOVE_CARDS;
   const x0 = Math.round(panel.x + (panel.w - row) / 2);
+  const viewport = { x: x0, y: vy, w: row, h: CARD_LIFT + visible };
+  const cardTop = vy + CARD_LIFT;
   const cards = Array.from({ length: n }, (_, i) => ({
     x: x0 + (i % cols) * (card.w + card.gap),
-    y: cardY + Math.floor(i / cols) * (card.h + card.gap),
+    y: cardTop + Math.floor(i / cols) * (card.h + card.gap) - at,
     w: card.w,
     h: card.h,
   }));
-  const by = cardY + grid + GAP_BELOW_CARDS;
-  const bx = Math.round(panel.x + (panel.w - button.w) / 2);
-  return { panel, title, cards, take: { x: bx, y: by, w: button.w, h: button.h } };
+  const ry = vy + viewport.h + GAP_BELOW_CARDS;
+  const centreX = (w: number): number => Math.round(panel.x + (panel.w - w) / 2);
+  return {
+    panel,
+    title,
+    subtitle,
+    viewport,
+    cards,
+    reroll: { x: centreX(reroll.w), y: ry, w: reroll.w, h: reroll.h },
+    take: { x: centreX(REWARD_BUTTON.w), y: ry + reroll.h + REROLL_GAP, w: REWARD_BUTTON.w, h: REWARD_BUTTON.h },
+    scrollMax,
+  };
 };
 
 export interface CouncilLayout {
