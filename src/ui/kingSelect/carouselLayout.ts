@@ -41,6 +41,8 @@ export const carouselSlots = (rect: Rect, selectedIndex: number, count: number):
   h0 -= h0 % 2;
   const w0 = Math.round((h0 * 2) / 3);
   const cx = rect.x + rect.w / 2;
+  // Spare height (the width, not the height, limits the cards) is split above and below.
+  const top = rect.y + Math.floor((rect.h - maxDrop - h0) / 2);
 
   return Array.from({ length: count }, (_, index) => {
     const offset = index - selectedIndex;
@@ -51,7 +53,7 @@ export const carouselSlots = (rect: Rect, selectedIndex: number, count: number):
     const midX = cx + Math.sign(offset) * Math.round(STEP[k]! * w0);
     const slotRect = {
       x: Math.round(midX - w / 2),
-      y: rect.y + drop[k]! + (h0 - h) / 2,
+      y: top + drop[k]! + (h0 - h) / 2,
       w,
       h,
     };
@@ -65,4 +67,44 @@ export const carouselSlots = (rect: Rect, selectedIndex: number, count: number):
       visible: Math.abs(offset) <= 2 && inside >= MIN_VISIBLE,
     };
   });
+};
+
+/**
+ * Where the carousel screen puts its parts. The card `area` never covers the back button or
+ * the arrows (so a swipe across it cannot hit them): on desktop the arrows stand left and
+ * right of it, on phones they sit under it.
+ */
+export interface CarouselScreenLayout {
+  title: Rect;
+  back: Rect;
+  /** The king's name, centred above the middle card. */
+  name: Rect;
+  /** The area `carouselSlots` lays the cards in; also the swipe area. */
+  area: Rect;
+  previous: Rect;
+  next: Rect;
+}
+
+export const carouselScreen = (screen: { w: number; h: number }): CarouselScreenLayout => {
+  const { w, h } = screen;
+  if (w >= DESKTOP_FROM) {
+    const area = { x: 72, y: 140, w: w - 144, h: h - 140 - 30 };
+    const arrowY = area.y + Math.floor(area.h / 2) - 32;
+    return {
+      title: { x: 140, y: 20, w: w - 280, h: 44 },
+      back: { x: 10, y: 10, w: 120, h: 48 },
+      name: { x: 0, y: 92, w, h: 36 },
+      area,
+      previous: { x: 12, y: arrowY, w: 52, h: 64 },
+      next: { x: w - 64, y: arrowY, w: 52, h: 64 },
+    };
+  }
+  return {
+    title: { x: 116, y: 14, w: w - 232, h: 40 },
+    back: { x: 10, y: 10, w: 96, h: 48 },
+    name: { x: 0, y: 68, w, h: 32 },
+    area: { x: 0, y: 106, w, h: h - 106 - 96 },
+    previous: { x: Math.floor(w / 2) - 56, y: h - 80, w: 48, h: 48 },
+    next: { x: Math.floor(w / 2) + 8, y: h - 80, w: 48, h: 48 },
+  };
 };

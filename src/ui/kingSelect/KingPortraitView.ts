@@ -27,6 +27,10 @@ export class KingPortraitView {
   private rect: Rect = { x: 0, y: 0, w: KING_CARD_NATIVE.w, h: KING_CARD_NATIVE.h };
   private handler: (() => void) | null = null;
   private readonly owner = 'king-portrait';
+  private exact = false;
+  private brightness = 0xffffff;
+  private depth = 0;
+  private shown = true;
 
   constructor(
     private readonly scene: Phaser.Scene,
@@ -57,20 +61,59 @@ export class KingPortraitView {
     this.choice = choice;
     const locked = !choice.playable;
     addPixelTexture(this.scene.textures, cardKey(choice.id, locked), paintKingCard(choice.id, locked));
-    this.card.setTexture(cardKey(choice.id, locked)).setVisible(true);
+    this.card.setTexture(cardKey(choice.id, locked)).setVisible(this.shown);
     this.portrait?.destroy();
     this.portrait = null;
     if (!locked) {
       addPixelTexture(this.scene.textures, portraitKey(choice.id), paintPortrait(this.content.king(choice.id)));
-      this.portrait = this.scene.add.image(0, 0, portraitKey(choice.id)).setOrigin(0, 0);
+      this.portrait = this.scene.add.image(0, 0, portraitKey(choice.id)).setOrigin(0, 0).setTint(this.brightness).setDepth(this.depth + 0.5).setVisible(this.shown);
     }
     this.place();
   }
 
-  /** `rect.w` is `66 × scale` (scale ≥ 1); the card is drawn at that integer scale. */
-  layout(rect: Rect): void {
+  /**
+   * Place the card in `rect`. By default `rect.w` is `66 × scale` and the card is drawn at that
+   * integer scale; with `exact` the scale is `rect.w / 66` (carousel cards of any size).
+   */
+  layout(rect: Rect, exact = false): void {
     this.rect = rect;
+    this.exact = exact;
     this.place();
+  }
+
+  /** 1 = full colour; lower dims the card and its portrait. */
+  setBrightness(brightness: number): void {
+    const v = Math.round(255 * brightness);
+    const tint = (v << 16) | (v << 8) | v;
+    this.card.setTint(tint);
+    this.portrait?.setTint(tint);
+    this.brightness = tint;
+  }
+
+  setDepth(depth: number): void {
+    this.card.setDepth(depth);
+    this.portrait?.setDepth(depth + 0.5);
+    this.depth = depth;
+  }
+
+  setVisible(visible: boolean): void {
+    this.shown = visible;
+    this.card.setVisible(visible && this.choice !== null);
+    this.portrait?.setVisible(visible);
+    if (!visible) this.tooltip.hide(this.owner);
+  }
+
+  /** A short side-to-side shake: "this one cannot be chosen". */
+  shake(): void {
+    const x = this.card.x;
+    this.scene.tweens.add({
+      targets: this.card,
+      x: x + 6,
+      duration: 45,
+      yoyo: true,
+      repeat: 2,
+      onComplete: () => this.card.setX(x),
+    });
   }
 
   destroy(): void {
@@ -80,13 +123,13 @@ export class KingPortraitView {
   }
 
   private place(): void {
-    const scale = Math.max(1, Math.floor(this.rect.w / KING_CARD_NATIVE.w));
+    const scale = this.exact ? this.rect.w / KING_CARD_NATIVE.w : Math.max(1, Math.floor(this.rect.w / KING_CARD_NATIVE.w));
     this.card.setPosition(this.rect.x, this.rect.y).setScale(scale);
     if (!this.portrait) return;
     // The placeholder portrait is 48×48 px, as wide as the window: centred top to bottom.
     const win = KING_CARD_WINDOW;
     this.portrait
-      .setPosition(this.rect.x + win.x * scale, this.rect.y + (win.y + Math.floor((win.h - PORTRAIT_SIZE) / 2)) * scale)
+      .setPosition(Math.round(this.rect.x + win.x * scale), Math.round(this.rect.y + (win.y + Math.floor((win.h - PORTRAIT_SIZE) / 2)) * scale))
       .setScale(scale);
   }
 

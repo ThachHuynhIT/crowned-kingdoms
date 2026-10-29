@@ -61,8 +61,10 @@ Phím tắt:
 | 1 | Chọn vua 1 |
 | 2 | Chọn vua 2 |
 | 3 | Chọn vua 3 |
-| Enter | Bắt đầu ván |
-| Esc | Về menu |
+| ArrowLeft | Vua trước |
+| ArrowRight | Vua sau |
+| Enter | Mở chi tiết vua / Chơi |
+| Esc | Quay lại (chi tiết → danh sách → menu) |
 
 ### Lên kế hoạch
 

@@ -61,7 +61,10 @@ describe('existing_bindings_unchanged', () => {
   };
 
   it('king select', () => {
-    expectKeys('kingSelect', FREE, { '1': 'select.1', '2': 'select.2', '3': 'select.3', Enter: 'confirm', Escape: 'back' });
+    expectKeys('kingSelect', FREE, {
+      '1': 'select.1', '2': 'select.2', '3': 'select.3', Enter: 'confirm', Escape: 'back',
+      ArrowLeft: 'king.previous', ArrowRight: 'king.next',
+    });
   });
 
   it('planning', () => {

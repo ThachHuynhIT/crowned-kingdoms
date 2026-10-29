@@ -1,6 +1,6 @@
 import { describe, expect, it } from 'vitest';
 import type { Rect } from '../hud/layout';
-import { carouselSlots } from './carouselLayout';
+import { carouselScreen, carouselSlots } from './carouselLayout';
 
 const DESKTOP: Rect = { x: 0, y: 150, w: 1280, h: 500 };
 const MOBILE: Rect = { x: 0, y: 130, w: 375, h: 520 };
@@ -83,6 +83,16 @@ describe('carouselSlots', () => {
     }
   });
 
+  it('centres the cards top to bottom in the area when the width, not the height, limits their size', () => {
+    const slots = carouselSlots(MOBILE, 4, 9);
+    const c = slots[4]!.rect;
+    const above = c.y - MOBILE.y;
+    const below = MOBILE.y + MOBILE.h - (slots[6]!.rect.y + slots[6]!.rect.h);
+    expect(above).toBeGreaterThan(40);
+    expect(Math.abs(above - (MOBILE.y + MOBILE.h - (c.y + c.h) - 32))).toBeLessThanOrEqual(1);
+    expect(below).toBeGreaterThanOrEqual(0);
+  });
+
   it('does not invent kings at the ends: the first king has no left neighbours', () => {
     const slots = carouselSlots(DESKTOP, 0, 9);
     expect(slots).toHaveLength(9);
@@ -95,5 +105,39 @@ describe('carouselSlots', () => {
     const one = carouselSlots(DESKTOP, 0, 1);
     expect(one).toHaveLength(1);
     expect(one[0]!.visible).toBe(true);
+  });
+});
+
+describe('carouselScreen', () => {
+  const SCREENS = [
+    ['desktop', { w: 1280, h: 720 }],
+    ['768', { w: 768, h: 1024 }],
+    ['mobile', { w: 375, h: 812 }],
+    ['767', { w: 767, h: 900 }],
+  ] as const;
+  const inside = (r: Rect, w: number, h: number): boolean => r.x >= 0 && r.y >= 0 && r.x + r.w <= w && r.y + r.h <= h;
+  const apart = (a: Rect, b: Rect): boolean => a.x + a.w <= b.x || b.x + b.w <= a.x || a.y + a.h <= b.y || b.y + b.h <= a.y;
+
+  for (const [name, s] of SCREENS) {
+    it(`keeps title, back, arrows and the card area on screen and the buttons at least 44 px (${name})`, () => {
+      const l = carouselScreen(s);
+      for (const r of [l.title, l.back, l.name, l.area, l.previous, l.next]) expect(inside(r, s.w, s.h), JSON.stringify(r)).toBe(true);
+      for (const r of [l.back, l.previous, l.next]) {
+        expect(r.w).toBeGreaterThanOrEqual(44);
+        expect(r.h).toBeGreaterThanOrEqual(44);
+      }
+      expect(apart(l.title, l.back)).toBe(true);
+      expect(apart(l.name, l.title)).toBe(true);
+      expect(apart(l.previous, l.next)).toBe(true);
+    });
+  }
+
+  it('lets a swipe cross the area without touching the back button or the arrows', () => {
+    for (const [, s] of SCREENS) {
+      const l = carouselScreen(s);
+      expect(apart(l.area, l.back)).toBe(true);
+      expect(apart(l.area, l.previous)).toBe(true);
+      expect(apart(l.area, l.next)).toBe(true);
+    }
   });
 });
