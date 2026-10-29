@@ -779,7 +779,7 @@ export class PlanningHudScene extends Phaser.Scene {
     const visible = [this.sellBtn, this.rerollBtn, this.deckBtn].map((b) => b?.container.visible ?? false);
     for (const b of [this.sellBtn, this.rerollBtn, this.deckBtn]) b?.container.destroy();
     this.actionSize = { w, h };
-    const common = { width: w, height: h, fontSize };
+    const common = { width: w, height: h, fontSize, skin: this.controller.state.kingId };
     this.sellBtn = createButton(this, 0, 0, 'Bán bài', {
       ...common,
       onClick: () => this.sell(),
