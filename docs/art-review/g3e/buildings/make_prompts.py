@@ -80,6 +80,7 @@ def main(group, only=None):
         runner.append(f'codex exec --sandbox workspace-write -C "$PWD" -i {REFERENCE} - < {prompt} > .superpowers/codex-b-{ident}.out 2>&1')
         runner.append(f'if [ -s {out} ]; then echo "{ident} ok" >> .superpowers/b-{group}.log; else echo "{ident} MISSING" >> .superpowers/b-{group}.log; fi')
     runner.append(f'echo done >> .superpowers/b-{group}.log')
+    (ROOT / '.superpowers').mkdir(exist_ok=True)  # git-ignored scratch; absent in a fresh worktree
     path = ROOT / f'.superpowers/b-{group}.sh'
     path.write_text('\n'.join(runner) + '\n', encoding='utf-8', newline='\n')
     print(path)
