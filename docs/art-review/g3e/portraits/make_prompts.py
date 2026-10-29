@@ -64,6 +64,7 @@ def main(only=None):
         runner.append(f'codex exec --sandbox workspace-write -C "$PWD" -i {REFERENCE} - < {prompt} > .superpowers/codex-p-{king}.out 2>&1')
         runner.append(f'if [ -s {out} ]; then echo "{king} ok" >> .superpowers/p.log; else echo "{king} MISSING" >> .superpowers/p.log; fi')
     runner.append('echo done >> .superpowers/p.log')
+    (ROOT / '.superpowers').mkdir(exist_ok=True)  # git-ignored scratch; absent in a fresh worktree
     path = ROOT / '.superpowers/p.sh'
     path.write_text('\n'.join(runner) + '\n', encoding='utf-8', newline='\n')
     print(path)
