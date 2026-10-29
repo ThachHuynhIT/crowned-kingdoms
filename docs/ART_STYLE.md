@@ -22,7 +22,7 @@ Giữ ô logic **32 px** và sân logic **384 px**, không đổi mô phỏng th
 | Boss                       | 48×48                  |                                                                                |
 | Đạn / hiệu ứng             | 4×4 – 8×8              | Tia lửa, mũi tên (4 hướng + 4 chéo, vẽ riêng, không xoay), đá, bùn             |
 | Tảng đá can thiệp          | 16×16 + bóng 24×8      |                                                                                |
-| Tranh thẻ                  | 32×24                  | Cửa sổ tranh trong `CardView`                                                  |
+| Tranh thẻ                  | 32×24 (tạm) → **96×72** | Cửa sổ tranh trong `CardView`; 96×72 là tranh minh họa mới đã chốt 29/10/2026 (xem mục "Tranh thẻ") |
 | Icon loại thẻ / tài nguyên | 16×16                  |                                                                                |
 | Chân dung vua              | 32×32                  | Ghép trong ô chọn vua                                                          |
 | Khung thẻ (UI)             | ô nguồn 24×32, slice 8 | `card`, `cardUncommon`, `cardRare`, `cardSelected`                             |
@@ -134,6 +134,20 @@ Bộ chín chân dung **đã được chủ dự án duyệt trong chat (29/10/2
 - **Nền:** cảnh fantasy theo chủ đề của vua (đồng lúa và cối xay, núi và đá rune, kệ sách và vòng rune, rừng cổ thụ, biển bão và hải đăng, lò rèn và dung nham, bánh răng và đồng hồ, trăng khuyết và cổng đá, thảo nguyên và lều), vẽ nhạt và mềm hơn nhân vật để vua là tâm điểm; không khung, viền hay vignette.
 - **Cấm:** chữ, số, khung thẻ (do UI dựng), watermark, làm mờ, anti-aliasing, gradient mượt, nhân vật khác.
 - **Trước khi vào game:** `ảnh nguồn → thu về 96×144 → ép về bảng màu → kiểm → duyệt → đăng ký (assets.manifest.yml, CREDITS.md)`; chưa nối vào `src` khi chưa làm hết các bước này.
+
+## Tranh thẻ
+
+![Hai mẫu tranh thẻ đã duyệt: Bù Nhìn Gác và Lễ Hội Mùa Màng](art-review/style-references/card-art-approved.png)
+
+Phong cách **đã được chủ dự án duyệt trong chat (29/10/2026)** qua hai mẫu Lúa Mì. Ảnh nguồn ở `docs/art-review/g3e/cards/<CardId>/source.png`, prompt cùng thư mục, danh mục 94 thẻ ở `cards.json` (xuất từ registry), công cụ `docs/art-review/g3e/cards/make_prompts.py` (cổng `tools/test_art_prompts.py`).
+
+- **Khung:** ảnh **4:3** (nguồn khoảng 1024×768), thu về **96×72** px ảnh (cỡ native chủ dự án chốt). Một chủ thể rõ ở giữa, chiếm khoảng 70% khung, đọc được khi thu còn 48×36.
+- **Công trình** (lính, tháp, kinh tế, hỗ trợ): dùng **nguyên văn khối "Prompt mẫu dùng lại"** ở mục "Góc nhìn" (công cụ lấy bằng `style_template()`), giữ góc 45° chính diện thấy nóc; phần "transparent background" được ghi đè bằng cảnh nền theo vương quốc. **Bùa, sách, ngai:** một vật/hiệu ứng tiêu biểu hoặc chiếc ngai, cùng góc nhìn.
+- **Màu:** một tông chủ đạo theo vương quốc cùng 2–3 sắc độ và một điểm nhấn ấm; đính kèm chân dung đã duyệt của vua sở hữu thẻ để giữ bảng màu (thẻ trung lập không đính kèm).
+- **Nền:** cảnh sơn nhẹ theo chủ đề vương quốc (đồng lúa và cối xay cho Lúa Mì...), nhạt và mềm hơn chủ thể; không khung, viền, vignette.
+- **Gợi ý hình ảnh từng thẻ** (`VISUAL` trong công cụ) khi tên và chức năng chưa đủ để vẽ đúng chủ thể (ví dụ Bù Nhìn Gác phải có con bù nhìn, không phải nỏ).
+- **Cấm:** chữ, số, khung thẻ (UI dựng), watermark, làm mờ, anti-aliasing, gradient mượt.
+- **Trước khi vào game:** `ảnh nguồn → thu về 96×72 → ép về bảng màu → kiểm → duyệt → đăng ký (assets.manifest.yml, CREDITS.md)` rồi thêm vào `VERTICAL_CARD_ART`; vùng tranh của thẻ nhỏ phải được chỉnh để chứa vừa 96×72 trước khi nối.
 
 ## Hiển thị
 

@@ -75,6 +75,14 @@ THEMES = {
 
 # What the picture must show, per card, when the name and the function are not enough to draw the right subject.
 VISUAL = {
+    'wheat_fertilizer': 'the SUBJECT is one burlap sack of rich dark compost tipped over a patch of young green sprouts, golden-green glowing motes drifting up from it; a small seedling growing; one iconic charm, no building, no people.',
+    'wheat_field': 'a tidy plot of ripe golden wheat in neat rows with a low wooden fence and a small gate in front; the fence posts and the gate have visible height. This is flat farmland, not a house: keep the same 45-degree downward view so the rows recede, and show a few wheat sheaves.',
+    'wheat_granary': 'a wooden granary raised on posts with a ladder, a broad thatched roof, sacks of grain at the door and hanging wheat bundles.',
+    'wheat_militia': 'a humble thatched cottage barracks with a rack of pitchforks and wooden shields beside the door, a small red banner on the roof, and two small peasant militiamen with pitchforks standing in front.',
+    'wheat_peasant_horde': 'a rough camp longhouse with a patched cloth-and-straw roof, a torn red banner on the ridge, pitchforks and scythes leaning on a rack, a hay cart beside it; two or three small angry peasants with pitchforks in front.',
+    'wheat_reapers': 'a farmhouse barn with a clay-tile roof, a big sickle hung beside the door, wheat sheaves, grain baskets, rakes and sacks; a different building from the approved reference house (change the proportions and props).',
+    'wheat_throne': 'the SUBJECT is a throne made of bound golden wheat sheaves and warm wood with golden wheat-ear ornaments, a wheat-emblem banner behind it, standing on a stone dais; front facing, seen from the 45-degree downward view.',
+    'wheat_windmill': 'a stone-and-timber windmill whose body is straight and upright, seen with the camera pitched 45 degrees DOWN: the viewer clearly sees the TOP of the windmill (the upper surface of its cap), with the sails fixed on the front; a flour sack cart at the door.',
     'wheat_scarecrow': 'the SUBJECT is a big straw-hat SCARECROW standing upright on a short wooden watch platform with a small straw roof, holding a sling; ladder at the front, sacks on the rail. The scarecrow is the first thing the eye sees (no crossbow or ballista).',
 }
 
