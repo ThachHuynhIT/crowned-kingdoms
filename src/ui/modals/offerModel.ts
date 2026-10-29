@@ -31,3 +31,15 @@ export const rewardRerollView = (): { label: string; enabled: false; tooltip: st
   enabled: false,
   tooltip: 'Đổi thưởng: Sắp có',
 });
+
+/**
+ * `offerHeading` with the conquered king's name in capitals on a conquest ("CHINH PHỤC VUA ĐÁ NÚI").
+ */
+export const offerHeadingFor = (
+  offers: Pick<CardOfferState, 'kind' | 'king'>,
+  kingName: (id: KingId) => string,
+): { title: string; subtitle: string } => {
+  const heading = offerHeading(offers.kind);
+  if (offers.kind !== 'conquest' || !offers.king) return heading;
+  return { ...heading, title: `${heading.title} ${kingName(offers.king).toLocaleUpperCase('vi')}` };
+};

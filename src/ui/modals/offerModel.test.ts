@@ -1,7 +1,7 @@
 import { describe, expect, it } from 'vitest';
 import type { KingId } from '../../data/types';
 import { CONTENT } from '../../game/cards/registry';
-import { offerHeading, offerTitle, rewardRerollView } from './offerModel';
+import { offerHeading, offerHeadingFor, offerTitle, rewardRerollView } from './offerModel';
 
 const name = (id: KingId) => CONTENT.king(id).nameVi;
 
@@ -45,5 +45,19 @@ describe('rewardRerollView', () => {
     expect(v.label).toBe('ĐỔI THƯỞNG — Sắp có');
     expect(v.tooltip).toContain('Sắp có');
     expect(`${v.label} ${v.tooltip}`).not.toMatch(/\d/);
+  });
+});
+
+describe('offerHeadingFor', () => {
+  it('names the conquered king in capitals on a conquest offer', () => {
+    const h = offerHeadingFor({ kind: 'conquest', king: 'stone' }, name);
+    expect(h.title).toBe(`CHINH PHỤC ${CONTENT.king('stone').nameVi.toLocaleUpperCase('vi')}`);
+    expect(h.subtitle).toBe('CHỌN 1 THẺ');
+  });
+
+  it('is the plain heading for the other kinds and for a conquest without a king', () => {
+    expect(offerHeadingFor({ kind: 'reward' }, name)).toEqual(offerHeading('reward'));
+    expect(offerHeadingFor({ kind: 'questReward' }, name)).toEqual(offerHeading('questReward'));
+    expect(offerHeadingFor({ kind: 'conquest' }, name)).toEqual(offerHeading('conquest'));
   });
 });

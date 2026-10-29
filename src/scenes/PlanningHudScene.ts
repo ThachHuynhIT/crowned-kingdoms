@@ -18,7 +18,7 @@ import { CalendarModal } from '../ui/modals/CalendarModal';
 import { DeckModal } from '../ui/modals/DeckModal';
 import { CLOSE_BUTTON, centredPanel } from '../ui/modals/modalLayout';
 import { createOverlay, fitOverlay } from '../ui/modals/overlay';
-import { offerTitle } from '../ui/modals/offerModel';
+import { offerHeadingFor } from '../ui/modals/offerModel';
 import { CouncilModal } from '../ui/modals/CouncilModal';
 import { QuestModal } from '../ui/modals/QuestModal';
 import { RewardModal } from '../ui/modals/RewardModal';
@@ -325,9 +325,12 @@ export class PlanningHudScene extends Phaser.Scene {
         this,
         CONTENT,
         offers.cardIds,
-        offerTitle(offers, (id) => CONTENT.enemyKing(id).nameVi),
         this.tooltip,
         (index) => this.bus.emit('ui:command', { command: { type: 'pickOffer', index } }),
+        {
+          skin: state.kingId,
+          heading: offerHeadingFor(offers, (id) => CONTENT.enemyKing(id).nameVi),
+        },
       ).setDepth(MODAL_DEPTH);
     }
     if (!choosing && this.pending.handIndex !== null) this.pending = NO_PENDING;
