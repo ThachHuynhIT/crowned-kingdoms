@@ -37,6 +37,11 @@ ICONS = {
     'icon_support': ('Hỗ trợ (loại thẻ)', 'the card kind "support": buildings that buff neighbours.', 'a round wooden-and-steel shield with a green leaf-shaped cross emblem, a small glowing green plus sign above it; wood brown, steel grey, leaf green.'),
     'icon_enchantment': ('Bùa phép (loại thẻ)', 'the card kind "enchantment": a rune charm attached to a building.', 'a round carved stone medallion with a glowing violet rune symbol in the centre, a thin gold ring around it, three small violet sparkles; grey stone, violet rune, gold rim.'),
     'icon_throne': ('Ngai (loại thẻ)', 'the card kind "throne": the throne of the king.', 'a tall high-backed wooden throne with a red cushion and gold trim, a small gold crown on top of the backrest; dark wood, red velvet, gold.'),
+    'icon_gold': ('Vàng (tài nguyên)', 'the resource "gold": the kingdom currency.', 'a stack of three shiny gold coins, the front coin with a small crown stamped on it, a bright highlight on the top-left edge; gold with warm orange shading.'),
+    'icon_life': ('Máu / Mạng (tài nguyên)', 'the resource "life": hit points and lives.', 'a plump red heart with a bright highlight on the top-left and a small steel-grey rim of plating on the lower edge; saturated red with a dark red shade.'),
+    'icon_level': ('Cấp (tài nguyên)', 'the resource "level": the upgrade level of a building.', 'a bold golden upward arrow standing on a short stack of two stone steps, small gold sparkles beside the arrow; gold arrow, grey stone steps.'),
+    'icon_enchant_stack': ('Chồng bùa (tài nguyên)', 'the resource "enchant stack": the number of charms stacked on a building.', 'three round rune discs stacked on top of each other like a short tower, each disc with a different glowing violet rune, the top one brightest; grey stone discs, violet runes, gold rims.'),
+    'icon_soul': ('Linh hồn (tài nguyên)', 'the resource "soul": energy taken from fallen enemies.', 'a ghostly pale cyan-white soul flame shaped like a teardrop with a tiny wisp tail and two small dark eye hollows, a few tiny floating cyan sparks; pale cyan with a deeper teal shade.'),
 }
 
 
