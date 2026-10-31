@@ -33,6 +33,10 @@ ICONS = {
     'icon_troop': ('Lính (loại thẻ)', 'the card kind "troop": a barracks that spawns soldiers.', 'a small steel helmet with a red plume in front of two crossed swords, the helmet is the main shape, swords peek out behind it; steel greys with a red accent.'),
     'icon_tower': ('Tháp (loại thẻ)', 'the card kind "tower": a defensive tower that shoots.', 'a round stone tower with a crenellated top, a small arched door and an arrow slit, a tiny pennant on top; warm grey stone with a wood-brown door.'),
     'icon_tome': ('Bùa/Sách phép (loại thẻ)', 'the card kind "tome": a spell or enchantment.', 'a closed leather spellbook seen slightly from above with a brass clasp and a small glowing gold star on the cover, a few sparkles above it; deep purple leather with gold.'),
+    'icon_economy': ('Kinh tế (loại thẻ)', 'the card kind "economy": buildings that earn gold.', 'a plump leather coin pouch tied with a cord, a few gold coins spilling out in front of it, one coin shown edge-on; warm brown leather with bright gold coins.'),
+    'icon_support': ('Hỗ trợ (loại thẻ)', 'the card kind "support": buildings that buff neighbours.', 'a round wooden-and-steel shield with a green leaf-shaped cross emblem, a small glowing green plus sign above it; wood brown, steel grey, leaf green.'),
+    'icon_enchantment': ('Bùa phép (loại thẻ)', 'the card kind "enchantment": a rune charm attached to a building.', 'a round carved stone medallion with a glowing violet rune symbol in the centre, a thin gold ring around it, three small violet sparkles; grey stone, violet rune, gold rim.'),
+    'icon_throne': ('Ngai (loại thẻ)', 'the card kind "throne": the throne of the king.', 'a tall high-backed wooden throne with a red cushion and gold trim, a small gold crown on top of the backrest; dark wood, red velvet, gold.'),
 }
 
 
