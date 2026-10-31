@@ -153,5 +153,36 @@ class CardPromptGateTest(unittest.TestCase):
             cp.ROOT = old
 
 
+ispec = importlib.util.spec_from_file_location('icon_prompts', ROOT / 'docs/art-review/g3e/icons/make_prompts.py')
+ip = importlib.util.module_from_spec(ispec)
+ispec.loader.exec_module(ip)
+
+
+class IconPromptGateTest(unittest.TestCase):
+    def test_reference_and_style_doc_exist(self):
+        self.assertTrue((ROOT / ip.REFERENCE).exists())
+        self.assertTrue((ROOT / ip.STYLE_DOC).exists())
+
+    def test_every_icon_prompt_points_at_the_doc_and_carries_the_reference(self):
+        for icon in ip.ICONS:
+            p = ip.build_prompt(f'x/{icon}/source.png', icon)
+            self.assertIn('docs/ART_STYLE.md', p, icon)
+            self.assertIn('BẮT BUỘC TRƯỚC KHI VẼ', p, icon)
+            self.assertIn(ip.REFERENCE, p, icon)
+            self.assertIn('32x32', p, icon)
+            self.assertIn('#FF00FF', p, icon)
+            self.assertIn('No text', p, icon)
+
+    def test_generation_is_refused_without_the_doc_or_reference(self):
+        old = ip.ROOT
+        try:
+            with tempfile.TemporaryDirectory() as d:
+                ip.ROOT = Path(d)
+                with self.assertRaises(SystemExit):
+                    ip.build_prompt('x.png', 'icon_troop')
+        finally:
+            ip.ROOT = old
+
+
 if __name__ == '__main__':
     unittest.main()
