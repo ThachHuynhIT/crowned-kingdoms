@@ -45,9 +45,9 @@ describe('edgeDistance / inRange', () => {
 describe('retarget — allies', () => {
   it('picks the nearest foe', () => {
     const w = world();
-    const a = unit(w, TEAM_ALLY, 50, 50);
-    const far = unit(w, TEAM_FOE, 50, 90);
-    const near = unit(w, TEAM_FOE, 80, 50);
+    const a = unit(w, TEAM_ALLY, 50, 150);
+    const far = unit(w, TEAM_FOE, 50, 190);
+    const near = unit(w, TEAM_FOE, 80, 150);
     retarget(w);
     expect(w.target[a]).toBe(near);
     expect(far).toBeGreaterThan(0);
@@ -83,25 +83,25 @@ describe('retarget — allies', () => {
 describe('retarget — foes', () => {
   it('picks the nearest ally unit within enemyAggro, else the throne', () => {
     const w = world();
-    const f = unit(w, TEAM_FOE, 300, 50);
-    const a = unit(w, TEAM_ALLY, 300, 90); // edge 32
+    const f = unit(w, TEAM_FOE, 300, 150);
+    const a = unit(w, TEAM_ALLY, 300, 190); // edge 32
     retarget(w);
     expect(w.target[f]).toBe(a);
 
     const w2 = world();
-    const f2 = unit(w2, TEAM_FOE, 300, 50);
-    unit(w2, TEAM_ALLY, 300, 110); // edge 52 > 48
+    const f2 = unit(w2, TEAM_FOE, 300, 150);
+    unit(w2, TEAM_ALLY, 300, 210); // edge 52 > 48
     retarget(w2);
     expect(w2.target[f2]).toBe(w2.throneId);
   });
 
   it('picks the nearer of two allies, structures included (edge distance)', () => {
     const w = world([structure(4)]); // plot 4 = (256, 128), id 1
-    const f = unit(w, TEAM_FOE, 256, 70); // structure edge 58 − 4 − 12 = 42
-    const a = unit(w, TEAM_ALLY, 256, 20); // edge 42 too, larger id
+    const f = unit(w, TEAM_FOE, 256, 186); // structure edge 58 − 4 − 12 = 42
+    const a = unit(w, TEAM_ALLY, 256, 236); // edge 42 too, larger id
     retarget(w);
     expect(w.target[f]).toBe(1);
-    w.y[a] = 25; // edge 37
+    w.y[a] = 231; // edge 37
     w.tick = BATTLE.retargetTicks;
     retarget(w);
     expect(w.target[f]).toBe(a);

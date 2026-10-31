@@ -18,18 +18,15 @@ import {
   toggleDeckCard,
   toggleSubselection,
 } from './councilModel';
-import { COUNCIL_BUTTON, councilLayout } from './modalLayout';
+import { COUNCIL_BUTTON, COUNCIL_HEADER_H, councilLayout, councilPlotSide } from './modalLayout';
 import { createOverlay, fitOverlay } from './overlay';
 
 const PAD_DESKTOP = 12;
 const PAD_MOBILE = 4;
-const HEADER_H = 24;
-const CELL = 44;
-const MIN_CELL = 36;
 const CELL_GAP = 2;
 const CHIP_H = 44;
 const CHIP_GAP = 4;
-const RARE_CARD = { w: 100, h: 140 } as const;
+const RARE_CARD = { w: 100, h: 150 } as const;
 
 /** The title of the council panel. */
 export const councilTitle = (year: number): string => `Hội Đồng Hoàng Gia — Năm ${year}`;
@@ -62,7 +59,8 @@ export class CouncilModal {
     private readonly tooltip: TooltipHost,
   ) {
     this.overlay = createOverlay(scene);
-    this.box = createPanel(scene, 'panel', 64, 64);
+    const skin = state.kingId;
+    this.box = createPanel(scene, 'panel', 64, 64, 0, 0, skin);
     this.box.image.setInteractive();
     this.title = addUiText(scene, 0, 0, councilTitle(state.year), 18).setOrigin(0.5, 0).setFontStyle('bold');
     for (let i = 0; i < 3; i++) {
@@ -81,6 +79,7 @@ export class CouncilModal {
       height: COUNCIL_BUTTON.h,
       fontSize: 16,
       onClick: () => this.enactNow(),
+      skin,
     });
     this.root = scene.add.container(0, 0, [
       this.overlay,
@@ -194,7 +193,7 @@ export class CouncilModal {
       this.header(a, def ? `${def.nameVi}: ${decreeText(def)}` : '');
       return;
     }
-    const body = { x: a.x, y: a.y + HEADER_H + 4, w: a.w, h: a.h - HEADER_H - 4 };
+    const body = { x: a.x, y: a.y + COUNCIL_HEADER_H + 4, w: a.w, h: a.h - COUNCIL_HEADER_H - 4 };
     if (sub.kind === 'plots') this.buildPlots(a, body, sub);
     else if (sub.kind === 'card') this.buildCards(a, body, sub);
     else this.buildDeck(a, body);
@@ -206,7 +205,7 @@ export class CouncilModal {
       return;
     }
     this.header(a, `Chọn ${sub.limit} ô khoá để mở (${sub.picked.length}/${sub.limit})`);
-    const side0 = Math.max(MIN_CELL, Math.min(CELL, Math.floor((body.h - 4 * CELL_GAP) / 5)));
+    const side0 = councilPlotSide(a.h);
     const side = 5 * side0 + 4 * CELL_GAP;
     const x0 = Math.round(body.x + (body.w - side) / 2);
     for (let plot = 0; plot < 25; plot++) {

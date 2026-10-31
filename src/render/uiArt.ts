@@ -1,4 +1,6 @@
-import { UI_PALETTE } from '../data/uiPalette';
+import { ALL_KINGS } from '../data/rules';
+import type { KingId } from '../data/types';
+import { KING_THEMES, UI_PALETTE, type KingTheme } from '../data/uiPalette';
 import { PixelCanvas, pixelHash } from './pixel';
 
 /**
@@ -53,6 +55,34 @@ export const UI_FRAMES: Readonly<Record<UiFrame, UiFrameDef>> = {
   cardSelected: { w: 24, h: 32, slice: 8, border: 5 },
 };
 
+/** Frames that exist once per king, painted in that king's colours (see `KING_THEMES`). */
+export const SKINNABLE_FRAMES = [
+  'panel',
+  'button',
+  'buttonHover',
+  'buttonDown',
+  'buttonActive',
+  'card',
+  'cardUncommon',
+  'cardRare',
+  'cardSelected',
+  'bar',
+] as const satisfies readonly UiFrame[];
+export type SkinnableFrame = (typeof SKINNABLE_FRAMES)[number];
+/** `panel@wheat`: the skinnable frame `panel` in the Wheat King's colours. */
+export type ThemedFrame = `${SkinnableFrame}@${KingId}`;
+/** Any frame name of the `ui` texture that a nine-slice can use. */
+export type AnyUiFrame = UiFrame | ThemedFrame;
+
+export const themedFrame = (base: SkinnableFrame, king: KingId): ThemedFrame => `${base}@${king}`;
+
+export const UI_THEMED_FRAME_IDS: readonly ThemedFrame[] = ALL_KINGS.flatMap((king) =>
+  SKINNABLE_FRAMES.map((base) => themedFrame(base, king)),
+);
+
+/** The neutral frame a themed one was derived from (same size, slice and border). */
+export const baseFrame = (frame: AnyUiFrame): UiFrame => frame.split('@')[0] as UiFrame;
+
 /** Decorations drawn unstretched. */
 export const UI_DECOR_IDS = ['clockDial', 'firefly'] as const;
 export type UiDecor = (typeof UI_DECOR_IDS)[number];
@@ -66,6 +96,32 @@ export const UI_DECOR: Readonly<Record<UiDecor, { readonly w: number; readonly h
 export const DIAL = { cx: 14, cy: 15, faceR: 9, height: 21 } as const;
 
 const P = UI_PALETTE;
+
+/** The colours a painted frame draws with: `UI_PALETTE`, or a king theme mapped onto the same roles. */
+type Pal = Readonly<
+  Record<
+    'outline' | 'wood' | 'woodDark' | 'woodLight' | 'cream' | 'creamLight' | 'creamDark' | 'gold' | 'select',
+    number
+  >
+>;
+
+const mix = (a: number, b: number, t: number): number => {
+  const ch = (shift: number): number =>
+    Math.round(((a >> shift) & 255) * (1 - t) + ((b >> shift) & 255) * t);
+  return (ch(16) << 16) | (ch(8) << 8) | ch(0);
+};
+
+const themePal = (t: KingTheme): Pal => ({
+  outline: t.bgDark,
+  woodDark: mix(t.bgDark, t.bgMid, 0.5),
+  wood: t.bgMid,
+  woodLight: mix(t.bgMid, t.accent, 0.6),
+  cream: t.panel,
+  creamLight: t.light,
+  creamDark: mix(t.panel, t.bgMid, 0.25),
+  gold: P.gold,
+  select: P.select,
+});
 
 const strokeRect = (
   c: PixelCanvas,
@@ -82,7 +138,7 @@ const strokeRect = (
 };
 
 /** Cut each outer corner (corner pixel + its two neighbours) and close it diagonally. */
-const roundCorners = (c: PixelCanvas): void => {
+const roundCorners = (c: PixelCanvas, outline: number): void => {
   const w = c.width - 1;
   const h = c.height - 1;
   const corners: [number, number, number, number][] = [
@@ -95,7 +151,7 @@ const roundCorners = (c: PixelCanvas): void => {
     c.set(x, y, 0, 0);
     c.set(x + dx, y, 0, 0);
     c.set(x, y + dy, 0, 0);
-    c.set(x + dx, y + dy, P.outline);
+    c.set(x + dx, y + dy, outline);
   }
 };
 
@@ -114,10 +170,13 @@ interface WoodFrame {
   /** Recolour the outer 2 px (outline + first wood row) in the selection red. */
   readonly selectRing?: boolean;
   readonly seed: number;
+  /** Colours to draw with (default `UI_PALETTE`). */
+  readonly pal?: Pal;
 }
 
 /** Short horizontal woodDark grain dashes (2–4 px) inside the wood band. */
 const paintGrain = (c: PixelCanvas, f: WoodFrame): void => {
+  const pal = f.pal ?? P;
   const groove = 1 + f.wood;
   const inBand = (x: number, y: number): boolean => {
     const insideOuter = x >= 2 && y >= 2 && x <= f.w - 3 && y <= f.h - 3;
@@ -128,7 +187,7 @@ const paintGrain = (c: PixelCanvas, f: WoodFrame): void => {
     for (let x = 2; x <= f.w - 3; x++) {
       if (!inBand(x, y) || pixelHash(x, y, f.seed) >= 0.12) continue;
       const len = 2 + Math.floor(pixelHash(y, x, f.seed + 1) * 3);
-      for (let i = 0; i < len && inBand(x + i, y); i++) c.set(x + i, y, P.woodDark);
+      for (let i = 0; i < len && inBand(x + i, y); i++) c.set(x + i, y, pal.woodDark);
       x += len;
     }
   }
@@ -136,35 +195,36 @@ const paintGrain = (c: PixelCanvas, f: WoodFrame): void => {
 
 /** outline → wood (lit edge, grain, shaded edge) → groove → core with an inner shadow. */
 const paintWoodFrame = (f: WoodFrame): PixelCanvas => {
+  const pal = f.pal ?? P;
   const c = new PixelCanvas(f.w, f.h);
-  c.fillRect(0, 0, f.w, f.h, P.wood);
+  c.fillRect(0, 0, f.w, f.h, pal.wood);
   if (f.wood >= 3) paintGrain(c, f);
-  const lit = f.pressed ? P.woodDark : P.woodLight;
-  const shade = f.pressed ? P.woodLight : P.woodDark;
+  const lit = f.pressed ? pal.woodDark : pal.woodLight;
+  const shade = f.pressed ? pal.woodLight : pal.woodDark;
   c.fillRect(1, 1, f.w - 2, 1, lit);
   c.fillRect(1, 1, 1, f.h - 2, lit);
   c.fillRect(1, f.h - 2, f.w - 2, 1, shade);
   c.fillRect(f.w - 2, 1, 1, f.h - 2, shade);
-  strokeRect(c, 0, 0, f.w, f.h, P.outline);
+  strokeRect(c, 0, 0, f.w, f.h, pal.outline);
   const g = 1 + f.wood;
-  strokeRect(c, g, g, f.w - 2 * g, f.h - 2 * g, P.woodDark);
+  strokeRect(c, g, g, f.w - 2 * g, f.h - 2 * g, pal.woodDark);
   const k = g + 1;
   c.fillRect(k, k, f.w - 2 * k, f.h - 2 * k, f.core);
   if (f.lightRing) {
-    strokeRect(c, k, k, f.w - 2 * k, f.h - 2 * k, P.woodLight);
+    strokeRect(c, k, k, f.w - 2 * k, f.h - 2 * k, pal.woodLight);
   } else if (f.gold) {
-    strokeRect(c, k, k, f.w - 2 * k, f.h - 2 * k, P.gold);
+    strokeRect(c, k, k, f.w - 2 * k, f.h - 2 * k, pal.gold);
   } else {
-    c.fillRect(k, k, f.w - 2 * k, 1, P.creamDark);
-    c.fillRect(k, k, 1, f.h - 2 * k, P.creamDark);
+    c.fillRect(k, k, f.w - 2 * k, 1, pal.creamDark);
+    c.fillRect(k, k, 1, f.h - 2 * k, pal.creamDark);
   }
-  roundCorners(c);
+  roundCorners(c, pal.outline);
   if (f.selectRing) {
     for (let i = 0; i < 2; i++) {
       for (let x = i; x < f.w - i; x++)
-        for (const y of [i, f.h - 1 - i]) if (c.alphaAt(x, y) > 0) c.set(x, y, P.select);
+        for (const y of [i, f.h - 1 - i]) if (c.alphaAt(x, y) > 0) c.set(x, y, pal.select);
       for (let y = i; y < f.h - i; y++)
-        for (const x of [i, f.w - 1 - i]) if (c.alphaAt(x, y) > 0) c.set(x, y, P.select);
+        for (const x of [i, f.w - 1 - i]) if (c.alphaAt(x, y) > 0) c.set(x, y, pal.select);
     }
   }
   return c;
@@ -189,29 +249,51 @@ const paintTooltip = (): PixelCanvas => {
   return c;
 };
 
-const paintBar = (): PixelCanvas => {
+const paintBar = (pal: Pal = P): PixelCanvas => {
   const { w, h } = UI_FRAMES.bar;
   const c = new PixelCanvas(w, h);
-  c.fillRect(0, 0, w, h, P.woodDark);
-  strokeRect(c, 0, 0, w, h, P.outline);
+  c.fillRect(0, 0, w, h, pal.woodDark);
+  strokeRect(c, 0, 0, w, h, pal.outline);
   return c;
 };
 
 const wood = (frame: UiFrame, rest: Omit<WoodFrame, 'w' | 'h'>): PixelCanvas =>
   paintWoodFrame({ w: UI_FRAMES[frame].w, h: UI_FRAMES[frame].h, ...rest });
 
-export const paintUiFrame = (frame: UiFrame): PixelCanvas => {
+const paintSkinnable = (frame: SkinnableFrame, pal: Pal): PixelCanvas => {
   switch (frame) {
     case 'panel':
-      return wood(frame, { wood: 4, core: P.cream, seed: 1 });
+      return wood(frame, { wood: 4, core: pal.cream, seed: 1, pal });
     case 'button':
-      return wood(frame, { wood: 2, core: P.cream, seed: 2 });
+      return wood(frame, { wood: 2, core: pal.cream, seed: 2, pal });
     case 'buttonHover':
-      return wood(frame, { wood: 2, core: P.creamLight, seed: 2 });
+      return wood(frame, { wood: 2, core: pal.creamLight, seed: 2, pal });
     case 'buttonDown':
-      return wood(frame, { wood: 2, core: P.creamDark, pressed: true, seed: 2 });
+      return wood(frame, { wood: 2, core: pal.creamDark, pressed: true, seed: 2, pal });
     case 'buttonActive':
-      return wood(frame, { wood: 2, core: P.cream, gold: true, seed: 2 });
+      return wood(frame, { wood: 2, core: pal.cream, gold: true, seed: 2, pal });
+    case 'bar':
+      return paintBar(pal);
+    case 'card':
+      return wood(frame, { wood: 2, core: pal.cream, seed: 3, pal });
+    case 'cardUncommon':
+      return wood(frame, { wood: 2, core: pal.cream, lightRing: true, seed: 3, pal });
+    case 'cardRare':
+      return wood(frame, { wood: 2, core: pal.cream, gold: true, seed: 3, pal });
+    case 'cardSelected':
+      return wood(frame, { wood: 3, core: pal.cream, selectRing: true, seed: 3, pal });
+  }
+};
+
+/** One frame; a `base@king` name paints the base frame in that king's colours. */
+export const paintUiFrame = (frame: AnyUiFrame): PixelCanvas => {
+  const at = frame.indexOf('@');
+  if (at >= 0) {
+    const pal = themePal(KING_THEMES[frame.slice(at + 1) as KingId]);
+    return paintSkinnable(frame.slice(0, at) as SkinnableFrame, pal);
+  }
+  const base = frame as UiFrame;
+  switch (base) {
     case 'slot':
       return paintSlot(P.woodDark, 1, P.cream);
     case 'slotHover':
@@ -220,16 +302,8 @@ export const paintUiFrame = (frame: UiFrame): PixelCanvas => {
       return paintSlot(P.select, 2, P.cream);
     case 'tooltip':
       return paintTooltip();
-    case 'bar':
-      return paintBar();
-    case 'card':
-      return wood(frame, { wood: 2, core: P.cream, seed: 3 });
-    case 'cardUncommon':
-      return wood(frame, { wood: 2, core: P.cream, lightRing: true, seed: 3 });
-    case 'cardRare':
-      return wood(frame, { wood: 2, core: P.cream, gold: true, seed: 3 });
-    case 'cardSelected':
-      return wood(frame, { wood: 3, core: P.cream, selectRing: true, seed: 3 });
+    default:
+      return paintSkinnable(base, P);
   }
 };
 

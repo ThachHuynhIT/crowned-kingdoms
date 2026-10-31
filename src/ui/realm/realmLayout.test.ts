@@ -1,4 +1,5 @@
 import { describe, expect, it } from 'vitest';
+import { cardLayout, fitArt } from '../cards/cardLayout';
 import { CARD_LIFT, type Rect, type Size } from '../hud/layout';
 import {
   PLANNING_ZOOM,
@@ -52,18 +53,18 @@ describe('planningLayout', () => {
     const l = planningLayout(DESKTOP);
     expect(l.desktop).toBe(true);
     expect(l.lives).toEqual({ x: 10, y: 10, w: 120, h: 52 });
-    expect(l.year).toEqual({ x: 560, y: 10, w: 160, h: 52 });
+    expect(l.year).toEqual({ x: 560, y: 66, w: 160, h: 26 });
     expect(l.board).toEqual({ x: 480, y: 200, w: 320, h: 320 });
     expect(l.zoom).toBe(2);
-    expect(l.scout).toMatchObject({ x: 1010, w: 260, y: 92, h: 428 });
+    expect(l.scout).toMatchObject({ x: 1010, w: 260, y: 92, h: 426 });
     expect(l.scoutButton).toBeNull();
     expect(l.gold).toEqual({ x: 134, y: 10, w: 120, h: 52 });
-    expect(l.calendar[0]).toEqual({ x: 994, y: 10, w: 52, h: 52 });
+    expect(l.calendar[0]).toEqual({ x: 502, y: 10, w: 52, h: 52 });
     expect(l.sell).toEqual({ x: 296, y: 658, w: 140, h: 52 });
     expect(l.reroll).toEqual({ x: 296, y: 598, w: 140, h: 52 });
     expect(l.deck).toEqual({ x: 844, y: 658, w: 140, h: 52 });
     expect(l.hand).toHaveLength(3);
-    expect(l.hand[0]).toEqual({ x: 448, y: 542, w: 120, h: 168 });
+    expect(l.hand[0]).toEqual({ x: 448, y: 534, w: 120, h: 176 });
     expect(l.hand[2]!.x).toBe(448 + 2 * 132);
     expect(l.fight.w).toBe(200);
     expect(l.fight.h).toBe(56);
@@ -74,12 +75,13 @@ describe('planningLayout', () => {
     expect(l.desktop).toBe(false);
     expect(l.lives).toEqual({ x: 10, y: 10, w: 96, h: 48 });
     expect(l.gold).toEqual({ x: 110, y: 10, w: 96, h: 48 });
-    expect(l.year.x).toBe(210);
+    expect(l.help).toEqual({ x: 210, y: 10, w: 52, h: 48 });
+    expect(l.year.x).toBe(266);
     expect(l.year.x + l.year.w).toBe(365);
     expect(l.board).toEqual({ x: 28, y: 180, w: 320, h: 320 });
     expect(l.zoom).toBe(2);
     expect(l.hand).toHaveLength(3);
-    expect(l.hand[0]).toEqual({ x: 18, y: 650, w: 108, h: 152 });
+    expect(l.hand[0]).toEqual({ x: 18, y: 640, w: 108, h: 162 });
     expect(l.hand[1]!.x).toBe(134);
     expect(l.scout).toBeNull();
     expect(l.scoutButton).toEqual({ x: 313, y: 64, w: 52, h: 52 });
@@ -92,6 +94,14 @@ describe('planningLayout', () => {
   ] as const) {
     it(`leaves room for a lifted selected card under the panels above the hand (${name})`, () => {
       const l = planningLayout(screen);
+      for (const card of l.hand) {
+        const lifted = { ...card, y: card.y - CARD_LIFT };
+        expectSeparate({ lifted, board: l.board, sell: l.sell, reroll: l.reroll, deck: l.deck });
+      }
+    });
+
+    it(`selected_lift_clear_of_actions: with four cards too (${name})`, () => {
+      const l = planningLayout(screen, 4);
       for (const card of l.hand) {
         const lifted = { ...card, y: card.y - CARD_LIFT };
         expectSeparate({ lifted, board: l.board, sell: l.sell, reroll: l.reroll, deck: l.deck });
@@ -119,6 +129,9 @@ describe('planningLayout', () => {
         reroll: l.reroll,
         deck: l.deck,
         ...Object.fromEntries(l.calendar.map((r, i) => [`cal${i}`, r])),
+        ...Object.fromEntries(l.calendarLinks.map((r, i) => [`link${i}`, r])),
+        allyStatus: l.allyStatus,
+        foeStatus: l.foeStatus,
       };
       if (l.scout) named.scout = l.scout;
       if (l.scoutButton) named.scoutButton = l.scoutButton;
@@ -155,6 +168,70 @@ describe('planningLayout', () => {
       { w: 600, h: 1400 },
     ])
       expect(() => planningLayout(s)).not.toThrow();
+  });
+});
+
+describe('planning header and status zones', () => {
+  const ODD: Size = { w: 900, h: 600 };
+  const SIZES: readonly [string, Size][] = [
+    ['desktop', DESKTOP],
+    ['768', { w: 768, h: 1024 }],
+    ['mobile', MOBILE],
+    ['767', { w: 767, h: 900 }],
+    ['odd 900×600', ODD],
+  ];
+
+  for (const [name, screen] of SIZES) {
+    it(`planning_header_zones_do_not_overlap: lives, gold, help, year, calendar and links (${name})`, () => {
+      const l = planningLayout(screen);
+      const zones: Record<string, Rect> = {
+        lives: l.lives, gold: l.gold, help: l.help, year: l.year,
+        ...Object.fromEntries(l.calendar.map((r, i) => [`cal${i}`, r])),
+      };
+      const names = Object.keys(zones);
+      for (let i = 0; i < names.length; i++) {
+        for (let j = i + 1; j < names.length; j++) expect(overlaps(zones[names[i]!]!, zones[names[j]!]!), `${names[i]} × ${names[j]}`).toBe(false);
+      }
+      for (const link of l.calendarLinks) {
+        expect(l.calendarLinks).toHaveLength(4);
+        for (const c of l.calendar) expect(overlaps(link, c)).toBe(false);
+      }
+    });
+  }
+
+  it('desktop: the five-year strip is centred on the screen with the year label right under it', () => {
+    const l = planningLayout(DESKTOP);
+    const first = l.calendar[0]!;
+    const last = l.calendar[4]!;
+    expect((first.x + last.x + last.w) / 2).toBeCloseTo(DESKTOP.w / 2, 0);
+    expect(l.year.y).toBeGreaterThanOrEqual(first.y + first.h);
+    expect(l.year.x + l.year.w / 2).toBeCloseTo(DESKTOP.w / 2, 0);
+  });
+
+  it('phone_board_is_320_square: the board keeps its size under the new header', () => {
+    const l = planningLayout(MOBILE);
+    expect([l.board.w, l.board.h]).toEqual([320, 320]);
+    for (const r of [...l.calendar, l.year, l.help]) expect(r.y + r.h).toBeLessThanOrEqual(l.board.y);
+  });
+
+  for (const [name, screen] of [['desktop', DESKTOP], ['mobile', MOBILE]] as const) {
+    it(`four_card_hand_and_actions_clear_board: status rows sit apart from the hand, the actions and the board (${name})`, () => {
+      const l = planningLayout(screen, 4);
+      for (const status of [l.allyStatus, l.foeStatus]) {
+        expect(inside(status, screen)).toBe(true);
+        for (const other of [l.board, l.reroll, l.sell, l.deck, ...l.hand.map((r) => ({ ...r, y: r.y - 12 }))]) {
+          expect(overlaps(status, other), JSON.stringify([status, other])).toBe(false);
+        }
+      }
+      expect(overlaps(l.allyStatus, l.foeStatus)).toBe(false);
+    });
+  }
+
+  it('the two status rows are on opposite sides: ally left, enemy right', () => {
+    for (const screen of [DESKTOP, MOBILE]) {
+      const l = planningLayout(screen);
+      expect(l.allyStatus.x).toBeLessThan(l.foeStatus.x);
+    }
   });
 });
 
@@ -372,60 +449,111 @@ describe('battleZoom', () => {
 });
 
 describe('battleLayout', () => {
-  for (const [name, screen] of [
+  const SIZES: readonly [string, Size][] = [
     ['desktop', DESKTOP],
+    ['768', { w: 768, h: 1024 }],
+    ['odd 900×600', { w: 900, h: 600 }],
     ['mobile', MOBILE],
-  ] as const) {
-    it(`places the battle HUD on screen without overlaps (${name})`, () => {
+    ['767', { w: 767, h: 900 }],
+  ];
+  const partsOf = (l: ReturnType<typeof battleLayout>): Record<string, Rect> => ({
+    clock: l.clock,
+    lives: l.lives,
+    gold: l.gold,
+    help: l.help,
+    year: l.year,
+    foes: l.foes,
+    waves: l.waves,
+    intervene: l.intervene,
+    auto: l.auto,
+    allyStatus: l.allyStatus,
+    foeStatus: l.foeStatus,
+    bossStatus: l.bossStatus,
+    ...Object.fromEntries(l.speed.map((r, i) => [`speed${i}`, r])),
+    ...Object.fromEntries(l.calendar.map((r, i) => [`cal${i}`, r])),
+  });
+
+  for (const [name, screen] of SIZES) {
+    it(`battle_top_controls_fit: every part is on screen and apart (${name})`, () => {
       const l = battleLayout(screen);
-      expect(l.clock.w).toBe(260);
-      expect(l.clock.h).toBe(52);
-      expect(l.foes.w).toBe(140);
-      expect(l.foes.h).toBe(52);
+      const parts = partsOf(l);
+      for (const [n, r] of Object.entries(parts)) expect(inside(r, screen), `${n} ${JSON.stringify(r)}`).toBe(true);
+      expectSeparate(parts);
+      for (const link of l.calendarLinks) for (const c of l.calendar) expect(overlaps(link, c)).toBe(false);
       expect(l.speed).toHaveLength(4);
-      l.speed.forEach((b, i) => {
-        expect(b.w).toBe(48);
-        expect(b.h).toBe(48);
-        if (i > 0) expect(b.x - (l.speed[i - 1]!.x + 48)).toBe(2);
-        expect(b.y).toBe(l.speed[0]!.y);
-      });
-      expect(l.speed[0]!.x).toBe(10);
-      expect(l.speed[0]!.y + 48).toBe(screen.h - 10);
-      expect(l.intervene).toEqual({ x: screen.w - 10 - 72, y: screen.h - 10 - 72, w: 72, h: 72 });
-      for (const b of [l.auto, l.waves, l.intervene]) {
-        expect(b.w).toBeGreaterThanOrEqual(44);
-        expect(b.h).toBeGreaterThanOrEqual(44);
+      for (const b of [...l.speed, l.auto, l.waves, l.intervene, l.help]) {
+        expect(b.w, JSON.stringify(b)).toBeGreaterThanOrEqual(44);
+        expect(b.h, JSON.stringify(b)).toBeGreaterThanOrEqual(44);
       }
-      expect(l.auto.x + l.auto.w).toBe(l.intervene.x + l.intervene.w); // right-aligned above Can Thiệp
-      expect(l.auto.y + l.auto.h).toBeLessThanOrEqual(l.intervene.y);
-      expect(l.waves.x + l.waves.w).toBe(l.foes.x + l.foes.w); // right-aligned below the foes panel
-      expect(l.waves.y).toBeGreaterThanOrEqual(l.foes.y + l.foes.h);
-      const all = {
-        clock: l.clock,
-        lives: l.lives,
-        gold: l.gold,
-        foes: l.foes,
-        intervene: l.intervene,
-        auto: l.auto,
-        waves: l.waves,
-      };
-      l.speed.forEach((b, i) => Object.assign(all, { [`speed${i}`]: b }));
-      for (const r of Object.values(all)) expect(inside(r, screen), JSON.stringify(r)).toBe(true);
-      expectSeparate(all);
+      for (const b of l.speed) expect([b.w, b.h]).toEqual([48, 48]);
+    });
+
+    it(`bottom_health_bars_do_not_overlap: ally bar left, enemy bar right, at the bottom (${name})`, () => {
+      const l = battleLayout(screen);
+      expect(l.allyStatus.x).toBeLessThan(l.foeStatus.x);
+      expect(overlaps(l.allyStatus, l.foeStatus)).toBe(false);
+      for (const r of [l.allyStatus, l.foeStatus]) {
+        expect(r.y + r.h).toBe(screen.h - 10);
+        expect(r.w).toBeGreaterThanOrEqual(170);
+      }
+      expect(l.intervene.x).toBe(l.allyStatus.x);
+      expect(l.intervene.y + l.intervene.h).toBeLessThanOrEqual(l.allyStatus.y);
     });
   }
 
-  it('ends the intervene button 10 px from the bottom-right corner on desktop', () => {
-    const { intervene } = battleLayout(DESKTOP);
-    expect(intervene.x + intervene.w).toBe(1270);
-    expect(intervene.y + intervene.h).toBe(710);
+  it('desktop: the speed controls sit in the top-right corner', () => {
+    const l = battleLayout(DESKTOP);
+    expect(new Set(l.speed.map((b) => b.y)).size).toBe(1);
+    expect(l.speed[0]!.y).toBe(10);
+    expect(l.speed[3]!.x + l.speed[3]!.w).toBe(1270);
+    l.speed.forEach((b, i) => {
+      if (i > 0) expect(b.x - (l.speed[i - 1]!.x + 48)).toBe(2);
+    });
+    expect(l.waves.x + l.waves.w).toBe(l.foes.x + l.foes.w);
+    expect(l.waves.y).toBeGreaterThanOrEqual(l.foes.y + l.foes.h);
   });
 
-  it('reuses the planning lives and gold panels', () => {
-    expect(battleLayout(DESKTOP).gold).toEqual(planningLayout(DESKTOP).gold);
-    expect(battleLayout(MOBILE).gold).toEqual(planningLayout(MOBILE).gold);
-    expect(battleLayout(DESKTOP).lives).toEqual(planningLayout(DESKTOP).lives);
-    expect(battleLayout(MOBILE).lives).toEqual(planningLayout(MOBILE).lives);
+  it('phone_speed_wraps_into_two_rows: two rows of two on the right, above the enemy bar', () => {
+    const l = battleLayout(MOBILE);
+    expect(new Set(l.speed.map((b) => b.y)).size).toBe(2);
+    expect(new Set(l.speed.map((b) => b.x)).size).toBe(2);
+    for (const b of l.speed) expect(b.y + b.h).toBeLessThanOrEqual(l.foeStatus.y);
+    expect(l.speed[1]!.x + l.speed[1]!.w).toBe(MOBILE.w - 10);
+  });
+
+  it('shows the same year strip and year label as the planning HUD, with the clock under it', () => {
+    for (const screen of [DESKTOP, MOBILE]) {
+      const b = battleLayout(screen);
+      const p = planningLayout(screen);
+      expect(b.calendar).toEqual(p.calendar);
+      expect(b.year).toEqual(p.year);
+      expect(b.clock.y).toBeGreaterThanOrEqual(b.year.y + b.year.h);
+    }
+  });
+
+  it('boss_and_summary_clear_controls: the boss row is below the clock and apart from every control', () => {
+    for (const [, screen] of SIZES) {
+      const l = battleLayout(screen);
+      expect(l.bossStatus.y).toBeGreaterThanOrEqual(l.clock.y + l.clock.h);
+      for (const r of [...l.speed, l.auto, l.waves, l.intervene, l.foes, l.help]) expect(overlaps(l.bossStatus, r)).toBe(false);
+    }
+  });
+
+  it('puts Can Thiệp bottom-left with Tự bắn right beside it, above the ally bar', () => {
+    for (const screen of [DESKTOP, MOBILE]) {
+      const l = battleLayout(screen);
+      expect([l.intervene.w, l.intervene.h]).toEqual([72, 72]);
+      expect(l.auto.x).toBeGreaterThanOrEqual(l.intervene.x + l.intervene.w);
+      expect(l.auto.y + l.auto.h).toBeLessThanOrEqual(l.allyStatus.y);
+    }
+  });
+
+  it('reuses the planning lives, gold and help', () => {
+    for (const screen of [DESKTOP, MOBILE]) {
+      const b = battleLayout(screen);
+      const p = planningLayout(screen);
+      expect([b.lives, b.gold, b.help]).toEqual([p.lives, p.gold, p.help]);
+    }
   });
 });
 
@@ -510,7 +638,21 @@ describe('hand of four (Bàn Tay Thứ Tư)', () => {
   it('shrinks the cards on mobile only as far as needed and keeps their proportions', () => {
     const [a] = planningLayout(MOBILE, 4).hand;
     expect(a!.w).toBeLessThan(108);
-    expect(a!.w / a!.h).toBeCloseTo(108 / 152, 1);
+    expect(a!.w / a!.h).toBeCloseTo(108 / 162, 1);
+  });
+
+  it('four_cards_fit_phone: every card of a four-card hand fits the vertical card layout in compact density', () => {
+    const { hand } = planningLayout(MOBILE, 4);
+    for (const r of hand) {
+      expect(r.w).toBeGreaterThanOrEqual(72);
+      expect(r.w).toBeLessThan(100); // compact density
+      const l = cardLayout({ w: r.w, h: r.h }, 4, 'compact');
+      for (const part of [l.header, l.art, l.badge, l.description]) {
+        expect(part.x + part.w).toBeLessThanOrEqual(r.w);
+        expect(part.y + part.h).toBeLessThanOrEqual(r.h);
+      }
+      expect(fitArt(l.art, { w: 32, h: 24 }).scale).toBeGreaterThanOrEqual(2);
+    }
   });
 
   it('centerHand centres a short hand on the four-slot row', () => {

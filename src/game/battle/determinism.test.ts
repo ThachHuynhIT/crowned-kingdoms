@@ -21,7 +21,7 @@ import { createBattle, drainEvents, type BattleWorld } from './world';
 
 const militia = unitStats({ unit: 'militia', hp: 32, dmg: 5, speed: 1 });
 const bandit = unitStats({ unit: 'bandit', hp: 30, dmg: 5, speed: 0.9 });
-/** Kỵ nhanh để đợt đầu đã tới vùng tảng đá (192, 100) ở tick 36. */
+/** Kỵ nhanh để đợt đầu (xuất từ phía nam, y ≈ 396) đã tới vùng tảng đá (192, 290) ở tick 36. */
 const boar = unitStats({ unit: 'boar_rider', hp: 50, dmg: 8, speed: 3, radius: 5, armor: 0.1 });
 
 const troop = (plot: number): StructureSetup =>
@@ -58,10 +58,10 @@ const STRUCTURES: readonly StructureSetup[] = [
 const SETUP: BattleSetup = battleSetup({
   year: 3,
   structures: STRUCTURES,
-  waves: [wave(0, 'N', 'E'), wave(120, 'S', 'W')],
+  waves: [wave(0, 'S', 'S'), wave(120, 'S', 'S')],
 });
 
-const INPUTS: readonly BattleInput[] = [{ tick: 30, x: 192, y: 100 }];
+const INPUTS: readonly BattleInput[] = [{ tick: 30, x: 192, y: 290 }];
 
 const step = (w: BattleWorld, inputs: readonly BattleCommand[]): void => {
   const tick = w.tick;

@@ -1,7 +1,11 @@
 import Phaser from 'phaser';
+import { ALL_KINGS } from '../data/rules';
 import { UI_PALETTE } from '../data/uiPalette';
 import { CONTENT } from '../game/cards/registry';
 import { buildSpritesTexture, buildUiTexture } from '../render/atlas';
+import { WALL_IMAGES, WALL_IMAGE_DIR, wallImageKey } from '../render/mountainWallAssets';
+import { IMAGE_ART_DIR, IMAGE_ART_FILES, imageArtKey } from '../render/imageArt';
+import { PORTRAIT_ASSETS, PORTRAIT_DIR, portraitTextureKey } from '../render/portraitAssets';
 import type { UiFrame } from '../render/uiArt';
 import { UI_KIT_DIR, UI_KIT_FILES, kitTextureKey } from '../render/uiKit';
 import { textStyle } from '../ui/theme';
@@ -27,6 +31,12 @@ export class PreloadScene extends Phaser.Scene {
     for (const [frame, file] of Object.entries(UI_KIT_FILES) as [UiFrame, string][]) {
       this.load.image(kitTextureKey(frame), UI_KIT_DIR + file);
     }
+    // Image art (G3e ai-v1); a file that fails to load leaves the generated art in its place.
+    for (const file of IMAGE_ART_FILES) this.load.image(imageArtKey(file), `${IMAGE_ART_DIR}${file}.png`);
+    // Mountain wall backdrop per king (G3e); a file that fails to load leaves the placeholder wall.
+    for (const s of WALL_IMAGES) this.load.image(wallImageKey(s.id), `${WALL_IMAGE_DIR}${s.id}.png`);
+    // King portraits (G3e), 96×144 each; a file that fails to load leaves the generated placeholder portrait.
+    for (const id of ALL_KINGS) this.load.image(portraitTextureKey(id), `${PORTRAIT_DIR}${PORTRAIT_ASSETS[id].file}`);
     // Real assets (atlases, audio) will be queued here with this.load.*.
   }
 

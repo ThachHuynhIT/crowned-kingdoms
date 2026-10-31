@@ -55,12 +55,10 @@ export function buildYearArmy(state: RunState, content: Content): ArmyPlan {
       // Cờ hiệu `enemyCostPct` làm đổi giá đơn vị khi tính ngân sách (spec §3.6).
       const costMult =
         1 + king.banner.effects.reduce((sum, e) => (e.type === 'enemyCostPct' ? sum + e.pct : sum), 0) / 100;
-      const extraEdges = king.banner.effects.reduce((sum, e) => (e.type === 'extraEdge' ? sum + e.count : sum), 0);
       return composeArmy(entries(content.enemyRoster(kingId), costMult), budget(slotMultFor(slot)), year, state.seed, {
         attacker: kingId,
         attackNo: slot.attack,
         banner: king.banner.id,
-        extraEdges,
       });
     }
     case 'coalition': {

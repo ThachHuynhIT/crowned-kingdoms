@@ -30,6 +30,13 @@ describe('uiKit', () => {
     expect(uiFrameDef('button')).toBe(UI_FRAMES.button);
   });
 
+  it('kit_does_not_override_themed_frames: activating every kit frame leaves king frames generated', () => {
+    activateUiKitFrames(Object.keys(UI_KIT_FILES) as (keyof typeof UI_KIT_FILES)[]);
+    expect(uiFrameDef('panel@wheat')).toEqual(UI_FRAMES.panel);
+    expect(uiFrameDef('card@arcane')).toEqual(UI_FRAMES.card);
+    expect(uiFrameDef('panel')).toBe(UI_KIT_FRAME);
+  });
+
   it('uses one texture key per frame', () => {
     expect(kitTextureKey('panel')).not.toBe(kitTextureKey('button'));
   });

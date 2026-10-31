@@ -1,5 +1,5 @@
 import type Phaser from 'phaser';
-import type { CardId } from '../../data/types';
+import type { CardId, KingId } from '../../data/types';
 import type { Content } from '../../game/cards/registry';
 import { CardView } from '../cards/CardView';
 import type { Rect } from '../hud/layout';
@@ -13,7 +13,7 @@ export class HandView {
 
   constructor(scene: Phaser.Scene, content: Content, tooltip: TooltipHost, slots = 4) {
     this.cards = Array.from({ length: slots }, (_, i) => {
-      const card = new CardView(scene, content, { w: 120, h: 168 }, tooltip);
+      const card = new CardView(scene, content, { w: 120, h: 176 }, tooltip);
       card.onClick(() => this.handler?.(i));
       card.onDrop((x, y) => this.dropper?.(i, x, y));
       return card;
@@ -39,6 +39,11 @@ export class HandView {
       card.setCard(hand[i] ?? null, { badge: badges[i] ?? null });
       card.setDimmed(dimmed[i] ?? false);
     });
+  }
+
+  /** Paint every card frame in a king's colours (`null`: the neutral frame). */
+  setTheme(king: KingId | null): void {
+    for (const card of this.cards) card.setTheme(king);
   }
 
   setSelected(index: number | null): void {

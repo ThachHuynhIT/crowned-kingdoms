@@ -85,3 +85,983 @@ assets:
     nativeSize: 48x48
     finalSize: 48x48
     notes: 9-slice (slice 8). Outline/red: cardSelected; see src/render/uiKit.ts
+  - id: world_ai_v1_spearman_0
+    path: public/assets/art/ai-v1/spearman_0.png
+    category: world
+    origin: custom
+    source: docs/art-review/g3e/ai-v1/source-sheet.webp
+    creator: Project owner (OpenAI imagegen via Codex; prompt in docs/art-review/g3e/ai-v1/README.md)
+    license: project-owned
+    attribution: false
+    redistribute: true
+    evidence: docs/art-review/g3e/ai-v1/
+    modified: true
+    nativeSize: ~24x32
+    finalSize: 48x34
+    notes: Spearman pose 0; block-downsampled from the source sheet and padded to a feet-aligned canvas; drawn at scale 0.5 (see src/render/imageArt.ts)
+  - id: world_ai_v1_spearman_foe_0
+    path: public/assets/art/ai-v1/spearman_foe_0.png
+    category: world
+    origin: custom
+    source: docs/art-review/g3e/ai-v1/source-sheet.webp
+    creator: Project owner (OpenAI imagegen via Codex; prompt in docs/art-review/g3e/ai-v1/README.md)
+    license: project-owned
+    attribution: false
+    redistribute: true
+    evidence: docs/art-review/g3e/ai-v1/
+    modified: true
+    nativeSize: ~24x32
+    finalSize: 48x34
+    notes: Foe recolour of spearman pose 0 (blue sash made red) by docs/art-review/g3e/ai-v1/make_assets.py
+  - id: world_ai_v1_spearman_1
+    path: public/assets/art/ai-v1/spearman_1.png
+    category: world
+    origin: custom
+    source: docs/art-review/g3e/ai-v1/source-sheet.webp
+    creator: Project owner (OpenAI imagegen via Codex; prompt in docs/art-review/g3e/ai-v1/README.md)
+    license: project-owned
+    attribution: false
+    redistribute: true
+    evidence: docs/art-review/g3e/ai-v1/
+    modified: true
+    nativeSize: ~24x32
+    finalSize: 48x34
+    notes: Spearman pose 1; block-downsampled from the source sheet and padded to a feet-aligned canvas; drawn at scale 0.5 (see src/render/imageArt.ts)
+  - id: world_ai_v1_spearman_foe_1
+    path: public/assets/art/ai-v1/spearman_foe_1.png
+    category: world
+    origin: custom
+    source: docs/art-review/g3e/ai-v1/source-sheet.webp
+    creator: Project owner (OpenAI imagegen via Codex; prompt in docs/art-review/g3e/ai-v1/README.md)
+    license: project-owned
+    attribution: false
+    redistribute: true
+    evidence: docs/art-review/g3e/ai-v1/
+    modified: true
+    nativeSize: ~24x32
+    finalSize: 48x34
+    notes: Foe recolour of spearman pose 1 (blue sash made red) by docs/art-review/g3e/ai-v1/make_assets.py
+  - id: world_ai_v1_spearman_2
+    path: public/assets/art/ai-v1/spearman_2.png
+    category: world
+    origin: custom
+    source: docs/art-review/g3e/ai-v1/source-sheet.webp
+    creator: Project owner (OpenAI imagegen via Codex; prompt in docs/art-review/g3e/ai-v1/README.md)
+    license: project-owned
+    attribution: false
+    redistribute: true
+    evidence: docs/art-review/g3e/ai-v1/
+    modified: true
+    nativeSize: ~24x32
+    finalSize: 48x34
+    notes: Spearman pose 2; block-downsampled from the source sheet and padded to a feet-aligned canvas; drawn at scale 0.5 (see src/render/imageArt.ts)
+  - id: world_ai_v1_spearman_foe_2
+    path: public/assets/art/ai-v1/spearman_foe_2.png
+    category: world
+    origin: custom
+    source: docs/art-review/g3e/ai-v1/source-sheet.webp
+    creator: Project owner (OpenAI imagegen via Codex; prompt in docs/art-review/g3e/ai-v1/README.md)
+    license: project-owned
+    attribution: false
+    redistribute: true
+    evidence: docs/art-review/g3e/ai-v1/
+    modified: true
+    nativeSize: ~24x32
+    finalSize: 48x34
+    notes: Foe recolour of spearman pose 2 (blue sash made red) by docs/art-review/g3e/ai-v1/make_assets.py
+  - id: world_ai_v1_spearman_3
+    path: public/assets/art/ai-v1/spearman_3.png
+    category: world
+    origin: custom
+    source: docs/art-review/g3e/ai-v1/source-sheet.webp
+    creator: Project owner (OpenAI imagegen via Codex; prompt in docs/art-review/g3e/ai-v1/README.md)
+    license: project-owned
+    attribution: false
+    redistribute: true
+    evidence: docs/art-review/g3e/ai-v1/
+    modified: true
+    nativeSize: ~24x32
+    finalSize: 48x34
+    notes: Spearman pose 3; block-downsampled from the source sheet and padded to a feet-aligned canvas; drawn at scale 0.5 (see src/render/imageArt.ts)
+  - id: world_ai_v1_spearman_foe_3
+    path: public/assets/art/ai-v1/spearman_foe_3.png
+    category: world
+    origin: custom
+    source: docs/art-review/g3e/ai-v1/source-sheet.webp
+    creator: Project owner (OpenAI imagegen via Codex; prompt in docs/art-review/g3e/ai-v1/README.md)
+    license: project-owned
+    attribution: false
+    redistribute: true
+    evidence: docs/art-review/g3e/ai-v1/
+    modified: true
+    nativeSize: ~24x32
+    finalSize: 48x34
+    notes: Foe recolour of spearman pose 3 (blue sash made red) by docs/art-review/g3e/ai-v1/make_assets.py
+  - id: world_ai_v1_spearman_4
+    path: public/assets/art/ai-v1/spearman_4.png
+    category: world
+    origin: custom
+    source: docs/art-review/g3e/ai-v1/source-sheet.webp
+    creator: Project owner (OpenAI imagegen via Codex; prompt in docs/art-review/g3e/ai-v1/README.md)
+    license: project-owned
+    attribution: false
+    redistribute: true
+    evidence: docs/art-review/g3e/ai-v1/
+    modified: true
+    nativeSize: ~24x32
+    finalSize: 48x34
+    notes: Spearman pose 4; block-downsampled from the source sheet and padded to a feet-aligned canvas; drawn at scale 0.5 (see src/render/imageArt.ts)
+  - id: world_ai_v1_spearman_foe_4
+    path: public/assets/art/ai-v1/spearman_foe_4.png
+    category: world
+    origin: custom
+    source: docs/art-review/g3e/ai-v1/source-sheet.webp
+    creator: Project owner (OpenAI imagegen via Codex; prompt in docs/art-review/g3e/ai-v1/README.md)
+    license: project-owned
+    attribution: false
+    redistribute: true
+    evidence: docs/art-review/g3e/ai-v1/
+    modified: true
+    nativeSize: ~24x32
+    finalSize: 48x34
+    notes: Foe recolour of spearman pose 4 (blue sash made red) by docs/art-review/g3e/ai-v1/make_assets.py
+  - id: world_ai_v1_spearman_5
+    path: public/assets/art/ai-v1/spearman_5.png
+    category: world
+    origin: custom
+    source: docs/art-review/g3e/ai-v1/source-sheet.webp
+    creator: Project owner (OpenAI imagegen via Codex; prompt in docs/art-review/g3e/ai-v1/README.md)
+    license: project-owned
+    attribution: false
+    redistribute: true
+    evidence: docs/art-review/g3e/ai-v1/
+    modified: true
+    nativeSize: ~24x32
+    finalSize: 48x34
+    notes: Spearman pose 5; block-downsampled from the source sheet and padded to a feet-aligned canvas; drawn at scale 0.5 (see src/render/imageArt.ts)
+  - id: world_ai_v1_spearman_foe_5
+    path: public/assets/art/ai-v1/spearman_foe_5.png
+    category: world
+    origin: custom
+    source: docs/art-review/g3e/ai-v1/source-sheet.webp
+    creator: Project owner (OpenAI imagegen via Codex; prompt in docs/art-review/g3e/ai-v1/README.md)
+    license: project-owned
+    attribution: false
+    redistribute: true
+    evidence: docs/art-review/g3e/ai-v1/
+    modified: true
+    nativeSize: ~24x32
+    finalSize: 48x34
+    notes: Foe recolour of spearman pose 5 (blue sash made red) by docs/art-review/g3e/ai-v1/make_assets.py
+  - id: world_ai_v1_cottage
+    path: public/assets/art/ai-v1/cottage.png
+    category: world
+    origin: custom
+    source: docs/art-review/g3e/ai-v1/source-sheet.webp
+    creator: Project owner (OpenAI imagegen via Codex; prompt in docs/art-review/g3e/ai-v1/README.md)
+    license: project-owned
+    attribution: false
+    redistribute: true
+    evidence: docs/art-review/g3e/ai-v1/
+    modified: true
+    nativeSize: 94x80
+    finalSize: 64x54
+    notes: Thatched cottage shrunk to 64 px wide; frame building_wheat_militia, scale 0.5
+  - id: world_ai_v1_grass_0
+    path: public/assets/art/ai-v1/grass_0.png
+    category: world
+    origin: custom
+    source: docs/art-review/g3e/ai-v1/source-sheet.webp
+    creator: Project owner (OpenAI imagegen via Codex; prompt in docs/art-review/g3e/ai-v1/README.md)
+    license: project-owned
+    attribution: false
+    redistribute: true
+    evidence: docs/art-review/g3e/ai-v1/
+    modified: true
+    nativeSize: 32x31
+    finalSize: 32x32
+    notes: Grass ground tile 0; field painted at 2x density, scale 0.5
+  - id: world_ai_v1_grass_1
+    path: public/assets/art/ai-v1/grass_1.png
+    category: world
+    origin: custom
+    source: docs/art-review/g3e/ai-v1/source-sheet.webp
+    creator: Project owner (OpenAI imagegen via Codex; prompt in docs/art-review/g3e/ai-v1/README.md)
+    license: project-owned
+    attribution: false
+    redistribute: true
+    evidence: docs/art-review/g3e/ai-v1/
+    modified: true
+    nativeSize: 32x31
+    finalSize: 32x32
+    notes: Grass ground tile 1; field painted at 2x density, scale 0.5
+  - id: world_ai_v1_grass_2
+    path: public/assets/art/ai-v1/grass_2.png
+    category: world
+    origin: custom
+    source: docs/art-review/g3e/ai-v1/source-sheet.webp
+    creator: Project owner (OpenAI imagegen via Codex; prompt in docs/art-review/g3e/ai-v1/README.md)
+    license: project-owned
+    attribution: false
+    redistribute: true
+    evidence: docs/art-review/g3e/ai-v1/
+    modified: true
+    nativeSize: 32x31
+    finalSize: 32x32
+    notes: Grass ground tile 2; field painted at 2x density, scale 0.5
+  - id: world_ai_v1_footman_0
+    path: public/assets/art/ai-v1/footman_0.png
+    category: world
+    origin: custom
+    source: docs/art-review/g3e/batch-01-barracks/source.png
+    creator: Project owner (OpenAI imagegen via Codex; prompt in docs/art-review/g3e/batch-01-barracks/prompt.md)
+    license: project-owned
+    attribution: false
+    redistribute: true
+    evidence: docs/art-review/g3e/batch-01-barracks/
+    modified: true
+    nativeSize: ~26x32
+    finalSize: 48x34
+    notes: Footman pose 0; background removed and block-downsampled by batch-01-barracks/make_assets.py; scale 0.5
+  - id: world_ai_v1_footman_foe_0
+    path: public/assets/art/ai-v1/footman_foe_0.png
+    category: world
+    origin: custom
+    source: docs/art-review/g3e/batch-01-barracks/source.png
+    creator: Project owner (OpenAI imagegen via Codex; prompt in docs/art-review/g3e/batch-01-barracks/prompt.md)
+    license: project-owned
+    attribution: false
+    redistribute: true
+    evidence: docs/art-review/g3e/batch-01-barracks/
+    modified: true
+    nativeSize: ~26x32
+    finalSize: 48x34
+    notes: Foe recolour (blue to red) of footman pose 0
+  - id: world_ai_v1_footman_1
+    path: public/assets/art/ai-v1/footman_1.png
+    category: world
+    origin: custom
+    source: docs/art-review/g3e/batch-01-barracks/source.png
+    creator: Project owner (OpenAI imagegen via Codex; prompt in docs/art-review/g3e/batch-01-barracks/prompt.md)
+    license: project-owned
+    attribution: false
+    redistribute: true
+    evidence: docs/art-review/g3e/batch-01-barracks/
+    modified: true
+    nativeSize: ~26x32
+    finalSize: 48x34
+    notes: Footman pose 1; background removed and block-downsampled by batch-01-barracks/make_assets.py; scale 0.5
+  - id: world_ai_v1_footman_foe_1
+    path: public/assets/art/ai-v1/footman_foe_1.png
+    category: world
+    origin: custom
+    source: docs/art-review/g3e/batch-01-barracks/source.png
+    creator: Project owner (OpenAI imagegen via Codex; prompt in docs/art-review/g3e/batch-01-barracks/prompt.md)
+    license: project-owned
+    attribution: false
+    redistribute: true
+    evidence: docs/art-review/g3e/batch-01-barracks/
+    modified: true
+    nativeSize: ~26x32
+    finalSize: 48x34
+    notes: Foe recolour (blue to red) of footman pose 1
+  - id: world_ai_v1_footman_2
+    path: public/assets/art/ai-v1/footman_2.png
+    category: world
+    origin: custom
+    source: docs/art-review/g3e/batch-01-barracks/source.png
+    creator: Project owner (OpenAI imagegen via Codex; prompt in docs/art-review/g3e/batch-01-barracks/prompt.md)
+    license: project-owned
+    attribution: false
+    redistribute: true
+    evidence: docs/art-review/g3e/batch-01-barracks/
+    modified: true
+    nativeSize: ~26x32
+    finalSize: 48x34
+    notes: Footman pose 2; background removed and block-downsampled by batch-01-barracks/make_assets.py; scale 0.5
+  - id: world_ai_v1_footman_foe_2
+    path: public/assets/art/ai-v1/footman_foe_2.png
+    category: world
+    origin: custom
+    source: docs/art-review/g3e/batch-01-barracks/source.png
+    creator: Project owner (OpenAI imagegen via Codex; prompt in docs/art-review/g3e/batch-01-barracks/prompt.md)
+    license: project-owned
+    attribution: false
+    redistribute: true
+    evidence: docs/art-review/g3e/batch-01-barracks/
+    modified: true
+    nativeSize: ~26x32
+    finalSize: 48x34
+    notes: Foe recolour (blue to red) of footman pose 2
+  - id: world_ai_v1_footman_3
+    path: public/assets/art/ai-v1/footman_3.png
+    category: world
+    origin: custom
+    source: docs/art-review/g3e/batch-01-barracks/source.png
+    creator: Project owner (OpenAI imagegen via Codex; prompt in docs/art-review/g3e/batch-01-barracks/prompt.md)
+    license: project-owned
+    attribution: false
+    redistribute: true
+    evidence: docs/art-review/g3e/batch-01-barracks/
+    modified: true
+    nativeSize: ~26x32
+    finalSize: 48x34
+    notes: Footman pose 3; background removed and block-downsampled by batch-01-barracks/make_assets.py; scale 0.5
+  - id: world_ai_v1_footman_foe_3
+    path: public/assets/art/ai-v1/footman_foe_3.png
+    category: world
+    origin: custom
+    source: docs/art-review/g3e/batch-01-barracks/source.png
+    creator: Project owner (OpenAI imagegen via Codex; prompt in docs/art-review/g3e/batch-01-barracks/prompt.md)
+    license: project-owned
+    attribution: false
+    redistribute: true
+    evidence: docs/art-review/g3e/batch-01-barracks/
+    modified: true
+    nativeSize: ~26x32
+    finalSize: 48x34
+    notes: Foe recolour (blue to red) of footman pose 3
+  - id: world_ai_v1_footman_4
+    path: public/assets/art/ai-v1/footman_4.png
+    category: world
+    origin: custom
+    source: docs/art-review/g3e/batch-01-barracks/source.png
+    creator: Project owner (OpenAI imagegen via Codex; prompt in docs/art-review/g3e/batch-01-barracks/prompt.md)
+    license: project-owned
+    attribution: false
+    redistribute: true
+    evidence: docs/art-review/g3e/batch-01-barracks/
+    modified: true
+    nativeSize: ~26x32
+    finalSize: 48x34
+    notes: Footman pose 4; background removed and block-downsampled by batch-01-barracks/make_assets.py; scale 0.5
+  - id: world_ai_v1_footman_foe_4
+    path: public/assets/art/ai-v1/footman_foe_4.png
+    category: world
+    origin: custom
+    source: docs/art-review/g3e/batch-01-barracks/source.png
+    creator: Project owner (OpenAI imagegen via Codex; prompt in docs/art-review/g3e/batch-01-barracks/prompt.md)
+    license: project-owned
+    attribution: false
+    redistribute: true
+    evidence: docs/art-review/g3e/batch-01-barracks/
+    modified: true
+    nativeSize: ~26x32
+    finalSize: 48x34
+    notes: Foe recolour (blue to red) of footman pose 4
+  - id: world_ai_v1_footman_5
+    path: public/assets/art/ai-v1/footman_5.png
+    category: world
+    origin: custom
+    source: docs/art-review/g3e/batch-01-barracks/source.png
+    creator: Project owner (OpenAI imagegen via Codex; prompt in docs/art-review/g3e/batch-01-barracks/prompt.md)
+    license: project-owned
+    attribution: false
+    redistribute: true
+    evidence: docs/art-review/g3e/batch-01-barracks/
+    modified: true
+    nativeSize: ~26x32
+    finalSize: 48x34
+    notes: Footman pose 5; background removed and block-downsampled by batch-01-barracks/make_assets.py; scale 0.5
+  - id: world_ai_v1_footman_foe_5
+    path: public/assets/art/ai-v1/footman_foe_5.png
+    category: world
+    origin: custom
+    source: docs/art-review/g3e/batch-01-barracks/source.png
+    creator: Project owner (OpenAI imagegen via Codex; prompt in docs/art-review/g3e/batch-01-barracks/prompt.md)
+    license: project-owned
+    attribution: false
+    redistribute: true
+    evidence: docs/art-review/g3e/batch-01-barracks/
+    modified: true
+    nativeSize: ~26x32
+    finalSize: 48x34
+    notes: Foe recolour (blue to red) of footman pose 5
+  - id: world_ai_v1_barracks
+    path: public/assets/art/ai-v1/barracks.png
+    category: world
+    origin: custom
+    source: docs/art-review/g3e/batch-01-barracks/source.png
+    creator: Project owner (OpenAI imagegen via Codex; prompt in docs/art-review/g3e/batch-01-barracks/prompt.md)
+    license: project-owned
+    attribution: false
+    redistribute: true
+    evidence: docs/art-review/g3e/batch-01-barracks/
+    modified: true
+    nativeSize: ~110x90
+    finalSize: 64x~55
+    notes: Barracks shrunk to 64 px wide; frame building_neutral_barracks, scale 0.5
+  - id: world_ai_v1_mountain_wall_mid_wheat
+    path: public/assets/art/ai-v1/mountain-wall/terrain_mountain_wall_mid_wheat.png
+    category: world
+    origin: custom
+    source: docs/art-review/oblique-wall/terrain_mountain_wall_mid_0/source_wheat_v2.png
+    creator: Project owner (OpenAI imagegen via Codex; prompt in .superpowers/codex-wall-mid0-v2.md, approved 26/10/2026)
+    license: project-owned
+    attribution: false
+    redistribute: true
+    evidence: docs/art-review/oblique-wall/
+    modified: true
+    nativeSize: 1536x768
+    finalSize: 384x192
+    notes: Mountain wall middle segment with the wheat king's sea backdrop; box-downscaled x4, tiled along the north edge, drawn at scale 0.5 (see src/render/mountainWallAssets.ts)
+  - id: world_ai_v1_mountain_wall_mid_stone
+    path: public/assets/art/ai-v1/mountain-wall/terrain_mountain_wall_mid_stone.png
+    category: world
+    origin: custom
+    source: docs/art-review/oblique-wall/terrain_mountain_wall_mid_0/source_stone.png
+    creator: Project owner (OpenAI imagegen via Codex; prompt in .superpowers/codex-wall-stone.md, approved 26/10/2026)
+    license: project-owned
+    attribution: false
+    redistribute: true
+    evidence: docs/art-review/oblique-wall/
+    modified: true
+    nativeSize: 1536x768
+    finalSize: 384x192
+    notes: Mountain wall middle segment with the stone king's sea backdrop; box-downscaled x4, tiled along the north edge, drawn at scale 0.5 (see src/render/mountainWallAssets.ts)
+  - id: world_ai_v1_mountain_wall_mid_arcane
+    path: public/assets/art/ai-v1/mountain-wall/terrain_mountain_wall_mid_arcane.png
+    category: world
+    origin: custom
+    source: docs/art-review/oblique-wall/terrain_mountain_wall_mid_0/source_arcane.png
+    creator: Project owner (OpenAI imagegen via Codex; prompt in .superpowers/codex-wall-arcane.md, approved 26/10/2026)
+    license: project-owned
+    attribution: false
+    redistribute: true
+    evidence: docs/art-review/oblique-wall/
+    modified: true
+    nativeSize: 1536x768
+    finalSize: 384x192
+    notes: Mountain wall middle segment with the arcane king's sea backdrop; box-downscaled x4, tiled along the north edge, drawn at scale 0.5 (see src/render/mountainWallAssets.ts)
+  - id: world_ai_v1_mountain_wall_mid_grove
+    path: public/assets/art/ai-v1/mountain-wall/terrain_mountain_wall_mid_grove.png
+    category: world
+    origin: custom
+    source: docs/art-review/oblique-wall/terrain_mountain_wall_mid_0/source_grove.png
+    creator: Project owner (OpenAI imagegen via Codex; prompt in .superpowers/codex-wall-grove.md, approved 26/10/2026)
+    license: project-owned
+    attribution: false
+    redistribute: true
+    evidence: docs/art-review/oblique-wall/
+    modified: true
+    nativeSize: 1536x768
+    finalSize: 384x192
+    notes: Mountain wall middle segment with the grove king's sea backdrop; box-downscaled x4, tiled along the north edge, drawn at scale 0.5 (see src/render/mountainWallAssets.ts)
+  - id: world_ai_v1_mountain_wall_mid_tide
+    path: public/assets/art/ai-v1/mountain-wall/terrain_mountain_wall_mid_tide.png
+    category: world
+    origin: custom
+    source: docs/art-review/oblique-wall/terrain_mountain_wall_mid_0/source_tide.png
+    creator: Project owner (OpenAI imagegen via Codex; prompt in .superpowers/codex-wall-tide.md, approved 26/10/2026)
+    license: project-owned
+    attribution: false
+    redistribute: true
+    evidence: docs/art-review/oblique-wall/
+    modified: true
+    nativeSize: 1536x768
+    finalSize: 384x192
+    notes: Mountain wall middle segment with the tide king's sea backdrop; box-downscaled x4, tiled along the north edge, drawn at scale 0.5 (see src/render/mountainWallAssets.ts)
+  - id: world_ai_v1_mountain_wall_mid_forge
+    path: public/assets/art/ai-v1/mountain-wall/terrain_mountain_wall_mid_forge.png
+    category: world
+    origin: custom
+    source: docs/art-review/oblique-wall/terrain_mountain_wall_mid_0/source_forge.png
+    creator: Project owner (OpenAI imagegen via Codex; prompt in .superpowers/codex-wall-forge.md, approved 26/10/2026)
+    license: project-owned
+    attribution: false
+    redistribute: true
+    evidence: docs/art-review/oblique-wall/
+    modified: true
+    nativeSize: 1536x768
+    finalSize: 384x192
+    notes: Mountain wall middle segment with the forge king's sea backdrop; box-downscaled x4, tiled along the north edge, drawn at scale 0.5 (see src/render/mountainWallAssets.ts)
+  - id: world_ai_v1_mountain_wall_mid_clock
+    path: public/assets/art/ai-v1/mountain-wall/terrain_mountain_wall_mid_clock.png
+    category: world
+    origin: custom
+    source: docs/art-review/oblique-wall/terrain_mountain_wall_mid_0/source_clock.png
+    creator: Project owner (OpenAI imagegen via Codex; prompt in .superpowers/codex-wall-clock.md, approved 26/10/2026)
+    license: project-owned
+    attribution: false
+    redistribute: true
+    evidence: docs/art-review/oblique-wall/
+    modified: true
+    nativeSize: 1536x768
+    finalSize: 384x192
+    notes: Mountain wall middle segment with the clock king's sea backdrop; box-downscaled x4, tiled along the north edge, drawn at scale 0.5 (see src/render/mountainWallAssets.ts)
+  - id: world_ai_v1_mountain_wall_mid_moon
+    path: public/assets/art/ai-v1/mountain-wall/terrain_mountain_wall_mid_moon.png
+    category: world
+    origin: custom
+    source: docs/art-review/oblique-wall/terrain_mountain_wall_mid_0/source_moon.png
+    creator: Project owner (OpenAI imagegen via Codex; prompt in .superpowers/codex-wall-moon.md, approved 26/10/2026)
+    license: project-owned
+    attribution: false
+    redistribute: true
+    evidence: docs/art-review/oblique-wall/
+    modified: true
+    nativeSize: 1536x768
+    finalSize: 384x192
+    notes: Mountain wall middle segment with the moon king's sea backdrop; box-downscaled x4, tiled along the north edge, drawn at scale 0.5 (see src/render/mountainWallAssets.ts)
+  - id: world_ai_v1_mountain_wall_mid_nomad
+    path: public/assets/art/ai-v1/mountain-wall/terrain_mountain_wall_mid_nomad.png
+    category: world
+    origin: custom
+    source: docs/art-review/oblique-wall/terrain_mountain_wall_mid_0/source_nomad.png
+    creator: Project owner (OpenAI imagegen via Codex; prompt in .superpowers/codex-wall-nomad.md, approved 26/10/2026)
+    license: project-owned
+    attribution: false
+    redistribute: true
+    evidence: docs/art-review/oblique-wall/
+    modified: true
+    nativeSize: 1536x768
+    finalSize: 384x192
+    notes: Mountain wall middle segment with the nomad king's sea backdrop; box-downscaled x4, tiled along the north edge, drawn at scale 0.5 (see src/render/mountainWallAssets.ts)
+  - id: world_ai_v1_mountain_wall_foot_0
+    path: public/assets/art/ai-v1/mountain-wall/terrain_mountain_wall_foot_0.png
+    category: world
+    origin: custom
+    source: docs/art-review/oblique-wall/terrain_mountain_wall_foot_0/source.png
+    creator: Project owner (OpenAI imagegen via Codex; prompt in .superpowers/codex-terrain_mountain_wall_foot_0.md, approved 26/10/2026)
+    license: project-owned
+    attribution: false
+    redistribute: true
+    evidence: docs/art-review/oblique-wall/
+    modified: true
+    nativeSize: 1536x256
+    finalSize: 384x64
+    notes: Mountain wall foot strip A; black background removed (docs/art-review/oblique-wall/make_alpha.py), alpha-aware downscale x4, drawn at scale 0.5 (see src/render/mountainWallAssets.ts)
+  - id: world_ai_v1_mountain_wall_foot_1
+    path: public/assets/art/ai-v1/mountain-wall/terrain_mountain_wall_foot_1.png
+    category: world
+    origin: custom
+    source: docs/art-review/oblique-wall/terrain_mountain_wall_foot_1/source.png
+    creator: Project owner (OpenAI imagegen via Codex; prompt in .superpowers/codex-terrain_mountain_wall_foot_1.md, approved 26/10/2026)
+    license: project-owned
+    attribution: false
+    redistribute: true
+    evidence: docs/art-review/oblique-wall/
+    modified: true
+    nativeSize: 1536x256
+    finalSize: 384x64
+    notes: Mountain wall foot strip B; black background removed (docs/art-review/oblique-wall/make_alpha.py), alpha-aware downscale x4, drawn at scale 0.5 (see src/render/mountainWallAssets.ts)
+  - id: world_ai_v1_mountain_wall_foot_2
+    path: public/assets/art/ai-v1/mountain-wall/terrain_mountain_wall_foot_2.png
+    category: world
+    origin: custom
+    source: docs/art-review/oblique-wall/terrain_mountain_wall_foot_2/source.png
+    creator: Project owner (OpenAI imagegen via Codex; prompt in .superpowers/codex-terrain_mountain_wall_foot_2.md, approved 26/10/2026)
+    license: project-owned
+    attribution: false
+    redistribute: true
+    evidence: docs/art-review/oblique-wall/
+    modified: true
+    nativeSize: 1536x256
+    finalSize: 384x64
+    notes: Mountain wall foot strip C; black background removed (docs/art-review/oblique-wall/make_alpha.py), alpha-aware downscale x4, drawn at scale 0.5 (see src/render/mountainWallAssets.ts)
+  - id: world_ai_v1_mountain_wall_cap_left
+    path: public/assets/art/ai-v1/mountain-wall/terrain_mountain_wall_cap_left.png
+    category: world
+    origin: custom
+    source: docs/art-review/oblique-wall/terrain_mountain_wall_cap_left/source.png
+    creator: Project owner (OpenAI imagegen via Codex; prompt in .superpowers/codex-terrain_mountain_wall_cap_left.md, approved 26/10/2026)
+    license: project-owned
+    attribution: false
+    redistribute: true
+    evidence: docs/art-review/oblique-wall/
+    modified: true
+    nativeSize: 768x768
+    finalSize: 192x192
+    notes: Mountain wall left end cap; black background removed (docs/art-review/oblique-wall/make_alpha.py), alpha-aware downscale x4, drawn at scale 0.5 (see src/render/mountainWallAssets.ts)
+  - id: world_ai_v1_mountain_wall_cap_right
+    path: public/assets/art/ai-v1/mountain-wall/terrain_mountain_wall_cap_right.png
+    category: world
+    origin: custom
+    source: docs/art-review/oblique-wall/terrain_mountain_wall_cap_right/source.png
+    creator: Project owner (OpenAI imagegen via Codex; prompt in .superpowers/codex-terrain_mountain_wall_cap_right.md, approved 26/10/2026)
+    license: project-owned
+    attribution: false
+    redistribute: true
+    evidence: docs/art-review/oblique-wall/
+    modified: true
+    nativeSize: 768x768
+    finalSize: 192x192
+    notes: Mountain wall right end cap; black background removed (docs/art-review/oblique-wall/make_alpha.py), alpha-aware downscale x4, drawn at scale 0.5 (see src/render/mountainWallAssets.ts)
+  - id: world_ai_v1_mountain_wall_mid_wheat_a
+    path: public/assets/art/ai-v1/mountain-wall/terrain_mountain_wall_mid_wheat_a.png
+    category: world
+    origin: custom
+    source: docs/art-review/oblique-wall/terrain_mountain_wall_mid_0/source_wheat_a.png
+    creator: Project owner (OpenAI imagegen via Codex; prompt in .superpowers/codex-wallvar-wheat-a.md, approved 26/10/2026)
+    license: project-owned
+    attribution: false
+    redistribute: true
+    evidence: docs/art-review/oblique-wall/
+    modified: true
+    nativeSize: 1536x768
+    finalSize: 384x192
+    notes: Supporting wall variant A for the wheat king; edges fitted to the main segment (docs/art-review/oblique-wall/fit_edges.py), box-downscaled x4, drawn at scale 1 (see src/render/mountainWallAssets.ts)
+  - id: world_ai_v1_mountain_wall_mid_wheat_b
+    path: public/assets/art/ai-v1/mountain-wall/terrain_mountain_wall_mid_wheat_b.png
+    category: world
+    origin: custom
+    source: docs/art-review/oblique-wall/terrain_mountain_wall_mid_0/source_wheat_b.png
+    creator: Project owner (OpenAI imagegen via Codex; prompt in .superpowers/codex-wallvar-wheat-b.md, approved 26/10/2026)
+    license: project-owned
+    attribution: false
+    redistribute: true
+    evidence: docs/art-review/oblique-wall/
+    modified: true
+    nativeSize: 1536x768
+    finalSize: 384x192
+    notes: Supporting wall variant B for the wheat king; edges fitted to the main segment (docs/art-review/oblique-wall/fit_edges.py), box-downscaled x4, drawn at scale 1 (see src/render/mountainWallAssets.ts)
+  - id: world_ai_v1_mountain_wall_mid_stone_a
+    path: public/assets/art/ai-v1/mountain-wall/terrain_mountain_wall_mid_stone_a.png
+    category: world
+    origin: custom
+    source: docs/art-review/oblique-wall/terrain_mountain_wall_mid_0/source_stone_a.png
+    creator: Project owner (OpenAI imagegen via Codex; prompt in .superpowers/codex-wallvar-stone-a.md, approved 26/10/2026)
+    license: project-owned
+    attribution: false
+    redistribute: true
+    evidence: docs/art-review/oblique-wall/
+    modified: true
+    nativeSize: 1536x768
+    finalSize: 384x192
+    notes: Supporting wall variant A for the stone king; edges fitted to the main segment (docs/art-review/oblique-wall/fit_edges.py), box-downscaled x4, drawn at scale 1 (see src/render/mountainWallAssets.ts)
+  - id: world_ai_v1_mountain_wall_mid_stone_b
+    path: public/assets/art/ai-v1/mountain-wall/terrain_mountain_wall_mid_stone_b.png
+    category: world
+    origin: custom
+    source: docs/art-review/oblique-wall/terrain_mountain_wall_mid_0/source_stone_b.png
+    creator: Project owner (OpenAI imagegen via Codex; prompt in .superpowers/codex-wallvar-stone-b.md, approved 26/10/2026)
+    license: project-owned
+    attribution: false
+    redistribute: true
+    evidence: docs/art-review/oblique-wall/
+    modified: true
+    nativeSize: 1536x768
+    finalSize: 384x192
+    notes: Supporting wall variant B for the stone king; edges fitted to the main segment (docs/art-review/oblique-wall/fit_edges.py), box-downscaled x4, drawn at scale 1 (see src/render/mountainWallAssets.ts)
+  - id: world_ai_v1_mountain_wall_mid_arcane_a
+    path: public/assets/art/ai-v1/mountain-wall/terrain_mountain_wall_mid_arcane_a.png
+    category: world
+    origin: custom
+    source: docs/art-review/oblique-wall/terrain_mountain_wall_mid_0/source_arcane_a.png
+    creator: Project owner (OpenAI imagegen via Codex; prompt in .superpowers/codex-wallvar-arcane-a.md, approved 26/10/2026)
+    license: project-owned
+    attribution: false
+    redistribute: true
+    evidence: docs/art-review/oblique-wall/
+    modified: true
+    nativeSize: 1536x768
+    finalSize: 384x192
+    notes: Supporting wall variant A for the arcane king; edges fitted to the main segment (docs/art-review/oblique-wall/fit_edges.py), box-downscaled x4, drawn at scale 1 (see src/render/mountainWallAssets.ts)
+  - id: world_ai_v1_mountain_wall_mid_arcane_b
+    path: public/assets/art/ai-v1/mountain-wall/terrain_mountain_wall_mid_arcane_b.png
+    category: world
+    origin: custom
+    source: docs/art-review/oblique-wall/terrain_mountain_wall_mid_0/source_arcane_b.png
+    creator: Project owner (OpenAI imagegen via Codex; prompt in .superpowers/codex-wallvar-arcane-b.md, approved 26/10/2026)
+    license: project-owned
+    attribution: false
+    redistribute: true
+    evidence: docs/art-review/oblique-wall/
+    modified: true
+    nativeSize: 1536x768
+    finalSize: 384x192
+    notes: Supporting wall variant B for the arcane king; edges fitted to the main segment (docs/art-review/oblique-wall/fit_edges.py), box-downscaled x4, drawn at scale 1 (see src/render/mountainWallAssets.ts)
+  - id: world_ai_v1_mountain_wall_mid_grove_a
+    path: public/assets/art/ai-v1/mountain-wall/terrain_mountain_wall_mid_grove_a.png
+    category: world
+    origin: custom
+    source: docs/art-review/oblique-wall/terrain_mountain_wall_mid_0/source_grove_a.png
+    creator: Project owner (OpenAI imagegen via Codex; prompt in .superpowers/codex-wallvar-grove-a.md, approved 26/10/2026)
+    license: project-owned
+    attribution: false
+    redistribute: true
+    evidence: docs/art-review/oblique-wall/
+    modified: true
+    nativeSize: 1536x768
+    finalSize: 384x192
+    notes: Supporting wall variant A for the grove king; edges fitted to the main segment (docs/art-review/oblique-wall/fit_edges.py), box-downscaled x4, drawn at scale 1 (see src/render/mountainWallAssets.ts)
+  - id: world_ai_v1_mountain_wall_mid_grove_b
+    path: public/assets/art/ai-v1/mountain-wall/terrain_mountain_wall_mid_grove_b.png
+    category: world
+    origin: custom
+    source: docs/art-review/oblique-wall/terrain_mountain_wall_mid_0/source_grove_b.png
+    creator: Project owner (OpenAI imagegen via Codex; prompt in .superpowers/codex-wallvar-grove-b.md, approved 26/10/2026)
+    license: project-owned
+    attribution: false
+    redistribute: true
+    evidence: docs/art-review/oblique-wall/
+    modified: true
+    nativeSize: 1536x768
+    finalSize: 384x192
+    notes: Supporting wall variant B for the grove king; edges fitted to the main segment (docs/art-review/oblique-wall/fit_edges.py), box-downscaled x4, drawn at scale 1 (see src/render/mountainWallAssets.ts)
+  - id: world_ai_v1_mountain_wall_mid_tide_a
+    path: public/assets/art/ai-v1/mountain-wall/terrain_mountain_wall_mid_tide_a.png
+    category: world
+    origin: custom
+    source: docs/art-review/oblique-wall/terrain_mountain_wall_mid_0/source_tide_a.png
+    creator: Project owner (OpenAI imagegen via Codex; prompt in .superpowers/codex-wallvar-tide-a.md, approved 26/10/2026)
+    license: project-owned
+    attribution: false
+    redistribute: true
+    evidence: docs/art-review/oblique-wall/
+    modified: true
+    nativeSize: 1536x768
+    finalSize: 384x192
+    notes: Supporting wall variant A for the tide king; edges fitted to the main segment (docs/art-review/oblique-wall/fit_edges.py), box-downscaled x4, drawn at scale 1 (see src/render/mountainWallAssets.ts)
+  - id: world_ai_v1_mountain_wall_mid_tide_b
+    path: public/assets/art/ai-v1/mountain-wall/terrain_mountain_wall_mid_tide_b.png
+    category: world
+    origin: custom
+    source: docs/art-review/oblique-wall/terrain_mountain_wall_mid_0/source_tide_b.png
+    creator: Project owner (OpenAI imagegen via Codex; prompt in .superpowers/codex-wallvar-tide-b.md, approved 26/10/2026)
+    license: project-owned
+    attribution: false
+    redistribute: true
+    evidence: docs/art-review/oblique-wall/
+    modified: true
+    nativeSize: 1536x768
+    finalSize: 384x192
+    notes: Supporting wall variant B for the tide king; edges fitted to the main segment (docs/art-review/oblique-wall/fit_edges.py), box-downscaled x4, drawn at scale 1 (see src/render/mountainWallAssets.ts)
+  - id: world_ai_v1_mountain_wall_mid_forge_a
+    path: public/assets/art/ai-v1/mountain-wall/terrain_mountain_wall_mid_forge_a.png
+    category: world
+    origin: custom
+    source: docs/art-review/oblique-wall/terrain_mountain_wall_mid_0/source_forge_a.png
+    creator: Project owner (OpenAI imagegen via Codex; prompt in .superpowers/codex-wallvar-forge-a.md, approved 26/10/2026)
+    license: project-owned
+    attribution: false
+    redistribute: true
+    evidence: docs/art-review/oblique-wall/
+    modified: true
+    nativeSize: 1536x768
+    finalSize: 384x192
+    notes: Supporting wall variant A for the forge king; edges fitted to the main segment (docs/art-review/oblique-wall/fit_edges.py), box-downscaled x4, drawn at scale 1 (see src/render/mountainWallAssets.ts)
+  - id: world_ai_v1_mountain_wall_mid_forge_b
+    path: public/assets/art/ai-v1/mountain-wall/terrain_mountain_wall_mid_forge_b.png
+    category: world
+    origin: custom
+    source: docs/art-review/oblique-wall/terrain_mountain_wall_mid_0/source_forge_b.png
+    creator: Project owner (OpenAI imagegen via Codex; prompt in .superpowers/codex-wallvar-forge-b.md, approved 26/10/2026)
+    license: project-owned
+    attribution: false
+    redistribute: true
+    evidence: docs/art-review/oblique-wall/
+    modified: true
+    nativeSize: 1536x768
+    finalSize: 384x192
+    notes: Supporting wall variant B for the forge king; edges fitted to the main segment (docs/art-review/oblique-wall/fit_edges.py), box-downscaled x4, drawn at scale 1 (see src/render/mountainWallAssets.ts)
+  - id: world_ai_v1_mountain_wall_mid_clock_a
+    path: public/assets/art/ai-v1/mountain-wall/terrain_mountain_wall_mid_clock_a.png
+    category: world
+    origin: custom
+    source: docs/art-review/oblique-wall/terrain_mountain_wall_mid_0/source_clock_a.png
+    creator: Project owner (OpenAI imagegen via Codex; prompt in .superpowers/codex-wallvar-clock-a.md, approved 26/10/2026)
+    license: project-owned
+    attribution: false
+    redistribute: true
+    evidence: docs/art-review/oblique-wall/
+    modified: true
+    nativeSize: 1536x768
+    finalSize: 384x192
+    notes: Supporting wall variant A for the clock king; edges fitted to the main segment (docs/art-review/oblique-wall/fit_edges.py), box-downscaled x4, drawn at scale 1 (see src/render/mountainWallAssets.ts)
+  - id: world_ai_v1_mountain_wall_mid_clock_b
+    path: public/assets/art/ai-v1/mountain-wall/terrain_mountain_wall_mid_clock_b.png
+    category: world
+    origin: custom
+    source: docs/art-review/oblique-wall/terrain_mountain_wall_mid_0/source_clock_b.png
+    creator: Project owner (OpenAI imagegen via Codex; prompt in .superpowers/codex-wallvar-clock-b.md, approved 26/10/2026)
+    license: project-owned
+    attribution: false
+    redistribute: true
+    evidence: docs/art-review/oblique-wall/
+    modified: true
+    nativeSize: 1536x768
+    finalSize: 384x192
+    notes: Supporting wall variant B for the clock king; edges fitted to the main segment (docs/art-review/oblique-wall/fit_edges.py), box-downscaled x4, drawn at scale 1 (see src/render/mountainWallAssets.ts)
+  - id: world_ai_v1_mountain_wall_mid_moon_a
+    path: public/assets/art/ai-v1/mountain-wall/terrain_mountain_wall_mid_moon_a.png
+    category: world
+    origin: custom
+    source: docs/art-review/oblique-wall/terrain_mountain_wall_mid_0/source_moon_a.png
+    creator: Project owner (OpenAI imagegen via Codex; prompt in .superpowers/codex-wallvar-moon-a.md, approved 26/10/2026)
+    license: project-owned
+    attribution: false
+    redistribute: true
+    evidence: docs/art-review/oblique-wall/
+    modified: true
+    nativeSize: 1536x768
+    finalSize: 384x192
+    notes: Supporting wall variant A for the moon king; edges fitted to the main segment (docs/art-review/oblique-wall/fit_edges.py), box-downscaled x4, drawn at scale 1 (see src/render/mountainWallAssets.ts)
+  - id: world_ai_v1_mountain_wall_mid_moon_b
+    path: public/assets/art/ai-v1/mountain-wall/terrain_mountain_wall_mid_moon_b.png
+    category: world
+    origin: custom
+    source: docs/art-review/oblique-wall/terrain_mountain_wall_mid_0/source_moon_b.png
+    creator: Project owner (OpenAI imagegen via Codex; prompt in .superpowers/codex-wallvar-moon-b.md, approved 26/10/2026)
+    license: project-owned
+    attribution: false
+    redistribute: true
+    evidence: docs/art-review/oblique-wall/
+    modified: true
+    nativeSize: 1536x768
+    finalSize: 384x192
+    notes: Supporting wall variant B for the moon king; edges fitted to the main segment (docs/art-review/oblique-wall/fit_edges.py), box-downscaled x4, drawn at scale 1 (see src/render/mountainWallAssets.ts)
+  - id: world_ai_v1_mountain_wall_mid_nomad_a
+    path: public/assets/art/ai-v1/mountain-wall/terrain_mountain_wall_mid_nomad_a.png
+    category: world
+    origin: custom
+    source: docs/art-review/oblique-wall/terrain_mountain_wall_mid_0/source_nomad_a.png
+    creator: Project owner (OpenAI imagegen via Codex; prompt in .superpowers/codex-wallvar-nomad-a.md, approved 26/10/2026)
+    license: project-owned
+    attribution: false
+    redistribute: true
+    evidence: docs/art-review/oblique-wall/
+    modified: true
+    nativeSize: 1536x768
+    finalSize: 384x192
+    notes: Supporting wall variant A for the nomad king; edges fitted to the main segment (docs/art-review/oblique-wall/fit_edges.py), box-downscaled x4, drawn at scale 1 (see src/render/mountainWallAssets.ts)
+  - id: world_ai_v1_mountain_wall_mid_nomad_b
+    path: public/assets/art/ai-v1/mountain-wall/terrain_mountain_wall_mid_nomad_b.png
+    category: world
+    origin: custom
+    source: docs/art-review/oblique-wall/terrain_mountain_wall_mid_0/source_nomad_b.png
+    creator: Project owner (OpenAI imagegen via Codex; prompt in .superpowers/codex-wallvar-nomad-b.md, approved 26/10/2026)
+    license: project-owned
+    attribution: false
+    redistribute: true
+    evidence: docs/art-review/oblique-wall/
+    modified: true
+    nativeSize: 1536x768
+    finalSize: 384x192
+    notes: Supporting wall variant B for the nomad king; edges fitted to the main segment (docs/art-review/oblique-wall/fit_edges.py), box-downscaled x4, drawn at scale 1 (see src/render/mountainWallAssets.ts)
+  - id: portrait_king_wheat
+    path: public/assets/art/ai-v1/portraits/wheat.png
+    category: ui
+    origin: custom
+    source: docs/art-review/g3e/portraits/wheat/source.png
+    creator: Project owner (OpenAI imagegen via Codex; prompt in docs/art-review/g3e/portraits/wheat/prompt.md, approved 29/10/2026)
+    license: project-owned
+    attribution: false
+    redistribute: true
+    evidence: docs/art-review/g3e/portraits/native-review.md
+    modified: true
+    nativeSize: 1024x1536
+    finalSize: 96x144
+    notes: Wheat King portrait; box-downscaled and snapped to a 24-colour palette by tools/prepare_king_portraits.py (variant A, approved 29/10/2026); drawn in the king card window (src/render/portraitAssets.ts)
+  - id: portrait_king_stone
+    path: public/assets/art/ai-v1/portraits/stone.png
+    category: ui
+    origin: custom
+    source: docs/art-review/g3e/portraits/stone/source.png
+    creator: Project owner (OpenAI imagegen via Codex; prompt in docs/art-review/g3e/portraits/stone/prompt.md, approved 29/10/2026)
+    license: project-owned
+    attribution: false
+    redistribute: true
+    evidence: docs/art-review/g3e/portraits/native-review.md
+    modified: true
+    nativeSize: 1024x1536
+    finalSize: 96x144
+    notes: Stone King portrait; box-downscaled and snapped to a 24-colour palette by tools/prepare_king_portraits.py (variant A, approved 29/10/2026); drawn in the king card window (src/render/portraitAssets.ts)
+  - id: portrait_king_arcane
+    path: public/assets/art/ai-v1/portraits/arcane.png
+    category: ui
+    origin: custom
+    source: docs/art-review/g3e/portraits/arcane/source.png
+    creator: Project owner (OpenAI imagegen via Codex; prompt in docs/art-review/g3e/portraits/arcane/prompt.md, approved 29/10/2026)
+    license: project-owned
+    attribution: false
+    redistribute: true
+    evidence: docs/art-review/g3e/portraits/native-review.md
+    modified: true
+    nativeSize: 1024x1536
+    finalSize: 96x144
+    notes: Arcane King portrait; box-downscaled and snapped to a 24-colour palette by tools/prepare_king_portraits.py (variant A, approved 29/10/2026); drawn in the king card window (src/render/portraitAssets.ts)
+  - id: portrait_king_grove
+    path: public/assets/art/ai-v1/portraits/grove.png
+    category: ui
+    origin: custom
+    source: docs/art-review/g3e/portraits/grove/source.png
+    creator: Project owner (OpenAI imagegen via Codex; prompt in docs/art-review/g3e/portraits/grove/prompt.md, approved 29/10/2026)
+    license: project-owned
+    attribution: false
+    redistribute: true
+    evidence: docs/art-review/g3e/portraits/native-review.md
+    modified: true
+    nativeSize: 1024x1536
+    finalSize: 96x144
+    notes: Grove King portrait; box-downscaled and snapped to a 24-colour palette by tools/prepare_king_portraits.py (variant A, approved 29/10/2026); drawn in the king card window (src/render/portraitAssets.ts)
+  - id: portrait_king_tide
+    path: public/assets/art/ai-v1/portraits/tide.png
+    category: ui
+    origin: custom
+    source: docs/art-review/g3e/portraits/tide/source.png
+    creator: Project owner (OpenAI imagegen via Codex; prompt in docs/art-review/g3e/portraits/tide/prompt.md, approved 29/10/2026)
+    license: project-owned
+    attribution: false
+    redistribute: true
+    evidence: docs/art-review/g3e/portraits/native-review.md
+    modified: true
+    nativeSize: 1024x1536
+    finalSize: 96x144
+    notes: Tide King portrait; box-downscaled and snapped to a 24-colour palette by tools/prepare_king_portraits.py (variant A, approved 29/10/2026); drawn in the king card window (src/render/portraitAssets.ts)
+  - id: portrait_king_forge
+    path: public/assets/art/ai-v1/portraits/forge.png
+    category: ui
+    origin: custom
+    source: docs/art-review/g3e/portraits/forge/source.png
+    creator: Project owner (OpenAI imagegen via Codex; prompt in docs/art-review/g3e/portraits/forge/prompt.md, approved 29/10/2026)
+    license: project-owned
+    attribution: false
+    redistribute: true
+    evidence: docs/art-review/g3e/portraits/native-review.md
+    modified: true
+    nativeSize: 1024x1536
+    finalSize: 96x144
+    notes: Forge King portrait; box-downscaled and snapped to a 24-colour palette by tools/prepare_king_portraits.py (variant A, approved 29/10/2026); drawn in the king card window (src/render/portraitAssets.ts)
+  - id: portrait_king_clock
+    path: public/assets/art/ai-v1/portraits/clock.png
+    category: ui
+    origin: custom
+    source: docs/art-review/g3e/portraits/clock/source.png
+    creator: Project owner (OpenAI imagegen via Codex; prompt in docs/art-review/g3e/portraits/clock/prompt.md, approved 29/10/2026)
+    license: project-owned
+    attribution: false
+    redistribute: true
+    evidence: docs/art-review/g3e/portraits/native-review.md
+    modified: true
+    nativeSize: 1024x1536
+    finalSize: 96x144
+    notes: Clockwork King portrait; box-downscaled and snapped to a 24-colour palette by tools/prepare_king_portraits.py (variant A, approved 29/10/2026); drawn in the king card window (src/render/portraitAssets.ts)
+  - id: portrait_king_moon
+    path: public/assets/art/ai-v1/portraits/moon.png
+    category: ui
+    origin: custom
+    source: docs/art-review/g3e/portraits/moon/source.png
+    creator: Project owner (OpenAI imagegen via Codex; prompt in docs/art-review/g3e/portraits/moon/prompt.md, approved 29/10/2026)
+    license: project-owned
+    attribution: false
+    redistribute: true
+    evidence: docs/art-review/g3e/portraits/native-review.md
+    modified: true
+    nativeSize: 1024x1536
+    finalSize: 96x144
+    notes: Moon King portrait; box-downscaled and snapped to a 24-colour palette by tools/prepare_king_portraits.py (variant A, approved 29/10/2026); drawn in the king card window (src/render/portraitAssets.ts)
+  - id: portrait_king_nomad
+    path: public/assets/art/ai-v1/portraits/nomad.png
+    category: ui
+    origin: custom
+    source: docs/art-review/g3e/portraits/nomad/source.png
+    creator: Project owner (OpenAI imagegen via Codex; prompt in docs/art-review/g3e/portraits/nomad/prompt.md, approved 29/10/2026)
+    license: project-owned
+    attribution: false
+    redistribute: true
+    evidence: docs/art-review/g3e/portraits/native-review.md
+    modified: true
+    nativeSize: 1024x1536
+    finalSize: 96x144
+    notes: Nomad Khan portrait; box-downscaled and snapped to a 24-colour palette by tools/prepare_king_portraits.py (variant A, approved 29/10/2026); drawn in the king card window (src/render/portraitAssets.ts)

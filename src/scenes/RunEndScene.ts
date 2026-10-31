@@ -48,7 +48,8 @@ export class RunEndScene extends Phaser.Scene {
 
     const state = this.state;
     const won = state?.won === true;
-    this.panel = createPanel(this, 'panel', 320, 240);
+    const skin = state?.kingId ?? 'neutral';
+    this.panel = createPanel(this, 'panel', 320, 240, 0, 0, skin);
     this.title = addUiText(this, 0, 0, won ? 'Chiến thắng!' : 'Vương quốc sụp đổ', 30, won ? UI_PALETTE.text : UI_PALETTE.bad)
       .setOrigin(0.5)
       .setFontStyle('bold');
@@ -61,12 +62,14 @@ export class RunEndScene extends Phaser.Scene {
         height: RESULT_BUTTON.h,
         fontSize: 18,
         onClick: () => this.toMenu(),
+        skin,
       }),
       createButton(this, 0, 0, 'Ván mới', {
         width: RESULT_BUTTON.w,
         height: RESULT_BUTTON.h,
         fontSize: 18,
         onClick: () => this.newRun(),
+        skin,
       }),
     ];
 

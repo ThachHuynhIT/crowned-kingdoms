@@ -2,7 +2,7 @@ import { ENEMY_BUDGET, ENEMY_CAP, ENEMY_LEVEL_COST, WAVES } from '../../data/bat
 import { RUN } from '../../data/run';
 import type { UnitId } from '../../data/types';
 import { Rng, hashSeed } from '../../core/random';
-import type { ArmySpawn, ArmyPlan, ArmyWave, Edge } from './types';
+import type { ArmySpawn, ArmyPlan, ArmyWave } from './types';
 
 export interface ComposeEntry {
   unit: UnitId;
@@ -11,7 +11,6 @@ export interface ComposeEntry {
   enemyCost: number;
 }
 
-const EDGES: readonly Edge[] = ['N', 'E', 'S', 'W'];
 const LEVELS = [1, 2, 3, 4, 5] as const;
 
 /** Ngân sách EP của một đạo quân (độ khó Gai 0): round(ENEMY_BUDGET[year−1] × slot). */
@@ -45,7 +44,7 @@ export const composeArmy = (
     kings?: ArmyPlan['kings'];
     boss?: ArmyPlan['boss'];
     bossOrdinal?: ArmyPlan['bossOrdinal'];
-    /** Số mép thêm mỗi đợt (cờ hiệu Đột Kích). */
+    /** Giữ cho nơi gọi cũ; không còn tác dụng ở đây (cờ Đột Kích thêm hàng dàn quân trong buildBattleSetup). */
     extraEdges?: number;
   } = {},
 ): ArmyPlan => {
@@ -86,18 +85,12 @@ export const composeArmy = (
   const sizes = [Math.floor(n * WAVES.share[0]), Math.floor(n * WAVES.share[1]), 0];
   sizes[2] = n - sizes[0]! - sizes[1]!;
 
-  const dual = year >= 10;
   const waves: ArmyWave[] = [];
   let cursor = 0;
   for (let w = 0; w < WAVES.share.length; w++) {
-    // Năm ≥ 10 hai mép; cờ hiệu Đột Kích thêm mép (tối đa bốn); mép sau luôn khác các mép trước.
-    const edgeCount = Math.min((dual ? 2 : 1) + (meta.extraEdges ?? 0), EDGES.length);
-    const edges: Edge[] = [];
-    for (let e = 0; e < edgeCount; e++) edges.push(rng.pick(EDGES.filter((x) => !edges.includes(x))));
+    // Địch chỉ tiến từ phía trước (mép S, spec 26/10/2026); cờ `extraEdges` và năm muộn chỉ thêm hàng dàn quân.
     const units: ArmySpawn[] = [];
-    for (let i = 0; i < sizes[w]!; i++) {
-      units.push({ unit: chosen[cursor++]!, edge: edges[i % edges.length]! });
-    }
+    for (let i = 0; i < sizes[w]!; i++) units.push({ unit: chosen[cursor++]!, edge: 'S' });
     waves.push({ spawnTick: WAVES.spawnTick[w]!, units });
   }
 

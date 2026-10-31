@@ -61,7 +61,10 @@ describe('existing_bindings_unchanged', () => {
   };
 
   it('king select', () => {
-    expectKeys('kingSelect', FREE, { '1': 'select.1', '2': 'select.2', '3': 'select.3', Enter: 'confirm', Escape: 'back' });
+    expectKeys('kingSelect', FREE, {
+      '1': 'select.1', '2': 'select.2', '3': 'select.3', Enter: 'confirm', Escape: 'back',
+      ArrowLeft: 'king.previous', ArrowRight: 'king.next',
+    });
   });
 
   it('planning', () => {
@@ -76,6 +79,10 @@ describe('existing_bindings_unchanged', () => {
     expectKeys('battle', FREE, {
       p: 'pause', P: 'pause', '1': 'speed.1', '2': 'speed.2', '3': 'speed.3', ' ': 'intervene', b: 'intervene', B: 'intervene', Escape: 'cancel',
     });
+    expectKeys('battle', FREE, { l: 'calendar', L: 'calendar' });
+    expect(resolveShortcut('l', 'battle', flags({ summaryOpen: true }))).toBeNull();
+    expect(resolveShortcut('l', 'battle', flags({ helpOpen: true }))).toBeNull();
+    expect(resolveShortcut('l', 'battle', flags({ mandatoryOpen: true }))).toBeNull();
     expect(resolveShortcut('Enter', 'battle', FREE)).toBeNull();
     expectKeys('battle', flags({ summaryOpen: true }), { Enter: 'confirm', ' ': 'confirm' });
     expect(resolveShortcut('p', 'battle', flags({ summaryOpen: true }))).toBeNull();

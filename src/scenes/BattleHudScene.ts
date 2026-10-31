@@ -5,7 +5,8 @@ import { INTERVENTION } from '../data/battle';
 import { toCss } from '../data/palette';
 import { UI_PALETTE } from '../data/uiPalette';
 import type { BattleResult } from '../game/battle/types';
-import { KIND_UNIT, type BattleWorld } from '../game/battle/world';
+import { KIND_UNIT, TEAM_FOE, type BattleWorld } from '../game/battle/world';
+import type { RunState } from '../game/run/state';
 import { CONTENT } from '../game/cards/registry';
 import type { GameEvents } from '../game/events';
 import type { RunController } from '../game/run/RunController';
@@ -16,7 +17,6 @@ import {
   foesRemaining,
   interventionCooldown,
   summaryLines,
-  throneHpFraction,
 } from '../ui/battle/battleReadout';
 import { InspectionView } from '../ui/info/InspectionView';
 import { entityAt } from '../ui/info/infoLines';
@@ -26,6 +26,13 @@ import { resolveShortcut, shortcutFlags, shortcutLabel } from '../ui/input/short
 import { openHelp } from './helpLauncher';
 import { bossReadout, type BossReadout } from '../ui/battle/battleReadout';
 import { DRAG_SLOP, GAP, MARGIN, textContent, type Point, type Rect } from '../ui/hud/layout';
+import { ENEMY_ARMY_TOOLTIP, armyHealth, healthText, throneHealth } from '../ui/hud/armyHealth';
+import { HealthBarView } from '../ui/hud/HealthBarView';
+import { kingTheme } from '../ui/kingSelect/kingTheme';
+import { CalendarModal } from '../ui/modals/CalendarModal';
+import { CalendarStrip } from '../ui/planning/CalendarStrip';
+import { allyStatusText, foeStatusText } from '../ui/planning/statusText';
+import { calendarCells } from '../ui/realm/calendarModel';
 import { RESULT_BUTTON, centredPanel, resultLayout } from '../ui/modals/modalLayout';
 import { createOverlay, fitOverlay } from '../ui/modals/overlay';
 import { ScoutPanel, tickClock } from '../ui/planning/ScoutPanel';
@@ -41,6 +48,7 @@ import {
 import {
   addUiText,
   createButton,
+  textStyle,
   createPanel,
   frameBorder,
   type Button,
@@ -61,8 +69,6 @@ const SPEEDS: readonly { speed: GameSpeed; label: string; tip: string[] }[] = [
 const BANNER_MS = 1200;
 const WIN_TEXT = 'Chiến thắng!';
 const LOSS_TEXT = 'Ngai thất thủ!';
-/** HP bar inside the clock panel: left of it the "m:ss" clock. */
-const CLOCK_TEXT_W = 64;
 const BAR_H = 16;
 const DOT_R = 4;
 const DOT_GAP = 14;
@@ -118,10 +124,14 @@ export class BattleHudScene extends Phaser.Scene {
   private goldBox!: UiBox;
   private goldIcon: Phaser.GameObjects.Image | null = null;
   private goldText!: Phaser.GameObjects.Text;
-  private clockBox!: UiBox;
   private clockText!: Phaser.GameObjects.Text;
-  private hpBar!: UiBox;
-  private hpFill!: Phaser.GameObjects.Graphics;
+  private yearText!: Phaser.GameObjects.Text;
+  private calendar!: CalendarStrip;
+  private calendarModal: CalendarModal | null = null;
+  private allyBar!: HealthBarView;
+  private foeBar!: HealthBarView;
+  private tick = 0;
+  private paused = false;
   /** The boss bar under the clock: shown while a boss is alive. */
   private bossBar!: UiBox;
   private bossFill!: Phaser.GameObjects.Graphics;
@@ -183,6 +193,9 @@ export class BattleHudScene extends Phaser.Scene {
     this.result = null;
     this.goldAtStart = this.controller.state.gold;
     this.scoutModal = null;
+    this.calendarModal = null;
+    this.tick = 0;
+    this.paused = false;
     this.inspected = null;
     this.hoveredId = null;
     this.lay = this.currentLayout();
@@ -214,11 +227,23 @@ export class BattleHudScene extends Phaser.Scene {
         : null;
     this.goldText = addUiText(this, 0, 0, '', 18).setOrigin(0, 0.5).setFontStyle('bold');
 
-    // Top centre: clock + throne HP.
-    this.clockBox = createPanel(this, 'panel', this.lay.clock.w, this.lay.clock.h);
-    this.clockText = addUiText(this, 0, 0, tickClock(0), 20).setOrigin(0, 0.5).setFontStyle('bold');
-    this.hpBar = createPanel(this, 'bar', 100, BAR_H);
-    this.hpFill = this.add.graphics();
+    // Top centre: the five-year strip, the year and the clock (floating over the field).
+    const floating = (size: number): Phaser.GameObjects.Text =>
+      this.add
+        .text(0, 0, '', textStyle(size, UI_PALETTE.creamLight))
+        .setOrigin(0.5)
+        .setFontStyle('bold')
+        .setShadow(2, 2, toCss(UI_PALETTE.outline), 0, false, true);
+    this.calendar = new CalendarStrip(this, CONTENT, this.tooltip, () => this.openCalendar());
+    this.yearText = floating(16);
+    this.clockText = floating(20);
+    this.showClock();
+    // Bottom corners: the throne's health (left), the enemy units' health (right).
+    this.allyBar = new HealthBarView(this, 'left');
+    this.foeBar = new HealthBarView(this, 'right', {
+      host: this.tooltip,
+      content: { title: 'Máu quân địch', lines: [[{ text: ENEMY_ARMY_TOOLTIP }]] },
+    });
     this.bossBar = createPanel(this, 'bar', 100, BAR_H);
     this.bossFill = this.add.graphics();
     this.bossText = addUiText(this, 0, 0, '', 12, UI_PALETTE.creamLight)
@@ -292,13 +317,17 @@ export class BattleHudScene extends Phaser.Scene {
 
     const bus = this.bus;
     this.offs.push(
-      bus.on('battle:tick', ({ tick }) => this.clockText.setText(tickClock(tick))),
+      bus.on('battle:tick', ({ tick }) => {
+        this.tick = tick;
+        this.showClock();
+      }),
       bus.on('clock:speed', ({ speed }) => this.showSpeed(speed)),
       bus.on('run:state', ({ state }) => {
         this.livesText.setText(`× ${state.lives}`);
         this.goldText.setText(`${state.gold}`);
         this.autoBtn.setLabel(autoLabel(state.autoFire));
         this.autoBtn.setActive(state.autoFire);
+        this.showYear(state);
       }),
       bus.on('log', ({ text }) => this.toasts.push(text)),
       bus.on('battle:ended', ({ result }) => this.onEnded(result)),
@@ -317,6 +346,8 @@ export class BattleHudScene extends Phaser.Scene {
     this.livesText.setText(`× ${this.controller.state.lives}`);
     this.goldText.setText(`${this.controller.state.gold}`);
     this.showSpeed(this.controller.runner?.clock.speed ?? 1);
+    this.showYear(this.controller.state);
+    this.applySkin();
     this.layout();
     this.refresh();
   }
@@ -332,7 +363,7 @@ export class BattleHudScene extends Phaser.Scene {
   private refresh(): void {
     const world = this.world;
     if (!world) return;
-    this.drawHp(throneHpFraction(world));
+    this.drawBars(world);
     this.drawBoss(bossReadout(world));
     this.foesText.setText(`Địch còn: ${foesRemaining(world)}`);
     this.drawDots(world.setup.waves.length, world.spawnedWaves);
@@ -368,22 +399,47 @@ export class BattleHudScene extends Phaser.Scene {
   }
 
   private placeToasts(): void {
-    const c = this.lay.clock;
-    const below = c.y + c.h + GAP * 2 + (this.bossShown ? BAR_H + 18 : 0);
+    const bs = this.lay.bossStatus;
+    const below = this.bossShown ? bs.y + bs.h + GAP : this.lay.clock.y + this.lay.clock.h + GAP * 2;
     this.toasts.setAnchor(this.scale.width / 2, below, this.scale.width - 2 * MARGIN);
   }
 
-  private drawHp(fraction: number): void {
-    const bar = this.hpBar.image;
-    const b = frameBorder(this, 'bar');
-    const innerW = this.hpBar.width - 2 * b;
-    const color =
-      fraction > 0.5 ? UI_PALETTE.good : fraction > 0.25 ? UI_PALETTE.warn : UI_PALETTE.bad;
-    const g = this.hpFill;
-    g.clear();
-    if (fraction <= 0) return;
-    g.fillStyle(color, 1);
-    g.fillRect(bar.x + b, bar.y + b, Math.max(1, Math.round(innerW * fraction)), BAR_H - 2 * b);
+  /** The two bottom bars: the throne (accent of the playing king) and the enemy units on the field. */
+  private drawBars(world: BattleWorld): void {
+    const state = this.controller.state;
+    const theme = kingTheme(state.kingId);
+    const throne = throneHealth(world);
+    this.allyBar.set(allyStatusText(state.kingId, CONTENT), throne, healthText(throne), theme.accent, state.kingId);
+    const army = armyHealth(world, TEAM_FOE);
+    const next = calendarCells(state, 1)[0];
+    this.foeBar.set(foeStatusText(next, CONTENT), army, healthText(army), UI_PALETTE.bad, state.kingId);
+  }
+
+  private showClock(): void {
+    this.clockText.setText(this.paused ? `${tickClock(this.tick)}  TẠM DỪNG` : tickClock(this.tick));
+  }
+
+  private showYear(state: RunState): void {
+    this.yearText.setText(`NĂM ${state.year} / ${state.rules.years}`);
+    this.calendar.setCells(calendarCells(state, 5));
+  }
+
+  /** The playing king's colours on every button and panel of the HUD. */
+  private applySkin(): void {
+    const skin = this.controller.state.kingId;
+    for (const b of [...this.speedButtons, this.intervene, this.autoBtn, this.wavesBtn, this.helpBtn]) b.setSkin(skin);
+    for (const box of [this.livesBox, this.goldBox, this.foesBox]) box.setSkin(skin);
+  }
+
+  private openCalendar(): void {
+    if (this.calendarModal || this.scoutModal || this.ended) return;
+    this.setAiming(false);
+    this.calendarModal = new CalendarModal(this, CONTENT, this.controller.state, this.tooltip, () => this.closeCalendar(), this.controller.state.kingId).setDepth(MODAL_DEPTH);
+  }
+
+  private closeCalendar(): void {
+    this.calendarModal?.destroy();
+    this.calendarModal = null;
   }
 
   private drawDots(waves: number, spawned: number): void {
@@ -441,6 +497,8 @@ export class BattleHudScene extends Phaser.Scene {
 
   private showSpeed(speed: GameSpeed): void {
     this.speedButtons.forEach((b, i) => b.setActive(SPEEDS[i]!.speed === speed));
+    this.paused = speed === 0;
+    this.showClock();
   }
 
   // ---- bảng thông tin nhà / lính (§10.7) ---------------------------------------------------
@@ -651,7 +709,7 @@ export class BattleHudScene extends Phaser.Scene {
       event.key,
       'battle',
       shortcutFlags(event, {
-        sideModalOpen: this.scoutModal !== null,
+        sideModalOpen: this.scoutModal !== null || this.calendarModal !== null,
         summaryOpen: this.ended && this.summary !== null,
       }),
     );
@@ -659,6 +717,10 @@ export class BattleHudScene extends Phaser.Scene {
     if (action === 'help.toggle') {
       event.preventDefault();
       this.bus.emit('ui:help', { open: true });
+      return;
+    }
+    if (this.calendarModal) {
+      if (action === 'cancel' || action === 'calendar') this.closeCalendar();
       return;
     }
     if (this.scoutModal) {
@@ -681,6 +743,9 @@ export class BattleHudScene extends Phaser.Scene {
       case 'intervene':
         this.toggleAim();
         break;
+      case 'calendar':
+        this.openCalendar();
+        break;
       case 'cancel':
         if (this.aiming) this.setAiming(false);
         break;
@@ -693,6 +758,8 @@ export class BattleHudScene extends Phaser.Scene {
     if (this.ended) return;
     this.ended = true;
     this.result = result;
+    this.closeCalendar(); // a side panel must not hide the banner and the summary
+    this.closeScout();
     this.setAiming(false);
     this.intervene.setEnabled(false);
     this.autoBtn.setEnabled(false);
@@ -795,13 +862,13 @@ export class BattleHudScene extends Phaser.Scene {
     this.goldText.setPosition(l.gold.x + 12 + (this.goldIcon ? 36 : 0), l.gold.y + l.gold.h / 2);
 
     const c = l.clock;
-    this.clockBox.resize(c.w, c.h);
-    this.clockBox.image.setPosition(c.x, c.y);
-    const inset = frameBorder(this, 'panel') + 4;
-    this.clockText.setPosition(c.x + inset + 4, c.y + c.h / 2);
-    const barX = c.x + inset + CLOCK_TEXT_W;
-    this.hpBar.resize(c.x + c.w - inset - barX, BAR_H);
-    this.hpBar.image.setPosition(barX, Math.round(c.y + (c.h - BAR_H) / 2));
+    this.clockText.setPosition(c.x + c.w / 2, c.y + c.h / 2);
+    this.clockText.setFontSize(desktop ? 20 : 16);
+    this.yearText.setPosition(l.year.x + l.year.w / 2, l.year.y + l.year.h / 2);
+    this.yearText.setFontSize(desktop ? 18 : 15);
+    this.calendar.layout(l.calendar, l.calendarLinks);
+    this.allyBar.layout(l.allyStatus);
+    this.foeBar.layout(l.foeStatus);
 
     const f = l.foes;
     this.foesBox.resize(f.w, f.h);
@@ -824,9 +891,10 @@ export class BattleHudScene extends Phaser.Scene {
     this.layoutScout();
     this.info.layout(this.screen(), battleControls(l));
 
-    this.bossBar.resize(c.w, BAR_H);
-    this.bossBar.image.setPosition(c.x, c.y + c.h + GAP + 14);
-    this.bossText.setPosition(c.x + c.w / 2, c.y + c.h + GAP);
+    const bs = l.bossStatus;
+    this.bossBar.resize(bs.w, BAR_H);
+    this.bossBar.image.setPosition(bs.x, bs.y + 14 + GAP);
+    this.bossText.setPosition(bs.x + bs.w / 2, bs.y + GAP);
     this.placeToasts();
     this.tooltip.refresh();
     this.layoutBanner();
@@ -865,6 +933,10 @@ export class BattleHudScene extends Phaser.Scene {
   }
 
   private teardown(): void {
+    this.closeCalendar();
+    this.calendar.destroy();
+    this.allyBar.destroy();
+    this.foeBar.destroy();
     for (const off of this.offs) off();
     this.offs = [];
     this.input.keyboard?.off(Phaser.Input.Keyboard.Events.ANY_KEY_DOWN, this.onKey, this);

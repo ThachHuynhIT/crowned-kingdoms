@@ -22,7 +22,7 @@ Giữ ô logic **32 px** và sân logic **384 px**, không đổi mô phỏng th
 | Boss                       | 48×48                  |                                                                                |
 | Đạn / hiệu ứng             | 4×4 – 8×8              | Tia lửa, mũi tên (4 hướng + 4 chéo, vẽ riêng, không xoay), đá, bùn             |
 | Tảng đá can thiệp          | 16×16 + bóng 24×8      |                                                                                |
-| Tranh thẻ                  | 32×24                  | Cửa sổ tranh trong `CardView`                                                  |
+| Tranh thẻ                  | 32×24 (tạm) → **96×72** | Cửa sổ tranh trong `CardView`; 96×72 là tranh minh họa mới đã chốt 29/10/2026 (xem mục "Tranh thẻ") |
 | Icon loại thẻ / tài nguyên | 16×16                  |                                                                                |
 | Chân dung vua              | 32×32                  | Ghép trong ô chọn vua                                                          |
 | Khung thẻ (UI)             | ô nguồn 24×32, slice 8 | `card`, `cardUncommon`, `cardRare`, `cardSelected`                             |
@@ -69,6 +69,86 @@ Khung thẻ theo độ hiếm (thêm vào texture `ui` từ G1): thường = vi�
 - **Không xoay sprite**; lật ngang để quay trái/phải được phép. **Neo ở chân** (origin 0.5, 1) và xếp chiều sâu theo y của chân (y-sort).
 - Chi tiết 1 px trên tile phải thưa (≤ 10% diện tích) để đơn vị đứng trên vẫn đọc được.
 
+## Góc nhìn
+
+> **BẮT BUỘC cho mọi lần tạo ảnh (người hay AI/Codex).** Trước khi tạo hoặc yêu cầu tạo BẤT KỲ ảnh nào cho game (công trình, lính, địa hình, vật trang trí, tường núi, icon…), phải: (1) đọc hết mục "Góc nhìn" này và mục "Quy tắc vẽ" ở trên; (2) đính kèm ảnh tham chiếu đã duyệt `art-review/style-references/harvester-house-front-approved.png` cho mọi công trình, và ảnh đã duyệt cùng loại (nếu có) cho loại khác; (3) dựng prompt từ **Prompt mẫu dùng lại** bên dưới (công cụ `docs/art-review/g3e/buildings/make_prompts.py` lấy đúng khối này, không tự chép lại); (4) duyệt kết quả bằng **Kiểm trước khi duyệt**. Prompt không dẫn tới tài liệu này hoặc thiếu ảnh tham chiếu thì không được chạy. Ảnh đi ngược các điểm trên bị loại, không "sửa dần" sau khi đã thêm chi tiết.
+
+Từ 26/10/2026 cảnh theo **Stardew Valley 2.5D** (đã chốt với chủ dự án), không còn nhìn thẳng từ trên xuống và không phải isometric. Camera nhìn xuống **45°** (chủ dự án chốt 26/10/2026: nhìn xéo xuống 45°), mặt đất là lưới vuông; vật đứng được vẽ như sau:
+
+- **Công trình = mái + mặt tiền, hai phần cao ngang nhau:** ở 45° mặt phẳng mái nằm ngang và mặt tiền thẳng đứng bị rút ngắn như nhau (cos 45° = sin 45°), nên mái chiếm khoảng 45% và mặt tiền khoảng 45% chiều cao sprite (phần móng/chân ~10%); mái nhìn từ trên xuống, thấy rõ mặt phẳng mái dốc với từng hàng ngói/rơm/ván chạy ngang; mặt tiền KHÔNG được vẽ cao hơn mái, cửa chính ở giữa, có đổ bóng dưới mái lên tường; chân móng ngắn. **Không thấy tường bên**, không xoay công trình, không hình thoi 2:1. Cạnh ngang nằm ngang, cạnh đứng nằm đứng, hình dáng gần đối xứng trái–phải.
+- **Vật phẳng trên đất** (ruộng, vòng pháp thuật, hồ): thấy mặt đất là hình chữ nhật rộng, phần nhô lên (hàng rào, bậc) có chiều cao thấy rõ.
+- **Vách núi và tường đá:** thấy mặt vách hướng về người chơi, đỉnh vách và biển/trời phía sau (xem [spec](superpowers/specs/2026-10-26-oblique-view-mountain-wall-design.md)).
+- **Quy ước chung:** ánh sáng trên-trái; viền là màu tối hơn của chính vật liệu (không viền đen thuần); bão hòa ấm; họa tiết chất liệu (ngói, ván, đá) rõ; neo chân công trình ở đáy sprite và y-sort.
+- Hai nhà tranh/trại lính của lô `ai-v1` đầu tiên (thấy hai mặt) sẽ được vẽ lại theo quy ước này; các nhóm công trình mới đều theo quy ước này.
+
+### Mẫu công trình chính diện đã duyệt — nhà đội Thợ Gặt (26/10/2026)
+
+![Nhà đội Thợ Gặt: nhìn thẳng chính diện, điểm nhìn cao thấy mái](art-review/style-references/harvester-house-front-approved.png)
+
+Ảnh trên là **mẫu phong cách đã được chủ dự án duyệt trong chat**, dùng làm tham chiếu cho các lần tạo công trình sau. Đây là concept phóng lớn, chưa phải sprite native đã kiểm pixel/alpha và chưa được đưa vào game. Tên đúng là **Thợ Gặt** (thu hoạch lúa), không phải Thợ Gạch. Ảnh này do AI tạo cho chủ dự án (không phải ảnh của game khác), lưu trong repo chỉ để làm tham chiếu và không được đưa vào game.
+
+- **Hướng nhà luôn thẳng chính diện:** mặt tiền đối diện người xem; hai chân góc mặt tiền cùng cao độ; xà ngang, bậu cửa và chân móng nằm ngang; cột đứng thẳng. Không thấy tường bên trái/phải, không xoay chéo, không isometric.
+- **Điểm nhìn xéo xuống 45°, không nghiêng sang bên:** thấy mái từ trên xuống nhưng mặt tiền vẫn thẳng, hai mặt cao ngang nhau. Góc 45° trong quy ước chung là mục tiêu; ảnh tham chiếu và các dấu hiệu hình học này là tiêu chí duyệt, không phải phép đo camera chính xác.
+- **Mái chạy ngang:** sống mái từ trái sang phải, song song mặt tiền; mặt mái trước rộng, có dải mái phía sau sống mái ở phía trên như ảnh mẫu. Thể hiện phần mái sau bằng cách vẽ cách điệu, không xoay cả ngôi nhà để lộ mái. Tránh mái có sống chạy chéo sâu vào màn hình hoặc đầu hồi cao che hết mái sau.
+- Hình khối gọn, gần cân đối; cửa chính ở giữa, đồ nghề có thể lệch hai bên. Ngói đất nung, gỗ nâu, tường vữa ấm; bó lúa vàng, liềm, cào, giỏ thóc và bao hạt nhận diện đội Thợ Gặt. Công trình khác thay vật liệu/đồ nghề theo chức năng, giữ cùng góc nhìn.
+- Pixel rõ cụm, ánh sáng trên-trái, nền trong suốt, toàn bộ mái và chân nhà nằm trong ảnh có khoảng đệm. Khi làm sprite thật phải giảm chi tiết theo kích thước native; không coi số pixel của concept là kích thước sản xuất.
+
+**Prompt mẫu dùng lại** (đính kèm ảnh tham chiếu trên; thay phần trong ngoặc vuông):
+
+```text
+Create one isolated pixel-art building for Crowned Kingdoms: [building and function].
+Use the attached approved harvester house as the camera and style reference.
+STRICT straight-on FRONT VIEW with the camera pitched 45 degrees DOWN (a 45-degree downward oblique view),
+orthographic game-art styling: the roof plane (or the top of a tower or windmill) and the front facade
+appear about EQUALLY tall because of the 45-degree pitch.
+Front facade faces the viewer exactly; horizontal beams, sills, foundation and eaves stay horizontal;
+vertical posts stay vertical; both front corners have the same height. No visible side walls.
+NO diagonal building rotation, NO isometric view, NO diamond ground base.
+Roof ridge runs LEFT TO RIGHT, parallel to the facade. Show a broad front roof plane and a
+smaller rear roof strip above the ridge, matching the reference's stylized roof geometry.
+Keep the house front-facing while revealing the roof; do not turn it sideways.
+Compact readable silhouette, cozy warm medieval pixel art, crisp square pixel clusters,
+upper-left lighting, dark material-colored outlines. [Materials and identifying tools.]
+Whole building visible, transparent background, padding around roof and feet.
+No people, text, labels, UI, watermark, blur or antialiasing.
+Concept preview only; native sprite size and pixel cleanup are a separate production step.
+```
+
+> Khi tạo qua Codex/imagegen để cắt sprite trong repo, thay dòng "transparent background" bằng nền **đen phẳng #000000** (không quầng sáng, không bóng, không nền đất): công cụ `make_assets.py` tách nền đen thành alpha 0/255 rồi thu nhỏ về 64 px ảnh rộng. Chiều cao tối đa 80 px ảnh (một ô bàn cờ); công trình thấp (ruộng) có thể thấp hơn.
+
+**Công trình không phải nhà mái dốc (tháp, cối xay, đài, lò…):** vẫn đúng một quy tắc — mặt tiền thẳng, điểm nhìn CAO nhìn xuống nên PHẢI THẤY PHẦN NÓC/ĐỈNH: thấy mặt trên của mái nón, mái vòm, nắp tháp, mặt bục hoặc miệng lò từ trên xuống (đỉnh là một hình bầu dục/chữ nhật dẹt có chiều rộng nhìn thấy, không phải chỉ một đường nét hay chóp nhọn nhìn ngang). Đỉnh công trình hướng lên và hơi ra phía người xem; thân công trình thẳng đứng, không xiên, không nghiêng sang bên. Cánh cối xay, cờ, cột nhô lên chỉ là phụ kiện gắn trên phần nóc/thân, không thay thế phần nóc đó.
+
+**Kiểm trước khi duyệt:** mặt tiền thẳng · thấy được phần nóc/mái từ trên xuống (kể cả tháp, cối xay) · không lộ tường bên · mái có chiều sâu mà nhà không xoay · nhận ra chức năng · đủ mái/chân · đọc được khi thu nhỏ. Nếu ảnh bị xéo, sửa hướng nhà trước khi thêm chi tiết.
+
+## Chân dung vua
+
+![Chín chân dung vua đã duyệt](art-review/style-references/king-portraits-approved.png)
+
+Bộ chín chân dung **đã được chủ dự án duyệt trong chat (29/10/2026)**, thay mẫu vuông 64×64 cũ (cất ở `docs/art-review/g3e/portraits/_rejected_square/`). Ảnh nguồn nằm ở `docs/art-review/g3e/portraits/<vua>/source.png` (1024×1536, concept chưa phải sprite native); prompt sinh bằng `docs/art-review/g3e/portraits/make_prompts.py` và vẫn bắt buộc dẫn Codex đọc tài liệu này, đính kèm ảnh tham chiếu đã duyệt. Dùng cho thẻ vua dọc trong màn chọn vua.
+
+- **Khung:** bán thân dọc tỉ lệ 2:3 (thu về **96×144** px ảnh), nhìn từ đầu tới đầu gối hoặc thắt lưng, đứng hoặc ngồi uy nghi, nhìn thẳng. Đầu cao khoảng 22% ảnh.
+- **Thân hình:** chiến binh dạn dày trận mạc: vai rộng, cơ bắp, sẹo, giáp và áo bạc màu, vết trầy. Không phải nông dân hiền lành.
+- **Vật đặc trưng** đọc được ngay, hình khối lớn, đúng "vua của cái gì" (gậy tinh thể, liềm, búa đá, gậy rễ, mỏ neo, búa rèn, cờ lê, trăng khuyết, cung và kiếm cong).
+- **Trang phục:** Chất liệu thật của đồ vật, không dùng nguyên liệu chủ đề làm áo (vua Lúa Mì mặc vải len thêu hoa văn, không phải rơm hay lúa). Hoa văn thêu, viền, họa tiết rõ.
+- **Màu:** một tông chủ đạo riêng mỗi vua (tím, vàng cam, xám xanh, lục, xanh biển, đỏ than, đồng, chàm, cát vàng) cùng 2–3 sắc độ và một điểm nhấn ấm nhỏ; nhận ra khi thu nhỏ 24×36.
+- **Nền:** cảnh fantasy theo chủ đề của vua (đồng lúa và cối xay, núi và đá rune, kệ sách và vòng rune, rừng cổ thụ, biển bão và hải đăng, lò rèn và dung nham, bánh răng và đồng hồ, trăng khuyết và cổng đá, thảo nguyên và lều), vẽ nhạt và mềm hơn nhân vật để vua là tâm điểm; không khung, viền hay vignette.
+- **Cấm:** chữ, số, khung thẻ (do UI dựng), watermark, làm mờ, anti-aliasing, gradient mượt, nhân vật khác.
+- **Trước khi vào game:** `ảnh nguồn → thu về 96×144 → ép về bảng màu → kiểm → duyệt → đăng ký (assets.manifest.yml, CREDITS.md)`; chưa nối vào `src` khi chưa làm hết các bước này.
+
+## Tranh thẻ
+
+![Hai mẫu tranh thẻ đã duyệt: Bù Nhìn Gác và Lễ Hội Mùa Màng](art-review/style-references/card-art-approved.png)
+
+Phong cách **đã được chủ dự án duyệt trong chat (29/10/2026)** qua hai mẫu Lúa Mì. Ảnh nguồn ở `docs/art-review/g3e/cards/<CardId>/source.png`, prompt cùng thư mục, danh mục 94 thẻ ở `cards.json` (xuất từ registry), công cụ `docs/art-review/g3e/cards/make_prompts.py` (cổng `tools/test_art_prompts.py`).
+
+- **Khung:** ảnh **4:3** (nguồn khoảng 1024×768), thu về **96×72** px ảnh (cỡ native chủ dự án chốt). Một chủ thể rõ ở giữa, chiếm khoảng 70% khung, đọc được khi thu còn 48×36.
+- **Công trình** (lính, tháp, kinh tế, hỗ trợ): dùng **nguyên văn khối "Prompt mẫu dùng lại"** ở mục "Góc nhìn" (công cụ lấy bằng `style_template()`), giữ góc 45° chính diện thấy nóc; phần "transparent background" được ghi đè bằng cảnh nền theo vương quốc. **Bùa, sách, ngai:** một vật/hiệu ứng tiêu biểu hoặc chiếc ngai, cùng góc nhìn.
+- **Màu:** một tông chủ đạo theo vương quốc cùng 2–3 sắc độ và một điểm nhấn ấm; đính kèm chân dung đã duyệt của vua sở hữu thẻ để giữ bảng màu (thẻ trung lập không đính kèm).
+- **Nền:** cảnh sơn nhẹ theo chủ đề vương quốc (đồng lúa và cối xay cho Lúa Mì...), nhạt và mềm hơn chủ thể; không khung, viền, vignette.
+- **Gợi ý hình ảnh từng thẻ** (`VISUAL` trong công cụ) khi tên và chức năng chưa đủ để vẽ đúng chủ thể (ví dụ Bù Nhìn Gác phải có con bù nhìn, không phải nỏ).
+- **Cấm:** chữ, số, khung thẻ (UI dựng), watermark, làm mờ, anti-aliasing, gradient mượt.
+- **Trước khi vào game:** `ảnh nguồn → thu về 96×72 → ép về bảng màu → kiểm → duyệt → đăng ký (assets.manifest.yml, CREDITS.md)` rồi thêm vào `VERTICAL_CARD_ART`; vùng tranh của thẻ nhỏ phải được chỉnh để chứa vừa 96×72 trước khi nối.
+
 ## Hiển thị
 
 - Game chạy `pixelArt: true` (nearest-neighbour) và **zoom số nguyên** (vương quốc: zoom 2; trận: `max(1, floor(min(width, height + 96) / 384))`). Không bao giờ scale lẻ; sprite/scroll hiển thị snap pixel, không sửa float của world để snap render. Chữ `FONT_UI` vẽ ở kích thước hiển thị gốc, không scale texture text theo tỷ lệ lẻ; kiểm độ rõ/glyph tiếng Việt bằng browser.
@@ -84,11 +164,11 @@ Hợp đồng **từ G1** (spec §11.4): mọi chỗ dùng sprite chỉ gọi fr
 
 ## Nguồn asset tạm
 
-Pack CC0/CC-BY từ itch.io, Kenney, OpenGameArt — ghi vào `CREDITS.md` kèm license. AI chỉ dùng cho moodboard/concept, không dùng làm sprite cuối.
+Pack CC0/CC-BY từ itch.io, Kenney, OpenGameArt — ghi vào `CREDITS.md` kèm license. Ảnh AI do chủ dự án cung cấp là nguồn hợp lệ cho sprite cuối (xem mục "Asset ngoài & AI"), phải đi qua quy trình duyệt từng nhóm.
 
 ## Asset ngoài & AI
 
 - Mọi asset ngoài phải qua [ASSET_LICENSES.md](ASSET_LICENSES.md) và được ghi vào [ASSET_MANIFEST.md](ASSET_MANIFEST.md) (dữ liệu ở `docs/assets.manifest.yml`) + `CREDITS.md` trước khi commit. Không tự tải rồi commit chỉ vì thấy URL.
-- AI chỉ dùng cho moodboard/concept/silhouette/color/sprite draft; không đưa thẳng vào atlas. Pipeline: `concept → native-size draft → color cleanup → manual pixel cleanup → animation → review → atlas`.
+- Ảnh AI (OpenAI imagegen qua Codex, do chủ dự án cung cấp và duyệt từng nhóm) dùng làm nguồn cho sprite cuối: không đưa nguyên ảnh vào atlas mà phải `ảnh nguồn → tách nền → thu nhỏ về native size → kiểm alpha/pixel → duyệt → đăng ký (assets.manifest.yml, CREDITS.md)`; nguồn và prompt lưu trong `docs/art-review/`. Mọi lần tạo ảnh tuân thủ khung BẮT BUỘC ở mục "Góc nhìn".
 - Asset chưa đạt yêu cầu: đánh dấu TODO, không tự ý đổi native size/projection, không xoay sprite, giữ nguyên frame name khi thay art.
 - Checklist nghiệm thu: đúng native size theo metadata · đúng projection · màu mở, phân biệt phe/trạng thái · mép alpha 0/255, bóng riêng alpha 128 có khai báo · không anti-aliasing/blur/gradient mượt · ánh sáng trên-trái · silhouette đọc được ở 1× · origin (0.5, 1) · đúng frame name · license đã ghi.

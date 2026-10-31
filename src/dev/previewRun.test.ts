@@ -1,6 +1,7 @@
 import { describe, expect, it } from 'vitest';
 import { RUN } from '../data/run';
 import { CONTENT } from '../game/cards/registry';
+import { bossEdge } from '../game/run/battleSetup';
 import { createPreviewRun, previewTargets, type PreviewTarget } from './previewRun';
 
 describe('preview_targets_follow_data', () => {
@@ -54,6 +55,15 @@ describe('fixtures are real rule states, not claims of earlier wins', () => {
       expect(state.phase).toBe('planning');
       expect(state.played).toBe(true);
       expect(state.army?.boss).toBeDefined();
+    }
+  });
+
+  it('southern_preview: every preview army and boss comes in from the south', () => {
+    for (const t of previewTargets()) {
+      const { state } = createPreviewRun(t, CONTENT);
+      if (state.army === null) continue;
+      expect(state.army.waves.flatMap((w) => w.units.map((u) => u.edge)).every((e) => e === 'S')).toBe(true);
+      if (t.kind === 'boss') expect(bossEdge(state.army)).toBe('S');
     }
   });
 

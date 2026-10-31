@@ -1,4 +1,4 @@
-import { UI_FRAMES, type UiFrame, type UiFrameDef } from './uiArt';
+import { UI_FRAMES, baseFrame, type AnyUiFrame, type UiFrame, type UiFrameDef } from './uiArt';
 
 /**
  * Kenney "Pixel UI Pack" (CC0) 9-slice frames laid over the generated UI frames
@@ -36,6 +36,6 @@ export const activateUiKitFrames = (frames: readonly UiFrame[]): void => {
 
 export const resetUiKitFrames = (): void => active.clear();
 
-/** Size, slice and border of `frame` as actually painted in the atlas. */
-export const uiFrameDef = (frame: UiFrame): UiFrameDef =>
-  active.has(frame) ? UI_KIT_FRAME : UI_FRAMES[frame];
+/** Size, slice and border of `frame` as actually painted in the atlas; king frames (`base@king`) are always generated. */
+export const uiFrameDef = (frame: AnyUiFrame): UiFrameDef =>
+  active.has(frame as UiFrame) ? UI_KIT_FRAME : UI_FRAMES[baseFrame(frame)];

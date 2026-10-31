@@ -1,4 +1,5 @@
 /** Dựng BattleSetup từ RunState (spec §5.3: G1 = cấp 1; §3.6: cấp địch). Thuần, không sửa đầu vào. */
+import { formationRowsFor } from '../battle/bounds';
 import { EMBER_TICKS, ENEMY_LEVEL_STAT, WAVES } from '../../data/battle';
 import { BOSSES } from '../../data/bosses';
 import { BOSS_SUMMON_UNITS } from '../../data/raiders';
@@ -350,13 +351,8 @@ export const structureFor = (state: RunState, plot: number, content: Content): S
   };
 };
 
-/** Mép đầu tiên của đợt 2 (nơi boss xuất hiện); nếu đợt 2 trống thì mép đầu tiên có quân, rồi `N`. */
-export const bossEdge = (army: NonNullable<RunState['army']>): Edge => {
-  const second = army.waves[1]?.units[0]?.edge;
-  if (second !== undefined) return second;
-  for (const wave of army.waves) if (wave.units[0] !== undefined) return wave.units[0].edge;
-  return 'N';
-};
+/** Boss cũng tiến từ phía trước (mép S), bất kể quân trong đợt xuất từ mép nào. */
+export const bossEdge = (_army: NonNullable<RunState['army']>): Edge => 'S';
 
 /**
  * Boss của năm (§7.3): HP nhân `1 + difficultyBudgetStep × gai` (không nhân hệ số cấp địch), quân triệu hồi
@@ -418,15 +414,17 @@ export function buildBattleSetup(state: RunState, content: Content): BattleSetup
       : content.enemyKing(army.attacker).banner;
   const banner = bannerDef?.effects ?? [];
   const speedScale = foeSpeedMult(state);
+  const extraEdges = banner.reduce((sum, e) => (e.type === 'extraEdge' ? sum + e.count : sum), 0);
   const waves: WaveSetup[] = army.waves.map((w) => ({
     spawnTick: w.spawnTick,
     spawns: w.units.map((s) => {
       const def = content.unit(s.unit);
       return {
         stats: unitStats(def, mult, def.tags.includes('siege'), content, banner, speedScale),
-        edge: s.edge,
+        edge: 'S' as const, // mọi đợt tiến từ phía trước, kể cả army cũ lưu N/E/W
       };
     }),
+    formationRows: formationRowsFor(state.year, extraEdges, w.units.length),
   }));
 
   const boss = bossSetup(state, army, content, structures, speedScale);
