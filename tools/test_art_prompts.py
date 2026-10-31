@@ -184,5 +184,41 @@ class IconPromptGateTest(unittest.TestCase):
             ip.ROOT = old
 
 
+uspec = importlib.util.spec_from_file_location('unit_prompts', ROOT / 'docs/art-review/g3e/units/make_prompts.py')
+up = importlib.util.module_from_spec(uspec)
+uspec.loader.exec_module(up)
+
+
+class UnitPromptGateTest(unittest.TestCase):
+    def test_reference_and_style_doc_exist(self):
+        self.assertTrue((ROOT / up.REFERENCE).exists())
+        self.assertTrue((ROOT / up.STYLE_DOC).exists())
+
+    def test_every_unit_prompt_points_at_the_doc_and_carries_the_reference(self):
+        for unit in up.UNITS:
+            p = up.build_prompt(f'x/{unit}/source.png', unit)
+            self.assertIn('docs/ART_STYLE.md', p, unit)
+            self.assertIn('BẮT BUỘC TRƯỚC KHI VẼ', p, unit)
+            self.assertIn(up.REFERENCE, p, unit)
+            self.assertIn('45 degrees', p, unit)
+            self.assertIn('#FF00FF', p, unit)
+            self.assertIn('ALLY', p, unit)
+            self.assertIn('No text', p, unit)
+
+    def test_native_size_follows_four_art_px_per_world_unit(self):
+        self.assertIn('64x64', up.build_prompt('x.png', 'militia'))
+        self.assertIn('64x96', up.build_prompt('x.png', 'reaper'))
+
+    def test_generation_is_refused_without_the_doc_or_reference(self):
+        old = up.ROOT
+        try:
+            with tempfile.TemporaryDirectory() as d:
+                up.ROOT = Path(d)
+                with self.assertRaises(SystemExit):
+                    up.build_prompt('x.png', 'militia')
+        finally:
+            up.ROOT = old
+
+
 if __name__ == '__main__':
     unittest.main()
