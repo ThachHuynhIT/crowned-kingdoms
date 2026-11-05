@@ -50,11 +50,28 @@ Spec: `docs/superpowers/specs/2026-10-28-king-select-redesign-design.md`. Đã x
 - Công trình Lúa Mì thử: Kho Thóc, Cối Xay Gió (`docs/art-review/g3e/buildings/wheat/`). Các bản bị loại nằm trong `_rejected_*` và `_superseded_*`.
 - Chân dung 9 vua đã duyệt và đã vào game (xem trên); mẫu vuông cũ ở `_rejected_square/`, bản Lúa Mì dùng rơm ở `_rejected_wheat_straw/`. Phong cách ở `ART_STYLE.md` mục "Chân dung vua".
 
-## Việc tiếp theo (người dùng chọn thứ tự)
-1. Cụm hiện tại: **biểu tượng UI (49), tranh thẻ dọc (94)** (chân dung vua đã xong). Chân dung nếu cần vẽ lại: `python docs/art-review/g3e/portraits/make_prompts.py <vua ...>` rồi `bash .superpowers/p.sh`, sau đó `python tools/prepare_king_portraits.py`.
-2. Công trình P0 (63 cái, mỗi vua một nhóm; 3 vua chơi được trước): `python docs/art-review/g3e/buildings/make_prompts.py wheat [id ...]`, rồi `python docs/art-review/g3e/buildings/make_assets.py wheat` để tách nền, thu nhỏ 64 px và dựng bảng duyệt `wheat/sheet.png`. Hai nhà cũ (Nhà Tranh, Trại Lính) phải vẽ lại theo góc mới.
-3. Lính P0 (40 loại × 6 pose), đạn và hiệu ứng P0 (17 + 26), địa hình và trang trí P2.
-4. G3e còn lại: giao diện mobile cơ bản đã nằm trong plan trên; còn kiểm cảm ứng thật.
+## Phạm vi PR #12 từ 06/11/2026: TRỌN BỘ asset vua Lúa Mì
+Chủ dự án đổi kế hoạch (06/11/2026): PR #12 (`g3e-ux-and-art`, nhánh duy nhất) phải có **toàn bộ asset P0 của vua Lúa Mì** đã duyệt và đã nối vào game. Các vua khác làm sau (lính vua Đá đã làm xong trước khi đổi kế hoạch, giữ nguyên). Danh sách đối chiếu `tools/asset-admin/planned.json` (49 mục có "wheat") với những gì đã có.
+
+| Nhóm | Asset | Trạng thái |
+|---|---|---|
+| Chân dung | Vua Lúa Mì | ✅ đã duyệt, đã vào game |
+| Màu giao diện | `KING_THEMES.wheat` (khung, nút, thẻ, thanh) | ✅ đã vào game |
+| Tường núi | đoạn tường + biển theo vua | ✅ đã vào game |
+| Lính | Dân Quân, Thợ Gặt, Nông Binh × 6 tư thế × 2 phe | ✅ đã duyệt, đã vào game |
+| Tranh thẻ (96×72) | 10 thẻ: Ngai, Ruộng Lúa, Bùa Phân Bón, Cối Xay Gió, Lễ Hội Mùa Màng, Kho Thóc, Khởi Nghĩa Nông Dân, Dân Quân, Đội Thợ Gặt, Bù Nhìn Gác | 🟡 ảnh đã duyệt phong cách (`cards/sheet-wheat.png`), **chưa nối**: cần chỉnh `cardLayout`/`fitArt` cho thẻ nhỏ rồi thêm vào `VERTICAL_CARD_ART` |
+| Ô bàn cờ | ô khoá / ô mở / bệ Ngai skin Lúa Mì (`public/assets/art/ai-v1/plots/wheat_*.png`) | 🟡 đã duyệt và đã cắt, **chưa nối** vào `plotFrame` |
+| Công trình (64 px, góc 45°) | Kho Thóc, Cối Xay Gió | 🟡 mẫu chờ duyệt (`buildings/wheat/`) |
+| | Ruộng Lúa, Khởi Nghĩa Nông Dân, Đội Thợ Gặt, Bù Nhìn Gác | ⬜ mới có prompt, chưa vẽ |
+| | Dân Quân (nhà) | ⬜ nhà tranh `cottage` cũ thấy hai mặt, phải vẽ lại theo góc 45° |
+| | Ngai Bó Lúa | ⬜ chưa vẽ |
+| Biểu tượng | Huy hiệu Vua Lúa Mì (`icon_king_wheat`) | ⬜ chưa vẽ |
+
+Ngoài P0 (P2, không bắt buộc cho PR này): kiến trúc cấp 2/3 và hoạt ảnh của 7 công trình + Ngai, hoạt ảnh mở rộng của 3 lính, trang trí Xe Lúa (`wild_wheat_cart`). Dùng chung mọi vua, đã duyệt nhưng chưa nối: nền đất 27 ô, 15 vật hoang dã.
+
+Thứ tự đề xuất: (1) duyệt Kho Thóc + Cối Xay Gió → vẽ 4 công trình còn lại, nhà Dân Quân và Ngai theo cùng mẫu → nối vào `IMAGE_BUILDINGS`; (2) nối tranh thẻ Lúa Mì; (3) nối ô bàn cờ Lúa Mì; (4) huy hiệu vua. Công cụ công trình: `python docs/art-review/g3e/buildings/make_prompts.py wheat [id ...]`, rồi `python docs/art-review/g3e/buildings/make_assets.py wheat` (tách nền, thu nhỏ 64 px, bảng duyệt `wheat/sheet.png`).
+
+Việc G3e khác (giữ nguyên): biểu tượng UI chung (12 mẫu chờ duyệt), tranh thẻ 5 vua khác, kiểm cảm ứng thật trên mobile.
 
 ## Quy tắc đã thống nhất với người dùng
 - Duyệt từng nhóm nhỏ; thử một mẫu trước khi vẽ cả nhóm; mọi prompt lấy từ `docs/ART_STYLE.md` kèm ảnh tham chiếu (`tools/test_art_prompts.py` chặn khi thiếu).
