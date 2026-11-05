@@ -216,8 +216,45 @@ class UnitPromptGateTest(unittest.TestCase):
                 up.ROOT = Path(d)
                 with self.assertRaises(SystemExit):
                     up.build_prompt('x.png', 'militia')
+                with self.assertRaises(SystemExit):
+                    up.build_pose_prompt('x.png', 'militia')
         finally:
             up.ROOT = old
+
+
+class UnitPosePromptGateTest(unittest.TestCase):
+    def test_six_poses_match_the_game_animations(self):
+        self.assertEqual([(p[0], p[1]) for p in up.POSES],
+                         [('idle', 0), ('idle', 1), ('walk', 0), ('walk', 1), ('attack', 0), ('attack', 1)])
+
+    def test_every_pose_prompt_points_at_the_doc_and_attaches_the_unit_sample(self):
+        for unit in up.UNITS:
+            p = up.build_pose_prompt(f'x/{unit}/poses-source.png', unit)
+            self.assertIn('docs/ART_STYLE.md', p, unit)
+            self.assertIn('BẮT BUỘC TRƯỚC KHI VẼ', p, unit)
+            self.assertIn(up.REFERENCE, p, unit)
+            self.assertIn(f'docs/art-review/g3e/units/{unit}/source.png', p, unit)
+            self.assertIn('3 columns', p, unit)
+            self.assertIn('SAME character', p, unit)
+            self.assertIn('#FF00FF', p, unit)
+            self.assertIn('No text', p, unit)
+            self.assertIn(up.ATTACK[unit], p, unit)
+
+    def test_pose_runner_attaches_the_reference_and_the_unit_sample(self):
+        up.main(['militia'], poses=True)
+        runner = (ROOT / '.superpowers/up.sh').read_text(encoding='utf-8')
+        self.assertIn(f'-i {up.REFERENCE} -i docs/art-review/g3e/units/militia/source.png', runner)
+        self.assertIn('docs/art-review/g3e/units/militia/poses-source.png', runner)
+
+    def test_pose_prompt_is_refused_without_the_approved_idle_sample(self):
+        old = up.P
+        try:
+            with tempfile.TemporaryDirectory() as d:
+                up.P = Path(d)
+                with self.assertRaises(SystemExit):
+                    up.build_pose_prompt('x.png', 'militia')
+        finally:
+            up.P = old
 
 
 if __name__ == '__main__':
