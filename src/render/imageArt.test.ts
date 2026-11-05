@@ -17,6 +17,14 @@ describe('image art mapping', () => {
     for (const file of Object.values(IMAGE_BUILDINGS)) expect(IMAGE_ART_FILES).toContain(file);
   });
 
+  it('the three Wheat units use their own posed art (G3e unit poses, 2026-11-06)', () => {
+    for (const unit of ['militia', 'reaper', 'peasant']) {
+      expect(IMAGE_UNITS[unit]).toBe(unit);
+      expect(unitPoseFile(unit, 'foe', 'attack', 1)).toBe(`${unit}_foe_5`);
+    }
+    expect(IMAGE_ART_FILES.some((f) => f.startsWith('spearman'))).toBe(false);
+  });
+
   it('idle, walk and attack use six different poses', () => {
     const all = Object.values(POSES).flat();
     expect(new Set(all).size).toBe(6);

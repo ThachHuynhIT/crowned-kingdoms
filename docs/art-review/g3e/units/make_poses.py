@@ -80,6 +80,18 @@ def reduce(rgb, solid, factor):
     return out
 
 
+def outline(frame, shade=0.42):
+    """Redraw the silhouette's 1-px outline: every opaque pixel touching transparency (4-neighbour) becomes a darker
+    shade of its own colour (ART_STYLE: outline = darker shade of the material, never pure black). Reduction averages
+    the source outline away at small sizes, so the runtime frames need it back to stay readable."""
+    a = frame[..., 3] > 0
+    pad = np.pad(a, 1)
+    edge = a & ~(pad[:-2, 1:-1] & pad[2:, 1:-1] & pad[1:-1, :-2] & pad[1:-1, 2:])
+    out = frame.copy()
+    out[edge, :3] = (frame[edge, :3].astype(float) * shade).astype(np.uint8)
+    return out
+
+
 def head_centre(frame):
     """Centre column of the top quarter of the figure (head/hat): stable across poses, unlike weapons and feet."""
     ys = np.where(frame[..., 3].any(axis=1))[0]
@@ -120,7 +132,7 @@ def on_grass(frame):
     return bg.resize((frame.shape[1] * ZOOM, frame.shape[0] * ZOOM), Image.NEAREST)
 
 
-def make(unit):
+def make(unit, export=False):
     src = P / unit / 'poses-source.png'
     if not src.exists():
         raise SystemExit(f'{unit}: {src} is missing (run make_prompts.py --poses {unit} and the Codex runner first)')
@@ -145,8 +157,23 @@ def make(unit):
         imgs = [on_grass(ally[a]).convert('RGB'), on_grass(ally[b]).convert('RGB')]
         imgs[0].save(out / f'{name}.gif', save_all=True, append_images=imgs[1:], duration=round(1000 / fps), loop=0)
     print(f'{unit}: {len(ally)} frames {w}x{h}, scale 1/{factor:.2f} -> {out.as_posix()}')
+    if export:
+        # The game shows image art at 2 art px per world unit (IMAGE_ART_SCALE 0.5, 1:1 screen pixels at camera zoom 2),
+        # so the runtime frames are reduced straight from the source at twice the factor (not by halving the 4-px
+        # frames above, which would average already-averaged pixels). The 4-px frames stay here as the masters.
+        game = place([outline(reduce(rgb, solid, factor * 2)) for rgb, solid in figures])
+        RUNTIME.mkdir(parents=True, exist_ok=True)
+        for i, c in enumerate(game):
+            Image.fromarray(c).save(RUNTIME / f'{unit}_{i}.png')
+            Image.fromarray(foe(c)).save(RUNTIME / f'{unit}_foe_{i}.png')
+        gh, gw = game[0].shape[:2]
+        print(f'{unit}: runtime frames {gw}x{gh} -> {RUNTIME.as_posix()}')
 
+
+RUNTIME = ROOT / 'public/assets/art/ai-v1'
 
 if __name__ == '__main__':
-    for u in sys.argv[1:] or ['militia']:
-        make(u)
+    args = sys.argv[1:]
+    export = '--export' in args
+    for u in [a for a in args if a != '--export'] or ['militia']:
+        make(u, export)

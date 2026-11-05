@@ -1065,3 +1065,543 @@ assets:
     nativeSize: 1024x1536
     finalSize: 96x144
     notes: Nomad Khan portrait; box-downscaled and snapped to a 24-colour palette by tools/prepare_king_portraits.py (variant A, approved 29/10/2026); drawn in the king card window (src/render/portraitAssets.ts)
+  - id: world_ai_v1_militia_0
+    path: public/assets/art/ai-v1/militia_0.png
+    category: unit
+    origin: custom
+    source: docs/art-review/g3e/units/militia/poses-source.png
+    creator: Project owner (OpenAI imagegen via Codex; prompt in docs/art-review/g3e/units/militia/poses-prompt.md)
+    license: project-owned
+    attribution: false
+    redistribute: true
+    evidence: docs/art-review/g3e/units/militia/poses/
+    modified: true
+    nativeSize: 1536x1024
+    finalSize: 38x27
+    anchor: feet
+    notes: Wheat militia (Dân Quân) pose 0 (idle 0); mask-weighted box reduction to 2 art px per world unit plus a redrawn 1-px material outline by docs/art-review/g3e/units/make_poses.py --export (approved 2026-11-06); drawn at scale 0.5 (src/render/imageArt.ts)
+  - id: world_ai_v1_militia_1
+    path: public/assets/art/ai-v1/militia_1.png
+    category: unit
+    origin: custom
+    source: docs/art-review/g3e/units/militia/poses-source.png
+    creator: Project owner (OpenAI imagegen via Codex; prompt in docs/art-review/g3e/units/militia/poses-prompt.md)
+    license: project-owned
+    attribution: false
+    redistribute: true
+    evidence: docs/art-review/g3e/units/militia/poses/
+    modified: true
+    nativeSize: 1536x1024
+    finalSize: 38x27
+    anchor: feet
+    notes: Wheat militia (Dân Quân) pose 1 (idle 1); mask-weighted box reduction to 2 art px per world unit plus a redrawn 1-px material outline by docs/art-review/g3e/units/make_poses.py --export (approved 2026-11-06); drawn at scale 0.5 (src/render/imageArt.ts)
+  - id: world_ai_v1_militia_2
+    path: public/assets/art/ai-v1/militia_2.png
+    category: unit
+    origin: custom
+    source: docs/art-review/g3e/units/militia/poses-source.png
+    creator: Project owner (OpenAI imagegen via Codex; prompt in docs/art-review/g3e/units/militia/poses-prompt.md)
+    license: project-owned
+    attribution: false
+    redistribute: true
+    evidence: docs/art-review/g3e/units/militia/poses/
+    modified: true
+    nativeSize: 1536x1024
+    finalSize: 38x27
+    anchor: feet
+    notes: Wheat militia (Dân Quân) pose 2 (walk 0); mask-weighted box reduction to 2 art px per world unit plus a redrawn 1-px material outline by docs/art-review/g3e/units/make_poses.py --export (approved 2026-11-06); drawn at scale 0.5 (src/render/imageArt.ts)
+  - id: world_ai_v1_militia_3
+    path: public/assets/art/ai-v1/militia_3.png
+    category: unit
+    origin: custom
+    source: docs/art-review/g3e/units/militia/poses-source.png
+    creator: Project owner (OpenAI imagegen via Codex; prompt in docs/art-review/g3e/units/militia/poses-prompt.md)
+    license: project-owned
+    attribution: false
+    redistribute: true
+    evidence: docs/art-review/g3e/units/militia/poses/
+    modified: true
+    nativeSize: 1536x1024
+    finalSize: 38x27
+    anchor: feet
+    notes: Wheat militia (Dân Quân) pose 3 (walk 1); mask-weighted box reduction to 2 art px per world unit plus a redrawn 1-px material outline by docs/art-review/g3e/units/make_poses.py --export (approved 2026-11-06); drawn at scale 0.5 (src/render/imageArt.ts)
+  - id: world_ai_v1_militia_4
+    path: public/assets/art/ai-v1/militia_4.png
+    category: unit
+    origin: custom
+    source: docs/art-review/g3e/units/militia/poses-source.png
+    creator: Project owner (OpenAI imagegen via Codex; prompt in docs/art-review/g3e/units/militia/poses-prompt.md)
+    license: project-owned
+    attribution: false
+    redistribute: true
+    evidence: docs/art-review/g3e/units/militia/poses/
+    modified: true
+    nativeSize: 1536x1024
+    finalSize: 38x27
+    anchor: feet
+    notes: Wheat militia (Dân Quân) pose 4 (attack 0); mask-weighted box reduction to 2 art px per world unit plus a redrawn 1-px material outline by docs/art-review/g3e/units/make_poses.py --export (approved 2026-11-06); drawn at scale 0.5 (src/render/imageArt.ts)
+  - id: world_ai_v1_militia_5
+    path: public/assets/art/ai-v1/militia_5.png
+    category: unit
+    origin: custom
+    source: docs/art-review/g3e/units/militia/poses-source.png
+    creator: Project owner (OpenAI imagegen via Codex; prompt in docs/art-review/g3e/units/militia/poses-prompt.md)
+    license: project-owned
+    attribution: false
+    redistribute: true
+    evidence: docs/art-review/g3e/units/militia/poses/
+    modified: true
+    nativeSize: 1536x1024
+    finalSize: 38x27
+    anchor: feet
+    notes: Wheat militia (Dân Quân) pose 5 (attack 1); mask-weighted box reduction to 2 art px per world unit plus a redrawn 1-px material outline by docs/art-review/g3e/units/make_poses.py --export (approved 2026-11-06); drawn at scale 0.5 (src/render/imageArt.ts)
+  - id: world_ai_v1_militia_foe_0
+    path: public/assets/art/ai-v1/militia_foe_0.png
+    category: unit
+    origin: custom
+    source: docs/art-review/g3e/units/militia/poses-source.png
+    creator: Project owner (OpenAI imagegen via Codex; prompt in docs/art-review/g3e/units/militia/poses-prompt.md)
+    license: project-owned
+    attribution: false
+    redistribute: true
+    evidence: docs/art-review/g3e/units/militia/poses/
+    modified: true
+    nativeSize: 1536x1024
+    finalSize: 38x27
+    anchor: feet
+    notes: Foe recolour (blue made red) of Wheat militia (Dân Quân) pose 0 (idle 0); mask-weighted box reduction to 2 art px per world unit plus a redrawn 1-px material outline by docs/art-review/g3e/units/make_poses.py --export (approved 2026-11-06); drawn at scale 0.5 (src/render/imageArt.ts)
+  - id: world_ai_v1_militia_foe_1
+    path: public/assets/art/ai-v1/militia_foe_1.png
+    category: unit
+    origin: custom
+    source: docs/art-review/g3e/units/militia/poses-source.png
+    creator: Project owner (OpenAI imagegen via Codex; prompt in docs/art-review/g3e/units/militia/poses-prompt.md)
+    license: project-owned
+    attribution: false
+    redistribute: true
+    evidence: docs/art-review/g3e/units/militia/poses/
+    modified: true
+    nativeSize: 1536x1024
+    finalSize: 38x27
+    anchor: feet
+    notes: Foe recolour (blue made red) of Wheat militia (Dân Quân) pose 1 (idle 1); mask-weighted box reduction to 2 art px per world unit plus a redrawn 1-px material outline by docs/art-review/g3e/units/make_poses.py --export (approved 2026-11-06); drawn at scale 0.5 (src/render/imageArt.ts)
+  - id: world_ai_v1_militia_foe_2
+    path: public/assets/art/ai-v1/militia_foe_2.png
+    category: unit
+    origin: custom
+    source: docs/art-review/g3e/units/militia/poses-source.png
+    creator: Project owner (OpenAI imagegen via Codex; prompt in docs/art-review/g3e/units/militia/poses-prompt.md)
+    license: project-owned
+    attribution: false
+    redistribute: true
+    evidence: docs/art-review/g3e/units/militia/poses/
+    modified: true
+    nativeSize: 1536x1024
+    finalSize: 38x27
+    anchor: feet
+    notes: Foe recolour (blue made red) of Wheat militia (Dân Quân) pose 2 (walk 0); mask-weighted box reduction to 2 art px per world unit plus a redrawn 1-px material outline by docs/art-review/g3e/units/make_poses.py --export (approved 2026-11-06); drawn at scale 0.5 (src/render/imageArt.ts)
+  - id: world_ai_v1_militia_foe_3
+    path: public/assets/art/ai-v1/militia_foe_3.png
+    category: unit
+    origin: custom
+    source: docs/art-review/g3e/units/militia/poses-source.png
+    creator: Project owner (OpenAI imagegen via Codex; prompt in docs/art-review/g3e/units/militia/poses-prompt.md)
+    license: project-owned
+    attribution: false
+    redistribute: true
+    evidence: docs/art-review/g3e/units/militia/poses/
+    modified: true
+    nativeSize: 1536x1024
+    finalSize: 38x27
+    anchor: feet
+    notes: Foe recolour (blue made red) of Wheat militia (Dân Quân) pose 3 (walk 1); mask-weighted box reduction to 2 art px per world unit plus a redrawn 1-px material outline by docs/art-review/g3e/units/make_poses.py --export (approved 2026-11-06); drawn at scale 0.5 (src/render/imageArt.ts)
+  - id: world_ai_v1_militia_foe_4
+    path: public/assets/art/ai-v1/militia_foe_4.png
+    category: unit
+    origin: custom
+    source: docs/art-review/g3e/units/militia/poses-source.png
+    creator: Project owner (OpenAI imagegen via Codex; prompt in docs/art-review/g3e/units/militia/poses-prompt.md)
+    license: project-owned
+    attribution: false
+    redistribute: true
+    evidence: docs/art-review/g3e/units/militia/poses/
+    modified: true
+    nativeSize: 1536x1024
+    finalSize: 38x27
+    anchor: feet
+    notes: Foe recolour (blue made red) of Wheat militia (Dân Quân) pose 4 (attack 0); mask-weighted box reduction to 2 art px per world unit plus a redrawn 1-px material outline by docs/art-review/g3e/units/make_poses.py --export (approved 2026-11-06); drawn at scale 0.5 (src/render/imageArt.ts)
+  - id: world_ai_v1_militia_foe_5
+    path: public/assets/art/ai-v1/militia_foe_5.png
+    category: unit
+    origin: custom
+    source: docs/art-review/g3e/units/militia/poses-source.png
+    creator: Project owner (OpenAI imagegen via Codex; prompt in docs/art-review/g3e/units/militia/poses-prompt.md)
+    license: project-owned
+    attribution: false
+    redistribute: true
+    evidence: docs/art-review/g3e/units/militia/poses/
+    modified: true
+    nativeSize: 1536x1024
+    finalSize: 38x27
+    anchor: feet
+    notes: Foe recolour (blue made red) of Wheat militia (Dân Quân) pose 5 (attack 1); mask-weighted box reduction to 2 art px per world unit plus a redrawn 1-px material outline by docs/art-review/g3e/units/make_poses.py --export (approved 2026-11-06); drawn at scale 0.5 (src/render/imageArt.ts)
+  - id: world_ai_v1_reaper_0
+    path: public/assets/art/ai-v1/reaper_0.png
+    category: unit
+    origin: custom
+    source: docs/art-review/g3e/units/reaper/poses-source.png
+    creator: Project owner (OpenAI imagegen via Codex; prompt in docs/art-review/g3e/units/reaper/poses-prompt.md)
+    license: project-owned
+    attribution: false
+    redistribute: true
+    evidence: docs/art-review/g3e/units/reaper/poses/
+    modified: true
+    nativeSize: 1536x1024
+    finalSize: 28x30
+    anchor: feet
+    notes: Wheat reaper (Thợ Gặt) pose 0 (idle 0); mask-weighted box reduction to 2 art px per world unit plus a redrawn 1-px material outline by docs/art-review/g3e/units/make_poses.py --export (approved 2026-11-06); drawn at scale 0.5 (src/render/imageArt.ts)
+  - id: world_ai_v1_reaper_1
+    path: public/assets/art/ai-v1/reaper_1.png
+    category: unit
+    origin: custom
+    source: docs/art-review/g3e/units/reaper/poses-source.png
+    creator: Project owner (OpenAI imagegen via Codex; prompt in docs/art-review/g3e/units/reaper/poses-prompt.md)
+    license: project-owned
+    attribution: false
+    redistribute: true
+    evidence: docs/art-review/g3e/units/reaper/poses/
+    modified: true
+    nativeSize: 1536x1024
+    finalSize: 28x30
+    anchor: feet
+    notes: Wheat reaper (Thợ Gặt) pose 1 (idle 1); mask-weighted box reduction to 2 art px per world unit plus a redrawn 1-px material outline by docs/art-review/g3e/units/make_poses.py --export (approved 2026-11-06); drawn at scale 0.5 (src/render/imageArt.ts)
+  - id: world_ai_v1_reaper_2
+    path: public/assets/art/ai-v1/reaper_2.png
+    category: unit
+    origin: custom
+    source: docs/art-review/g3e/units/reaper/poses-source.png
+    creator: Project owner (OpenAI imagegen via Codex; prompt in docs/art-review/g3e/units/reaper/poses-prompt.md)
+    license: project-owned
+    attribution: false
+    redistribute: true
+    evidence: docs/art-review/g3e/units/reaper/poses/
+    modified: true
+    nativeSize: 1536x1024
+    finalSize: 28x30
+    anchor: feet
+    notes: Wheat reaper (Thợ Gặt) pose 2 (walk 0); mask-weighted box reduction to 2 art px per world unit plus a redrawn 1-px material outline by docs/art-review/g3e/units/make_poses.py --export (approved 2026-11-06); drawn at scale 0.5 (src/render/imageArt.ts)
+  - id: world_ai_v1_reaper_3
+    path: public/assets/art/ai-v1/reaper_3.png
+    category: unit
+    origin: custom
+    source: docs/art-review/g3e/units/reaper/poses-source.png
+    creator: Project owner (OpenAI imagegen via Codex; prompt in docs/art-review/g3e/units/reaper/poses-prompt.md)
+    license: project-owned
+    attribution: false
+    redistribute: true
+    evidence: docs/art-review/g3e/units/reaper/poses/
+    modified: true
+    nativeSize: 1536x1024
+    finalSize: 28x30
+    anchor: feet
+    notes: Wheat reaper (Thợ Gặt) pose 3 (walk 1); mask-weighted box reduction to 2 art px per world unit plus a redrawn 1-px material outline by docs/art-review/g3e/units/make_poses.py --export (approved 2026-11-06); drawn at scale 0.5 (src/render/imageArt.ts)
+  - id: world_ai_v1_reaper_4
+    path: public/assets/art/ai-v1/reaper_4.png
+    category: unit
+    origin: custom
+    source: docs/art-review/g3e/units/reaper/poses-source.png
+    creator: Project owner (OpenAI imagegen via Codex; prompt in docs/art-review/g3e/units/reaper/poses-prompt.md)
+    license: project-owned
+    attribution: false
+    redistribute: true
+    evidence: docs/art-review/g3e/units/reaper/poses/
+    modified: true
+    nativeSize: 1536x1024
+    finalSize: 28x30
+    anchor: feet
+    notes: Wheat reaper (Thợ Gặt) pose 4 (attack 0); mask-weighted box reduction to 2 art px per world unit plus a redrawn 1-px material outline by docs/art-review/g3e/units/make_poses.py --export (approved 2026-11-06); drawn at scale 0.5 (src/render/imageArt.ts)
+  - id: world_ai_v1_reaper_5
+    path: public/assets/art/ai-v1/reaper_5.png
+    category: unit
+    origin: custom
+    source: docs/art-review/g3e/units/reaper/poses-source.png
+    creator: Project owner (OpenAI imagegen via Codex; prompt in docs/art-review/g3e/units/reaper/poses-prompt.md)
+    license: project-owned
+    attribution: false
+    redistribute: true
+    evidence: docs/art-review/g3e/units/reaper/poses/
+    modified: true
+    nativeSize: 1536x1024
+    finalSize: 28x30
+    anchor: feet
+    notes: Wheat reaper (Thợ Gặt) pose 5 (attack 1); mask-weighted box reduction to 2 art px per world unit plus a redrawn 1-px material outline by docs/art-review/g3e/units/make_poses.py --export (approved 2026-11-06); drawn at scale 0.5 (src/render/imageArt.ts)
+  - id: world_ai_v1_reaper_foe_0
+    path: public/assets/art/ai-v1/reaper_foe_0.png
+    category: unit
+    origin: custom
+    source: docs/art-review/g3e/units/reaper/poses-source.png
+    creator: Project owner (OpenAI imagegen via Codex; prompt in docs/art-review/g3e/units/reaper/poses-prompt.md)
+    license: project-owned
+    attribution: false
+    redistribute: true
+    evidence: docs/art-review/g3e/units/reaper/poses/
+    modified: true
+    nativeSize: 1536x1024
+    finalSize: 28x30
+    anchor: feet
+    notes: Foe recolour (blue made red) of Wheat reaper (Thợ Gặt) pose 0 (idle 0); mask-weighted box reduction to 2 art px per world unit plus a redrawn 1-px material outline by docs/art-review/g3e/units/make_poses.py --export (approved 2026-11-06); drawn at scale 0.5 (src/render/imageArt.ts)
+  - id: world_ai_v1_reaper_foe_1
+    path: public/assets/art/ai-v1/reaper_foe_1.png
+    category: unit
+    origin: custom
+    source: docs/art-review/g3e/units/reaper/poses-source.png
+    creator: Project owner (OpenAI imagegen via Codex; prompt in docs/art-review/g3e/units/reaper/poses-prompt.md)
+    license: project-owned
+    attribution: false
+    redistribute: true
+    evidence: docs/art-review/g3e/units/reaper/poses/
+    modified: true
+    nativeSize: 1536x1024
+    finalSize: 28x30
+    anchor: feet
+    notes: Foe recolour (blue made red) of Wheat reaper (Thợ Gặt) pose 1 (idle 1); mask-weighted box reduction to 2 art px per world unit plus a redrawn 1-px material outline by docs/art-review/g3e/units/make_poses.py --export (approved 2026-11-06); drawn at scale 0.5 (src/render/imageArt.ts)
+  - id: world_ai_v1_reaper_foe_2
+    path: public/assets/art/ai-v1/reaper_foe_2.png
+    category: unit
+    origin: custom
+    source: docs/art-review/g3e/units/reaper/poses-source.png
+    creator: Project owner (OpenAI imagegen via Codex; prompt in docs/art-review/g3e/units/reaper/poses-prompt.md)
+    license: project-owned
+    attribution: false
+    redistribute: true
+    evidence: docs/art-review/g3e/units/reaper/poses/
+    modified: true
+    nativeSize: 1536x1024
+    finalSize: 28x30
+    anchor: feet
+    notes: Foe recolour (blue made red) of Wheat reaper (Thợ Gặt) pose 2 (walk 0); mask-weighted box reduction to 2 art px per world unit plus a redrawn 1-px material outline by docs/art-review/g3e/units/make_poses.py --export (approved 2026-11-06); drawn at scale 0.5 (src/render/imageArt.ts)
+  - id: world_ai_v1_reaper_foe_3
+    path: public/assets/art/ai-v1/reaper_foe_3.png
+    category: unit
+    origin: custom
+    source: docs/art-review/g3e/units/reaper/poses-source.png
+    creator: Project owner (OpenAI imagegen via Codex; prompt in docs/art-review/g3e/units/reaper/poses-prompt.md)
+    license: project-owned
+    attribution: false
+    redistribute: true
+    evidence: docs/art-review/g3e/units/reaper/poses/
+    modified: true
+    nativeSize: 1536x1024
+    finalSize: 28x30
+    anchor: feet
+    notes: Foe recolour (blue made red) of Wheat reaper (Thợ Gặt) pose 3 (walk 1); mask-weighted box reduction to 2 art px per world unit plus a redrawn 1-px material outline by docs/art-review/g3e/units/make_poses.py --export (approved 2026-11-06); drawn at scale 0.5 (src/render/imageArt.ts)
+  - id: world_ai_v1_reaper_foe_4
+    path: public/assets/art/ai-v1/reaper_foe_4.png
+    category: unit
+    origin: custom
+    source: docs/art-review/g3e/units/reaper/poses-source.png
+    creator: Project owner (OpenAI imagegen via Codex; prompt in docs/art-review/g3e/units/reaper/poses-prompt.md)
+    license: project-owned
+    attribution: false
+    redistribute: true
+    evidence: docs/art-review/g3e/units/reaper/poses/
+    modified: true
+    nativeSize: 1536x1024
+    finalSize: 28x30
+    anchor: feet
+    notes: Foe recolour (blue made red) of Wheat reaper (Thợ Gặt) pose 4 (attack 0); mask-weighted box reduction to 2 art px per world unit plus a redrawn 1-px material outline by docs/art-review/g3e/units/make_poses.py --export (approved 2026-11-06); drawn at scale 0.5 (src/render/imageArt.ts)
+  - id: world_ai_v1_reaper_foe_5
+    path: public/assets/art/ai-v1/reaper_foe_5.png
+    category: unit
+    origin: custom
+    source: docs/art-review/g3e/units/reaper/poses-source.png
+    creator: Project owner (OpenAI imagegen via Codex; prompt in docs/art-review/g3e/units/reaper/poses-prompt.md)
+    license: project-owned
+    attribution: false
+    redistribute: true
+    evidence: docs/art-review/g3e/units/reaper/poses/
+    modified: true
+    nativeSize: 1536x1024
+    finalSize: 28x30
+    anchor: feet
+    notes: Foe recolour (blue made red) of Wheat reaper (Thợ Gặt) pose 5 (attack 1); mask-weighted box reduction to 2 art px per world unit plus a redrawn 1-px material outline by docs/art-review/g3e/units/make_poses.py --export (approved 2026-11-06); drawn at scale 0.5 (src/render/imageArt.ts)
+  - id: world_ai_v1_peasant_0
+    path: public/assets/art/ai-v1/peasant_0.png
+    category: unit
+    origin: custom
+    source: docs/art-review/g3e/units/peasant/poses-source.png
+    creator: Project owner (OpenAI imagegen via Codex; prompt in docs/art-review/g3e/units/peasant/poses-prompt.md)
+    license: project-owned
+    attribution: false
+    redistribute: true
+    evidence: docs/art-review/g3e/units/peasant/poses/
+    modified: true
+    nativeSize: 1536x1024
+    finalSize: 38x26
+    anchor: feet
+    notes: Wheat peasant (Nông Binh) pose 0 (idle 0); mask-weighted box reduction to 2 art px per world unit plus a redrawn 1-px material outline by docs/art-review/g3e/units/make_poses.py --export (approved 2026-11-06); drawn at scale 0.5 (src/render/imageArt.ts)
+  - id: world_ai_v1_peasant_1
+    path: public/assets/art/ai-v1/peasant_1.png
+    category: unit
+    origin: custom
+    source: docs/art-review/g3e/units/peasant/poses-source.png
+    creator: Project owner (OpenAI imagegen via Codex; prompt in docs/art-review/g3e/units/peasant/poses-prompt.md)
+    license: project-owned
+    attribution: false
+    redistribute: true
+    evidence: docs/art-review/g3e/units/peasant/poses/
+    modified: true
+    nativeSize: 1536x1024
+    finalSize: 38x26
+    anchor: feet
+    notes: Wheat peasant (Nông Binh) pose 1 (idle 1); mask-weighted box reduction to 2 art px per world unit plus a redrawn 1-px material outline by docs/art-review/g3e/units/make_poses.py --export (approved 2026-11-06); drawn at scale 0.5 (src/render/imageArt.ts)
+  - id: world_ai_v1_peasant_2
+    path: public/assets/art/ai-v1/peasant_2.png
+    category: unit
+    origin: custom
+    source: docs/art-review/g3e/units/peasant/poses-source.png
+    creator: Project owner (OpenAI imagegen via Codex; prompt in docs/art-review/g3e/units/peasant/poses-prompt.md)
+    license: project-owned
+    attribution: false
+    redistribute: true
+    evidence: docs/art-review/g3e/units/peasant/poses/
+    modified: true
+    nativeSize: 1536x1024
+    finalSize: 38x26
+    anchor: feet
+    notes: Wheat peasant (Nông Binh) pose 2 (walk 0); mask-weighted box reduction to 2 art px per world unit plus a redrawn 1-px material outline by docs/art-review/g3e/units/make_poses.py --export (approved 2026-11-06); drawn at scale 0.5 (src/render/imageArt.ts)
+  - id: world_ai_v1_peasant_3
+    path: public/assets/art/ai-v1/peasant_3.png
+    category: unit
+    origin: custom
+    source: docs/art-review/g3e/units/peasant/poses-source.png
+    creator: Project owner (OpenAI imagegen via Codex; prompt in docs/art-review/g3e/units/peasant/poses-prompt.md)
+    license: project-owned
+    attribution: false
+    redistribute: true
+    evidence: docs/art-review/g3e/units/peasant/poses/
+    modified: true
+    nativeSize: 1536x1024
+    finalSize: 38x26
+    anchor: feet
+    notes: Wheat peasant (Nông Binh) pose 3 (walk 1); mask-weighted box reduction to 2 art px per world unit plus a redrawn 1-px material outline by docs/art-review/g3e/units/make_poses.py --export (approved 2026-11-06); drawn at scale 0.5 (src/render/imageArt.ts)
+  - id: world_ai_v1_peasant_4
+    path: public/assets/art/ai-v1/peasant_4.png
+    category: unit
+    origin: custom
+    source: docs/art-review/g3e/units/peasant/poses-source.png
+    creator: Project owner (OpenAI imagegen via Codex; prompt in docs/art-review/g3e/units/peasant/poses-prompt.md)
+    license: project-owned
+    attribution: false
+    redistribute: true
+    evidence: docs/art-review/g3e/units/peasant/poses/
+    modified: true
+    nativeSize: 1536x1024
+    finalSize: 38x26
+    anchor: feet
+    notes: Wheat peasant (Nông Binh) pose 4 (attack 0); mask-weighted box reduction to 2 art px per world unit plus a redrawn 1-px material outline by docs/art-review/g3e/units/make_poses.py --export (approved 2026-11-06); drawn at scale 0.5 (src/render/imageArt.ts)
+  - id: world_ai_v1_peasant_5
+    path: public/assets/art/ai-v1/peasant_5.png
+    category: unit
+    origin: custom
+    source: docs/art-review/g3e/units/peasant/poses-source.png
+    creator: Project owner (OpenAI imagegen via Codex; prompt in docs/art-review/g3e/units/peasant/poses-prompt.md)
+    license: project-owned
+    attribution: false
+    redistribute: true
+    evidence: docs/art-review/g3e/units/peasant/poses/
+    modified: true
+    nativeSize: 1536x1024
+    finalSize: 38x26
+    anchor: feet
+    notes: Wheat peasant (Nông Binh) pose 5 (attack 1); mask-weighted box reduction to 2 art px per world unit plus a redrawn 1-px material outline by docs/art-review/g3e/units/make_poses.py --export (approved 2026-11-06); drawn at scale 0.5 (src/render/imageArt.ts)
+  - id: world_ai_v1_peasant_foe_0
+    path: public/assets/art/ai-v1/peasant_foe_0.png
+    category: unit
+    origin: custom
+    source: docs/art-review/g3e/units/peasant/poses-source.png
+    creator: Project owner (OpenAI imagegen via Codex; prompt in docs/art-review/g3e/units/peasant/poses-prompt.md)
+    license: project-owned
+    attribution: false
+    redistribute: true
+    evidence: docs/art-review/g3e/units/peasant/poses/
+    modified: true
+    nativeSize: 1536x1024
+    finalSize: 38x26
+    anchor: feet
+    notes: Foe recolour (blue made red) of Wheat peasant (Nông Binh) pose 0 (idle 0); mask-weighted box reduction to 2 art px per world unit plus a redrawn 1-px material outline by docs/art-review/g3e/units/make_poses.py --export (approved 2026-11-06); drawn at scale 0.5 (src/render/imageArt.ts)
+  - id: world_ai_v1_peasant_foe_1
+    path: public/assets/art/ai-v1/peasant_foe_1.png
+    category: unit
+    origin: custom
+    source: docs/art-review/g3e/units/peasant/poses-source.png
+    creator: Project owner (OpenAI imagegen via Codex; prompt in docs/art-review/g3e/units/peasant/poses-prompt.md)
+    license: project-owned
+    attribution: false
+    redistribute: true
+    evidence: docs/art-review/g3e/units/peasant/poses/
+    modified: true
+    nativeSize: 1536x1024
+    finalSize: 38x26
+    anchor: feet
+    notes: Foe recolour (blue made red) of Wheat peasant (Nông Binh) pose 1 (idle 1); mask-weighted box reduction to 2 art px per world unit plus a redrawn 1-px material outline by docs/art-review/g3e/units/make_poses.py --export (approved 2026-11-06); drawn at scale 0.5 (src/render/imageArt.ts)
+  - id: world_ai_v1_peasant_foe_2
+    path: public/assets/art/ai-v1/peasant_foe_2.png
+    category: unit
+    origin: custom
+    source: docs/art-review/g3e/units/peasant/poses-source.png
+    creator: Project owner (OpenAI imagegen via Codex; prompt in docs/art-review/g3e/units/peasant/poses-prompt.md)
+    license: project-owned
+    attribution: false
+    redistribute: true
+    evidence: docs/art-review/g3e/units/peasant/poses/
+    modified: true
+    nativeSize: 1536x1024
+    finalSize: 38x26
+    anchor: feet
+    notes: Foe recolour (blue made red) of Wheat peasant (Nông Binh) pose 2 (walk 0); mask-weighted box reduction to 2 art px per world unit plus a redrawn 1-px material outline by docs/art-review/g3e/units/make_poses.py --export (approved 2026-11-06); drawn at scale 0.5 (src/render/imageArt.ts)
+  - id: world_ai_v1_peasant_foe_3
+    path: public/assets/art/ai-v1/peasant_foe_3.png
+    category: unit
+    origin: custom
+    source: docs/art-review/g3e/units/peasant/poses-source.png
+    creator: Project owner (OpenAI imagegen via Codex; prompt in docs/art-review/g3e/units/peasant/poses-prompt.md)
+    license: project-owned
+    attribution: false
+    redistribute: true
+    evidence: docs/art-review/g3e/units/peasant/poses/
+    modified: true
+    nativeSize: 1536x1024
+    finalSize: 38x26
+    anchor: feet
+    notes: Foe recolour (blue made red) of Wheat peasant (Nông Binh) pose 3 (walk 1); mask-weighted box reduction to 2 art px per world unit plus a redrawn 1-px material outline by docs/art-review/g3e/units/make_poses.py --export (approved 2026-11-06); drawn at scale 0.5 (src/render/imageArt.ts)
+  - id: world_ai_v1_peasant_foe_4
+    path: public/assets/art/ai-v1/peasant_foe_4.png
+    category: unit
+    origin: custom
+    source: docs/art-review/g3e/units/peasant/poses-source.png
+    creator: Project owner (OpenAI imagegen via Codex; prompt in docs/art-review/g3e/units/peasant/poses-prompt.md)
+    license: project-owned
+    attribution: false
+    redistribute: true
+    evidence: docs/art-review/g3e/units/peasant/poses/
+    modified: true
+    nativeSize: 1536x1024
+    finalSize: 38x26
+    anchor: feet
+    notes: Foe recolour (blue made red) of Wheat peasant (Nông Binh) pose 4 (attack 0); mask-weighted box reduction to 2 art px per world unit plus a redrawn 1-px material outline by docs/art-review/g3e/units/make_poses.py --export (approved 2026-11-06); drawn at scale 0.5 (src/render/imageArt.ts)
+  - id: world_ai_v1_peasant_foe_5
+    path: public/assets/art/ai-v1/peasant_foe_5.png
+    category: unit
+    origin: custom
+    source: docs/art-review/g3e/units/peasant/poses-source.png
+    creator: Project owner (OpenAI imagegen via Codex; prompt in docs/art-review/g3e/units/peasant/poses-prompt.md)
+    license: project-owned
+    attribution: false
+    redistribute: true
+    evidence: docs/art-review/g3e/units/peasant/poses/
+    modified: true
+    nativeSize: 1536x1024
+    finalSize: 38x26
+    anchor: feet
+    notes: Foe recolour (blue made red) of Wheat peasant (Nông Binh) pose 5 (attack 1); mask-weighted box reduction to 2 art px per world unit plus a redrawn 1-px material outline by docs/art-review/g3e/units/make_poses.py --export (approved 2026-11-06); drawn at scale 0.5 (src/render/imageArt.ts)

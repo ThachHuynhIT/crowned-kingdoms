@@ -11,21 +11,32 @@ export const IMAGE_ART_SCALE = 0.5;
 
 export const imageArtKey = (file: string): string => `imgart-${file}`;
 
+/**
+ * Units drawn from image art: unit id → file prefix of its six poses (`<prefix>_<i>`, `<prefix>_foe_<i>`).
+ * The Wheat militia, reaper and peasant come from `docs/art-review/g3e/units/make_poses.py --export` (approved
+ * 2026-11-06); they replace the first `spearman` sheet for the militia.
+ */
+export const IMAGE_UNITS: Readonly<Record<string, string>> = {
+  militia: 'militia',
+  reaper: 'reaper',
+  peasant: 'peasant',
+  footman: 'footman',
+};
+
+const POSE_INDEXES = [0, 1, 2, 3, 4, 5];
+
 /** Every PNG of the set (file name without `.png`). */
 export const IMAGE_ART_FILES: readonly string[] = [
-  ...[0, 1, 2, 3, 4, 5].map((i) => `spearman_${i}`),
-  ...[0, 1, 2, 3, 4, 5].map((i) => `spearman_foe_${i}`),
-  ...[0, 1, 2, 3, 4, 5].map((i) => `footman_${i}`),
-  ...[0, 1, 2, 3, 4, 5].map((i) => `footman_foe_${i}`),
+  ...Object.values(IMAGE_UNITS).flatMap((prefix) => [
+    ...POSE_INDEXES.map((i) => `${prefix}_${i}`),
+    ...POSE_INDEXES.map((i) => `${prefix}_foe_${i}`),
+  ]),
   'cottage',
   'barracks',
   'grass_0',
   'grass_1',
   'grass_2',
 ];
-
-/** Units drawn from image art: unit id → file prefix of its six poses (`<prefix>_<i>`, `<prefix>_foe_<i>`). */
-export const IMAGE_UNITS: Readonly<Record<string, string>> = { militia: 'spearman', footman: 'footman' };
 /** Buildings drawn from image art: card id → file. */
 export const IMAGE_BUILDINGS: Readonly<Record<string, string>> = {
   wheat_militia: 'cottage',
@@ -33,7 +44,7 @@ export const IMAGE_BUILDINGS: Readonly<Record<string, string>> = {
 };
 export const GRASS_FILES: readonly string[] = ['grass_0', 'grass_1', 'grass_2'];
 
-/** Pose of the spearman sheet for each animation and frame. */
+/** Pose index of each animation frame (the sheets are drawn idle0 idle1 walk0 walk1 attack0 attack1). */
 export const POSES: Record<UnitAnim, readonly [number, number]> = {
   idle: [0, 1],
   walk: [2, 3],
