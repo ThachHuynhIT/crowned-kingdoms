@@ -38,6 +38,11 @@ GROUPS = {
          'a farmhouse barn with clay-tile roof, a big sickle hung beside the door, wheat sheaves, grain baskets, rakes and sacks (as in the approved reference, but a different building: change the proportions, add a hayloft window).'),
         ('building_wheat_scarecrow', 'Bù Nhìn Gác (scarecrow watch tower, tower, TALL building but at most 520 px)',
          'a short wooden watch platform with a small straw roof and a big straw-hat scarecrow standing on it holding a sling, ladder at the front, sacks on the rail.'),
+        # added 2026-11-06 (owner: PR #12 must carry every Wheat king asset); replaces the old two-sided ai-v1 cottage
+        ('building_wheat_militia', 'Dân Quân (village militia house, troop building)',
+         'a small cosy village guardhouse with a golden thatched roof, cream plaster walls with dark timber beams, a wooden rack of short spears and two round wooden shields with a plank cross leaning by the door (the militia\'s gear), a small blue pennant on the ridge, a water barrel.'),
+        ('building_wheat_throne', 'Ngai Bó Lúa (the Wheat king\'s throne keep, the TALLEST building of the kingdom, up to 520 px tall, it shoots at enemies)',
+         'a sturdy round stone-and-timber keep, straight and upright, whose flat crenellated top is clearly seen from above (a visible top platform, as the tower rule requires) with a giant golden wheat-sheaf crown standing on it and a small archer slit; golden wheat banners with a blue trim hang on the front, a wide arched wooden door, stacked grain sacks at the base. Royal but rustic, gold and warm stone.'),
         ('building_wheat_windmill', 'Cối Xay Gió (windmill, economy)',
          'a stone-and-timber windmill whose body is straight and upright, seen with the camera pitched 45 degrees DOWN: the viewer clearly sees the TOP of the windmill, i.e. the upper surface of its large rounded thatched cap/dome (a visible oval-ish roof plane with rows of straw, seen from above), not just its side profile and not a pointed tip seen sideways. Four cloth-sail blades are mounted on the front of the cap, frontal to the viewer (not turned). A door at the front center, a short stone base and flour sacks. Keep the facade straight-on; do not rotate or tilt the body.'),
     ]),
