@@ -8,7 +8,7 @@ import type { IconId } from '../../render/iconArt';
 import type { UiFrame } from '../../render/uiArt';
 import { CARD_LIFT, DRAG_SLOP, type Size, type TooltipContent } from '../hud/layout';
 import { skinFrame, type UiSkin } from '../skin';
-import { VERTICAL_CARD_ART, resolveCardImage } from './cardImage';
+import { VERTICAL_CARD_ART, pickCardImage, resolveCardImage } from './cardImage';
 import { cardLayout, fitArt, type CardDensity } from './cardLayout';
 import { clampLines, nextLevelLine } from './cardText';
 import {
@@ -220,7 +220,7 @@ export class CardView {
     name.setText(clampLines(def.nameVi, l.name.w, 2, measureName).join('\n'));
     this.add(name);
 
-    const ref = resolveCardImage(def.id, VERTICAL_CARD_ART);
+    const ref = pickCardImage(l.art, resolveCardImage(def.id, VERTICAL_CARD_ART));
     const fit = fitArt(l.art, ref);
     if (this.scene.textures.exists(ref.key) && this.scene.textures.get(ref.key).has(ref.frame)) {
       this.add(this.scene.add.image(fit.x, fit.y, ref.key, ref.frame).setOrigin(0, 0).setScale(fit.scale));

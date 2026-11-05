@@ -2445,3 +2445,283 @@ assets:
     finalSize: 64x74
     anchor: feet
     notes: Bù Nhìn Gác (scarecrow watch tower), 45-degree front view; black background removed and box-reduced to 64 px wide by docs/art-review/g3e/buildings/make_assets.py (approved 2026-11-06); drawn at scale 0.5 (src/render/imageArt.ts IMAGE_BUILDINGS)
+  - id: card_art_wheat_throne
+    path: public/assets/art/ai-v1/cards/wheat_throne.png
+    category: ui
+    origin: custom
+    source: docs/art-review/g3e/cards/wheat_throne/source.png
+    creator: Project owner (OpenAI imagegen via Codex; prompt in docs/art-review/g3e/cards/wheat_throne/prompt.md)
+    license: project-owned
+    attribution: false
+    redistribute: true
+    evidence: docs/art-review/g3e/cards/sheet-wheat.png
+    modified: true
+    nativeSize: 1448x1086
+    finalSize: 96x72
+    notes: Card illustration of Ngai Bó Lúa (wheat_throne) (style approved 2026-10-29); box-reduced by docs/art-review/g3e/cards/make_assets.py; full size (src/ui/cards/cardImage.ts)
+  - id: card_art_wheat_throne_48
+    path: public/assets/art/ai-v1/cards/wheat_throne-48.png
+    category: ui
+    origin: custom
+    source: docs/art-review/g3e/cards/wheat_throne/source.png
+    creator: Project owner (OpenAI imagegen via Codex; prompt in docs/art-review/g3e/cards/wheat_throne/prompt.md)
+    license: project-owned
+    attribution: false
+    redistribute: true
+    evidence: docs/art-review/g3e/cards/sheet-wheat.png
+    modified: true
+    nativeSize: 1448x1086
+    finalSize: 48x36
+    notes: Card illustration of Ngai Bó Lúa (wheat_throne) (style approved 2026-10-29); box-reduced by docs/art-review/g3e/cards/make_assets.py; copy for picture windows under 96 px (src/ui/cards/cardImage.ts)
+  - id: card_art_wheat_field
+    path: public/assets/art/ai-v1/cards/wheat_field.png
+    category: ui
+    origin: custom
+    source: docs/art-review/g3e/cards/wheat_field/source.png
+    creator: Project owner (OpenAI imagegen via Codex; prompt in docs/art-review/g3e/cards/wheat_field/prompt.md)
+    license: project-owned
+    attribution: false
+    redistribute: true
+    evidence: docs/art-review/g3e/cards/sheet-wheat.png
+    modified: true
+    nativeSize: 1024x768
+    finalSize: 96x72
+    notes: Card illustration of Ruộng Lúa (wheat_field) (style approved 2026-10-29); box-reduced by docs/art-review/g3e/cards/make_assets.py; full size (src/ui/cards/cardImage.ts)
+  - id: card_art_wheat_field_48
+    path: public/assets/art/ai-v1/cards/wheat_field-48.png
+    category: ui
+    origin: custom
+    source: docs/art-review/g3e/cards/wheat_field/source.png
+    creator: Project owner (OpenAI imagegen via Codex; prompt in docs/art-review/g3e/cards/wheat_field/prompt.md)
+    license: project-owned
+    attribution: false
+    redistribute: true
+    evidence: docs/art-review/g3e/cards/sheet-wheat.png
+    modified: true
+    nativeSize: 1024x768
+    finalSize: 48x36
+    notes: Card illustration of Ruộng Lúa (wheat_field) (style approved 2026-10-29); box-reduced by docs/art-review/g3e/cards/make_assets.py; copy for picture windows under 96 px (src/ui/cards/cardImage.ts)
+  - id: card_art_wheat_fertilizer
+    path: public/assets/art/ai-v1/cards/wheat_fertilizer.png
+    category: ui
+    origin: custom
+    source: docs/art-review/g3e/cards/wheat_fertilizer/source.png
+    creator: Project owner (OpenAI imagegen via Codex; prompt in docs/art-review/g3e/cards/wheat_fertilizer/prompt.md)
+    license: project-owned
+    attribution: false
+    redistribute: true
+    evidence: docs/art-review/g3e/cards/sheet-wheat.png
+    modified: true
+    nativeSize: 1448x1086
+    finalSize: 96x72
+    notes: Card illustration of Bùa Phân Bón (wheat_fertilizer) (style approved 2026-10-29); box-reduced by docs/art-review/g3e/cards/make_assets.py; full size (src/ui/cards/cardImage.ts)
+  - id: card_art_wheat_fertilizer_48
+    path: public/assets/art/ai-v1/cards/wheat_fertilizer-48.png
+    category: ui
+    origin: custom
+    source: docs/art-review/g3e/cards/wheat_fertilizer/source.png
+    creator: Project owner (OpenAI imagegen via Codex; prompt in docs/art-review/g3e/cards/wheat_fertilizer/prompt.md)
+    license: project-owned
+    attribution: false
+    redistribute: true
+    evidence: docs/art-review/g3e/cards/sheet-wheat.png
+    modified: true
+    nativeSize: 1448x1086
+    finalSize: 48x36
+    notes: Card illustration of Bùa Phân Bón (wheat_fertilizer) (style approved 2026-10-29); box-reduced by docs/art-review/g3e/cards/make_assets.py; copy for picture windows under 96 px (src/ui/cards/cardImage.ts)
+  - id: card_art_wheat_windmill
+    path: public/assets/art/ai-v1/cards/wheat_windmill.png
+    category: ui
+    origin: custom
+    source: docs/art-review/g3e/cards/wheat_windmill/source.png
+    creator: Project owner (OpenAI imagegen via Codex; prompt in docs/art-review/g3e/cards/wheat_windmill/prompt.md)
+    license: project-owned
+    attribution: false
+    redistribute: true
+    evidence: docs/art-review/g3e/cards/sheet-wheat.png
+    modified: true
+    nativeSize: 1024x768
+    finalSize: 96x72
+    notes: Card illustration of Cối Xay Gió (wheat_windmill) (style approved 2026-10-29); box-reduced by docs/art-review/g3e/cards/make_assets.py; full size (src/ui/cards/cardImage.ts)
+  - id: card_art_wheat_windmill_48
+    path: public/assets/art/ai-v1/cards/wheat_windmill-48.png
+    category: ui
+    origin: custom
+    source: docs/art-review/g3e/cards/wheat_windmill/source.png
+    creator: Project owner (OpenAI imagegen via Codex; prompt in docs/art-review/g3e/cards/wheat_windmill/prompt.md)
+    license: project-owned
+    attribution: false
+    redistribute: true
+    evidence: docs/art-review/g3e/cards/sheet-wheat.png
+    modified: true
+    nativeSize: 1024x768
+    finalSize: 48x36
+    notes: Card illustration of Cối Xay Gió (wheat_windmill) (style approved 2026-10-29); box-reduced by docs/art-review/g3e/cards/make_assets.py; copy for picture windows under 96 px (src/ui/cards/cardImage.ts)
+  - id: card_art_wheat_harvest_festival
+    path: public/assets/art/ai-v1/cards/wheat_harvest_festival.png
+    category: ui
+    origin: custom
+    source: docs/art-review/g3e/cards/wheat_harvest_festival/source.png
+    creator: Project owner (OpenAI imagegen via Codex; prompt in docs/art-review/g3e/cards/wheat_harvest_festival/prompt.md)
+    license: project-owned
+    attribution: false
+    redistribute: true
+    evidence: docs/art-review/g3e/cards/sheet-wheat.png
+    modified: true
+    nativeSize: 1448x1086
+    finalSize: 96x72
+    notes: Card illustration of Lễ Hội Mùa Màng (wheat_harvest_festival) (style approved 2026-10-29); box-reduced by docs/art-review/g3e/cards/make_assets.py; full size (src/ui/cards/cardImage.ts)
+  - id: card_art_wheat_harvest_festival_48
+    path: public/assets/art/ai-v1/cards/wheat_harvest_festival-48.png
+    category: ui
+    origin: custom
+    source: docs/art-review/g3e/cards/wheat_harvest_festival/source.png
+    creator: Project owner (OpenAI imagegen via Codex; prompt in docs/art-review/g3e/cards/wheat_harvest_festival/prompt.md)
+    license: project-owned
+    attribution: false
+    redistribute: true
+    evidence: docs/art-review/g3e/cards/sheet-wheat.png
+    modified: true
+    nativeSize: 1448x1086
+    finalSize: 48x36
+    notes: Card illustration of Lễ Hội Mùa Màng (wheat_harvest_festival) (style approved 2026-10-29); box-reduced by docs/art-review/g3e/cards/make_assets.py; copy for picture windows under 96 px (src/ui/cards/cardImage.ts)
+  - id: card_art_wheat_granary
+    path: public/assets/art/ai-v1/cards/wheat_granary.png
+    category: ui
+    origin: custom
+    source: docs/art-review/g3e/cards/wheat_granary/source.png
+    creator: Project owner (OpenAI imagegen via Codex; prompt in docs/art-review/g3e/cards/wheat_granary/prompt.md)
+    license: project-owned
+    attribution: false
+    redistribute: true
+    evidence: docs/art-review/g3e/cards/sheet-wheat.png
+    modified: true
+    nativeSize: 1024x768
+    finalSize: 96x72
+    notes: Card illustration of Kho Thóc (wheat_granary) (style approved 2026-10-29); box-reduced by docs/art-review/g3e/cards/make_assets.py; full size (src/ui/cards/cardImage.ts)
+  - id: card_art_wheat_granary_48
+    path: public/assets/art/ai-v1/cards/wheat_granary-48.png
+    category: ui
+    origin: custom
+    source: docs/art-review/g3e/cards/wheat_granary/source.png
+    creator: Project owner (OpenAI imagegen via Codex; prompt in docs/art-review/g3e/cards/wheat_granary/prompt.md)
+    license: project-owned
+    attribution: false
+    redistribute: true
+    evidence: docs/art-review/g3e/cards/sheet-wheat.png
+    modified: true
+    nativeSize: 1024x768
+    finalSize: 48x36
+    notes: Card illustration of Kho Thóc (wheat_granary) (style approved 2026-10-29); box-reduced by docs/art-review/g3e/cards/make_assets.py; copy for picture windows under 96 px (src/ui/cards/cardImage.ts)
+  - id: card_art_wheat_peasant_horde
+    path: public/assets/art/ai-v1/cards/wheat_peasant_horde.png
+    category: ui
+    origin: custom
+    source: docs/art-review/g3e/cards/wheat_peasant_horde/source.png
+    creator: Project owner (OpenAI imagegen via Codex; prompt in docs/art-review/g3e/cards/wheat_peasant_horde/prompt.md)
+    license: project-owned
+    attribution: false
+    redistribute: true
+    evidence: docs/art-review/g3e/cards/sheet-wheat.png
+    modified: true
+    nativeSize: 1024x768
+    finalSize: 96x72
+    notes: Card illustration of Khởi Nghĩa Nông Dân (wheat_peasant_horde) (style approved 2026-10-29); box-reduced by docs/art-review/g3e/cards/make_assets.py; full size (src/ui/cards/cardImage.ts)
+  - id: card_art_wheat_peasant_horde_48
+    path: public/assets/art/ai-v1/cards/wheat_peasant_horde-48.png
+    category: ui
+    origin: custom
+    source: docs/art-review/g3e/cards/wheat_peasant_horde/source.png
+    creator: Project owner (OpenAI imagegen via Codex; prompt in docs/art-review/g3e/cards/wheat_peasant_horde/prompt.md)
+    license: project-owned
+    attribution: false
+    redistribute: true
+    evidence: docs/art-review/g3e/cards/sheet-wheat.png
+    modified: true
+    nativeSize: 1024x768
+    finalSize: 48x36
+    notes: Card illustration of Khởi Nghĩa Nông Dân (wheat_peasant_horde) (style approved 2026-10-29); box-reduced by docs/art-review/g3e/cards/make_assets.py; copy for picture windows under 96 px (src/ui/cards/cardImage.ts)
+  - id: card_art_wheat_militia
+    path: public/assets/art/ai-v1/cards/wheat_militia.png
+    category: ui
+    origin: custom
+    source: docs/art-review/g3e/cards/wheat_militia/source.png
+    creator: Project owner (OpenAI imagegen via Codex; prompt in docs/art-review/g3e/cards/wheat_militia/prompt.md)
+    license: project-owned
+    attribution: false
+    redistribute: true
+    evidence: docs/art-review/g3e/cards/sheet-wheat.png
+    modified: true
+    nativeSize: 1024x768
+    finalSize: 96x72
+    notes: Card illustration of Dân Quân (wheat_militia) (style approved 2026-10-29); box-reduced by docs/art-review/g3e/cards/make_assets.py; full size (src/ui/cards/cardImage.ts)
+  - id: card_art_wheat_militia_48
+    path: public/assets/art/ai-v1/cards/wheat_militia-48.png
+    category: ui
+    origin: custom
+    source: docs/art-review/g3e/cards/wheat_militia/source.png
+    creator: Project owner (OpenAI imagegen via Codex; prompt in docs/art-review/g3e/cards/wheat_militia/prompt.md)
+    license: project-owned
+    attribution: false
+    redistribute: true
+    evidence: docs/art-review/g3e/cards/sheet-wheat.png
+    modified: true
+    nativeSize: 1024x768
+    finalSize: 48x36
+    notes: Card illustration of Dân Quân (wheat_militia) (style approved 2026-10-29); box-reduced by docs/art-review/g3e/cards/make_assets.py; copy for picture windows under 96 px (src/ui/cards/cardImage.ts)
+  - id: card_art_wheat_reapers
+    path: public/assets/art/ai-v1/cards/wheat_reapers.png
+    category: ui
+    origin: custom
+    source: docs/art-review/g3e/cards/wheat_reapers/source.png
+    creator: Project owner (OpenAI imagegen via Codex; prompt in docs/art-review/g3e/cards/wheat_reapers/prompt.md)
+    license: project-owned
+    attribution: false
+    redistribute: true
+    evidence: docs/art-review/g3e/cards/sheet-wheat.png
+    modified: true
+    nativeSize: 1024x768
+    finalSize: 96x72
+    notes: Card illustration of Đội Thợ Gặt (wheat_reapers) (style approved 2026-10-29); box-reduced by docs/art-review/g3e/cards/make_assets.py; full size (src/ui/cards/cardImage.ts)
+  - id: card_art_wheat_reapers_48
+    path: public/assets/art/ai-v1/cards/wheat_reapers-48.png
+    category: ui
+    origin: custom
+    source: docs/art-review/g3e/cards/wheat_reapers/source.png
+    creator: Project owner (OpenAI imagegen via Codex; prompt in docs/art-review/g3e/cards/wheat_reapers/prompt.md)
+    license: project-owned
+    attribution: false
+    redistribute: true
+    evidence: docs/art-review/g3e/cards/sheet-wheat.png
+    modified: true
+    nativeSize: 1024x768
+    finalSize: 48x36
+    notes: Card illustration of Đội Thợ Gặt (wheat_reapers) (style approved 2026-10-29); box-reduced by docs/art-review/g3e/cards/make_assets.py; copy for picture windows under 96 px (src/ui/cards/cardImage.ts)
+  - id: card_art_wheat_scarecrow
+    path: public/assets/art/ai-v1/cards/wheat_scarecrow.png
+    category: ui
+    origin: custom
+    source: docs/art-review/g3e/cards/wheat_scarecrow/source.png
+    creator: Project owner (OpenAI imagegen via Codex; prompt in docs/art-review/g3e/cards/wheat_scarecrow/prompt.md)
+    license: project-owned
+    attribution: false
+    redistribute: true
+    evidence: docs/art-review/g3e/cards/sheet-wheat.png
+    modified: true
+    nativeSize: 1024x768
+    finalSize: 96x72
+    notes: Card illustration of Bù Nhìn Gác (wheat_scarecrow) (style approved 2026-10-29); box-reduced by docs/art-review/g3e/cards/make_assets.py; full size (src/ui/cards/cardImage.ts)
+  - id: card_art_wheat_scarecrow_48
+    path: public/assets/art/ai-v1/cards/wheat_scarecrow-48.png
+    category: ui
+    origin: custom
+    source: docs/art-review/g3e/cards/wheat_scarecrow/source.png
+    creator: Project owner (OpenAI imagegen via Codex; prompt in docs/art-review/g3e/cards/wheat_scarecrow/prompt.md)
+    license: project-owned
+    attribution: false
+    redistribute: true
+    evidence: docs/art-review/g3e/cards/sheet-wheat.png
+    modified: true
+    nativeSize: 1024x768
+    finalSize: 48x36
+    notes: Card illustration of Bù Nhìn Gác (wheat_scarecrow) (style approved 2026-10-29); box-reduced by docs/art-review/g3e/cards/make_assets.py; copy for picture windows under 96 px (src/ui/cards/cardImage.ts)
