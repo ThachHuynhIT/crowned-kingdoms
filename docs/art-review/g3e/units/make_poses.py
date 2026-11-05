@@ -36,7 +36,20 @@ def magenta_mask(rgb):
     return (r > 150) & (b > 150) & (g < 110) & (np.abs(r - b) < 90)
 
 
+def _prompts():
+    import importlib.util
+    spec = importlib.util.spec_from_file_location('unit_prompts', P / 'make_prompts.py')
+    mod = importlib.util.module_from_spec(spec)
+    spec.loader.exec_module(mod)
+    return mod
+
+
+HEIGHT = _prompts().HEIGHT
+
+
 def reference_height(unit):
+    if unit in HEIGHT:
+        return HEIGHT[unit]
     for name in ('preview64.png', 'preview96.png'):
         f = P / unit / name
         if f.exists():
@@ -116,10 +129,12 @@ def place(frames):
 
 
 def foe(c):
-    """Same blue -> red recolour as docs/art-review/g3e/ai-v1/make_assets.py (team colour areas only)."""
+    """Same blue -> red recolour as docs/art-review/g3e/ai-v1/make_assets.py (team colour areas only), plus strong cyan
+    (glowing blue runes, e.g. the golem's chest in its wind-up)."""
     c = c.copy()
     r, g, b = (c[..., k].astype(int) for k in range(3))
-    blue = (c[..., 3] > 0) & (b > r + 30) & (b > g + 10)
+    cyan = (b > r + 60) & (g > r + 60)
+    blue = (c[..., 3] > 0) & (b > r + 30) & ((b > g + 10) | cyan)
     c[..., 0] = np.where(blue, np.clip(b + 25, 0, 255), c[..., 0])
     c[..., 1] = np.where(blue, (g * 0.35).astype(int), c[..., 1])
     c[..., 2] = np.where(blue, (r * 0.45).astype(int), c[..., 2])
@@ -172,8 +187,38 @@ def make(unit, export=False):
 
 RUNTIME = ROOT / 'public/assets/art/ai-v1'
 
+
+def sample(units, sheet_name):
+    """Reduce each new standing sample (<unit>/source.png) to its HEIGHT as <unit>/preview.png, then lay the approved
+    Wheat militia/reaper/peasant idle frames and the new previews side by side on grass at 4x, feet on one line."""
+    figs = []
+    for u in ('militia', 'reaper', 'peasant'):
+        f = P / u / 'poses' / f'{u}_0.png'
+        if f.exists():
+            figs.append(np.array(Image.open(f).convert('RGBA')))
+    for unit in units:
+        rgb, solid = crop_figure(np.array(Image.open(P / unit / 'source.png').convert('RGBA')))
+        prev = reduce(rgb, solid, solid.shape[0] / HEIGHT[unit])
+        Image.fromarray(prev).save(P / unit / 'preview.png')
+        figs.append(prev)
+        print(f'{unit}: preview {prev.shape[1]}x{prev.shape[0]} (scale 1/{solid.shape[0] / HEIGHT[unit]:.1f})')
+    gap = 4
+    w = sum(f.shape[1] for f in figs) + gap * (len(figs) + 1)
+    h = max(f.shape[0] for f in figs) + 2 * gap
+    board = Image.new('RGBA', (w, h), GRASS)
+    x = gap
+    for f in figs:
+        board.alpha_composite(Image.fromarray(f), (x, h - gap - f.shape[0]))
+        x += f.shape[1] + gap
+    board.resize((w * ZOOM, h * ZOOM), Image.NEAREST).save(P / sheet_name)
+    print(P / sheet_name)
+
+
 if __name__ == '__main__':
     args = sys.argv[1:]
-    export = '--export' in args
-    for u in [a for a in args if a != '--export'] or ['militia']:
-        make(u, export)
+    names = [a for a in args if not a.startswith('--')]
+    if '--sample' in args:
+        sample(names, f'sheet-sample-{"-".join(names)}.png' if len(names) < 3 else 'sheet-sample-new.png')
+    else:
+        for u in names or ['militia']:
+            make(u, '--export' in args)

@@ -222,13 +222,46 @@ class UnitPromptGateTest(unittest.TestCase):
             up.ROOT = old
 
 
+class NewUnitScaleGateTest(unittest.TestCase):
+    def test_sized_units_exist_and_carry_the_approved_militia(self):
+        self.assertTrue((ROOT / up.UNIT_REFERENCE).exists())
+        for unit, h in up.HEIGHT.items():
+            self.assertIn(unit, up.UNITS)
+            p = up.build_prompt(f'x/{unit}/source.png', unit)
+            self.assertIn('APPROVED Wheat militia', p, unit)
+            self.assertIn(f'({h} art pixels against 51)', p, unit)
+
+    def test_wheat_prompts_are_unchanged_by_the_scale_line(self):
+        for unit in ('militia', 'reaper', 'peasant'):
+            self.assertNotIn('APPROVED Wheat militia', up.build_prompt('x.png', unit))
+
+    def test_sample_runner_attaches_the_militia_for_sized_units_only(self):
+        up.main(['golem', 'militia'])
+        runner = (ROOT / '.superpowers/u.sh').read_text(encoding='utf-8')
+        golem = next(l for l in runner.splitlines() if 'golem/prompt.md' in l)
+        militia = next(l for l in runner.splitlines() if 'militia/prompt.md' in l)
+        self.assertIn(f'-i {up.REFERENCE} -i {up.UNIT_REFERENCE}', golem)
+        self.assertNotIn(up.UNIT_REFERENCE, militia)
+
+    def test_stone_is_warm_so_the_foe_recolour_only_hits_the_team_colour(self):
+        for unit in ('golem', 'rubble'):
+            self.assertIn('WARM grey-brown', up.build_prompt('x.png', unit))
+
+
 class UnitPosePromptGateTest(unittest.TestCase):
     def test_six_poses_match_the_game_animations(self):
         self.assertEqual([(p[0], p[1]) for p in up.POSES],
                          [('idle', 0), ('idle', 1), ('walk', 0), ('walk', 1), ('attack', 0), ('attack', 1)])
 
+    def test_every_unit_has_attack_poses(self):
+        for unit in up.UNITS:
+            self.assertIn(unit, up.ATTACK, unit)
+            self.assertIn(unit, up.STRIKE, unit)
+
     def test_every_pose_prompt_points_at_the_doc_and_attaches_the_unit_sample(self):
         for unit in up.UNITS:
+            if not up.sample_path(unit).exists():
+                continue  # no approved standing sample yet: build_pose_prompt refuses (tested below)
             p = up.build_pose_prompt(f'x/{unit}/poses-source.png', unit)
             self.assertIn('docs/ART_STYLE.md', p, unit)
             self.assertIn('BẮT BUỘC TRƯỚC KHI VẼ', p, unit)

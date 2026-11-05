@@ -37,19 +37,39 @@ UNITS = {
     'militia': ('Dân Quân (Lúa Mì)', 'a basic village militiaman, the weakest melee unit of the Wheat kingdom.', 'a stout young villager in a cream woollen tunic with a patterned hem, a blue belt, a brown leather cap, sturdy boots, holding a short wooden spear in one hand and a small round wooden shield with a cross of planks in the other; friendly but determined face.', 64, 64),
     'reaper': ('Thợ Gặt (Lúa Mì)', 'a tall melee reaper of the Wheat kingdom who cleaves several enemies.', 'a tall farmer in an ochre woollen tunic and a wide-brimmed straw hat, a blue sash, leather gloves, holding a big curved sickle-scythe resting on the shoulder; calm hard look.', 64, 96),
     'peasant': ('Nông Binh (Lúa Mì)', 'a fast, weak peasant fighter of the Wheat kingdom.', 'a skinny angry peasant in a patched brown tunic and a blue headband, holding a pitchfork up in both hands, a small sack on the belt.', 64, 64),
+    # Stone kingdom (2026-11-06). Stone is WARM grey-brown so the blue -> red foe recolour only touches the team colour.
+    'golem': ('Người Đá (Đá)', 'a big, slow stone golem of the Stone kingdom that slams enemies with its fists.', 'a hulking chibi golem built from rounded WARM grey-brown boulders (not blue-grey), a small head sunk between huge rocky shoulders, two big stone fists hanging low, short thick legs, a carved rune on the chest glowing BLUE, a few small blue crystal shards on the shoulders; friendly heavy look.', 96, 96),
+    'miner': ('Thợ Mỏ (Đá)', 'a tough melee miner of the Stone kingdom.', 'a stocky bearded mountain miner in a brown leather apron over a grey wool shirt, a BLUE scarf and blue cuffs, a battered brass mining helmet with a small lantern, holding a big iron pickaxe across the body with both hands; gruff grin.', 64, 96),
+    'rubble': ('Đá Vụn (Đá)', 'a small rock creature summoned by the Stone kingdom, weak and expendable.', 'a small living heap of WARM grey-brown rocks (not blue-grey) with two tiny stubby rock legs, two small glowing BLUE eyes and a small blue rune mark on the front; cute and clumsy.', 64, 64),
+    'slinger': ('Lính Ném Đá (Đá)', 'a ranged sling thrower of the Stone kingdom.', 'a young mountain villager in a grey-brown wool tunic with a BLUE sash and a blue headscarf, a leather pouch of round stones on the belt, holding a leather sling ready in one hand and a stone in the other; alert eager face.', 64, 64),
 }
+
+# In-game height in art pixels (4 art px per world unit) of units added after the Wheat set, chosen against the
+# approved militia (51 px tall). The standing sample is reduced to this height (make_poses.py --sample) and the pose
+# sheet is drawn at a block size that makes this height fit a 512 px cell.
+HEIGHT = {'golem': 76, 'miner': 58, 'rubble': 34, 'slinger': 50}
+MILITIA_HEIGHT = 51
+# approved unit of the same kind, attached to every new unit's standing sample (ART_STYLE: "ảnh đã duyệt cùng loại")
+UNIT_REFERENCE = 'docs/art-review/g3e/units/militia/source.png'
+
+SCALE_LINE = """Scale and style: the second attached image is the APPROVED Wheat militia; match its chibi style, outline, shading and palette warmth exactly. In the game this unit stands about {pct}% as tall as that militia ({h} art pixels against 51), so give it the matching bulk and proportions, but still draw it large, filling the canvas height.
+"""
 
 
 def build_prompt(out, unit):
     if not (ROOT / STYLE_DOC).exists() or not (ROOT / REFERENCE).exists():
         raise SystemExit('docs/ART_STYLE.md or the approved reference image is missing: refusing to generate images')
+    if unit in HEIGHT and not (ROOT / UNIT_REFERENCE).exists():
+        raise SystemExit(f'{UNIT_REFERENCE} (the approved unit reference) is missing: refusing to generate images')
     name, role, visual, w, h = UNITS[unit]
     # one square canvas for every unit so sizes stay comparable; tall units are drawn narrow inside it
     side = max(w, h)
     block = f'{1024 // side}x{1024 // side} source pixels'
     native = f'{side}x{side}' if w == h else f'{w}x{h} (the character fills the full height of a {side}x{side} square, drawn {w} wide)'
-    return HEADER.format(out=out, doc=STYLE_DOC, ref=REFERENCE) + BODY.format(
-        name=name, role=role, visual=visual, native=native, block=block)
+    body = BODY.format(name=name, role=role, visual=visual, native=native, block=block)
+    if unit in HEIGHT:
+        body += SCALE_LINE.format(pct=round(100 * HEIGHT[unit] / MILITIA_HEIGHT), h=HEIGHT[unit])
+    return HEADER.format(out=out, doc=STYLE_DOC, ref=REFERENCE) + body
 
 
 # --- animation poses (requested by the project owner on 2026-11-05) -------------------------------------
@@ -70,11 +90,19 @@ ATTACK = {
     'militia': 'the spear pulled back to the hip, front knee bent, shield raised in front of the chest.',
     'reaper': 'the sickle-scythe raised high above and behind the head with both hands, weight on the back foot.',
     'peasant': 'the pitchfork pulled back at waist height with both hands, leaning back.',
+    'golem': 'both stone fists raised high above the head, the body leaning back, the chest rune glowing brighter.',
+    'miner': 'the pickaxe swung up behind the shoulder with both hands, weight on the back foot.',
+    'rubble': 'the rock heap squashed low and leaning back, ready to hop.',
+    'slinger': 'the sling whirled above the head in one hand, the stone in the pouch, the other arm pointing right.',
 }
 STRIKE = {
     'militia': 'a long lunge to the right, the spear thrust straight out to the right at chest height with the arm fully extended, the shield stays on the body.',
     'reaper': 'a wide low swing: the blade sweeps down and forward to the right at knee height, body leaning forward.',
     'peasant': 'a hard jab: the pitchfork thrust forward to the right at chest height, both arms extended, front foot forward.',
+    'golem': 'both fists slammed down together in front of it to the right at ground level, the body bent forward, small rock chips at the fists.',
+    'miner': 'the pickaxe brought down hard in front to the right at knee height, body bent forward.',
+    'rubble': 'a hop forward to the right, the rock heap stretched tall and leaning into the hit.',
+    'slinger': 'the throwing arm swung fully forward to the right at shoulder height, the sling released and empty, front foot forward (the stone itself is drawn by the game, not here).',
 }
 
 POSE_BODY = """Create ONE pixel-art ANIMATION SHEET for the Crowned Kingdoms unit {name} — {role}
@@ -108,8 +136,14 @@ def build_pose_prompt(out, unit):
     side = max(w, h)
     lines = {f'p{i}': text.format(attack_windup=ATTACK[unit], attack_strike=STRIKE[unit]) for i, (_, _, text) in enumerate(POSES)}
     sample = f'docs/art-review/g3e/units/{unit}/source.png'
+    if unit in HEIGHT:
+        # the character is drawn HEIGHT art px tall in blocks of b px, so make_poses reduces it at ~b (no blurry resampling)
+        b = min(8, 460 // HEIGHT[unit])
+        block = f'{b}x{b} source pixels; the character is about {HEIGHT[unit]} art pixels tall (about {b * HEIGHT[unit]} source pixels) in every cell'
+    else:
+        block = f'{512 // side}x{512 // side} source pixels'
     return HEADER.format(out=out, doc=STYLE_DOC, ref=REFERENCE) + POSE_BODY.format(
-        name=name, role=role, sample=sample, native=f'{w}x{h}', block=f'{512 // side}x{512 // side} source pixels', **lines)
+        name=name, role=role, sample=sample, native=f'{w}x{h}', block=block, **lines)
 
 
 def main(only=None, poses=False):
@@ -124,7 +158,10 @@ def main(only=None, poses=False):
         prompt_file = d / ('poses-prompt.md' if poses else 'prompt.md')
         prompt_file.write_text(build_pose_prompt(out, unit) if poses else build_prompt(out, unit), encoding='utf-8')
         prompt = prompt_file.relative_to(ROOT).as_posix()
-        images = f'-i {REFERENCE}' + (f' -i {sample_path(unit).relative_to(ROOT).as_posix()}' if poses else '')
+        if poses:
+            images = f'-i {REFERENCE} -i {sample_path(unit).relative_to(ROOT).as_posix()}'
+        else:
+            images = f'-i {REFERENCE}' + (f' -i {UNIT_REFERENCE}' if unit in HEIGHT else '')
         runner.append(f'codex exec --sandbox workspace-write -C "$PWD" {images} - < {prompt} > .superpowers/codex-{tag}-{unit}.out 2>&1')
         runner.append(f'if [ -s {out} ]; then echo "{unit} ok" >> .superpowers/{tag}.log; else echo "{unit} MISSING" >> .superpowers/{tag}.log; fi')
     runner.append(f'echo done >> .superpowers/{tag}.log')
