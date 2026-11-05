@@ -21,7 +21,9 @@ import {
   GRASS_FILES,
   IMAGE_ART_SCALE,
   IMAGE_BUILDINGS,
+  IMAGE_PLOTS,
   IMAGE_UNITS,
+  PLOT_STATES,
   imageArtKey,
   unitPoseFile,
 } from './imageArt';
@@ -52,6 +54,9 @@ export const unitFrame = (unit: UnitId, team: UnitTeam, anim: UnitAnim, n: numbe
 /** Troop/tower building or the throne (the throne card id is its frame). */
 export const buildingFrame = (cardId: CardId): string => `building_${cardId}`;
 export const plotFrame = (state: PlotState): string => `plot_${state}`;
+/** The plot frame of `kingId`'s board: its own skin when `IMAGE_PLOTS` has one, else the shared plot. */
+export const kingPlotFrame = (kingId: string, state: PlotState): string =>
+  IMAGE_PLOTS[kingId] === undefined ? plotFrame(state) : `plot_${kingId}_${state}`;
 export const cardArtFrame = (cardId: CardId): string => `card_art_${cardId}`;
 export const iconFrame = (id: IconId): string => `icon_${id}`;
 /** `arrow_<dir>`, `boulder`, `boulder_shadow`, `spark`. */
@@ -194,8 +199,10 @@ export const spriteList = (content: Content): { name: string; art: PixelCanvas }
       out.push({ name: buildingFrame(def.id), art: paintBuilding(def.kind, accent) });
     out.push({ name: cardArtFrame(def.id), art: paintCardArt(def, accent) });
   }
-  for (const state of ['open', 'locked', 'throne'] as const)
-    out.push({ name: plotFrame(state), art: paintPlot(state) });
+  for (const state of PLOT_STATES) out.push({ name: plotFrame(state), art: paintPlot(state) });
+  // per-king plot skins: generated plot until `withImageArt` swaps in the king's image
+  for (const king of Object.keys(IMAGE_PLOTS))
+    for (const state of PLOT_STATES) out.push({ name: kingPlotFrame(king, state), art: paintPlot(state) });
   for (const id of ICON_IDS) out.push({ name: iconFrame(id), art: paintIcon(id) });
   for (const dir of ARROW_DIRS) out.push({ name: fxFrame(`arrow_${dir}`), art: paintArrow(dir) });
   out.push({ name: fxFrame('boulder'), art: paintBoulder() });
@@ -233,6 +240,8 @@ export const withImageArt = (
         for (let n = 0; n < UNIT_FRAME_COUNT; n++)
           wanted.set(unitFrame(unit, team, anim, n), unitPoseFile(unit, team, anim, n));
   for (const [card, file] of Object.entries(IMAGE_BUILDINGS)) wanted.set(buildingFrame(card as CardId), file);
+  for (const [king, prefix] of Object.entries(IMAGE_PLOTS))
+    for (const state of PLOT_STATES) wanted.set(kingPlotFrame(king, state), `${prefix}_${state}`);
   return list.map((s) => {
     const file = wanted.get(s.name);
     const art = file === undefined ? null : imageFile(textures, file);

@@ -60,15 +60,17 @@ Chủ dự án đổi kế hoạch (06/11/2026): PR #12 (`g3e-ux-and-art`, nhán
 | Tường núi | đoạn tường + biển theo vua | ✅ đã vào game |
 | Lính | Dân Quân, Thợ Gặt, Nông Binh × 6 tư thế × 2 phe | ✅ đã duyệt, đã vào game |
 | Tranh thẻ (96×72) | 10 thẻ: Ngai, Ruộng Lúa, Bùa Phân Bón, Cối Xay Gió, Lễ Hội Mùa Màng, Kho Thóc, Khởi Nghĩa Nông Dân, Dân Quân, Đội Thợ Gặt, Bù Nhìn Gác | ✅ đã vào game 06/11: `docs/art-review/g3e/cards/make_assets.py wheat` thu về 96×72 và bản 48×36 (`public/assets/art/ai-v1/cards/`); `VERTICAL_CARD_ART` + `pickCardImage` chọn bản lớn nhất vừa ô tranh ở scale 1 (tay bài 96×72, kho bài/lưới nhỏ 48×36), không co giãn lẻ. Kiểm trình duyệt: tay bài 3 thẻ 96×72, kho bài 7 thẻ 48×36. Lưu ý: tranh thẻ vẽ trước bộ công trình 06/11 nên vài công trình khác màu mái so với trên bàn cờ (Cối Xay Gió, Kho Thóc) |
-| Ô bàn cờ | ô khoá / ô mở / bệ Ngai skin Lúa Mì (`public/assets/art/ai-v1/plots/wheat_*.png`) | 🟡 đã duyệt và đã cắt, **chưa nối** vào `plotFrame` |
+| Ô bàn cờ | ô khoá / ô mở / bệ Ngai skin Lúa Mì (`public/assets/art/ai-v1/plots/wheat_*.png`) | ✅ đã vào game 06/11: `IMAGE_PLOTS` + `kingPlotFrame` (vua chưa có skin giữ ô chung). Kiểm trình duyệt: bàn cờ Lúa Mì 16 ô khoá, 8 ô mở, 1 bệ Ngai skin mới ở scale 0,5; vua Đá vẫn ô chung |
 | Công trình (64 px, góc 45°) | Ruộng Lúa, Kho Thóc, Cối Xay Gió, Khởi Nghĩa Nông Dân, Dân Quân (nhà), Đội Thợ Gặt, Bù Nhìn Gác, Ngai Bó Lúa | ✅ đã duyệt 06/11, đã vào game (`IMAGE_BUILDINGS`; Kho Thóc và Cối Xay Gió vẽ lại, bản cũ ở `buildings/wheat/_rejected_2026-11-06/`; `cottage` cũ không còn được nạp). Kiểm trình duyệt: Ruộng Lúa và Ngai trong ván thật, 6 cái kia bằng sprite gỡ lỗi trên bàn cờ |
 | Biểu tượng | Huy hiệu Vua Lúa Mì (`icon_king_wheat`) | ⬜ chưa vẽ |
 
 Ngoài P0 (P2, không bắt buộc cho PR này): kiến trúc cấp 2/3 và hoạt ảnh của 7 công trình + Ngai, hoạt ảnh mở rộng của 3 lính, trang trí Xe Lúa (`wild_wheat_cart`). Dùng chung mọi vua, đã duyệt nhưng chưa nối: nền đất 27 ô, 15 vật hoang dã.
 
-Thứ tự còn lại: (1) nối ô bàn cờ Lúa Mì; (2) huy hiệu vua.
+Còn lại cho vua Lúa Mì: huy hiệu vua (`icon_king_wheat`).
 
-Lỗi sẵn có phát hiện 06/11 (không do thay đổi art): dừng `MainMenu` rồi đổi cỡ cửa sổ → `Uncaught TypeError: Cannot read properties of undefined (reading 'resize')` từ listener `scale.on('resize')` trong `src/ui/theme.ts` (khoảng dòng 322) trên một NineSlice đã bị huỷ. Công cụ công trình: `python docs/art-review/g3e/buildings/make_prompts.py wheat [id ...]`, rồi `python docs/art-review/g3e/buildings/make_assets.py wheat` (tách nền, thu nhỏ 64 px, bảng duyệt `wheat/sheet.png`).
+Lỗi sẵn có phát hiện 06/11 (không do thay đổi art): dừng `MainMenu` rồi đổi cỡ cửa sổ → `Uncaught TypeError: Cannot read properties of undefined (reading 'resize')` từ listener `scale.on('resize')` trong `src/ui/theme.ts` (khoảng dòng 322) trên một NineSlice đã bị huỷ.
+
+Công cụ công trình: `python docs/art-review/g3e/buildings/make_prompts.py wheat [id ...]`, rồi `python docs/art-review/g3e/buildings/make_assets.py wheat` (tách nền, thu nhỏ 64 px, bảng duyệt `wheat/sheet.png`).
 
 Việc G3e khác (giữ nguyên): biểu tượng UI chung (12 mẫu chờ duyệt), tranh thẻ 5 vua khác, kiểm cảm ứng thật trên mobile.
 

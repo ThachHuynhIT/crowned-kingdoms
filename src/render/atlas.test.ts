@@ -7,6 +7,7 @@ import {
   fieldKey,
   fxFrame,
   iconFrame,
+  kingPlotFrame,
   packShelves,
   plotFrame,
   spriteList,
@@ -45,6 +46,14 @@ describe('spriteList for the content', () => {
       for (const team of ['ally', 'foe'] as const)
         for (const anim of ['idle', 'walk', 'attack'] as const)
           expect(names.has(unitFrame(unit.id, team, anim, 0)), `${unit.id} ${team} ${anim}`).toBe(true);
+  });
+
+  it('the Wheat king has its own plot skin; other kings keep the shared plots', () => {
+    for (const state of ['open', 'locked', 'throne'] as const) {
+      expect(kingPlotFrame('wheat', state)).toBe(`plot_wheat_${state}`);
+      expect(names.has(kingPlotFrame('wheat', state)), state).toBe(true);
+      expect(kingPlotFrame('stone', state)).toBe(plotFrame(state));
+    }
   });
 
   it('has the pulse, shield and stun effect frames', () => {

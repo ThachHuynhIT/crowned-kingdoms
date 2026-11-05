@@ -48,6 +48,13 @@ export const IMAGE_BUILDINGS: Readonly<Record<string, string>> = {
 };
 export const GRASS_FILES: readonly string[] = ['grass_0', 'grass_1', 'grass_2'];
 
+/**
+ * Plot skins per king: king id → file prefix of its `_open`, `_locked`, `_throne` plots (64×64, the 2026-10 batch-03
+ * sheet cut by tools/slice_art_batches.py, approved; Wheat wired 2026-11-06). Kings not listed keep the shared plots.
+ */
+export const IMAGE_PLOTS: Readonly<Record<string, string>> = { wheat: 'plots/wheat' };
+export const PLOT_STATES = ['open', 'locked', 'throne'] as const;
+
 /** Every PNG of the set (file name without `.png`). */
 export const IMAGE_ART_FILES: readonly string[] = [
   ...Object.values(IMAGE_UNITS).flatMap((prefix) => [
@@ -55,6 +62,7 @@ export const IMAGE_ART_FILES: readonly string[] = [
     ...POSE_INDEXES.map((i) => `${prefix}_foe_${i}`),
   ]),
   ...Object.values(IMAGE_BUILDINGS),
+  ...Object.values(IMAGE_PLOTS).flatMap((prefix) => PLOT_STATES.map((s) => `${prefix}_${s}`)),
   ...GRASS_FILES,
 ];
 

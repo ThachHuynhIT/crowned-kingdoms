@@ -10,7 +10,7 @@ import { unlockCost } from '../data/run';
 import { THRONE_PLOT, adjacentToUnlocked } from '../game/run/board';
 import type { RunState } from '../game/run/state';
 import { FONT_UI } from '../ui/theme';
-import { SPRITES_KEY, buildingFrame, imageFrameScale, plotFrame } from './atlas';
+import { SPRITES_KEY, buildingFrame, imageFrameScale, kingPlotFrame, plotFrame } from './atlas';
 
 const SIZE = 5;
 const PLOTS = SIZE * SIZE;
@@ -81,7 +81,8 @@ export class BoardRenderer {
     for (let p = 0; p < PLOTS; p++) {
       const plot = state.plots[p];
       const ground = p === THRONE_PLOT ? 'throne' : plot?.unlocked ? 'open' : 'locked';
-      this.plots[p]!.setFrame(plotFrame(ground));
+      const frame = kingPlotFrame(state.kingId, ground);
+      this.plots[p]!.setFrame(frame).setScale(imageFrameScale(frame));
       const cardId = p === THRONE_PLOT ? throneId : (plot?.building?.cardId ?? null);
       this.setBuilding(p, cardId);
     }

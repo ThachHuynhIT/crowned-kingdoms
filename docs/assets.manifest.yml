@@ -2725,3 +2725,45 @@ assets:
     nativeSize: 1024x768
     finalSize: 48x36
     notes: Card illustration of Bù Nhìn Gác (wheat_scarecrow) (style approved 2026-10-29); box-reduced by docs/art-review/g3e/cards/make_assets.py; copy for picture windows under 96 px (src/ui/cards/cardImage.ts)
+  - id: plot_wheat_open
+    path: public/assets/art/ai-v1/plots/wheat_open.png
+    category: terrain
+    origin: custom
+    source: docs/art-review/g3e/batch-03-plots-wheat-stone/source.png
+    creator: Project owner (OpenAI imagegen via Codex; prompt in docs/art-review/g3e/batch-03-plots-wheat-stone/prompt.md)
+    license: project-owned
+    attribution: false
+    redistribute: true
+    evidence: docs/art-review/g3e/batch-03-plots-wheat-stone/
+    modified: true
+    nativeSize: 1536x1024
+    finalSize: 64x64
+    notes: Wheat king open (tilled) plot with the fence-and-sheaf border; cut by tools/slice_art_batches.py; drawn at scale 0.5 on the Wheat board (src/render/imageArt.ts IMAGE_PLOTS, wired 2026-11-06)
+  - id: plot_wheat_locked
+    path: public/assets/art/ai-v1/plots/wheat_locked.png
+    category: terrain
+    origin: custom
+    source: docs/art-review/g3e/batch-03-plots-wheat-stone/source.png
+    creator: Project owner (OpenAI imagegen via Codex; prompt in docs/art-review/g3e/batch-03-plots-wheat-stone/prompt.md)
+    license: project-owned
+    attribution: false
+    redistribute: true
+    evidence: docs/art-review/g3e/batch-03-plots-wheat-stone/
+    modified: true
+    nativeSize: 1536x1024
+    finalSize: 64x64
+    notes: Wheat king locked (wild grass) plot with the fence-and-sheaf border; cut by tools/slice_art_batches.py; drawn at scale 0.5 on the Wheat board (src/render/imageArt.ts IMAGE_PLOTS, wired 2026-11-06)
+  - id: plot_wheat_throne
+    path: public/assets/art/ai-v1/plots/wheat_throne.png
+    category: terrain
+    origin: custom
+    source: docs/art-review/g3e/batch-03-plots-wheat-stone/source.png
+    creator: Project owner (OpenAI imagegen via Codex; prompt in docs/art-review/g3e/batch-03-plots-wheat-stone/prompt.md)
+    license: project-owned
+    attribution: false
+    redistribute: true
+    evidence: docs/art-review/g3e/batch-03-plots-wheat-stone/
+    modified: true
+    nativeSize: 1536x1024
+    finalSize: 64x64
+    notes: Wheat king throne plot (carved wheat-sheaf stone) with the fence-and-sheaf border; cut by tools/slice_art_batches.py; drawn at scale 0.5 on the Wheat board (src/render/imageArt.ts IMAGE_PLOTS, wired 2026-11-06)

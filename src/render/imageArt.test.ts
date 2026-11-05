@@ -1,6 +1,6 @@
 import { describe, expect, it } from 'vitest';
 import { generateField, paintField } from './fieldArt';
-import { GRASS_FILES, IMAGE_ART_FILES, IMAGE_ART_SCALE, IMAGE_BUILDINGS, IMAGE_UNITS, POSES, unitPoseFile } from './imageArt';
+import { GRASS_FILES, IMAGE_ART_FILES, IMAGE_ART_SCALE, IMAGE_BUILDINGS, IMAGE_PLOTS, IMAGE_UNITS, POSES, unitPoseFile } from './imageArt';
 import { PixelCanvas, upscale } from './pixel';
 
 describe('image art mapping', () => {
@@ -29,6 +29,11 @@ describe('image art mapping', () => {
     for (const card of ['throne', 'field', 'windmill', 'granary', 'peasant_horde', 'militia', 'reapers', 'scarecrow'])
       expect(IMAGE_BUILDINGS[`wheat_${card}`]).toBe(`wheat_${card}`);
     expect(IMAGE_ART_FILES).not.toContain('cottage');
+  });
+
+  it('loads the three Wheat plot skins', () => {
+    expect(IMAGE_PLOTS.wheat).toBe('plots/wheat');
+    for (const state of ['open', 'locked', 'throne']) expect(IMAGE_ART_FILES).toContain(`plots/wheat_${state}`);
   });
 
   it('idle, walk and attack use six different poses', () => {
