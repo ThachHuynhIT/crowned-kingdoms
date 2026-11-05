@@ -1605,3 +1605,723 @@ assets:
     finalSize: 38x26
     anchor: feet
     notes: Foe recolour (blue made red) of Wheat peasant (Nông Binh) pose 5 (attack 1); mask-weighted box reduction to 2 art px per world unit plus a redrawn 1-px material outline by docs/art-review/g3e/units/make_poses.py --export (approved 2026-11-06); drawn at scale 0.5 (src/render/imageArt.ts)
+  - id: world_ai_v1_golem_0
+    path: public/assets/art/ai-v1/golem_0.png
+    category: unit
+    origin: custom
+    source: docs/art-review/g3e/units/golem/poses-source.png
+    creator: Project owner (OpenAI imagegen via Codex; prompt in docs/art-review/g3e/units/golem/poses-prompt.md)
+    license: project-owned
+    attribution: false
+    redistribute: true
+    evidence: docs/art-review/g3e/units/golem/poses/
+    modified: true
+    nativeSize: 1536x1024
+    finalSize: 44x40
+    anchor: feet
+    notes: Stone golem (Người Đá) pose 0 (idle 0); mask-weighted box reduction to 2 art px per world unit plus a redrawn 1-px material outline by docs/art-review/g3e/units/make_poses.py --export (approved 2026-11-06); drawn at scale 0.5 (src/render/imageArt.ts)
+  - id: world_ai_v1_golem_1
+    path: public/assets/art/ai-v1/golem_1.png
+    category: unit
+    origin: custom
+    source: docs/art-review/g3e/units/golem/poses-source.png
+    creator: Project owner (OpenAI imagegen via Codex; prompt in docs/art-review/g3e/units/golem/poses-prompt.md)
+    license: project-owned
+    attribution: false
+    redistribute: true
+    evidence: docs/art-review/g3e/units/golem/poses/
+    modified: true
+    nativeSize: 1536x1024
+    finalSize: 44x40
+    anchor: feet
+    notes: Stone golem (Người Đá) pose 1 (idle 1); mask-weighted box reduction to 2 art px per world unit plus a redrawn 1-px material outline by docs/art-review/g3e/units/make_poses.py --export (approved 2026-11-06); drawn at scale 0.5 (src/render/imageArt.ts)
+  - id: world_ai_v1_golem_2
+    path: public/assets/art/ai-v1/golem_2.png
+    category: unit
+    origin: custom
+    source: docs/art-review/g3e/units/golem/poses-source.png
+    creator: Project owner (OpenAI imagegen via Codex; prompt in docs/art-review/g3e/units/golem/poses-prompt.md)
+    license: project-owned
+    attribution: false
+    redistribute: true
+    evidence: docs/art-review/g3e/units/golem/poses/
+    modified: true
+    nativeSize: 1536x1024
+    finalSize: 44x40
+    anchor: feet
+    notes: Stone golem (Người Đá) pose 2 (walk 0); mask-weighted box reduction to 2 art px per world unit plus a redrawn 1-px material outline by docs/art-review/g3e/units/make_poses.py --export (approved 2026-11-06); drawn at scale 0.5 (src/render/imageArt.ts)
+  - id: world_ai_v1_golem_3
+    path: public/assets/art/ai-v1/golem_3.png
+    category: unit
+    origin: custom
+    source: docs/art-review/g3e/units/golem/poses-source.png
+    creator: Project owner (OpenAI imagegen via Codex; prompt in docs/art-review/g3e/units/golem/poses-prompt.md)
+    license: project-owned
+    attribution: false
+    redistribute: true
+    evidence: docs/art-review/g3e/units/golem/poses/
+    modified: true
+    nativeSize: 1536x1024
+    finalSize: 44x40
+    anchor: feet
+    notes: Stone golem (Người Đá) pose 3 (walk 1); mask-weighted box reduction to 2 art px per world unit plus a redrawn 1-px material outline by docs/art-review/g3e/units/make_poses.py --export (approved 2026-11-06); drawn at scale 0.5 (src/render/imageArt.ts)
+  - id: world_ai_v1_golem_4
+    path: public/assets/art/ai-v1/golem_4.png
+    category: unit
+    origin: custom
+    source: docs/art-review/g3e/units/golem/poses-source.png
+    creator: Project owner (OpenAI imagegen via Codex; prompt in docs/art-review/g3e/units/golem/poses-prompt.md)
+    license: project-owned
+    attribution: false
+    redistribute: true
+    evidence: docs/art-review/g3e/units/golem/poses/
+    modified: true
+    nativeSize: 1536x1024
+    finalSize: 44x40
+    anchor: feet
+    notes: Stone golem (Người Đá) pose 4 (attack 0); mask-weighted box reduction to 2 art px per world unit plus a redrawn 1-px material outline by docs/art-review/g3e/units/make_poses.py --export (approved 2026-11-06); drawn at scale 0.5 (src/render/imageArt.ts)
+  - id: world_ai_v1_golem_5
+    path: public/assets/art/ai-v1/golem_5.png
+    category: unit
+    origin: custom
+    source: docs/art-review/g3e/units/golem/poses-source.png
+    creator: Project owner (OpenAI imagegen via Codex; prompt in docs/art-review/g3e/units/golem/poses-prompt.md)
+    license: project-owned
+    attribution: false
+    redistribute: true
+    evidence: docs/art-review/g3e/units/golem/poses/
+    modified: true
+    nativeSize: 1536x1024
+    finalSize: 44x40
+    anchor: feet
+    notes: Stone golem (Người Đá) pose 5 (attack 1); mask-weighted box reduction to 2 art px per world unit plus a redrawn 1-px material outline by docs/art-review/g3e/units/make_poses.py --export (approved 2026-11-06); drawn at scale 0.5 (src/render/imageArt.ts)
+  - id: world_ai_v1_golem_foe_0
+    path: public/assets/art/ai-v1/golem_foe_0.png
+    category: unit
+    origin: custom
+    source: docs/art-review/g3e/units/golem/poses-source.png
+    creator: Project owner (OpenAI imagegen via Codex; prompt in docs/art-review/g3e/units/golem/poses-prompt.md)
+    license: project-owned
+    attribution: false
+    redistribute: true
+    evidence: docs/art-review/g3e/units/golem/poses/
+    modified: true
+    nativeSize: 1536x1024
+    finalSize: 44x40
+    anchor: feet
+    notes: Foe recolour (blue made red) of Stone golem (Người Đá) pose 0 (idle 0); mask-weighted box reduction to 2 art px per world unit plus a redrawn 1-px material outline by docs/art-review/g3e/units/make_poses.py --export (approved 2026-11-06); drawn at scale 0.5 (src/render/imageArt.ts)
+  - id: world_ai_v1_golem_foe_1
+    path: public/assets/art/ai-v1/golem_foe_1.png
+    category: unit
+    origin: custom
+    source: docs/art-review/g3e/units/golem/poses-source.png
+    creator: Project owner (OpenAI imagegen via Codex; prompt in docs/art-review/g3e/units/golem/poses-prompt.md)
+    license: project-owned
+    attribution: false
+    redistribute: true
+    evidence: docs/art-review/g3e/units/golem/poses/
+    modified: true
+    nativeSize: 1536x1024
+    finalSize: 44x40
+    anchor: feet
+    notes: Foe recolour (blue made red) of Stone golem (Người Đá) pose 1 (idle 1); mask-weighted box reduction to 2 art px per world unit plus a redrawn 1-px material outline by docs/art-review/g3e/units/make_poses.py --export (approved 2026-11-06); drawn at scale 0.5 (src/render/imageArt.ts)
+  - id: world_ai_v1_golem_foe_2
+    path: public/assets/art/ai-v1/golem_foe_2.png
+    category: unit
+    origin: custom
+    source: docs/art-review/g3e/units/golem/poses-source.png
+    creator: Project owner (OpenAI imagegen via Codex; prompt in docs/art-review/g3e/units/golem/poses-prompt.md)
+    license: project-owned
+    attribution: false
+    redistribute: true
+    evidence: docs/art-review/g3e/units/golem/poses/
+    modified: true
+    nativeSize: 1536x1024
+    finalSize: 44x40
+    anchor: feet
+    notes: Foe recolour (blue made red) of Stone golem (Người Đá) pose 2 (walk 0); mask-weighted box reduction to 2 art px per world unit plus a redrawn 1-px material outline by docs/art-review/g3e/units/make_poses.py --export (approved 2026-11-06); drawn at scale 0.5 (src/render/imageArt.ts)
+  - id: world_ai_v1_golem_foe_3
+    path: public/assets/art/ai-v1/golem_foe_3.png
+    category: unit
+    origin: custom
+    source: docs/art-review/g3e/units/golem/poses-source.png
+    creator: Project owner (OpenAI imagegen via Codex; prompt in docs/art-review/g3e/units/golem/poses-prompt.md)
+    license: project-owned
+    attribution: false
+    redistribute: true
+    evidence: docs/art-review/g3e/units/golem/poses/
+    modified: true
+    nativeSize: 1536x1024
+    finalSize: 44x40
+    anchor: feet
+    notes: Foe recolour (blue made red) of Stone golem (Người Đá) pose 3 (walk 1); mask-weighted box reduction to 2 art px per world unit plus a redrawn 1-px material outline by docs/art-review/g3e/units/make_poses.py --export (approved 2026-11-06); drawn at scale 0.5 (src/render/imageArt.ts)
+  - id: world_ai_v1_golem_foe_4
+    path: public/assets/art/ai-v1/golem_foe_4.png
+    category: unit
+    origin: custom
+    source: docs/art-review/g3e/units/golem/poses-source.png
+    creator: Project owner (OpenAI imagegen via Codex; prompt in docs/art-review/g3e/units/golem/poses-prompt.md)
+    license: project-owned
+    attribution: false
+    redistribute: true
+    evidence: docs/art-review/g3e/units/golem/poses/
+    modified: true
+    nativeSize: 1536x1024
+    finalSize: 44x40
+    anchor: feet
+    notes: Foe recolour (blue made red) of Stone golem (Người Đá) pose 4 (attack 0); mask-weighted box reduction to 2 art px per world unit plus a redrawn 1-px material outline by docs/art-review/g3e/units/make_poses.py --export (approved 2026-11-06); drawn at scale 0.5 (src/render/imageArt.ts)
+  - id: world_ai_v1_golem_foe_5
+    path: public/assets/art/ai-v1/golem_foe_5.png
+    category: unit
+    origin: custom
+    source: docs/art-review/g3e/units/golem/poses-source.png
+    creator: Project owner (OpenAI imagegen via Codex; prompt in docs/art-review/g3e/units/golem/poses-prompt.md)
+    license: project-owned
+    attribution: false
+    redistribute: true
+    evidence: docs/art-review/g3e/units/golem/poses/
+    modified: true
+    nativeSize: 1536x1024
+    finalSize: 44x40
+    anchor: feet
+    notes: Foe recolour (blue made red) of Stone golem (Người Đá) pose 5 (attack 1); mask-weighted box reduction to 2 art px per world unit plus a redrawn 1-px material outline by docs/art-review/g3e/units/make_poses.py --export (approved 2026-11-06); drawn at scale 0.5 (src/render/imageArt.ts)
+  - id: world_ai_v1_miner_0
+    path: public/assets/art/ai-v1/miner_0.png
+    category: unit
+    origin: custom
+    source: docs/art-review/g3e/units/miner/poses-source.png
+    creator: Project owner (OpenAI imagegen via Codex; prompt in docs/art-review/g3e/units/miner/poses-prompt.md)
+    license: project-owned
+    attribution: false
+    redistribute: true
+    evidence: docs/art-review/g3e/units/miner/poses/
+    modified: true
+    nativeSize: 1536x1024
+    finalSize: 32x31
+    anchor: feet
+    notes: Stone miner (Thợ Mỏ) pose 0 (idle 0); mask-weighted box reduction to 2 art px per world unit plus a redrawn 1-px material outline by docs/art-review/g3e/units/make_poses.py --export (approved 2026-11-06); drawn at scale 0.5 (src/render/imageArt.ts)
+  - id: world_ai_v1_miner_1
+    path: public/assets/art/ai-v1/miner_1.png
+    category: unit
+    origin: custom
+    source: docs/art-review/g3e/units/miner/poses-source.png
+    creator: Project owner (OpenAI imagegen via Codex; prompt in docs/art-review/g3e/units/miner/poses-prompt.md)
+    license: project-owned
+    attribution: false
+    redistribute: true
+    evidence: docs/art-review/g3e/units/miner/poses/
+    modified: true
+    nativeSize: 1536x1024
+    finalSize: 32x31
+    anchor: feet
+    notes: Stone miner (Thợ Mỏ) pose 1 (idle 1); mask-weighted box reduction to 2 art px per world unit plus a redrawn 1-px material outline by docs/art-review/g3e/units/make_poses.py --export (approved 2026-11-06); drawn at scale 0.5 (src/render/imageArt.ts)
+  - id: world_ai_v1_miner_2
+    path: public/assets/art/ai-v1/miner_2.png
+    category: unit
+    origin: custom
+    source: docs/art-review/g3e/units/miner/poses-source.png
+    creator: Project owner (OpenAI imagegen via Codex; prompt in docs/art-review/g3e/units/miner/poses-prompt.md)
+    license: project-owned
+    attribution: false
+    redistribute: true
+    evidence: docs/art-review/g3e/units/miner/poses/
+    modified: true
+    nativeSize: 1536x1024
+    finalSize: 32x31
+    anchor: feet
+    notes: Stone miner (Thợ Mỏ) pose 2 (walk 0); mask-weighted box reduction to 2 art px per world unit plus a redrawn 1-px material outline by docs/art-review/g3e/units/make_poses.py --export (approved 2026-11-06); drawn at scale 0.5 (src/render/imageArt.ts)
+  - id: world_ai_v1_miner_3
+    path: public/assets/art/ai-v1/miner_3.png
+    category: unit
+    origin: custom
+    source: docs/art-review/g3e/units/miner/poses-source.png
+    creator: Project owner (OpenAI imagegen via Codex; prompt in docs/art-review/g3e/units/miner/poses-prompt.md)
+    license: project-owned
+    attribution: false
+    redistribute: true
+    evidence: docs/art-review/g3e/units/miner/poses/
+    modified: true
+    nativeSize: 1536x1024
+    finalSize: 32x31
+    anchor: feet
+    notes: Stone miner (Thợ Mỏ) pose 3 (walk 1); mask-weighted box reduction to 2 art px per world unit plus a redrawn 1-px material outline by docs/art-review/g3e/units/make_poses.py --export (approved 2026-11-06); drawn at scale 0.5 (src/render/imageArt.ts)
+  - id: world_ai_v1_miner_4
+    path: public/assets/art/ai-v1/miner_4.png
+    category: unit
+    origin: custom
+    source: docs/art-review/g3e/units/miner/poses-source.png
+    creator: Project owner (OpenAI imagegen via Codex; prompt in docs/art-review/g3e/units/miner/poses-prompt.md)
+    license: project-owned
+    attribution: false
+    redistribute: true
+    evidence: docs/art-review/g3e/units/miner/poses/
+    modified: true
+    nativeSize: 1536x1024
+    finalSize: 32x31
+    anchor: feet
+    notes: Stone miner (Thợ Mỏ) pose 4 (attack 0); mask-weighted box reduction to 2 art px per world unit plus a redrawn 1-px material outline by docs/art-review/g3e/units/make_poses.py --export (approved 2026-11-06); drawn at scale 0.5 (src/render/imageArt.ts)
+  - id: world_ai_v1_miner_5
+    path: public/assets/art/ai-v1/miner_5.png
+    category: unit
+    origin: custom
+    source: docs/art-review/g3e/units/miner/poses-source.png
+    creator: Project owner (OpenAI imagegen via Codex; prompt in docs/art-review/g3e/units/miner/poses-prompt.md)
+    license: project-owned
+    attribution: false
+    redistribute: true
+    evidence: docs/art-review/g3e/units/miner/poses/
+    modified: true
+    nativeSize: 1536x1024
+    finalSize: 32x31
+    anchor: feet
+    notes: Stone miner (Thợ Mỏ) pose 5 (attack 1); mask-weighted box reduction to 2 art px per world unit plus a redrawn 1-px material outline by docs/art-review/g3e/units/make_poses.py --export (approved 2026-11-06); drawn at scale 0.5 (src/render/imageArt.ts)
+  - id: world_ai_v1_miner_foe_0
+    path: public/assets/art/ai-v1/miner_foe_0.png
+    category: unit
+    origin: custom
+    source: docs/art-review/g3e/units/miner/poses-source.png
+    creator: Project owner (OpenAI imagegen via Codex; prompt in docs/art-review/g3e/units/miner/poses-prompt.md)
+    license: project-owned
+    attribution: false
+    redistribute: true
+    evidence: docs/art-review/g3e/units/miner/poses/
+    modified: true
+    nativeSize: 1536x1024
+    finalSize: 32x31
+    anchor: feet
+    notes: Foe recolour (blue made red) of Stone miner (Thợ Mỏ) pose 0 (idle 0); mask-weighted box reduction to 2 art px per world unit plus a redrawn 1-px material outline by docs/art-review/g3e/units/make_poses.py --export (approved 2026-11-06); drawn at scale 0.5 (src/render/imageArt.ts)
+  - id: world_ai_v1_miner_foe_1
+    path: public/assets/art/ai-v1/miner_foe_1.png
+    category: unit
+    origin: custom
+    source: docs/art-review/g3e/units/miner/poses-source.png
+    creator: Project owner (OpenAI imagegen via Codex; prompt in docs/art-review/g3e/units/miner/poses-prompt.md)
+    license: project-owned
+    attribution: false
+    redistribute: true
+    evidence: docs/art-review/g3e/units/miner/poses/
+    modified: true
+    nativeSize: 1536x1024
+    finalSize: 32x31
+    anchor: feet
+    notes: Foe recolour (blue made red) of Stone miner (Thợ Mỏ) pose 1 (idle 1); mask-weighted box reduction to 2 art px per world unit plus a redrawn 1-px material outline by docs/art-review/g3e/units/make_poses.py --export (approved 2026-11-06); drawn at scale 0.5 (src/render/imageArt.ts)
+  - id: world_ai_v1_miner_foe_2
+    path: public/assets/art/ai-v1/miner_foe_2.png
+    category: unit
+    origin: custom
+    source: docs/art-review/g3e/units/miner/poses-source.png
+    creator: Project owner (OpenAI imagegen via Codex; prompt in docs/art-review/g3e/units/miner/poses-prompt.md)
+    license: project-owned
+    attribution: false
+    redistribute: true
+    evidence: docs/art-review/g3e/units/miner/poses/
+    modified: true
+    nativeSize: 1536x1024
+    finalSize: 32x31
+    anchor: feet
+    notes: Foe recolour (blue made red) of Stone miner (Thợ Mỏ) pose 2 (walk 0); mask-weighted box reduction to 2 art px per world unit plus a redrawn 1-px material outline by docs/art-review/g3e/units/make_poses.py --export (approved 2026-11-06); drawn at scale 0.5 (src/render/imageArt.ts)
+  - id: world_ai_v1_miner_foe_3
+    path: public/assets/art/ai-v1/miner_foe_3.png
+    category: unit
+    origin: custom
+    source: docs/art-review/g3e/units/miner/poses-source.png
+    creator: Project owner (OpenAI imagegen via Codex; prompt in docs/art-review/g3e/units/miner/poses-prompt.md)
+    license: project-owned
+    attribution: false
+    redistribute: true
+    evidence: docs/art-review/g3e/units/miner/poses/
+    modified: true
+    nativeSize: 1536x1024
+    finalSize: 32x31
+    anchor: feet
+    notes: Foe recolour (blue made red) of Stone miner (Thợ Mỏ) pose 3 (walk 1); mask-weighted box reduction to 2 art px per world unit plus a redrawn 1-px material outline by docs/art-review/g3e/units/make_poses.py --export (approved 2026-11-06); drawn at scale 0.5 (src/render/imageArt.ts)
+  - id: world_ai_v1_miner_foe_4
+    path: public/assets/art/ai-v1/miner_foe_4.png
+    category: unit
+    origin: custom
+    source: docs/art-review/g3e/units/miner/poses-source.png
+    creator: Project owner (OpenAI imagegen via Codex; prompt in docs/art-review/g3e/units/miner/poses-prompt.md)
+    license: project-owned
+    attribution: false
+    redistribute: true
+    evidence: docs/art-review/g3e/units/miner/poses/
+    modified: true
+    nativeSize: 1536x1024
+    finalSize: 32x31
+    anchor: feet
+    notes: Foe recolour (blue made red) of Stone miner (Thợ Mỏ) pose 4 (attack 0); mask-weighted box reduction to 2 art px per world unit plus a redrawn 1-px material outline by docs/art-review/g3e/units/make_poses.py --export (approved 2026-11-06); drawn at scale 0.5 (src/render/imageArt.ts)
+  - id: world_ai_v1_miner_foe_5
+    path: public/assets/art/ai-v1/miner_foe_5.png
+    category: unit
+    origin: custom
+    source: docs/art-review/g3e/units/miner/poses-source.png
+    creator: Project owner (OpenAI imagegen via Codex; prompt in docs/art-review/g3e/units/miner/poses-prompt.md)
+    license: project-owned
+    attribution: false
+    redistribute: true
+    evidence: docs/art-review/g3e/units/miner/poses/
+    modified: true
+    nativeSize: 1536x1024
+    finalSize: 32x31
+    anchor: feet
+    notes: Foe recolour (blue made red) of Stone miner (Thợ Mỏ) pose 5 (attack 1); mask-weighted box reduction to 2 art px per world unit plus a redrawn 1-px material outline by docs/art-review/g3e/units/make_poses.py --export (approved 2026-11-06); drawn at scale 0.5 (src/render/imageArt.ts)
+  - id: world_ai_v1_rubble_0
+    path: public/assets/art/ai-v1/rubble_0.png
+    category: unit
+    origin: custom
+    source: docs/art-review/g3e/units/rubble/poses-source.png
+    creator: Project owner (OpenAI imagegen via Codex; prompt in docs/art-review/g3e/units/rubble/poses-prompt.md)
+    license: project-owned
+    attribution: false
+    redistribute: true
+    evidence: docs/art-review/g3e/units/rubble/poses/
+    modified: true
+    nativeSize: 1536x1024
+    finalSize: 20x18
+    anchor: feet
+    notes: Stone rubble (Đá Vụn) pose 0 (idle 0); mask-weighted box reduction to 2 art px per world unit plus a redrawn 1-px material outline by docs/art-review/g3e/units/make_poses.py --export (approved 2026-11-06); drawn at scale 0.5 (src/render/imageArt.ts)
+  - id: world_ai_v1_rubble_1
+    path: public/assets/art/ai-v1/rubble_1.png
+    category: unit
+    origin: custom
+    source: docs/art-review/g3e/units/rubble/poses-source.png
+    creator: Project owner (OpenAI imagegen via Codex; prompt in docs/art-review/g3e/units/rubble/poses-prompt.md)
+    license: project-owned
+    attribution: false
+    redistribute: true
+    evidence: docs/art-review/g3e/units/rubble/poses/
+    modified: true
+    nativeSize: 1536x1024
+    finalSize: 20x18
+    anchor: feet
+    notes: Stone rubble (Đá Vụn) pose 1 (idle 1); mask-weighted box reduction to 2 art px per world unit plus a redrawn 1-px material outline by docs/art-review/g3e/units/make_poses.py --export (approved 2026-11-06); drawn at scale 0.5 (src/render/imageArt.ts)
+  - id: world_ai_v1_rubble_2
+    path: public/assets/art/ai-v1/rubble_2.png
+    category: unit
+    origin: custom
+    source: docs/art-review/g3e/units/rubble/poses-source.png
+    creator: Project owner (OpenAI imagegen via Codex; prompt in docs/art-review/g3e/units/rubble/poses-prompt.md)
+    license: project-owned
+    attribution: false
+    redistribute: true
+    evidence: docs/art-review/g3e/units/rubble/poses/
+    modified: true
+    nativeSize: 1536x1024
+    finalSize: 20x18
+    anchor: feet
+    notes: Stone rubble (Đá Vụn) pose 2 (walk 0); mask-weighted box reduction to 2 art px per world unit plus a redrawn 1-px material outline by docs/art-review/g3e/units/make_poses.py --export (approved 2026-11-06); drawn at scale 0.5 (src/render/imageArt.ts)
+  - id: world_ai_v1_rubble_3
+    path: public/assets/art/ai-v1/rubble_3.png
+    category: unit
+    origin: custom
+    source: docs/art-review/g3e/units/rubble/poses-source.png
+    creator: Project owner (OpenAI imagegen via Codex; prompt in docs/art-review/g3e/units/rubble/poses-prompt.md)
+    license: project-owned
+    attribution: false
+    redistribute: true
+    evidence: docs/art-review/g3e/units/rubble/poses/
+    modified: true
+    nativeSize: 1536x1024
+    finalSize: 20x18
+    anchor: feet
+    notes: Stone rubble (Đá Vụn) pose 3 (walk 1); mask-weighted box reduction to 2 art px per world unit plus a redrawn 1-px material outline by docs/art-review/g3e/units/make_poses.py --export (approved 2026-11-06); drawn at scale 0.5 (src/render/imageArt.ts)
+  - id: world_ai_v1_rubble_4
+    path: public/assets/art/ai-v1/rubble_4.png
+    category: unit
+    origin: custom
+    source: docs/art-review/g3e/units/rubble/poses-source.png
+    creator: Project owner (OpenAI imagegen via Codex; prompt in docs/art-review/g3e/units/rubble/poses-prompt.md)
+    license: project-owned
+    attribution: false
+    redistribute: true
+    evidence: docs/art-review/g3e/units/rubble/poses/
+    modified: true
+    nativeSize: 1536x1024
+    finalSize: 20x18
+    anchor: feet
+    notes: Stone rubble (Đá Vụn) pose 4 (attack 0); mask-weighted box reduction to 2 art px per world unit plus a redrawn 1-px material outline by docs/art-review/g3e/units/make_poses.py --export (approved 2026-11-06); drawn at scale 0.5 (src/render/imageArt.ts)
+  - id: world_ai_v1_rubble_5
+    path: public/assets/art/ai-v1/rubble_5.png
+    category: unit
+    origin: custom
+    source: docs/art-review/g3e/units/rubble/poses-source.png
+    creator: Project owner (OpenAI imagegen via Codex; prompt in docs/art-review/g3e/units/rubble/poses-prompt.md)
+    license: project-owned
+    attribution: false
+    redistribute: true
+    evidence: docs/art-review/g3e/units/rubble/poses/
+    modified: true
+    nativeSize: 1536x1024
+    finalSize: 20x18
+    anchor: feet
+    notes: Stone rubble (Đá Vụn) pose 5 (attack 1); mask-weighted box reduction to 2 art px per world unit plus a redrawn 1-px material outline by docs/art-review/g3e/units/make_poses.py --export (approved 2026-11-06); drawn at scale 0.5 (src/render/imageArt.ts)
+  - id: world_ai_v1_rubble_foe_0
+    path: public/assets/art/ai-v1/rubble_foe_0.png
+    category: unit
+    origin: custom
+    source: docs/art-review/g3e/units/rubble/poses-source.png
+    creator: Project owner (OpenAI imagegen via Codex; prompt in docs/art-review/g3e/units/rubble/poses-prompt.md)
+    license: project-owned
+    attribution: false
+    redistribute: true
+    evidence: docs/art-review/g3e/units/rubble/poses/
+    modified: true
+    nativeSize: 1536x1024
+    finalSize: 20x18
+    anchor: feet
+    notes: Foe recolour (blue made red) of Stone rubble (Đá Vụn) pose 0 (idle 0); mask-weighted box reduction to 2 art px per world unit plus a redrawn 1-px material outline by docs/art-review/g3e/units/make_poses.py --export (approved 2026-11-06); drawn at scale 0.5 (src/render/imageArt.ts)
+  - id: world_ai_v1_rubble_foe_1
+    path: public/assets/art/ai-v1/rubble_foe_1.png
+    category: unit
+    origin: custom
+    source: docs/art-review/g3e/units/rubble/poses-source.png
+    creator: Project owner (OpenAI imagegen via Codex; prompt in docs/art-review/g3e/units/rubble/poses-prompt.md)
+    license: project-owned
+    attribution: false
+    redistribute: true
+    evidence: docs/art-review/g3e/units/rubble/poses/
+    modified: true
+    nativeSize: 1536x1024
+    finalSize: 20x18
+    anchor: feet
+    notes: Foe recolour (blue made red) of Stone rubble (Đá Vụn) pose 1 (idle 1); mask-weighted box reduction to 2 art px per world unit plus a redrawn 1-px material outline by docs/art-review/g3e/units/make_poses.py --export (approved 2026-11-06); drawn at scale 0.5 (src/render/imageArt.ts)
+  - id: world_ai_v1_rubble_foe_2
+    path: public/assets/art/ai-v1/rubble_foe_2.png
+    category: unit
+    origin: custom
+    source: docs/art-review/g3e/units/rubble/poses-source.png
+    creator: Project owner (OpenAI imagegen via Codex; prompt in docs/art-review/g3e/units/rubble/poses-prompt.md)
+    license: project-owned
+    attribution: false
+    redistribute: true
+    evidence: docs/art-review/g3e/units/rubble/poses/
+    modified: true
+    nativeSize: 1536x1024
+    finalSize: 20x18
+    anchor: feet
+    notes: Foe recolour (blue made red) of Stone rubble (Đá Vụn) pose 2 (walk 0); mask-weighted box reduction to 2 art px per world unit plus a redrawn 1-px material outline by docs/art-review/g3e/units/make_poses.py --export (approved 2026-11-06); drawn at scale 0.5 (src/render/imageArt.ts)
+  - id: world_ai_v1_rubble_foe_3
+    path: public/assets/art/ai-v1/rubble_foe_3.png
+    category: unit
+    origin: custom
+    source: docs/art-review/g3e/units/rubble/poses-source.png
+    creator: Project owner (OpenAI imagegen via Codex; prompt in docs/art-review/g3e/units/rubble/poses-prompt.md)
+    license: project-owned
+    attribution: false
+    redistribute: true
+    evidence: docs/art-review/g3e/units/rubble/poses/
+    modified: true
+    nativeSize: 1536x1024
+    finalSize: 20x18
+    anchor: feet
+    notes: Foe recolour (blue made red) of Stone rubble (Đá Vụn) pose 3 (walk 1); mask-weighted box reduction to 2 art px per world unit plus a redrawn 1-px material outline by docs/art-review/g3e/units/make_poses.py --export (approved 2026-11-06); drawn at scale 0.5 (src/render/imageArt.ts)
+  - id: world_ai_v1_rubble_foe_4
+    path: public/assets/art/ai-v1/rubble_foe_4.png
+    category: unit
+    origin: custom
+    source: docs/art-review/g3e/units/rubble/poses-source.png
+    creator: Project owner (OpenAI imagegen via Codex; prompt in docs/art-review/g3e/units/rubble/poses-prompt.md)
+    license: project-owned
+    attribution: false
+    redistribute: true
+    evidence: docs/art-review/g3e/units/rubble/poses/
+    modified: true
+    nativeSize: 1536x1024
+    finalSize: 20x18
+    anchor: feet
+    notes: Foe recolour (blue made red) of Stone rubble (Đá Vụn) pose 4 (attack 0); mask-weighted box reduction to 2 art px per world unit plus a redrawn 1-px material outline by docs/art-review/g3e/units/make_poses.py --export (approved 2026-11-06); drawn at scale 0.5 (src/render/imageArt.ts)
+  - id: world_ai_v1_rubble_foe_5
+    path: public/assets/art/ai-v1/rubble_foe_5.png
+    category: unit
+    origin: custom
+    source: docs/art-review/g3e/units/rubble/poses-source.png
+    creator: Project owner (OpenAI imagegen via Codex; prompt in docs/art-review/g3e/units/rubble/poses-prompt.md)
+    license: project-owned
+    attribution: false
+    redistribute: true
+    evidence: docs/art-review/g3e/units/rubble/poses/
+    modified: true
+    nativeSize: 1536x1024
+    finalSize: 20x18
+    anchor: feet
+    notes: Foe recolour (blue made red) of Stone rubble (Đá Vụn) pose 5 (attack 1); mask-weighted box reduction to 2 art px per world unit plus a redrawn 1-px material outline by docs/art-review/g3e/units/make_poses.py --export (approved 2026-11-06); drawn at scale 0.5 (src/render/imageArt.ts)
+  - id: world_ai_v1_slinger_0
+    path: public/assets/art/ai-v1/slinger_0.png
+    category: unit
+    origin: custom
+    source: docs/art-review/g3e/units/slinger/poses-source.png
+    creator: Project owner (OpenAI imagegen via Codex; prompt in docs/art-review/g3e/units/slinger/poses-prompt.md)
+    license: project-owned
+    attribution: false
+    redistribute: true
+    evidence: docs/art-review/g3e/units/slinger/poses/
+    modified: true
+    nativeSize: 1536x1024
+    finalSize: 40x28
+    anchor: feet
+    notes: Stone slinger (Lính Ném Đá) pose 0 (idle 0); mask-weighted box reduction to 2 art px per world unit plus a redrawn 1-px material outline by docs/art-review/g3e/units/make_poses.py --export (approved 2026-11-06); drawn at scale 0.5 (src/render/imageArt.ts)
+  - id: world_ai_v1_slinger_1
+    path: public/assets/art/ai-v1/slinger_1.png
+    category: unit
+    origin: custom
+    source: docs/art-review/g3e/units/slinger/poses-source.png
+    creator: Project owner (OpenAI imagegen via Codex; prompt in docs/art-review/g3e/units/slinger/poses-prompt.md)
+    license: project-owned
+    attribution: false
+    redistribute: true
+    evidence: docs/art-review/g3e/units/slinger/poses/
+    modified: true
+    nativeSize: 1536x1024
+    finalSize: 40x28
+    anchor: feet
+    notes: Stone slinger (Lính Ném Đá) pose 1 (idle 1); mask-weighted box reduction to 2 art px per world unit plus a redrawn 1-px material outline by docs/art-review/g3e/units/make_poses.py --export (approved 2026-11-06); drawn at scale 0.5 (src/render/imageArt.ts)
+  - id: world_ai_v1_slinger_2
+    path: public/assets/art/ai-v1/slinger_2.png
+    category: unit
+    origin: custom
+    source: docs/art-review/g3e/units/slinger/poses-source.png
+    creator: Project owner (OpenAI imagegen via Codex; prompt in docs/art-review/g3e/units/slinger/poses-prompt.md)
+    license: project-owned
+    attribution: false
+    redistribute: true
+    evidence: docs/art-review/g3e/units/slinger/poses/
+    modified: true
+    nativeSize: 1536x1024
+    finalSize: 40x28
+    anchor: feet
+    notes: Stone slinger (Lính Ném Đá) pose 2 (walk 0); mask-weighted box reduction to 2 art px per world unit plus a redrawn 1-px material outline by docs/art-review/g3e/units/make_poses.py --export (approved 2026-11-06); drawn at scale 0.5 (src/render/imageArt.ts)
+  - id: world_ai_v1_slinger_3
+    path: public/assets/art/ai-v1/slinger_3.png
+    category: unit
+    origin: custom
+    source: docs/art-review/g3e/units/slinger/poses-source.png
+    creator: Project owner (OpenAI imagegen via Codex; prompt in docs/art-review/g3e/units/slinger/poses-prompt.md)
+    license: project-owned
+    attribution: false
+    redistribute: true
+    evidence: docs/art-review/g3e/units/slinger/poses/
+    modified: true
+    nativeSize: 1536x1024
+    finalSize: 40x28
+    anchor: feet
+    notes: Stone slinger (Lính Ném Đá) pose 3 (walk 1); mask-weighted box reduction to 2 art px per world unit plus a redrawn 1-px material outline by docs/art-review/g3e/units/make_poses.py --export (approved 2026-11-06); drawn at scale 0.5 (src/render/imageArt.ts)
+  - id: world_ai_v1_slinger_4
+    path: public/assets/art/ai-v1/slinger_4.png
+    category: unit
+    origin: custom
+    source: docs/art-review/g3e/units/slinger/poses-source.png
+    creator: Project owner (OpenAI imagegen via Codex; prompt in docs/art-review/g3e/units/slinger/poses-prompt.md)
+    license: project-owned
+    attribution: false
+    redistribute: true
+    evidence: docs/art-review/g3e/units/slinger/poses/
+    modified: true
+    nativeSize: 1536x1024
+    finalSize: 40x28
+    anchor: feet
+    notes: Stone slinger (Lính Ném Đá) pose 4 (attack 0); mask-weighted box reduction to 2 art px per world unit plus a redrawn 1-px material outline by docs/art-review/g3e/units/make_poses.py --export (approved 2026-11-06); drawn at scale 0.5 (src/render/imageArt.ts)
+  - id: world_ai_v1_slinger_5
+    path: public/assets/art/ai-v1/slinger_5.png
+    category: unit
+    origin: custom
+    source: docs/art-review/g3e/units/slinger/poses-source.png
+    creator: Project owner (OpenAI imagegen via Codex; prompt in docs/art-review/g3e/units/slinger/poses-prompt.md)
+    license: project-owned
+    attribution: false
+    redistribute: true
+    evidence: docs/art-review/g3e/units/slinger/poses/
+    modified: true
+    nativeSize: 1536x1024
+    finalSize: 40x28
+    anchor: feet
+    notes: Stone slinger (Lính Ném Đá) pose 5 (attack 1); mask-weighted box reduction to 2 art px per world unit plus a redrawn 1-px material outline by docs/art-review/g3e/units/make_poses.py --export (approved 2026-11-06); drawn at scale 0.5 (src/render/imageArt.ts)
+  - id: world_ai_v1_slinger_foe_0
+    path: public/assets/art/ai-v1/slinger_foe_0.png
+    category: unit
+    origin: custom
+    source: docs/art-review/g3e/units/slinger/poses-source.png
+    creator: Project owner (OpenAI imagegen via Codex; prompt in docs/art-review/g3e/units/slinger/poses-prompt.md)
+    license: project-owned
+    attribution: false
+    redistribute: true
+    evidence: docs/art-review/g3e/units/slinger/poses/
+    modified: true
+    nativeSize: 1536x1024
+    finalSize: 40x28
+    anchor: feet
+    notes: Foe recolour (blue made red) of Stone slinger (Lính Ném Đá) pose 0 (idle 0); mask-weighted box reduction to 2 art px per world unit plus a redrawn 1-px material outline by docs/art-review/g3e/units/make_poses.py --export (approved 2026-11-06); drawn at scale 0.5 (src/render/imageArt.ts)
+  - id: world_ai_v1_slinger_foe_1
+    path: public/assets/art/ai-v1/slinger_foe_1.png
+    category: unit
+    origin: custom
+    source: docs/art-review/g3e/units/slinger/poses-source.png
+    creator: Project owner (OpenAI imagegen via Codex; prompt in docs/art-review/g3e/units/slinger/poses-prompt.md)
+    license: project-owned
+    attribution: false
+    redistribute: true
+    evidence: docs/art-review/g3e/units/slinger/poses/
+    modified: true
+    nativeSize: 1536x1024
+    finalSize: 40x28
+    anchor: feet
+    notes: Foe recolour (blue made red) of Stone slinger (Lính Ném Đá) pose 1 (idle 1); mask-weighted box reduction to 2 art px per world unit plus a redrawn 1-px material outline by docs/art-review/g3e/units/make_poses.py --export (approved 2026-11-06); drawn at scale 0.5 (src/render/imageArt.ts)
+  - id: world_ai_v1_slinger_foe_2
+    path: public/assets/art/ai-v1/slinger_foe_2.png
+    category: unit
+    origin: custom
+    source: docs/art-review/g3e/units/slinger/poses-source.png
+    creator: Project owner (OpenAI imagegen via Codex; prompt in docs/art-review/g3e/units/slinger/poses-prompt.md)
+    license: project-owned
+    attribution: false
+    redistribute: true
+    evidence: docs/art-review/g3e/units/slinger/poses/
+    modified: true
+    nativeSize: 1536x1024
+    finalSize: 40x28
+    anchor: feet
+    notes: Foe recolour (blue made red) of Stone slinger (Lính Ném Đá) pose 2 (walk 0); mask-weighted box reduction to 2 art px per world unit plus a redrawn 1-px material outline by docs/art-review/g3e/units/make_poses.py --export (approved 2026-11-06); drawn at scale 0.5 (src/render/imageArt.ts)
+  - id: world_ai_v1_slinger_foe_3
+    path: public/assets/art/ai-v1/slinger_foe_3.png
+    category: unit
+    origin: custom
+    source: docs/art-review/g3e/units/slinger/poses-source.png
+    creator: Project owner (OpenAI imagegen via Codex; prompt in docs/art-review/g3e/units/slinger/poses-prompt.md)
+    license: project-owned
+    attribution: false
+    redistribute: true
+    evidence: docs/art-review/g3e/units/slinger/poses/
+    modified: true
+    nativeSize: 1536x1024
+    finalSize: 40x28
+    anchor: feet
+    notes: Foe recolour (blue made red) of Stone slinger (Lính Ném Đá) pose 3 (walk 1); mask-weighted box reduction to 2 art px per world unit plus a redrawn 1-px material outline by docs/art-review/g3e/units/make_poses.py --export (approved 2026-11-06); drawn at scale 0.5 (src/render/imageArt.ts)
+  - id: world_ai_v1_slinger_foe_4
+    path: public/assets/art/ai-v1/slinger_foe_4.png
+    category: unit
+    origin: custom
+    source: docs/art-review/g3e/units/slinger/poses-source.png
+    creator: Project owner (OpenAI imagegen via Codex; prompt in docs/art-review/g3e/units/slinger/poses-prompt.md)
+    license: project-owned
+    attribution: false
+    redistribute: true
+    evidence: docs/art-review/g3e/units/slinger/poses/
+    modified: true
+    nativeSize: 1536x1024
+    finalSize: 40x28
+    anchor: feet
+    notes: Foe recolour (blue made red) of Stone slinger (Lính Ném Đá) pose 4 (attack 0); mask-weighted box reduction to 2 art px per world unit plus a redrawn 1-px material outline by docs/art-review/g3e/units/make_poses.py --export (approved 2026-11-06); drawn at scale 0.5 (src/render/imageArt.ts)
+  - id: world_ai_v1_slinger_foe_5
+    path: public/assets/art/ai-v1/slinger_foe_5.png
+    category: unit
+    origin: custom
+    source: docs/art-review/g3e/units/slinger/poses-source.png
+    creator: Project owner (OpenAI imagegen via Codex; prompt in docs/art-review/g3e/units/slinger/poses-prompt.md)
+    license: project-owned
+    attribution: false
+    redistribute: true
+    evidence: docs/art-review/g3e/units/slinger/poses/
+    modified: true
+    nativeSize: 1536x1024
+    finalSize: 40x28
+    anchor: feet
+    notes: Foe recolour (blue made red) of Stone slinger (Lính Ném Đá) pose 5 (attack 1); mask-weighted box reduction to 2 art px per world unit plus a redrawn 1-px material outline by docs/art-review/g3e/units/make_poses.py --export (approved 2026-11-06); drawn at scale 0.5 (src/render/imageArt.ts)

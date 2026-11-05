@@ -38,6 +38,13 @@ Spec: `docs/superpowers/specs/2026-10-28-king-select-redesign-design.md`. Đã x
 - Đã kiểm trong trình duyệt (1280×720, trận thật năm 1, phóng camera để xem pixel): dân quân phe ta đi/đánh đúng khung, scale 0,5, neo chân; thợ gặt và nông binh chỉ kiểm bằng sprite gỡ lỗi từ atlas vì trận năm 1 không có chúng. Không lỗi console.
 - Còn lại: ở mật độ 2 px/đơn vị mặt lính hơi nhòe so với bản duyệt 4 px; lính sinh bằng code (cướp, yêu tinh…) vẫn lệch phong cách bên cạnh lính ảnh.
 
+## Lính vua Đá (06/11/2026, đã duyệt và đã vào game)
+- **Người Đá, Thợ Mỏ, Đá Vụn, Lính Ném Đá**: mẫu đứng → 6 tư thế → vào `IMAGE_UNITS`. Mọi việc làm trên nhánh duy nhất `g3e-ux-and-art` (chủ dự án yêu cầu: không nhánh phụ, không PR khác).
+- Lính mới (sau bộ Lúa Mì) có chiều cao trong game `HEIGHT` trong `make_prompts.py` (so với dân quân 51 px: Người Đá 76, Thợ Mỏ 58, Lính Ném Đá 50, Đá Vụn 34); prompt mẫu đứng đính kèm mẫu dân quân đã duyệt (`UNIT_REFERENCE`); bảng tư thế vẽ theo khối pixel vừa chiều cao đó. Xem mẫu đứng đúng cỡ: `make_poses.py --sample <lính...>`.
+- Đổi màu phe địch bắt cả xanh ngọc sáng (chữ khắc phát sáng của Người Đá).
+- Đã kiểm trong trình duyệt (vua Đá, trận thật năm 1): Người Đá phe ta đi đúng khung, scale 0,5; Thợ Mỏ, Đá Vụn, Lính Ném Đá (ta/địch) kiểm bằng sprite gỡ lỗi từ atlas. Không lỗi console.
+- Ghi chú: Đá Vụn trông như Người Đá thu nhỏ (chủ dự án đã duyệt); Codex vẽ Đá Vụn to hơn yêu cầu nên thu nhỏ nhiều hơn (1/12,5), hơi mất chi tiết.
+
 ## Đang chờ người dùng duyệt (chưa vào game, chưa đăng ký)
 - **Tranh thẻ dọc (94 thẻ):** chủ dự án chốt cỡ native **96×72** (4:3, 29/10/2026). Công cụ `docs/art-review/g3e/cards/make_prompts.py` (danh mục `cards.json` từ registry; thẻ công trình dùng nguyên khối mẫu của `ART_STYLE.md`; `VISUAL` cho gợi ý hình ảnh từng thẻ), cổng `tools/test_art_prompts.py`. Đang thử 2 mẫu Lúa Mì (`wheat_scarecrow`, `wheat_harvest_festival`); mục "Tranh thẻ" của `ART_STYLE.md` chỉ thêm khi chủ dự án duyệt phong cách. **Khi nối vào game:** tranh 96×72 vừa thẻ ≥ 100 px rộng ở scale 1, nhưng vùng tranh của thẻ nhỏ (84–96 px, lưới 3×3 và kho bài) chỉ rộng 76–88 px: phải chỉnh `cardLayout`/`fitArt` hoặc cỡ thẻ trước khi thêm vào `VERTICAL_CARD_ART`.
 - Công trình Lúa Mì thử: Kho Thóc, Cối Xay Gió (`docs/art-review/g3e/buildings/wheat/`). Các bản bị loại nằm trong `_rejected_*` và `_superseded_*`.

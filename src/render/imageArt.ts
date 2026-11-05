@@ -13,13 +13,18 @@ export const imageArtKey = (file: string): string => `imgart-${file}`;
 
 /**
  * Units drawn from image art: unit id → file prefix of its six poses (`<prefix>_<i>`, `<prefix>_foe_<i>`).
- * The Wheat militia, reaper and peasant come from `docs/art-review/g3e/units/make_poses.py --export` (approved
- * 2026-11-06); they replace the first `spearman` sheet for the militia.
+ * The Wheat (militia, reaper, peasant) and Stone (golem, miner, rubble, slinger) units come from
+ * `docs/art-review/g3e/units/make_poses.py --export` (approved 2026-11-06); the militia's replace the first
+ * `spearman` sheet.
  */
 export const IMAGE_UNITS: Readonly<Record<string, string>> = {
   militia: 'militia',
   reaper: 'reaper',
   peasant: 'peasant',
+  golem: 'golem',
+  miner: 'miner',
+  rubble: 'rubble',
+  slinger: 'slinger',
   footman: 'footman',
 };
 

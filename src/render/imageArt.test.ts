@@ -17,8 +17,8 @@ describe('image art mapping', () => {
     for (const file of Object.values(IMAGE_BUILDINGS)) expect(IMAGE_ART_FILES).toContain(file);
   });
 
-  it('the three Wheat units use their own posed art (G3e unit poses, 2026-11-06)', () => {
-    for (const unit of ['militia', 'reaper', 'peasant']) {
+  it('the Wheat and Stone units use their own posed art (G3e unit poses, 2026-11-06)', () => {
+    for (const unit of ['militia', 'reaper', 'peasant', 'golem', 'miner', 'rubble', 'slinger']) {
       expect(IMAGE_UNITS[unit]).toBe(unit);
       expect(unitPoseFile(unit, 'foe', 'attack', 1)).toBe(`${unit}_foe_5`);
     }
