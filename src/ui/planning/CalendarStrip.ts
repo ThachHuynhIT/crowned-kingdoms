@@ -6,7 +6,9 @@ import { UI_PALETTE } from '../../data/uiPalette';
 import type { Content } from '../../game/cards/registry';
 import { SPRITES_KEY, iconFrame } from '../../render/atlas';
 import type { Rect } from '../hud/layout';
+import type { KingId } from '../../data/types';
 import type { CalendarCell } from '../realm/calendarModel';
+import { kingBadge } from '../realm/kingBadge';
 import { questCalendarLabel } from './questNotice';
 import {
   addUiText,
@@ -136,24 +138,27 @@ export class CalendarCellView {
       const kings = cell.kings ?? [];
       const small = Math.max(10, Math.round(w * 0.22));
       kings.forEach((id, i) => {
-        const dx = cx + (i - (kings.length - 1) / 2) * (small + 3);
-        const badge = this.scene.add
-          .rectangle(dx, cy, small, small, PALETTE[this.content.enemyKing(id).color])
-          .setStrokeStyle(2, UI_PALETTE.outline);
-        this.add(badge);
+        const art = kingBadge(id, small);
+        const dx = cx + (i - (kings.length - 1) / 2) * ((art?.size ?? small) + 3);
+        this.add(this.kingMark(id, dx, cy, small));
       });
       return;
     }
-    const king = this.content.enemyKing(cell.attacker);
-    const badge = this.scene.add
-      .rectangle(cx, cy, side, side, PALETTE[king.color])
-      .setStrokeStyle(2, UI_PALETTE.outline);
-    this.add(badge);
+    this.add(this.kingMark(cell.attacker, cx, cy, side));
     const dots = cell.attack ?? 0;
     for (let i = 0; i < dots; i++) {
       const dx = cx + (i - (dots - 1) / 2) * (DOT + 3);
       this.add(this.scene.add.rectangle(dx, h - (label ? 17 : 7), DOT, DOT, UI_PALETTE.select).setStrokeStyle(1, UI_PALETTE.outline));
     }
+  }
+
+  /** The king's badge image when it has one and it loaded, else its colour square of `side` px. */
+  private kingMark(king: KingId, x: number, y: number, side: number): Phaser.GameObjects.GameObject {
+    const art = kingBadge(king, side);
+    if (art && this.scene.textures.exists(art.key)) return this.scene.add.image(x, y, art.key).setOrigin(0.5);
+    return this.scene.add
+      .rectangle(x, y, side, side, PALETTE[this.content.enemyKing(king).color])
+      .setStrokeStyle(2, UI_PALETTE.outline);
   }
 
   /** Council (crown) and quest (tome) markers in the top-right corner. */

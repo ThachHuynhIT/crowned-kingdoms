@@ -2767,3 +2767,31 @@ assets:
     nativeSize: 1536x1024
     finalSize: 64x64
     notes: Wheat king throne plot (carved wheat-sheaf stone) with the fence-and-sheaf border; cut by tools/slice_art_batches.py; drawn at scale 0.5 on the Wheat board (src/render/imageArt.ts IMAGE_PLOTS, wired 2026-11-06)
+  - id: icon_king_wheat
+    path: public/assets/art/ai-v1/icons/icon_king_wheat.png
+    category: icon
+    origin: custom
+    source: docs/art-review/g3e/icons/icon_king_wheat/source.png
+    creator: Project owner (OpenAI imagegen via Codex; prompt in docs/art-review/g3e/icons/icon_king_wheat/prompt.md)
+    license: project-owned
+    attribution: false
+    redistribute: true
+    evidence: docs/art-review/g3e/icons/icon_king_wheat/preview.png
+    modified: true
+    nativeSize: 1024x1024
+    finalSize: 32x32
+    notes: Wheat king badge (shield with a wheat sheaf) on the year calendar; magenta keyed out and box-reduced by docs/art-review/g3e/icons/make_assets.py (src/ui/realm/kingBadge.ts, 2026-11-06)
+  - id: icon_king_wheat_16
+    path: public/assets/art/ai-v1/icons/icon_king_wheat-16.png
+    category: icon
+    origin: custom
+    source: docs/art-review/g3e/icons/icon_king_wheat/source.png
+    creator: Project owner (OpenAI imagegen via Codex; prompt in docs/art-review/g3e/icons/icon_king_wheat/prompt.md)
+    license: project-owned
+    attribution: false
+    redistribute: true
+    evidence: docs/art-review/g3e/icons/icon_king_wheat/preview.png
+    modified: true
+    nativeSize: 1024x1024
+    finalSize: 16x16
+    notes: Wheat king badge (shield with a wheat sheaf) on the year calendar; magenta keyed out and box-reduced by docs/art-review/g3e/icons/make_assets.py (src/ui/realm/kingBadge.ts, 2026-11-06)

@@ -9,6 +9,7 @@ import { PORTRAIT_ASSETS, PORTRAIT_DIR, portraitTextureKey } from '../render/por
 import type { UiFrame } from '../render/uiArt';
 import { UI_KIT_DIR, UI_KIT_FILES, kitTextureKey } from '../render/uiKit';
 import { CARD_ART_FILES } from '../ui/cards/cardImage';
+import { KING_BADGE_FILES } from '../ui/realm/kingBadge';
 import { textStyle } from '../ui/theme';
 import { SCENES } from './keys';
 
@@ -40,6 +41,8 @@ export class PreloadScene extends Phaser.Scene {
     for (const id of ALL_KINGS) this.load.image(portraitTextureKey(id), `${PORTRAIT_DIR}${PORTRAIT_ASSETS[id].file}`);
     // Card illustrations (G3e, 96×72 + 48×36); a file that fails to load leaves the 32×24 atlas picture.
     for (const f of CARD_ART_FILES) this.load.image(f.key, f.url);
+    // King badges on the calendar (G3e, 32 + 16 px); a file that fails to load leaves the colour square.
+    for (const f of KING_BADGE_FILES) this.load.image(f.key, f.url);
     // Real assets (atlases, audio) will be queued here with this.load.*.
   }
 

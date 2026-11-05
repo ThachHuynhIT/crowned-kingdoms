@@ -41,6 +41,8 @@ ICONS = {
     'icon_life': ('Máu / Mạng (tài nguyên)', 'the resource "life": hit points and lives.', 'a plump red heart with a bright highlight on the top-left and a small steel-grey rim of plating on the lower edge; saturated red with a dark red shade.'),
     'icon_level': ('Cấp (tài nguyên)', 'the resource "level": the upgrade level of a building.', 'a bold golden upward arrow standing on a short stack of two stone steps, small gold sparkles beside the arrow; gold arrow, grey stone steps.'),
     'icon_enchant_stack': ('Chồng bùa (tài nguyên)', 'the resource "enchant stack": the number of charms stacked on a building.', 'three round rune discs stacked on top of each other like a short tower, each disc with a different glowing violet rune, the top one brightest; grey stone discs, violet runes, gold rims.'),
+    # king badges (2026-11-06): shown on the calendar for the years that king attacks; one heraldic shape per king
+    'icon_king_wheat': ('Huy hiệu Vua Lúa Mì (huy hiệu vua)', 'the badge of the Wheat king, shown on the year calendar when the Wheat kingdom attacks.', 'a small heraldic shield (pointed bottom) with a warm wooden rim, a golden-yellow field and one bold golden wheat sheaf tied with a blue band in the middle, a tiny gold crown on the top edge of the shield; golden yellow, warm brown wood, a blue accent. The wheat sheaf must stay readable as a thumbnail.'),
     'icon_soul': ('Linh hồn (tài nguyên)', 'the resource "soul": energy taken from fallen enemies.', 'a ghostly pale cyan-white soul flame shaped like a teardrop with a tiny wisp tail and two small dark eye hollows, a few tiny floating cyan sparks; pale cyan with a deeper teal shade.'),
 }
 
