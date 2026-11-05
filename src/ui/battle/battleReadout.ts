@@ -3,6 +3,7 @@ import { BOSSES } from '../../data/bosses';
 import { bossPhase } from '../../game/battle/bosses';
 import { TICKS_PER_SECOND } from '../../core/SimClock';
 import { KIND_UNIT, TEAM_FOE, type BattleWorld } from '../../game/battle/world';
+import { throneHealth } from '../hud/armyHealth';
 
 /**
  * Pure read-outs of a running battle for the battle HUD (§10.7). They only read the world;
@@ -21,11 +22,7 @@ export const foesRemaining = (world: BattleWorld): number => {
 };
 
 /** Throne HP as 0..1 (0 once destroyed). */
-export const throneHpFraction = (world: BattleWorld): number => {
-  const max = world.maxHp[world.throneId]!;
-  if (max <= 0) return 0;
-  return Math.max(0, Math.min(1, world.hp[world.throneId]! / max));
-};
+export const throneHpFraction = (world: BattleWorld): number => throneHealth(world).fraction;
 
 export interface InterventionCooldown {
   ready: boolean;

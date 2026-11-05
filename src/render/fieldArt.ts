@@ -8,7 +8,7 @@ import {
   computeDualGrid,
   type TerrainSource,
 } from './dualGrid';
-import { PixelCanvas, pixelHash } from './pixel';
+import { PixelCanvas, pixelHash, upscale } from './pixel';
 
 /** Terrain names; the index is the data value and the blend priority (higher draws on top). */
 export const FIELD_TERRAINS = ['grass', 'flowers', 'path', 'sand', 'water'] as const;
@@ -100,7 +100,7 @@ export const paintFieldTile = (terrain: number, mask: number, seed: number): Pix
  * The whole 384x384 field: 24x24 data cells blended through the dual grid. The 25x25 display
  * tiles are drawn half a tile up-left so the picture is cropped to the data grid.
  */
-export const paintField = (seed: number): PixelCanvas => {
+export const paintField = (seed: number, grass?: readonly PixelCanvas[]): PixelCanvas => {
   const data = generateField(seed);
   const source: TerrainSource = {
     width: N,
@@ -109,7 +109,10 @@ export const paintField = (seed: number): PixelCanvas => {
       data[Math.min(N - 1, Math.max(0, cy)) * N + Math.min(N - 1, Math.max(0, cx))]!,
   };
   const dual = computeDualGrid(source, (t) => t);
-  const out = new PixelCanvas(N * TILE, N * TILE);
+  // With grass art (2 art px per world unit) the whole field is painted at twice the density:
+  // the grass comes from the art, every other tile is the generated one enlarged 2×.
+  const k = grass && grass.length > 0 ? 2 : 1;
+  const out = new PixelCanvas(N * TILE * k, N * TILE * k);
   const terrains = [...dual.layers.keys()].sort((a, b) => a - b);
   for (const t of terrains) {
     const layer = dual.layers.get(t)!;
@@ -118,7 +121,13 @@ export const paintField = (seed: number): PixelCanvas => {
         const mask = layer[ty * dual.width + tx]!;
         if (mask < 0) continue;
         const tileSeed = seed + tx * 7919 + ty * 104729;
-        out.blit(paintFieldTile(t, mask, tileSeed), tx * TILE - TILE / 2, ty * TILE - TILE / 2);
+        const tile =
+          k === 2 && grass && t === 0 && mask === 15
+            ? grass[Math.floor(pixelHash(tx, ty, seed) * grass.length)]!
+            : k === 2
+              ? upscale(paintFieldTile(t, mask, tileSeed), 2)
+              : paintFieldTile(t, mask, tileSeed);
+        out.blit(tile, (tx * TILE - TILE / 2) * k, (ty * TILE - TILE / 2) * k);
       }
   }
   return out;

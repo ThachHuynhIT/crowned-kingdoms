@@ -119,35 +119,23 @@ describe('edges', () => {
   const roster = [{ unit: 'u', weight: 1, enemyCost: 1 }];
   const edgesOf = (plan: ReturnType<typeof composeArmy>): string[][] => plan.waves.map((w) => [...new Set(w.units.map((u) => u.edge))]);
 
-  it('one edge before year 10, two from year 10', () => {
-    for (const w of edgesOf(composeArmy(roster, 60, 5, 1, {}))) expect(w).toHaveLength(1);
-    for (const w of edgesOf(composeArmy(roster, 80, 12, 1, {}))) expect(w).toHaveLength(2);
+  it('every army comes in from the south, early or late, with or without the extra-edge flag', () => {
+    for (const w of edgesOf(composeArmy(roster, 60, 5, 1, {}))) expect(w).toEqual(['S']);
+    for (const w of edgesOf(composeArmy(roster, 80, 12, 1, {}))) expect(w).toEqual(['S']);
+    for (const w of edgesOf(composeArmy(roster, 80, 12, 1, { extraEdges: 9 }))) expect(w).toEqual(['S']);
   });
 
-  it('an extra edge (Nomad banner) adds one distinct edge to every wave', () => {
-    for (const w of edgesOf(composeArmy(roster, 60, 5, 1, { extraEdges: 1 }))) expect(w).toHaveLength(2);
-    for (const w of edgesOf(composeArmy(roster, 80, 12, 1, { extraEdges: 1 }))) expect(w).toHaveLength(3);
-    for (const w of edgesOf(composeArmy(roster, 80, 12, 1, { extraEdges: 9 }))) expect(w).toHaveLength(4);
-  });
-
-  it('the Nomad king army carries the extra edge, the others do not', () => {
-    const nomadYear = (s: RunState): number => s.enemyKings.indexOf('nomad');
+  it('the Nomad king army is also south-only; the flag becomes formation rows in battleSetup', () => {
     let found = false;
     for (let seed = 1; seed <= 12 && !found; seed++) {
       const base = newRun(seed, 'wheat', CONTENT, RULES_FULL);
-      const idx = nomadYear(base);
+      const idx = base.enemyKings.indexOf('nomad');
       if (idx < 0) continue;
       const firstAttackYear = [3, 4, 7, 12, 15, 18][idx]!;
       const plan = buildYearArmy({ ...base, year: firstAttackYear }, CONTENT);
-      const perWave = plan.waves.map((w) => new Set(w.units.map((u) => u.edge)).size);
-      for (const n of perWave) expect(n).toBe(firstAttackYear >= 10 ? 3 : 2);
+      for (const w of plan.waves) expect(new Set(w.units.map((u) => u.edge))).toEqual(new Set(['S']));
       found = true;
     }
     expect(found).toBe(true);
-  });
-
-  it('keeps raiders and the older king banners as they were (one edge early)', () => {
-    const plan = composeArmy(roster, 40, 3, 4, { attacker: 'raiders' });
-    expect(edgesOf(plan).every((w) => w.length === 1)).toBe(true);
   });
 });

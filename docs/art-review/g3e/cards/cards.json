@@ -1,0 +1,754 @@
+[
+ {
+  "id": "arcane_apprentices",
+  "nameVi": "Học Viện",
+  "owner": "arcane",
+  "kind": "troop",
+  "rarity": "common",
+  "summary": "Học Viện | Sinh 3 Học Đồ khi ra trận."
+ },
+ {
+  "id": "arcane_archmage",
+  "nameVi": "Tháp Đại Pháp Sư",
+  "owner": "arcane",
+  "kind": "troop",
+  "rarity": "rare",
+  "summary": "Tháp Đại Pháp Sư | Sinh 1 Đại Pháp Sư khi ra trận. Mỗi stack Bùa trên toàn bàn cờ cho họ +4% sát thương (tối đa +100%)."
+ },
+ {
+  "id": "arcane_frost_mages",
+  "nameVi": "Tháp Băng Sư",
+  "owner": "arcane",
+  "kind": "troop",
+  "rarity": "uncommon",
+  "summary": "Tháp Băng Sư | Sinh 2 Pháp Sư Băng khi ra trận."
+ },
+ {
+  "id": "arcane_haste_rune",
+  "nameVi": "Bùa Tốc Biến",
+  "owner": "arcane",
+  "kind": "enchantment",
+  "rarity": "common",
+  "summary": "Bùa Tốc Biến | Mỗi lần gắn: +12% tốc độ đánh."
+ },
+ {
+  "id": "arcane_library",
+  "nameVi": "Thư Viện",
+  "owner": "arcane",
+  "kind": "support",
+  "rarity": "uncommon",
+  "summary": "Thư Viện | Đầu năm +1 vàng. Lân cận: công trình có ít nhất 1 Bùa nhận thêm 1 stack ảo của Bùa gắn đầu tiên."
+ },
+ {
+  "id": "arcane_mage_tower",
+  "nameVi": "Tháp Pháp Sư",
+  "owner": "arcane",
+  "kind": "tower",
+  "rarity": "common",
+  "summary": "Tháp Pháp Sư | Bắn 9 sát thương phép, tầm 80; nảy sang 1 địch khác trong 32 px với 60% sát thương."
+ },
+ {
+  "id": "arcane_mirror",
+  "nameVi": "Gương Chép Bùa",
+  "owner": "arcane",
+  "kind": "tome",
+  "rarity": "uncommon",
+  "summary": "Gương Chép Bùa | Công trình thứ hai nhận bản sao mọi stack Bùa của công trình thứ nhất (tới giới hạn stack)."
+ },
+ {
+  "id": "arcane_spark_rune",
+  "nameVi": "Bùa Tia Lửa",
+  "owner": "arcane",
+  "kind": "enchantment",
+  "rarity": "common",
+  "summary": "Bùa Tia Lửa | Mỗi lần gắn: mỗi đòn +2 sát thương (cộng sau mọi phần trăm)."
+ },
+ {
+  "id": "arcane_throne",
+  "nameVi": "Ngai Tinh Tú",
+  "owner": "arcane",
+  "kind": "throne",
+  "rarity": "common",
+  "summary": "Ngai Tinh Tú | Ngai của Vua Phép Thuật: bắn phép vào kẻ địch. Hòa Âm: công trình có từ 2 stack Bùa trở lên nhận +10% máu và sát thương."
+ },
+ {
+  "id": "arcane_ward",
+  "nameVi": "Vòng Kết Giới",
+  "owner": "arcane",
+  "kind": "support",
+  "rarity": "rare",
+  "summary": "Vòng Kết Giới | Mỗi 50 tick, lính mình trong 64 px nhận 20 khiên (tối đa gấp đôi)."
+ },
+ {
+  "id": "clock_bell_tower",
+  "nameVi": "Tháp Chuông",
+  "owner": "clock",
+  "kind": "support",
+  "rarity": "uncommon",
+  "summary": "Tháp Chuông | Mỗi 100 tick: lính mình trong 80 px đánh nhanh thêm 25/30/35/40/45% trong 30 tick; từ cấp 3 địch trong 80 px bị choáng 5 tick."
+ },
+ {
+  "id": "clock_colossus",
+  "nameVi": "Lò Khổng Lồ Đồng",
+  "owner": "clock",
+  "kind": "troop",
+  "rarity": "rare",
+  "summary": "Lò Khổng Lồ Đồng | Sinh 1 khổng lồ đồng."
+ },
+ {
+  "id": "clock_gear_tower",
+  "nameVi": "Tháp Bánh Răng",
+  "owner": "clock",
+  "kind": "tower",
+  "rarity": "common",
+  "summary": "Tháp Bánh Răng | Bắn 5 sát thương; mỗi giây đánh nhanh thêm 2% (tối đa +100%)."
+ },
+ {
+  "id": "clock_rewind",
+  "nameVi": "Tua Ngược",
+  "owner": "clock",
+  "kind": "tome",
+  "rarity": "uncommon",
+  "summary": "Tua Ngược | Công trình được chọn vĩnh viễn lên dây trước thêm 5 giây (tối đa 30 giây)."
+ },
+ {
+  "id": "clock_spiders",
+  "nameVi": "Ổ Nhện Cơ Khí",
+  "owner": "clock",
+  "kind": "troop",
+  "rarity": "uncommon",
+  "summary": "Ổ Nhện Cơ Khí | Sinh 3 nhện cơ khí. Mỗi 150 tick, thiếu nhện thì sinh lại 1 con."
+ },
+ {
+  "id": "clock_spring_workshop",
+  "nameVi": "Xưởng Lò Xo",
+  "owner": "clock",
+  "kind": "economy",
+  "rarity": "common",
+  "summary": "Xưởng Lò Xo | Đầu năm +1 vàng. Lân cận: mọi tăng tiến lên dây trước 10/12/14/16/20 giây."
+ },
+ {
+  "id": "clock_steam_cannon",
+  "nameVi": "Pháo Hơi Nước",
+  "owner": "clock",
+  "kind": "tower",
+  "rarity": "rare",
+  "summary": "Pháo Hơi Nước | Pháo 30 sát thương, nổ lan 18; mỗi giây đánh nhanh thêm 1.5% (tối đa +90%)."
+ },
+ {
+  "id": "clock_tick_rune",
+  "nameVi": "Bùa Tích Tắc",
+  "owner": "clock",
+  "kind": "enchantment",
+  "rarity": "common",
+  "summary": "Bùa Tích Tắc | Mỗi lần gắn: +1% tốc độ đánh mỗi giây (tối đa +30% mỗi stack)."
+ },
+ {
+  "id": "clock_windup_soldiers",
+  "nameVi": "Xưởng Lính Thiếc",
+  "owner": "clock",
+  "kind": "troop",
+  "rarity": "common",
+  "summary": "Xưởng Lính Thiếc | Sinh 4 lính thiếc."
+ },
+ {
+  "id": "forge_armory",
+  "nameVi": "Kho Giáp",
+  "owner": "forge",
+  "kind": "support",
+  "rarity": "rare",
+  "summary": "Kho Giáp | Mọi lính trên bàn cờ +0.04/0.05/0.06/0.07/0.08 giáp (chỉ lấy Kho Giáp cao nhất). Lân cận: +10% máu."
+ },
+ {
+  "id": "forge_blast_furnace",
+  "nameVi": "Lò Cao",
+  "owner": "forge",
+  "kind": "economy",
+  "rarity": "uncommon",
+  "summary": "Lò Cao | Đầu năm +1 vàng. Lân cận: công trình lửa +25% sát thương bỏng."
+ },
+ {
+  "id": "forge_bombardiers",
+  "nameVi": "Đội Ném Lửa",
+  "owner": "forge",
+  "kind": "troop",
+  "rarity": "uncommon",
+  "summary": "Đội Ném Lửa | Sinh 2 lính ném lửa."
+ },
+ {
+  "id": "forge_ember_rune",
+  "nameVi": "Bùa Than Hồng",
+  "owner": "forge",
+  "kind": "enchantment",
+  "rarity": "common",
+  "summary": "Bùa Than Hồng | Mỗi lần gắn: mỗi đòn gây thêm bỏng 2 mỗi giây trong 30 tick."
+ },
+ {
+  "id": "forge_flame_tower",
+  "nameVi": "Tháp Phun Lửa",
+  "owner": "forge",
+  "kind": "tower",
+  "rarity": "common",
+  "summary": "Tháp Phun Lửa | Phun lửa 4 sát thương theo hình quạt, bỏng 1 mỗi giây."
+ },
+ {
+  "id": "forge_iron_drake",
+  "nameVi": "Tổ Rồng Sắt",
+  "owner": "forge",
+  "kind": "troop",
+  "rarity": "rare",
+  "summary": "Tổ Rồng Sắt | Sinh 1 rồng sắt."
+ },
+ {
+  "id": "forge_master_hammer",
+  "nameVi": "Búa Thợ Cả",
+  "owner": "forge",
+  "kind": "tome",
+  "rarity": "uncommon",
+  "summary": "Búa Thợ Cả | +1 cấp cho công trình được chọn và +1 cấp cho công trình lân cận thấp cấp nhất."
+ },
+ {
+  "id": "forge_smithy",
+  "nameVi": "Lò Rèn",
+  "owner": "forge",
+  "kind": "support",
+  "rarity": "common",
+  "summary": "Lò Rèn | Lân cận: lính +12% sát thương và +0.05 giáp."
+ },
+ {
+  "id": "forge_swordsmen",
+  "nameVi": "Doanh Trại Kiếm Sĩ",
+  "owner": "forge",
+  "kind": "troop",
+  "rarity": "common",
+  "summary": "Doanh Trại Kiếm Sĩ | Sinh 3 kiếm sĩ thép."
+ },
+ {
+  "id": "grove_bear_cave",
+  "nameVi": "Hang Gấu",
+  "owner": "grove",
+  "kind": "troop",
+  "rarity": "uncommon",
+  "summary": "Hang Gấu | Sinh 1 gấu rừng."
+ },
+ {
+  "id": "grove_deep_roots",
+  "nameVi": "Bùa Rễ Sâu",
+  "owner": "grove",
+  "kind": "enchantment",
+  "rarity": "common",
+  "summary": "Bùa Rễ Sâu | Mỗi đầu năm công trình nhận vĩnh viễn +3% máu và sát thương mỗi stack (tối đa +90%)."
+ },
+ {
+  "id": "grove_sapling",
+  "nameVi": "Cây Mầm",
+  "owner": "grove",
+  "kind": "support",
+  "rarity": "common",
+  "summary": "Cây Mầm | Đầu năm, đủ mỗi 3 năm tuổi thì +1 cấp. Lân cận: lính +8% máu."
+ },
+ {
+  "id": "grove_spirit_stags",
+  "nameVi": "Đàn Hươu Thần",
+  "owner": "grove",
+  "kind": "troop",
+  "rarity": "rare",
+  "summary": "Đàn Hươu Thần | Sinh 2 hươu thần."
+ },
+ {
+  "id": "grove_spring",
+  "nameVi": "Suối Hồi Sinh",
+  "owner": "grove",
+  "kind": "support",
+  "rarity": "common",
+  "summary": "Suối Hồi Sinh | Lính mình trong 64 px hồi 2/3/4/5/6 máu mỗi giây theo cấp."
+ },
+ {
+  "id": "grove_spring_rain",
+  "nameVi": "Mưa Xuân",
+  "owner": "grove",
+  "kind": "tome",
+  "rarity": "uncommon",
+  "summary": "Mưa Xuân | Mọi công trình Rừng Xanh +2 năm tuổi; mọi Cây Mầm +1 cấp."
+ },
+ {
+  "id": "grove_thorn_tower",
+  "nameVi": "Tháp Gai",
+  "owner": "grove",
+  "kind": "tower",
+  "rarity": "uncommon",
+  "summary": "Tháp Gai | Bắn gai 5 sát thương, độc 2 mỗi giây, cộng tối đa 3 lớp."
+ },
+ {
+  "id": "grove_treant",
+  "nameVi": "Cổ Thụ Thức Tỉnh",
+  "owner": "grove",
+  "kind": "troop",
+  "rarity": "rare",
+  "summary": "Cổ Thụ Thức Tỉnh | Sinh 1 cổ thụ."
+ },
+ {
+  "id": "grove_wolf_den",
+  "nameVi": "Hang Sói",
+  "owner": "grove",
+  "kind": "troop",
+  "rarity": "common",
+  "summary": "Hang Sói | Sinh 3 sói."
+ },
+ {
+  "id": "moon_altar",
+  "nameVi": "Đàn Tế",
+  "owner": "moon",
+  "kind": "support",
+  "rarity": "uncommon",
+  "summary": "Đàn Tế | Mỗi khi chơi một thẻ hiến tế, Đàn Tế ghi thêm 1 lễ vật. Đầu trận triệu hồi bóng ma theo số lễ vật."
+ },
+ {
+  "id": "moon_blood_moon_rune",
+  "nameVi": "Bùa Trăng Máu",
+  "owner": "moon",
+  "kind": "enchantment",
+  "rarity": "common",
+  "summary": "Bùa Trăng Máu | Mỗi lần gắn: +30% sát thương, −10% máu."
+ },
+ {
+  "id": "moon_blood_pact",
+  "nameVi": "Khế Ước Máu",
+  "owner": "moon",
+  "kind": "tome",
+  "rarity": "common",
+  "summary": "Khế Ước Máu | Hiến tế một công trình (không phải Ngai): nhận 3 vàng mỗi cấp; mọi stack Bùa của nó chuyển sang Ngai."
+ },
+ {
+  "id": "moon_crypt",
+  "nameVi": "Hầm Mộ",
+  "owner": "moon",
+  "kind": "troop",
+  "rarity": "common",
+  "summary": "Hầm Mộ | Sinh 3 bộ xương, mỗi con sống lại một lần với 50% máu."
+ },
+ {
+  "id": "moon_eclipse_pact",
+  "nameVi": "Giao Ước Nguyệt Thực",
+  "owner": "moon",
+  "kind": "tome",
+  "rarity": "rare",
+  "summary": "Giao Ước Nguyệt Thực | Mất 1 mạng (không dùng được khi còn 1 mạng): công trình được chọn +2 cấp, nhận 5 vàng."
+ },
+ {
+  "id": "moon_reaper_shrine",
+  "nameVi": "Điện Thần Chết",
+  "owner": "moon",
+  "kind": "troop",
+  "rarity": "rare",
+  "summary": "Điện Thần Chết | Sinh 1 thần chết trăng."
+ },
+ {
+  "id": "moon_shadow_spire",
+  "nameVi": "Tháp Bóng Đêm",
+  "owner": "moon",
+  "kind": "tower",
+  "rarity": "common",
+  "summary": "Tháp Bóng Đêm | Bắn 7 sát thương phép; mỗi lần hạ địch triệu hồi 1 bóng ma (tối đa 3/4/5/6/8 mỗi trận)."
+ },
+ {
+  "id": "moon_summoning_circle",
+  "nameVi": "Vòng Triệu Hồi",
+  "owner": "moon",
+  "kind": "support",
+  "rarity": "uncommon",
+  "summary": "Vòng Triệu Hồi | Mỗi 80/70/60/50/40 tick triệu hồi 1 bóng ma tại ô (tối đa 8 mỗi trận)."
+ },
+ {
+  "id": "moon_vampires",
+  "nameVi": "Lâu Đài Ma Cà Rồng",
+  "owner": "moon",
+  "kind": "troop",
+  "rarity": "uncommon",
+  "summary": "Lâu Đài Ma Cà Rồng | Sinh 2 ma cà rồng."
+ },
+ {
+  "id": "neutral_archer_tower",
+  "nameVi": "Tháp Cung",
+  "owner": "neutral",
+  "kind": "tower",
+  "rarity": "common",
+  "summary": "Tháp Cung | Bắn 7 sát thương, tầm 88."
+ },
+ {
+  "id": "neutral_barracks",
+  "nameVi": "Trại Lính",
+  "owner": "neutral",
+  "kind": "troop",
+  "rarity": "common",
+  "summary": "Trại Lính | Sinh 3 Lính Bộ khi ra trận."
+ },
+ {
+  "id": "neutral_clear_land",
+  "nameVi": "Khai Hoang",
+  "owner": "neutral",
+  "kind": "tome",
+  "rarity": "common",
+  "summary": "Khai Hoang | Mở một ô khoá bất kỳ."
+ },
+ {
+  "id": "neutral_demolish",
+  "nameVi": "Dỡ Bỏ",
+  "owner": "neutral",
+  "kind": "tome",
+  "rarity": "common",
+  "summary": "Dỡ Bỏ | Dỡ một công trình, nhận 2 vàng mỗi cấp của nó."
+ },
+ {
+  "id": "neutral_fortify",
+  "nameVi": "Bùa Vững Chãi",
+  "owner": "neutral",
+  "kind": "enchantment",
+  "rarity": "common",
+  "summary": "Bùa Vững Chãi | Mỗi lần gắn: +20% máu lính và máu công trình."
+ },
+ {
+  "id": "neutral_mercenary_camp",
+  "nameVi": "Trại Đánh Thuê",
+  "owner": "neutral",
+  "kind": "troop",
+  "rarity": "uncommon",
+  "summary": "Trại Đánh Thuê | Sinh 2 Lính Đánh Thuê. Đầu năm trả 1 vàng; không đủ vàng thì năm đó trại không sinh lính."
+ },
+ {
+  "id": "neutral_move",
+  "nameVi": "Dời Nhà",
+  "owner": "neutral",
+  "kind": "tome",
+  "rarity": "common",
+  "summary": "Dời Nhà | Dời một công trình sang ô đã mở khác (đổi chỗ nếu có)."
+ },
+ {
+  "id": "neutral_promote",
+  "nameVi": "Thăng Cấp",
+  "owner": "neutral",
+  "kind": "tome",
+  "rarity": "common",
+  "summary": "Thăng Cấp | Nâng một công trình (không phải Ngai) lên 1 cấp."
+ },
+ {
+  "id": "neutral_sharpen",
+  "nameVi": "Bùa Sắc Bén",
+  "owner": "neutral",
+  "kind": "enchantment",
+  "rarity": "common",
+  "summary": "Bùa Sắc Bén | Mỗi lần gắn: +15% sát thương."
+ },
+ {
+  "id": "neutral_well",
+  "nameVi": "Giếng Làng",
+  "owner": "neutral",
+  "kind": "economy",
+  "rarity": "common",
+  "summary": "Giếng Làng | Đầu năm nhận 1 vàng."
+ },
+ {
+  "id": "nomad_bazaar",
+  "nameVi": "Chợ Phiên",
+  "owner": "nomad",
+  "kind": "economy",
+  "rarity": "uncommon",
+  "summary": "Chợ Phiên | Đầu năm +1 vàng, thêm +1 vàng cho mỗi loại công trình khác nhau ở lân cận."
+ },
+ {
+  "id": "nomad_caravan",
+  "nameVi": "Đoàn Lữ Hành",
+  "owner": "nomad",
+  "kind": "economy",
+  "rarity": "rare",
+  "summary": "Đoàn Lữ Hành | Đầu năm +2 vàng. Mỗi lần một công trình được dời: +1 vàng ngay (tối đa 3 mỗi năm)."
+ },
+ {
+  "id": "nomad_horse_archers",
+  "nameVi": "Trại Cung Kỵ",
+  "owner": "nomad",
+  "kind": "troop",
+  "rarity": "common",
+  "summary": "Trại Cung Kỵ | Sinh 2 cung kỵ."
+ },
+ {
+  "id": "nomad_khan_guard",
+  "nameVi": "Ngự Lâm Thiết Kỵ",
+  "owner": "nomad",
+  "kind": "troop",
+  "rarity": "rare",
+  "summary": "Ngự Lâm Thiết Kỵ | Sinh 2 thiết kỵ."
+ },
+ {
+  "id": "nomad_relocate",
+  "nameVi": "Nhổ Trại",
+  "owner": "nomad",
+  "kind": "tome",
+  "rarity": "common",
+  "summary": "Nhổ Trại | Dời một công trình sang ô đã mở khác (đổi chỗ nếu có); nếu cách xa từ 2 ô trở lên thì +1 cấp."
+ },
+ {
+  "id": "nomad_riders",
+  "nameVi": "Trại Kỵ Binh",
+  "owner": "nomad",
+  "kind": "troop",
+  "rarity": "common",
+  "summary": "Trại Kỵ Binh | Sinh 2 kỵ binh xung phong."
+ },
+ {
+  "id": "nomad_stables",
+  "nameVi": "Chuồng Ngựa",
+  "owner": "nomad",
+  "kind": "support",
+  "rarity": "common",
+  "summary": "Chuồng Ngựa | Lân cận: lính kỵ binh +15% tốc độ và sát thương."
+ },
+ {
+  "id": "nomad_watchtower",
+  "nameVi": "Chòi Canh Thảo Nguyên",
+  "owner": "nomad",
+  "kind": "tower",
+  "rarity": "uncommon",
+  "summary": "Chòi Canh Thảo Nguyên | Bắn 7 sát thương, tầm xa; +20% sát thương cho mỗi ô lân cận đã mở mà còn trống."
+ },
+ {
+  "id": "nomad_wind_rune",
+  "nameVi": "Bùa Gió Thảo Nguyên",
+  "owner": "nomad",
+  "kind": "enchantment",
+  "rarity": "uncommon",
+  "summary": "Bùa Gió Thảo Nguyên | Mỗi lần gắn: +10% tốc độ và +10% sát thương; nhân đôi trong năm công trình vừa được dời."
+ },
+ {
+  "id": "stone_catapult",
+  "nameVi": "Tháp Ném Đá",
+  "owner": "stone",
+  "kind": "tower",
+  "rarity": "common",
+  "summary": "Tháp Ném Đá | Ném 14 sát thương lan, tầm 96, không bắn được địch trong 24 px."
+ },
+ {
+  "id": "stone_crystal",
+  "nameVi": "Tháp Pha Lê",
+  "owner": "stone",
+  "kind": "tower",
+  "rarity": "uncommon",
+  "summary": "Tháp Pha Lê | Tia 4 sát thương phép, tầm 64, bắn rất nhanh; mỗi đòn liên tiếp vào cùng mục tiêu +20% (tối đa +200%)."
+ },
+ {
+  "id": "stone_golem_forge",
+  "nameVi": "Xưởng Người Đá",
+  "owner": "stone",
+  "kind": "troop",
+  "rarity": "common",
+  "summary": "Xưởng Người Đá | Sinh 1 Người Đá khi ra trận."
+ },
+ {
+  "id": "stone_miners",
+  "nameVi": "Đội Thợ Mỏ",
+  "owner": "stone",
+  "kind": "troop",
+  "rarity": "uncommon",
+  "summary": "Đội Thợ Mỏ | Sinh 3 Thợ Mỏ khi ra trận; mỗi Thợ Mỏ chết để lại một Đá Vụn."
+ },
+ {
+  "id": "stone_mountain_heart",
+  "nameVi": "Tim Núi",
+  "owner": "stone",
+  "kind": "tower",
+  "rarity": "rare",
+  "summary": "Tim Núi | Mỗi 40 tick, mọi địch trong 48 px nhận 30 sát thương vật lý và choáng 10 tick. Lân cận: Người Đá +30% máu."
+ },
+ {
+  "id": "stone_quarry",
+  "nameVi": "Mỏ Đá",
+  "owner": "stone",
+  "kind": "economy",
+  "rarity": "common",
+  "summary": "Mỏ Đá | Đầu năm +1 vàng. Lân cận: tháp +10% sát thương."
+ },
+ {
+  "id": "stone_rune_carving",
+  "nameVi": "Khắc Ấn Núi",
+  "owner": "stone",
+  "kind": "tome",
+  "rarity": "rare",
+  "summary": "Khắc Ấn Núi | Mọi tháp đang có trên bàn cờ nhận vĩnh viễn +8% sát thương."
+ },
+ {
+  "id": "stone_stoneskin",
+  "nameVi": "Bùa Da Đá",
+  "owner": "stone",
+  "kind": "enchantment",
+  "rarity": "common",
+  "summary": "Bùa Da Đá | Mỗi lần gắn: +20% máu lính và máu công trình, +0.05 giáp."
+ },
+ {
+  "id": "stone_throne",
+  "nameVi": "Ngai Đá Tảng",
+  "owner": "stone",
+  "kind": "throne",
+  "rarity": "common",
+  "summary": "Ngai Đá Tảng | Ngai của Vua Đá Núi: ném đá vào kẻ địch. Núi Che Chở: mọi tháp +10% sát thương."
+ },
+ {
+  "id": "stone_wall",
+  "nameVi": "Tường Thành",
+  "owner": "stone",
+  "kind": "support",
+  "rarity": "uncommon",
+  "summary": "Tường Thành | Giáp 0.3. Khiêu khích: địch gần phải đánh tường trước. Lân cận: công trình +20% máu."
+ },
+ {
+  "id": "tide_cannon",
+  "nameVi": "Pháo Đài Biển",
+  "owner": "tide",
+  "kind": "tower",
+  "rarity": "common",
+  "summary": "Pháo Đài Biển | Pháo 16 sát thương, nổ lan 12, đẩy lùi 16."
+ },
+ {
+  "id": "tide_harbor",
+  "nameVi": "Bến Cảng",
+  "owner": "tide",
+  "kind": "economy",
+  "rarity": "common",
+  "summary": "Bến Cảng | Đầu năm +2 vàng."
+ },
+ {
+  "id": "tide_hookmen",
+  "nameVi": "Đội Móc Câu",
+  "owner": "tide",
+  "kind": "troop",
+  "rarity": "uncommon",
+  "summary": "Đội Móc Câu | Sinh 2 lính móc câu."
+ },
+ {
+  "id": "tide_kraken",
+  "nameVi": "Vực Kraken",
+  "owner": "tide",
+  "kind": "tower",
+  "rarity": "rare",
+  "summary": "Vực Kraken | Bốn xúc tu đánh bốn mục tiêu khác nhau, mỗi xúc tu 14 sát thương, đẩy lùi 8."
+ },
+ {
+  "id": "tide_pirates",
+  "nameVi": "Thuyền Cướp Biển",
+  "owner": "tide",
+  "kind": "troop",
+  "rarity": "common",
+  "summary": "Thuyền Cướp Biển | Sinh 4 cướp biển. Mỗi 8 địch chúng hạ: +1 vàng (tối đa 3 mỗi trận)."
+ },
+ {
+  "id": "tide_privateers",
+  "nameVi": "Hợp Đồng Đánh Thuê",
+  "owner": "tide",
+  "kind": "tome",
+  "rarity": "rare",
+  "summary": "Hợp Đồng Đánh Thuê | Trả toàn bộ vàng (tối đa 16); trận năm nay có thêm 1 lính đánh thuê tại Ngai cho mỗi 2 vàng đã trả."
+ },
+ {
+  "id": "tide_treasure",
+  "nameVi": "Rương Châu Báu",
+  "owner": "tide",
+  "kind": "economy",
+  "rarity": "uncommon",
+  "summary": "Rương Châu Báu | Đầu năm +1 vàng cho mỗi 5 vàng đang có, tối đa 3."
+ },
+ {
+  "id": "tide_undertow_rune",
+  "nameVi": "Bùa Sóng Ngầm",
+  "owner": "tide",
+  "kind": "enchantment",
+  "rarity": "common",
+  "summary": "Bùa Sóng Ngầm | Mỗi lần gắn: mỗi đòn đẩy lùi thêm 6; lính +8% tốc độ."
+ },
+ {
+  "id": "tide_wave_tower",
+  "nameVi": "Tháp Sóng",
+  "owner": "tide",
+  "kind": "tower",
+  "rarity": "uncommon",
+  "summary": "Tháp Sóng | Mỗi 50 tick tạo sóng 10 sát thương phép, đẩy lùi 24."
+ },
+ {
+  "id": "wheat_fertilizer",
+  "nameVi": "Bùa Phân Bón",
+  "owner": "wheat",
+  "kind": "enchantment",
+  "rarity": "common",
+  "summary": "Bùa Phân Bón | Mỗi lần gắn: công trình lính +1 lính, công trình kinh tế +1 vàng đầu năm."
+ },
+ {
+  "id": "wheat_field",
+  "nameVi": "Ruộng Lúa",
+  "owner": "wheat",
+  "kind": "economy",
+  "rarity": "common",
+  "summary": "Ruộng Lúa | Đầu năm +1 vàng. Lân cận: công trình lính +1 lính."
+ },
+ {
+  "id": "wheat_granary",
+  "nameVi": "Kho Thóc",
+  "owner": "wheat",
+  "kind": "support",
+  "rarity": "rare",
+  "summary": "Kho Thóc | Lân cận: công trình lính +15% máu lính. Đầu năm +1 vàng cho mỗi Ruộng Lúa lân cận."
+ },
+ {
+  "id": "wheat_harvest_festival",
+  "nameVi": "Lễ Hội Mùa Màng",
+  "owner": "wheat",
+  "kind": "tome",
+  "rarity": "uncommon",
+  "summary": "Lễ Hội Mùa Màng | Nhận vàng bằng tổng cấp mọi Ruộng Lúa (tối thiểu 2)."
+ },
+ {
+  "id": "wheat_militia",
+  "nameVi": "Dân Quân",
+  "owner": "wheat",
+  "kind": "troop",
+  "rarity": "common",
+  "summary": "Dân Quân | Sinh 4 Dân Quân khi ra trận."
+ },
+ {
+  "id": "wheat_peasant_horde",
+  "nameVi": "Khởi Nghĩa Nông Dân",
+  "owner": "wheat",
+  "kind": "troop",
+  "rarity": "rare",
+  "summary": "Khởi Nghĩa Nông Dân | Sinh 4 Nông Binh, thêm 2 Nông Binh cho mỗi Ruộng Lúa trên bàn cờ."
+ },
+ {
+  "id": "wheat_reapers",
+  "nameVi": "Đội Thợ Gặt",
+  "owner": "wheat",
+  "kind": "troop",
+  "rarity": "uncommon",
+  "summary": "Đội Thợ Gặt | Sinh 3 Thợ Gặt khi ra trận."
+ },
+ {
+  "id": "wheat_scarecrow",
+  "nameVi": "Bù Nhìn Gác",
+  "owner": "wheat",
+  "kind": "tower",
+  "rarity": "common",
+  "summary": "Bù Nhìn Gác | Bắn 6 sát thương, tầm 72; trúng: chậm 20%."
+ },
+ {
+  "id": "wheat_throne",
+  "nameVi": "Ngai Bó Lúa",
+  "owner": "wheat",
+  "kind": "throne",
+  "rarity": "common",
+  "summary": "Ngai Bó Lúa | Ngai của Vua Lúa Mì: bắn kẻ địch trong tầm. Mùa Gặt: đầu năm +1 vàng cho mỗi 2 Ruộng Lúa (từ Ngai cấp 3: mỗi Ruộng Lúa)."
+ },
+ {
+  "id": "wheat_windmill",
+  "nameVi": "Cối Xay Gió",
+  "owner": "wheat",
+  "kind": "economy",
+  "rarity": "uncommon",
+  "summary": "Cối Xay Gió | Đầu năm +2 vàng, thêm +1 vàng cho mỗi Ruộng Lúa lân cận."
+ }
+]

@@ -171,7 +171,7 @@ export const NOMAD_ENEMY: EnemyKingDef = {
   banner: {
     id: 'nomad_banner',
     nameVi: 'Đột Kích',
-    textVi: 'Địch +25% tốc; mỗi đợt thêm 1 mép xuất hiện.',
+    textVi: 'Địch +25% tốc; mỗi đợt dàn thêm 1 hàng dàn quân phía trước.',
     effects: [
       { type: 'enemyStat', stat: 'speed', pct: 25 },
       { type: 'extraEdge', count: 1 },

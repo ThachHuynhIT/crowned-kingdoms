@@ -5,6 +5,7 @@
  * đẩy lùi đang chạy; rồi kẹp biên. Công trình/Ngai không bao giờ di chuyển.
  */
 import { BATTLE } from '../../data/battle';
+import { clampNorthY } from './bounds';
 import { separationPush } from './steering';
 import { edgeDistance, isRage } from './targeting';
 import { KIND_UNIT, TEAM_FOE, type BattleWorld } from './world';
@@ -127,6 +128,6 @@ export const moveEntities = (world: BattleWorld): void => {
       }
     }
     world.x[i] = Math.min(hi, Math.max(lo, x));
-    world.y[i] = Math.min(hi, Math.max(lo, y));
+    world.y[i] = Math.min(world.maxY, clampNorthY(y, world.radius[i]!));
   }
 };

@@ -6,6 +6,7 @@ import type * as BossesModule from '../../data/bosses';
 import type * as DecreesModule from '../../data/decrees';
 import type * as QuestsModule from '../../data/quests';
 import type * as RunModule from '../../data/run';
+import { BATTLE_DIRECTION_HELP } from '../../data/help';
 import { mechanicEntries } from './mechanics';
 
 const text = (entries: readonly { title: string; lines: readonly string[] }[]): string =>
@@ -39,6 +40,12 @@ describe('mechanicEntries', () => {
     expect(all).toContain(RUN.questYears.join(', '));
     expect(all).toContain(RUN.bossYears.join(', '));
     expect(all).toContain(`${BATTLE.hardLimitTick} tick`);
+  });
+
+  it('southern_attack: says enemies come only from the front and the north wall has no way through', () => {
+    const text = all;
+    expect(text).toContain(BATTLE_DIRECTION_HELP);
+    expect(text).toContain('quân bay');
   });
 
   it('states the win condition for the 900-tick limit and the boss kill', () => {

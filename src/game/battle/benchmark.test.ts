@@ -27,7 +27,8 @@ const archer = unitStats({
   projectileSpeed: 7,
   speed: 0.8,
 });
-const EDGES: readonly Edge[] = ['N', 'E', 'S', 'W'];
+/** Địch chỉ tiến từ phía trước; mép khác chỉ còn trong test hình học của world. */
+const EDGES: readonly Edge[] = ['S'];
 
 const standardSetup = (): BattleSetup =>
   battleSetup({
@@ -50,7 +51,7 @@ const standardSetup = (): BattleSetup =>
       {
         spawnTick: 0,
         spawns: EDGES.flatMap((edge) =>
-          Array.from({ length: 30 }, (_, i) => ({ stats: i % 4 === 0 ? archer : bandit, edge })),
+          Array.from({ length: 120 }, (_, i) => ({ stats: i % 4 === 0 ? archer : bandit, edge })),
         ),
       },
     ],
@@ -180,7 +181,7 @@ describe('battle benchmark (§8.10)', () => {
       waves: [
         {
           spawnTick: 0,
-          spawns: EDGES.flatMap((edge) => Array.from({ length: 30 }, (_, i) => ({ stats: i % 4 === 0 ? colossus : bandit, edge }))),
+          spawns: EDGES.flatMap((edge) => Array.from({ length: 120 }, (_, i) => ({ stats: i % 4 === 0 ? colossus : bandit, edge }))),
         },
       ],
     });

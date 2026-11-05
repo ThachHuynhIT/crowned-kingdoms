@@ -13,6 +13,7 @@ import {
   type TooltipHost,
   type UiBox,
 } from '../theme';
+import type { UiSkin } from '../skin';
 import { CLOSE_BUTTON, calendarModalLayout } from './modalLayout';
 import { createOverlay, fitOverlay } from './overlay';
 
@@ -39,10 +40,11 @@ export class CalendarModal {
     state: Pick<RunState, 'year' | 'rules' | 'enemyKings'>,
     tooltip: TooltipHost,
     onClose: () => void,
+    skin: UiSkin = 'neutral',
   ) {
     this.overlay = createOverlay(scene);
     this.overlay.on(Phaser.Input.Events.GAMEOBJECT_POINTER_UP, onClose);
-    this.box = createPanel(scene, 'panel', 64, 64);
+    this.box = createPanel(scene, 'panel', 64, 64, 0, 0, skin);
     this.box.image.setInteractive(); // a click on the panel must not reach the closing overlay
     this.title = addUiText(scene, 0, 0, TITLE, 18).setOrigin(0, 0.5).setFontStyle('bold');
     this.close = createButton(scene, 0, 0, '✕', {
@@ -51,6 +53,7 @@ export class CalendarModal {
       fontSize: 20,
       onClick: onClose,
       tooltip: { host: tooltip, content: () => textContent(['Đóng (Esc)']) },
+      skin,
     });
     this.cells = fullCalendar(state.rules, state.enemyKings).map((cell) => {
       const view = new CalendarCellView(scene, content, tooltip, () => undefined);

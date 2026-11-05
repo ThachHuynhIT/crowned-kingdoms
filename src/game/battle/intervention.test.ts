@@ -263,9 +263,9 @@ describe('pickAutoTarget', () => {
     expect(pickAutoTarget(w)).toBeNull();
   });
 
-  it('clamps the aim point into the field', () => {
+  it('clamps the aim point into the playable area (x in the field, y down to the deepest southern rank)', () => {
     const w = worldWithFoes([[-20, 500]]);
-    expect(pickAutoTarget(w)).toEqual({ x: 0, y: BATTLE.field });
+    expect(pickAutoTarget(w)).toEqual({ x: 0, y: w.maxY });
   });
 
   it('uses world.boulderRadius for both the cluster count and the blast', () => {

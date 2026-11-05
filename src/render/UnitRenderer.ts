@@ -3,7 +3,7 @@ import { BATTLE } from '../data/battle';
 import { UI_PALETTE } from '../data/uiPalette';
 import type { CardId } from '../data/types';
 import { KIND_UNIT, TEAM_ALLY, type BattleWorld } from '../game/battle/world';
-import { SPRITES_KEY, buildingFrame, fxFrame, unitFrame } from './atlas';
+import { SPRITES_KEY, buildingFrame, fxFrame, imageFrameScale, unitFrame } from './atlas';
 import type { UnitAnim } from './unitArt';
 
 /** Frames per second of each unit animation (spec §11.3: 6–8 idle/walk, 10–12 attack). */
@@ -95,7 +95,7 @@ export class UnitRenderer {
       return null;
     }
     const sprite = this.scene.add.image(world.x[id]!, world.y[id]!, SPRITES_KEY, frame);
-    sprite.setOrigin(0.5, 1);
+    sprite.setOrigin(0.5, 1).setScale(imageFrameScale(frame));
     const slot: Slot = { sprite, frame, facingLeft: world.team[id] !== TEAM_ALLY, dead: false };
     sprite.setFlipX(slot.facingLeft);
     this.slots[id] = slot;
@@ -112,7 +112,7 @@ export class UnitRenderer {
     const team = world.team[id] === TEAM_ALLY ? 'ally' : 'foe';
     const frame = unitFrame(world.label[id]!, team, anim, n);
     if (frame !== slot.frame && this.hasFrame(frame)) {
-      slot.sprite.setFrame(frame);
+      slot.sprite.setFrame(frame).setScale(imageFrameScale(frame));
       slot.frame = frame;
     }
     // Face the way we move; standing still, face the target.

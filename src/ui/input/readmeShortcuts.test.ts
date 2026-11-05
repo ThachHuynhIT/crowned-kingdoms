@@ -1,8 +1,11 @@
 import { expect, it } from 'vitest';
-import readme from '../../../README.md?raw';
+import rawReadme from '../../../README.md?raw';
 import { SHORTCUTS } from '../../data/shortcuts';
 // @ts-expect-error -- Node ESM tool is JavaScript without a TypeScript declaration.
 import { renderShortcutsMarkdown } from '../../../tools/sync-shortcuts.mjs';
+
+// A Windows checkout may hold CRLF line endings; the table is compared as LF.
+const readme = rawReadme.replaceAll('\r\n', '\n');
 
 it('readme_generated_matches_table', () => {
   const startMarker = '<!-- shortcuts:start -->';

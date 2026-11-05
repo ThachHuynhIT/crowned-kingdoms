@@ -125,7 +125,7 @@ export class RealmScene extends Phaser.Scene {
       preview ? preview.persistence : getSession(this)?.persistence,
     );
     this.cameras.main.setBackgroundColor(PALETTE.grass);
-    this.field = new FieldRenderer(this, seed);
+    this.field = new FieldRenderer(this, seed, initial.kingId);
     this.board = new BoardRenderer(this, CONTENT);
     this.units = new UnitRenderer(this);
     this.fx = new FxRenderer(this);

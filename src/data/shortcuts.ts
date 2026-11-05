@@ -7,6 +7,8 @@ export type ShortcutAction =
   | 'select.2'
   | 'select.3'
   | 'select.4'
+  | 'king.previous'
+  | 'king.next'
   | 'reroll'
   | 'sell'
   | 'deck'
@@ -43,8 +45,10 @@ export const SHORTCUTS: readonly ShortcutDef[] = [
   { id: 'king.1', contexts: ['kingSelect'], keys: ['1'], labelVi: 'Chọn vua 1', action: 'select.1', priority: 10 },
   { id: 'king.2', contexts: ['kingSelect'], keys: ['2'], labelVi: 'Chọn vua 2', action: 'select.2', priority: 10 },
   { id: 'king.3', contexts: ['kingSelect'], keys: ['3'], labelVi: 'Chọn vua 3', action: 'select.3', priority: 10 },
-  { id: 'king.start', contexts: ['kingSelect'], keys: ['Enter'], labelVi: 'Bắt đầu ván', action: 'confirm', priority: 10 },
-  { id: 'king.back', contexts: ['kingSelect'], keys: ['Escape'], labelVi: 'Về menu', action: 'back', priority: 10 },
+  { id: 'king.prev', contexts: ['kingSelect'], keys: ['ArrowLeft'], labelVi: 'Vua trước', action: 'king.previous', priority: 10 },
+  { id: 'king.next', contexts: ['kingSelect'], keys: ['ArrowRight'], labelVi: 'Vua sau', action: 'king.next', priority: 10 },
+  { id: 'king.start', contexts: ['kingSelect'], keys: ['Enter'], labelVi: 'Mở chi tiết vua / Chơi', action: 'confirm', priority: 10 },
+  { id: 'king.back', contexts: ['kingSelect'], keys: ['Escape'], labelVi: 'Quay lại (chi tiết → danh sách → menu)', action: 'back', priority: 10 },
 
   { id: 'plan.1', contexts: ['planning'], keys: ['1'], labelVi: 'Chọn thẻ 1', action: 'select.1', priority: 10 },
   { id: 'plan.2', contexts: ['planning'], keys: ['2'], labelVi: 'Chọn thẻ 2', action: 'select.2', priority: 10 },
@@ -62,6 +66,7 @@ export const SHORTCUTS: readonly ShortcutDef[] = [
   { id: 'battle.speed2', contexts: ['battle'], keys: ['2'], labelVi: 'Tốc độ ×2', action: 'speed.2', priority: 10 },
   { id: 'battle.speed3', contexts: ['battle'], keys: ['3'], labelVi: 'Tốc độ ×3', action: 'speed.3', priority: 10 },
   { id: 'battle.intervene', contexts: ['battle'], keys: [' ', 'b'], labelVi: 'Can thiệp (ngắm tảng đá)', action: 'intervene', priority: 10 },
+  { id: 'battle.calendar', contexts: ['battle'], keys: ['l'], labelVi: 'Xem lịch', action: 'calendar', priority: 10 },
   { id: 'battle.cancel', contexts: ['battle'], keys: ['Escape'], labelVi: 'Thôi ngắm / đóng bảng', action: 'cancel', priority: 10 },
   { id: 'battle.continue', contexts: ['battle'], keys: ['Enter', ' '], labelVi: 'Tiếp tục sau trận', action: 'confirm', priority: 10, when: 'summary' },
 

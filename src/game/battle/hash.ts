@@ -221,6 +221,7 @@ export const hashWorld = (world: BattleWorld): number => {
   h = mixWord(h, world.won ? 1 : 0);
   h = mixNum(h, world.endTick);
   h = mixWord(h, world.autoFire ? 1 : 0);
+  h = mixNum(h, world.maxY);
   h = mixNum(h, world.boulderRadius);
   h = mixNum(h, world.boulderDmgPct);
   h = mixNum(h, world.cooldownTicks);

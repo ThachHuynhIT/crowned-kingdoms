@@ -4,6 +4,7 @@ import { NEUTRAL_CARDS, NEUTRAL_UNITS } from './neutral';
 import { RAIDER_ROSTER, RAIDER_UNITS } from './raiders';
 import { WHEAT } from './kings/wheat';
 import { KINGS_G1 } from './kings';
+import { NOMAD_ENEMY } from './kings/nomad';
 import type { CardDef, UnitDef } from './types';
 
 const allCards: readonly CardDef[] = [WHEAT.throne, ...WHEAT.cards, ...NEUTRAL_CARDS];
@@ -176,5 +177,15 @@ describe('G1 content integrity', () => {
       target: 'buildingThenPlot',
       actions: [{ type: 'move', levelIfFar: 0 }],
     });
+  });
+});
+
+describe('southern_extra_edge_text', () => {
+  it('the Nomad banner explains the extra rank in front, not an extra edge, and keeps its numbers', () => {
+    const b = NOMAD_ENEMY.banner;
+    expect(b.textVi).toContain('hàng dàn quân');
+    expect(b.textVi).not.toContain('mép');
+    expect(b.effects).toContainEqual({ type: 'extraEdge', count: 1 });
+    expect(b.effects).toContainEqual({ type: 'enemyStat', stat: 'speed', pct: 25 });
   });
 });

@@ -10,4 +10,13 @@
 Most art is procedurally generated placeholder art (`src/render/*Art.ts`).
 
 - UI frames (panel, tooltip, button, card): [Pixel UI Pack](https://kenney.nl/assets/pixel-ui-pack) by Kenney — CC0 (credit not required, given with thanks). Unmodified; see `docs/licenses/kenney-pixel-ui-pack/`.
+- Spearman, thatched cottage and grass tiles (`public/assets/art/ai-v1/`): images generated with OpenAI imagegen and supplied by the project owner, sliced and recoloured in-repo (`docs/art-review/g3e/ai-v1/`, prompt recorded there). Custom, not third-party.
+- Mountain wall segments with a sea backdrop per king (`public/assets/art/ai-v1/mountain-wall/`): images generated with OpenAI imagegen via Codex for the project owner, box-downscaled in-repo (`docs/art-review/oblique-wall/`). Custom, not third-party.
+- Wheat militia, reaper, peasant and Stone golem, miner, rubble, slinger animation poses (`public/assets/art/ai-v1/{militia,reaper,peasant,golem,miner,rubble,slinger}_*.png`): images generated with OpenAI imagegen via Codex for the project owner, reduced, outlined and recoloured in-repo (`docs/art-review/g3e/units/make_poses.py`, prompts in `docs/art-review/g3e/units/`). Custom, not third-party.
+- Wheat king buildings and throne (`public/assets/art/ai-v1/wheat_*.png`): images generated with OpenAI imagegen via Codex for the project owner, background removed and reduced to 64 px in-repo (`docs/art-review/g3e/buildings/make_assets.py`, prompts in `docs/art-review/g3e/buildings/wheat/`). Custom, not third-party.
+- Wheat king plots (`public/assets/art/ai-v1/plots/wheat_*.png`): images generated with OpenAI imagegen via Codex for the project owner, cut in-repo by `tools/slice_art_batches.py` (`docs/art-review/g3e/batch-03-plots-wheat-stone/`). Custom, not third-party.
+- Wheat king card illustrations (`public/assets/art/ai-v1/cards/`): images generated with OpenAI imagegen via Codex for the project owner, box-reduced to 96×72 and 48×36 in-repo (`docs/art-review/g3e/cards/make_assets.py`, prompts in `docs/art-review/g3e/cards/`). Custom, not third-party.
+- Wheat king badge (`public/assets/art/ai-v1/icons/icon_king_wheat*.png`): image generated with OpenAI imagegen via Codex for the project owner, keyed and reduced to 32 and 16 px in-repo (`docs/art-review/g3e/icons/make_assets.py`). Custom, not third-party.
+- King portraits (`public/assets/art/ai-v1/portraits/`): images generated with OpenAI imagegen via Codex for the project owner, box-downscaled and palette-snapped in-repo (`tools/prepare_king_portraits.py`, `docs/art-review/g3e/portraits/`). Custom, not third-party.
+
 Add every third-party asset here with its author, source URL and license (CC0 / CC-BY …) when it is imported.

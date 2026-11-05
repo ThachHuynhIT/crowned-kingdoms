@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest';
-import { ENEMY_LEVEL_STAT, WAVES } from '../../data/battle';
+import { BATTLE, ENEMY_LEVEL_STAT, WAVES } from '../../data/battle';
 import { RULES_FULL } from '../../data/rules';
 import { CONTENT } from '../cards/registry';
 import { buildBattleSetup } from '../run/battleSetup';
@@ -96,6 +96,11 @@ describe('spawn_at120_once', () => {
       run(w, 120);
       const id = w.bossId;
       const p = edgePositions(edge, 1)[0]!;
+      if (edge === 'N') {
+        // The raw N slot lies north of the mountain wall, so the boss is placed on the wall line.
+        expect(w.y[id]!).toBeGreaterThanOrEqual(BATTLE.wallY + w.radius[id]!);
+        continue;
+      }
       expect([w.x[id]! === p.x || Math.abs(w.x[id]! - p.x) < 5, w.y[id]! === p.y || Math.abs(w.y[id]! - p.y) < 5]).toEqual([true, true]);
     }
   });

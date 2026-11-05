@@ -1,0 +1,10 @@
+random: win 0.0% -> 0.0% (+0.0 pts), median year 12.5 -> 10.0 (-2.5), bot crashes 0 -> 0
+  random/arcane: win 0.0% -> 0.0% (+0.0 pts)
+  random/stone: win 0.0% -> 0.0% (+0.0 pts)
+  random/wheat: win 0.0% -> 0.0% (+0.0 pts)
+scripted: win 0.3% -> 11.3% (+11.0 pts), median year 20 -> 22 (+2.0), bot crashes 1 -> 3
+  scripted/arcane: win 0.0% -> 14.0% (+14.0 pts)
+  scripted/stone: win 1.0% -> 18.0% (+17.0 pts)
+  scripted/wheat: win 0.0% -> 2.0% (+2.0 pts)
+FAIL: scripted: win-rate delta +11.0 pts exceeds 10.0
+FAIL: scripted/stone: win-rate delta +17.0 pts exceeds 15.0

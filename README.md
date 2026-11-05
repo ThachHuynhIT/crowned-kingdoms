@@ -61,8 +61,10 @@ Phím tắt:
 | 1 | Chọn vua 1 |
 | 2 | Chọn vua 2 |
 | 3 | Chọn vua 3 |
-| Enter | Bắt đầu ván |
-| Esc | Về menu |
+| ArrowLeft | Vua trước |
+| ArrowRight | Vua sau |
+| Enter | Mở chi tiết vua / Chơi |
+| Esc | Quay lại (chi tiết → danh sách → menu) |
 
 ### Lên kế hoạch
 
@@ -90,6 +92,7 @@ Phím tắt:
 | 2 | Tốc độ ×2 |
 | 3 | Tốc độ ×3 |
 | Space / B | Can thiệp (ngắm tảng đá) |
+| L | Xem lịch |
 | Esc | Thôi ngắm / đóng bảng |
 | Enter / Space | Tiếp tục sau trận (khi bảng tóm tắt trận mở) |
 
@@ -132,6 +135,8 @@ Nguyên tắc: **luật tách khỏi hiển thị**, tick cố định 10/s, det
 
 - [docs/GDD.md](docs/GDD.md) — thiết kế game rút gọn
 - [docs/ART_STYLE.md](docs/ART_STYLE.md) — quy chuẩn pixel art, bảng màu Hearth 32, UI kiểu Stardew
+- [docs/ASSET_INVENTORY.md](docs/ASSET_INVENTORY.md) — kiểm kê asset, danh mục còn thiếu và yêu cầu sản xuất
+- [docs/ASSET_REQUIREMENTS.md](docs/ASSET_REQUIREMENTS.md) — yêu cầu từng bộ nhà–quân–đạn, animation, cấp 1–5 và số lượng sản xuất
 - [docs/ROADMAP.md](docs/ROADMAP.md) — dự án con G0–G5
 
 ## Trạng thái

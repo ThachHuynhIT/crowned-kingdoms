@@ -6,6 +6,7 @@
  */
 import { BATTLE, INTERVENTION } from '../../data/battle';
 import { BOSS_RULES } from '../../data/bosses';
+import { clampNorthY } from './bounds';
 import { queueDamage } from './combat';
 import type { AutoFireInput, BattleInput } from './types';
 import { DMG_MAGIC, KIND_UNIT, TEAM_FOE, type BattleWorld, type Boulder } from './world';
@@ -29,7 +30,7 @@ const scheduleBoulder = (world: BattleWorld, tick: number, x: number, y: number)
 };
 
 /**
- * Thử thả tảng đá. Hợp lệ khi `input.tick === world.tick`, x/y hữu hạn trong [0, field],
+ * Thử thả tảng đá. Hợp lệ khi `input.tick === world.tick`, x hữu hạn trong [0, field], y trong [0, world.maxY],
  * `tick ≥ firstReadyTick` và `tick ≥ readyTick` (trận chưa kết thúc). Hợp lệ → lên lịch tảng
  * đá, `readyTick = tick + cooldownTicks`, `interventionsUsed++`, ghi vào `inputs`, sự kiện
  * `boulder drop`. Không hợp lệ → không đổi gì, trả false.
@@ -38,10 +39,12 @@ export const tryIntervene = (world: BattleWorld, input: BattleInput): boolean =>
   const { tick, x, y } = input;
   if (world.ended || tick !== world.tick) return false;
   if (!Number.isFinite(x) || !Number.isFinite(y)) return false;
-  if (x < 0 || x > BATTLE.field || y < 0 || y > BATTLE.field) return false;
+  // The ranks of a southern wave stand below the field line, so the drop may go as deep as world.maxY.
+  if (x < 0 || x > BATTLE.field || y < 0 || y > world.maxY) return false;
   if (tick < INTERVENTION.firstReadyTick || tick < world.readyTick) return false;
-  scheduleBoulder(world, tick, x, y);
-  world.inputs.push({ tick, x, y });
+  const clampedY = clampNorthY(y, 0); // điểm rơi không nằm trong tường núi
+  scheduleBoulder(world, tick, x, clampedY);
+  world.inputs.push({ tick, x, y: clampedY });
   return true;
 };
 
@@ -83,7 +86,7 @@ export const pickAutoTarget = (world: BattleWorld): { x: number; y: number } | n
   if (best < 0) return null;
   return {
     x: Math.min(Math.max(world.x[best]!, 0), BATTLE.field),
-    y: Math.min(Math.max(world.y[best]!, 0), BATTLE.field),
+    y: Math.min(Math.max(world.y[best]!, BATTLE.wallY), world.maxY),
   };
 };
 

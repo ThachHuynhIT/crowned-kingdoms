@@ -1,6 +1,8 @@
 import Phaser from 'phaser';
 import type { EventBus } from '../core/events';
+import { toCss } from '../data/palette';
 import { RUN } from '../data/run';
+import { UI_PALETTE } from '../data/uiPalette';
 import { describeCard } from '../game/cards/describe';
 import { CONTENT } from '../game/cards/registry';
 import type { GameEvents } from '../game/events';
@@ -18,7 +20,7 @@ import { CalendarModal } from '../ui/modals/CalendarModal';
 import { DeckModal } from '../ui/modals/DeckModal';
 import { CLOSE_BUTTON, centredPanel } from '../ui/modals/modalLayout';
 import { createOverlay, fitOverlay } from '../ui/modals/overlay';
-import { offerTitle } from '../ui/modals/offerModel';
+import { offerHeadingFor } from '../ui/modals/offerModel';
 import { CouncilModal } from '../ui/modals/CouncilModal';
 import { QuestModal } from '../ui/modals/QuestModal';
 import { RewardModal } from '../ui/modals/RewardModal';
@@ -33,6 +35,7 @@ import { resolveShortcut, shortcutFlags, shortcutLabel } from '../ui/input/short
 import { openHelp } from './helpLauncher';
 import { cardBadge, willLevelUpTo } from '../ui/cards/cardText';
 import { CalendarStrip } from '../ui/planning/CalendarStrip';
+import { allyStatusText, foeStatusText } from '../ui/planning/statusText';
 import { HandView } from '../ui/planning/HandView';
 import { ScoutPanel } from '../ui/planning/ScoutPanel';
 import { canFight } from '../ui/planning/fightRule';
@@ -48,6 +51,7 @@ import {
 } from '../ui/realm/realmLayout';
 import {
   addUiText,
+  textStyle,
   createButton,
   createPanel,
   type Button,
@@ -93,8 +97,9 @@ export class PlanningHudScene extends Phaser.Scene {
   private livesBox!: UiBox;
   private livesIcon: Phaser.GameObjects.Image | null = null;
   private livesText!: Phaser.GameObjects.Text;
-  private yearBox!: UiBox;
   private yearText!: Phaser.GameObjects.Text;
+  private allyText!: Phaser.GameObjects.Text;
+  private foeText!: Phaser.GameObjects.Text;
   private scout!: ScoutPanel;
   private hand!: HandView;
   private goldBox!: UiBox;
@@ -179,8 +184,16 @@ export class PlanningHudScene extends Phaser.Scene {
         ? this.add.image(0, 0, SPRITES_KEY, iconFrame('crown')).setScale(2).setOrigin(0, 0.5)
         : null;
     this.livesText = addUiText(this, 0, 0, '', 18).setOrigin(0, 0.5).setFontStyle('bold');
-    this.yearBox = createPanel(this, 'panel', 160, 52);
-    this.yearText = addUiText(this, 0, 0, '', 18).setOrigin(0.5).setFontStyle('bold');
+    // Year label and the two status rows float over the world (light text, dark shadow) instead of sitting in frames.
+    const floating = (origin: number): Phaser.GameObjects.Text =>
+      this.add
+        .text(0, 0, '', textStyle(16, UI_PALETTE.creamLight))
+        .setOrigin(origin, 0.5)
+        .setFontStyle('bold')
+        .setShadow(2, 2, toCss(UI_PALETTE.outline), 0, false, true);
+    this.yearText = floating(0.5);
+    this.allyText = floating(0);
+    this.foeText = floating(1);
     this.goldBox = createPanel(this, 'panel', 120, 52);
     this.goldIcon =
       tex.exists(SPRITES_KEY) && tex.get(SPRITES_KEY).has(iconFrame('gold'))
@@ -248,7 +261,11 @@ export class PlanningHudScene extends Phaser.Scene {
         this.pending = { handIndex: p.handIndex, targets: [...p.targets], ready: p.ready };
         this.refreshPending();
       }),
-      bus.on('run:illegal', ({ reason }) => this.flashIllegal(reason)),
+      bus.on('run:illegal', ({ reason }) => {
+        // A refused pick (the offer is still open) must not leave Nhận disabled for good.
+        if (reason === 'wrongPhase' || reason === 'badTarget') this.reward?.retry();
+        this.flashIllegal(reason);
+      }),
       bus.on('log', ({ text }) => this.toasts.push(text)),
       bus.on('ui:pending-buy', ({ plot, price }) => {
         this.buy = plot === null ? null : { plot, price };
@@ -272,8 +289,17 @@ export class PlanningHudScene extends Phaser.Scene {
     this.scale.on(Phaser.Scale.Events.RESIZE, this.layout, this);
     this.events.once(Phaser.Scenes.Events.SHUTDOWN, this.teardown, this);
 
+    this.applySkin();
     this.layout();
     this.refresh(this.controller.state);
+  }
+
+  /** The playing king's colours on the HUD panels, buttons and hand. */
+  private applySkin(): void {
+    const king = this.controller.state.kingId;
+    for (const b of [this.sellBtn, this.rerollBtn, this.deckBtn, this.scoutBtn, this.helpBtn, this.fight, this.confirmBtn, this.cancelBtn]) b.setSkin(king);
+    for (const box of [this.livesBox, this.goldBox]) box.setSkin(king);
+    this.hand.setTheme(king);
   }
 
   // ---- state → widgets ---------------------------------------------------------------------
@@ -285,7 +311,9 @@ export class PlanningHudScene extends Phaser.Scene {
     this.refreshModals(state);
     this.livesText.setText(`× ${state.lives}`);
     this.goldText.setText(`${state.gold}`);
-    this.yearText.setText(`Năm ${state.year} / ${state.rules.years}`);
+    this.yearText.setText(`NĂM ${state.year} / ${state.rules.years}`);
+    this.allyText.setText(allyStatusText(state.kingId, CONTENT));
+    this.foeText.setText(foeStatusText(calendarCells(state, 1)[0], CONTENT));
     this.calendar.setCells(calendarCells(state, 5));
     this.scout.setPlan(state.army);
     if (this.inspected !== null) {
@@ -325,9 +353,12 @@ export class PlanningHudScene extends Phaser.Scene {
         this,
         CONTENT,
         offers.cardIds,
-        offerTitle(offers, (id) => CONTENT.enemyKing(id).nameVi),
         this.tooltip,
         (index) => this.bus.emit('ui:command', { command: { type: 'pickOffer', index } }),
+        {
+          skin: state.kingId,
+          heading: offerHeadingFor(offers, (id) => CONTENT.enemyKing(id).nameVi),
+        },
       ).setDepth(MODAL_DEPTH);
     }
     if (!choosing && this.pending.handIndex !== null) this.pending = NO_PENDING;
@@ -683,11 +714,11 @@ export class PlanningHudScene extends Phaser.Scene {
     else if (modal === 'calendar') {
       this.calendarModal = new CalendarModal(this, CONTENT, state, this.tooltip, () =>
         this.bus.emit('ui:close-modal', {}),
-      ).setDepth(MODAL_DEPTH);
+      state.kingId).setDepth(MODAL_DEPTH);
     } else {
       this.deckModal = new DeckModal(this, CONTENT, state.deck, this.tooltip, () =>
         this.bus.emit('ui:close-modal', {}),
-      ).setDepth(MODAL_DEPTH);
+      state.kingId).setDepth(MODAL_DEPTH);
     }
   }
 
@@ -752,7 +783,7 @@ export class PlanningHudScene extends Phaser.Scene {
     const visible = [this.sellBtn, this.rerollBtn, this.deckBtn].map((b) => b?.container.visible ?? false);
     for (const b of [this.sellBtn, this.rerollBtn, this.deckBtn]) b?.container.destroy();
     this.actionSize = { w, h };
-    const common = { width: w, height: h, fontSize };
+    const common = { width: w, height: h, fontSize, skin: this.controller.state.kingId };
     this.sellBtn = createButton(this, 0, 0, 'Bán bài', {
       ...common,
       onClick: () => this.sell(),
@@ -786,22 +817,23 @@ export class PlanningHudScene extends Phaser.Scene {
     const iconX = l.lives.x + 12;
     this.livesIcon?.setPosition(iconX, midY);
     this.livesText.setPosition(iconX + (this.livesIcon ? 36 : 0), midY);
-    this.yearBox.resize(l.year.w, l.year.h);
-    this.yearBox.image.setPosition(l.year.x, l.year.y);
     this.yearText.setPosition(l.year.x + l.year.w / 2, l.year.y + l.year.h / 2);
-    this.yearText.setFontSize(l.desktop ? 18 : 16);
+    this.yearText.setFontSize(l.desktop ? 18 : 15);
+    const statusSize = l.desktop ? 15 : 13;
+    this.allyText.setFontSize(statusSize).setPosition(l.allyStatus.x + 4, l.allyStatus.y + l.allyStatus.h / 2).setVisible(l.allyStatus.w >= 100);
+    this.foeText.setFontSize(statusSize).setPosition(l.foeStatus.x + l.foeStatus.w - 4, l.foeStatus.y + l.foeStatus.h / 2).setVisible(l.foeStatus.w >= 100);
 
     this.goldBox.resize(l.gold.w, l.gold.h);
     this.goldBox.image.setPosition(l.gold.x, l.gold.y);
     const goldMid = l.gold.y + l.gold.h / 2;
     this.goldIcon?.setPosition(l.gold.x + 12, goldMid);
     this.goldText.setPosition(l.gold.x + 12 + (this.goldIcon ? 36 : 0), goldMid);
-    this.calendar.layout(l.calendar);
+    this.calendar.layout(l.calendar, l.calendarLinks);
     this.scout.setVisible(l.scout !== null);
     if (l.scout) this.scout.layout(l.scout, 'full');
     this.helpBtn.container.setPosition(l.help.x + l.help.w / 2, l.help.y + l.help.h / 2);
     const noticeX = l.help.x + l.help.w + 8;
-    const noticeW = Math.min(320, l.year.x - 8 - noticeX);
+    const noticeW = Math.min(320, l.calendar[0]!.x - 8 - noticeX);
     this.questNotice.layout(l.desktop && noticeW >= 160 ? { x: noticeX, y: l.help.y, w: noticeW, h: l.help.h } : null);
     this.scoutBtn.setVisible(l.scoutButton !== null);
     if (l.scoutButton) {

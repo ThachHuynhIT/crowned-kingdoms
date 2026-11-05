@@ -77,17 +77,12 @@ describe('composeArmy', () => {
     expect(all(a).map((u) => u.unit)).toEqual(all(b).map((u) => u.unit));
   });
 
-  it('uses one edge per wave before year 10 and two alternating from year 10', () => {
+  it('deploys every wave from the south edge, before and after year 10', () => {
     for (let seed = 1; seed <= 20; seed++) {
-      for (const w of composeArmy(ROSTER, 34, 9, seed).waves) {
-        expect(new Set(w.units.map((u) => u.edge)).size).toBeLessThanOrEqual(1);
-      }
-      for (const w of composeArmy(ROSTER, 34, 10, seed).waves) {
-        if (w.units.length < 2) continue;
-        const edges = new Set(w.units.map((u) => u.edge));
-        expect(edges.size).toBe(2);
-        const [a, b] = [w.units[0]!.edge, w.units[1]!.edge];
-        w.units.forEach((u, i) => expect(u.edge).toBe(i % 2 === 0 ? a : b));
+      for (const year of [9, 10]) {
+        for (const w of composeArmy(ROSTER, 34, year, seed).waves) {
+          expect(new Set(w.units.map((u) => u.edge))).toEqual(w.units.length === 0 ? new Set() : new Set(['S']));
+        }
       }
     }
   });

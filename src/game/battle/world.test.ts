@@ -240,7 +240,7 @@ describe('spawnWave', () => {
       expect(w.alive[id]).toBe(1);
     }
     expect([w.x[1], w.y[1]]).toEqual([187, 396]);
-    expect([w.x[2], w.y[2]]).toEqual([192, -12]);
+    expect([w.x[2], w.y[2]]).toEqual([192, BATTLE.wallY + w.radius[2]!]); // raw N slot (−12) is clamped to the wall
     expect([w.x[3], w.y[3]]).toEqual([197, 396]);
     expect(w.label[2]).toBe('ogre');
     expect(w.hp[2]).toBe(90);

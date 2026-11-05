@@ -8,6 +8,20 @@ import { cardBadge, clampLines, nextLevelLine, willLevelUpTo } from './cardText'
 /** Bold UI font is about 6.5 px per character at 12 px. */
 const measure = (s: string): number => Math.ceil(s.length * 6.5);
 
+describe('clampLines with long Vietnamese names', () => {
+  it('keeps diacritics, wraps to two lines and cuts the rest with an ellipsis', () => {
+    const name = 'Đá Tảng Hoàng Gia Bất Diệt Của Núi';
+    const lines = clampLines(name, 80, 2, measure);
+    expect(lines.length).toBeLessThanOrEqual(2);
+    expect(lines.join(' ')).toContain('Đá Tảng');
+    expect(lines.every((l) => measure(l) <= 80)).toBe(true);
+    expect(lines[lines.length - 1]).toMatch(/…$/);
+  });
+  it('leaves a name that fits untouched', () => {
+    expect(clampLines('Đá Tảng', 80, 2, measure)).toEqual(['Đá Tảng']);
+  });
+});
+
 describe('cardBadge', () => {
   const tower = CONTENT.card('wheat_scarecrow');
   it('says which level a duplicate will reach', () => {

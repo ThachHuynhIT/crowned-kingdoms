@@ -19,11 +19,11 @@ const unit = (
 
 const EPS = 1e-9;
 
-/** Footman (range 2, r 4, speed 1) at (20, 20) aimed at a stationary foe (r 4) 100 px east. */
+/** Footman (range 2, r 4, speed 1) at (20, 120), south of the wall, aimed at a stationary foe (r 4) 100 px east. */
 const approach = (over: Partial<UnitStats> = {}) => {
   const w = world();
-  const a = unit(w, TEAM_ALLY, 20, 20, over);
-  const f = unit(w, TEAM_FOE, 120, 20, { speed: 0 });
+  const a = unit(w, TEAM_ALLY, 20, 120, over);
+  const f = unit(w, TEAM_FOE, 120, 120, { speed: 0 });
   w.target[a] = f;
   return { w, a, f };
 };
@@ -41,7 +41,7 @@ describe('moveEntities — walking to a target', () => {
       expect(edgeDistance(w, a, f)).toBeGreaterThanOrEqual(2 - EPS);
     }
     expect(edgeDistance(w, a, f)).toBeCloseTo(2, 9);
-    expect(w.y[a]).toBe(20);
+    expect(w.y[a]).toBe(120);
   });
 
   it('slowPct 50 halves the step', () => {
@@ -53,12 +53,12 @@ describe('moveEntities — walking to a target', () => {
 
   it('stands still when already in range', () => {
     const w = world();
-    const a = unit(w, TEAM_ALLY, 20, 20);
-    const f = unit(w, TEAM_FOE, 29, 20, { speed: 0 }); // edge 1 ≤ range 2
+    const a = unit(w, TEAM_ALLY, 20, 120);
+    const f = unit(w, TEAM_FOE, 29, 120, { speed: 0 }); // edge 1 ≤ range 2
     w.target[a] = f;
     moveEntities(w);
     expect(w.x[a]).toBe(20);
-    expect(w.y[a]).toBe(20);
+    expect(w.y[a]).toBe(120);
   });
 
   it('records the start-of-tick position in prevX/prevY', () => {
@@ -68,27 +68,27 @@ describe('moveEntities — walking to a target', () => {
     moveEntities(w);
     expect(w.prevX[a]).toBe(21);
     expect(w.x[a]).toBe(22);
-    expect(w.prevY[a]).toBe(20);
+    expect(w.prevY[a]).toBe(120);
   });
 
   it('uses start-of-tick positions: a later id sees the earlier id where it was', () => {
     const w = world();
-    const a = unit(w, TEAM_ALLY, 20, 20); // walks south towards g
-    const f = unit(w, TEAM_FOE, 40, 20); // walks west towards a
-    const g = unit(w, TEAM_FOE, 20, 120, { speed: 0 });
+    const a = unit(w, TEAM_ALLY, 20, 120); // walks south towards g
+    const f = unit(w, TEAM_FOE, 40, 120); // walks west towards a
+    const g = unit(w, TEAM_FOE, 20, 220, { speed: 0 });
     w.target[a] = g;
     w.target[f] = a;
     moveEntities(w);
     expect(w.x[a]).toBe(20);
-    expect(w.y[a]).toBe(21);
+    expect(w.y[a]).toBe(121);
     expect(w.x[f]).toBe(39);
-    expect(w.y[f]).toBe(20); // aimed at a's start-of-tick position (20, 20)
+    expect(w.y[f]).toBe(120); // aimed at a's start-of-tick position (20, 120)
   });
 
   it('foes move 1.5× during rage, not before', () => {
     const w = world();
-    const f = unit(w, TEAM_FOE, 20, 20);
-    const a = unit(w, TEAM_ALLY, 120, 20, { speed: 0 });
+    const f = unit(w, TEAM_FOE, 20, 120);
+    const a = unit(w, TEAM_ALLY, 120, 120, { speed: 0 });
     w.target[f] = a;
     w.tick = BATTLE.rageTick - 1;
     moveEntities(w);

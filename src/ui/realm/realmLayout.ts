@@ -2,6 +2,7 @@ import { BATTLE } from '../../data/battle';
 import { plotCenter } from '../../game/battle/world';
 import { THRONE_PLOT, plotCol, plotRow } from '../../game/run/board';
 import { CARD_LIFT, GAP, MARGIN, SPEED_GAP, type Point, type Rect, type Size } from '../hud/layout';
+import { calendarStripLayout } from '../planning/calendarStripLayout';
 
 /**
  * Pure layout maths of the realm screens (no Phaser): the planning HUD (§10.4), the battle
@@ -35,7 +36,7 @@ const BUTTON_GAP = 8;
 const DESK = {
   top: { lives: 120, gold: 120, year: 160, h: 52 },
   scout: { w: 260, y: 92, bottom: 520 },
-  card: { w: 120, h: 168, gap: 12 },
+  card: { w: 120, h: 176, gap: 12 },
   button: { w: 140, h: 52 },
 } as const;
 
@@ -51,10 +52,15 @@ const PHONE = {
   boardY: 180,
   /** Deck / reroll / sell, one row under the board; ends well above the hand (y 650). */
   buttons: { w: 84, h: 48, y: 508 },
-  card: { w: 108, h: 152, gap: 8 },
+  card: { w: 108, h: 162, gap: 8 },
 } as const;
 
 const FIGHT = { w: 200, h: 56 } as const;
+/** The year label under the strip, and the two status rows at the bottom corners. */
+const YEAR_LABEL_H = 26;
+const STATUS_H = 44;
+const STATUS_H_PHONE = 40;
+const STATUS_W = 240;
 const HAND_BOTTOM = 10;
 
 export interface PlanningLayout {
@@ -68,6 +74,12 @@ export interface PlanningLayout {
   year: Rect;
   /** Five 52×52 cells: this year and the next four. */
   calendar: readonly Rect[];
+  /** The bars joining the five cells (drawn, not tappable). */
+  calendarLinks: readonly Rect[];
+  /** Bottom-left: the playing king. */
+  allyStatus: Rect;
+  /** Bottom-right: who attacks next. */
+  foeStatus: Rect;
   board: Rect;
   /** The scouting report column (desktop); null on mobile, where `scoutButton` opens it. */
   scout: Rect | null;
@@ -163,10 +175,6 @@ const besidePlot = (cell: Rect, screen: Size): { confirm: Rect; cancel: Rect } =
   };
 };
 
-/** `count` cells in a row from `x`, `CELL` wide with `GAP` between. */
-const cellRow = (x: number, y: number): Rect[] =>
-  Array.from({ length: CALENDAR_CELLS }, (_, i) => ({ x: x + i * (CELL + GAP), y, w: CELL, h: CELL }));
-
 /** From this width the decree / quest column fits between the board and the screen edge. */
 const WIDE_DESKTOP = 1100;
 const DECREE_PANEL_W = 260;
@@ -181,15 +189,20 @@ const desktopLayout = (screen: Size, handSize: number): PlanningLayout => {
   const boardPx = cell * BOARD_SIDE;
   const lives = { x: MARGIN, y: MARGIN, w: DESK.top.lives, h: DESK.top.h };
   const gold = { x: lives.x + lives.w + GAP, y: MARGIN, w: DESK.top.gold, h: DESK.top.h };
-  const year = {
-    x: Math.round((w - DESK.top.year) / 2),
-    y: MARGIN,
-    w: DESK.top.year,
-    h: DESK.top.h,
-  };
   const wide = w >= WIDE_DESKTOP;
-  const calendarW = CALENDAR_CELLS * CELL + (CALENDAR_CELLS - 1) * GAP;
-  const calendar = cellRow(w - MARGIN - calendarW, MARGIN);
+  // The year strip sits in the middle of the top edge (right of the help button on a narrow window),
+  // with the year label right under it.
+  const stripW = CALENDAR_CELLS * CELL + (CALENDAR_CELLS - 1) * GAP;
+  const helpEnd = helpRect(gold).x + 52;
+  const stripX = Math.max(Math.round((w - stripW) / 2), helpEnd + GAP);
+  const strip = calendarStripLayout({ x: stripX, y: MARGIN, w: stripW, h: CELL }, CALENDAR_CELLS);
+  const calendar = strip.cells;
+  const year = {
+    x: Math.round(stripX + stripW / 2 - DESK.top.year / 2),
+    y: MARGIN + CELL + GAP,
+    w: DESK.top.year,
+    h: YEAR_LABEL_H,
+  };
   const hand = handRow(screen, DESK.card, handSize);
   const first = hand[0]!;
   const last = hand[hand.length - 1]!;
@@ -215,6 +228,10 @@ const desktopLayout = (screen: Size, handSize: number): PlanningLayout => {
   const sell = { x: left, y: bottomY, w: DESK.button.w, h: DESK.button.h };
   const reroll = { ...sell, y: bottomY - GAP * 2 - DESK.button.h };
   const deck = { x: last.x + last.w + DESK.card.gap, y: bottomY, w: DESK.button.w, h: DESK.button.h };
+  const statusY = h - HAND_BOTTOM - STATUS_H;
+  const allyW = Math.max(0, Math.min(STATUS_W, sell.x - GAP - MARGIN));
+  const foeX = deck.x + deck.w + GAP;
+  const foeW = Math.max(0, Math.min(STATUS_W, w - MARGIN - foeX));
   const mid = Math.floor(BOARD_SIDE / 2) * cell;
   const centre = { x: board.x + mid, y: board.y + mid, w: cell, h: cell };
   return {
@@ -225,6 +242,9 @@ const desktopLayout = (screen: Size, handSize: number): PlanningLayout => {
     help: helpRect(gold),
     year,
     calendar,
+    calendarLinks: strip.links,
+    allyStatus: { x: MARGIN, y: statusY, w: allyW, h: STATUS_H },
+    foeStatus: { x: foeX, y: statusY, w: foeW, h: STATUS_H },
     board,
     scout,
     scoutButton: null,
@@ -252,10 +272,15 @@ const mobileLayout = (screen: Size, handSize: number): PlanningLayout => {
   const boardPx = BATTLE.plot * PLANNING_ZOOM * BOARD_SIDE;
   const lives = { x: MARGIN, y: MARGIN, w: PHONE.top.lives, h: PHONE.top.h };
   const gold = { x: lives.x + lives.w + GAP, y: MARGIN, w: PHONE.top.gold, h: PHONE.top.h };
-  const yearX = gold.x + gold.w + GAP;
+  const help = helpRect(gold);
+  const yearX = help.x + help.w + GAP;
   const year = { x: yearX, y: MARGIN, w: Math.max(0, w - MARGIN - yearX), h: PHONE.top.h };
-  const calendar = cellRow(MARGIN, PHONE.rowY);
   const scoutButton = { x: w - MARGIN - CELL, y: PHONE.rowY, w: CELL, h: CELL };
+  const strip = calendarStripLayout(
+    { x: MARGIN, y: PHONE.rowY, w: Math.max(0, scoutButton.x - GAP - MARGIN), h: CELL },
+    CALENDAR_CELLS,
+  );
+  const calendar = strip.cells;
   const board = {
     x: Math.round((w - boardPx) / 2),
     y: PHONE.boardY,
@@ -268,14 +293,19 @@ const mobileLayout = (screen: Size, handSize: number): PlanningLayout => {
   const sell = { x: w - MARGIN - b.w, y: b.y, w: b.w, h: b.h };
   const reroll = { x: sell.x - GAP - b.w, y: b.y, w: b.w, h: b.h };
   const deck = { x: reroll.x - GAP - b.w, y: b.y, w: b.w, h: b.h };
+  const statusY = b.y + b.h + 8;
+  const statusW = Math.floor((w - 2 * MARGIN - GAP) / 2);
   return {
     desktop: false,
     zoom: PLANNING_ZOOM,
     lives,
     gold,
-    help: helpRect(gold),
+    help,
     year,
     calendar,
+    calendarLinks: strip.links,
+    allyStatus: { x: MARGIN, y: statusY, w: statusW, h: STATUS_H_PHONE },
+    foeStatus: { x: MARGIN + statusW + GAP, y: statusY, w: statusW, h: STATUS_H_PHONE },
     board,
     scout: null,
     scoutButton,
@@ -331,62 +361,95 @@ export const confirmFor = (
     : { confirm: { ...layout.confirm }, cancel: { ...layout.cancel } };
 
 export interface BattleLayout {
+  /** The battle clock (and "TẠM DỪNG"), a floating line under the year label. */
   clock: Rect;
   lives: Rect;
   gold: Rect;
   help: Rect;
+  /** Same five-year strip, bars and label as the planning HUD. */
+  calendar: readonly Rect[];
+  calendarLinks: readonly Rect[];
+  year: Rect;
+  /** "Địch còn" and the wave dots. */
   foes: Rect;
+  /** Pause, ×1, ×2, ×3: one row top-right on desktop, two rows of two bottom-right on phones. */
   speed: readonly Rect[];
+  /** Can Thiệp, bottom-left above the ally bar. */
   intervene: Rect;
-  /** "Tự bắn: Bật/Tắt" (§7.4): right-aligned just above the Can Thiệp button. */
+  /** "Tự bắn: Bật/Tắt" (§7.4), right beside Can Thiệp. */
   auto: Rect;
-  /** "Địch": opens the full scout report of this year's army; just below the foes panel. */
+  /** "Địch": opens the full scout report of this year's army. */
   waves: Rect;
+  /** Bottom-left: the throne's health bar with the king's name. */
+  allyStatus: Rect;
+  /** Bottom-right: the health bar of the enemy units on the field. */
+  foeStatus: Rect;
+  /** The boss bar, under the clock (empty while there is no live boss). */
+  bossStatus: Rect;
 }
 
-const CLOCK = { w: 260, h: 52 } as const;
+const CLOCK = { w: 200, h: 30 } as const;
+const CLOCK_PHONE = { w: 120, h: 30 } as const;
 const FOES = { w: 140, h: 52 } as const;
+const FOES_PHONE = { w: 120, h: 52 } as const;
 const INTERVENE = 72;
 const AUTO = { w: 104, h: 48 } as const;
 const WAVES = { w: 44, h: 44 } as const;
+const BOSS = { w: 340, h: 40 } as const;
+const HP_BAR = { desktop: { w: 300, h: 44 }, phone: { h: 40 } } as const;
 
-/** §10.7. On mobile the clock drops to a second row (the top row holds lives and foes). */
+/**
+ * §10.7. The top reuses the planning HUD (lives, gold, help, the five-year strip and the year
+ * label) with the clock under it; the speed controls go top-right (second row of the top when a
+ * narrow desktop window has no room beside the strip; two rows of two bottom-right on phones).
+ * Bottom corners: the throne's bar with Can Thiệp and Tự bắn above it (left), the enemy bar (right).
+ */
 export const battleLayout = (screen: Size): BattleLayout => {
   const { w, h } = screen;
   const desktop = isDesktop(w);
-  const { lives, gold, help } = planningLayout(screen);
-  const clock = {
-    x: Math.round((w - CLOCK.w) / 2),
-    y: desktop ? MARGIN : MARGIN + Math.max(lives.h, FOES.h) + GAP,
-    w: CLOCK.w,
-    h: CLOCK.h,
-  };
-  const foes = { x: w - MARGIN - FOES.w, y: MARGIN, w: FOES.w, h: FOES.h };
+  const plan = planningLayout(screen);
+  const { lives, gold, help, calendar, calendarLinks, year } = plan;
+  const centreX = year.x + year.w / 2;
+  const speedW = 4 * BUTTON + 3 * SPEED_GAP;
+
+  if (desktop) {
+    const clock = { x: Math.round(centreX - CLOCK.w / 2), y: year.y + year.h + 2, w: CLOCK.w, h: CLOCK.h };
+    const speedX = w - MARGIN - speedW;
+    const stripRight = calendar[calendar.length - 1]!.x + CELL;
+    const speedY = stripRight + GAP <= speedX ? MARGIN : MARGIN + CELL + GAP;
+    const speed = [0, 1, 2, 3].map((i) => ({ x: speedX + i * (BUTTON + SPEED_GAP), y: speedY, w: BUTTON, h: BUTTON }));
+    const foes = { x: w - MARGIN - FOES.w, y: speedY + BUTTON + GAP, w: FOES.w, h: FOES.h };
+    const waves = { x: foes.x + foes.w - WAVES.w, y: foes.y + foes.h + GAP, w: WAVES.w, h: WAVES.h };
+    // The boss bar is centred under the clock, narrowed if the foes panel stands beside it.
+    const bossW = Math.max(200, Math.min(BOSS.w, 2 * (foes.x - GAP - centreX)));
+    const bossStatus = { x: Math.round(centreX - bossW / 2), y: clock.y + clock.h + GAP, w: bossW, h: BOSS.h };
+    const allyStatus = { x: MARGIN, y: h - MARGIN - HP_BAR.desktop.h, w: HP_BAR.desktop.w, h: HP_BAR.desktop.h };
+    const foeStatus = { x: w - MARGIN - HP_BAR.desktop.w, y: allyStatus.y, w: HP_BAR.desktop.w, h: HP_BAR.desktop.h };
+    const intervene = { x: MARGIN, y: allyStatus.y - GAP - INTERVENE, w: INTERVENE, h: INTERVENE };
+    const auto = { x: intervene.x + intervene.w + GAP, y: intervene.y + intervene.h - AUTO.h, w: AUTO.w, h: AUTO.h };
+    return { clock, lives, gold, help, calendar, calendarLinks, year, foes, speed, intervene, auto, waves, allyStatus, foeStatus, bossStatus };
+  }
+
+  const rowY = calendar[0]!.y + CELL + GAP;
+  const clock = { x: MARGIN, y: rowY, w: CLOCK_PHONE.w, h: CLOCK_PHONE.h };
+  const foes = { x: w - MARGIN - FOES_PHONE.w, y: rowY, w: FOES_PHONE.w, h: FOES_PHONE.h };
+  const bossStatus = { x: MARGIN, y: foes.y + foes.h + GAP, w: w - 2 * MARGIN, h: BOSS.h };
+  const barW = Math.floor((w - 2 * MARGIN - GAP) / 2);
+  const allyStatus = { x: MARGIN, y: h - MARGIN - HP_BAR.phone.h, w: barW, h: HP_BAR.phone.h };
+  const foeStatus = { x: w - MARGIN - barW, y: allyStatus.y, w: barW, h: HP_BAR.phone.h };
+  const intervene = { x: MARGIN, y: allyStatus.y - GAP - INTERVENE, w: INTERVENE, h: INTERVENE };
+  const auto = { x: intervene.x + intervene.w + GAP, y: allyStatus.y - GAP - AUTO.h, w: AUTO.w, h: AUTO.h };
+  const blockW = 2 * BUTTON + SPEED_GAP;
+  const blockX = w - MARGIN - blockW;
+  const blockY = foeStatus.y - GAP - (2 * BUTTON + SPEED_GAP);
   const speed = [0, 1, 2, 3].map((i) => ({
-    x: MARGIN + i * (BUTTON + SPEED_GAP),
-    y: h - MARGIN - BUTTON,
+    x: blockX + (i % 2) * (BUTTON + SPEED_GAP),
+    y: blockY + Math.floor(i / 2) * (BUTTON + SPEED_GAP),
     w: BUTTON,
     h: BUTTON,
   }));
-  const intervene = {
-    x: w - MARGIN - INTERVENE,
-    y: h - MARGIN - INTERVENE,
-    w: INTERVENE,
-    h: INTERVENE,
-  };
-  const auto = {
-    x: intervene.x + intervene.w - AUTO.w,
-    y: intervene.y - GAP - AUTO.h,
-    w: AUTO.w,
-    h: AUTO.h,
-  };
-  const waves = {
-    x: foes.x + foes.w - WAVES.w,
-    y: foes.y + foes.h + GAP,
-    w: WAVES.w,
-    h: WAVES.h,
-  };
-  return { clock, lives, gold, help, foes, speed, intervene, auto, waves };
+  const waves = plan.scoutButton ?? { x: w - MARGIN - WAVES.w, y: rowY, w: WAVES.w, h: WAVES.h };
+  return { clock, lives, gold, help, calendar, calendarLinks, year, foes, speed, intervene, auto, waves, allyStatus, foeStatus, bossStatus };
 };
 
 /**

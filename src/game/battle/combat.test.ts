@@ -148,10 +148,10 @@ describe('instant melee damage', () => {
 });
 
 describe('projectiles', () => {
-  /** Tháp id 1 ở (192,160) r12; địch r4 cách mép–mép 80 px → tâm (192, 64). */
+  /** Tháp id 1 ở (192,160) r12; địch r4 cách mép–mép 52 px → tâm (192, 92), sát chân tường núi (wallY 88 + r 4). */
   const setupShot = () => {
     const w = world([archerTower()]);
-    const f = unit(w, TEAM_FOE, 192, 64, { hp: 100, dmg: 0, speed: 0 });
+    const f = unit(w, TEAM_FOE, 192, 92, { hp: 100, dmg: 0, speed: 0 });
     return { w, f, tower: 1 };
   };
 
@@ -173,8 +173,8 @@ describe('projectiles', () => {
       applyDamagePhase(w);
       if (w.hp[f]! < before) hits.push(t);
     }
-    // tâm cách 96 px → 12 lần bay
-    expect(hits).toEqual([11]);
+    // tâm cách 68 px → 9 lần bay
+    expect(hits).toEqual([8]);
     expect(w.hp[f]).toBe(93);
     expect(w.projectileCount).toBe(0);
   });
@@ -184,7 +184,7 @@ describe('projectiles', () => {
     attackPhase(w);
     projectilePhase(w);
     expect([w.projectiles.px[0], w.projectiles.py[0]]).toEqual([192, 152]);
-    w.x[f] = 192 + 88; // mục tiêu sang ngang: (280, 64) → hướng (88, −88)/√2·88
+    w.x[f] = 192 + 60; // mục tiêu sang ngang: (252, 92) → hướng (60, −60)/√2·60
     projectilePhase(w);
     const s = 8 / Math.sqrt(2);
     expect(w.projectiles.px[0]).toBeCloseTo(192 + s, 10);
@@ -652,7 +652,7 @@ describe('death spawns', () => {
 
   it('spawns `count` children on distinct offsets and inherits the parent source uid and home', () => {
     const w = world();
-    const m = addUnit(w, unitStats({ hp: 10, ...miner(3) }), TEAM_ALLY, 120, 120, 90, 90, 7);
+    const m = addUnit(w, unitStats({ hp: 10, ...miner(3) }), TEAM_ALLY, 120, 120, 110, 110, 7);
     const before = w.count;
     w.playerUnits = 1;
     w.hp[m] = 0;
@@ -662,8 +662,8 @@ describe('death spawns', () => {
     for (let c = before; c < before + 3; c++) {
       spots.add(`${w.x[c]},${w.y[c]}`);
       expect(w.sourceUid[c]).toBe(7);
-      expect(w.homeX[c]).toBe(90);
-      expect(w.homeY[c]).toBe(90);
+      expect(w.homeX[c]).toBe(110);
+      expect(w.homeY[c]).toBe(110);
     }
     expect(spots.size).toBe(3);
     expect(w.playerUnits).toBe(4);

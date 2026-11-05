@@ -1,13 +1,17 @@
 import { describe, expect, it } from 'vitest';
 import type { Rect, Size } from '../hud/layout';
 import {
+  COUNCIL_HEADER_H,
+  DECK_CARD,
   calendarModalLayout,
   centredPanel,
   councilLayout,
+  councilPlotSide,
   deckModalLayout,
   questLayout,
   resultLayout,
   rewardLayout,
+  visibleRewardCards,
 } from './modalLayout';
 
 const DESKTOP: Size = { w: 1280, h: 720 };
@@ -30,10 +34,10 @@ describe('centredPanel', () => {
 
 describe('rewardLayout', () => {
   for (const [name, screen, inset, card] of [
-    ['desktop', DESKTOP, 24, { w: 150, h: 210 }],
-    ['mobile', MOBILE, 10, { w: 108, h: 152 }],
+    ['desktop', DESKTOP, 24, { w: 180, h: 288 }],
+    ['mobile', MOBILE, 10, { w: 108, h: 180 }],
   ] as const) {
-    it(`fits title, 3 cards and the take button inside the panel (${name})`, () => {
+    it(`fits the headings, 3 vertical cards, the reroll line and the take button inside the panel (${name})`, () => {
       const l = rewardLayout(screen, inset);
       expect(contains({ x: 0, y: 0, ...screen }, l.panel)).toBe(true);
       expect(l.cards).toHaveLength(3);
@@ -43,27 +47,54 @@ describe('rewardLayout', () => {
         w: l.panel.w - 2 * inset,
         h: l.panel.h - 2 * inset,
       };
-      for (const r of [l.title, ...l.cards, l.take]) {
+      for (const r of [l.title, l.subtitle, l.viewport, ...l.cards, l.reroll, l.take]) {
         expect(contains(inner, r), JSON.stringify(r)).toBe(true);
       }
       for (const c of l.cards) {
         expect(c.w).toBe(card.w);
         expect(c.h).toBe(card.h);
-        // A selected card lifts 12 px: still below the title.
-        expect(c.y - 12).toBeGreaterThanOrEqual(l.title.y + l.title.h);
+        // A selected card lifts 12 px: still below the subtitle.
+        expect(c.y - 12).toBeGreaterThanOrEqual(l.subtitle.y + l.subtitle.h);
+        expect(contains(l.viewport, c)).toBe(true);
       }
-      for (const b of [l.take]) {
+      expect(new Set(l.cards.map((c) => c.y)).size).toBe(1);
+      for (const b of [l.take, l.reroll]) {
         expect(b.w).toBeGreaterThanOrEqual(44);
         expect(b.h).toBeGreaterThanOrEqual(44);
       }
-      const parts = [l.title, ...l.cards, l.take];
       expect('skip' in l).toBe(false);
+      expect(l.scrollMax).toBe(0);
       expect(l.take.x + l.take.w / 2).toBeCloseTo(l.panel.x + l.panel.w / 2, 0);
+      const parts = [l.title, l.subtitle, l.viewport, l.reroll, l.take];
       for (let i = 0; i < parts.length; i++)
         for (let j = i + 1; j < parts.length; j++)
-          expect(overlaps(parts[i]!, parts[j]!)).toBe(false);
+          expect(overlaps(parts[i]!, parts[j]!), `${i}×${j}`).toBe(false);
     });
   }
+
+  it('reward_desktop_three_180x288_cards_in_a_row_centred_on_the_screen', () => {
+    const l = rewardLayout(DESKTOP, 24);
+    const mid = (l.cards[0]!.x + l.cards[2]!.x + l.cards[2]!.w) / 2;
+    expect(mid).toBeCloseTo(DESKTOP.w / 2, 0);
+    expect(l.cards[1]!.x - (l.cards[0]!.x + 180)).toBe(24);
+    const centreY = (l.panel.y + l.panel.y + l.panel.h) / 2;
+    expect(Math.abs(centreY - DESKTOP.h / 2)).toBeLessThanOrEqual(1);
+  });
+
+  it('reward_phone_three_108x180_cards_in_a_row_with_a_small_gap', () => {
+    const l = rewardLayout(MOBILE, 10);
+    expect(l.cards[1]!.x - (l.cards[0]!.x + 108)).toBe(5);
+  });
+
+  it('count 0 is not turned into an empty card', () => {
+    expect(rewardLayout(DESKTOP, 24, 0).cards).toEqual([]);
+  });
+
+  it('the reroll line and the take button are separate rows below the cards', () => {
+    const l = rewardLayout(DESKTOP, 24);
+    expect(l.reroll.y).toBeGreaterThanOrEqual(l.viewport.y + l.viewport.h);
+    expect(l.take.y).toBeGreaterThanOrEqual(l.reroll.y + l.reroll.h);
+  });
 });
 
 describe('resultLayout', () => {
@@ -135,14 +166,14 @@ describe('deckModalLayout', () => {
     ['desktop', DESKTOP, 24, 6],
     ['mobile', MOBILE, 10, 3],
   ] as const) {
-    it(`has ${cols} columns of 96×134 cards in a viewport inside the panel (${name})`, () => {
+    it(`has ${cols} columns of 96×144 cards in a viewport inside the panel (${name})`, () => {
       const l = deckModalLayout(screen, inset, 20, 0);
       expect(contains({ x: 0, y: 0, ...screen }, l.panel)).toBe(true);
       expect(l.cols).toBe(cols);
       expect(l.cards).toHaveLength(20);
       for (const c of l.cards) {
         expect(c.w).toBe(96);
-        expect(c.h).toBe(134);
+        expect(c.h).toBe(144);
         // Horizontally always inside the viewport.
         expect(c.x).toBeGreaterThanOrEqual(l.viewport.x);
         expect(c.x + c.w).toBeLessThanOrEqual(l.viewport.x + l.viewport.w);
@@ -173,6 +204,22 @@ describe('deckModalLayout', () => {
     });
   }
 
+  for (const [name, screen, inset] of [
+    ['desktop', DESKTOP, 24],
+    ['mobile', MOBILE, 10],
+  ] as const) {
+    it(`deck_last_row_reachable: at least one row shows and the last row scrolls fully into view (${name})`, () => {
+      for (let count = 1; count <= 60; count++) {
+        const top = deckModalLayout(screen, inset, count, 0);
+        expect(top.viewport.h, `count ${count}`).toBeGreaterThanOrEqual(DECK_CARD.h);
+        const end = deckModalLayout(screen, inset, count, 99999);
+        const last = end.cards[count - 1]!;
+        expect(last.y).toBeGreaterThanOrEqual(end.viewport.y);
+        expect(last.y + last.h).toBeLessThanOrEqual(end.viewport.y + end.viewport.h);
+      }
+    });
+  }
+
   it('needs no scrolling for a handful of cards', () => {
     const l = deckModalLayout(DESKTOP, 24, 5, 0);
     expect(l.maxScroll).toBe(0);
@@ -195,34 +242,48 @@ const SCREENS: readonly [string, Size, number][] = [
 const inside = (screen: Size, r: Rect): boolean => contains({ x: 0, y: 0, ...screen }, r);
 
 describe('rewardLayout with 4 cards', () => {
-  it('is one row of 150×210 cards on desktop', () => {
+  it('is one row of 180×288 cards on desktop', () => {
     const l = rewardLayout(DESKTOP, 24, 4);
     expect(l.cards).toHaveLength(4);
     expect(new Set(l.cards.map((c) => c.y)).size).toBe(1);
-    expect(l.cards.every((c) => c.w === 150 && c.h === 210)).toBe(true);
+    expect(l.cards.every((c) => c.w === 180 && c.h === 288)).toBe(true);
     expect(inside(DESKTOP, l.panel)).toBe(true);
   });
 
-  it('is a 2×2 grid of 108×152 cards on mobile, all inside the panel and the screen, none overlapping', () => {
+  it('four_cards_phone: a 2×2 grid of 108×180 cards, all inside the panel and the screen, none overlapping', () => {
     const inset = 10;
     const l = rewardLayout(MOBILE, inset, 4);
     expect(new Set(l.cards.map((c) => c.x)).size).toBe(2);
     expect(new Set(l.cards.map((c) => c.y)).size).toBe(2);
-    expect(l.cards.every((c) => c.w === 108 && c.h === 152)).toBe(true);
+    expect(l.cards.every((c) => c.w === 108 && c.h === 180)).toBe(true);
     expect(inside(MOBILE, l.panel)).toBe(true);
     const inner = { x: l.panel.x + inset, y: l.panel.y + inset, w: l.panel.w - 2 * inset, h: l.panel.h - 2 * inset };
-    for (const r of [l.title, ...l.cards, l.take]) expect(contains(inner, r), JSON.stringify(r)).toBe(true);
+    for (const r of [l.title, l.subtitle, ...l.cards, l.reroll, l.take]) expect(contains(inner, r), JSON.stringify(r)).toBe(true);
     for (let i = 0; i < l.cards.length; i++) {
       for (let j = i + 1; j < l.cards.length; j++) expect(overlaps(l.cards[i]!, l.cards[j]!)).toBe(false);
       expect(overlaps(l.cards[i]!, l.take)).toBe(false);
-      // a selected card lifts 12 px and must stay under the title
-      expect(l.cards[i]!.y - 12).toBeGreaterThanOrEqual(l.title.y + l.title.h);
+      expect(l.cards[i]!.y - 12).toBeGreaterThanOrEqual(l.subtitle.y + l.subtitle.h);
     }
+    expect(l.scrollMax).toBe(0);
   });
 
-  it('3 cards keep the old single row on mobile', () => {
+  it('3 cards keep a single row on mobile', () => {
     const l = rewardLayout(MOBILE, 10, 3);
     expect(new Set(l.cards.map((c) => c.y)).size).toBe(1);
+  });
+
+  it('a phone too short for two rows scrolls the cards and never loses the last one', () => {
+    const SHORT: Size = { w: 375, h: 560 };
+    const top = rewardLayout(SHORT, 10, 4, 0);
+    expect(top.scrollMax).toBeGreaterThan(0);
+    expect(inside(SHORT, top.panel)).toBe(true);
+    expect(overlaps(top.viewport, top.take)).toBe(false);
+    const end = rewardLayout(SHORT, 10, 4, 99999);
+    expect(end.cards).toHaveLength(4);
+    const last = end.cards[3]!;
+    expect(last.y).toBeGreaterThanOrEqual(end.viewport.y);
+    expect(last.y + last.h).toBeLessThanOrEqual(end.viewport.y + end.viewport.h);
+    expect(end.cards[0]!.y).toBe(top.cards[0]!.y - top.scrollMax);
   });
 });
 
@@ -317,4 +378,62 @@ describe('councilLayout on short phones', () => {
       for (const c of l.choices) expect(c.h).toBeGreaterThanOrEqual(60);
     });
   }
+});
+
+describe('F1 layout fixes', () => {
+  const PHONES: readonly Size[] = [{ w: 375, h: 812 }, { w: 375, h: 667 }, { w: 390, h: 664 }, { w: 375, h: 635 }];
+
+  it('council_extra_selection_targets_at_least_44: the plot cells of the unlock decree are touch targets on every supported screen', () => {
+    for (const screen of [DESKTOP, ...PHONES]) {
+      const l = councilLayout(screen, screen.w >= 768 ? 24 : 9);
+      const side = councilPlotSide(l.area.h);
+      expect(side, `${screen.w}×${screen.h}`).toBe(44);
+      // five rows of cells and their gaps fit under the area header
+      expect(COUNCIL_HEADER_H + 4 + 5 * side + 4 * 2).toBeLessThanOrEqual(l.area.h);
+    }
+  });
+
+  it('a very short area keeps the old floor of 36 px instead of overflowing', () => {
+    expect(councilPlotSide(120)).toBe(36);
+    expect(councilPlotSide(400)).toBe(44);
+  });
+
+  it('long_quest_body_keeps_buttons_visible: body, Nhận and Từ chối stay inside the panel and the screen', () => {
+    for (const screen of [DESKTOP, MOBILE, { w: 360, h: 640 }, { w: 375, h: 568 }] as Size[]) {
+      const inset = screen.w >= 768 ? 24 : 10;
+      const l = questLayout(screen, inset);
+      expect(inside(screen, l.panel), `${screen.w}×${screen.h}`).toBe(true);
+      for (const r of [l.title, l.body, l.accept, l.decline]) expect(contains(l.panel, r), JSON.stringify(r)).toBe(true);
+      expect(l.body.h).toBeGreaterThanOrEqual(100);
+      expect(l.accept.y).toBeGreaterThanOrEqual(l.body.y + l.body.h);
+    }
+  });
+
+  it('run_result_long_lines_fit: twelve summary lines fit the panel on a short phone', () => {
+    const screen = { w: 375, h: 568 };
+    const l = resultLayout(screen, 10, 12, 2);
+    expect(inside(screen, l.panel)).toBe(true);
+    for (const r of [l.title, ...l.lines, ...l.buttons]) expect(contains(l.panel, r), JSON.stringify(r)).toBe(true);
+    for (const b of l.buttons) expect(b.h).toBeGreaterThanOrEqual(44);
+  });
+
+  it('help_and_deck_headers_clear_close: the title never runs under the close button and the tabs sit below both', () => {
+    for (const [screen, inset] of [[DESKTOP, 24], [MOBILE, 10]] as const) {
+      const l = deckModalLayout(screen, inset, 20, 0);
+      expect(overlaps(l.title, l.close)).toBe(false);
+      for (const t of l.tabs) expect(t.y).toBeGreaterThanOrEqual(Math.max(l.title.y + l.title.h, l.close.y + l.close.h));
+    }
+  });
+});
+
+describe('visibleRewardCards', () => {
+  it('shows every card when the grid fits, and only the fully visible ones when it scrolls', () => {
+    const all = rewardLayout(MOBILE, 10, 4);
+    expect(visibleRewardCards(all)).toEqual([true, true, true, true]);
+    const SHORT: Size = { w: 375, h: 560 };
+    const top = rewardLayout(SHORT, 10, 4, 0);
+    expect(visibleRewardCards(top)).toEqual([true, true, false, false]);
+    const end = rewardLayout(SHORT, 10, 4, 99999);
+    expect(visibleRewardCards(end)).toEqual([false, false, true, true]);
+  });
 });

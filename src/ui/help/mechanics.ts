@@ -3,6 +3,7 @@ import { TICKS_PER_SECOND } from '../../core/SimClock';
 import { BATTLE } from '../../data/battle';
 import { BOSS_RULES } from '../../data/bosses';
 import { DECREE_RULES } from '../../data/decrees';
+import { BATTLE_DIRECTION_HELP } from '../../data/help';
 import { QUEST_RULES } from '../../data/quests';
 import { RUN, REWARD, battleGold, rerollCost } from '../../data/run';
 import type { BossId } from '../../data/types';
@@ -79,6 +80,10 @@ export const mechanicEntries = (content: Content): readonly HelpEntry[] => {
       `Các năm ${RUN.questYears.join(', ')} có thể có sứ giả đề nghị nhiệm vụ; bạn nhận hoặc từ chối.`,
       `Tối đa ${RUN.maxActiveQuests} nhiệm vụ cùng lúc. Hết hạn mà chưa xong thì không có thưởng.`,
       `Đặt Cược tốn ${QUEST_RULES.wagerFee} vàng khi nhận.`,
+    ]),
+    entry('direction', 'Hướng địch', [
+      BATTLE_DIRECTION_HELP,
+      'Tường núi chắn cả quân bay: không ai đi xuyên hay vòng ra phía sau lâu đài.',
     ]),
     entry('boss', 'Boss', [
       `Boss xuất hiện ở các năm ${RUN.bossYears.join(', ')}.`,

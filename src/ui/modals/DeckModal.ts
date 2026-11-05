@@ -14,6 +14,7 @@ import {
   type UiBox,
 } from '../theme';
 import { DECK_TABS, deckEntries, type DeckEntry, type DeckTab } from './deckModel';
+import type { UiSkin } from '../skin';
 import { CLOSE_BUTTON, DECK_CARD, deckModalLayout, type DeckModalLayout } from './modalLayout';
 import { snapScroll } from '../hud/layout';
 import { createOverlay, fitOverlay } from './overlay';
@@ -72,10 +73,11 @@ export class DeckModal {
     private readonly deck: readonly CardId[],
     private readonly tooltip: TooltipHost,
     onClose: () => void,
+    private readonly skin: UiSkin = 'neutral',
   ) {
     this.overlay = createOverlay(scene);
     this.overlay.on(Phaser.Input.Events.GAMEOBJECT_POINTER_UP, onClose);
-    this.box = createPanel(scene, 'panel', 64, 64);
+    this.box = createPanel(scene, 'panel', 64, 64, 0, 0, skin);
     this.box.image.setInteractive(); // a click on the panel must not reach the closing overlay
     this.title = addUiText(scene, 0, 0, '', 18).setOrigin(0, 0.5).setFontStyle('bold');
     this.close = createButton(scene, 0, 0, '✕', {
@@ -84,6 +86,7 @@ export class DeckModal {
       fontSize: 20,
       onClick: onClose,
       tooltip: { host: tooltip, content: () => textContent(['Đóng (Esc)']) },
+      skin,
     });
     this.tabs = DECK_TABS.map(({ id, label }) =>
       createButton(scene, 0, 0, label, {
@@ -91,6 +94,7 @@ export class DeckModal {
         height: 44,
         fontSize: 13,
         onClick: () => this.setTab(id),
+        skin,
       }),
     );
     this.root = scene.add.container(0, 0, [
@@ -144,6 +148,7 @@ export class DeckModal {
     this.cards.length = 0;
     for (const entry of this.entries) {
       const view = new CardView(this.scene, this.content, { w: DECK_CARD.w, h: DECK_CARD.h }, this.tooltip);
+      if (this.skin !== 'neutral') view.setTheme(this.skin);
       view.setCard(entry.cardId);
       const badge = addUiText(this.scene, 0, 0, `×${entry.count}`, 14, UI_PALETTE.creamLight)
         .setFontStyle('bold')

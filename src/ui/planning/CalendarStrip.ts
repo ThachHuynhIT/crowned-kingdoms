@@ -6,7 +6,9 @@ import { UI_PALETTE } from '../../data/uiPalette';
 import type { Content } from '../../game/cards/registry';
 import { SPRITES_KEY, iconFrame } from '../../render/atlas';
 import type { Rect } from '../hud/layout';
+import type { KingId } from '../../data/types';
 import type { CalendarCell } from '../realm/calendarModel';
+import { kingBadge } from '../realm/kingBadge';
 import { questCalendarLabel } from './questNotice';
 import {
   addUiText,
@@ -136,24 +138,27 @@ export class CalendarCellView {
       const kings = cell.kings ?? [];
       const small = Math.max(10, Math.round(w * 0.22));
       kings.forEach((id, i) => {
-        const dx = cx + (i - (kings.length - 1) / 2) * (small + 3);
-        const badge = this.scene.add
-          .rectangle(dx, cy, small, small, PALETTE[this.content.enemyKing(id).color])
-          .setStrokeStyle(2, UI_PALETTE.outline);
-        this.add(badge);
+        const art = kingBadge(id, small);
+        const dx = cx + (i - (kings.length - 1) / 2) * ((art?.size ?? small) + 3);
+        this.add(this.kingMark(id, dx, cy, small));
       });
       return;
     }
-    const king = this.content.enemyKing(cell.attacker);
-    const badge = this.scene.add
-      .rectangle(cx, cy, side, side, PALETTE[king.color])
-      .setStrokeStyle(2, UI_PALETTE.outline);
-    this.add(badge);
+    this.add(this.kingMark(cell.attacker, cx, cy, side));
     const dots = cell.attack ?? 0;
     for (let i = 0; i < dots; i++) {
       const dx = cx + (i - (dots - 1) / 2) * (DOT + 3);
       this.add(this.scene.add.rectangle(dx, h - (label ? 17 : 7), DOT, DOT, UI_PALETTE.select).setStrokeStyle(1, UI_PALETTE.outline));
     }
+  }
+
+  /** The king's badge image when it has one and it loaded, else its colour square of `side` px. */
+  private kingMark(king: KingId, x: number, y: number, side: number): Phaser.GameObjects.GameObject {
+    const art = kingBadge(king, side);
+    if (art && this.scene.textures.exists(art.key)) return this.scene.add.image(x, y, art.key).setOrigin(0.5);
+    return this.scene.add
+      .rectangle(x, y, side, side, PALETTE[this.content.enemyKing(king).color])
+      .setStrokeStyle(2, UI_PALETTE.outline);
   }
 
   /** Council (crown) and quest (tome) markers in the top-right corner. */
@@ -178,29 +183,53 @@ export class CalendarCellView {
 /** The five-year calendar strip of the planning HUD (§10.4); pressing a cell opens the full calendar. */
 export class CalendarStrip {
   private readonly cells: CalendarCellView[];
+  /** Thin bars (not frames) joining each cell to the next, drawn under the cells. */
+  private readonly links: Phaser.GameObjects.Rectangle[];
+  private shown = 0;
+  private visible = true;
 
   constructor(scene: Phaser.Scene, content: Content, tooltip: TooltipHost, onOpen: () => void) {
+    this.links = Array.from({ length: 4 }, () =>
+      scene.add.rectangle(0, 0, 1, 1, UI_PALETTE.woodLight).setOrigin(0, 0).setStrokeStyle(1, UI_PALETTE.outline),
+    );
     this.cells = Array.from({ length: 5 }, () => new CalendarCellView(scene, content, tooltip, onOpen));
   }
 
   /** Cells to show (fewer than 5 near the last year). */
   setCells(cells: readonly CalendarCell[]): void {
     this.cells.forEach((view, i) => view.set(cells[i] ?? null));
+    this.shown = Math.min(cells.length, this.cells.length);
+    this.showLinks();
   }
 
-  layout(rects: readonly Rect[]): void {
+  /** Place the cells, and the bars of `links` between them (`calendarStripLayout`). */
+  layout(rects: readonly Rect[], links: readonly Rect[] = []): void {
     this.cells.forEach((view, i) => {
       const r = rects[i];
       if (r) view.layout(r);
     });
+    this.links.forEach((bar, i) => {
+      const r = links[i];
+      if (r) bar.setPosition(r.x, r.y).setSize(r.w, r.h);
+    });
+    this.showLinks();
   }
 
   setVisible(visible: boolean): void {
+    this.visible = visible;
     this.cells.forEach((v) => v.setVisible(visible));
+    this.showLinks();
+  }
+
+  /** A bar shows only between two cells that are both on show. */
+  private showLinks(): void {
+    this.links.forEach((bar, i) => bar.setVisible(this.visible && i + 1 < this.shown));
   }
 
   destroy(): void {
     for (const v of this.cells) v.destroy();
+    for (const l of this.links) l.destroy();
     this.cells.length = 0;
+    this.links.length = 0;
   }
 }
