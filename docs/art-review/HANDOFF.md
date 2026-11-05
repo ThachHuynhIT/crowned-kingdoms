@@ -61,15 +61,14 @@ Chủ dự án đổi kế hoạch (06/11/2026): PR #12 (`g3e-ux-and-art`, nhán
 | Lính | Dân Quân, Thợ Gặt, Nông Binh × 6 tư thế × 2 phe | ✅ đã duyệt, đã vào game |
 | Tranh thẻ (96×72) | 10 thẻ: Ngai, Ruộng Lúa, Bùa Phân Bón, Cối Xay Gió, Lễ Hội Mùa Màng, Kho Thóc, Khởi Nghĩa Nông Dân, Dân Quân, Đội Thợ Gặt, Bù Nhìn Gác | 🟡 ảnh đã duyệt phong cách (`cards/sheet-wheat.png`), **chưa nối**: cần chỉnh `cardLayout`/`fitArt` cho thẻ nhỏ rồi thêm vào `VERTICAL_CARD_ART` |
 | Ô bàn cờ | ô khoá / ô mở / bệ Ngai skin Lúa Mì (`public/assets/art/ai-v1/plots/wheat_*.png`) | 🟡 đã duyệt và đã cắt, **chưa nối** vào `plotFrame` |
-| Công trình (64 px, góc 45°) | Kho Thóc, Cối Xay Gió | 🟡 mẫu chờ duyệt (`buildings/wheat/`) |
-| | Ruộng Lúa, Khởi Nghĩa Nông Dân, Đội Thợ Gặt, Bù Nhìn Gác | ⬜ mới có prompt, chưa vẽ |
-| | Dân Quân (nhà) | ⬜ nhà tranh `cottage` cũ thấy hai mặt, phải vẽ lại theo góc 45° |
-| | Ngai Bó Lúa | ⬜ chưa vẽ |
+| Công trình (64 px, góc 45°) | Ruộng Lúa, Kho Thóc, Cối Xay Gió, Khởi Nghĩa Nông Dân, Dân Quân (nhà), Đội Thợ Gặt, Bù Nhìn Gác, Ngai Bó Lúa | ✅ đã duyệt 06/11, đã vào game (`IMAGE_BUILDINGS`; Kho Thóc và Cối Xay Gió vẽ lại, bản cũ ở `buildings/wheat/_rejected_2026-11-06/`; `cottage` cũ không còn được nạp). Kiểm trình duyệt: Ruộng Lúa và Ngai trong ván thật, 6 cái kia bằng sprite gỡ lỗi trên bàn cờ |
 | Biểu tượng | Huy hiệu Vua Lúa Mì (`icon_king_wheat`) | ⬜ chưa vẽ |
 
 Ngoài P0 (P2, không bắt buộc cho PR này): kiến trúc cấp 2/3 và hoạt ảnh của 7 công trình + Ngai, hoạt ảnh mở rộng của 3 lính, trang trí Xe Lúa (`wild_wheat_cart`). Dùng chung mọi vua, đã duyệt nhưng chưa nối: nền đất 27 ô, 15 vật hoang dã.
 
-Thứ tự đề xuất: (1) duyệt Kho Thóc + Cối Xay Gió → vẽ 4 công trình còn lại, nhà Dân Quân và Ngai theo cùng mẫu → nối vào `IMAGE_BUILDINGS`; (2) nối tranh thẻ Lúa Mì; (3) nối ô bàn cờ Lúa Mì; (4) huy hiệu vua. Công cụ công trình: `python docs/art-review/g3e/buildings/make_prompts.py wheat [id ...]`, rồi `python docs/art-review/g3e/buildings/make_assets.py wheat` (tách nền, thu nhỏ 64 px, bảng duyệt `wheat/sheet.png`).
+Thứ tự còn lại: (1) nối tranh thẻ Lúa Mì; (2) nối ô bàn cờ Lúa Mì; (3) huy hiệu vua.
+
+Lỗi sẵn có phát hiện 06/11 (không do thay đổi art): dừng `MainMenu` rồi đổi cỡ cửa sổ → `Uncaught TypeError: Cannot read properties of undefined (reading 'resize')` từ listener `scale.on('resize')` trong `src/ui/theme.ts` (khoảng dòng 322) trên một NineSlice đã bị huỷ. Công cụ công trình: `python docs/art-review/g3e/buildings/make_prompts.py wheat [id ...]`, rồi `python docs/art-review/g3e/buildings/make_assets.py wheat` (tách nền, thu nhỏ 64 px, bảng duyệt `wheat/sheet.png`).
 
 Việc G3e khác (giữ nguyên): biểu tượng UI chung (12 mẫu chờ duyệt), tranh thẻ 5 vua khác, kiểm cảm ứng thật trên mobile.
 

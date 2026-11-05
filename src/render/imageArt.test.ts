@@ -25,6 +25,12 @@ describe('image art mapping', () => {
     expect(IMAGE_ART_FILES.some((f) => f.startsWith('spearman'))).toBe(false);
   });
 
+  it('every Wheat building card, throne included, uses the approved 45° image (2026-11-06)', () => {
+    for (const card of ['throne', 'field', 'windmill', 'granary', 'peasant_horde', 'militia', 'reapers', 'scarecrow'])
+      expect(IMAGE_BUILDINGS[`wheat_${card}`]).toBe(`wheat_${card}`);
+    expect(IMAGE_ART_FILES).not.toContain('cottage');
+  });
+
   it('idle, walk and attack use six different poses', () => {
     const all = Object.values(POSES).flat();
     expect(new Set(all).size).toBe(6);

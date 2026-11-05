@@ -30,24 +30,33 @@ export const IMAGE_UNITS: Readonly<Record<string, string>> = {
 
 const POSE_INDEXES = [0, 1, 2, 3, 4, 5];
 
+/**
+ * Buildings drawn from image art: card id → file. The eight Wheat buildings (throne included) are the 45° set from
+ * `docs/art-review/g3e/buildings/wheat/` (approved 2026-11-06, 64 art px wide); they replace the first two-sided
+ * `cottage` for the militia house.
+ */
+export const IMAGE_BUILDINGS: Readonly<Record<string, string>> = {
+  wheat_throne: 'wheat_throne',
+  wheat_field: 'wheat_field',
+  wheat_windmill: 'wheat_windmill',
+  wheat_granary: 'wheat_granary',
+  wheat_peasant_horde: 'wheat_peasant_horde',
+  wheat_militia: 'wheat_militia',
+  wheat_reapers: 'wheat_reapers',
+  wheat_scarecrow: 'wheat_scarecrow',
+  neutral_barracks: 'barracks',
+};
+export const GRASS_FILES: readonly string[] = ['grass_0', 'grass_1', 'grass_2'];
+
 /** Every PNG of the set (file name without `.png`). */
 export const IMAGE_ART_FILES: readonly string[] = [
   ...Object.values(IMAGE_UNITS).flatMap((prefix) => [
     ...POSE_INDEXES.map((i) => `${prefix}_${i}`),
     ...POSE_INDEXES.map((i) => `${prefix}_foe_${i}`),
   ]),
-  'cottage',
-  'barracks',
-  'grass_0',
-  'grass_1',
-  'grass_2',
+  ...Object.values(IMAGE_BUILDINGS),
+  ...GRASS_FILES,
 ];
-/** Buildings drawn from image art: card id → file. */
-export const IMAGE_BUILDINGS: Readonly<Record<string, string>> = {
-  wheat_militia: 'cottage',
-  neutral_barracks: 'barracks',
-};
-export const GRASS_FILES: readonly string[] = ['grass_0', 'grass_1', 'grass_2'];
 
 /** Pose index of each animation frame (the sheets are drawn idle0 idle1 walk0 walk1 attack0 attack1). */
 export const POSES: Record<UnitAnim, readonly [number, number]> = {

@@ -2325,3 +2325,123 @@ assets:
     finalSize: 40x28
     anchor: feet
     notes: Foe recolour (blue made red) of Stone slinger (Lính Ném Đá) pose 5 (attack 1); mask-weighted box reduction to 2 art px per world unit plus a redrawn 1-px material outline by docs/art-review/g3e/units/make_poses.py --export (approved 2026-11-06); drawn at scale 0.5 (src/render/imageArt.ts)
+  - id: building_wheat_throne
+    path: public/assets/art/ai-v1/wheat_throne.png
+    category: building
+    origin: custom
+    source: docs/art-review/g3e/buildings/wheat/building_wheat_throne/source.png
+    creator: Project owner (OpenAI imagegen via Codex; prompt in docs/art-review/g3e/buildings/wheat/building_wheat_throne/prompt.md)
+    license: project-owned
+    attribution: false
+    redistribute: true
+    evidence: docs/art-review/g3e/buildings/wheat/
+    modified: true
+    nativeSize: 1024x1024
+    finalSize: 64x81
+    anchor: feet
+    notes: Ngai Bó Lúa (Wheat throne keep), 45-degree front view; black background removed and box-reduced to 64 px wide by docs/art-review/g3e/buildings/make_assets.py (approved 2026-11-06); drawn at scale 0.5 (src/render/imageArt.ts IMAGE_BUILDINGS)
+  - id: building_wheat_field
+    path: public/assets/art/ai-v1/wheat_field.png
+    category: building
+    origin: custom
+    source: docs/art-review/g3e/buildings/wheat/building_wheat_field/source.png
+    creator: Project owner (OpenAI imagegen via Codex; prompt in docs/art-review/g3e/buildings/wheat/building_wheat_field/prompt.md)
+    license: project-owned
+    attribution: false
+    redistribute: true
+    evidence: docs/art-review/g3e/buildings/wheat/
+    modified: true
+    nativeSize: 1024x1024
+    finalSize: 64x34
+    anchor: feet
+    notes: Ruộng Lúa (wheat field), 45-degree front view; black background removed and box-reduced to 64 px wide by docs/art-review/g3e/buildings/make_assets.py (approved 2026-11-06); drawn at scale 0.5 (src/render/imageArt.ts IMAGE_BUILDINGS)
+  - id: building_wheat_windmill
+    path: public/assets/art/ai-v1/wheat_windmill.png
+    category: building
+    origin: custom
+    source: docs/art-review/g3e/buildings/wheat/building_wheat_windmill/source.png
+    creator: Project owner (OpenAI imagegen via Codex; prompt in docs/art-review/g3e/buildings/wheat/building_wheat_windmill/prompt.md)
+    license: project-owned
+    attribution: false
+    redistribute: true
+    evidence: docs/art-review/g3e/buildings/wheat/
+    modified: true
+    nativeSize: 1024x1024
+    finalSize: 64x74
+    anchor: feet
+    notes: Cối Xay Gió (windmill), 45-degree front view; black background removed and box-reduced to 64 px wide by docs/art-review/g3e/buildings/make_assets.py (approved 2026-11-06); drawn at scale 0.5 (src/render/imageArt.ts IMAGE_BUILDINGS)
+  - id: building_wheat_granary
+    path: public/assets/art/ai-v1/wheat_granary.png
+    category: building
+    origin: custom
+    source: docs/art-review/g3e/buildings/wheat/building_wheat_granary/source.png
+    creator: Project owner (OpenAI imagegen via Codex; prompt in docs/art-review/g3e/buildings/wheat/building_wheat_granary/prompt.md)
+    license: project-owned
+    attribution: false
+    redistribute: true
+    evidence: docs/art-review/g3e/buildings/wheat/
+    modified: true
+    nativeSize: 1024x1024
+    finalSize: 64x59
+    anchor: feet
+    notes: Kho Thóc (granary), 45-degree front view; black background removed and box-reduced to 64 px wide by docs/art-review/g3e/buildings/make_assets.py (approved 2026-11-06); drawn at scale 0.5 (src/render/imageArt.ts IMAGE_BUILDINGS)
+  - id: building_wheat_peasant_horde
+    path: public/assets/art/ai-v1/wheat_peasant_horde.png
+    category: building
+    origin: custom
+    source: docs/art-review/g3e/buildings/wheat/building_wheat_peasant_horde/source.png
+    creator: Project owner (OpenAI imagegen via Codex; prompt in docs/art-review/g3e/buildings/wheat/building_wheat_peasant_horde/prompt.md)
+    license: project-owned
+    attribution: false
+    redistribute: true
+    evidence: docs/art-review/g3e/buildings/wheat/
+    modified: true
+    nativeSize: 1024x1024
+    finalSize: 64x52
+    anchor: feet
+    notes: Khởi Nghĩa Nông Dân (peasant uprising camp), 45-degree front view; black background removed and box-reduced to 64 px wide by docs/art-review/g3e/buildings/make_assets.py (approved 2026-11-06); drawn at scale 0.5 (src/render/imageArt.ts IMAGE_BUILDINGS)
+  - id: building_wheat_militia
+    path: public/assets/art/ai-v1/wheat_militia.png
+    category: building
+    origin: custom
+    source: docs/art-review/g3e/buildings/wheat/building_wheat_militia/source.png
+    creator: Project owner (OpenAI imagegen via Codex; prompt in docs/art-review/g3e/buildings/wheat/building_wheat_militia/prompt.md)
+    license: project-owned
+    attribution: false
+    redistribute: true
+    evidence: docs/art-review/g3e/buildings/wheat/
+    modified: true
+    nativeSize: 1024x1024
+    finalSize: 64x65
+    anchor: feet
+    notes: Dân Quân (militia house), 45-degree front view; black background removed and box-reduced to 64 px wide by docs/art-review/g3e/buildings/make_assets.py (approved 2026-11-06); drawn at scale 0.5 (src/render/imageArt.ts IMAGE_BUILDINGS)
+  - id: building_wheat_reapers
+    path: public/assets/art/ai-v1/wheat_reapers.png
+    category: building
+    origin: custom
+    source: docs/art-review/g3e/buildings/wheat/building_wheat_reapers/source.png
+    creator: Project owner (OpenAI imagegen via Codex; prompt in docs/art-review/g3e/buildings/wheat/building_wheat_reapers/prompt.md)
+    license: project-owned
+    attribution: false
+    redistribute: true
+    evidence: docs/art-review/g3e/buildings/wheat/
+    modified: true
+    nativeSize: 1024x1024
+    finalSize: 64x58
+    anchor: feet
+    notes: Đội Thợ Gặt (reapers farmhouse), 45-degree front view; black background removed and box-reduced to 64 px wide by docs/art-review/g3e/buildings/make_assets.py (approved 2026-11-06); drawn at scale 0.5 (src/render/imageArt.ts IMAGE_BUILDINGS)
+  - id: building_wheat_scarecrow
+    path: public/assets/art/ai-v1/wheat_scarecrow.png
+    category: building
+    origin: custom
+    source: docs/art-review/g3e/buildings/wheat/building_wheat_scarecrow/source.png
+    creator: Project owner (OpenAI imagegen via Codex; prompt in docs/art-review/g3e/buildings/wheat/building_wheat_scarecrow/prompt.md)
+    license: project-owned
+    attribution: false
+    redistribute: true
+    evidence: docs/art-review/g3e/buildings/wheat/
+    modified: true
+    nativeSize: 1024x1024
+    finalSize: 64x74
+    anchor: feet
+    notes: Bù Nhìn Gác (scarecrow watch tower), 45-degree front view; black background removed and box-reduced to 64 px wide by docs/art-review/g3e/buildings/make_assets.py (approved 2026-11-06); drawn at scale 0.5 (src/render/imageArt.ts IMAGE_BUILDINGS)
