@@ -1,6 +1,5 @@
 import { BATTLE } from '../../data/battle';
-import { plotCenter } from '../../game/battle/world';
-import { THRONE_PLOT, plotCol, plotRow } from '../../game/run/board';
+import { plotCol, plotRow } from '../../game/run/board';
 import { CARD_LIFT, GAP, MARGIN, SPEED_GAP, type Point, type Rect, type Size } from '../hud/layout';
 import { calendarStripLayout } from '../planning/calendarStripLayout';
 
@@ -206,7 +205,7 @@ const desktopLayout = (screen: Size, handSize: number): PlanningLayout => {
   const hand = handRow(screen, DESK.card, handSize);
   const first = hand[0]!;
   const last = hand[hand.length - 1]!;
-  // Centred like the battle camera's throne, lowered no further than the hand allows.
+  // Centred like the battle camera's board centre, lowered no further than the hand allows.
   const centreY = Math.min(h / 2, first.y - GAP - boardPx / 2);
   const board = {
     x: Math.round(w / 2 - boardPx / 2),
@@ -478,11 +477,14 @@ export const screenToWorld = (p: Point, scroll: Point, screen: Size, zoom: numbe
   };
 };
 
-/** §10.7 battle camera: zoom `battleZoom`, the throne at the screen centre. */
+/** Centre of the 5×5 board in world px (the board spans boardOrigin … +5 plots); not the throne, which sits on the back row. */
+const BOARD_CENTRE: Point = { x: BATTLE.boardOrigin + (BOARD_SIDE * BATTLE.plot) / 2, y: BATTLE.boardOrigin + (BOARD_SIDE * BATTLE.plot) / 2 };
+
+/** §10.7 battle camera: zoom `battleZoom`, the board centre at the screen centre. */
 export const battleCamera = (screen: Size): { zoom: number; scroll: Point } => {
   const zoom = battleZoom(screen.w, screen.h);
   const scroll = cameraScroll(
-    plotCenter(THRONE_PLOT),
+    BOARD_CENTRE,
     { x: screen.w / 2, y: screen.h / 2 },
     screen,
     zoom,
@@ -498,12 +500,10 @@ export const battleWorldAt = (p: Point, screen: Size): Point | null => {
   return w;
 };
 
-/** Centre of the 5×5 board in world px: the throne's plot centre (the board spans boardOrigin … +5 plots). */
-const BOARD_CENTRE = plotCenter(THRONE_PLOT);
 
 /**
  * The one camera of the realm (§10.4, §10.7). Planning puts the board centre where
- * `planningLayout` drew the board; battle centres the throne. On desktop both are the same
+ * `planningLayout` drew the board; battle centres the board too. On desktop both are the same
  * camera, on mobile they differ in zoom (the scene eases between them).
  */
 export type RealmPhase = 'planning' | 'battle';

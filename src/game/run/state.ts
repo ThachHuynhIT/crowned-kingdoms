@@ -3,7 +3,7 @@ import type { Rules } from '../../data/rules';
 import type { BossId, CardId, DecreeId, KingId, Level, QuestId, StatKey } from '../../data/types';
 import type { ArmyPlan, BattleResult } from '../battle/types';
 
-export const RUN_SAVE_VERSION = 4;
+export const RUN_SAVE_VERSION = 5;
 
 export interface BuildingState {
   uid: number;

@@ -4,6 +4,7 @@ import { CUSTOM_TOME_HANDLERS } from '../cards/custom';
 import { contentWith, runState } from '../testing/fixtures';
 import { applyCommand } from './commands';
 import type { BuildingState, IllegalReason, PlayTarget, RunState } from './state';
+import { THRONE_PLOT } from './board';
 
 const base = { owner: 'neutral' as const, name: 'x', rarity: 'common' as const, tags: [], textVi: 'x' };
 const barracks: CardDef = { ...base, id: 'neutral_barracks', nameVi: 'Trại', kind: 'troop', effects: [] };
@@ -113,8 +114,8 @@ describe('enchantments', () => {
   });
 
   it('can target the throne when the card allows it', () => {
-    const next = run(state(['neutral_sharpen']), play(0, plot(12)));
-    expect(next.plots[12]!.building!.enchants).toEqual([{ cardId: 'neutral_sharpen', stacks: 1 }]);
+    const next = run(state(['neutral_sharpen']), play(0, plot(THRONE_PLOT)));
+    expect(next.plots[THRONE_PLOT]!.building!.enchants).toEqual([{ cardId: 'neutral_sharpen', stacks: 1 }]);
   });
 });
 

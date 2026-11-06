@@ -9,6 +9,7 @@ import { collectStatSheet } from '../run/modifiers';
 import type { RunState } from '../run/state';
 import { runState, unitStats, withBuilding } from '../testing/fixtures';
 import { CONTENT } from './registry';
+import { THRONE_PLOT } from '../run/board';
 
 const IDS = [
   'moon_altar',
@@ -121,7 +122,7 @@ describe('the nine Moon King cards (spec 6.10)', () => {
       const next = ok(play(s, 'moon_blood_pact', { kind: 'plot', plot: 6 }));
       expect(next.gold).toBe(9);
       expect(next.plots[6]!.building).toBeNull();
-      const throne = next.plots[12]!.building!;
+      const throne = next.plots[THRONE_PLOT]!.building!;
       expect(throne.enchants).toEqual([
         { cardId: 'arcane_haste_rune', stacks: 2 },
         { cardId: 'arcane_spark_rune', stacks: 2 }, // the 4-stack limit stops the third
@@ -132,8 +133,8 @@ describe('the nine Moon King cards (spec 6.10)', () => {
     it('leaves runes the Ngai cannot wear behind, and refuses the Ngai itself', () => {
       const s = withBuilding(runState(), 6, 'wheat_militia', 1, ench('wheat_fertilizer', 2));
       const next = ok(play(s, 'moon_blood_pact', { kind: 'plot', plot: 6 }));
-      expect(next.plots[12]!.building!.enchants).toEqual([]);
-      expect('error' in play(s, 'moon_blood_pact', { kind: 'plot', plot: 12 })).toBe(true);
+      expect(next.plots[THRONE_PLOT]!.building!.enchants).toEqual([]);
+      expect('error' in play(s, 'moon_blood_pact', { kind: 'plot', plot: THRONE_PLOT })).toBe(true);
     });
 
     it('counts as a sacrifice for the altar and the offering quest', () => {

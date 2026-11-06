@@ -5,7 +5,7 @@ import { STRUCT_HP } from '../../data/scaling';
 import { composeArmy, armyBudget } from '../battle/compose';
 import type { ArmyPlan } from '../battle/types';
 import { CONTENT } from '../cards/registry';
-import { initialPlots } from './board';
+import { THRONE_PLOT, initialPlots } from './board';
 import { buildBattleSetup } from './battleSetup';
 import type { RunState } from './state';
 
@@ -17,7 +17,7 @@ const roster = CONTENT.raiderRoster().map((r) => ({
 
 function makeState(army: ArmyPlan | null): RunState {
   const plots = initialPlots();
-  plots[12]!.building = { uid: 0, cardId: 'wheat_throne', level: 1, enchants: [], placedYear: 1, permanent: {}, ageBonus: 0, counters: {}, movedYear: null };
+  plots[THRONE_PLOT]!.building = { uid: 0, cardId: 'wheat_throne', level: 1, enchants: [], placedYear: 1, permanent: {}, ageBonus: 0, counters: {}, movedYear: null };
   plots[7]!.building = { uid: 3, cardId: 'wheat_militia', level: 1, enchants: [], placedYear: 1, permanent: {}, ageBonus: 0, counters: {}, movedYear: null };
   plots[11]!.building = { uid: 5, cardId: 'neutral_archer_tower', level: 1, enchants: [], placedYear: 1, permanent: {}, ageBonus: 0, counters: {}, movedYear: null };
   plots[13]!.building = { uid: 4, cardId: 'neutral_barracks', level: 1, enchants: [], placedYear: 2, permanent: {}, ageBonus: 0, counters: {}, movedYear: null };
@@ -111,7 +111,7 @@ describe('buildBattleSetup', () => {
 
   it('maps the throne', () => {
     expect(setup.throne.hp).toBe(300);
-    expect(setup.throne.plot).toBe(12);
+    expect(setup.throne.plot).toBe(THRONE_PLOT);
     expect(setup.throne.uid).toBe(0);
     expect(setup.throne.kind).toBe('throne');
     expect(setup.throne.attack!.range).toBe(72);

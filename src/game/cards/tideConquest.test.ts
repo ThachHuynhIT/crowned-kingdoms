@@ -12,6 +12,7 @@ import type { RunState } from '../run/state';
 import { startYear } from '../run/yearFlow';
 import { runState, unitStats, withBuilding } from '../testing/fixtures';
 import { CONTENT } from './registry';
+import { THRONE_PLOT } from '../run/board';
 
 const IDS = [
   'tide_cannon',
@@ -162,7 +163,7 @@ describe('the nine Tide King cards (spec 6.7)', () => {
 
   describe('tide_privateers', () => {
     const contract = (gold: number): RunState => play(withBuilding({ ...runState(), gold }, 6, 'wheat_militia'), 'tide_privateers');
-    const mercs = (s: RunState): number => s.plots[12]!.building!.counters.privateers ?? 0;
+    const mercs = (s: RunState): number => s.plots[THRONE_PLOT]!.building!.counters.privateers ?? 0;
 
     it('pays everything up to 16 and keeps one mercenary per 2 gold paid', () => {
       const rich = contract(17);

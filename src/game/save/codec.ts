@@ -11,6 +11,7 @@ import { QUESTS } from '../../data/quests';
 import { RUN } from '../../data/run';
 import { INCOMPATIBLE_RUN_TEXT, SAVE_FORMAT_VERSION } from '../../data/save';
 import type { Content } from '../cards/registry';
+import { THRONE_PLOT } from '../run/board';
 import type { RunPhase, RunState } from '../run/state';
 import { RUN_SAVE_VERSION } from '../run/state';
 import { migrateRunState } from './migrate';
@@ -52,7 +53,6 @@ const CALENDARS = ['raiders', 'short', 'full'];
 const OFFER_PHASE: Record<string, RunPhase> = { reward: 'reward', questReward: 'reward', conquest: 'conquest', council: 'council', quest: 'quest' };
 const EDGES = ['N', 'E', 'S', 'W'];
 const PLOTS = 25;
-const THRONE = 12;
 
 /** Mọi số trong cây phải hữu hạn (JSON không giữ NaN / Infinity, nhưng dữ liệu hỏng có thể có). */
 const allFinite = (v: unknown): boolean => {
@@ -129,10 +129,11 @@ function validate(raw: unknown, content: Content): asserts raw is RunState {
       stacks += (e as Loose).stacks as number;
     }
     ensure(stacks <= RUN.maxEnchantStacks, 'too many stacks');
-    if (i === THRONE) ensure(bd.level === s.throneLevel, 'throne building level');
+    if (i === THRONE_PLOT) ensure(bd.level === s.throneLevel, 'throne building level');
   });
-  const throne = (plots[THRONE] as Loose).building;
+  const throne = (plots[THRONE_PLOT] as Loose).building;
   ensure(throne !== null && isObject(throne), 'throne missing');
+  ensure((plots[THRONE_PLOT] as Loose).unlocked === true, 'throne plot locked');
   ensure((s.nextUid as number) > maxUid, 'nextUid');
   ensure(isObject(s.rng) && (['draw', 'reward', 'calendar', 'council', 'quest'] as const).every((k) => isUint32((s.rng as Loose)[k])), 'rng');
 

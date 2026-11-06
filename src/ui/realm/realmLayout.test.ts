@@ -307,7 +307,7 @@ describe('planningZoom / realmCamera', () => {
     expect(realmCamera(MOBILE, 'battle').zoom).toBe(1);
   });
 
-  it('puts the board centre (throne) where planningLayout drew the board', () => {
+  it('puts the board centre where planningLayout drew the board', () => {
     for (const screen of [DESKTOP, MOBILE, { w: 1920, h: 1080 }]) {
       const l = planningLayout(screen);
       const cam = realmCamera(screen, 'planning');
@@ -587,7 +587,7 @@ describe('cameraScroll / screenToWorld', () => {
 });
 
 describe('battleCamera / battleWorldAt', () => {
-  it('centres the throne (plot 12, world 192,192) on screen', () => {
+  it('centres the board (world 192,192), not the back-row throne, on screen', () => {
     for (const screen of [DESKTOP, MOBILE]) {
       const mid = { x: screen.w / 2, y: screen.h / 2 };
       const p = battleWorldAt(mid, screen)!;

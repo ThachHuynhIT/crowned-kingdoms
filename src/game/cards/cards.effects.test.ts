@@ -9,6 +9,7 @@ import type { BuildingState, PlayTarget, RunState } from '../run/state';
 import { runState } from '../testing/fixtures';
 import { describeCard } from './describe';
 import { CONTENT } from './registry';
+import { THRONE_PLOT } from '../run/board';
 
 export const bld = (
   uid: number,
@@ -117,7 +118,7 @@ describe('neutral G2 cards (spec §6.1)', () => {
     expect(structureAt(one, 6).spawn!.stats.dmg).toBeCloseTo(structureAt(plain, 6).spawn!.stats.dmg * 1.15, 9);
     expect(structureAt(one, 8).attack!.dmg).toBeCloseTo(structureAt(plain, 8).attack!.dmg * 1.15, 9);
     expect(structureAt(two, 6).spawn!.stats.dmg).toBeCloseTo(structureAt(plain, 6).spawn!.stats.dmg * 1.3, 9);
-    const throne = setupOf([], { plots: board([[12, { ...bld(0, 'wheat_throne', 1, sharpen(1)) }]]).plots });
+    const throne = setupOf([], { plots: board([[THRONE_PLOT, { ...bld(0, 'wheat_throne', 1, sharpen(1)) }]]).plots });
     expect(throne.throne.attack!.dmg).toBeCloseTo(plain.throne.attack!.dmg * 1.15, 9);
   });
 
@@ -134,7 +135,7 @@ describe('neutral G2 cards (spec §6.1)', () => {
     expect(next.plots[6]!.building!.level).toBe(3);
     const r = applyCommand(
       board([], { hand: ['neutral_promote'] }),
-      { type: 'play', handIndex: 0, target: plot(12) },
+      { type: 'play', handIndex: 0, target: plot(THRONE_PLOT) },
       CONTENT,
     );
     expect('error' in r).toBe(true);
@@ -289,10 +290,10 @@ describe('Stone King (spec §6.4)', () => {
     const plain = structureAt(setupOf([[6, bld(1, 'wheat_scarecrow')]]), 6).attack!.dmg;
     const pct = [10, 12, 15, 18, 20];
     for (const level of [1, 2, 3, 4, 5] as const) {
-      const s = setupOf([[12, bld(0, 'stone_throne')], [6, bld(1, 'wheat_scarecrow')]], { ...asStone, throneLevel: level });
+      const s = setupOf([[THRONE_PLOT, bld(0, 'stone_throne')], [6, bld(1, 'wheat_scarecrow')]], { ...asStone, throneLevel: level });
       expect(structureAt(s, 6).attack!.dmg).toBeCloseTo(plain * (1 + pct[level - 1]! / 100), 9);
     }
-    const troop = setupOf([[12, bld(0, 'stone_throne')], [6, bld(1, 'wheat_militia')]], asStone);
+    const troop = setupOf([[THRONE_PLOT, bld(0, 'stone_throne')], [6, bld(1, 'wheat_militia')]], asStone);
     const troopPlain = setupOf([[6, bld(1, 'wheat_militia')]]);
     expect(structureAt(troop, 6).spawn!.stats.dmg).toBe(structureAt(troopPlain, 6).spawn!.stats.dmg);
   });
@@ -378,7 +379,7 @@ describe('Stone King (spec §6.4)', () => {
     expect(once.plots[6]!.building!.permanent).toEqual({ dmg: 8 });
     expect(once.plots[7]!.building!.permanent).toEqual({});
     const twice = playOn(
-      once.plots.flatMap((p, i) => (p.building && i !== 12 ? [[i, p.building] as [number, BuildingState]] : [])),
+      once.plots.flatMap((p, i) => (p.building && i !== THRONE_PLOT ? [[i, p.building] as [number, BuildingState]] : [])),
       ['stone_rune_carving'],
       { kind: 'none' },
     );
@@ -562,11 +563,11 @@ describe('Arcane King (spec §6.5)', () => {
     const two = spells('neutral_sharpen', 2);
     const plain = structureAt(setupOf([[6, bld(1, 'arcane_mage_tower', 1, two)]]), 6);
     for (const level of [1, 2, 3, 4, 5] as const) {
-      const s = setupOf([[12, bld(0, 'arcane_throne')], [6, bld(1, 'arcane_mage_tower', 1, two)]], { ...asArcane, throneLevel: level });
+      const s = setupOf([[THRONE_PLOT, bld(0, 'arcane_throne')], [6, bld(1, 'arcane_mage_tower', 1, two)]], { ...asArcane, throneLevel: level });
       expect(structureAt(s, 6).attack!.dmg).toBeCloseTo(9 * (1 + (30 + pct[level - 1]!) / 100), 9); // percentages add
       expect(structureAt(s, 6).hp).toBeCloseTo(plain.hp * (1 + pct[level - 1]! / 100), 9);
     }
-    const one = setupOf([[12, bld(0, 'arcane_throne')], [6, bld(1, 'arcane_mage_tower', 1, spells('neutral_sharpen', 1))]], asArcane);
+    const one = setupOf([[THRONE_PLOT, bld(0, 'arcane_throne')], [6, bld(1, 'arcane_mage_tower', 1, spells('neutral_sharpen', 1))]], asArcane);
     const onePlain = setupOf([[6, bld(1, 'arcane_mage_tower', 1, spells('neutral_sharpen', 1))]]);
     expect(structureAt(one, 6).attack!.dmg).toBeCloseTo(structureAt(onePlain, 6).attack!.dmg, 9);
   });

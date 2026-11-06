@@ -11,6 +11,7 @@ import { attackStats, throneSetup } from '../testing/fixtures';
 import { applyCommand } from './commands';
 import type { RunState } from './state';
 import { newRun } from './yearFlow';
+import { THRONE_PLOT } from './board';
 
 const FULL: Rules = { years: 30, calendar: 'full', autoStart: false };
 const BOSSES: [1 | 2 | 3, BossId][] = [
@@ -86,10 +87,10 @@ describe('throne_promotion', () => {
     [2, 5, 5],
   ] as const)('winning boss %i with the Ngai at level %i leaves it at %i, also on the board', (ordinal, from, to) => {
     const s = bossFight(ordinal, { throneLevel: from });
-    s.plots[12]!.building!.level = from;
+    s.plots[THRONE_PLOT]!.building!.level = from;
     const next = run(s, result(true));
     expect(next.throneLevel).toBe(to);
-    expect(next.plots[12]!.building!.level).toBe(to);
+    expect(next.plots[THRONE_PLOT]!.building!.level).toBe(to);
   });
 
   it('a lost battle, boss 3 and an ordinary year give no level', () => {

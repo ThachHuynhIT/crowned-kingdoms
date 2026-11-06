@@ -39,14 +39,19 @@ describe('neighbours', () => {
 });
 
 describe('initialPlots', () => {
-  it('opens the inner 3x3 and holds no buildings', () => {
+  it('opens the throne plot (2) and the inner 3x3, all empty', () => {
     const plots = initialPlots();
     expect(plots).toHaveLength(25);
-    expect(plots.filter((p) => p.unlocked)).toHaveLength(9);
-    for (const i of [6, 7, 8, 11, 12, 13, 16, 17, 18]) expect(plots[i]!.unlocked).toBe(true);
-    expect(plots[0]!.unlocked).toBe(false);
-    expect(plots[24]!.unlocked).toBe(false);
+    expect(THRONE_PLOT).toBe(2);
+    const open = plots.flatMap((p, i) => (p.unlocked ? [i] : []));
+    expect(open).toEqual([2, 6, 7, 8, 11, 12, 13, 16, 17, 18]);
     expect(plots.every((p) => p.building === null)).toBe(true);
+  });
+
+  it('gives the throne three neighbours, only plot 7 open at the start', () => {
+    expect(neighbours(THRONE_PLOT)).toEqual([3, 7, 1]);
+    const plots = initialPlots();
+    expect(neighbours(THRONE_PLOT).filter((n) => plots[n]!.unlocked)).toEqual([7]);
   });
 });
 
@@ -55,9 +60,10 @@ describe('checkPlay troop', () => {
   const at = (plot: number) => checkPlay(plots, troop, { kind: 'plot', plot });
   it('applies plot rules', () => {
     expect(at(0)).toBe('locked');
-    expect(at(12)).toBe('throne');
+    expect(at(THRONE_PLOT)).toBe('throne');
     expect(at(7)).toBe('occupied');
     expect(at(6)).toBeNull();
+    expect(at(12)).toBeNull(); // the board centre is an ordinary building plot now
     expect(at(99)).toBe('badTarget');
     expect(checkPlay(plots, troop, { kind: 'none' })).toBe('badTarget');
   });
@@ -98,11 +104,11 @@ describe('checkPlay buildingThenPlot (move)', () => {
   const two = (first: number, second: number) =>
     checkPlay(plots, move, { kind: 'two', first, second });
   it('applies source and destination rules', () => {
-    expect(two(12, 6)).toBe('throne');
+    expect(two(THRONE_PLOT, 6)).toBe('throne');
     expect(two(6, 8)).toBe('noBuilding');
     expect(two(0, 6)).toBe('locked');
     expect(two(7, 0)).toBe('locked');
-    expect(two(7, 12)).toBe('throne');
+    expect(two(7, THRONE_PLOT)).toBe('throne');
     expect(two(7, 7)).toBe('badTarget');
     expect(two(7, 6)).toBeNull();
   });
@@ -131,13 +137,13 @@ describe('targetCount / checkTargetStep', () => {
   it('checks the first pick of a two-target card against any second plot', () => {
     expect(checkTargetStep(plots, move, [], 7)).toBeNull();
     expect(checkTargetStep(plots, move, [], 6)).toBe('noBuilding');
-    expect(checkTargetStep(plots, move, [], 12)).toBe('throne');
+    expect(checkTargetStep(plots, move, [], THRONE_PLOT)).toBe('throne');
     expect(checkTargetStep(plots, move, [], 0)).toBe('locked');
   });
   it('checks the second pick against the first', () => {
     expect(checkTargetStep(plots, move, [7], 6)).toBeNull();
     expect(checkTargetStep(plots, move, [7], 7)).toBe('badTarget');
-    expect(checkTargetStep(plots, move, [7], 12)).toBe('throne');
+    expect(checkTargetStep(plots, move, [7], THRONE_PLOT)).toBe('throne');
     expect(checkTargetStep(plots, move, [7], 0)).toBe('locked');
   });
   it('reports badTarget for a source with nowhere to go', () => {

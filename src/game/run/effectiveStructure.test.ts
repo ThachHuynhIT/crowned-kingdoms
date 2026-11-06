@@ -4,8 +4,9 @@ import { CONTENT } from '../cards/registry';
 import { runState, withBuilding } from '../testing/fixtures';
 import { attackStats, buildBattleSetup, structureFor } from './battleSetup';
 import type { RunState } from './state';
+import { THRONE_PLOT } from './board';
 
-const THRONE = 12;
+const THRONE = THRONE_PLOT;
 const withDecree = (s: RunState, id: DecreeId): RunState => ({ ...s, decrees: [...s.decrees, id] });
 const tower = (level: 1 | 2 | 3 | 4 | 5 = 5): RunState =>
   withBuilding(runState(), 6, 'neutral_archer_tower', level);
