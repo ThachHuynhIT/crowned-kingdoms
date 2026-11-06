@@ -47,7 +47,7 @@ def main() -> None:
     draw = ImageDraw.Draw(sheet)
     title, label = font(30), font(20)
 
-    draw.text((30, 20), 'Mẫu isometric 2:1, bản 2 — chờ chủ dự án duyệt (06/11/2026)', fill=INK, font=title)
+    draw.text((30, 20), 'Mẫu isometric 2:1, bản 3 (sửa mái) — chờ chủ dự án duyệt (06/11/2026)', fill=INK, font=title)
 
     # Row 1: what the game uses now (front view, 45 degrees)
     draw.text((30, 80), 'Hiện tại (chính diện 45°)', fill=INK, font=label)

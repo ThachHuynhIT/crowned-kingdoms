@@ -83,6 +83,8 @@ ISO_DIR = 'docs/art-review/iso-board'
 # The sample gate of 2026-11-06: one building and one ground tile, approved before anything else is drawn.
 ISO_SAMPLES = [
     # v2 (owner feedback 2026-11-06): main door on the RIGHT wall, house in the middle of its plot.
+    # v3 (owner feedback 2026-11-06): the back-right roof corner rose above the front roof; the roof must sit
+    # squarely on the walls with every eave parallel to the wall top below it.
     ('sample-building', 'Đội Thợ Gặt (the reapers\' farmhouse barn, a troop building of the Wheat king), seen in 2:1 isometric',
      'The same building as the attached approved reference, redrawn in isometric: a farmhouse barn with a clay-tile '
      'roof seen from above, cream plaster and dark timber walls, a hayloft window. The MAIN DOOR (big double wooden '
@@ -90,6 +92,12 @@ ISO_SAMPLES = [
      'left wall has only a window and a big sickle hung on it. Wheat sheaves, grain baskets, rakes and sacks stand '
      'beside the door on the right wall. No wooden deck or platform under the house: the walls stand directly on '
      'the ground. The house stands in the MIDDLE of its square plot; its footprint is one small diamond. '
+     'ROOF GEOMETRY (most important): a simple gable roof whose ridge runs along the left-right diagonal axis, '
+     'sitting squarely on top of the walls. All four eave corners are at the SAME height: the right-hand eave runs '
+     'exactly parallel to the top of the right wall below it and the left-hand eave exactly parallel to the top of '
+     'the left wall, both at the true 2:1 slope. The left and right eave corners are on the same screen row. The '
+     'back-right part of the roof must NOT rise higher than the front part; no eave line is drawn flat. Gable end '
+     'triangle on the right wall above the door, a hayloft window in that gable. '
      'Theme: farm kingdom, warm bright wood, golden straw, clay tiles.'),
     ('sample-plot', 'one open farm plot of the Wheat king, a single flat 2:1 isometric ground tile',
      'A diamond of freshly tilled brown soil in a few diagonal furrows, framed by a thin rim of short grass and '

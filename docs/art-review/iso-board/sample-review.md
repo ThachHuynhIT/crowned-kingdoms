@@ -4,7 +4,8 @@ Spec: `docs/superpowers/specs/2026-11-06-iso-board-redesign-design.md` §4. Quy 
 
 | Mẫu | Nguồn | Prompt | Trạng thái |
 |---|---|---|---|
-| Công trình: Đội Thợ Gặt, isometric — bản 2 | `sample-building/source.png` (1024×1024, nền đen) | `sample-building/prompt.md` | **Chờ chủ dự án duyệt** |
+| Công trình: Đội Thợ Gặt, isometric — bản 3 | `sample-building/source.png` (1024×1024, nền đen) | `sample-building/prompt.md` | **Chờ chủ dự án duyệt** |
+| ↳ bản 2 (góc mái sau bên phải bị nâng cao hơn mái trước) | `sample-building/v2-source.png` | `sample-building/v2-prompt.md` | Chủ dự án yêu cầu sửa |
 | ↳ bản 1 (cửa bên trái, có bệ gỗ) | `sample-building/v1-source.png` | `sample-building/v1-prompt.md` | Chủ dự án yêu cầu sửa |
 | Ô đất mở của Lúa Mì, isometric | `sample-plot/source.png` (1024×1024, nền đen) | `sample-plot/prompt.md` | **Chờ chủ dự án duyệt** (chưa có góp ý) |
 | Ô đã xây (sân lát đá), isometric | `sample-plot-built/source.png` (1024×1024, nền đen) | `sample-plot-built/prompt.md` | **Chờ chủ dự án duyệt** |
@@ -23,3 +24,9 @@ Spec: `docs/superpowers/specs/2026-11-06-iso-board-redesign-design.md` §4. Quy 
   - Bản 1 có bệ gỗ dưới chân và tường trái chưa sáng hơn hẳn tường phải. Bản 2 đã bỏ bệ gỗ.
   - Bản 2 nên lưu ý: mái đổi sang mái bốn phía và không còn cửa sổ gác xép như bản 1.
 - **Chưa duyệt thì không làm:** phép chiếu và renderer (Task 9–10), vẽ lại cả bộ Lúa Mì (Task 11), và chưa đăng ký `assets.manifest.yml` / `CREDITS.md`.
+
+**Góp ý về bản 2 (06/11/2026):** góc mái sau bên phải cao hơn phần mái trước, không đúng góc isometric. Bản 3 đã sửa: mái ngồi đều trên tường, diềm mái song song với đỉnh tường, góc mái trái và phải cao ngang nhau. Quy tắc này đã ghi vào ART_STYLE (gạch đầu dòng "Mái đúng trục" và mục kiểm).
+
+**Claude tự kiểm bản 3:**
+- Đạt: góc diềm mái trái (y ≈ 440) và phải (y ≈ 450) gần ngang nhau; sống mái chạy theo trục chéo; cửa ở tường phải, có cửa sổ gác xép ở đầu hồi.
+- Còn lệch: tường phải dốc khoảng 3:1, tường trái khoảng 2,2:1. Nghĩa là tường phải thoải hơn chuẩn 2:1; có thể nắn lại khi làm sạch sprite native hoặc vẽ lại.
