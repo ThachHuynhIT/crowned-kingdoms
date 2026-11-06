@@ -84,5 +84,4 @@ Việc G3e khác (giữ nguyên): biểu tượng UI chung (12 mẫu chờ duy�
 PR #13 (nhánh `iso-board-redesign`) đã xong P1 (ô 64 px, Ngai hàng sau, khu tập kết, một đường) và P2 (zoom 1×–3×, kéo bản đồ). Với P3:
 
 - ART_STYLE có thêm mục "Isometric (trục đo 2.5D) cho sprite thế giới" và khối "Prompt isometric dùng lại". Tranh thẻ vẫn theo khối chính diện 45°.
-- Hai mẫu (nhà Đội Thợ Gặt và ô đất mở) nằm ở `docs/art-review/iso-board/`, đang **chờ chủ dự án duyệt**. Xem `sample-review.md` và `sample-comparison.png`.
-- Chưa duyệt thì không làm renderer isometric và không vẽ cả bộ.
+- Ba mẫu ở `docs/art-review/iso-board/` (nhà Thợ Gặt bản 3, ô trống bản 2, ô lát đá bản 2) **đã được chủ dự án duyệt ngày 06/11/2026** và đã chép vào `style-references/`. Bước tiếp theo là phép chiếu và renderer isometric (Task 9–10), rồi vẽ lại bộ Lúa Mì (Task 11).
