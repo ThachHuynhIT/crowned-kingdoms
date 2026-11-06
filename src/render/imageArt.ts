@@ -59,6 +59,33 @@ export const PLOT_STATES = ['open', 'locked', 'throne', 'built'] as const;
 /** The isometric mountain cliff segment (approved 2026-11-06, foot sheared to 2:1), tiled along the north edge. */
 export const WALL_FILE = 'iso/wall_cliff';
 
+/**
+ * The wild objects of `docs/art-review/g3e/batch-06-wilds` cut by `docs/art-review/iso-board/wilds/make_wilds.py`
+ * (spec 2026-11-06 §5): tall ones stand outside the field, low ones inside it; `radius` is their world footprint.
+ * Only the ids in `DECOR_APPROVED` (each approved by the owner) are loaded and drawn.
+ */
+export const DECOR_CATALOG: readonly { id: string; tall: boolean; radius: number }[] = [
+  { id: 'tree_pine_dark', tall: true, radius: 18 },
+  { id: 'tree_pine_light', tall: true, radius: 18 },
+  { id: 'tree_oak', tall: true, radius: 24 },
+  { id: 'tree_autumn', tall: true, radius: 24 },
+  { id: 'mountain_snow', tall: true, radius: 32 },
+  { id: 'cliff_mossy', tall: true, radius: 30 },
+  { id: 'boulders_big', tall: true, radius: 32 },
+  { id: 'bush_green', tall: false, radius: 10 },
+  { id: 'bush_berry', tall: false, radius: 10 },
+  { id: 'bush_dry', tall: false, radius: 10 },
+  { id: 'rock_large', tall: false, radius: 13 },
+  { id: 'rock_medium', tall: false, radius: 9 },
+  { id: 'rock_small', tall: false, radius: 7 },
+  { id: 'stump', tall: false, radius: 10 },
+  { id: 'log', tall: false, radius: 16 },
+];
+/** Owner-approved wild objects (none yet: waiting for the per-object review). */
+export const DECOR_APPROVED: readonly string[] = [];
+/** File of an approved wild object. */
+export const decorFile = (id: string): string => `iso/wilds/${id}`;
+
 /** Every PNG of the set (file name without `.png`). */
 export const IMAGE_ART_FILES: readonly string[] = [
   ...Object.values(IMAGE_UNITS).flatMap((prefix) => [
@@ -69,6 +96,7 @@ export const IMAGE_ART_FILES: readonly string[] = [
   ...Object.values(IMAGE_PLOTS).flatMap((prefix) => PLOT_STATES.map((s) => `${prefix}_${s}`)),
   ...GRASS_FILES,
   WALL_FILE,
+  ...DECOR_APPROVED.map(decorFile),
 ];
 
 /** Pose index of each animation frame (the sheets are drawn idle0 idle1 walk0 walk1 attack0 attack1). */

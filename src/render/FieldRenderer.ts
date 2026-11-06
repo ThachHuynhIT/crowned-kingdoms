@@ -2,6 +2,7 @@ import type Phaser from 'phaser';
 import { BATTLE } from '../data/battle';
 import type { KingId } from '../data/types';
 import { project } from '../core/iso';
+import { DecorationRenderer } from './DecorationRenderer';
 import { IsoWallRenderer } from './IsoWallRenderer';
 import { ensureFieldTexture, ensureGroundTexture, fieldTextureScale, groundTextureScale } from './atlas';
 
@@ -18,6 +19,7 @@ export class FieldRenderer {
   private image: Phaser.GameObjects.Image | null;
   private ground: Phaser.GameObjects.TileSprite | null;
   private wall: IsoWallRenderer | null;
+  private decor: DecorationRenderer | null;
 
   constructor(scene: Phaser.Scene, seed: number, kingId?: KingId) {
     this.textures = scene.textures;
@@ -36,6 +38,7 @@ export class FieldRenderer {
     // Isometric cliff drawn in code until the isometric wall art (Task 11); the king skin waits for it.
     void kingId;
     this.wall = new IsoWallRenderer(scene, seed);
+    this.decor = new DecorationRenderer(scene, seed);
   }
 
   /** Destroys the images, then removes the `field-<seed>` texture (nothing else uses it). */
@@ -43,6 +46,8 @@ export class FieldRenderer {
     if (this.image === null) return;
     this.wall?.destroy();
     this.wall = null;
+    this.decor?.destroy();
+    this.decor = null;
     this.ground?.destroy();
     this.ground = null;
     this.image.destroy();

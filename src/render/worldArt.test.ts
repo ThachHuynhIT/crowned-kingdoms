@@ -150,6 +150,38 @@ describe('field art', () => {
     }
   });
 
+  it('runs a river from the west edge to the south edge, never on the board or the road (P4)', () => {
+    const WATER = FIELD_TERRAINS.indexOf('water');
+    const PATH = FIELD_TERRAINS.indexOf('path');
+    for (let seed = 1; seed <= 12; seed++) {
+      const f = generateField(seed);
+      const at = (col: number, row: number): number => f[row * 48 + col]!;
+      // water reaches the west edge and the south edge
+      expect(Array.from({ length: 48 }, (_, r) => at(0, r)).includes(WATER), `seed ${seed} west`).toBe(true);
+      expect(Array.from({ length: 48 }, (_, c) => at(c, 47)).includes(WATER), `seed ${seed} south`).toBe(true);
+      // and the water cells connect them (4-neighbour flood from the west edge reaches the south edge)
+      const seen = new Set<number>();
+      const queue: number[] = [];
+      for (let r = 0; r < 48; r++) if (at(0, r) === WATER) queue.push(r * 48);
+      while (queue.length) {
+        const i = queue.pop()!;
+        if (seen.has(i)) continue;
+        seen.add(i);
+        const c = i % 48;
+        const r = (i - c) / 48;
+        for (const [dc, dr] of [[1, 0], [-1, 0], [0, 1], [0, -1]] as const) {
+          const nc = c + dc;
+          const nr = r + dr;
+          if (nc >= 0 && nc < 48 && nr >= 0 && nr < 48 && at(nc, nr) === WATER) queue.push(nr * 48 + nc);
+        }
+      }
+      expect([...seen].some((i) => i >= 47 * 48), `seed ${seed} connected`).toBe(true);
+      // never on the board, and the road stays a road
+      for (let r = 14; r <= 33; r++) for (let c = 14; c <= 33; c++) expect(at(c, r)).not.toBe(WATER);
+      for (let r = 34; r < 48; r++) for (const c of [23, 24]) expect(at(c, r)).toBe(PATH);
+    }
+  });
+
   it('is deterministic per seed and varies between seeds', () => {
     expect(generateField(7)).toEqual(generateField(7));
     const base = generateField(1);

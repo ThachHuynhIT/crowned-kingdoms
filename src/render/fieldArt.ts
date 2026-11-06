@@ -23,6 +23,13 @@ const BOARD_LAST = (BOARD_ORIGIN + BOARD_SIDE * PLOT) / TILE - 1;
 /** The single road: the two middle columns, from the board's south edge to the field's (spec 06/11/2026, G). */
 const ROAD_COLS = [N / 2 - 1, N / 2] as const;
 const onRoad = (col: number, row: number): boolean => row > BOARD_LAST && (col === ROAD_COLS[0] || col === ROAD_COLS[1]);
+/**
+ * The river: it starts at the west edge on row `row0` and its centre slides to column `col1` at the south
+ * edge, `half` cells either side of the centre. At row 33 (the board's last row) the centre is at most
+ * col1 × 13/28 + 2 ≈ 10.4, so with half = 1 it stays west of the board (col 14); at the south edge it is
+ * at most col1 + 2 + 2 = 20, west of the road (col 23).
+ */
+const RIVER = { row0: 20, col1: 16, half: 1 } as const;
 
 /** N×N terrain indices (row-major). The board area is always grass or flowers. */
 export const generateField = (seed: number): Uint8Array => {
@@ -34,8 +41,26 @@ export const generateField = (seed: number): Uint8Array => {
       if (fractalNoise2D(seed, col, row, { octaves: 2, frequency: 0.35, persistence: 0.5 }) > 0.72)
         f[at(col, row)] = FLOWERS;
 
-  // A pond in one of the four outer corners, ringed with sand (never on the road).
-  const pcx = valueNoise2D(seed, 1.5, 2.5) < 0.5 ? 6 : N - 7;
+  // A river (P4, spec 2026-11-06 §5): from the west edge down to the south edge through the south-west
+  // corner, west of the road and clear of the board; it wanders with the seed, sand on its banks. It is
+  // only ground art: nothing in the battle collides with it.
+  for (let row = 0; row < N; row++) {
+    const t = (row - RIVER.row0) / (N - 1 - RIVER.row0);
+    if (t < 0) continue;
+    const wobble = (valueNoise2D(seed, 3.5, row * 0.18) - 0.5) * 4;
+    const centre = RIVER.col1 * t + wobble;
+    for (let col = 0; col < N; col++) {
+      const d = Math.abs(col - centre);
+      if (d <= RIVER.half) f[at(col, row)] = WATER;
+      else if (d <= RIVER.half + 1 && f[at(col, row)] !== WATER) f[at(col, row)] = SAND;
+    }
+  }
+  // The river enters at the west edge: a short bend joining the edge to its first row.
+  for (let col = 0; col <= 2; col++)
+    for (let row = RIVER.row0 - 1; row <= RIVER.row0 + 1; row++) f[at(col, row)] = WATER;
+
+  // A pond in one of the two east corners (the river owns the west), ringed with sand (never on the road).
+  const pcx = N - 7;
   const pcy = valueNoise2D(seed, 4.5, 7.5) < 0.5 ? 6 : N - 7;
   for (let row = 0; row < N; row++)
     for (let col = 0; col < N; col++) {
@@ -138,3 +163,11 @@ export const paintField = (seed: number, grass?: readonly PixelCanvas[]): PixelC
 
 /** A plain, fully painted grass tile; tiled under the field so the ground fills the whole screen. */
 export const paintGroundTile = (): PixelCanvas => paintFieldTile(0, 15, 0);
+
+/** Terrain index (FIELD_TERRAINS) under world point (x, y) of a `generateField` grid, null off the field. */
+export const fieldTerrainAt = (field: Uint8Array, x: number, y: number): number | null => {
+  const col = Math.floor(x / TILE);
+  const row = Math.floor(y / TILE);
+  if (col < 0 || row < 0 || col >= N || row >= N) return null;
+  return field[row * N + col]!;
+};
