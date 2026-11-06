@@ -79,7 +79,7 @@ describe('battles deploy into the boxes', () => {
     }
   });
 
-  it('puts every structure at its west-shifted foot, clear of its box', () => {
+  it('puts every structure at its foot (the plot centre), clear of its box', () => {
     const w = createBattle(battleSetup({ structures: [structure(7)] }));
     const id = Array.from({ length: w.count }, (_, i) => i).find((i) => w.kind[i] === KIND_STRUCTURE)!;
     expect([w.x[id], w.y[id]]).toEqual([plotCenter(7).x + BUILDING_FOOT_OFFSET.x, plotCenter(7).y]);

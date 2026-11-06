@@ -425,7 +425,7 @@ export const plotCenter = (plot: number): { x: number; y: number } => {
 
 /**
  * Chân (vị trí) của công trình hay Ngai đứng trên ô `plot`: tâm ô lệch `BUILDING_FOOT_OFFSET` về phía
- * tây, để nửa đông của ô là khu tập kết lính (spec 06/11/2026). Renderer neo sprite đúng điểm này.
+ * (hiện là 0: nhà đứng giữa ô, chủ dự án chốt 06/11/2026). Renderer neo sprite đúng điểm này.
  */
 export const structureFoot = (plot: number): { x: number; y: number } => {
   const c = plotCenter(plot);

@@ -70,7 +70,12 @@ class IsoSamplePromptGateTest(unittest.TestCase):
         self.assertIn('STRICT straight-on FRONT VIEW', mp.style_template())
 
     def test_sample_prompts_read_the_doc_attach_the_reference_and_say_so(self):
-        self.assertEqual([s[0] for s in mp.ISO_SAMPLES], ['sample-building', 'sample-plot'])
+        self.assertEqual([s[0] for s in mp.ISO_SAMPLES], ['sample-building', 'sample-plot', 'sample-plot-built'])
+        building = dict((i, d) for i, _, d in mp.ISO_SAMPLES)['sample-building']
+        self.assertIn('MAIN DOOR', building)
+        self.assertIn('RIGHT wall', building)
+        self.assertIn('MIDDLE of its square plot', building)
+        self.assertIn('PAVED WITH STONE', dict((i, d) for i, _, d in mp.ISO_SAMPLES)['sample-plot-built'])
         for ident, name, desc in mp.ISO_SAMPLES:
             p = mp.build_iso_prompt(f'x/{ident}/source.png', name, desc)
             self.assertIn('docs/ART_STYLE.md', p, ident)
@@ -81,11 +86,15 @@ class IsoSamplePromptGateTest(unittest.TestCase):
             self.assertIn(name, p, ident)
             self.assertNotIn('[subject]', p, ident)
 
-    def test_sample_mode_writes_exactly_the_two_samples_and_attaches_the_reference(self):
+    def test_sample_mode_writes_only_the_samples_and_attaches_the_reference(self):
         mp.main('iso-sample')
         runner = (ROOT / '.superpowers/b-iso-sample.sh').read_text(encoding='utf-8')
+        self.assertEqual(runner.count('codex exec'), 3)
+        self.assertEqual(runner.count(f'-i {mp.REFERENCE}'), 3)
+        mp.main('iso-sample', ['sample-building', 'sample-plot-built'])
+        runner = (ROOT / '.superpowers/b-iso-sample.sh').read_text(encoding='utf-8')
         self.assertEqual(runner.count('codex exec'), 2)
-        self.assertEqual(runner.count(f'-i {mp.REFERENCE}'), 2)
+        self.assertNotIn('sample-plot/prompt.md', runner)
         for ident, _, _ in mp.ISO_SAMPLES:
             self.assertTrue((ROOT / 'docs/art-review/iso-board' / ident / 'prompt.md').exists(), ident)
 

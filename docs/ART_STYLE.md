@@ -13,8 +13,8 @@ Từ 06/11/2026 (spec [bàn cờ isometric](superpowers/specs/2026-11-06-iso-boa
 | Thứ                        | Kích thước             | Ghi chú                                                                        |
 | -------------------------- | ---------------------- | ------------------------------------------------------------------------------ |
 | Tile cánh đồng             | 16×16                  | Dual-grid (cỏ < cỏ hoa < đường đất < cát; ao là nước)                          |
-| Ô bàn cờ                   | 64×64 world (art 32×32 phóng ×2 nguyên) | Ô mở trống (đất xới viền cỏ), ô khoá (cỏ rậm + cọc rào + biển giá), bệ Ngai đá; nửa đông của ô là khu tập kết lính. Sau P3: hình thoi 2:1 |
-| Công trình                 | 32×40                  | Chân lệch 14 px về phía tây ô, sprite neo dưới chân 16 px (y-sort)             |
+| Ô bàn cờ                   | 64×64 world (art 32×32 phóng ×2 nguyên) | Ô mở trống (đất xới viền cỏ), ô khoá (cỏ rậm + cọc rào + biển giá), bệ Ngai đá; ô đã xây nhà là sân lát đá; dải trước cửa (phía đông) là khu tập kết lính. Sau P3: hình thoi 2:1 |
+| Công trình                 | 32×40                  | Đứng giữa ô, sprite neo dưới chân 16 px (y-sort); cửa chính ở mặt đông          |
 | Ngai                       | 32×48                  |                                                                                |
 | Lính nhỏ chibi             | 16×16                  | Dân quân, sói, nhện, xương…; đầu ≈ 40% chiều cao                               |
 | Lính cao                   | 16×24                  | Người cầm vũ khí dài, pháp sư, kỵ binh                                         |
@@ -78,7 +78,7 @@ Khung thẻ theo độ hiếm (thêm vào texture `ui` từ G1): thường = vi�
 Từ 06/11/2026 **thế giới** (mặt đất, ô bàn cờ, công trình, tường núi, vật trang trí) chuyển sang **isometric 2:1** (chủ dự án chốt, spec [bàn cờ isometric](superpowers/specs/2026-11-06-iso-board-redesign-design.md)). Mô phỏng trận vẫn tính trên lưới vuông; chỉ cách vẽ đổi. **Cổng duyệt:** trước hết chỉ vẽ **một công trình mẫu + một ô đất mẫu** (`docs/art-review/iso-board/`), đặt cạnh bản hiện tại để chủ dự án duyệt; chưa duyệt thì không vẽ cả bộ và không nối vào game. Sau khi duyệt, ảnh mẫu thành tham chiếu góc nhìn cùng loại và được ghi ngày duyệt ở đây. Lính chính diện hiện tại dùng tạm; tranh thẻ và chân dung giữ quy chuẩn riêng của chúng.
 
 - **Mặt đất:** mỗi ô vuông world hiện thành **hình thoi rộng gấp đôi cao (2:1)**: cạnh thoi là bậc pixel "2 ngang – 1 dọc", không răng cưa lộn xộn. Ô đất có mép dày vài pixel ở hai cạnh phía trước (tây-nam, đông-nam) để thấy độ dày.
-- **Công trình:** thấy **hai mặt tường** (trái hướng tây-nam, phải hướng đông-nam) và **mái nhìn từ trên xuống**; đường ngang của nhà chạy theo hai trục chéo 2:1, cạnh đứng vẫn thẳng đứng. Chân nhà là một hình thoi 2:1 nằm gọn trong **nửa tây** của ô (nửa đông là khu tập kết lính). Ánh sáng trên-trái: mặt tây-nam sáng hơn mặt đông-nam.
+- **Công trình:** thấy **hai mặt tường** (trái hướng tây-nam, phải hướng đông-nam) và **mái nhìn từ trên xuống**; đường ngang của nhà chạy theo hai trục chéo 2:1, cạnh đứng vẫn thẳng đứng. Chân nhà là một hình thoi 2:1 nằm **giữa ô**; **cửa chính ở mặt tường bên phải** (hướng đông-nam trên màn hình, hướng đông trong world), dải đất trước cửa là khu tập kết lính (chủ dự án chốt 06/11/2026). Ô đã xây nhà là **sân lát đá cả ô**, giữ viền cỏ và cọc góc như ô trống. Ánh sáng trên-trái: mặt tây-nam sáng hơn mặt đông-nam.
 - **Không:** không nhìn chính diện, không phối cảnh (đường song song vẫn song song), không xoay lệch khỏi hai trục 2:1, không đổ bóng mềm.
 - **Giữ từ mẫu Thợ Gặt:** chất liệu, bảng màu ấm, cỡ cụm pixel, viền màu tối của vật liệu, mức chi tiết. Ảnh mẫu Thợ Gặt chỉ dùng làm tham chiếu **phong cách**, không lấy góc nhìn của nó.
 

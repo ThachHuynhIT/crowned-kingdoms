@@ -1,6 +1,6 @@
 /**
  * Khu tập kết lính của mỗi ô (spec 06/11/2026, quyết định C): lính của một công trình xuất hiện và
- * đứng sẵn trong `DEPLOY_BOX` ở nửa đông của ô, không còn xếp vòng quanh tâm ô. Lưới xác định theo
+ * đứng sẵn trong `DEPLOY_BOX`, dải đất trước cửa nhà ở phía đông ô, không còn xếp vòng quanh tâm ô. Lưới xác định theo
  * hàng rồi cột; đông quá thì các ô lưới nhỏ lại và thân có thể chồng nhau (separation xử lý tiếp).
  * Chỉ dùng + − × ÷, Math.sqrt/ceil/floor.
  */

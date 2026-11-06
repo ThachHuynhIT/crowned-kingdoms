@@ -82,19 +82,30 @@ ISO_DIR = 'docs/art-review/iso-board'
 
 # The sample gate of 2026-11-06: one building and one ground tile, approved before anything else is drawn.
 ISO_SAMPLES = [
+    # v2 (owner feedback 2026-11-06): main door on the RIGHT wall, house in the middle of its plot.
     ('sample-building', 'Đội Thợ Gặt (the reapers\' farmhouse barn, a troop building of the Wheat king), seen in 2:1 isometric',
      'The same building as the attached approved reference, redrawn in isometric: a farmhouse barn with a clay-tile '
-     'roof seen from above, cream plaster and dark timber walls, a big sickle hung beside the door on the left '
-     '(south-west) wall, wheat sheaves, grain baskets, rakes and sacks around the door, a hayloft window. Its '
-     'footprint is one small diamond. Theme: farm kingdom, warm bright wood, golden straw, clay tiles.'),
+     'roof seen from above, cream plaster and dark timber walls, a hayloft window. The MAIN DOOR (big double wooden '
+     'door with a small stone step) is on the RIGHT wall (the wall facing south-east, on the right of the image); the '
+     'left wall has only a window and a big sickle hung on it. Wheat sheaves, grain baskets, rakes and sacks stand '
+     'beside the door on the right wall. No wooden deck or platform under the house: the walls stand directly on '
+     'the ground. The house stands in the MIDDLE of its square plot; its footprint is one small diamond. '
+     'Theme: farm kingdom, warm bright wood, golden straw, clay tiles.'),
     ('sample-plot', 'one open farm plot of the Wheat king, a single flat 2:1 isometric ground tile',
      'A diamond of freshly tilled brown soil in a few diagonal furrows, framed by a thin rim of short grass and '
      'four small wooden fence posts at the diamond corners; the two front edges show a few pixels of earth '
      'thickness. Flat ground only: no building, no crops standing tall. Theme: farm kingdom, warm earth and grass.'),
+    # added 2026-11-06 (owner: a plot with a building on it is paved with stone)
+    ('sample-plot-built', 'one built plot of the Wheat king (the ground under a building), a single flat 2:1 isometric ground tile',
+     'The SAME diamond tile as an open farm plot (same size, same thin rim of short grass, same four small wooden '
+     'fence posts at the diamond corners, same few pixels of earth thickness on the two front edges), but the '
+     'whole inside is a COURTYARD PAVED WITH STONE: warm grey and sandy flagstones and a few bricks laid along the '
+     'two diagonal axes, small gravel in the joints, a little moss. Flat ground only: no building, no props. '
+     'Theme: farm kingdom, warm stone, earth and grass.'),
 ]
 
 ISO_FOOTER = """
-YÊU CẦU SẢN XUẤT (ghi đè phần "transparent background" ở trên): ảnh 1024×1024, nền ĐEN PHẲNG #000000 hoàn toàn (không quầng sáng, không bóng đổ lên nền, không nền đất/cỏ ngoài chính vật thể). MỘT vật thể duy nhất ở giữa ảnh. Công trình: hình thoi chân rộng khoảng 440 px, đáy hình thoi chân ở khoảng y = 900. Ô đất: hình thoi rộng khoảng 900 px, cao khoảng 450 px (đúng 2:1), nằm giữa ảnh. "Pixel" lớn khoảng 7×7 điểm ảnh, cạnh thoi là bậc pixel 2 ngang – 1 dọc.
+YÊU CẦU SẢN XUẤT (ghi đè phần "transparent background" ở trên): ảnh 1024×1024, nền ĐEN PHẲNG #000000 hoàn toàn (không quầng sáng, không bóng đổ lên nền, không nền đất/cỏ ngoài chính vật thể). MỘT vật thể duy nhất ở giữa ảnh. Công trình: hình thoi chân rộng khoảng 440 px, đáy hình thoi chân ở khoảng y = 900, đứng thẳng trên nền đen (không bệ, không sàn gỗ). Ô đất: hình thoi rộng khoảng 900 px, cao khoảng 450 px (đúng 2:1), nằm giữa ảnh. "Pixel" lớn khoảng 7×7 điểm ảnh, cạnh thoi là bậc pixel 2 ngang – 1 dọc.
 Khi xong, in đường dẫn file đã lưu và kích thước ảnh.
 """
 
@@ -111,10 +122,12 @@ def build_iso_prompt(out, name, desc, template=None):
     ) + body + ISO_FOOTER
 
 
-def main_iso_sample():
+def main_iso_sample(only=None):
     template = iso_template()
     runner = ['#!/bin/bash', f'cd "{ROOT.as_posix()}"']
     for ident, name, desc in ISO_SAMPLES:
+        if only and ident not in only:
+            continue
         d = ROOT / ISO_DIR / ident
         d.mkdir(parents=True, exist_ok=True)
         out = (d / 'source.png').relative_to(ROOT).as_posix()
@@ -138,7 +151,7 @@ def build_prompt(out, name, desc, theme, template=None):
 
 def main(group, only=None):
     if group == 'iso-sample':
-        main_iso_sample()
+        main_iso_sample(only)
         return
     cfg = GROUPS[group]
     template = style_template()

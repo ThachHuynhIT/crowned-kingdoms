@@ -42,11 +42,12 @@ def font(size: int) -> ImageFont.ImageFont:
 def main() -> None:
     building = key_black(Image.open(D / 'sample-building/source.png'))
     plot = key_black(Image.open(D / 'sample-plot/source.png'))
+    built = key_black(Image.open(D / 'sample-plot-built/source.png'))
     sheet = Image.new('RGBA', (1500, 1300), BG)
     draw = ImageDraw.Draw(sheet)
     title, label = font(30), font(20)
 
-    draw.text((30, 20), 'Mẫu isometric 2:1 — chờ chủ dự án duyệt (06/11/2026)', fill=INK, font=title)
+    draw.text((30, 20), 'Mẫu isometric 2:1, bản 2 — chờ chủ dự án duyệt (06/11/2026)', fill=INK, font=title)
 
     # Row 1: what the game uses now (front view, 45 degrees)
     draw.text((30, 80), 'Hiện tại (chính diện 45°)', fill=INK, font=label)
@@ -63,27 +64,33 @@ def main() -> None:
     # Row 2: the isometric samples
     draw.text((30, 460), 'Mẫu isometric mới (ảnh nguồn thu nhỏ)', fill=INK, font=label)
     b2 = fit(building, h=300)
-    p2 = fit(plot, w=420)
     sheet.alpha_composite(b2, (30, 495))
-    draw.text((30, 805), 'Đội Thợ Gặt — isometric', fill=INK, font=label)
-    sheet.alpha_composite(p2, (30 + b2.width + 50, 495 + (300 - p2.height) // 2))
-    draw.text((30 + b2.width + 50, 805), 'Ô đất mở — isometric', fill=INK, font=label)
+    draw.text((30, 805), 'Thợ Gặt (cửa bên phải)', fill=INK, font=label)
+    x = 30 + b2.width + 40
+    for img, cap in ((plot, 'Ô đất mở'), (built, 'Ô đã xây (sân lát đá)')):
+        p2 = fit(img, w=400)
+        sheet.alpha_composite(p2, (x, 495 + (300 - p2.height) // 2))
+        draw.text((x, 805), cap, fill=INK, font=label)
+        x += 400 + 30
 
     # Row 3: a 3x3 board at zoom 3 — plot 64 world px -> diamond 192x96, building 32 world px wide -> 96 px
-    draw.text((30, 860), 'Thử ghép bàn 3×3 ở zoom 3 (nhà đứng nửa tây ô, nửa đông để lính)', fill=INK, font=label)
+    draw.text((30, 860), 'Thử ghép bàn 3×3 ở zoom 3 (nhà giữa ô lát đá, cửa bên phải, lính đứng trước cửa)', fill=INK, font=label)
     tw, th = 192, 96
     tile = fit(plot, w=tw)
+    paved = fit(built, w=tw)
     ox, top = 750, 930
     centre = lambda col, row: (ox + (col - row) * tw // 2, top + th // 2 + (col + row) * th // 2)
+    houses = ((1, 1), (0, 2), (2, 0))
     for row in range(3):
         for col in range(3):
             cx, cy = centre(col, row)
-            sheet.alpha_composite(tile, (cx - tile.width // 2, cy - th // 2))
+            t = paved if (col, row) in houses else tile
+            sheet.alpha_composite(t, (cx - t.width // 2, cy - th // 2))
     house = fit(building, w=96)
-    for col, row in ((1, 1), (0, 2), (2, 0)):
+    for col, row in houses:
         cx, cy = centre(col, row)
-        # foot 14 world px west of the plot centre: in 2:1 iso at zoom 3 that is (-21, -10) screen px
-        fx, fy = cx - 21, cy - 10 + 24
+        # house in the middle of the plot: its 32x32 world footprint's bottom corner is 8 iso px below the centre (x3)
+        fx, fy = cx, cy + 24
         sheet.alpha_composite(house, (fx - house.width // 2, fy - house.height))
 
     out = D / 'sample-comparison.png'

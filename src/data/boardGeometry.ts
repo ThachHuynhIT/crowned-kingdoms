@@ -19,13 +19,17 @@ export const WALL_Y = 176;
 export const cells = (n: number): number => n * PLOT;
 
 /**
- * Chân công trình (và Ngai) lệch khỏi tâm ô về phía tây world; nửa đông của ô là khu tập kết lính.
- * Nhà rộng 32 px nên thân ngang chiếm [−30, +2] quanh tâm ô.
+ * Chân công trình (và Ngai) đứng giữa ô (chủ dự án chốt 06/11/2026: "nhà đặt ở giữa ô đất").
+ * Nhà rộng 32 px nên thân ngang chiếm [−16, +16] quanh tâm ô.
  */
-export const BUILDING_FOOT_OFFSET = { x: -14, y: 0 } as const;
+export const BUILDING_FOOT_OFFSET = { x: 0, y: 0 } as const;
 
-/** Khu tập kết lính của một ô, quanh tâm ô (world px): x ∈ [x0, x1], y ∈ [y0, y1]. */
-export const DEPLOY_BOX = { x0: 4, x1: 28, y0: -24, y1: 24 } as const;
+/**
+ * Khu tập kết lính của một ô, quanh tâm ô (world px): x ∈ [x0, x1], y ∈ [y0, y1]. Là dải đất
+ * TRƯỚC CỬA nhà: cửa chính ở mặt tường hướng đông world (mặt phải khi vẽ isometric), nên dải nằm
+ * giữa mép đông của nhà (+16) và mép đông của ô (+32).
+ */
+export const DEPLOY_BOX = { x0: 18, x1: 30, y0: -24, y1: 24 } as const;
 
 /**
  * Các bảng số của spec gốc (§6, §7.3) viết cho ô 32 px. Mọi đại lượng px/tick (tốc độ lính, tốc độ

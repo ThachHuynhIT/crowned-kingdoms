@@ -48,7 +48,7 @@ export const BUILDING_FOOT_DY = 16;
 /** Ground layer just above the plots: the dirt deploy boxes. */
 const BOX_DEPTH = 1.5;
 
-/** Where a building on `plot` is drawn: its structure foot (west half of the plot), lowered by `BUILDING_FOOT_DY`. */
+/** Where a building on `plot` is drawn: its structure foot (the plot centre), lowered by `BUILDING_FOOT_DY`. */
 export const buildingFoot = (plot: number): { x: number; y: number } => {
   const f = structureFoot(plot);
   return { x: f.x, y: f.y + BUILDING_FOOT_DY };
