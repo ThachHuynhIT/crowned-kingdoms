@@ -99,14 +99,18 @@ ISO_SAMPLES = [
      'back-right part of the roof must NOT rise higher than the front part; no eave line is drawn flat. Gable end '
      'triangle on the right wall above the door, a hayloft window in that gable. '
      'Theme: farm kingdom, warm bright wood, golden straw, clay tiles.'),
-    ('sample-plot', 'one open farm plot of the Wheat king, a single flat 2:1 isometric ground tile',
-     'A diamond of freshly tilled brown soil in a few diagonal furrows, framed by a thin rim of short grass and '
-     'four small wooden fence posts at the diamond corners; the two front edges show a few pixels of earth '
-     'thickness. Flat ground only: no building, no crops standing tall. Theme: farm kingdom, warm earth and grass.'),
+    # v2 (owner feedback 2026-11-06): bare empty land, not a farm field; tiny low corner posts.
+    ('sample-plot', 'one open (empty) building plot of the Wheat king, a single flat 2:1 isometric ground tile',
+     'A diamond of BARE, EMPTY LAND waiting for a building: flat packed brown earth with a few sparse tufts of '
+     'short grass, a few small pebbles and faint patches of dry soil. It is NOT a farm field: NO furrows, NO tilled '
+     'rows, NO crops. A thin rim of short grass frames the diamond and the two front edges show a few pixels of '
+     'earth thickness. At each of the four diamond corners only a TINY, LOW wooden stake (a stub just a few pixels '
+     'tall, much smaller than in a fence) marks the corner without hiding the ground. Flat ground only: no building. '
+     'Theme: farm kingdom, warm earth and grass.'),
     # added 2026-11-06 (owner: a plot with a building on it is paved with stone)
     ('sample-plot-built', 'one built plot of the Wheat king (the ground under a building), a single flat 2:1 isometric ground tile',
-     'The SAME diamond tile as an open farm plot (same size, same thin rim of short grass, same four small wooden '
-     'fence posts at the diamond corners, same few pixels of earth thickness on the two front edges), but the '
+     'The SAME diamond tile as an open plot (same size, same thin rim of short grass, the same four TINY, LOW wooden '
+     'corner stakes only a few pixels tall, same few pixels of earth thickness on the two front edges), but the '
      'whole inside is a COURTYARD PAVED WITH STONE: warm grey and sandy flagstones and a few bricks laid along the '
      'two diagonal axes, small gravel in the joints, a little moss. Flat ground only: no building, no props. '
      'Theme: farm kingdom, warm stone, earth and grass.'),

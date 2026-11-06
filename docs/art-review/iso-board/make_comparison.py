@@ -47,7 +47,7 @@ def main() -> None:
     draw = ImageDraw.Draw(sheet)
     title, label = font(30), font(20)
 
-    draw.text((30, 20), 'Mẫu isometric 2:1, bản 3 (sửa mái) — chờ chủ dự án duyệt (06/11/2026)', fill=INK, font=title)
+    draw.text((30, 20), 'Mẫu isometric 2:1 — nhà bản 3, ô đất bản 2 — chờ chủ dự án duyệt (06/11/2026)', fill=INK, font=title)
 
     # Row 1: what the game uses now (front view, 45 degrees)
     draw.text((30, 80), 'Hiện tại (chính diện 45°)', fill=INK, font=label)
@@ -67,7 +67,7 @@ def main() -> None:
     sheet.alpha_composite(b2, (30, 495))
     draw.text((30, 805), 'Thợ Gặt (cửa bên phải)', fill=INK, font=label)
     x = 30 + b2.width + 40
-    for img, cap in ((plot, 'Ô đất mở'), (built, 'Ô đã xây (sân lát đá)')):
+    for img, cap in ((plot, 'Ô trống (đất trống)'), (built, 'Ô đã xây (sân lát đá)')):
         p2 = fit(img, w=400)
         sheet.alpha_composite(p2, (x, 495 + (300 - p2.height) // 2))
         draw.text((x, 805), cap, fill=INK, font=label)

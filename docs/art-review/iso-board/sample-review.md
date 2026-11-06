@@ -7,8 +7,10 @@ Spec: `docs/superpowers/specs/2026-11-06-iso-board-redesign-design.md` §4. Quy 
 | Công trình: Đội Thợ Gặt, isometric — bản 3 | `sample-building/source.png` (1024×1024, nền đen) | `sample-building/prompt.md` | **Chờ chủ dự án duyệt** |
 | ↳ bản 2 (góc mái sau bên phải bị nâng cao hơn mái trước) | `sample-building/v2-source.png` | `sample-building/v2-prompt.md` | Chủ dự án yêu cầu sửa |
 | ↳ bản 1 (cửa bên trái, có bệ gỗ) | `sample-building/v1-source.png` | `sample-building/v1-prompt.md` | Chủ dự án yêu cầu sửa |
-| Ô đất mở của Lúa Mì, isometric | `sample-plot/source.png` (1024×1024, nền đen) | `sample-plot/prompt.md` | **Chờ chủ dự án duyệt** (chưa có góp ý) |
-| Ô đã xây (sân lát đá), isometric | `sample-plot-built/source.png` (1024×1024, nền đen) | `sample-plot-built/prompt.md` | **Chờ chủ dự án duyệt** |
+| Ô trống (đất trống), isometric — bản 2 | `sample-plot/source.png` (1024×1024, nền đen) | `sample-plot/prompt.md` | **Chờ chủ dự án duyệt** |
+| ↳ bản 1 (ruộng có luống, cọc cao) | `sample-plot/v1-source.png` | `sample-plot/v1-prompt.md` | Chủ dự án yêu cầu sửa |
+| Ô đã xây (sân lát đá), isometric — bản 2 | `sample-plot-built/source.png` (1024×1024, nền đen) | `sample-plot-built/prompt.md` | **Chờ chủ dự án duyệt** |
+| ↳ bản 1 (cọc cao) | `sample-plot-built/v1-source.png` | `sample-plot-built/v1-prompt.md` | Chủ dự án yêu cầu sửa |
 
 **Góp ý của chủ dự án về bản 1 (06/11/2026)**, đã áp dụng trong bản 2 và trong code:
 
@@ -30,3 +32,6 @@ Spec: `docs/superpowers/specs/2026-11-06-iso-board-redesign-design.md` §4. Quy 
 **Claude tự kiểm bản 3:**
 - Đạt: góc diềm mái trái (y ≈ 440) và phải (y ≈ 450) gần ngang nhau; sống mái chạy theo trục chéo; cửa ở tường phải, có cửa sổ gác xép ở đầu hồi.
 - Còn lệch: tường phải dốc khoảng 3:1, tường trái khoảng 2,2:1. Nghĩa là tường phải thoải hơn chuẩn 2:1; có thể nắn lại khi làm sạch sprite native hoặc vẽ lại.
+
+**Góp ý về ô đất (06/11/2026):** cọc góc phải thấp và nhỏ; ô trống phải là một mảnh đất trống, không giống ruộng. Bản 2 đã sửa, và ART_STYLE đã ghi quy tắc này ở gạch đầu dòng "Mặt đất".
+- **Claude tự kiểm:** ô trống bản 2 là đất nện với vài khóm cỏ và sỏi, không có luống; cọc chỉ cao vài pixel. Hai ô chưa khớp nhau hoàn toàn: cọc ô trống là gốc tròn, cọc ô lát đá là khối vuông nhỏ hơn, và mép đất của ô lát đá mỏng hơn. Hai điểm này sẽ được làm đồng nhất khi làm sạch sprite native.
