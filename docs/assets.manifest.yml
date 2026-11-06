@@ -3013,3 +3013,228 @@ assets:
     nativeSize: 1024x1024
     finalSize: 128x128
     notes: Sand bank seamless ground texture, top-down (approved 2026-11-06); box-reduced 8x by docs/art-review/iso-board/terrain/make_textures.py; sampled at absolute art position by paintField (src/render/imageArt.ts GROUND_TEXTURE_FILES)
+  - id: decor_tree_pine_dark_iso
+    path: public/assets/art/ai-v1/iso/wilds/tree_pine_dark.png
+    category: doodad
+    origin: custom
+    source: docs/art-review/g3e/batch-06-wilds/source.png
+    creator: Project owner (OpenAI imagegen via Codex; prompt in docs/art-review/g3e/batch-06-wilds/prompt.md)
+    license: project-owned
+    attribution: false
+    redistribute: true
+    evidence: docs/art-review/iso-board/wilds/
+    modified: true
+    nativeSize: 1536x1024
+    finalSize: 77x102
+    anchor: feet
+    notes: Wild tall (outside the field) decoration (approved 2026-11-06); cut from the wilds sheet, black keyed and box-reduced 4x by docs/art-review/iso-board/wilds/make_wilds.py; placed by src/render/decorationModel.ts (DECOR_CATALOG)
+  - id: decor_tree_pine_light_iso
+    path: public/assets/art/ai-v1/iso/wilds/tree_pine_light.png
+    category: doodad
+    origin: custom
+    source: docs/art-review/g3e/batch-06-wilds/source.png
+    creator: Project owner (OpenAI imagegen via Codex; prompt in docs/art-review/g3e/batch-06-wilds/prompt.md)
+    license: project-owned
+    attribution: false
+    redistribute: true
+    evidence: docs/art-review/iso-board/wilds/
+    modified: true
+    nativeSize: 1536x1024
+    finalSize: 73x102
+    anchor: feet
+    notes: Wild tall (outside the field) decoration (approved 2026-11-06); cut from the wilds sheet, black keyed and box-reduced 4x by docs/art-review/iso-board/wilds/make_wilds.py; placed by src/render/decorationModel.ts (DECOR_CATALOG)
+  - id: decor_tree_oak_iso
+    path: public/assets/art/ai-v1/iso/wilds/tree_oak.png
+    category: doodad
+    origin: custom
+    source: docs/art-review/g3e/batch-06-wilds/source.png
+    creator: Project owner (OpenAI imagegen via Codex; prompt in docs/art-review/g3e/batch-06-wilds/prompt.md)
+    license: project-owned
+    attribution: false
+    redistribute: true
+    evidence: docs/art-review/iso-board/wilds/
+    modified: true
+    nativeSize: 1536x1024
+    finalSize: 94x100
+    anchor: feet
+    notes: Wild tall (outside the field) decoration (approved 2026-11-06); cut from the wilds sheet, black keyed and box-reduced 4x by docs/art-review/iso-board/wilds/make_wilds.py; placed by src/render/decorationModel.ts (DECOR_CATALOG)
+  - id: decor_tree_autumn_iso
+    path: public/assets/art/ai-v1/iso/wilds/tree_autumn.png
+    category: doodad
+    origin: custom
+    source: docs/art-review/g3e/batch-06-wilds/source.png
+    creator: Project owner (OpenAI imagegen via Codex; prompt in docs/art-review/g3e/batch-06-wilds/prompt.md)
+    license: project-owned
+    attribution: false
+    redistribute: true
+    evidence: docs/art-review/iso-board/wilds/
+    modified: true
+    nativeSize: 1536x1024
+    finalSize: 95x97
+    anchor: feet
+    notes: Wild tall (outside the field) decoration (approved 2026-11-06); cut from the wilds sheet, black keyed and box-reduced 4x by docs/art-review/iso-board/wilds/make_wilds.py; placed by src/render/decorationModel.ts (DECOR_CATALOG)
+  - id: decor_mountain_snow_iso
+    path: public/assets/art/ai-v1/iso/wilds/mountain_snow.png
+    category: doodad
+    origin: custom
+    source: docs/art-review/g3e/batch-06-wilds/source.png
+    creator: Project owner (OpenAI imagegen via Codex; prompt in docs/art-review/g3e/batch-06-wilds/prompt.md)
+    license: project-owned
+    attribution: false
+    redistribute: true
+    evidence: docs/art-review/iso-board/wilds/
+    modified: true
+    nativeSize: 1536x1024
+    finalSize: 121x88
+    anchor: feet
+    notes: Wild tall (outside the field) decoration (approved 2026-11-06); cut from the wilds sheet, black keyed and box-reduced 4x by docs/art-review/iso-board/wilds/make_wilds.py; placed by src/render/decorationModel.ts (DECOR_CATALOG)
+  - id: decor_cliff_mossy_iso
+    path: public/assets/art/ai-v1/iso/wilds/cliff_mossy.png
+    category: doodad
+    origin: custom
+    source: docs/art-review/g3e/batch-06-wilds/source.png
+    creator: Project owner (OpenAI imagegen via Codex; prompt in docs/art-review/g3e/batch-06-wilds/prompt.md)
+    license: project-owned
+    attribution: false
+    redistribute: true
+    evidence: docs/art-review/iso-board/wilds/
+    modified: true
+    nativeSize: 1536x1024
+    finalSize: 108x86
+    anchor: feet
+    notes: Wild tall (outside the field) decoration (approved 2026-11-06); cut from the wilds sheet, black keyed and box-reduced 4x by docs/art-review/iso-board/wilds/make_wilds.py; placed by src/render/decorationModel.ts (DECOR_CATALOG)
+  - id: decor_boulders_big_iso
+    path: public/assets/art/ai-v1/iso/wilds/boulders_big.png
+    category: doodad
+    origin: custom
+    source: docs/art-review/g3e/batch-06-wilds/source.png
+    creator: Project owner (OpenAI imagegen via Codex; prompt in docs/art-review/g3e/batch-06-wilds/prompt.md)
+    license: project-owned
+    attribution: false
+    redistribute: true
+    evidence: docs/art-review/iso-board/wilds/
+    modified: true
+    nativeSize: 1536x1024
+    finalSize: 129x84
+    anchor: feet
+    notes: Wild tall (outside the field) decoration (approved 2026-11-06); cut from the wilds sheet, black keyed and box-reduced 4x by docs/art-review/iso-board/wilds/make_wilds.py; placed by src/render/decorationModel.ts (DECOR_CATALOG)
+  - id: decor_bush_green_iso
+    path: public/assets/art/ai-v1/iso/wilds/bush_green.png
+    category: doodad
+    origin: custom
+    source: docs/art-review/g3e/batch-06-wilds/source.png
+    creator: Project owner (OpenAI imagegen via Codex; prompt in docs/art-review/g3e/batch-06-wilds/prompt.md)
+    license: project-owned
+    attribution: false
+    redistribute: true
+    evidence: docs/art-review/iso-board/wilds/
+    modified: true
+    nativeSize: 1536x1024
+    finalSize: 41x31
+    anchor: feet
+    notes: Wild low (inside the field) decoration (approved 2026-11-06); cut from the wilds sheet, black keyed and box-reduced 4x by docs/art-review/iso-board/wilds/make_wilds.py; placed by src/render/decorationModel.ts (DECOR_CATALOG)
+  - id: decor_bush_berry_iso
+    path: public/assets/art/ai-v1/iso/wilds/bush_berry.png
+    category: doodad
+    origin: custom
+    source: docs/art-review/g3e/batch-06-wilds/source.png
+    creator: Project owner (OpenAI imagegen via Codex; prompt in docs/art-review/g3e/batch-06-wilds/prompt.md)
+    license: project-owned
+    attribution: false
+    redistribute: true
+    evidence: docs/art-review/iso-board/wilds/
+    modified: true
+    nativeSize: 1536x1024
+    finalSize: 41x30
+    anchor: feet
+    notes: Wild low (inside the field) decoration (approved 2026-11-06); cut from the wilds sheet, black keyed and box-reduced 4x by docs/art-review/iso-board/wilds/make_wilds.py; placed by src/render/decorationModel.ts (DECOR_CATALOG)
+  - id: decor_bush_dry_iso
+    path: public/assets/art/ai-v1/iso/wilds/bush_dry.png
+    category: doodad
+    origin: custom
+    source: docs/art-review/g3e/batch-06-wilds/source.png
+    creator: Project owner (OpenAI imagegen via Codex; prompt in docs/art-review/g3e/batch-06-wilds/prompt.md)
+    license: project-owned
+    attribution: false
+    redistribute: true
+    evidence: docs/art-review/iso-board/wilds/
+    modified: true
+    nativeSize: 1536x1024
+    finalSize: 40x34
+    anchor: feet
+    notes: Wild low (inside the field) decoration (approved 2026-11-06); cut from the wilds sheet, black keyed and box-reduced 4x by docs/art-review/iso-board/wilds/make_wilds.py; placed by src/render/decorationModel.ts (DECOR_CATALOG)
+  - id: decor_rock_large_iso
+    path: public/assets/art/ai-v1/iso/wilds/rock_large.png
+    category: doodad
+    origin: custom
+    source: docs/art-review/g3e/batch-06-wilds/source.png
+    creator: Project owner (OpenAI imagegen via Codex; prompt in docs/art-review/g3e/batch-06-wilds/prompt.md)
+    license: project-owned
+    attribution: false
+    redistribute: true
+    evidence: docs/art-review/iso-board/wilds/
+    modified: true
+    nativeSize: 1536x1024
+    finalSize: 52x34
+    anchor: feet
+    notes: Wild low (inside the field) decoration (approved 2026-11-06); cut from the wilds sheet, black keyed and box-reduced 4x by docs/art-review/iso-board/wilds/make_wilds.py; placed by src/render/decorationModel.ts (DECOR_CATALOG)
+  - id: decor_rock_medium_iso
+    path: public/assets/art/ai-v1/iso/wilds/rock_medium.png
+    category: doodad
+    origin: custom
+    source: docs/art-review/g3e/batch-06-wilds/source.png
+    creator: Project owner (OpenAI imagegen via Codex; prompt in docs/art-review/g3e/batch-06-wilds/prompt.md)
+    license: project-owned
+    attribution: false
+    redistribute: true
+    evidence: docs/art-review/iso-board/wilds/
+    modified: true
+    nativeSize: 1536x1024
+    finalSize: 36x25
+    anchor: feet
+    notes: Wild low (inside the field) decoration (approved 2026-11-06); cut from the wilds sheet, black keyed and box-reduced 4x by docs/art-review/iso-board/wilds/make_wilds.py; placed by src/render/decorationModel.ts (DECOR_CATALOG)
+  - id: decor_rock_small_iso
+    path: public/assets/art/ai-v1/iso/wilds/rock_small.png
+    category: doodad
+    origin: custom
+    source: docs/art-review/g3e/batch-06-wilds/source.png
+    creator: Project owner (OpenAI imagegen via Codex; prompt in docs/art-review/g3e/batch-06-wilds/prompt.md)
+    license: project-owned
+    attribution: false
+    redistribute: true
+    evidence: docs/art-review/iso-board/wilds/
+    modified: true
+    nativeSize: 1536x1024
+    finalSize: 29x20
+    anchor: feet
+    notes: Wild low (inside the field) decoration (approved 2026-11-06); cut from the wilds sheet, black keyed and box-reduced 4x by docs/art-review/iso-board/wilds/make_wilds.py; placed by src/render/decorationModel.ts (DECOR_CATALOG)
+  - id: decor_stump_iso
+    path: public/assets/art/ai-v1/iso/wilds/stump.png
+    category: doodad
+    origin: custom
+    source: docs/art-review/g3e/batch-06-wilds/source.png
+    creator: Project owner (OpenAI imagegen via Codex; prompt in docs/art-review/g3e/batch-06-wilds/prompt.md)
+    license: project-owned
+    attribution: false
+    redistribute: true
+    evidence: docs/art-review/iso-board/wilds/
+    modified: true
+    nativeSize: 1536x1024
+    finalSize: 41x29
+    anchor: feet
+    notes: Wild low (inside the field) decoration (approved 2026-11-06); cut from the wilds sheet, black keyed and box-reduced 4x by docs/art-review/iso-board/wilds/make_wilds.py; placed by src/render/decorationModel.ts (DECOR_CATALOG)
+  - id: decor_log_iso
+    path: public/assets/art/ai-v1/iso/wilds/log.png
+    category: doodad
+    origin: custom
+    source: docs/art-review/g3e/batch-06-wilds/source.png
+    creator: Project owner (OpenAI imagegen via Codex; prompt in docs/art-review/g3e/batch-06-wilds/prompt.md)
+    license: project-owned
+    attribution: false
+    redistribute: true
+    evidence: docs/art-review/iso-board/wilds/
+    modified: true
+    nativeSize: 1536x1024
+    finalSize: 64x32
+    anchor: feet
+    notes: Wild low (inside the field) decoration (approved 2026-11-06); cut from the wilds sheet, black keyed and box-reduced 4x by docs/art-review/iso-board/wilds/make_wilds.py; placed by src/render/decorationModel.ts (DECOR_CATALOG)

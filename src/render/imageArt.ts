@@ -81,8 +81,8 @@ export const DECOR_CATALOG: readonly { id: string; tall: boolean; radius: number
   { id: 'stump', tall: false, radius: 10 },
   { id: 'log', tall: false, radius: 16 },
 ];
-/** Owner-approved wild objects (none yet: waiting for the per-object review). */
-export const DECOR_APPROVED: readonly string[] = [];
+/** Owner-approved wild objects (all fifteen, 2026-11-06). */
+export const DECOR_APPROVED: readonly string[] = DECOR_CATALOG.map((d) => d.id);
 /** File of an approved wild object. */
 export const decorFile = (id: string): string => `iso/wilds/${id}`;
 
