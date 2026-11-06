@@ -80,7 +80,7 @@ describe('RangeRenderer', () => {
     const clears = made[0]!.clears;
     const drawn = made[0]!.rects.length;
     r.move({ x: 250, y: 90 });
-    expect([made[0]!.x, made[0]!.y]).toEqual([250 - 90, (250 + 90) / 2]); // the projected world point
+    expect([made[0]!.x, made[0]!.y]).toEqual([90 - 250, (250 + 90) / 2]); // the projected world point (x' = y − x)
     expect(made[0]!.clears).toBe(clears);
     expect(made[0]!.rects).toHaveLength(drawn);
   });

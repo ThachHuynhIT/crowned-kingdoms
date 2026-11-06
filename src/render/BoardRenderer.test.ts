@@ -172,8 +172,8 @@ describe('southern edge arrow', () => {
     expect(tipWorld.x).toBeCloseTo(mid, 6);
     expect(tipWorld.y).toBeGreaterThan(south);
     expect(Math.abs(tipX - edgeMid.x) + Math.abs(tipY - edgeMid.y)).toBeLessThan(16);
-    // the base is down-left of the tip (towards the road), so the arrow points up-right at the board
-    expect((x1 + x2) / 2).toBeLessThan(tipX);
+    // the base is down-right of the tip (towards the road), so the arrow points up-left at the board
+    expect((x1 + x2) / 2).toBeGreaterThan(tipX);
     expect((y1 + y2) / 2).toBeGreaterThan(tipY);
   });
 

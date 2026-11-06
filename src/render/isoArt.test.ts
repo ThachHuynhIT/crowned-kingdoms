@@ -20,10 +20,10 @@ describe('squareToIso (nearest sampling, no texture rotation)', () => {
     expect([iso.width, iso.height]).toEqual([8, 4]);
   });
 
-  it('puts world north-west on top, north-east on the right, south-west on the left, south-east at the bottom', () => {
+  it('puts world north-west on top, south-west on the right, north-east on the left, south-east at the bottom', () => {
     expect(rgbAt(iso, 4, 0)).toBe(0x110000);
-    expect(rgbAt(iso, 6, 2)).toBe(0x002200);
-    expect(rgbAt(iso, 1, 2)).toBe(0x000033);
+    expect(rgbAt(iso, 6, 2)).toBe(0x000033);
+    expect(rgbAt(iso, 1, 2)).toBe(0x002200);
     expect(rgbAt(iso, 4, 3)).toBe(0x444444);
   });
 

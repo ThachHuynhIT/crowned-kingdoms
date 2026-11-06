@@ -100,7 +100,7 @@ export class FxRenderer {
       const back = d > 0 ? backDist / d : 0;
       const at = iso({ x: p.px[k]! - dx * back, y: p.py[k]! - dy * back });
       // The arrow frame follows the flight on screen (projected direction), never a rotated sprite.
-      const img = this.image(this.projectiles, used, fxFrame(`arrow_${arrowDir(dx - dy, (dx + dy) / 2)}`));
+      const img = this.image(this.projectiles, used, fxFrame(`arrow_${arrowDir(dy - dx, (dx + dy) / 2)}`));
       img.setPosition(Math.round(at.x), Math.round(at.y - FLIGHT_H)).setDepth(at.y);
       used += 1;
     }

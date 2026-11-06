@@ -119,10 +119,10 @@ export class UnitRenderer {
       slot.sprite.setFrame(frame).setScale(imageFrameScale(frame) * ISO_SPRITE_SCALE);
       slot.frame = frame;
     }
-    // Face the way we move on screen (projected x = x − y); standing still, face the target.
-    let face = dx - dy;
+    // Face the way we move on screen (projected x = y − x); standing still, face the target.
+    let face = dy - dx;
     const t = world.target[id]!;
-    if (face === 0 && t >= 0 && world.alive[t] === 1) face = world.x[t]! - world.y[t]! - (world.x[id]! - world.y[id]!);
+    if (face === 0 && t >= 0 && world.alive[t] === 1) face = world.y[t]! - world.x[t]! - (world.y[id]! - world.x[id]!);
     if (face !== 0 && face < 0 !== slot.facingLeft) {
       slot.facingLeft = face < 0;
       slot.sprite.setFlipX(slot.facingLeft);

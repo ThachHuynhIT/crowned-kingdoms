@@ -2,9 +2,9 @@ import { describe, expect, it } from 'vitest';
 import { ISO, isoDepth, project, unproject } from './iso';
 
 describe('isometric projection (2:1, owner decision 2026-11-06: a 64 px plot is a 128×64 diamond)', () => {
-  it('maps the world axes onto the two 2:1 diagonals', () => {
-    expect(project({ x: 64, y: 0 })).toEqual({ x: 64, y: 32 });
-    expect(project({ x: 0, y: 64 })).toEqual({ x: -64, y: 32 });
+  it('maps the world axes onto the two 2:1 diagonals: south (the road) down-right, east down-left', () => {
+    expect(project({ x: 0, y: 64 })).toEqual({ x: 64, y: 32 });
+    expect(project({ x: 64, y: 0 })).toEqual({ x: -64, y: 32 });
     expect(project({ x: 384, y: 384 })).toEqual({ x: 0, y: 384 });
     expect([ISO.plotW, ISO.plotH]).toEqual([128, 64]);
   });

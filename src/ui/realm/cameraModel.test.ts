@@ -105,8 +105,9 @@ describe('camera model (spec 06/11/2026, P2 zoom)', () => {
     expect([r.w, r.h]).toEqual([ISO.plotW * 3, ISO.plotH * 3]);
     const c = { x: r.x + r.w / 2, y: r.y + r.h / 2 };
     expect(plotAtView(z, DESKTOP, c)).toBe(7);
-    // half a diamond right and down is the next column (plot 8); the box corner is not plot 7
-    expect(plotAtView(z, DESKTOP, { x: c.x + r.w / 2, y: c.y + r.h / 2 })).toBe(8);
+    // half a diamond right and down is the next row south (plot 12); half left and down the next column (plot 8)
+    expect(plotAtView(z, DESKTOP, { x: c.x + r.w / 2, y: c.y + r.h / 2 })).toBe(12);
+    expect(plotAtView(z, DESKTOP, { x: c.x - r.w / 2, y: c.y + r.h / 2 })).toBe(8);
     expect(plotAtView(z, DESKTOP, { x: r.x + 1, y: r.y + 1 })).not.toBe(7);
   });
 

@@ -12,7 +12,7 @@ export const ISO_SPRITE_SCALE = 2;
 /** World point → camera (projected) point. */
 export const iso = (p: IsoPoint): IsoPoint => project(p);
 
-/** The four projected corners of the world rect [x, x + w] × [y, y + h]: top, right, bottom, left. */
+/** The four projected corners of the world rect [x, x + w] × [y, y + h]: top (NW), left (NE), bottom (SE), right (SW). */
 export const isoQuad = (x: number, y: number, w: number, h: number): IsoPoint[] => [
   project({ x, y }),
   project({ x: x + w, y }),

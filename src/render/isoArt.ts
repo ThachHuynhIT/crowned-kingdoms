@@ -11,11 +11,11 @@ export const squareToIso = (src: PixelCanvas): PixelCanvas => {
   const out = new PixelCanvas(2 * s, s);
   for (let v = 0; v < s; v++)
     for (let u = 0; u < 2 * s; u++) {
-      // projected point relative to the top corner, then back to the square
+      // projected point relative to the top corner, then back to the square (src/core/iso.ts: x' = y − x)
       const qx = u + 0.5 - s;
       const qy = v + 0.5;
-      const x = Math.floor(qy + qx / 2);
-      const y = Math.floor(qy - qx / 2);
+      const x = Math.floor(qy - qx / 2);
+      const y = Math.floor(qy + qx / 2);
       if (x < 0 || y < 0 || x >= s || y >= src.height) continue;
       const i = (y * src.width + x) * 4;
       const o = (v * out.width + u) * 4;

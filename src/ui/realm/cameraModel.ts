@@ -27,11 +27,11 @@ const WORLD_BOUNDS = {
   y1: BATTLE.field + BATTLE.plot + BATTLE.spawnOutside + BATTLE.spawnRowGap,
 } as const;
 
-/** `WORLD_BOUNDS` as the camera sees it: the bounding box of its isometric diamond (camera space). */
+/** `WORLD_BOUNDS` as the camera sees it: the bounding box of its isometric diamond (camera space, x' = y − x). */
 export const MAP_BOUNDS = {
-  x0: WORLD_BOUNDS.x0 - WORLD_BOUNDS.y1,
+  x0: WORLD_BOUNDS.y0 - WORLD_BOUNDS.x1,
   y0: (WORLD_BOUNDS.x0 + WORLD_BOUNDS.y0) / 2,
-  x1: WORLD_BOUNDS.x1 - WORLD_BOUNDS.y0,
+  x1: WORLD_BOUNDS.y1 - WORLD_BOUNDS.x0,
   y1: (WORLD_BOUNDS.x1 + WORLD_BOUNDS.y1) / 2,
 } as const;
 
@@ -127,11 +127,17 @@ export const plotRectAtView = (view: CameraView, screen: Size, plot: number): Re
   const row = Math.floor(plot / SIDE);
   const x0 = BATTLE.boardOrigin + col * BATTLE.plot;
   const y0 = BATTLE.boardOrigin + row * BATTLE.plot;
-  const top = worldToScreen(view, screen, { x: x0, y: y0 });
-  const left = worldToScreen(view, screen, { x: x0, y: y0 + BATTLE.plot });
-  const right = worldToScreen(view, screen, { x: x0 + BATTLE.plot, y: y0 });
-  const bottom = worldToScreen(view, screen, { x: x0 + BATTLE.plot, y: y0 + BATTLE.plot });
-  return { x: left.x, y: top.y, w: right.x - left.x, h: bottom.y - top.y };
+  const corners = [
+    worldToScreen(view, screen, { x: x0, y: y0 }),
+    worldToScreen(view, screen, { x: x0 + BATTLE.plot, y: y0 }),
+    worldToScreen(view, screen, { x: x0, y: y0 + BATTLE.plot }),
+    worldToScreen(view, screen, { x: x0 + BATTLE.plot, y: y0 + BATTLE.plot }),
+  ];
+  const xs = corners.map((p) => p.x);
+  const ys = corners.map((p) => p.y);
+  const x = Math.min(...xs);
+  const y = Math.min(...ys);
+  return { x, y, w: Math.max(...xs) - x, h: Math.max(...ys) - y };
 };
 
 /** −1, 0 or +1 zoom step for a pinch whose squared finger spread went from `startSq` to `nowSq`. */

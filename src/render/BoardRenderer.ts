@@ -166,11 +166,11 @@ export class BoardRenderer {
     const tip = iso({ x: mid, y: hi + ARROW_GAP });
     // Enemies only march in from the front (south): every non-empty input shows one arrow there.
     if (edges.length === 0) return;
-    // The road comes up from the south: on screen it runs from the lower left (direction (−2, 1)),
-    // so the arrow's base sits that way from the tip, across the road (direction (1, 2)).
-    const base = { x: tip.x - 2 * h, y: tip.y + h };
+    // The road comes up from the south: on screen it runs from the lower right (direction (2, 1)),
+    // so the arrow's base sits that way from the tip, across the road (direction (−1, 2)).
+    const base = { x: tip.x + 2 * h, y: tip.y + h };
     const tri: [number, number, number, number, number, number] = [
-      base.x + h / 2, base.y + h, base.x - h / 2, base.y - h, tip.x, tip.y,
+      base.x - h / 2, base.y + h, base.x + h / 2, base.y - h, tip.x, tip.y,
     ];
     g.fillStyle(UI_PALETTE.gold, 1);
     g.fillTriangle(...tri);

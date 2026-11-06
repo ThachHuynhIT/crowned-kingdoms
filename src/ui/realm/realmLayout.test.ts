@@ -261,8 +261,8 @@ describe('plotScreenRect', () => {
     expect(PLANNING_ZOOM).toBe(1);
     expect(plotScreenRect(l, 12)).toEqual({ x: 576, y: 328, w: 128, h: 64 });
     expect(plotScreenRect(l, 0)).toEqual({ x: 576, y: l.board.y, w: 128, h: 64 }); // the top corner
-    expect(plotScreenRect(l, 4)).toEqual({ x: 832, y: 328, w: 128, h: 64 }); // the right corner
-    expect(plotScreenRect(l, 20)).toEqual({ x: 320, y: 328, w: 128, h: 64 }); // the left corner
+    expect(plotScreenRect(l, 4)).toEqual({ x: 320, y: 328, w: 128, h: 64 }); // the left corner (world north-east)
+    expect(plotScreenRect(l, 20)).toEqual({ x: 832, y: 328, w: 128, h: 64 }); // the right corner (world south-west)
     expect(plotScreenRect(l, 24)).toEqual({ x: 576, y: 456, w: 128, h: 64 }); // the bottom corner
   });
 });
@@ -628,15 +628,15 @@ describe('battleCamera / battleWorldAt', () => {
   });
 
   it('maps screen offsets by 1 / zoom and returns null off the field', () => {
-    // Screen (+100, −50) from the centre is projected (100, 334): world (334 + 50, 334 − 50).
+    // Screen (+100, −50) from the centre is projected (100, 334): world (334 − 50, 334 + 50).
     const p = battleWorldAt({ x: 640 + 100, y: 360 - 50 }, DESKTOP)!;
-    expect(p.x).toBeCloseTo(384, 9);
-    expect(p.y).toBeCloseTo(284, 9);
+    expect(p.x).toBeCloseTo(284, 9);
+    expect(p.y).toBeCloseTo(384, 9);
     // The screen's top-left corner is off the field (west of it).
     expect(battleWorldAt({ x: 0, y: 0 }, DESKTOP)).toBeNull();
-    // On the board-centre row, the field's west edge (world x 0) is 768 projected px left of the centre.
-    expect(battleWorldAt({ x: 187.5 - 768, y: 406 }, MOBILE)!.x).toBeCloseTo(0, 9);
-    expect(battleWorldAt({ x: 187.5 - 770, y: 406 }, MOBILE)).toBeNull();
+    // On the board-centre row, the field's west edge (world x 0) is 768 projected px right of the centre.
+    expect(battleWorldAt({ x: 187.5 + 768, y: 406 }, MOBILE)!.x).toBeCloseTo(0, 9);
+    expect(battleWorldAt({ x: 187.5 + 770, y: 406 }, MOBILE)).toBeNull();
   });
 });
 

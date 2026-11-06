@@ -36,8 +36,10 @@ export class IsoWallRenderer {
   constructor(scene: Phaser.Scene, seed: number) {
     const g = scene.add.graphics().setDepth(DEPTH);
     this.g = g;
-    const a = project({ x: -ISO_WALL_EXTENT, y: BATTLE.wallY });
-    const b = project({ x: BATTLE.field + ISO_WALL_EXTENT, y: BATTLE.wallY });
+    const p = project({ x: -ISO_WALL_EXTENT, y: BATTLE.wallY });
+    const q = project({ x: BATTLE.field + ISO_WALL_EXTENT, y: BATTLE.wallY });
+    // a = the left end on screen, b = the right end (the line's direction depends on the projection)
+    const [a, b] = p.x <= q.x ? [p, q] : [q, p];
     const key = imageArtKey(WALL_FILE);
     if (scene.textures.exists(key)) {
       this.tileArt(scene, key, a, b);
@@ -76,13 +78,21 @@ export class IsoWallRenderer {
   private tileArt(scene: Phaser.Scene, key: string, a: { x: number; y: number }, b: { x: number; y: number }): void {
     const frame = scene.textures.get(key).get();
     const w = frame.width;
-    const lineY = (x: number): number => a.y + (x - a.x) / 2;
+    const slope = (b.y - a.y) / (b.x - a.x);
+    const lineY = (x: number): number => a.y + (x - a.x) * slope;
+    // The art's foot runs down to the right; with the wall line running down to the left (the enemy comes
+    // from the right, src/core/iso.ts) the segments are mirrored (a horizontal flip, never a rotation).
+    const flip = slope < 0;
     const g = this.g!;
-    const top = frame.height - w / 2; // face height above the foot at the left edge
+    const top = frame.height - w / 2; // face height above the foot at its higher end
     g.fillStyle(PALETTE.grassDark, 1);
     fillPoly(g, [{ x: a.x, y: a.y - top + 4 }, { x: b.x, y: b.y - top + 4 }, { x: b.x, y: b.y - top - 4000 }, { x: a.x, y: a.y - top - 4000 }]);
-    for (let sx = a.x; sx < b.x; sx += w) {
-      this.images.push(scene.add.image(sx, lineY(sx + w), key).setOrigin(0, 1).setDepth(DEPTH + 0.01));
+    for (let sx = Math.min(a.x, b.x); sx < Math.max(a.x, b.x); sx += w) {
+      // bottom row = the lower end of this segment's foot
+      const bottom = Math.max(lineY(sx), lineY(sx + w));
+      this.images.push(
+        scene.add.image(sx + w / 2, bottom, key).setOrigin(0.5, 1).setFlipX(flip).setDepth(DEPTH + 0.01),
+      );
     }
   }
 

@@ -344,8 +344,8 @@ export const planningLayout = (screen: Size, handSize = 3): PlanningLayout =>
   isDesktop(screen.w) ? desktopLayout(screen, handSize) : mobileLayout(screen, handSize);
 
 /**
- * Bounding box of `plot`'s diamond inside the board box `board` (isometric: plot 0 is the top
- * corner, columns run down-right, rows down-left).
+ * Bounding box of `plot`'s diamond inside the board box `board` (isometric, src/core/iso.ts: plot 0
+ * is the top corner, rows (world south) run down-right, columns (world east) down-left).
  */
 const plotRectOf = (board: Rect, plot: number): Rect => {
   const cw = board.w / BOARD_SIDE;
@@ -353,7 +353,7 @@ const plotRectOf = (board: Rect, plot: number): Rect => {
   const col = plotCol(plot);
   const row = plotRow(plot);
   return {
-    x: board.x + board.w / 2 + ((col - row) * cw) / 2 - cw / 2,
+    x: board.x + board.w / 2 + ((row - col) * cw) / 2 - cw / 2,
     y: board.y + ((col + row) * ch) / 2,
     w: cw,
     h: ch,
@@ -369,8 +369,8 @@ export const plotAtScreen = (layout: PlanningLayout, p: Point): number | null =>
   const ch = layout.board.h / BOARD_SIDE;
   const dx = p.x - (layout.board.x + layout.board.w / 2);
   const dy = p.y - layout.board.y;
-  const col = Math.floor(dy / ch + dx / cw);
-  const row = Math.floor(dy / ch - dx / cw);
+  const col = Math.floor(dy / ch - dx / cw);
+  const row = Math.floor(dy / ch + dx / cw);
   if (col < 0 || col >= BOARD_SIDE || row < 0 || row >= BOARD_SIDE) return null;
   return row * BOARD_SIDE + col;
 };

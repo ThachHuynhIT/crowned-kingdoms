@@ -36,12 +36,12 @@ describe('board geometry (64 px plots, spec 06/11/2026)', () => {
     expect(DECREE_RULES.boulderRadius).toBe(16);
   });
 
-  it('keeps the building sprite (32 wide) clear of the deploy box, both inside the plot', () => {
+  it('keeps the building body (32 px) clear of the deploy strip in front of its door (south), both inside the plot', () => {
     const half = PLOT / 2;
-    const [left, right] = [BUILDING_FOOT_OFFSET.x - 16, BUILDING_FOOT_OFFSET.x + 16];
-    expect(left).toBeGreaterThanOrEqual(-half);
-    expect(right).toBeLessThan(DEPLOY_BOX.x0);
-    expect(DEPLOY_BOX.x1).toBeLessThanOrEqual(half);
-    expect([DEPLOY_BOX.y0, DEPLOY_BOX.y1].every((y) => Math.abs(y) <= half)).toBe(true);
+    const [north, south] = [BUILDING_FOOT_OFFSET.y - 16, BUILDING_FOOT_OFFSET.y + 16];
+    expect(north).toBeGreaterThanOrEqual(-half);
+    expect(south).toBeLessThan(DEPLOY_BOX.y0);
+    expect(DEPLOY_BOX.y1).toBeLessThanOrEqual(half);
+    expect([DEPLOY_BOX.x0, DEPLOY_BOX.x1].every((x) => Math.abs(x) <= half)).toBe(true);
   });
 });

@@ -26,10 +26,11 @@ export const BUILDING_FOOT_OFFSET = { x: 0, y: 0 } as const;
 
 /**
  * Khu tập kết lính của một ô, quanh tâm ô (world px): x ∈ [x0, x1], y ∈ [y0, y1]. Là dải đất
- * TRƯỚC CỬA nhà: cửa chính ở mặt tường hướng đông world (mặt phải khi vẽ isometric), nên dải nằm
- * giữa mép đông của nhà (+16) và mép đông của ô (+32).
+ * TRƯỚC CỬA nhà: cửa chính ở mặt tường bên phải khi vẽ isometric, và từ 06/11/2026 (địch vào từ bên
+ * phải màn hình) mặt đó nhìn về phía nam world, ra con đường; dải nằm giữa mép nam của nhà (+16) và
+ * mép nam của ô (+32).
  */
-export const DEPLOY_BOX = { x0: 18, x1: 30, y0: -24, y1: 24 } as const;
+export const DEPLOY_BOX = { x0: -24, x1: 24, y0: 18, y1: 30 } as const;
 
 /**
  * Các bảng số của spec gốc (§6, §7.3) viết cho ô 32 px. Mọi đại lượng px/tick (tốc độ lính, tốc độ

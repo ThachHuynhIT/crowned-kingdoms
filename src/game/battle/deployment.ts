@@ -1,6 +1,6 @@
 /**
  * Khu tập kết lính của mỗi ô (spec 06/11/2026, quyết định C): lính của một công trình xuất hiện và
- * đứng sẵn trong `DEPLOY_BOX`, dải đất trước cửa nhà ở phía đông ô, không còn xếp vòng quanh tâm ô. Lưới xác định theo
+ * đứng sẵn trong `DEPLOY_BOX`, dải đất trước cửa nhà ở phía nam ô (ra con đường), không còn xếp vòng quanh tâm ô. Lưới xác định theo
  * hàng rồi cột; đông quá thì các ô lưới nhỏ lại và thân có thể chồng nhau (separation xử lý tiếp).
  * Chỉ dùng + − × ÷, Math.sqrt/ceil/floor.
  */
@@ -29,7 +29,7 @@ export const deploySlot = (
   if (y0 > y1) y0 = y1 = (DEPLOY_BOX.y0 + DEPLOY_BOX.y1) / 2;
   const boxW = DEPLOY_BOX.x1 - DEPLOY_BOX.x0;
   const boxH = DEPLOY_BOX.y1 - DEPLOY_BOX.y0;
-  const cols = Math.max(1, Math.ceil(Math.sqrt((count * boxW) / boxH)));
+  const cols = Math.min(count, Math.max(1, Math.ceil(Math.sqrt((count * boxW) / boxH))));
   const rows = Math.ceil(count / cols);
   const row = Math.floor(index / cols);
   const col = index - row * cols;
