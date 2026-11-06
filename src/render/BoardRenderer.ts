@@ -109,7 +109,8 @@ export class BoardRenderer {
     const throneId = this.throneCard(state);
     for (let p = 0; p < PLOTS; p++) {
       const plot = state.plots[p];
-      const ground = p === THRONE_PLOT ? 'throne' : plot?.unlocked ? 'open' : 'locked';
+      // A plot with a building on it is a paved yard (owner, 2026-11-06).
+      const ground = p === THRONE_PLOT ? 'throne' : !plot?.unlocked ? 'locked' : plot.building ? 'built' : 'open';
       const frame = kingPlotFrame(state.kingId, ground);
       // Plot frames are diamonds (atlas): scale each to the 128×64 diamond of a plot.
       const img = this.plots[p]!.setFrame(frame);

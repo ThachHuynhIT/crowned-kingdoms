@@ -96,3 +96,22 @@ PR #13 (nhánh `iso-board-redesign`) đã xong P1 (ô 64 px, Ngai hàng sau, khu
   - Ô đất và nhà vẫn là art vuông/chính diện cũ, được biến hình hoặc dựng thẳng. Bộ art Lúa Mì isometric là Task 11.
   - Ô đã xây (sân lát đá) chưa có trong game, chờ art ở Task 11.
 - **Đã kiểm trong trình duyệt** (cửa sổ phiên đang ẩn nên phải tự đẩy vòng lặp game): ở 1024×768 bàn thoi, ngai ở hàng sau, con đường đi từ góc dưới trái, trận chạy đúng, console không lỗi. Ở 375×812 bàn rộng hơn màn hình nên kéo được.
+
+### Bộ Lúa Mì isometric trong game (Task 11, 06/11/2026)
+
+- **Đã duyệt (chủ dự án):** 7 công trình mới, ô khoá, ô Ngai, cùng mẫu tường (độ dốc sửa lúc sản xuất). Nguồn và ghi chú ở `docs/art-review/iso-board/wheat/`.
+- **Cắt sprite:** `docs/art-review/iso-board/make_assets.py` ghi ra `public/assets/art/ai-v1/iso/`:
+  - 8 nhà (kể cả Ngai) thu cùng một tỉ lệ, nhà Thợ Gặt rộng 64 px;
+  - 4 ô (trống, đã xây, khoá, Ngai) rộng 128 px, tâm hình thoi đặt ở hàng giữa ảnh;
+  - đoạn vách núi được nắn chân từ dốc 0,388 về đúng 0,5 bằng cách dịch từng cột, rộng 480 px.
+- **Đã nối vào game:**
+  - `IMAGE_BUILDINGS` và `IMAGE_PLOTS` trỏ sang bộ isometric;
+  - ô có nhà hiện thành sân lát đá (trạng thái `built`, có bản vẽ bằng code dự phòng);
+  - `IsoWallRenderer` xếp các đoạn vách nối tiếp dọc mép bắc.
+- **Đăng ký:** 13 mục `*_iso` trong `assets.manifest.yml` và một dòng trong CREDITS.
+- **Bộ 45° cũ:** ảnh và mục manifest cũ của bộ Lúa Mì 45° vẫn nằm trong repo nhưng game không còn dùng (tranh thẻ vẫn dùng ảnh 45° riêng của chúng).
+- **Đã kiểm trong trình duyệt** (tự đẩy vòng lặp game) ở zoom 1× và 2×.
+- **Chưa làm:**
+  - Lính vẫn vẽ nhìn chính diện;
+  - các vua khác vẫn dùng ô vuông biến hình và nhà vẽ bằng code;
+  - Ruộng Lúa trên sân lát đá trông nhỏ, vì thu theo chân nhà.

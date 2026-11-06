@@ -1,6 +1,6 @@
 import { describe, expect, it } from 'vitest';
 import { generateField, paintField } from './fieldArt';
-import { GRASS_FILES, IMAGE_ART_FILES, IMAGE_ART_SCALE, IMAGE_BUILDINGS, IMAGE_PLOTS, IMAGE_UNITS, POSES, unitPoseFile } from './imageArt';
+import { GRASS_FILES, IMAGE_ART_FILES, IMAGE_ART_SCALE, IMAGE_BUILDINGS, IMAGE_PLOTS, IMAGE_UNITS, POSES, WALL_FILE, unitPoseFile } from './imageArt';
 import { PixelCanvas, upscale } from './pixel';
 
 describe('image art mapping', () => {
@@ -25,15 +25,16 @@ describe('image art mapping', () => {
     expect(IMAGE_ART_FILES.some((f) => f.startsWith('spearman'))).toBe(false);
   });
 
-  it('every Wheat building card, throne included, uses the approved 45° image (2026-11-06)', () => {
+  it('every Wheat building card, throne included, uses the approved isometric image (2026-11-06)', () => {
     for (const card of ['throne', 'field', 'windmill', 'granary', 'peasant_horde', 'militia', 'reapers', 'scarecrow'])
-      expect(IMAGE_BUILDINGS[`wheat_${card}`]).toBe(`wheat_${card}`);
+      expect(IMAGE_BUILDINGS[`wheat_${card}`]).toBe(`iso/wheat_${card}`);
     expect(IMAGE_ART_FILES).not.toContain('cottage');
   });
 
-  it('loads the three Wheat plot skins', () => {
-    expect(IMAGE_PLOTS.wheat).toBe('plots/wheat');
-    for (const state of ['open', 'locked', 'throne']) expect(IMAGE_ART_FILES).toContain(`plots/wheat_${state}`);
+  it('loads the four isometric Wheat plot skins, the paved built plot included, and the cliff', () => {
+    expect(IMAGE_PLOTS.wheat).toBe('iso/plots/wheat');
+    for (const state of ['open', 'locked', 'throne', 'built']) expect(IMAGE_ART_FILES).toContain(`iso/plots/wheat_${state}`);
+    expect(IMAGE_ART_FILES).toContain(WALL_FILE);
   });
 
   it('idle, walk and attack use six different poses', () => {

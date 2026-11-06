@@ -3,9 +3,10 @@ import { PixelCanvas, pixelHash } from './pixel';
 
 export const PLOT_SIZE = 32;
 
-export type PlotState = 'open' | 'locked' | 'throne';
+/** `built`: a plot with a building on it, paved with stone (owner, 2026-11-06). */
+export type PlotState = 'open' | 'locked' | 'throne' | 'built';
 
-/** A 32x32 ground plot: cleared earth (open), stone-covered (locked) or a gold-edged yard. */
+/** A 32x32 ground plot: cleared earth (open), stone-covered (locked), a gold-edged yard (throne) or flagstones (built). */
 export const paintPlot = (state: PlotState): PixelCanvas => {
   const n = PLOT_SIZE;
   const c = new PixelCanvas(n, n);
@@ -28,6 +29,13 @@ export const paintPlot = (state: PlotState): PixelCanvas => {
     for (let i = 6; i < n - 6; i++) {
       c.set(i, i, PALETTE.plum);
       c.set(n - 1 - i, i, PALETTE.plum);
+    }
+  } else if (state === 'built') {
+    // Flagstones: a grid of pale stones with dark joints.
+    c.fillRect(2, 2, n - 4, n - 4, PALETTE.stoneLight);
+    for (let i = 2; i < n - 2; i += 6) {
+      c.fillRect(2, i, n - 4, 1, PALETTE.stone);
+      c.fillRect(i + ((i / 6) % 2) * 3, 2, 1, n - 4, PALETTE.stone);
     }
   } else if (state === 'throne') {
     c.fillRect(2, 2, n - 4, 1, PALETTE.gold);

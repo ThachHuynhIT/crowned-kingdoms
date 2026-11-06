@@ -2795,3 +2795,193 @@ assets:
     nativeSize: 1024x1024
     finalSize: 16x16
     notes: Wheat king badge (shield with a wheat sheaf) on the year calendar; magenta keyed out and box-reduced by docs/art-review/g3e/icons/make_assets.py (src/ui/realm/kingBadge.ts, 2026-11-06)
+  - id: building_wheat_reapers_iso
+    path: public/assets/art/ai-v1/iso/wheat_reapers.png
+    category: building
+    origin: custom
+    source: docs/art-review/iso-board/sample-building/source.png
+    creator: Project owner (OpenAI imagegen via Codex; prompt in docs/art-review/iso-board/sample-building/prompt.md)
+    license: project-owned
+    attribution: false
+    redistribute: true
+    evidence: docs/art-review/iso-board/
+    modified: true
+    nativeSize: 1024x1024
+    finalSize: 64x54
+    anchor: feet
+    notes: Đội Thợ Gặt (reapers barn), isometric 2:1 (approved 2026-11-06); black keyed and box-reduced at one shared scale (Reapers = 64 px wide) by docs/art-review/iso-board/make_assets.py; drawn at 0.5 x 2 (src/render/imageArt.ts IMAGE_BUILDINGS)
+  - id: building_wheat_militia_iso
+    path: public/assets/art/ai-v1/iso/wheat_militia.png
+    category: building
+    origin: custom
+    source: docs/art-review/iso-board/wheat/building_wheat_militia/source.png
+    creator: Project owner (OpenAI imagegen via Codex; prompt in docs/art-review/iso-board/wheat/building_wheat_militia/prompt.md)
+    license: project-owned
+    attribution: false
+    redistribute: true
+    evidence: docs/art-review/iso-board/
+    modified: true
+    nativeSize: 1024x1024
+    finalSize: 62x67
+    anchor: feet
+    notes: Dân Quân (militia guardhouse), isometric 2:1 (approved 2026-11-06); black keyed and box-reduced at one shared scale (Reapers = 64 px wide) by docs/art-review/iso-board/make_assets.py; drawn at 0.5 x 2 (src/render/imageArt.ts IMAGE_BUILDINGS)
+  - id: building_wheat_peasant_horde_iso
+    path: public/assets/art/ai-v1/iso/wheat_peasant_horde.png
+    category: building
+    origin: custom
+    source: docs/art-review/iso-board/wheat/building_wheat_peasant_horde/source.png
+    creator: Project owner (OpenAI imagegen via Codex; prompt in docs/art-review/iso-board/wheat/building_wheat_peasant_horde/prompt.md)
+    license: project-owned
+    attribution: false
+    redistribute: true
+    evidence: docs/art-review/iso-board/
+    modified: true
+    nativeSize: 1024x1024
+    finalSize: 64x62
+    anchor: feet
+    notes: Khởi Nghĩa Nông Dân (peasant uprising camp), isometric 2:1 (approved 2026-11-06); black keyed and box-reduced at one shared scale (Reapers = 64 px wide) by docs/art-review/iso-board/make_assets.py; drawn at 0.5 x 2 (src/render/imageArt.ts IMAGE_BUILDINGS)
+  - id: building_wheat_granary_iso
+    path: public/assets/art/ai-v1/iso/wheat_granary.png
+    category: building
+    origin: custom
+    source: docs/art-review/iso-board/wheat/building_wheat_granary/source.png
+    creator: Project owner (OpenAI imagegen via Codex; prompt in docs/art-review/iso-board/wheat/building_wheat_granary/prompt.md)
+    license: project-owned
+    attribution: false
+    redistribute: true
+    evidence: docs/art-review/iso-board/
+    modified: true
+    nativeSize: 1024x1024
+    finalSize: 63x63
+    anchor: feet
+    notes: Kho Thóc (granary), isometric 2:1 (approved 2026-11-06); black keyed and box-reduced at one shared scale (Reapers = 64 px wide) by docs/art-review/iso-board/make_assets.py; drawn at 0.5 x 2 (src/render/imageArt.ts IMAGE_BUILDINGS)
+  - id: building_wheat_windmill_iso
+    path: public/assets/art/ai-v1/iso/wheat_windmill.png
+    category: building
+    origin: custom
+    source: docs/art-review/iso-board/wheat/building_wheat_windmill/source.png
+    creator: Project owner (OpenAI imagegen via Codex; prompt in docs/art-review/iso-board/wheat/building_wheat_windmill/prompt.md)
+    license: project-owned
+    attribution: false
+    redistribute: true
+    evidence: docs/art-review/iso-board/
+    modified: true
+    nativeSize: 1024x1024
+    finalSize: 39x61
+    anchor: feet
+    notes: Cối Xay Gió (windmill), isometric 2:1 (approved 2026-11-06); black keyed and box-reduced at one shared scale (Reapers = 64 px wide) by docs/art-review/iso-board/make_assets.py; drawn at 0.5 x 2 (src/render/imageArt.ts IMAGE_BUILDINGS)
+  - id: building_wheat_scarecrow_iso
+    path: public/assets/art/ai-v1/iso/wheat_scarecrow.png
+    category: building
+    origin: custom
+    source: docs/art-review/iso-board/wheat/building_wheat_scarecrow/source.png
+    creator: Project owner (OpenAI imagegen via Codex; prompt in docs/art-review/iso-board/wheat/building_wheat_scarecrow/prompt.md)
+    license: project-owned
+    attribution: false
+    redistribute: true
+    evidence: docs/art-review/iso-board/
+    modified: true
+    nativeSize: 1024x1024
+    finalSize: 45x61
+    anchor: feet
+    notes: Bù Nhìn Gác (scarecrow watch tower), isometric 2:1 (approved 2026-11-06); black keyed and box-reduced at one shared scale (Reapers = 64 px wide) by docs/art-review/iso-board/make_assets.py; drawn at 0.5 x 2 (src/render/imageArt.ts IMAGE_BUILDINGS)
+  - id: building_wheat_field_iso
+    path: public/assets/art/ai-v1/iso/wheat_field.png
+    category: building
+    origin: custom
+    source: docs/art-review/iso-board/wheat/building_wheat_field/source.png
+    creator: Project owner (OpenAI imagegen via Codex; prompt in docs/art-review/iso-board/wheat/building_wheat_field/prompt.md)
+    license: project-owned
+    attribution: false
+    redistribute: true
+    evidence: docs/art-review/iso-board/
+    modified: true
+    nativeSize: 1024x1024
+    finalSize: 75x43
+    anchor: feet
+    notes: Ruộng Lúa (wheat field), isometric 2:1 (approved 2026-11-06); black keyed and box-reduced at one shared scale (Reapers = 64 px wide) by docs/art-review/iso-board/make_assets.py; drawn at 0.5 x 2 (src/render/imageArt.ts IMAGE_BUILDINGS)
+  - id: building_wheat_throne_iso
+    path: public/assets/art/ai-v1/iso/wheat_throne.png
+    category: building
+    origin: custom
+    source: docs/art-review/iso-board/wheat/building_wheat_throne/source.png
+    creator: Project owner (OpenAI imagegen via Codex; prompt in docs/art-review/iso-board/wheat/building_wheat_throne/prompt.md)
+    license: project-owned
+    attribution: false
+    redistribute: true
+    evidence: docs/art-review/iso-board/
+    modified: true
+    nativeSize: 1024x1024
+    finalSize: 54x71
+    anchor: feet
+    notes: Ngai Bó Lúa (Wheat throne keep), isometric 2:1 (approved 2026-11-06); black keyed and box-reduced at one shared scale (Reapers = 64 px wide) by docs/art-review/iso-board/make_assets.py; drawn at 0.5 x 2 (src/render/imageArt.ts IMAGE_BUILDINGS)
+  - id: plot_wheat_open_iso
+    path: public/assets/art/ai-v1/iso/plots/wheat_open.png
+    category: terrain
+    origin: custom
+    source: docs/art-review/iso-board/sample-plot/source.png
+    creator: Project owner (OpenAI imagegen via Codex; prompt in docs/art-review/iso-board/sample-plot/prompt.md)
+    license: project-owned
+    attribution: false
+    redistribute: true
+    evidence: docs/art-review/iso-board/
+    modified: true
+    nativeSize: 1024x1024
+    finalSize: 128x65
+    notes: Wheat king open (empty land) plot, isometric diamond (approved 2026-11-06); reduced to 128 px wide and padded so the diamond centre is the middle row by docs/art-review/iso-board/make_assets.py (src/render/imageArt.ts IMAGE_PLOTS)
+  - id: plot_wheat_built_iso
+    path: public/assets/art/ai-v1/iso/plots/wheat_built.png
+    category: terrain
+    origin: custom
+    source: docs/art-review/iso-board/sample-plot-built/source.png
+    creator: Project owner (OpenAI imagegen via Codex; prompt in docs/art-review/iso-board/sample-plot-built/prompt.md)
+    license: project-owned
+    attribution: false
+    redistribute: true
+    evidence: docs/art-review/iso-board/
+    modified: true
+    nativeSize: 1024x1024
+    finalSize: 128x67
+    notes: Wheat king built plot (stone-paved yard under a building), isometric diamond (approved 2026-11-06); reduced to 128 px wide and padded so the diamond centre is the middle row by docs/art-review/iso-board/make_assets.py (src/render/imageArt.ts IMAGE_PLOTS)
+  - id: plot_wheat_locked_iso
+    path: public/assets/art/ai-v1/iso/plots/wheat_locked.png
+    category: terrain
+    origin: custom
+    source: docs/art-review/iso-board/wheat/plot_wheat_locked/source.png
+    creator: Project owner (OpenAI imagegen via Codex; prompt in docs/art-review/iso-board/wheat/plot_wheat_locked/prompt.md)
+    license: project-owned
+    attribution: false
+    redistribute: true
+    evidence: docs/art-review/iso-board/
+    modified: true
+    nativeSize: 1024x1024
+    finalSize: 128x69
+    notes: Wheat king locked (wild meadow) plot, isometric diamond (approved 2026-11-06); reduced to 128 px wide and padded so the diamond centre is the middle row by docs/art-review/iso-board/make_assets.py (src/render/imageArt.ts IMAGE_PLOTS)
+  - id: plot_wheat_throne_iso
+    path: public/assets/art/ai-v1/iso/plots/wheat_throne.png
+    category: terrain
+    origin: custom
+    source: docs/art-review/iso-board/wheat/plot_wheat_throne/source.png
+    creator: Project owner (OpenAI imagegen via Codex; prompt in docs/art-review/iso-board/wheat/plot_wheat_throne/prompt.md)
+    license: project-owned
+    attribution: false
+    redistribute: true
+    evidence: docs/art-review/iso-board/
+    modified: true
+    nativeSize: 1024x1024
+    finalSize: 128x71
+    notes: Wheat king throne plot (royal stone dais), isometric diamond (approved 2026-11-06); reduced to 128 px wide and padded so the diamond centre is the middle row by docs/art-review/iso-board/make_assets.py (src/render/imageArt.ts IMAGE_PLOTS)
+  - id: terrain_wall_cliff_iso
+    path: public/assets/art/ai-v1/iso/wall_cliff.png
+    category: terrain
+    origin: custom
+    source: docs/art-review/iso-board/wheat/terrain_wall_iso_sample/source.png
+    creator: Project owner (OpenAI imagegen via Codex; prompt in docs/art-review/iso-board/wheat/terrain_wall_iso_sample/prompt.md)
+    license: project-owned
+    attribution: false
+    redistribute: true
+    evidence: docs/art-review/iso-board/
+    modified: true
+    nativeSize: 1536x1024
+    finalSize: 480x356
+    notes: Mountain cliff segment for the north edge, isometric (v2 approved 2026-11-06 with the slope to be fixed in production): every column shifted so the foot runs at exactly 2:1, then box-reduced to 480 px wide by docs/art-review/iso-board/make_assets.py; tiled along the wall line by src/render/IsoWallRenderer.ts

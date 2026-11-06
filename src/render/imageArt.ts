@@ -31,29 +31,33 @@ export const IMAGE_UNITS: Readonly<Record<string, string>> = {
 const POSE_INDEXES = [0, 1, 2, 3, 4, 5];
 
 /**
- * Buildings drawn from image art: card id → file. The eight Wheat buildings (throne included) are the 45° set from
- * `docs/art-review/g3e/buildings/wheat/` (approved 2026-11-06, 64 art px wide); they replace the first two-sided
- * `cottage` for the militia house.
+ * Buildings drawn from image art: card id → file. The eight Wheat buildings (throne included) are the isometric
+ * set (approved 2026-11-06) cut by `docs/art-review/iso-board/make_assets.py` into `iso/` at one shared scale (the
+ * Reapers barn is 64 px wide); they replace the earlier 45-degree front-view set.
  */
 export const IMAGE_BUILDINGS: Readonly<Record<string, string>> = {
-  wheat_throne: 'wheat_throne',
-  wheat_field: 'wheat_field',
-  wheat_windmill: 'wheat_windmill',
-  wheat_granary: 'wheat_granary',
-  wheat_peasant_horde: 'wheat_peasant_horde',
-  wheat_militia: 'wheat_militia',
-  wheat_reapers: 'wheat_reapers',
-  wheat_scarecrow: 'wheat_scarecrow',
+  wheat_throne: 'iso/wheat_throne',
+  wheat_field: 'iso/wheat_field',
+  wheat_windmill: 'iso/wheat_windmill',
+  wheat_granary: 'iso/wheat_granary',
+  wheat_peasant_horde: 'iso/wheat_peasant_horde',
+  wheat_militia: 'iso/wheat_militia',
+  wheat_reapers: 'iso/wheat_reapers',
+  wheat_scarecrow: 'iso/wheat_scarecrow',
   neutral_barracks: 'barracks',
 };
 export const GRASS_FILES: readonly string[] = ['grass_0', 'grass_1', 'grass_2'];
 
 /**
- * Plot skins per king: king id → file prefix of its `_open`, `_locked`, `_throne` plots (64×64, the 2026-10 batch-03
- * sheet cut by tools/slice_art_batches.py, approved; Wheat wired 2026-11-06). Kings not listed keep the shared plots.
+ * Plot skins per king: king id → file prefix of its `_open`, `_locked`, `_throne`, `_built` plots. Wheat's are the
+ * isometric diamonds (approved 2026-11-06), 128 px wide with the diamond's centre on the middle row
+ * (`docs/art-review/iso-board/make_assets.py`). Kings not listed keep the shared plots (resampled into diamonds).
  */
-export const IMAGE_PLOTS: Readonly<Record<string, string>> = { wheat: 'plots/wheat' };
-export const PLOT_STATES = ['open', 'locked', 'throne'] as const;
+export const IMAGE_PLOTS: Readonly<Record<string, string>> = { wheat: 'iso/plots/wheat' };
+export const PLOT_STATES = ['open', 'locked', 'throne', 'built'] as const;
+
+/** The isometric mountain cliff segment (approved 2026-11-06, foot sheared to 2:1), tiled along the north edge. */
+export const WALL_FILE = 'iso/wall_cliff';
 
 /** Every PNG of the set (file name without `.png`). */
 export const IMAGE_ART_FILES: readonly string[] = [
@@ -64,6 +68,7 @@ export const IMAGE_ART_FILES: readonly string[] = [
   ...Object.values(IMAGE_BUILDINGS),
   ...Object.values(IMAGE_PLOTS).flatMap((prefix) => PLOT_STATES.map((s) => `${prefix}_${s}`)),
   ...GRASS_FILES,
+  WALL_FILE,
 ];
 
 /** Pose index of each animation frame (the sheets are drawn idle0 idle1 walk0 walk1 attack0 attack1). */
