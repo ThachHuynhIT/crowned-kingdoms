@@ -143,6 +143,35 @@ class IsoWheatSetPromptGateTest(unittest.TestCase):
         self.assertIn('-i docs/art-review/style-references/iso-plot-built-approved.png', runner)
 
 
+class GroundTexturePromptGateTest(unittest.TestCase):
+    """Ground textures (2026-11-06): their own block in docs/ART_STYLE.md, top-down and seamless, refs attached."""
+
+    def test_texture_block_is_in_the_style_doc(self):
+        t = mp.texture_template()
+        self.assertIn('TILES SEAMLESSLY', t)
+        self.assertIn('STRAIGHT FROM ABOVE', t)
+        self.assertIn('[subject]', t)
+
+    def test_water_and_sand_prompts_read_the_doc_and_carry_the_references(self):
+        self.assertEqual([i for i, _, _ in mp.GROUND_TEXTURES], ['terrain_water', 'terrain_sand'])
+        for ident, name, desc in mp.GROUND_TEXTURES:
+            p = mp.build_texture_prompt(f'x/{ident}/source.png', name, desc)
+            self.assertIn('docs/ART_STYLE.md', p, ident)
+            self.assertIn('BẮT BUỘC TRƯỚC KHI VẼ', p, ident)
+            self.assertIn(mp.REFERENCE, p, ident)
+            for r in mp.TEXTURE_REFS:
+                self.assertIn(r, p, ident)
+            self.assertIn('LẶP LIỀN MẠCH', p, ident)
+            self.assertNotIn('[subject]', p, ident)
+
+    def test_runner_attaches_every_reference(self):
+        mp.main('terrain-textures')
+        runner = (ROOT / '.superpowers/b-textures.sh').read_text(encoding='utf-8')
+        self.assertEqual(runner.count('codex exec'), 2)
+        for r in [mp.REFERENCE, *mp.TEXTURE_REFS]:
+            self.assertEqual(runner.count(f'-i {r}'), 2)
+
+
 pspec = importlib.util.spec_from_file_location('portrait_prompts', ROOT / 'docs/art-review/g3e/portraits/make_prompts.py')
 pp = importlib.util.module_from_spec(pspec)
 pspec.loader.exec_module(pp)

@@ -71,7 +71,7 @@ Khung thẻ theo độ hiếm (thêm vào texture `ui` từ G1): thường = vi�
 
 ## Góc nhìn
 
-> **BẮT BUỘC cho mọi lần tạo ảnh (người hay AI/Codex).** Trước khi tạo hoặc yêu cầu tạo BẤT KỲ ảnh nào cho game (công trình, lính, địa hình, vật trang trí, tường núi, icon…), phải: (1) đọc hết mục "Góc nhìn" này và mục "Quy tắc vẽ" ở trên; (2) đính kèm ảnh tham chiếu đã duyệt `art-review/style-references/harvester-house-front-approved.png` cho mọi công trình, và ảnh đã duyệt cùng loại (nếu có) cho loại khác; (3) dựng prompt từ khối prompt mẫu đúng loại bên dưới — khối "Prompt isometric dùng lại" cho sprite thế giới (công trình, ô đất, tường, vật trang trí), khối "Prompt mẫu dùng lại" (chính diện 45°) cho tranh thẻ — qua công cụ `docs/art-review/g3e/buildings/make_prompts.py` (lấy đúng khối, không tự chép lại); (4) duyệt kết quả bằng mục kiểm tương ứng. Prompt không dẫn tới tài liệu này hoặc thiếu ảnh tham chiếu thì không được chạy. Ảnh đi ngược các điểm trên bị loại, không "sửa dần" sau khi đã thêm chi tiết.
+> **BẮT BUỘC cho mọi lần tạo ảnh (người hay AI/Codex).** Trước khi tạo hoặc yêu cầu tạo BẤT KỲ ảnh nào cho game (công trình, lính, địa hình, vật trang trí, tường núi, icon…), phải: (1) đọc hết mục "Góc nhìn" này và mục "Quy tắc vẽ" ở trên; (2) đính kèm ảnh tham chiếu đã duyệt `art-review/style-references/harvester-house-front-approved.png` cho mọi công trình, và ảnh đã duyệt cùng loại (nếu có) cho loại khác; (3) dựng prompt từ khối prompt mẫu đúng loại bên dưới — khối "Prompt isometric dùng lại" cho sprite thế giới (công trình, ô đất, tường, vật trang trí), khối "Prompt texture mặt đất dùng lại" cho texture nền liền mạch (cỏ, cát, nước, đường), khối "Prompt mẫu dùng lại" (chính diện 45°) cho tranh thẻ — qua công cụ `docs/art-review/g3e/buildings/make_prompts.py` (lấy đúng khối, không tự chép lại); (4) duyệt kết quả bằng mục kiểm tương ứng. Prompt không dẫn tới tài liệu này hoặc thiếu ảnh tham chiếu thì không được chạy. Ảnh đi ngược các điểm trên bị loại, không "sửa dần" sau khi đã thêm chi tiết.
 
 ### Isometric (trục đo 2.5D) cho sprite thế giới — chủ dự án chốt 06/11/2026
 
@@ -107,6 +107,21 @@ Concept preview only; native sprite size and pixel cleanup are a separate produc
 ```
 
 > Khi tạo qua Codex để cắt sprite trong repo, thay "transparent background" bằng nền **đen phẳng #000000** như quy ước ở dưới.
+
+**Texture mặt đất (cỏ, cát, nước, đường đất) — chủ dự án yêu cầu 06/11/2026:** sông, bãi cát và mặt đất phải nối liền. Vì vậy chúng không vẽ thành từng mảnh hình thoi. Mỗi loại là **một texture vuông nhìn thẳng từ trên xuống, lặp liền mạch** (mép trái khớp mép phải, mép trên khớp mép dưới). Game lấy hình sông/bãi cát từ dữ liệu bản đồ, tô bằng texture rồi tự trải cả mặt đất lên nền isometric 2:1 (`squareToIso`), nên mọi đoạn tự nối với nhau. Texture không có vật thể nổi khối (cây, đá to), không bóng đổ, không viền; bảng màu ấm như các mẫu isometric đã duyệt.
+
+**Prompt texture mặt đất dùng lại** (đính kèm ảnh phong cách và các ô isometric đã duyệt để lấy bảng màu; thay phần trong ngoặc vuông):
+
+```text
+Create one seamless pixel-art GROUND TEXTURE for Crowned Kingdoms: [subject].
+This is a flat texture seen STRAIGHT FROM ABOVE (top-down), square, and it TILES SEAMLESSLY: the left edge
+continues into the right edge and the top edge into the bottom edge, with no visible seam, border or vignette.
+The game itself lays it onto the 2:1 isometric ground, so do NOT draw it in isometric or perspective.
+Use the attached approved images ONLY for the warm palette, pixel-cluster size and finish (match the approved
+isometric plots' earth and grass tones). Cozy warm medieval pixel art, crisp square pixel clusters about
+7×7 image px, upper-left lighting, no antialiasing, no blur, no smooth gradients. [Materials and details.]
+No objects that stick up (no trees, big rocks, buildings), no shadows, no text, labels or watermark.
+```
 
 **Kiểm trước khi duyệt (isometric):** thoi 2:1 đúng tỉ lệ · cạnh đất là bậc 2–1 sạch · thấy hai mặt tường và mái từ trên · diềm mái song song đỉnh tường, góc mái trái và phải ngang nhau, không góc mái nào bị nâng · cạnh đứng thẳng · không phối cảnh · ánh sáng trên-trái (mặt trái sáng hơn) · cùng phong cách/màu với mẫu Thợ Gặt · đọc được khi thu nhỏ.
 

@@ -182,6 +182,29 @@ describe('field art', () => {
     }
   });
 
+  it('rings all water with an unbroken sand bank, diagonals too (river and sand join up, 2026-11-06)', () => {
+    const WATER = FIELD_TERRAINS.indexOf('water');
+    const SAND = FIELD_TERRAINS.indexOf('sand');
+    const PATH = FIELD_TERRAINS.indexOf('path');
+    for (let seed = 1; seed <= 12; seed++) {
+      const f = generateField(seed);
+      const at = (col: number, row: number): number => f[row * 48 + col]!;
+      for (let r = 0; r < 48; r++)
+        for (let c = 0; c < 48; c++) {
+          if (at(c, r) !== WATER) continue;
+          for (let dr = -1; dr <= 1; dr++)
+            for (let dc = -1; dc <= 1; dc++) {
+              const nr = r + dr;
+              const nc = c + dc;
+              if (nr < 0 || nc < 0 || nr >= 48 || nc >= 48) continue;
+              const t = at(nc, nr);
+              // only the road may cut a bank (it is drawn last)
+              expect([WATER, SAND, PATH], `seed ${seed} ${nc},${nr} next to water`).toContain(t);
+            }
+        }
+    }
+  });
+
   it('is deterministic per seed and varies between seeds', () => {
     expect(generateField(7)).toEqual(generateField(7));
     const base = generateField(1);

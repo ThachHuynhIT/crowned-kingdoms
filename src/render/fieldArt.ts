@@ -72,6 +72,22 @@ export const generateField = (seed: number): Uint8Array => {
       else if (d2 <= 36 + wobble * 12) f[at(col, row)] = SAND;
     }
 
+  // Every bank is one unbroken ring: a cell touching water (diagonals too) is sand, so the stair-stepped river
+  // never leaves its sand in separate blocks (owner 2026-11-06: river and sand must join up).
+  const wet = f.slice();
+  for (let row = 0; row < N; row++)
+    for (let col = 0; col < N; col++) {
+      if (wet[at(col, row)] === WATER) continue;
+      let touches = false;
+      for (let dr = -1; dr <= 1 && !touches; dr++)
+        for (let dc = -1; dc <= 1; dc++) {
+          const r = row + dr;
+          const c = col + dc;
+          if (r >= 0 && c >= 0 && r < N && c < N && wet[at(c, r)] === WATER) touches = true;
+        }
+      if (touches) f[at(col, row)] = SAND;
+    }
+
   // The road from the enemy's side to the board, drawn last so nothing covers it.
   for (let row = 0; row < N; row++) for (let col = 0; col < N; col++) if (onRoad(col, row)) f[at(col, row)] = PATH;
 
@@ -128,7 +144,38 @@ export const paintFieldTile = (terrain: number, mask: number, seed: number): Pix
  * The whole 768x768 field: 48x48 data cells blended through the dual grid. The 49x49 display
  * tiles are drawn half a tile up-left so the picture is cropped to the data grid.
  */
-export const paintField = (seed: number, grass?: readonly PixelCanvas[]): PixelCanvas => {
+/** Optional seamless ground textures (art px, density 2) that colour the water and sand tiles. */
+export interface GroundTextures {
+  readonly water?: PixelCanvas;
+  readonly sand?: PixelCanvas;
+}
+
+/**
+ * Recolour the opaque pixels of `tile` (drawn at art position ox, oy) from `tex` sampled at the same absolute
+ * art position, wrapped: every tile reads one continuous picture, so neighbouring tiles join without a seam.
+ */
+const textureTile = (tile: PixelCanvas, tex: PixelCanvas, ox: number, oy: number): PixelCanvas => {
+  const out = new PixelCanvas(tile.width, tile.height);
+  for (let y = 0; y < tile.height; y++)
+    for (let x = 0; x < tile.width; x++) {
+      const i = (y * tile.width + x) * 4;
+      if (tile.data[i + 3] === 0) continue;
+      const tx = (((ox + x) % tex.width) + tex.width) % tex.width;
+      const ty = (((oy + y) % tex.height) + tex.height) % tex.height;
+      const j = (ty * tex.width + tx) * 4;
+      out.data[i] = tex.data[j]!;
+      out.data[i + 1] = tex.data[j + 1]!;
+      out.data[i + 2] = tex.data[j + 2]!;
+      out.data[i + 3] = tile.data[i + 3]!;
+    }
+  return out;
+};
+
+export const paintField = (
+  seed: number,
+  grass?: readonly PixelCanvas[],
+  textures?: GroundTextures,
+): PixelCanvas => {
   const data = generateField(seed);
   const source: TerrainSource = {
     width: N,
@@ -149,13 +196,16 @@ export const paintField = (seed: number, grass?: readonly PixelCanvas[]): PixelC
         const mask = layer[ty * dual.width + tx]!;
         if (mask < 0) continue;
         const tileSeed = seed + tx * 7919 + ty * 104729;
+        const ox = (tx * TILE - TILE / 2) * k;
+        const oy = (ty * TILE - TILE / 2) * k;
+        const tex = k === 2 ? (t === WATER ? textures?.water : t === SAND ? textures?.sand : undefined) : undefined;
         const tile =
           k === 2 && grass && t === 0 && mask === 15
             ? grass[Math.floor(pixelHash(tx, ty, seed) * grass.length)]!
             : k === 2
               ? upscale(paintFieldTile(t, mask, tileSeed), 2)
               : paintFieldTile(t, mask, tileSeed);
-        out.blit(tile, (tx * TILE - TILE / 2) * k, (ty * TILE - TILE / 2) * k);
+        out.blit(tex ? textureTile(tile, tex, ox, oy) : tile, ox, oy);
       }
   }
   return out;

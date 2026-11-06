@@ -86,6 +86,13 @@ export const DECOR_APPROVED: readonly string[] = [];
 /** File of an approved wild object. */
 export const decorFile = (id: string): string => `iso/wilds/${id}`;
 
+/**
+ * Seamless ground textures that colour the river and its sand banks (`docs/art-review/iso-board/terrain`,
+ * 128 px, density 2). Only the terrains in `GROUND_TEXTURES_APPROVED` (approved by the owner) are loaded.
+ */
+export const GROUND_TEXTURE_FILES = { water: 'iso/terrain/water', sand: 'iso/terrain/sand' } as const;
+export const GROUND_TEXTURES_APPROVED: readonly (keyof typeof GROUND_TEXTURE_FILES)[] = [];
+
 /** Every PNG of the set (file name without `.png`). */
 export const IMAGE_ART_FILES: readonly string[] = [
   ...Object.values(IMAGE_UNITS).flatMap((prefix) => [
@@ -97,6 +104,7 @@ export const IMAGE_ART_FILES: readonly string[] = [
   ...GRASS_FILES,
   WALL_FILE,
   ...DECOR_APPROVED.map(decorFile),
+  ...GROUND_TEXTURES_APPROVED.map((t) => GROUND_TEXTURE_FILES[t]),
 ];
 
 /** Pose index of each animation frame (the sheets are drawn idle0 idle1 walk0 walk1 attack0 attack1). */

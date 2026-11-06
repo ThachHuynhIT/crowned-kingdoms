@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest';
-import { generateField, paintField } from './fieldArt';
+import { FIELD_TERRAINS, generateField, paintField } from './fieldArt';
 import { GRASS_FILES, IMAGE_ART_FILES, IMAGE_ART_SCALE, IMAGE_BUILDINGS, IMAGE_PLOTS, IMAGE_UNITS, POSES, WALL_FILE, unitPoseFile } from './imageArt';
 import { PixelCanvas, upscale } from './pixel';
 
@@ -78,5 +78,50 @@ describe('paintField with grass art', () => {
       if (c === 0x112233 || c === 0x223344 || c === 0x334455) artPixels++;
     }
     expect(artPixels).toBeGreaterThan(1000);
+  });
+});
+
+describe('paintField with ground textures (river and sand join up, 2026-11-06)', () => {
+  const grass = [0x112233, 0x223344, 0x334455].map((c) => {
+    const t = new PixelCanvas(32, 32);
+    t.fillRect(0, 0, 32, 32, c);
+    return t;
+  });
+  // A 40×24 texture whose colour encodes its own pixel position: (x << 8) | y, blue-ish so it is never grass.
+  const tex = (tag: number): PixelCanvas => {
+    const t = new PixelCanvas(40, 24);
+    for (let y = 0; y < 24; y++) for (let x = 0; x < 40; x++) t.set(x, y, (tag << 16) | (x << 8) | y);
+    return t;
+  };
+  const water = tex(0xa0);
+  const sand = tex(0xb0);
+
+  it('fills water and sand from the textures at their world position, so neighbouring tiles join without a seam', () => {
+    const f = paintField(4, grass, { water, sand });
+    const field = generateField(4);
+    const WATER = FIELD_TERRAINS.indexOf('water');
+    let checked = 0;
+    // Every art pixel of a water cell surrounded by water reads the texture at (x mod 40, y mod 24).
+    for (let row = 1; row < 47; row++)
+      for (let col = 1; col < 47; col++) {
+        const all = [-1, 0, 1].every((dr) => [-1, 0, 1].every((dc) => field[(row + dr) * 48 + col + dc] === WATER));
+        if (!all) continue;
+        for (let py = row * 32; py < row * 32 + 32; py += 7)
+          for (let px = col * 32; px < col * 32 + 32; px += 7) {
+            const i = (py * f.width + px) * 4;
+            expect([f.data[i], f.data[i + 1], f.data[i + 2]]).toEqual([0xa0, px % 40, py % 24]);
+            checked++;
+          }
+      }
+    expect(checked).toBeGreaterThan(20);
+  });
+
+  it('keeps the river and bank shapes of the data (the textures only colour them)', () => {
+    const plainShape = paintField(4, grass);
+    const textured = paintField(4, grass, { water, sand });
+    expect([textured.width, textured.height]).toEqual([plainShape.width, plainShape.height]);
+    let holes = 0;
+    for (let i = 3; i < textured.data.length; i += 4) if (textured.data[i] !== 255) holes++;
+    expect(holes).toBe(0);
   });
 });

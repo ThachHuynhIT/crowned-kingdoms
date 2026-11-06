@@ -265,6 +265,78 @@ def main_iso_set(only=None):
     print(path)
 
 
+# ---- Ground textures (owner 2026-11-06: river and sand banks must join up) ----------------------------------
+
+def texture_template():
+    """The fenced `text` block after "Prompt texture mặt đất dùng lại" in docs/ART_STYLE.md."""
+    doc = ROOT / STYLE_DOC
+    if not doc.exists():
+        raise SystemExit(f'{STYLE_DOC} is missing: refusing to generate images without the style document')
+    text = doc.read_text(encoding='utf-8')
+    m = re.search(r'\*\*Prompt texture mặt đất dùng lại\*\*.*?```text\n(.*?)```', text, re.S)
+    if m is None:
+        raise SystemExit(f'{STYLE_DOC}: "Prompt texture mặt đất dùng lại" block not found')
+    if not (ROOT / REFERENCE).exists():
+        raise SystemExit(f'{REFERENCE} is missing: refusing to generate images without the approved reference')
+    return m.group(1).replace('\r\n', '\n')
+
+
+TEXTURE_REFS = [
+    'docs/art-review/style-references/iso-plot-open-approved.png',
+    'docs/art-review/style-references/iso-plot-built-approved.png',
+]
+
+GROUND_TEXTURES = [
+    ('terrain_water', 'calm river WATER',
+     'Warm teal-blue river water (not a harsh saturated blue): two or three close blue-green tones, soft horizontal '
+     'ripple lines of slightly lighter pixels and a few tiny white glints, evenly spread so the texture repeats '
+     'without a pattern that stands out; no banks, no sand, no foam border.'),
+    ('terrain_sand', 'river-bank SAND',
+     'Warm pale golden sand matching the approved plots\' earth tones: two or three close sand tones, faint wind '
+     'ripples, a few tiny pebbles and one or two very small shells, evenly spread; no water, no grass, no border.'),
+]
+
+TEXTURE_FOOTER = """
+YÊU CẦU SẢN XUẤT: ảnh VUÔNG 1024×1024, texture phủ KÍN cả ảnh (không nền đen, không khung, không viền, không khoảng trống), LẶP LIỀN MẠCH theo cả hai chiều. "Pixel" lớn khoảng 7×7 điểm ảnh.
+Khi xong, in đường dẫn file đã lưu và kích thước ảnh.
+"""
+
+
+def build_texture_prompt(out, name, desc, template=None):
+    template = template or texture_template()
+    body = template.replace('[subject]', name).replace('[Materials and details.]', desc)
+    head = HEADER.format(out=out, doc=STYLE_DOC, ref=REFERENCE).replace(
+        'mục "Góc nhìn" (khung BẮT BUỘC, quy ước công trình, mẫu đã duyệt, kiểm trước khi duyệt)',
+        'mục "Góc nhìn" (khung BẮT BUỘC, mục "Texture mặt đất" và khối "Prompt texture mặt đất dùng lại")',
+    ).replace(
+        'lấy GÓC NHÌN, cách đổ khối mái/mặt tiền, mức chi tiết và phong cách từ đó',
+        'CHỈ lấy bảng màu, cỡ cụm pixel và độ hoàn thiện từ đó (texture vẽ nhìn thẳng từ trên xuống, KHÔNG isometric)',
+    )
+    refs = ', '.join(f'`{r}`' for r in TEXTURE_REFS)
+    return head + f'Ảnh đã duyệt đính kèm thêm để lấy bảng màu: {refs}.\n\n' + body + TEXTURE_FOOTER
+
+
+def main_textures(only=None):
+    template = texture_template()
+    runner = ['#!/bin/bash', f'cd "{ROOT.as_posix()}"']
+    for ident, name, desc in GROUND_TEXTURES:
+        if only and ident not in only:
+            continue
+        d = ROOT / ISO_DIR / 'terrain' / ident
+        d.mkdir(parents=True, exist_ok=True)
+        out = (d / 'source.png').relative_to(ROOT).as_posix()
+        (d / 'prompt.md').write_text(build_texture_prompt(out, name, desc, template), encoding='utf-8')
+        prompt = (d / 'prompt.md').relative_to(ROOT).as_posix()
+        images = ' '.join(f'-i {r}' for r in [REFERENCE, *TEXTURE_REFS])
+        runner.append(f'codex exec --sandbox workspace-write -C "$PWD" {images} - < {prompt} > .superpowers/codex-tex-{ident}.out 2>&1')
+        runner.append(f'if [ -s {out} ]; then echo "{ident} ok" >> .superpowers/b-textures.log; else echo "{ident} MISSING" >> .superpowers/b-textures.log; fi')
+    runner.append('echo done >> .superpowers/b-textures.log')
+    (ROOT / '.superpowers').mkdir(exist_ok=True)
+    path = ROOT / '.superpowers/b-textures.sh'
+    path.write_text('\n'.join(runner) + '\n', encoding='utf-8', newline='\n')
+    print(path)
+
+
 def build_prompt(out, name, desc, theme, template=None):
     template = template or style_template()
     body = template.replace('[building and function]', f'{name}').replace(
@@ -278,6 +350,9 @@ def main(group, only=None):
         return
     if group == 'wheat-iso':
         main_iso_set(only)
+        return
+    if group == 'terrain-textures':
+        main_textures(only)
         return
     cfg = GROUPS[group]
     template = style_template()

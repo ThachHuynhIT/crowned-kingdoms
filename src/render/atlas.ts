@@ -5,7 +5,7 @@ import type { CardDef, CardId, UnitId } from '../data/types';
 import type { Content } from '../game/cards/registry';
 import { paintBuilding, paintThrone } from './buildingArt';
 import { paintCardArt } from './cardArt';
-import { paintField, paintGroundTile } from './fieldArt';
+import { paintField, paintGroundTile, type GroundTextures } from './fieldArt';
 import {
   ARROW_DIRS,
   paintArrow,
@@ -19,6 +19,8 @@ import {
 import { ICON_IDS, paintIcon, type IconId } from './iconArt';
 import {
   GRASS_FILES,
+  GROUND_TEXTURE_FILES,
+  GROUND_TEXTURES_APPROVED,
   IMAGE_ART_SCALE,
   IMAGE_BUILDINGS,
   IMAGE_PLOTS,
@@ -258,6 +260,16 @@ export const grassArt = (textures: Phaser.Textures.TextureManager): PixelCanvas[
   return tiles.every((t) => t !== null) ? (tiles as PixelCanvas[]) : null;
 };
 
+/** The approved, loaded river and sand textures (a missing one keeps the generated look). */
+export const groundTextures = (textures: Phaser.Textures.TextureManager): GroundTextures => {
+  const out: { water?: PixelCanvas; sand?: PixelCanvas } = {};
+  for (const t of GROUND_TEXTURES_APPROVED) {
+    const art = imageFile(textures, GROUND_TEXTURE_FILES[t]);
+    if (art) out[t] = art;
+  }
+  return out;
+};
+
 /**
  * Plot frames laid onto the isometric ground (spec 2026-11-06): each square plot picture becomes
  * a 2:1 diamond (`squareToIso`) until isometric plot art replaces it (Task 11).
@@ -309,6 +321,6 @@ export const ensureFieldTexture = (
 ): string => {
   const key = fieldKey(seed);
   // The square field laid onto the isometric ground (spec 2026-11-06): a diamond, top corner = world (0, 0).
-  if (!textures.exists(key)) addPixelTexture(textures, key, squareToIso(paintField(seed, grassArt(textures) ?? undefined)));
+  if (!textures.exists(key)) addPixelTexture(textures, key, squareToIso(paintField(seed, grassArt(textures) ?? undefined, groundTextures(textures))));
   return key;
 };
