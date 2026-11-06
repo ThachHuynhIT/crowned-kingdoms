@@ -78,3 +78,11 @@ Việc G3e khác (giữ nguyên): biểu tượng UI chung (12 mẫu chờ duy�
 - Duyệt từng nhóm nhỏ; thử một mẫu trước khi vẽ cả nhóm; mọi prompt lấy từ `docs/ART_STYLE.md` kèm ảnh tham chiếu (`tools/test_art_prompts.py` chặn khi thiếu).
 - Chưa nối ảnh mới vào `src` khi người dùng chưa duyệt; ảnh bị loại cất vào thư mục `_rejected_*`.
 - PR chỉ vào `develop`; không đụng `.agents/` và `AGENTS.md`; Codex không chạy được node nên phải tự kiểm lại kết quả của nó.
+
+## Bàn cờ isometric — cổng mẫu P3 (06/11/2026)
+
+PR #13 (nhánh `iso-board-redesign`) đã xong P1 (ô 64 px, Ngai hàng sau, khu tập kết, một đường) và P2 (zoom 1×–3×, kéo bản đồ). Với P3:
+
+- ART_STYLE có thêm mục "Isometric (trục đo 2.5D) cho sprite thế giới" và khối "Prompt isometric dùng lại". Tranh thẻ vẫn theo khối chính diện 45°.
+- Hai mẫu (nhà Đội Thợ Gặt và ô đất mở) nằm ở `docs/art-review/iso-board/`, đang **chờ chủ dự án duyệt**. Xem `sample-review.md` và `sample-comparison.png`.
+- Chưa duyệt thì không làm renderer isometric và không vẽ cả bộ.

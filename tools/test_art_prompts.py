@@ -55,6 +55,51 @@ class ArtPromptGateTest(unittest.TestCase):
             mp.ROOT = old_root
 
 
+class IsoSamplePromptGateTest(unittest.TestCase):
+    """Isometric world sprites (owner decision 2026-11-06): their own block in docs/ART_STYLE.md, samples first."""
+
+    def test_iso_template_is_its_own_block_in_the_style_doc(self):
+        t = mp.iso_template()
+        self.assertIn('ISOMETRIC', t)
+        self.assertIn('2:1', t)
+        self.assertIn('[subject]', t)
+        self.assertIn('[Materials and identifying details.]', t)
+        self.assertNotIn('STRICT straight-on FRONT VIEW', t)
+        self.assertNotIn('NO isometric view', t)
+        # the card illustrations keep the approved front-view block
+        self.assertIn('STRICT straight-on FRONT VIEW', mp.style_template())
+
+    def test_sample_prompts_read_the_doc_attach_the_reference_and_say_so(self):
+        self.assertEqual([s[0] for s in mp.ISO_SAMPLES], ['sample-building', 'sample-plot'])
+        for ident, name, desc in mp.ISO_SAMPLES:
+            p = mp.build_iso_prompt(f'x/{ident}/source.png', name, desc)
+            self.assertIn('docs/ART_STYLE.md', p, ident)
+            self.assertIn('BẮT BUỘC TRƯỚC KHI VẼ', p, ident)
+            self.assertIn(mp.REFERENCE, p, ident)
+            self.assertIn('ISOMETRIC', p, ident)
+            self.assertIn('#000000', p, ident)
+            self.assertIn(name, p, ident)
+            self.assertNotIn('[subject]', p, ident)
+
+    def test_sample_mode_writes_exactly_the_two_samples_and_attaches_the_reference(self):
+        mp.main('iso-sample')
+        runner = (ROOT / '.superpowers/b-iso-sample.sh').read_text(encoding='utf-8')
+        self.assertEqual(runner.count('codex exec'), 2)
+        self.assertEqual(runner.count(f'-i {mp.REFERENCE}'), 2)
+        for ident, _, _ in mp.ISO_SAMPLES:
+            self.assertTrue((ROOT / 'docs/art-review/iso-board' / ident / 'prompt.md').exists(), ident)
+
+    def test_iso_generation_is_refused_without_the_doc_or_reference(self):
+        old_root = mp.ROOT
+        try:
+            with tempfile.TemporaryDirectory() as d:
+                mp.ROOT = Path(d)
+                with self.assertRaises(SystemExit):
+                    mp.iso_template()
+        finally:
+            mp.ROOT = old_root
+
+
 pspec = importlib.util.spec_from_file_location('portrait_prompts', ROOT / 'docs/art-review/g3e/portraits/make_prompts.py')
 pp = importlib.util.module_from_spec(pspec)
 pspec.loader.exec_module(pp)

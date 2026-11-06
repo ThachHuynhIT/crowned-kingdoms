@@ -1,6 +1,7 @@
 """Write one Codex prompt per building of a group and a runner script (sequential, one image per run).
 
     python docs/art-review/g3e/buildings/make_prompts.py wheat [building_id ...]
+    python docs/art-review/g3e/buildings/make_prompts.py iso-sample     # the two isometric samples (2026-11-06 gate)
 
 The style rules are NOT written here: the prompt is built from the "Prompt mẫu dùng lại" block of docs/ART_STYLE.md
 (single source of truth) and the approved reference image is always attached. Generation refuses to run when either is
@@ -63,6 +64,71 @@ def style_template():
     return m.group(1).replace('\r\n', '\n')
 
 
+def iso_template():
+    """The fenced `text` block after "Prompt isometric dùng lại" in docs/ART_STYLE.md (world sprites, 2026-11-06)."""
+    doc = ROOT / STYLE_DOC
+    if not doc.exists():
+        raise SystemExit(f'{STYLE_DOC} is missing: refusing to generate images without the style document')
+    text = doc.read_text(encoding='utf-8')
+    m = re.search(r'\*\*Prompt isometric dùng lại\*\*.*?```text\n(.*?)```', text, re.S)
+    if m is None:
+        raise SystemExit(f'{STYLE_DOC}: "Prompt isometric dùng lại" block not found')
+    if not (ROOT / REFERENCE).exists():
+        raise SystemExit(f'{REFERENCE} is missing: refusing to generate images without the approved reference')
+    return m.group(1).replace('\r\n', '\n')
+
+
+ISO_DIR = 'docs/art-review/iso-board'
+
+# The sample gate of 2026-11-06: one building and one ground tile, approved before anything else is drawn.
+ISO_SAMPLES = [
+    ('sample-building', 'Đội Thợ Gặt (the reapers\' farmhouse barn, a troop building of the Wheat king), seen in 2:1 isometric',
+     'The same building as the attached approved reference, redrawn in isometric: a farmhouse barn with a clay-tile '
+     'roof seen from above, cream plaster and dark timber walls, a big sickle hung beside the door on the left '
+     '(south-west) wall, wheat sheaves, grain baskets, rakes and sacks around the door, a hayloft window. Its '
+     'footprint is one small diamond. Theme: farm kingdom, warm bright wood, golden straw, clay tiles.'),
+    ('sample-plot', 'one open farm plot of the Wheat king, a single flat 2:1 isometric ground tile',
+     'A diamond of freshly tilled brown soil in a few diagonal furrows, framed by a thin rim of short grass and '
+     'four small wooden fence posts at the diamond corners; the two front edges show a few pixels of earth '
+     'thickness. Flat ground only: no building, no crops standing tall. Theme: farm kingdom, warm earth and grass.'),
+]
+
+ISO_FOOTER = """
+YÊU CẦU SẢN XUẤT (ghi đè phần "transparent background" ở trên): ảnh 1024×1024, nền ĐEN PHẲNG #000000 hoàn toàn (không quầng sáng, không bóng đổ lên nền, không nền đất/cỏ ngoài chính vật thể). MỘT vật thể duy nhất ở giữa ảnh. Công trình: hình thoi chân rộng khoảng 440 px, đáy hình thoi chân ở khoảng y = 900. Ô đất: hình thoi rộng khoảng 900 px, cao khoảng 450 px (đúng 2:1), nằm giữa ảnh. "Pixel" lớn khoảng 7×7 điểm ảnh, cạnh thoi là bậc pixel 2 ngang – 1 dọc.
+Khi xong, in đường dẫn file đã lưu và kích thước ảnh.
+"""
+
+
+def build_iso_prompt(out, name, desc, template=None):
+    template = template or iso_template()
+    body = template.replace('[subject]', name).replace('[Materials and identifying details.]', desc)
+    return HEADER.format(out=out, doc=STYLE_DOC, ref=REFERENCE).replace(
+        'mục "Góc nhìn" (khung BẮT BUỘC, quy ước công trình, mẫu đã duyệt, kiểm trước khi duyệt)',
+        'mục "Góc nhìn" (khung BẮT BUỘC, mục con "Isometric (trục đo 2.5D) cho sprite thế giới", khối "Prompt isometric dùng lại", "Kiểm trước khi duyệt (isometric)")',
+    ).replace(
+        'lấy GÓC NHÌN, cách đổ khối mái/mặt tiền, mức chi tiết và phong cách từ đó',
+        'CHỈ lấy phong cách, bảng màu, chất liệu và cỡ cụm pixel từ đó, KHÔNG lấy góc nhìn chính diện của nó (góc nhìn là isometric 2:1)',
+    ) + body + ISO_FOOTER
+
+
+def main_iso_sample():
+    template = iso_template()
+    runner = ['#!/bin/bash', f'cd "{ROOT.as_posix()}"']
+    for ident, name, desc in ISO_SAMPLES:
+        d = ROOT / ISO_DIR / ident
+        d.mkdir(parents=True, exist_ok=True)
+        out = (d / 'source.png').relative_to(ROOT).as_posix()
+        (d / 'prompt.md').write_text(build_iso_prompt(out, name, desc, template), encoding='utf-8')
+        prompt = (d / 'prompt.md').relative_to(ROOT).as_posix()
+        runner.append(f'codex exec --sandbox workspace-write -C "$PWD" -i {REFERENCE} - < {prompt} > .superpowers/codex-iso-{ident}.out 2>&1')
+        runner.append(f'if [ -s {out} ]; then echo "{ident} ok" >> .superpowers/b-iso-sample.log; else echo "{ident} MISSING" >> .superpowers/b-iso-sample.log; fi')
+    runner.append('echo done >> .superpowers/b-iso-sample.log')
+    (ROOT / '.superpowers').mkdir(exist_ok=True)
+    path = ROOT / '.superpowers/b-iso-sample.sh'
+    path.write_text('\n'.join(runner) + '\n', encoding='utf-8', newline='\n')
+    print(path)
+
+
 def build_prompt(out, name, desc, theme, template=None):
     template = template or style_template()
     body = template.replace('[building and function]', f'{name}').replace(
@@ -71,6 +137,9 @@ def build_prompt(out, name, desc, theme, template=None):
 
 
 def main(group, only=None):
+    if group == 'iso-sample':
+        main_iso_sample()
+        return
     cfg = GROUPS[group]
     template = style_template()
     runner = ['#!/bin/bash', f'cd "{ROOT.as_posix()}"']

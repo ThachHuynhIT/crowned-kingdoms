@@ -8,13 +8,13 @@ Nguồn luật màu/kích thước mở: **yêu cầu chủ dự án ngày 23/10
 
 ## Kích thước theo metadata
 
-Giữ ô logic **32 px** và sân logic **384 px**, không đổi mô phỏng theo art. Kích thước canvas/frame là số nguyên dương, khai báo và kiểm đúng metadata (đơn vị theo `UnitDef.sprite`, UI qua `uiFrameDef`); không có danh sách kích thước đóng. Bảng dưới ghi các kích thước hiện tại để tham khảo. G3e giữ công trình 32×40, Ngai 32×48 và kích thước lính hiện tại, không biến chúng thành giới hạn chung.
+Từ 06/11/2026 (spec [bàn cờ isometric](superpowers/specs/2026-11-06-iso-board-redesign-design.md)) ô logic là **64 px** và sân logic **768 px**; công trình và lính giữ nguyên kích thước world (ô to ra, nhà không to theo). Không đổi mô phỏng theo art. Kích thước canvas/frame là số nguyên dương, khai báo và kiểm đúng metadata (đơn vị theo `UnitDef.sprite`, UI qua `uiFrameDef`); không có danh sách kích thước đóng. Bảng dưới ghi các kích thước hiện tại để tham khảo. G3e giữ công trình 32×40, Ngai 32×48 và kích thước lính hiện tại, không biến chúng thành giới hạn chung.
 
 | Thứ                        | Kích thước             | Ghi chú                                                                        |
 | -------------------------- | ---------------------- | ------------------------------------------------------------------------------ |
 | Tile cánh đồng             | 16×16                  | Dual-grid (cỏ < cỏ hoa < đường đất < cát; ao là nước)                          |
-| Ô bàn cờ                   | 32×32                  | Ô mở trống (đất xới viền cỏ), ô khoá (cỏ rậm + cọc rào + biển giá), bệ Ngai đá |
-| Công trình                 | 32×40                  | Đứng trên mép dưới ô, phần cao 8 px tràn lên ô phía Bắc (y-sort)               |
+| Ô bàn cờ                   | 64×64 world (art 32×32 phóng ×2 nguyên) | Ô mở trống (đất xới viền cỏ), ô khoá (cỏ rậm + cọc rào + biển giá), bệ Ngai đá; nửa đông của ô là khu tập kết lính. Sau P3: hình thoi 2:1 |
+| Công trình                 | 32×40                  | Chân lệch 14 px về phía tây ô, sprite neo dưới chân 16 px (y-sort)             |
 | Ngai                       | 32×48                  |                                                                                |
 | Lính nhỏ chibi             | 16×16                  | Dân quân, sói, nhện, xương…; đầu ≈ 40% chiều cao                               |
 | Lính cao                   | 16×24                  | Người cầm vũ khí dài, pháp sư, kỵ binh                                         |
@@ -71,7 +71,41 @@ Khung thẻ theo độ hiếm (thêm vào texture `ui` từ G1): thường = vi�
 
 ## Góc nhìn
 
-> **BẮT BUỘC cho mọi lần tạo ảnh (người hay AI/Codex).** Trước khi tạo hoặc yêu cầu tạo BẤT KỲ ảnh nào cho game (công trình, lính, địa hình, vật trang trí, tường núi, icon…), phải: (1) đọc hết mục "Góc nhìn" này và mục "Quy tắc vẽ" ở trên; (2) đính kèm ảnh tham chiếu đã duyệt `art-review/style-references/harvester-house-front-approved.png` cho mọi công trình, và ảnh đã duyệt cùng loại (nếu có) cho loại khác; (3) dựng prompt từ **Prompt mẫu dùng lại** bên dưới (công cụ `docs/art-review/g3e/buildings/make_prompts.py` lấy đúng khối này, không tự chép lại); (4) duyệt kết quả bằng **Kiểm trước khi duyệt**. Prompt không dẫn tới tài liệu này hoặc thiếu ảnh tham chiếu thì không được chạy. Ảnh đi ngược các điểm trên bị loại, không "sửa dần" sau khi đã thêm chi tiết.
+> **BẮT BUỘC cho mọi lần tạo ảnh (người hay AI/Codex).** Trước khi tạo hoặc yêu cầu tạo BẤT KỲ ảnh nào cho game (công trình, lính, địa hình, vật trang trí, tường núi, icon…), phải: (1) đọc hết mục "Góc nhìn" này và mục "Quy tắc vẽ" ở trên; (2) đính kèm ảnh tham chiếu đã duyệt `art-review/style-references/harvester-house-front-approved.png` cho mọi công trình, và ảnh đã duyệt cùng loại (nếu có) cho loại khác; (3) dựng prompt từ khối prompt mẫu đúng loại bên dưới — khối "Prompt isometric dùng lại" cho sprite thế giới (công trình, ô đất, tường, vật trang trí), khối "Prompt mẫu dùng lại" (chính diện 45°) cho tranh thẻ — qua công cụ `docs/art-review/g3e/buildings/make_prompts.py` (lấy đúng khối, không tự chép lại); (4) duyệt kết quả bằng mục kiểm tương ứng. Prompt không dẫn tới tài liệu này hoặc thiếu ảnh tham chiếu thì không được chạy. Ảnh đi ngược các điểm trên bị loại, không "sửa dần" sau khi đã thêm chi tiết.
+
+### Isometric (trục đo 2.5D) cho sprite thế giới — chủ dự án chốt 06/11/2026
+
+Từ 06/11/2026 **thế giới** (mặt đất, ô bàn cờ, công trình, tường núi, vật trang trí) chuyển sang **isometric 2:1** (chủ dự án chốt, spec [bàn cờ isometric](superpowers/specs/2026-11-06-iso-board-redesign-design.md)). Mô phỏng trận vẫn tính trên lưới vuông; chỉ cách vẽ đổi. **Cổng duyệt:** trước hết chỉ vẽ **một công trình mẫu + một ô đất mẫu** (`docs/art-review/iso-board/`), đặt cạnh bản hiện tại để chủ dự án duyệt; chưa duyệt thì không vẽ cả bộ và không nối vào game. Sau khi duyệt, ảnh mẫu thành tham chiếu góc nhìn cùng loại và được ghi ngày duyệt ở đây. Lính chính diện hiện tại dùng tạm; tranh thẻ và chân dung giữ quy chuẩn riêng của chúng.
+
+- **Mặt đất:** mỗi ô vuông world hiện thành **hình thoi rộng gấp đôi cao (2:1)**: cạnh thoi là bậc pixel "2 ngang – 1 dọc", không răng cưa lộn xộn. Ô đất có mép dày vài pixel ở hai cạnh phía trước (tây-nam, đông-nam) để thấy độ dày.
+- **Công trình:** thấy **hai mặt tường** (trái hướng tây-nam, phải hướng đông-nam) và **mái nhìn từ trên xuống**; đường ngang của nhà chạy theo hai trục chéo 2:1, cạnh đứng vẫn thẳng đứng. Chân nhà là một hình thoi 2:1 nằm gọn trong **nửa tây** của ô (nửa đông là khu tập kết lính). Ánh sáng trên-trái: mặt tây-nam sáng hơn mặt đông-nam.
+- **Không:** không nhìn chính diện, không phối cảnh (đường song song vẫn song song), không xoay lệch khỏi hai trục 2:1, không đổ bóng mềm.
+- **Giữ từ mẫu Thợ Gặt:** chất liệu, bảng màu ấm, cỡ cụm pixel, viền màu tối của vật liệu, mức chi tiết. Ảnh mẫu Thợ Gặt chỉ dùng làm tham chiếu **phong cách**, không lấy góc nhìn của nó.
+
+**Prompt isometric dùng lại** (đính kèm ảnh tham chiếu phong cách; thay phần trong ngoặc vuông):
+
+```text
+Create one isolated pixel-art asset for Crowned Kingdoms: [subject].
+Use the attached approved harvester house ONLY as the style reference (materials, warm palette,
+pixel-cluster size, dark material-colored outlines, level of detail). Do NOT copy its front-facing camera.
+ISOMETRIC view, classic 2:1 pixel-art isometric (dimetric): the ground footprint is a DIAMOND twice as
+wide as it is tall; edges that run along the ground follow the two diagonal axes as clean 2-across-1-up
+pixel steps; vertical edges stay vertical; parallel lines stay parallel (no perspective).
+For a building: two walls are visible (left wall facing south-west, right wall facing south-east) and the
+roof is seen from above; its footprint is one small diamond. For a ground tile: a flat diamond seen from
+above with a few pixels of visible thickness on its two front edges.
+Upper-left lighting: the left (south-west) faces are lighter than the right (south-east) faces.
+Cozy warm medieval pixel art, crisp square pixel clusters. [Materials and identifying details.]
+Whole asset visible, transparent background, padding around it.
+No people, text, labels, UI, watermark, blur, soft shadows or antialiasing.
+Concept preview only; native sprite size and pixel cleanup are a separate production step.
+```
+
+> Khi tạo qua Codex để cắt sprite trong repo, thay "transparent background" bằng nền **đen phẳng #000000** như quy ước ở dưới.
+
+**Kiểm trước khi duyệt (isometric):** thoi 2:1 đúng tỉ lệ · cạnh đất là bậc 2–1 sạch · thấy hai mặt tường và mái từ trên · cạnh đứng thẳng · không phối cảnh · ánh sáng trên-trái (mặt trái sáng hơn) · cùng phong cách/màu với mẫu Thợ Gặt · đọc được khi thu nhỏ.
+
+### Chính diện 45° (Stardew 2.5D) — tranh thẻ và sprite hiện có
 
 Từ 26/10/2026 cảnh theo **Stardew Valley 2.5D** (đã chốt với chủ dự án), không còn nhìn thẳng từ trên xuống và không phải isometric. Camera nhìn xuống **45°** (chủ dự án chốt 26/10/2026: nhìn xéo xuống 45°), mặt đất là lưới vuông; vật đứng được vẽ như sau:
 
@@ -151,7 +185,7 @@ Phong cách **đã được chủ dự án duyệt trong chat (29/10/2026)** qua
 
 ## Hiển thị
 
-- Game chạy `pixelArt: true` (nearest-neighbour) và **zoom số nguyên** (vương quốc: zoom 2; trận: `max(1, floor(min(width, height + 96) / 384))`). Không bao giờ scale lẻ; sprite/scroll hiển thị snap pixel, không sửa float của world để snap render. Chữ `FONT_UI` vẽ ở kích thước hiển thị gốc, không scale texture text theo tỷ lệ lẻ; kiểm độ rõ/glyph tiếng Việt bằng browser.
+- Game chạy `pixelArt: true` (nearest-neighbour) và **zoom số nguyên**: bậc tổng quan `max(1, floor(min(width, height + 96) / 768))` (thường là 1), người chơi zoom thêm 2×/3× bằng lăn chuột hoặc chụm hai ngón (06/11/2026). Không bao giờ scale lẻ; sprite/scroll hiển thị snap pixel, không sửa float của world để snap render. Chữ `FONT_UI` vẽ ở kích thước hiển thị gốc, không scale texture text theo tỷ lệ lẻ; kiểm độ rõ/glyph tiếng Việt bằng browser.
 
 ## Pipeline art sinh bằng code
 
