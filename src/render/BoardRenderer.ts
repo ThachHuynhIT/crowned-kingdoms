@@ -1,10 +1,11 @@
 import type Phaser from 'phaser';
 import { BATTLE } from '../data/battle';
-import { toCss } from '../data/palette';
+import { DEPLOY_BOX } from '../data/boardGeometry';
+import { PALETTE, toCss } from '../data/palette';
 import { UI_PALETTE } from '../data/uiPalette';
 import type { CardId } from '../data/types';
 import type { Edge } from '../game/battle/types';
-import { plotCenter } from '../game/battle/world';
+import { plotCenter, structureFoot } from '../game/battle/world';
 import type { Content } from '../game/cards/registry';
 import { unlockCost } from '../data/run';
 import { THRONE_PLOT, adjacentToUnlocked } from '../game/run/board';
@@ -37,8 +38,24 @@ const HIGHLIGHT_COLOR: Readonly<Record<PlotHighlight, number>> = {
   selected: UI_PALETTE.gold,
 };
 
-/** Foot y of a building standing on `plot` (the bottom edge of the cell, spec §11.2). */
-export const buildingFootY = (plot: number): number => plotCenter(plot).y + BATTLE.plot / 2;
+/** World px one plot frame covers at its frame scale (the 32 px plot art of the old 32 px cells). */
+export const PLOT_ART_PX = 32;
+/**
+ * A building sprite's foot sits this far south of its structure position (spec 06/11/2026): half a
+ * 32 px building, so the sprite is centred on the body that collides in battle.
+ */
+export const BUILDING_FOOT_DY = 16;
+/** Ground layer just above the plots: the dirt deploy boxes. */
+const BOX_DEPTH = 1.5;
+
+/** Where a building on `plot` is drawn: its structure foot (west half of the plot), lowered by `BUILDING_FOOT_DY`. */
+export const buildingFoot = (plot: number): { x: number; y: number } => {
+  const f = structureFoot(plot);
+  return { x: f.x, y: f.y + BUILDING_FOOT_DY };
+};
+
+/** Foot y of a building standing on `plot`. */
+export const buildingFootY = (plot: number): number => buildingFoot(plot).y;
 
 /**
  * The 5x5 board outside battle: plot ground, buildings anchored at their feet on the bottom
@@ -57,6 +74,8 @@ export class BoardRenderer {
   private readonly marks: Phaser.GameObjects.Graphics;
   /** "4"-style gold price on every locked plot next to an open one. */
   private readonly prices: Phaser.GameObjects.Text[] = [];
+  /** Dirt deploy boxes on the plots whose building raises troops (spec 06/11/2026, C). */
+  private readonly boxes: Phaser.GameObjects.Graphics;
   private buildingsVisible = true;
 
   constructor(scene: Phaser.Scene, content: Content) {
@@ -73,6 +92,7 @@ export class BoardRenderer {
     this.highlights = scene.add.graphics().setDepth(HIGHLIGHT_DEPTH);
     this.arrows = scene.add.graphics().setDepth(ARROW_DEPTH);
     this.marks = scene.add.graphics().setDepth(MARK_DEPTH);
+    this.boxes = scene.add.graphics().setDepth(BOX_DEPTH);
   }
 
   /** Redraw plots and buildings from the run state. */
@@ -82,12 +102,13 @@ export class BoardRenderer {
       const plot = state.plots[p];
       const ground = p === THRONE_PLOT ? 'throne' : plot?.unlocked ? 'open' : 'locked';
       const frame = kingPlotFrame(state.kingId, ground);
-      this.plots[p]!.setFrame(frame).setScale(imageFrameScale(frame));
+      this.plots[p]!.setFrame(frame).setScale(imageFrameScale(frame) * (BATTLE.plot / PLOT_ART_PX));
       const cardId = p === THRONE_PLOT ? throneId : (plot?.building?.cardId ?? null);
       this.setBuilding(p, cardId);
     }
     this.drawMarks(state);
     this.drawPrices(state);
+    this.drawBoxes(state);
   }
 
   /** Hide buildings while the battle renders them as structures (UnitRenderer). */
@@ -157,6 +178,7 @@ export class BoardRenderer {
     this.highlights.destroy();
     this.arrows.destroy();
     this.marks.destroy();
+    this.boxes.destroy();
     for (const t of this.prices) t.destroy();
     this.prices.length = 0;
   }
@@ -180,6 +202,23 @@ export class BoardRenderer {
       };
       if (level > 1) for (let i = 0; i < level; i++) pip(i, c.y + BATTLE.plot / 2 - 6, UI_PALETTE.gold);
       for (let i = 0; i < stacks; i++) pip(i, c.y - BATTLE.plot / 2 + 3, UI_PALETTE.select);
+    }
+  }
+
+  /** A low dirt patch in the deploy box of every plot whose building raises troops. */
+  private drawBoxes(state: RunState): void {
+    const g = this.boxes;
+    g.clear();
+    const w = DEPLOY_BOX.x1 - DEPLOY_BOX.x0;
+    const h = DEPLOY_BOX.y1 - DEPLOY_BOX.y0;
+    for (let p = 0; p < PLOTS; p++) {
+      const b = state.plots[p]?.building;
+      if (!b || p === THRONE_PLOT || this.content.card(b.cardId).kind !== 'troop') continue;
+      const c = plotCenter(p);
+      g.fillStyle(PALETTE.soil, 1);
+      g.fillRect(c.x + DEPLOY_BOX.x0, c.y + DEPLOY_BOX.y0, w, h);
+      g.lineStyle(1, PALETTE.path, 1);
+      g.strokeRect(c.x + DEPLOY_BOX.x0, c.y + DEPLOY_BOX.y0, w, h);
     }
   }
 
@@ -225,13 +264,12 @@ export class BoardRenderer {
       return;
     }
     if (img === null) {
-      const c = plotCenter(plot);
-      const foot = buildingFootY(plot);
+      const foot = buildingFoot(plot);
       img = this.scene.add
-        .image(c.x, foot, SPRITES_KEY, buildingFrame(cardId))
+        .image(foot.x, foot.y, SPRITES_KEY, buildingFrame(cardId))
         .setOrigin(0.5, 1)
         .setScale(imageFrameScale(buildingFrame(cardId)))
-        .setDepth(foot);
+        .setDepth(foot.y);
       this.buildings[plot] = img;
     } else if (shown !== cardId) {
       img.setFrame(buildingFrame(cardId)).setScale(imageFrameScale(buildingFrame(cardId)));

@@ -10,7 +10,10 @@ import { battleResult } from './step';
 import { addDot } from './statuses';
 import { pickShotTarget, retarget } from './targeting';
 import type { UnitStats } from './types';
-import { TEAM_ALLY, TEAM_FOE, addUnit, createBattle, drainEvents, type BattleWorld } from './world';
+import { TEAM_ALLY, TEAM_FOE, addUnit, createBattle, drainEvents, structureFoot, type BattleWorld } from './world';
+
+/** Chân Ngai của fixture (plot 12). Các trận khác đặt lính ở y ≥ 220, xa tường núi phía bắc. */
+const T = structureFoot(12);
 
 const arena = (): BattleWorld => createBattle(battleSetup({ throne: throneSetup({ attack: null }) }));
 
@@ -28,8 +31,8 @@ const strike = (w: BattleWorld, a: number, v: number): void => {
 describe('lifesteal and healAlly', () => {
   it('lifesteal 40% heals 3 from a raw 10 against armor 0.25 (heal is on damage after armor)', () => {
     const w = arena();
-    const a = spawn(w, TEAM_ALLY, 100, 20, { onHit: [{ type: 'lifesteal', pct: 40 }] });
-    const v = spawn(w, TEAM_FOE, 109, 20, { armor: 0.25 });
+    const a = spawn(w, TEAM_ALLY, 100, 220, { onHit: [{ type: 'lifesteal', pct: 40 }] });
+    const v = spawn(w, TEAM_FOE, 109, 220, { armor: 0.25 });
     w.hp[a] = 50;
     strike(w, a, v);
     expect(w.hp[v]).toBeCloseTo(100 - 7.5);
@@ -38,8 +41,8 @@ describe('lifesteal and healAlly', () => {
 
   it('lifesteal never heals above maxHp', () => {
     const w = arena();
-    const a = spawn(w, TEAM_ALLY, 100, 20, { onHit: [{ type: 'lifesteal', pct: 100 }] });
-    const v = spawn(w, TEAM_FOE, 109, 20);
+    const a = spawn(w, TEAM_ALLY, 100, 220, { onHit: [{ type: 'lifesteal', pct: 100 }] });
+    const v = spawn(w, TEAM_FOE, 109, 220);
     w.hp[a] = 95;
     strike(w, a, v);
     expect(w.hp[a]).toBe(100);
@@ -47,12 +50,12 @@ describe('lifesteal and healAlly', () => {
 
   it('healAlly 4 HP / 40 px heals the lowest-HP ally in range (ties: lowest id), never a foe or itself', () => {
     const w = arena();
-    const a = spawn(w, TEAM_ALLY, 100, 20, { onHit: [{ type: 'healAlly', hp: 4, radius: 40 }] });
-    const b = spawn(w, TEAM_ALLY, 110, 20);
-    const c = spawn(w, TEAM_ALLY, 120, 20);
-    const far = spawn(w, TEAM_ALLY, 300, 20);
-    const v = spawn(w, TEAM_FOE, 109, 20);
-    const foeHurt = spawn(w, TEAM_FOE, 105, 60);
+    const a = spawn(w, TEAM_ALLY, 100, 220, { onHit: [{ type: 'healAlly', hp: 4, radius: 40 }] });
+    const b = spawn(w, TEAM_ALLY, 110, 220);
+    const c = spawn(w, TEAM_ALLY, 120, 220);
+    const far = spawn(w, TEAM_ALLY, 300, 220);
+    const v = spawn(w, TEAM_FOE, 109, 220);
+    const foeHurt = spawn(w, TEAM_FOE, 105, 260);
     w.hp[a] = 1;
     w.hp[b] = 5;
     w.hp[c] = 5;
@@ -70,10 +73,10 @@ describe('lifesteal and healAlly', () => {
 describe('flying', () => {
   it('is immune to short melee but not to reach 56, towers or the throne', () => {
     const w = arena();
-    const melee = spawn(w, TEAM_ALLY, 100, 20);
-    const archer = spawn(w, TEAM_ALLY, 100, 60, { range: 56, interval: 10 });
-    const bat = spawn(w, TEAM_FOE, 108, 20, { tags: ['flying'] });
-    const ground = spawn(w, TEAM_FOE, 150, 20);
+    const melee = spawn(w, TEAM_ALLY, 100, 220);
+    const archer = spawn(w, TEAM_ALLY, 100, 260, { range: 56, interval: 10 });
+    const bat = spawn(w, TEAM_FOE, 108, 220, { tags: ['flying'] });
+    const ground = spawn(w, TEAM_FOE, 150, 220);
     retarget(w);
     expect(w.target[melee]).toBe(ground); // the nearer bat cannot be hit by a range-2 attack
     w.target[melee] = bat;
@@ -87,7 +90,7 @@ describe('flying', () => {
 
   it('a throne (structure) can shoot a flying unit', () => {
     const w = createBattle(battleSetup());
-    const bat = spawn(w, TEAM_FOE, 192, 150, { tags: ['flying'] });
+    const bat = spawn(w, TEAM_FOE, T.x, T.y - 42, { tags: ['flying'] });
     expect(pickShotTarget(w, w.throneId)).toBe(bat);
   });
 });
@@ -95,12 +98,12 @@ describe('flying', () => {
 describe('kite', () => {
   it('backs away from a foe inside the distance while its attack is cooling down', () => {
     const w = arena();
-    const a = spawn(w, TEAM_ALLY, 100, 100, {
+    const a = spawn(w, TEAM_ALLY, 100, 300, {
       range: 56,
       speed: 1,
       behaviours: [{ type: 'kite', distance: 24 }],
     });
-    const v = spawn(w, TEAM_FOE, 114, 100, { speed: 0 });
+    const v = spawn(w, TEAM_FOE, 114, 300, { speed: 0 });
     w.target[a] = v;
     w.cooldown[a] = 5;
     const before = w.x[v]! - w.x[a]!;
@@ -111,8 +114,8 @@ describe('kite', () => {
 
   it('stays put when ready to shoot', () => {
     const w = arena();
-    const a = spawn(w, TEAM_ALLY, 100, 100, { range: 56, behaviours: [{ type: 'kite', distance: 24 }] });
-    const v = spawn(w, TEAM_FOE, 114, 100, { speed: 0 });
+    const a = spawn(w, TEAM_ALLY, 100, 300, { range: 56, behaviours: [{ type: 'kite', distance: 24 }] });
+    const v = spawn(w, TEAM_FOE, 114, 300, { speed: 0 });
     w.target[a] = v;
     w.cooldown[a] = 0;
     moveEntities(w);
@@ -122,14 +125,14 @@ describe('kite', () => {
 
 describe('charge, knockback and pull', () => {
   const charger = (w: BattleWorld) =>
-    spawn(w, TEAM_ALLY, 100, 20, {
+    spawn(w, TEAM_ALLY, 100, 220, {
       behaviours: [{ type: 'charge', dmgMult: 2, knockback: 8, stunTicks: 10 }],
     });
 
   it('the first strike hits x2, stuns 10 and knocks back 8; the second is ordinary', () => {
     const w = arena();
     const a = charger(w);
-    const v = spawn(w, TEAM_FOE, 109, 20, { hp: 1000, speed: 0 });
+    const v = spawn(w, TEAM_FOE, 109, 220, { hp: 1000, speed: 0 });
     strike(w, a, v);
     expect(w.hp[v]).toBe(1000 - 20);
     expect(w.stunTicks[v]).toBe(11); // +1: this tick's status phase takes one
@@ -145,22 +148,22 @@ describe('charge, knockback and pull', () => {
 
   it('onHit knockback pushes the foe away; a boss and a structure do not move', () => {
     const w = arena();
-    const a = spawn(w, TEAM_ALLY, 100, 20, { onHit: [{ type: 'knockback', px: 8 }] });
-    const v = spawn(w, TEAM_FOE, 109, 20, { hp: 1000 });
-    const boss = spawn(w, TEAM_FOE, 100, 29, { hp: 1000, tags: ['boss'] });
+    const a = spawn(w, TEAM_ALLY, 100, 220, { onHit: [{ type: 'knockback', px: 8 }] });
+    const v = spawn(w, TEAM_FOE, 109, 220, { hp: 1000 });
+    const boss = spawn(w, TEAM_FOE, 100, 229, { hp: 1000, tags: ['boss'] });
     strike(w, a, v);
     expect(w.kbX[v]! * 3).toBeCloseTo(8);
     strike(w, a, boss);
     expect(w.kbTicks[boss]).toBe(0);
-    const f = spawn(w, TEAM_FOE, 192, 210, { onHit: [{ type: 'knockback', px: 8 }] });
+    const f = spawn(w, TEAM_FOE, T.x, T.y + 18, { onHit: [{ type: 'knockback', px: 8 }] }); // touching the throne
     strike(w, f, w.throneId);
     expect(w.kbTicks[w.throneId]).toBe(0);
   });
 
   it('pull: every 4th hit drags the victim 16 px toward the attacker', () => {
     const w = arena();
-    const a = spawn(w, TEAM_ALLY, 100, 20, { onHit: [{ type: 'pull', px: 16, every: 4 }] });
-    const v = spawn(w, TEAM_FOE, 109, 20, { hp: 1000 });
+    const a = spawn(w, TEAM_ALLY, 100, 220, { onHit: [{ type: 'pull', px: 16, every: 4 }] });
+    const v = spawn(w, TEAM_FOE, 109, 220, { hp: 1000 });
     for (let i = 0; i < 3; i++) strike(w, a, v);
     expect(w.kbTicks[v]).toBe(0);
     strike(w, a, v);
@@ -172,7 +175,7 @@ describe('charge, knockback and pull', () => {
 describe('time and health behaviours', () => {
   const behave = (b: UnitBehaviourDef[], over: Partial<UnitStats> = {}): { w: BattleWorld; id: number } => {
     const w = arena();
-    const id = spawn(w, TEAM_ALLY, 100, 20, { dmg: 10, interval: 10, speed: 1, behaviours: b, ...over });
+    const id = spawn(w, TEAM_ALLY, 100, 220, { dmg: 10, interval: 10, speed: 1, behaviours: b, ...over });
     return { w, id };
   };
   const at = (w: BattleWorld, tick: number): void => {
@@ -228,7 +231,7 @@ describe('time and health behaviours', () => {
 
   it('units without such behaviours are left exactly as built', () => {
     const w = arena();
-    const id = spawn(w, TEAM_ALLY, 100, 20, { dmg: 7.3, interval: 11, speed: 0.9 });
+    const id = spawn(w, TEAM_ALLY, 100, 220, { dmg: 7.3, interval: 11, speed: 0.9 });
     const h = hashWorld(w);
     w.tick = 500;
     tickBehaviours(w);
@@ -251,8 +254,8 @@ describe('time and health behaviours', () => {
 
   it('every dead unit adds a Hồn for its own team', () => {
     const w = arena();
-    const a = spawn(w, TEAM_ALLY, 100, 20);
-    const f = spawn(w, TEAM_FOE, 200, 20);
+    const a = spawn(w, TEAM_ALLY, 100, 220);
+    const f = spawn(w, TEAM_FOE, 200, 220);
     w.hp[a] = 0;
     w.hp[f] = 0;
     deathPhase(w);
@@ -261,7 +264,7 @@ describe('time and health behaviours', () => {
 
   it('killHeal restores 10 HP on a kill', () => {
     const { w, id } = behave([{ type: 'killHeal', hp: 10 }]);
-    const v = spawn(w, TEAM_FOE, 109, 20, { hp: 5 });
+    const v = spawn(w, TEAM_FOE, 109, 220, { hp: 5 });
     w.hp[id] = 50;
     strike(w, id, v);
     deathPhase(w);
@@ -272,7 +275,7 @@ describe('time and health behaviours', () => {
 
 describe('reviveOnce', () => {
   const skeleton = (w: BattleWorld, team = TEAM_ALLY) =>
-    spawn(w, team, 100, 20, {
+    spawn(w, team, 100, 220, {
       hp: 40,
       behaviours: [{ type: 'reviveOnce', hpPct: 50 }],
       deathSpawn: { stats: unitStats({ hp: 5 }), count: 2 },
@@ -313,16 +316,16 @@ describe('cone_without_trig', () => {
   const cone = { range: 30, halfAngleCos: CONE.cos45 };
   const scene = () => {
     const w = arena();
-    const a = spawn(w, TEAM_ALLY, 100, 100, { range: 40, cone, dmg: 10 });
-    const main = spawn(w, TEAM_FOE, 120, 100);
+    const a = spawn(w, TEAM_ALLY, 100, 300, { range: 40, cone, dmg: 10 });
+    const main = spawn(w, TEAM_FOE, 120, 300);
     return { w, a, main };
   };
 
   it('hits every foe in the cone and no one outside the angle or the range', () => {
     const { w, a, main } = scene();
-    const inside = spawn(w, TEAM_FOE, 100 + 15.3, 100 + 12.9); // about 40 degrees
-    const wide = spawn(w, TEAM_FOE, 100 + 12.9, 100 + 15.3); // about 50 degrees
-    const tooFar = spawn(w, TEAM_FOE, 100 + 60, 100);
+    const inside = spawn(w, TEAM_FOE, 100 + 15.3, 300 + 12.9); // about 40 degrees
+    const wide = spawn(w, TEAM_FOE, 100 + 12.9, 300 + 15.3); // about 50 degrees
+    const tooFar = spawn(w, TEAM_FOE, 100 + 60, 300);
     strike(w, a, main);
     expect(w.hp[main]).toBe(90);
     expect(w.hp[inside]).toBe(90);
@@ -332,14 +335,14 @@ describe('cone_without_trig', () => {
 
   it('exactly 45 degrees is inside', () => {
     const { w, a, main } = scene();
-    const edge = spawn(w, TEAM_FOE, 110, 110);
+    const edge = spawn(w, TEAM_FOE, 110, 310);
     strike(w, a, main);
     expect(w.hp[edge]).toBe(90);
   });
 
   it('never hits an ally', () => {
     const { w, a, main } = scene();
-    const friend = spawn(w, TEAM_ALLY, 115, 103);
+    const friend = spawn(w, TEAM_ALLY, 115, 303);
     strike(w, a, main);
     expect(w.hp[friend]).toBe(100);
   });
@@ -348,9 +351,9 @@ describe('cone_without_trig', () => {
 describe('projectile_dead_target', () => {
   it('lands where the target stood and still splashes 50% on a neighbour', () => {
     const w = arena();
-    const a = spawn(w, TEAM_ALLY, 100, 100, { range: 80, projectileSpeed: 5, splash: 20, dmg: 10 });
-    const v = spawn(w, TEAM_FOE, 140, 100);
-    const near = spawn(w, TEAM_FOE, 150, 100);
+    const a = spawn(w, TEAM_ALLY, 100, 300, { range: 80, projectileSpeed: 5, splash: 20, dmg: 10 });
+    const v = spawn(w, TEAM_FOE, 140, 300);
+    const near = spawn(w, TEAM_FOE, 150, 300);
     w.target[a] = v;
     w.cooldown[a] = 0;
     attackPhase(w);
@@ -378,7 +381,7 @@ describe('gold accumulator and hashing', () => {
 
   const rich = (): { w: BattleWorld; a: number; v: number } => {
     const w = arena();
-    const a = spawn(w, TEAM_ALLY, 100, 20, {
+    const a = spawn(w, TEAM_ALLY, 100, 220, {
       behaviours: [
         { type: 'reviveOnce', hpPct: 50 },
         { type: 'charge', dmgMult: 2, knockback: 8, stunTicks: 10 },
@@ -386,7 +389,7 @@ describe('gold accumulator and hashing', () => {
       ],
       onHit: [{ type: 'pull', px: 16, every: 4 }],
     });
-    const v = spawn(w, TEAM_FOE, 200, 20);
+    const v = spawn(w, TEAM_FOE, 200, 220);
     return { w, a, v };
   };
 

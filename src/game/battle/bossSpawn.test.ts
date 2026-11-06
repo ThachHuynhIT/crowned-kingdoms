@@ -1,5 +1,6 @@
 import { describe, expect, it } from 'vitest';
 import { BATTLE, ENEMY_LEVEL_STAT, WAVES } from '../../data/battle';
+import { SPEC_MOVE_SCALE } from '../../data/boardGeometry';
 import { RULES_FULL } from '../../data/rules';
 import { CONTENT } from '../cards/registry';
 import { buildBattleSetup } from '../run/battleSetup';
@@ -37,12 +38,12 @@ describe('the boss in the battle setup', () => {
     const { state, setup } = bossYear(10);
     const boss = setup.boss!;
     expect(boss.stats.hp).toBe(2500);
-    expect(boss.stats).toMatchObject({ armor: 0.2, speed: 0.5, radius: 14, dmg: 40, cleave: 3, range: 4, interval: 20, unit: 'boss_bog_ogre' });
+    expect(boss.stats).toMatchObject({ armor: 0.2, speed: 0.5 * SPEC_MOVE_SCALE, radius: 14, dmg: 40, cleave: 3, range: 4, interval: 20, unit: 'boss_bog_ogre' });
     expect(boss.spawnTick).toBe(WAVES.spawnTick[1]);
     expect(boss.edge).toBe(state.army!.waves[1]!.units[0]!.edge);
     expect(Object.keys(boss.summons).sort()).toEqual(['frog', 'hornet']);
-    expect(boss.summons.frog).toMatchObject({ hp: 20, dmg: 4, speed: 1.2, radius: 3 });
-    expect(boss.summons.hornet).toMatchObject({ hp: 25, dmg: 6, speed: 1.6 });
+    expect(boss.summons.frog).toMatchObject({ hp: 20, dmg: 4, speed: 1.2 * SPEC_MOVE_SCALE, radius: 3 });
+    expect(boss.summons.hornet).toMatchObject({ hp: 25, dmg: 6, speed: 1.6 * SPEC_MOVE_SCALE });
     // the foe-level multiplier of the entourage is never applied to the boss
     expect(ENEMY_LEVEL_STAT[state.army!.level - 1]! * state.army!.statMult).toBeGreaterThanOrEqual(1);
     expect(boss.mirror).toBeNull(); // only boss 3 has a mirror
@@ -82,8 +83,9 @@ describe('spawn_at120_once', () => {
     expect(bossOf(w)).toHaveLength(1);
     expect(w.bossId).toBe(id);
     expect(w.bossSpawnTick).toBe(120);
-    // it already took its first step in the tick it appeared (speed 0.5)
-    expect(Math.abs(w.x[id!]! - edgePositions('W', 1)[0]!.x)).toBeLessThanOrEqual(0.5);
+    // it already took its first step in the tick it appeared (at most its speed, 0.5 × SPEC_MOVE_SCALE)
+    expect(Math.abs(w.x[id!]! - edgePositions('W', 1)[0]!.x)).toBeLessThanOrEqual(w.speed[id!]!);
+    expect(w.speed[id!]).toBe(0.5 * SPEC_MOVE_SCALE);
     expect(w.y[id!]).toBe(edgePositions('W', 1)[0]!.y);
     run(w, 130);
     expect(bossOf(w)).toHaveLength(1);

@@ -4,7 +4,7 @@ import { attackStats, structure, unitStats } from '../testing/fixtures';
 import { bossWorld } from './bossKit';
 import { afterBossDamage, spawnBossSummons, tickBosses } from './bosses';
 import { applyDamagePhase, attackPhase, deathPhase } from './combat';
-import { TEAM_FOE, addUnit, type BattleWorld } from './world';
+import { TEAM_FOE, addUnit, structureFoot, type BattleWorld } from './world';
 
 const tower = (plot: number, dmg: number) =>
   structure(plot, {
@@ -25,7 +25,10 @@ const at = (w: BattleWorld, tick: number): void => {
 const frogs = (w: BattleWorld): number => [...Array(w.count).keys()].filter((i) => w.alive[i] === 1 && w.label[i] === 'frog').length;
 
 describe('Ông Kẹ Đầm Lầy: Ném Bùn', () => {
-  const scene = () => bossWorld(1, [tower(6, 7), tower(7, 12), tower(8, 12), tower(4, 99), troop(11)]);
+  // The boss stands 100 px south of the plot-7 tower: towers 6, 7, 8 are within mudRange (160),
+  // tower 4 (≈ 208 px) is not; the boss is also within the plot-7 tower's own range (edge 74 ≤ 88).
+  const spot = { x: structureFoot(7).x, y: structureFoot(7).y + 100 };
+  const scene = () => bossWorld(1, [tower(6, 7), tower(7, 12), tower(8, 12), tower(4, 99), troop(11)], spot);
 
   it('first throw at tick 200 (boss age 80), then 280; none in between', () => {
     const w = scene();
@@ -48,7 +51,7 @@ describe('Ông Kẹ Đầm Lầy: Ném Bùn', () => {
     at(w, 200);
     expect(w.damageQueue[0]!.victim).toBe(idAt(w, 7)); // 12 beats 7; plot 4 is out of range (99 ignored); 7 beats 8 on the tie
     expect(w.damageQueue[0]!.sourceId).toBe(w.bossId);
-    const lone = bossWorld(1, [troop(6), troop(7)]);
+    const lone = bossWorld(1, [troop(6), troop(7)], spot);
     at(lone, 200);
     expect(lone.damageQueue).toHaveLength(0); // no tower: nothing happens, nothing throws
   });

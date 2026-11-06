@@ -3,7 +3,7 @@ import { BATTLE } from '../../data/battle';
 import { attackStats, battleSetup, structure, unitStats } from '../testing/fixtures';
 import type { StructureSetup, UnitStats } from './types';
 import { edgeDistance, inRange, pickShotTarget, retarget } from './targeting';
-import { TEAM_ALLY, TEAM_FOE, addUnit, createBattle, type BattleWorld } from './world';
+import { TEAM_ALLY, TEAM_FOE, addUnit, createBattle, structureFoot, type BattleWorld } from './world';
 
 const world = (structures: StructureSetup[] = []): BattleWorld =>
   createBattle(battleSetup({ structures }));
@@ -16,7 +16,11 @@ const unit = (
   over: Partial<UnitStats> = {},
 ): number => addUnit(w, unitStats(over), team, x, y, x, y, -1);
 
-/** Tháp ở plot 2 = (192, 128), tầm 60, closestToThrone. */
+/** Chân Ngai (fixture: plot 12) và chân tháp plot 2: tháp đứng ngay bắc Ngai, cách hai ô. */
+const T = structureFoot(12);
+const TW = structureFoot(2);
+
+/** Tháp ở plot 2, tầm 60, closestToThrone. */
 const tower = (over: Partial<StructureSetup> = {}): StructureSetup =>
   structure(2, {
     kind: 'tower',
@@ -45,9 +49,9 @@ describe('edgeDistance / inRange', () => {
 describe('retarget — allies', () => {
   it('picks the nearest foe', () => {
     const w = world();
-    const a = unit(w, TEAM_ALLY, 50, 150);
-    const far = unit(w, TEAM_FOE, 50, 190);
-    const near = unit(w, TEAM_FOE, 80, 150);
+    const a = unit(w, TEAM_ALLY, 50, 350);
+    const far = unit(w, TEAM_FOE, 50, 390);
+    const near = unit(w, TEAM_FOE, 80, 350);
     retarget(w);
     expect(w.target[a]).toBe(near);
     expect(far).toBeGreaterThan(0);
@@ -82,35 +86,38 @@ describe('retarget — allies', () => {
 
 describe('retarget — foes', () => {
   it('picks the nearest ally unit within enemyAggro, else the throne', () => {
+    // far west of the throne, so only the test ally can be within aggro
     const w = world();
-    const f = unit(w, TEAM_FOE, 300, 150);
-    const a = unit(w, TEAM_ALLY, 300, 190); // edge 32
+    const f = unit(w, TEAM_FOE, 100, 300);
+    const a = unit(w, TEAM_ALLY, 100, 300 + 8 + BATTLE.enemyAggro - 16); // edge aggro − 16
     retarget(w);
     expect(w.target[f]).toBe(a);
 
     const w2 = world();
-    const f2 = unit(w2, TEAM_FOE, 300, 150);
-    unit(w2, TEAM_ALLY, 300, 210); // edge 52 > 48
+    const f2 = unit(w2, TEAM_FOE, 100, 300);
+    unit(w2, TEAM_ALLY, 100, 300 + 8 + BATTLE.enemyAggro + 4); // edge aggro + 4
     retarget(w2);
     expect(w2.target[f2]).toBe(w2.throneId);
   });
 
   it('picks the nearer of two allies, structures included (edge distance)', () => {
-    const w = world([structure(4)]); // plot 4 = (256, 128), id 1
-    const f = unit(w, TEAM_FOE, 256, 186); // structure edge 58 − 4 − 12 = 42
-    const a = unit(w, TEAM_ALLY, 256, 236); // edge 42 too, larger id
+    const s = structureFoot(4); // id 1
+    const w = world([structure(4)]);
+    const f = unit(w, TEAM_FOE, s.x, s.y + 58); // structure edge 58 − 4 − 12 = 42
+    const a = unit(w, TEAM_ALLY, s.x, s.y + 108); // edge 42 too, larger id
     retarget(w);
     expect(w.target[f]).toBe(1);
-    w.y[a] = 231; // edge 37
+    w.y[a] = s.y + 103; // edge 37
     w.tick = BATTLE.retargetTicks;
     retarget(w);
     expect(w.target[f]).toBe(a);
   });
 
   it('siege units ignore ally units and pick structures within siegeAggro, then the throne', () => {
-    const w = world([structure(4)]); // (256, 128)
-    const f = unit(w, TEAM_FOE, 300, 90, { siege: true }); // structure edge ≈ 42.1
-    unit(w, TEAM_ALLY, 300, 98);
+    const s = structureFoot(4);
+    const w = world([structure(4)]);
+    const f = unit(w, TEAM_FOE, s.x + 44, s.y - 38, { siege: true }); // structure edge ≈ 42.1
+    unit(w, TEAM_ALLY, s.x + 44, s.y - 30);
     retarget(w);
     expect(w.target[f]).toBe(1);
 
@@ -190,38 +197,38 @@ describe('retarget cadence', () => {
 describe('pickShotTarget', () => {
   it('closestToThrone tower picks the in-range foe nearest the throne', () => {
     const w = world([tower()]);
-    const nearTower = unit(w, TEAM_FOE, 192, 100); // tower 28, throne 92
-    const nearThrone = unit(w, TEAM_FOE, 240, 160); // tower ≈ 57.7 (edge ≈ 41.7), throne ≈ 57.7
+    const nearTower = unit(w, TEAM_FOE, TW.x, TW.y - 28); // tower 28, throne 156
+    const nearThrone = unit(w, TEAM_FOE, TW.x, TW.y + 60); // tower 60 (edge 44), throne 68
     expect(nearTower).toBeLessThan(nearThrone);
     expect(pickShotTarget(w, 1)).toBe(nearThrone);
   });
 
   it('nearest throne picks the in-range foe nearest itself, ignoring allies', () => {
     const w = world();
-    unit(w, TEAM_ALLY, 192, 180);
-    unit(w, TEAM_FOE, 192, 250); // 58
-    const d = unit(w, TEAM_FOE, 192, 140); // 52
-    unit(w, TEAM_FOE, 192, 300); // edge 90 > 72
+    unit(w, TEAM_ALLY, T.x, T.y - 12);
+    unit(w, TEAM_FOE, T.x, T.y + 58); // 58
+    const d = unit(w, TEAM_FOE, T.x, T.y - 52); // 52
+    unit(w, TEAM_FOE, T.x, T.y + 108); // edge 90 > 72
     expect(pickShotTarget(w, w.throneId)).toBe(d);
   });
 
   it('breaks ties by the smaller id', () => {
     const w = world();
-    const first = unit(w, TEAM_FOE, 150, 192);
-    unit(w, TEAM_FOE, 234, 192);
+    const first = unit(w, TEAM_FOE, T.x - 42, T.y);
+    unit(w, TEAM_FOE, T.x + 42, T.y);
     expect(pickShotTarget(w, w.throneId)).toBe(first);
 
     const w2 = world([tower()]);
-    const t1 = unit(w2, TEAM_FOE, 172, 160); // throne: (−20, −32)
-    unit(w2, TEAM_FOE, 212, 160); // throne: (20, −32)
+    const t1 = unit(w2, TEAM_FOE, TW.x - 20, TW.y + 32); // throne: (−20, −96)
+    unit(w2, TEAM_FOE, TW.x + 20, TW.y + 32); // throne: (20, −96)
     expect(pickShotTarget(w2, 1)).toBe(t1);
   });
 
   it('lowestHp / highestHp pick by hp, ties by id', () => {
     const w = world([tower({ targeting: 'lowestHp' })]);
-    const a = unit(w, TEAM_FOE, 192, 100);
-    const b = unit(w, TEAM_FOE, 200, 100);
-    const c = unit(w, TEAM_FOE, 184, 100);
+    const a = unit(w, TEAM_FOE, TW.x, TW.y - 28);
+    const b = unit(w, TEAM_FOE, TW.x + 8, TW.y - 28);
+    const c = unit(w, TEAM_FOE, TW.x - 8, TW.y - 28);
     w.hp[a] = 30;
     w.hp[b] = 10;
     w.hp[c] = 10;
@@ -237,9 +244,9 @@ describe('pickShotTarget', () => {
     expect(pickShotTarget(w, 1)).toBe(-1);
     expect(pickShotTarget(w, w.throneId)).toBe(-1);
 
-    // ids by plot: structure(1) at (160, 128) → id 1 (attack null), tower (plot 2) → id 2
+    // ids by plot: structure(1) → id 1 (attack null), tower (plot 2) → id 2
     const w2 = world([tower(), structure(1)]);
-    const f = unit(w2, TEAM_FOE, 165, 128);
+    const f = unit(w2, TEAM_FOE, structureFoot(1).x + 5, structureFoot(1).y); // tower 59 (edge 43)
     expect(pickShotTarget(w2, 2)).toBe(f);
     expect(pickShotTarget(w2, 1)).toBe(-1);
     w2.alive[2] = 0;
@@ -248,47 +255,50 @@ describe('pickShotTarget', () => {
 
   it('ignores dead foes', () => {
     const w = world();
-    const d = unit(w, TEAM_FOE, 192, 140);
-    const e = unit(w, TEAM_FOE, 192, 250);
+    const d = unit(w, TEAM_FOE, T.x, T.y - 52);
+    const e = unit(w, TEAM_FOE, T.x, T.y + 58);
     w.alive[d] = 0;
     expect(pickShotTarget(w, w.throneId)).toBe(e);
   });
 });
 
 describe('retarget — taunt (spec §8.4)', () => {
-  /** Wall at plot 6 = (160, 160) taunting within 40 px; a unit of ours stands next to the foe. */
-  const scene = (foeX: number, over: Partial<StructureSetup> = {}) => {
+  /** Wall at plot 6 taunting within 40 px; a foe `dx` east of it, a unit of ours next to the foe. */
+  const W6 = structureFoot(6);
+  const scene = (dx: number, over: Partial<StructureSetup> = {}) => {
     const w = world([structure(6, { taunt: 40, ...over })]);
-    const friend = unit(w, TEAM_ALLY, foeX + 10, 160);
-    const foe = unit(w, TEAM_FOE, foeX, 160);
+    const friend = unit(w, TEAM_ALLY, W6.x + dx + 10, W6.y);
+    const foe = unit(w, TEAM_FOE, W6.x + dx, W6.y);
     return { w, friend, foe, wall: 1 };
   };
 
   it('a foe within the taunt radius must go for the wall even if one of our units is nearer', () => {
-    const { w, foe, wall } = scene(190);
+    const { w, foe, wall } = scene(30);
     retarget(w);
     expect(w.target[foe]).toBe(wall);
   });
 
   it('a foe outside the radius ignores the taunt', () => {
-    const { w, friend, foe, wall } = scene(230);
+    const { w, friend, foe, wall } = scene(70);
     retarget(w);
     expect(w.target[foe]).toBe(friend);
     expect(w.target[foe]).not.toBe(wall);
   });
 
   it('picks the nearest of two taunting structures, the lower id on a tie', () => {
-    const w = world([structure(6, { uid: 60, taunt: 60 }), structure(8, { uid: 80, taunt: 60 })]);
-    const foe = unit(w, TEAM_FOE, 176, 160); // 16 from plot 6 (160,160), 48 from plot 8 (224,160)
+    // plots 6 and 8 are two cells apart; both taunt that far, so a foe between them is in both
+    const reach = 2 * BATTLE.plot;
+    const w = world([structure(6, { uid: 60, taunt: reach }), structure(8, { uid: 80, taunt: reach })]);
+    const foe = unit(w, TEAM_FOE, W6.x + 16, W6.y); // 16 from plot 6, 112 from plot 8
     retarget(w);
     expect(w.target[foe]).toBe(1);
-    const tie = unit(w, TEAM_FOE, 192, 160); // 32 from each
+    const tie = unit(w, TEAM_FOE, W6.x + BATTLE.plot, W6.y); // one cell from each
     retarget(w);
     expect(w.target[tie]).toBe(1);
   });
 
   it('ignores a destroyed taunting structure and is ignored during the rage', () => {
-    const { w, friend, foe, wall } = scene(190);
+    const { w, friend, foe, wall } = scene(30);
     w.alive[wall] = 0;
     retarget(w);
     expect(w.target[foe]).toBe(friend);
@@ -299,7 +309,7 @@ describe('retarget — taunt (spec §8.4)', () => {
   });
 
   it('does not make structures without taunt special', () => {
-    const { w, friend, foe } = scene(190, { taunt: 0 });
+    const { w, friend, foe } = scene(30, { taunt: 0 });
     retarget(w);
     expect(w.target[foe]).toBe(friend);
   });

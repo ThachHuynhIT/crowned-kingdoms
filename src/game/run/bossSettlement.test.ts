@@ -6,6 +6,7 @@ import type { BossId } from '../../data/types';
 import { bossWorld, realBoss } from '../battle/bossKit';
 import { battleResult, stepBattle } from '../battle/step';
 import type { BattleResult } from '../battle/types';
+import { structureFoot } from '../battle/world';
 import { CONTENT } from '../cards/registry';
 import { attackStats, throneSetup } from '../testing/fixtures';
 import { applyCommand } from './commands';
@@ -178,7 +179,7 @@ describe('timeout_vs_kill (battle level)', () => {
 
   it('killing the boss reports bossDefeated', () => {
     const weak = { ...quietBoss(), stats: { ...quietBoss().stats, hp: 1 } };
-    const w = bossWorld(1, [], { x: 150, y: 192 }, weak, { throne: throneSetup({ attack: attackStats({ dmg: 50, range: 72, interval: 5 }) }) });
+    const w = bossWorld(1, [], { x: structureFoot(12).x - 40, y: structureFoot(12).y }, weak, { throne: throneSetup({ attack: attackStats({ dmg: 50, range: 72, interval: 5 }) }) });
     for (let i = 0; i < 300 && !w.ended; i++) stepBattle(w, []);
     const r = battleResult(w)!;
     expect(r).toMatchObject({ won: true, bossDefeated: 'boss_bog_ogre' });

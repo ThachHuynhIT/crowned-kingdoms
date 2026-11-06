@@ -13,8 +13,8 @@ import { calendarStripLayout } from '../planning/calendarStripLayout';
 /** §10.1: from 768 px wide the desktop layout is used. */
 export const isDesktop = (width: number): boolean => width >= 768;
 
-/** Planning zoom on mobile: one 32 px plot = 64 screen px (touch targets stay ≥ 44 px). */
-export const PLANNING_ZOOM = 2;
+/** Planning zoom on mobile: one 64 px plot = 64 screen px (touch targets stay ≥ 44 px; spec 06/11/2026). */
+export const PLANNING_ZOOM = 1;
 /** The board is 5×5 plots (spec §4.1, `src/game/run/board.ts`). */
 const BOARD_SIDE = 5;
 
@@ -196,17 +196,20 @@ const desktopLayout = (screen: Size, handSize: number): PlanningLayout => {
   const stripX = Math.max(Math.round((w - stripW) / 2), helpEnd + GAP);
   const strip = calendarStripLayout({ x: stripX, y: MARGIN, w: stripW, h: CELL }, CALENDAR_CELLS);
   const calendar = strip.cells;
-  const year = {
-    x: Math.round(stripX + stripW / 2 - DESK.top.year / 2),
-    y: MARGIN + CELL + GAP,
-    w: DESK.top.year,
-    h: YEAR_LABEL_H,
-  };
   const hand = handRow(screen, DESK.card, handSize);
   const first = hand[0]!;
   const last = hand[hand.length - 1]!;
-  // Centred like the battle camera's board centre, lowered no further than the hand allows.
-  const centreY = Math.min(h / 2, first.y - GAP - boardPx / 2);
+  // The year label sits under the strip; on a short window (the 320 px board would not fit between
+  // it and the hand) it moves beside the strip, on the top row.
+  const underY = MARGIN + CELL + GAP;
+  const inline = underY + YEAR_LABEL_H + GAP + boardPx + GAP > first.y;
+  const year = inline
+    ? { x: stripX + stripW + GAP, y: Math.round(MARGIN + (CELL - YEAR_LABEL_H) / 2), w: DESK.top.year, h: YEAR_LABEL_H }
+    : { x: Math.round(stripX + stripW / 2 - DESK.top.year / 2), y: underY, w: DESK.top.year, h: YEAR_LABEL_H };
+  // Centred like the battle camera's board centre, lowered no further than the hand allows,
+  // and never up into the top row.
+  const topLimit = year.y + year.h + GAP + boardPx / 2;
+  const centreY = Math.max(topLimit, Math.min(h / 2, first.y - GAP - boardPx / 2));
   const board = {
     x: Math.round(w / 2 - boardPx / 2),
     y: Math.round(centreY - boardPx / 2),
@@ -259,9 +262,9 @@ const desktopLayout = (screen: Size, handSize: number): PlanningLayout => {
     ...besidePlot(centre, screen),
     hint: {
       x: board.x,
-      y: year.y + year.h + MARGIN,
+      y: Math.max(year.y + year.h, MARGIN + CELL) + MARGIN,
       w: board.w,
-      h: Math.max(0, board.y - GAP - (year.y + year.h + MARGIN)),
+      h: Math.max(0, board.y - GAP - (Math.max(year.y + year.h, MARGIN + CELL) + MARGIN)),
     },
   };
 };
@@ -407,11 +410,15 @@ export const battleLayout = (screen: Size): BattleLayout => {
   const { w, h } = screen;
   const desktop = isDesktop(w);
   const plan = planningLayout(screen);
-  const { lives, gold, help, calendar, calendarLinks, year } = plan;
-  const centreX = year.x + year.w / 2;
+  const { lives, gold, help, calendar, calendarLinks } = plan;
   const speedW = 4 * BUTTON + 3 * SPEED_GAP;
 
   if (desktop) {
+    // The battle has no board to make room for: the year label always sits under the strip
+    // (planning may have moved it beside the strip on a short window), the clock under it.
+    const stripMid = (calendar[0]!.x + calendar[calendar.length - 1]!.x + CELL) / 2;
+    const year = { ...plan.year, x: Math.round(stripMid - plan.year.w / 2), y: MARGIN + CELL + GAP };
+    const centreX = year.x + year.w / 2;
     const clock = { x: Math.round(centreX - CLOCK.w / 2), y: year.y + year.h + 2, w: CLOCK.w, h: CLOCK.h };
     const speedX = w - MARGIN - speedW;
     const stripRight = calendar[calendar.length - 1]!.x + CELL;
@@ -448,7 +455,7 @@ export const battleLayout = (screen: Size): BattleLayout => {
     h: BUTTON,
   }));
   const waves = plan.scoutButton ?? { x: w - MARGIN - WAVES.w, y: rowY, w: WAVES.w, h: WAVES.h };
-  return { clock, lives, gold, help, calendar, calendarLinks, year, foes, speed, intervene, auto, waves, allyStatus, foeStatus, bossStatus };
+  return { clock, lives, gold, help, calendar, calendarLinks, year: plan.year, foes, speed, intervene, auto, waves, allyStatus, foeStatus, bossStatus };
 };
 
 /**

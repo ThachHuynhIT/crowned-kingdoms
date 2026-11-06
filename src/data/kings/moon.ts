@@ -1,3 +1,4 @@
+import { cells } from '../boardGeometry';
 import type { CardDef, EnemyKingDef } from '../types';
 
 const dead = { owner: 'moon' as const, tags: ['undead'] as const };
@@ -26,7 +27,7 @@ export const MOON_CARDS: readonly CardDef[] = [
     effects: [
       {
         type: 'tower',
-        attack: { dmg: 7, type: 'magic', range: 72, interval: 10, projectileSpeed: 8 },
+        attack: { dmg: 7, type: 'magic', range: cells(1.6875), interval: 10, projectileSpeed: 16 },
         targeting: 'closestToThrone',
       },
       { type: 'summonOnKill', unit: 'wraith', max: [3, 4, 5, 6, 8] },
@@ -124,7 +125,7 @@ export const MOON_ENEMY: EnemyKingDef = {
       nameVi: 'Bộ Xương',
       hp: 26,
       attack: { dmg: 6, type: 'physical', range: 2, interval: 10 },
-      speed: 0.9,
+      speed: 1.8,
       radius: 4,
       armor: 0,
       tags: ['melee', 'undead'],
@@ -137,7 +138,7 @@ export const MOON_ENEMY: EnemyKingDef = {
       nameVi: 'Bóng Ma',
       hp: 30,
       attack: { dmg: 8, type: 'magic', range: 2, interval: 10 },
-      speed: 1.3,
+      speed: 2.6,
       radius: 4,
       armor: 0,
       tags: ['melee', 'undead'],
@@ -149,7 +150,7 @@ export const MOON_ENEMY: EnemyKingDef = {
       nameVi: 'Ma Cà Rồng',
       hp: 60,
       attack: { dmg: 10, type: 'physical', range: 2, interval: 10, onHit: [{ type: 'lifesteal', pct: 40 }] },
-      speed: 1.2,
+      speed: 2.4,
       radius: 4,
       armor: 0,
       tags: ['melee', 'undead'],
@@ -161,7 +162,7 @@ export const MOON_ENEMY: EnemyKingDef = {
       nameVi: 'Thần Chết Trăng',
       hp: 150,
       attack: { dmg: 25, type: 'physical', range: 3, interval: 14, cleave: 3 },
-      speed: 1.0,
+      speed: 2,
       radius: 6,
       armor: 0.1,
       tags: ['melee', 'undead'],

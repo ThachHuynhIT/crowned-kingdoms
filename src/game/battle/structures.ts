@@ -5,7 +5,22 @@
  */
 import { queueDamage } from './combat';
 import { BATTLE } from '../../data/battle';
-import { KIND_UNIT, TEAM_ALLY, addUnit, spawnOffset, stunFor, type BattleWorld } from './world';
+import { BUILDING_FOOT_OFFSET } from '../../data/boardGeometry';
+import { deploySlot } from './deployment';
+import { KIND_UNIT, TEAM_ALLY, addUnit, stunFor, type BattleWorld } from './world';
+
+/**
+ * Ô thứ `index` trong `count` của khu tập kết của công trình `i`: tâm ô suy ra từ chân công trình
+ * (home) trừ `BUILDING_FOOT_OFFSET`. Dùng cho lính hồi sinh và triệu hồi từ công trình.
+ */
+const boxSlotOf = (world: BattleWorld, i: number, index: number, count: number, radius: number): { x: number; y: number } =>
+  deploySlot(
+    world.homeX[i]! - BUILDING_FOOT_OFFSET.x,
+    world.homeY[i]! - BUILDING_FOOT_OFFSET.y,
+    Math.min(index, Math.max(1, count) - 1),
+    Math.max(1, count),
+    radius,
+  );
 
 const dueAt = (world: BattleWorld, every: number): boolean =>
   every > 0 && world.tick > 0 && world.tick % every === 0;
@@ -98,8 +113,8 @@ export const respawnPhase = (world: BattleWorld): void => {
       world.capped += 1;
       continue;
     }
-    const o = spawnOffset(living);
-    const id = addUnit(world, stats, TEAM_ALLY, world.homeX[i]! + o.dx, world.homeY[i]! + o.dy, world.homeX[i]!, world.homeY[i]!, world.sourceUid[i]!);
+    const p = boxSlotOf(world, i, living, world.respawnCount[i]!, stats.radius);
+    const id = addUnit(world, stats, TEAM_ALLY, p.x, p.y, p.x, p.y, world.sourceUid[i]!);
     if (id < 0) world.capped += 1;
     else world.playerUnits += 1;
   }
@@ -115,8 +130,8 @@ export const summonPhase = (world: BattleWorld): void => {
       world.capped += 1;
       continue;
     }
-    const o = spawnOffset(world.summonDone[i]!);
-    const id = addUnit(world, stats, TEAM_ALLY, world.homeX[i]! + o.dx, world.homeY[i]! + o.dy, world.homeX[i]!, world.homeY[i]!, world.sourceUid[i]!);
+    const p = boxSlotOf(world, i, world.summonDone[i]!, world.summonMax[i]!, stats.radius);
+    const id = addUnit(world, stats, TEAM_ALLY, p.x, p.y, p.x, p.y, world.sourceUid[i]!);
     world.summonDone[i] = world.summonDone[i]! + 1;
     if (id < 0) world.capped += 1;
     else world.playerUnits += 1;

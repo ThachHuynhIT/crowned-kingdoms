@@ -4,7 +4,7 @@ import { bossWorld } from './bossKit';
 import { spawnBossSummons, tickBosses } from './bosses';
 import { applyDamagePhase, attackPhase, deathPhase } from './combat';
 import { inRange } from './targeting';
-import { TEAM_ALLY, addUnit, type BattleWorld } from './world';
+import { TEAM_ALLY, addUnit, structureFoot, type BattleWorld } from './world';
 
 const at = (w: BattleWorld, tick: number): void => {
   w.tick = tick;
@@ -70,9 +70,11 @@ describe('Nữ Hoàng Ong: Hạ Cánh', () => {
   });
 
   it('only a long-range or tower attack can hit her in the air; a melee unit hits only while she is down', () => {
-    const w = bossWorld(2, [structure(7, { kind: 'tower', attack: attackStats({ dmg: 5, range: 88, interval: 12 }), cardId: 'neutral_archer_tower' })]);
-    const melee = addUnit(w, unitStats({ hp: 100, range: 2 }), TEAM_ALLY, 117, 192, 117, 192, 9);
-    const archer = addUnit(w, unitStats({ hp: 100, range: 56 }), TEAM_ALLY, 100, 215, 100, 215, 9);
+    // the queen hovers within the plot-7 tower's range (edge ≈ 73 ≤ 88)
+    const q = { x: structureFoot(7).x - 92, y: structureFoot(7).y + 32 };
+    const w = bossWorld(2, [structure(7, { kind: 'tower', attack: attackStats({ dmg: 5, range: 88, interval: 12 }), cardId: 'neutral_archer_tower' })], q);
+    const melee = addUnit(w, unitStats({ hp: 100, range: 2 }), TEAM_ALLY, q.x + 17, q.y, q.x + 17, q.y, 9);
+    const archer = addUnit(w, unitStats({ hp: 100, range: 56 }), TEAM_ALLY, q.x, q.y + 23, q.x, q.y + 23, 9);
     at(w, 200);
     expect(inRange(w, melee, w.bossId)).toBe(false);
     expect(inRange(w, archer, w.bossId)).toBe(true);

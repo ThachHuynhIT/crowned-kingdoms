@@ -1,4 +1,5 @@
 import { fractalNoise2D, valueNoise2D } from '../core/noise';
+import { BOARD_ORIGIN, BOARD_SIDE, FIELD, PLOT } from '../data/boardGeometry';
 import { PALETTE } from '../data/palette';
 import {
   MASK_BL,
@@ -13,12 +14,17 @@ import { PixelCanvas, pixelHash, upscale } from './pixel';
 /** Terrain names; the index is the data value and the blend priority (higher draws on top). */
 export const FIELD_TERRAINS = ['grass', 'flowers', 'path', 'sand', 'water'] as const;
 
-const N = 24;
 const TILE = 16;
+/** Data cells per side: the 768 px field in 16 px cells (spec 06/11/2026: 64 px plots). */
+const N = FIELD / TILE;
 const [GRASS, FLOWERS, PATH, SAND, WATER] = [0, 1, 2, 3, 4];
-const inBoard = (col: number, row: number): boolean => col >= 7 && col <= 16 && row >= 7 && row <= 16;
+const BOARD_FIRST = BOARD_ORIGIN / TILE;
+const BOARD_LAST = (BOARD_ORIGIN + BOARD_SIDE * PLOT) / TILE - 1;
+/** The single road: the two middle columns, from the board's south edge to the field's (spec 06/11/2026, G). */
+const ROAD_COLS = [N / 2 - 1, N / 2] as const;
+const onRoad = (col: number, row: number): boolean => row > BOARD_LAST && (col === ROAD_COLS[0] || col === ROAD_COLS[1]);
 
-/** 24x24 terrain indices (row-major). The 10x10 board area is always grass or flowers. */
+/** N×N terrain indices (row-major). The board area is always grass or flowers. */
 export const generateField = (seed: number): Uint8Array => {
   const f = new Uint8Array(N * N).fill(GRASS);
   const at = (col: number, row: number): number => row * N + col;
@@ -28,27 +34,24 @@ export const generateField = (seed: number): Uint8Array => {
       if (fractalNoise2D(seed, col, row, { octaves: 2, frequency: 0.35, persistence: 0.5 }) > 0.72)
         f[at(col, row)] = FLOWERS;
 
-  // A cross of paths along the middle row/column, only outside the board.
-  for (let i = 0; i < N; i++) {
-    if (!inBoard(12, i)) f[at(12, i)] = PATH;
-    if (!inBoard(i, 12)) f[at(i, 12)] = PATH;
-  }
-
-  // A pond in one of the four outer corners, ringed with sand.
-  const pcx = valueNoise2D(seed, 1.5, 2.5) < 0.5 ? 3 : 20;
-  const pcy = valueNoise2D(seed, 4.5, 7.5) < 0.5 ? 3 : 20;
+  // A pond in one of the four outer corners, ringed with sand (never on the road).
+  const pcx = valueNoise2D(seed, 1.5, 2.5) < 0.5 ? 6 : N - 7;
+  const pcy = valueNoise2D(seed, 4.5, 7.5) < 0.5 ? 6 : N - 7;
   for (let row = 0; row < N; row++)
     for (let col = 0; col < N; col++) {
       const dx = col - pcx;
       const dy = row - pcy;
       const d2 = dx * dx + dy * dy;
-      const wobble = valueNoise2D(seed, col * 0.7, row * 0.7);
-      if (d2 <= 4 + wobble * 2) f[at(col, row)] = WATER;
-      else if (d2 <= 9 + wobble * 3) f[at(col, row)] = SAND;
+      const wobble = valueNoise2D(seed, col * 0.35, row * 0.35);
+      if (d2 <= 16 + wobble * 8) f[at(col, row)] = WATER;
+      else if (d2 <= 36 + wobble * 12) f[at(col, row)] = SAND;
     }
 
-  for (let row = 7; row <= 16; row++)
-    for (let col = 7; col <= 16; col++)
+  // The road from the enemy's side to the board, drawn last so nothing covers it.
+  for (let row = 0; row < N; row++) for (let col = 0; col < N; col++) if (onRoad(col, row)) f[at(col, row)] = PATH;
+
+  for (let row = BOARD_FIRST; row <= BOARD_LAST; row++)
+    for (let col = BOARD_FIRST; col <= BOARD_LAST; col++)
       if (f[at(col, row)]! > FLOWERS) f[at(col, row)] = GRASS;
   return f;
 };
@@ -97,7 +100,7 @@ export const paintFieldTile = (terrain: number, mask: number, seed: number): Pix
 };
 
 /**
- * The whole 384x384 field: 24x24 data cells blended through the dual grid. The 25x25 display
+ * The whole 768x768 field: 48x48 data cells blended through the dual grid. The 49x49 display
  * tiles are drawn half a tile up-left so the picture is cropped to the data grid.
  */
 export const paintField = (seed: number, grass?: readonly PixelCanvas[]): PixelCanvas => {

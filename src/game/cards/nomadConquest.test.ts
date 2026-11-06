@@ -1,3 +1,4 @@
+import { SPEC_MOVE_SCALE } from '../../data/boardGeometry';
 import { describe, expect, it } from 'vitest';
 import { TOWER_RANGE, TOWER_STD } from '../../data/scaling';
 import type { CardId, Level } from '../../data/types';
@@ -55,7 +56,7 @@ describe('the nine Nomad King cards (spec 6.11)', () => {
 
   it('the riders charge and the khan guard stuns on its charge', () => {
     expect(at(withBuilding(runState(), 6, 'nomad_riders', 1), 6).spawn!.stats.behaviours).toEqual([
-      { type: 'charge', dmgMult: 2, knockback: 8, stunTicks: 0 },
+      { type: 'charge', dmgMult: 2, knockback: 8 * SPEC_MOVE_SCALE, stunTicks: 0 },
     ]);
     expect(at(withBuilding(runState(), 6, 'nomad_khan_guard', 1), 6).spawn!.stats.behaviours).toEqual([
       { type: 'charge', dmgMult: 2, knockback: 0, stunTicks: 10 },
@@ -146,7 +147,7 @@ describe('the nine Nomad King cards (spec 6.11)', () => {
       for (const level of [1, 5] as Level[]) {
         const a = at(withBuilding(runState(), 22, 'nomad_watchtower', level), 22).attack!;
         // a plot on the edge has 3 neighbours, none open and empty at the start except those unlocked
-        expect([a.range, a.interval, a.projectileSpeed]).toEqual([96 + TOWER_RANGE[level - 1]!, 12, 9]);
+        expect([a.range, a.interval, a.projectileSpeed]).toEqual([144 + TOWER_RANGE[level - 1]!, 12, 9 * SPEC_MOVE_SCALE]);
         expect(a.dmg).toBeGreaterThanOrEqual(7 * TOWER_STD[level - 1]!);
       }
     });

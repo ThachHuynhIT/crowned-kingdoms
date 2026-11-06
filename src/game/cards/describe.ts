@@ -1,4 +1,4 @@
-import { TOWER_RANGE, TOWER_STD } from '../../data/scaling';
+import { PULSE_RADIUS_BONUS, TOWER_RANGE, TOWER_STD } from '../../data/scaling';
 import type { AttackSpec, CardDef, EffectDef, Level, Scalar } from '../../data/types';
 
 /** Nội dung mô tả thẻ; cùng hình dạng với TooltipContent nhưng game không import ui. */
@@ -47,7 +47,7 @@ function effectValues(effects: readonly EffectDef[], level: Level): Record<strin
     }
     else if (e.type === 'pulse') {
       Object.assign(out, attackValues(e.attack, level));
-      out.radius = scalarAt(e.radius, level) + TOWER_RANGE[level - 1]!;
+      out.radius = scalarAt(e.radius, level) + PULSE_RADIUS_BONUS[level - 1]!;
     }
   }
   return out;

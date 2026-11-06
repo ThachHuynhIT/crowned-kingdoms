@@ -1,9 +1,10 @@
+import { SPEC_MOVE_SCALE } from '../../data/boardGeometry';
 import { describe, expect, it } from 'vitest';
 import { TOWER_RANGE } from '../../data/scaling';
 import type { CardId, Level } from '../../data/types';
 import { stepBattle } from '../battle/step';
 import { tickStatuses } from '../battle/statuses';
-import { TEAM_ALLY, TEAM_FOE, addUnit, createBattle } from '../battle/world';
+import { TEAM_ALLY, TEAM_FOE, addUnit, createBattle, structureFoot } from '../battle/world';
 import { buildBattleSetup } from '../run/battleSetup';
 import { applyCommand } from '../run/commands';
 import { collectStatSheet } from '../run/modifiers';
@@ -94,13 +95,13 @@ describe('the nine Grove King cards (spec 6.6)', () => {
   describe('grove_spring', () => {
     it('sets a 64 px aura of 2 HP/s at level 1 and 6 HP/s at level 5', () => {
       for (const [level, hps] of [[1, 2], [5, 6]] as const) {
-        expect(at(withBuilding(runState(), 6, 'grove_spring', level), 6).healAura).toEqual({ radius: 64, hps });
+        expect(at(withBuilding(runState(), 6, 'grove_spring', level), 6).healAura).toEqual({ radius: 128, hps });
       }
     });
 
     it('heals our units in range every second in the battle, not foes', () => {
       const w = createBattle(setupOf(withBuilding(runState(), 6, 'grove_spring', 5)));
-      const c = { x: 112 + 32 * 1 + 16, y: 112 + 32 * 1 + 16 };
+      const c = structureFoot(6);
       const friend = addUnit(w, unitStats({ hp: 100 }), TEAM_ALLY, c.x + 30, c.y, c.x, c.y, 9);
       const foe = addUnit(w, unitStats({ hp: 100 }), TEAM_FOE, c.x + 30, c.y + 5, c.x, c.y, -1);
       w.hp[friend] = 50;
@@ -145,7 +146,7 @@ describe('the nine Grove King cards (spec 6.6)', () => {
     it('shoots 5 physical at range 64 every 8 ticks with a poison onHit', () => {
       for (const level of LEVELS) {
         const a = at(withBuilding(runState(), 6, 'grove_thorn_tower', level), 6).attack!;
-        expect([a.range, a.interval, a.projectileSpeed]).toEqual([64 + TOWER_RANGE[level - 1]!, 8, 8]);
+        expect([a.range, a.interval, a.projectileSpeed]).toEqual([96 + TOWER_RANGE[level - 1]!, 8, 8 * SPEC_MOVE_SCALE]);
         expect(a.onHit).toEqual([{ type: 'poison', dps: 2, ticks: 30, maxStacks: 3 }]);
       }
       expect(at(withBuilding(runState(), 6, 'grove_thorn_tower', 1), 6).attack!.dmg).toBe(5);
@@ -154,7 +155,7 @@ describe('the nine Grove King cards (spec 6.6)', () => {
     it('poisons a foe up to 3 stacks, keyed on the tower uid', () => {
       const s = withBuilding(runState(), 6, 'grove_thorn_tower', 1);
       const w = createBattle(setupOf(s));
-      const foe = addUnit(w, unitStats({ hp: 5000, speed: 0, dmg: 0, interval: 0 }), TEAM_FOE, 150, 150, 150, 150, -1);
+      const foe = addUnit(w, unitStats({ hp: 5000, speed: 0, dmg: 0, interval: 0 }), TEAM_FOE, structureFoot(6).x - 40, structureFoot(6).y, structureFoot(6).x - 40, structureFoot(6).y, -1);
       for (let i = 0; i < 80; i++) stepBattle(w, []);
       expect(w.hp[foe]).toBeLessThan(5000);
       expect(w.dots).toHaveLength(1);

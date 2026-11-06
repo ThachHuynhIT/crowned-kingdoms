@@ -1,10 +1,11 @@
+import { SPEC_MOVE_SCALE } from '../../data/boardGeometry';
 import { describe, expect, it } from 'vitest';
-import { TOWER_RANGE, TOWER_STD } from '../../data/scaling';
+import { PULSE_RADIUS_BONUS, TOWER_RANGE, TOWER_STD } from '../../data/scaling';
 import type { CardId, Level } from '../../data/types';
 import { settleBattleGold } from '../battle/behaviours';
 import { attackPhase } from '../battle/combat';
 import { stepBattle } from '../battle/step';
-import { TEAM_FOE, addUnit, createBattle } from '../battle/world';
+import { TEAM_FOE, addUnit, createBattle, structureFoot } from '../battle/world';
 import { buildBattleSetup } from '../run/battleSetup';
 import { applyCommand } from '../run/commands';
 import { yearIncome } from '../run/income';
@@ -60,7 +61,7 @@ describe('the nine Tide King cards (spec 6.7)', () => {
 
   it('tide_hookmen: the hookman pulls every 4th hit by 16 px', () => {
     const stats = at(withBuilding(runState(), 6, 'tide_hookmen', 1), 6).spawn!.stats;
-    expect(stats.onHit).toContainEqual({ type: 'pull', px: 16, every: 4 });
+    expect(stats.onHit).toContainEqual({ type: 'pull', px: 16 * SPEC_MOVE_SCALE, every: 4 });
   });
 
   describe('tide_pirates gold', () => {
@@ -91,8 +92,8 @@ describe('the nine Tide King cards (spec 6.7)', () => {
       for (const level of [1, 5] as Level[]) {
         const a = at(withBuilding(runState(), 6, 'tide_cannon', level), 6).attack!;
         expect(a.dmg).toBeCloseTo(16 * TOWER_STD[level - 1]!);
-        expect([a.range, a.interval, a.projectileSpeed, a.splash]).toEqual([88 + TOWER_RANGE[level - 1]!, 22, 6, 12]);
-        expect(a.onHit).toEqual([{ type: 'knockback', px: 16 }]);
+        expect([a.range, a.interval, a.projectileSpeed, a.splash]).toEqual([132 + TOWER_RANGE[level - 1]!, 22, 6 * SPEC_MOVE_SCALE, 24]);
+        expect(a.onHit).toEqual([{ type: 'knockback', px: 16 * SPEC_MOVE_SCALE }]);
       }
     });
   });
@@ -110,13 +111,13 @@ describe('the nine Tide King cards (spec 6.7)', () => {
       withBuilding(runState(), 6, card, 1, { enchants: [{ cardId: 'tide_undertow_rune' as CardId, stacks }] });
 
     it('adds 6 px of knockback to every hit of a tower, on top of its own', () => {
-      expect(at(enchanted('tide_cannon', 1), 6).attack!.onHit).toEqual([{ type: 'knockback', px: 22 }]);
-      expect(at(enchanted('tide_cannon', 2), 6).attack!.onHit).toEqual([{ type: 'knockback', px: 28 }]);
+      expect(at(enchanted('tide_cannon', 1), 6).attack!.onHit).toEqual([{ type: 'knockback', px: 22 * SPEC_MOVE_SCALE }]);
+      expect(at(enchanted('tide_cannon', 2), 6).attack!.onHit).toEqual([{ type: 'knockback', px: 28 * SPEC_MOVE_SCALE }]);
     });
 
     it('gives troops knockback and +8% speed per stack', () => {
       const stats = at(enchanted('wheat_militia', 1), 6).spawn!.stats;
-      expect(stats.onHit).toEqual([{ type: 'knockback', px: 6 }]);
+      expect(stats.onHit).toEqual([{ type: 'knockback', px: 6 * SPEC_MOVE_SCALE }]);
       const plain = at(withBuilding(runState(), 6, 'wheat_militia'), 6).spawn!.stats;
       expect(stats.speed).toBeCloseTo(plain.speed * 1.08);
       expect(at(enchanted('wheat_militia', 3), 6).spawn!.stats.speed).toBeCloseTo(plain.speed * 1.24);
@@ -124,26 +125,27 @@ describe('the nine Tide King cards (spec 6.7)', () => {
   });
 
   describe('tide_wave_tower', () => {
-    it('is a 50-tick pulse of 10 magic damage with a 24 px knockback', () => {
+    it('is a 50-tick pulse of 10 magic damage with a 48 px knockback (24 at 32 px plots)', () => {
       for (const level of [1, 5] as Level[]) {
         const pulse = at(withBuilding(runState(), 6, 'tide_wave_tower', level), 6).pulse!;
         expect(pulse.everyTicks).toBe(50);
-        expect(pulse.radius).toBe(72 + TOWER_RANGE[level - 1]!);
+        expect(pulse.radius).toBe(144 + PULSE_RADIUS_BONUS[level - 1]!);
         expect(pulse.dmg).toBeCloseTo(10 * TOWER_STD[level - 1]!);
-        expect([pulse.dmgType, pulse.knockback]).toEqual(['magic', 24]);
+        expect([pulse.dmgType, pulse.knockback]).toEqual(['magic', 24 * SPEC_MOVE_SCALE]);
       }
     });
 
     it('hits and shoves a foe in range on the pulse tick, and leaves far ones alone', () => {
       const w = createBattle(setupOf(withBuilding(runState(), 6, 'tide_wave_tower', 1)));
-      const near = addUnit(w, unitStats({ hp: 100, speed: 0, dmg: 0, interval: 0 }), TEAM_FOE, 100, 150, 100, 150, -1);
-      const far = addUnit(w, unitStats({ hp: 100, speed: 0, dmg: 0, interval: 0 }), TEAM_FOE, 380, 380, 380, 380, -1);
+      const t = structureFoot(6);
+      const near = addUnit(w, unitStats({ hp: 100, speed: 0, dmg: 0, interval: 0 }), TEAM_FOE, t.x - 60, t.y - 10, t.x - 60, t.y - 10, -1);
+      const far = addUnit(w, unitStats({ hp: 100, speed: 0, dmg: 0, interval: 0 }), TEAM_FOE, 740, 740, 740, 740, -1);
       for (let i = 0; i < 50; i++) stepBattle(w, []);
       expect(w.hp[near]).toBe(100);
       stepBattle(w, []); // tick 50
       expect(w.hp[near]).toBe(90);
       expect(w.kbTicks[near]).toBeGreaterThan(0);
-      expect(Math.sqrt(w.kbX[near]! * w.kbX[near]! + w.kbY[near]! * w.kbY[near]!) * 3).toBeCloseTo(24);
+      expect(Math.sqrt(w.kbX[near]! * w.kbX[near]! + w.kbY[near]! * w.kbY[near]!) * 3).toBeCloseTo(24 * SPEC_MOVE_SCALE);
       expect(w.kbX[near]).toBeLessThan(0); // shoved west, away from the tower
       expect(w.hp[far]).toBe(100);
     });
@@ -201,11 +203,11 @@ describe('the nine Tide King cards (spec 6.7)', () => {
         expect(s.multiAttack).toBe(4);
         expect([s.attack!.dmg, s.attack!.range, s.attack!.interval, s.attack!.projectileSpeed]).toEqual([
           14 * TOWER_STD[level - 1]!,
-          56 + TOWER_RANGE[level - 1]!,
+          84 + TOWER_RANGE[level - 1]!,
           12,
           0,
         ]);
-        expect(s.attack!.onHit).toEqual([{ type: 'knockback', px: 8 }]);
+        expect(s.attack!.onHit).toEqual([{ type: 'knockback', px: 8 * SPEC_MOVE_SCALE }]);
         expect(s.targeting).toBe('nearest');
       }
     });
@@ -213,7 +215,7 @@ describe('the nine Tide King cards (spec 6.7)', () => {
     it('picks four DIFFERENT nearest foes each beat, and only one if only one is near', () => {
       const w = createBattle(setupOf(withBuilding(runState(), 6, 'tide_kraken', 1)));
       const ids = [0, 1, 2, 3, 4, 5].map((i) =>
-        addUnit(w, unitStats({ hp: 1000, speed: 0, dmg: 0, interval: 0 }), TEAM_FOE, 150 + i * 4, 140, 150, 140, -1),
+        addUnit(w, unitStats({ hp: 1000, speed: 0, dmg: 0, interval: 0 }), TEAM_FOE, structureFoot(6).x - 10 + i * 4, structureFoot(6).y - 20, structureFoot(6).x - 10, structureFoot(6).y - 20, -1),
       );
       w.cooldown.fill(0);
       attackPhase(w);
@@ -222,7 +224,7 @@ describe('the nine Tide King cards (spec 6.7)', () => {
       expect(victims.length).toBe(4);
       for (const v of victims) expect(ids).toContain(v);
       const lone = createBattle(setupOf(withBuilding(runState(), 6, 'tide_kraken', 1)));
-      addUnit(lone, unitStats({ hp: 1000, speed: 0, dmg: 0, interval: 0 }), TEAM_FOE, 150, 140, 150, 140, -1);
+      addUnit(lone, unitStats({ hp: 1000, speed: 0, dmg: 0, interval: 0 }), TEAM_FOE, structureFoot(6).x - 10, structureFoot(6).y - 20, structureFoot(6).x - 10, structureFoot(6).y - 20, -1);
       lone.cooldown.fill(0);
       attackPhase(lone);
       expect(lone.damageQueue.filter((q) => q.sourceId === 1)).toHaveLength(1);

@@ -61,7 +61,7 @@ export const BOSSES: readonly BossDef[] = [
     unit: boss('boss_bog_ogre', 'Ông Kẹ Đầm Lầy', {
       hp: 2500,
       armor: 0.2,
-      speed: 0.5,
+      speed: 1,
       radius: 14,
       tags: ['boss', 'melee', 'siege'],
       attack: { dmg: 40, type: 'physical', range: 4, interval: 20, cleave: 3 },
@@ -73,10 +73,10 @@ export const BOSSES: readonly BossDef[] = [
     unit: boss('boss_hornet_queen', 'Nữ Hoàng Ong Bắp Cày', {
       hp: 9000,
       armor: 0.1,
-      speed: 0.8,
+      speed: 1.6,
       radius: 12,
       tags: ['boss', 'ranged', 'flying'],
-      attack: { dmg: 50, type: 'physical', range: 64, interval: 15, projectileSpeed: 9 },
+      attack: { dmg: 50, type: 'physical', range: 64, interval: 15, projectileSpeed: 18 },
     }),
   },
   {
@@ -85,7 +85,7 @@ export const BOSSES: readonly BossDef[] = [
     unit: boss('boss_crownless_king', 'Vua Không Ngai', {
       hp: 30000,
       armor: 0.3,
-      speed: 0.6,
+      speed: 1.2,
       radius: 16,
       tags: ['boss', 'melee'],
       attack: { dmg: 120, type: 'physical', range: 6, interval: 18, cleave: 4 },

@@ -1,4 +1,5 @@
 import { describe, expect, it } from 'vitest';
+import { BATTLE } from '../../data/battle';
 import { cardLayout, fitArt } from '../cards/cardLayout';
 import { CARD_LIFT, type Rect, type Size } from '../hud/layout';
 import {
@@ -55,7 +56,7 @@ describe('planningLayout', () => {
     expect(l.lives).toEqual({ x: 10, y: 10, w: 120, h: 52 });
     expect(l.year).toEqual({ x: 560, y: 66, w: 160, h: 26 });
     expect(l.board).toEqual({ x: 480, y: 200, w: 320, h: 320 });
-    expect(l.zoom).toBe(2);
+    expect(l.zoom).toBe(1); // 64 px plots at zoom 1 (spec 06/11/2026)
     expect(l.scout).toMatchObject({ x: 1010, w: 260, y: 92, h: 426 });
     expect(l.scoutButton).toBeNull();
     expect(l.gold).toEqual({ x: 134, y: 10, w: 120, h: 52 });
@@ -79,7 +80,7 @@ describe('planningLayout', () => {
     expect(l.year.x).toBe(266);
     expect(l.year.x + l.year.w).toBe(365);
     expect(l.board).toEqual({ x: 28, y: 180, w: 320, h: 320 });
-    expect(l.zoom).toBe(2);
+    expect(l.zoom).toBe(1);
     expect(l.hand).toHaveLength(3);
     expect(l.hand[0]).toEqual({ x: 18, y: 640, w: 108, h: 162 });
     expect(l.hand[1]!.x).toBe(134);
@@ -238,7 +239,7 @@ describe('planning header and status zones', () => {
 describe('plotScreenRect', () => {
   it('maps plots to 64 px screen cells of the board', () => {
     const l = planningLayout(DESKTOP);
-    expect(PLANNING_ZOOM).toBe(2);
+    expect(PLANNING_ZOOM).toBe(1);
     expect(plotScreenRect(l, 12)).toEqual({ x: 608, y: 328, w: 64, h: 64 });
     expect(plotScreenRect(l, 0)).toEqual({ x: l.board.x, y: l.board.y, w: 64, h: 64 });
     expect(plotScreenRect(l, 24)).toEqual({ x: 480 + 256, y: 200 + 256, w: 64, h: 64 });
@@ -279,9 +280,9 @@ describe('centerHand', () => {
 });
 
 describe('planningZoom / realmCamera', () => {
-  it('uses the battle zoom on desktop and zoom 2 on mobile', () => {
-    expect(planningZoom(DESKTOP)).toBe(2);
-    expect(planningZoom({ w: 1920, h: 1080 })).toBe(3);
+  it('uses the battle zoom on desktop and PLANNING_ZOOM (1) on mobile', () => {
+    expect(planningZoom(DESKTOP)).toBe(1);
+    expect(planningZoom({ w: 1920, h: 1080 })).toBe(1); // 1176 / 768; zoom steps come with P2
     expect(planningZoom(MOBILE)).toBe(PLANNING_ZOOM);
   });
 
@@ -302,8 +303,8 @@ describe('planningZoom / realmCamera', () => {
     });
   }
 
-  it('keeps zoom 2 for planning and zoom 1 for the battle on mobile', () => {
-    expect(realmCamera(MOBILE, 'planning').zoom).toBe(2);
+  it('uses zoom 1 for planning and for the battle on mobile', () => {
+    expect(realmCamera(MOBILE, 'planning').zoom).toBe(1);
     expect(realmCamera(MOBILE, 'battle').zoom).toBe(1);
   });
 
@@ -312,8 +313,8 @@ describe('planningZoom / realmCamera', () => {
       const l = planningLayout(screen);
       const cam = realmCamera(screen, 'planning');
       const p = screenToWorld({ x: l.board.x, y: l.board.y }, cam.scroll, screen, cam.zoom);
-      expect(p.x).toBeCloseTo(112, 6); // BATTLE.boardOrigin: the board's top-left corner
-      expect(p.y).toBeCloseTo(112, 6);
+      expect(p.x).toBeCloseTo(BATTLE.boardOrigin, 6); // the board's top-left corner
+      expect(p.y).toBeCloseTo(BATTLE.boardOrigin, 6);
     }
   });
 });
@@ -334,11 +335,11 @@ describe('realmCameraMix', () => {
     }
   });
 
-  it('eases the zoom between 2 and 1 on mobile and keeps the throne on screen', () => {
+  it('never mixes a fractional zoom on mobile: both phases are at zoom 1', () => {
     const mid = realmCameraMix(MOBILE, 'planning', 'battle', 0.5);
-    expect(mid.zoom).toBeCloseTo(1.5, 9);
-    const throne = screenToWorld({ x: MOBILE.w / 2, y: MOBILE.h / 2 }, mid.scroll, MOBILE, mid.zoom);
-    expect(Math.abs(throne.x - 192)).toBeLessThan(200);
+    expect(mid.zoom).toBe(1);
+    const centre = screenToWorld({ x: MOBILE.w / 2, y: MOBILE.h / 2 }, mid.scroll, MOBILE, mid.zoom);
+    expect(Math.abs(centre.x - BATTLE.field / 2)).toBeLessThan(200);
   });
 
   it('is constant on desktop where both phases share the camera', () => {
@@ -440,10 +441,11 @@ describe('confirmFor', () => {
 
 describe('battleZoom', () => {
   it('follows §10.7: max(1, floor(min(w, h + 96) / field))', () => {
-    expect(battleZoom(1280, 720)).toBe(2);
+    // field 768 (spec 06/11/2026): min(1280, 816) / 768 → 1; min(1920, 1176) / 768 → 1.
+    expect(battleZoom(1280, 720)).toBe(1);
     expect(battleZoom(375, 812)).toBe(1);
-    // min(1920, 1176) / 384 = 3.06 → 3 (the brief listed 2; the spec formula gives 3).
-    expect(battleZoom(1920, 1080)).toBe(3);
+    expect(battleZoom(1920, 1080)).toBe(1);
+    expect(battleZoom(2560, 1600)).toBe(2);
     expect(battleZoom(100, 100)).toBe(1);
   });
 });
@@ -587,25 +589,25 @@ describe('cameraScroll / screenToWorld', () => {
 });
 
 describe('battleCamera / battleWorldAt', () => {
-  it('centres the board (world 192,192), not the back-row throne, on screen', () => {
+  it('centres the board (world 384,384), not the back-row throne, on screen', () => {
     for (const screen of [DESKTOP, MOBILE]) {
       const mid = { x: screen.w / 2, y: screen.h / 2 };
       const p = battleWorldAt(mid, screen)!;
-      expect(p.x).toBeCloseTo(192, 9);
-      expect(p.y).toBeCloseTo(192, 9);
+      expect(p.x).toBeCloseTo(384, 9);
+      expect(p.y).toBeCloseTo(384, 9);
     }
-    expect(battleCamera(DESKTOP).zoom).toBe(2);
+    expect(battleCamera(DESKTOP).zoom).toBe(1);
     expect(battleCamera(MOBILE).zoom).toBe(1);
   });
 
   it('maps screen offsets by 1 / zoom and returns null off the field', () => {
     const p = battleWorldAt({ x: 640 + 100, y: 360 - 50 }, DESKTOP)!;
-    expect(p.x).toBeCloseTo(242, 9);
-    expect(p.y).toBeCloseTo(167, 9);
-    // Desktop shows world x 192 ± 320: the screen's left edge is off the field.
+    expect(p.x).toBeCloseTo(484, 9);
+    expect(p.y).toBeCloseTo(334, 9);
+    // Desktop shows world x 384 ± 640: the screen's left edge is off the field.
     expect(battleWorldAt({ x: 0, y: 360 }, DESKTOP)).toBeNull();
-    expect(battleWorldAt({ x: 187.5 - 192, y: 406 }, MOBILE)!.x).toBeCloseTo(0, 9);
-    expect(battleWorldAt({ x: 187.5 - 193, y: 406 }, MOBILE)).toBeNull();
+    expect(battleWorldAt({ x: 187.5 - 384, y: 406 }, MOBILE)!.x).toBeCloseTo(0, 9);
+    expect(battleWorldAt({ x: 187.5 - 385, y: 406 }, MOBILE)).toBeNull();
   });
 });
 

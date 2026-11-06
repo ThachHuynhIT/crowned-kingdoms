@@ -94,8 +94,8 @@ describe('buildBattleSetup', () => {
     expect(t.kind).toBe('tower');
     expect(t.hp).toBe(220);
     expect(t.attack!.dmg).toBe(7);
-    expect(t.attack!.range).toBe(88);
-    expect(t.attack!.projectileSpeed).toBe(8);
+    expect(t.attack!.range).toBe(132); // 88 × 1,5
+    expect(t.attack!.projectileSpeed).toBe(16); // 8 × 2 (spec 06/11/2026)
     expect(t.attack!.slowPct).toBe(0);
     expect(t.targeting).toBe('closestToThrone');
     expect(t.spawn).toBeNull();
@@ -114,7 +114,7 @@ describe('buildBattleSetup', () => {
     expect(setup.throne.plot).toBe(THRONE_PLOT);
     expect(setup.throne.uid).toBe(0);
     expect(setup.throne.kind).toBe('throne');
-    expect(setup.throne.attack!.range).toBe(72);
+    expect(setup.throne.attack!.range).toBe(108); // 72 × 1,5
     expect(setup.throne.targeting).toBe('nearest');
   });
 

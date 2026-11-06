@@ -1,3 +1,4 @@
+import { SPEC_MOVE_SCALE } from '../../data/boardGeometry';
 import { describe, expect, it } from 'vitest';
 import { CONTENT } from './registry';
 
@@ -39,7 +40,7 @@ const BEHAVIOURS: Record<string, unknown[]> = {
     { type: 'killHeal', hp: 10 },
     { type: 'soulScaling', pctPerSoul: 2 },
   ],
-  rider: [{ type: 'charge', dmgMult: 2, knockback: 8, stunTicks: 0 }],
+  rider: [{ type: 'charge', dmgMult: 2, knockback: 8 * SPEC_MOVE_SCALE, stunTicks: 0 }],
   horse_archer: [{ type: 'kite', distance: 24 }],
   khan_guard: [{ type: 'charge', dmgMult: 2, knockback: 0, stunTicks: 10 }],
 };
@@ -70,7 +71,7 @@ describe('enemy_catalog_9_playable_3', () => {
     const u = CONTENT.unit(id);
     expect(u.hp).toBe(hp);
     expect(u.attack).toMatchObject({ dmg, type, range, interval });
-    expect([u.speed, u.radius, u.armor, u.enemyCost]).toEqual([speed, radius, armor, ep]);
+    expect([u.speed, u.radius, u.armor, u.enemyCost]).toEqual([speed * SPEC_MOVE_SCALE, radius, armor, ep]);
     expect([...u.tags].sort()).toEqual([...tags].sort());
     expect(u.behaviours ?? []).toEqual(BEHAVIOURS[id] ?? []);
   });
@@ -78,16 +79,16 @@ describe('enemy_catalog_9_playable_3', () => {
   it('keeps the special attacks of the table (projectiles, on-hit effects, cone)', () => {
     const a = (id: string) => CONTENT.unit(id).attack;
     expect(a('stag').onHit).toEqual([{ type: 'healAlly', hp: 4, radius: 40 }]);
-    expect(a('dryad')).toMatchObject({ projectileSpeed: 7, onHit: [{ type: 'healAlly', hp: 3, radius: 56 }] });
-    expect(a('hookman')).toMatchObject({ projectileSpeed: 6, onHit: [{ type: 'pull', px: 16, every: 4 }] });
-    expect(a('musketeer').projectileSpeed).toBe(10);
-    expect(a('bombardier')).toMatchObject({ splash: 14, projectileSpeed: 5, onHit: [{ type: 'burn', dps: 2, ticks: 30 }] });
+    expect(a('dryad')).toMatchObject({ projectileSpeed: 7 * SPEC_MOVE_SCALE, onHit: [{ type: 'healAlly', hp: 3, radius: 56 }] });
+    expect(a('hookman')).toMatchObject({ projectileSpeed: 6 * SPEC_MOVE_SCALE, onHit: [{ type: 'pull', px: 16 * SPEC_MOVE_SCALE, every: 4 }] });
+    expect(a('musketeer').projectileSpeed).toBe(10 * SPEC_MOVE_SCALE);
+    expect(a('bombardier')).toMatchObject({ splash: 14, projectileSpeed: 5 * SPEC_MOVE_SCALE, onHit: [{ type: 'burn', dps: 2, ticks: 30 }] });
     expect(a('iron_drake')).toMatchObject({ cone: { range: 32 }, onHit: [{ type: 'burn', dps: 4, ticks: 30 }] });
     expect(a('iron_drake').cone!.halfAngleCos).toBeCloseTo(0.7071, 4);
-    expect(a('gear_gunner').projectileSpeed).toBe(8);
+    expect(a('gear_gunner').projectileSpeed).toBe(8 * SPEC_MOVE_SCALE);
     expect(a('vampire').onHit).toEqual([{ type: 'lifesteal', pct: 40 }]);
     expect(a('moon_reaper').cleave).toBe(3);
-    expect(a('horse_archer').projectileSpeed).toBe(8);
+    expect(a('horse_archer').projectileSpeed).toBe(8 * SPEC_MOVE_SCALE);
   });
 
   it('every sprite is one of the allowed sizes and the units are sorted into the registry', () => {

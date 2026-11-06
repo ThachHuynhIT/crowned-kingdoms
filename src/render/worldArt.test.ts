@@ -126,12 +126,28 @@ describe('buildings and plots', () => {
 });
 
 describe('field art', () => {
-  it('generates a 24x24 field with a clear board area', () => {
+  it('generates a 48x48 field (768 px of 16 px cells) with a clear board area', () => {
     const f = generateField(1);
-    expect(f.length).toBe(576);
+    expect(f.length).toBe(48 * 48);
     for (const v of f) expect(v).toBeLessThan(FIELD_TERRAINS.length);
-    for (let row = 7; row <= 16; row++)
-      for (let col = 7; col <= 16; col++) expect([0, 1]).toContain(f[row * 24 + col]);
+    for (let row = 14; row <= 33; row++)
+      for (let col = 14; col <= 33; col++) expect([0, 1]).toContain(f[row * 48 + col]);
+  });
+
+  it('keeps a single road: south of the board only, nothing north, east or west (spec 06/11/2026, G)', () => {
+    const PATH = FIELD_TERRAINS.indexOf('path');
+    for (let seed = 1; seed <= 12; seed++) {
+      const f = generateField(seed);
+      const at = (col: number, row: number): number => f[row * 48 + col]!;
+      // The road: the two middle columns from the board's south edge (row 34) to the field edge.
+      for (let row = 34; row < 48; row++) for (const col of [23, 24]) expect(at(col, row), `seed ${seed} ${col},${row}`).toBe(PATH);
+      // No path anywhere else: not north of the board, not in the west or east strips.
+      for (let row = 0; row < 48; row++)
+        for (let col = 0; col < 48; col++) {
+          if (row >= 34 && (col === 23 || col === 24)) continue;
+          expect(at(col, row), `seed ${seed} ${col},${row}`).not.toBe(PATH);
+        }
+    }
   });
 
   it('is deterministic per seed and varies between seeds', () => {
@@ -159,9 +175,9 @@ describe('field art', () => {
     expect(same(t, paintGroundTile())).toBe(true);
   });
 
-  it('paints the whole field opaque at 384x384, deterministically', () => {
+  it('paints the whole field opaque at 768x768, deterministically', () => {
     const f = paintField(1);
-    expect([f.width, f.height]).toEqual([384, 384]);
+    expect([f.width, f.height]).toEqual([768, 768]);
     expect(foreign(f)).toEqual([]);
     for (let i = 3; i < f.data.length; i += 4) if (f.data[i] !== 255) throw new Error(`hole at ${i}`);
     expect(same(f, paintField(1))).toBe(true);

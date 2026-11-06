@@ -1,3 +1,4 @@
+import { SPEC_MOVE_SCALE } from '../../data/boardGeometry';
 import { describe, expect, it } from 'vitest';
 import { TOWER_RANGE, TOWER_STD } from '../../data/scaling';
 import type { CardId, Level } from '../../data/types';
@@ -72,9 +73,9 @@ describe('the nine Moon King cards (spec 6.10)', () => {
         expect(s.attack!.dmg).toBeCloseTo(7 * TOWER_STD[level - 1]!);
         expect([s.attack!.dmgType, s.attack!.range, s.attack!.interval, s.attack!.projectileSpeed]).toEqual([
           'magic',
-          72 + TOWER_RANGE[level - 1]!,
+          108 + TOWER_RANGE[level - 1]!,
           10,
-          8,
+          8 * SPEC_MOVE_SCALE,
         ]);
         expect(s.summonOnKill!.max).toBe(level === 1 ? 3 : 8);
         expect(s.summonOnKill!.stats.unit).toBe('wraith');

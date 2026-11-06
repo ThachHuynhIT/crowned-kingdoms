@@ -1,8 +1,8 @@
 import type Phaser from 'phaser';
-import { BATTLE } from '../data/battle';
 import { UI_PALETTE } from '../data/uiPalette';
 import type { CardId } from '../data/types';
 import { KIND_UNIT, TEAM_ALLY, type BattleWorld } from '../game/battle/world';
+import { BUILDING_FOOT_DY } from './BoardRenderer';
 import { SPRITES_KEY, buildingFrame, fxFrame, imageFrameScale, unitFrame } from './atlas';
 import type { UnitAnim } from './unitArt';
 
@@ -66,7 +66,7 @@ export class UnitRenderer {
       const x = world.prevX[id]! + (world.x[id]! - world.prevX[id]!) * a;
       const y = world.prevY[id]! + (world.y[id]! - world.prevY[id]!) * a;
       const isUnit = world.kind[id] === KIND_UNIT;
-      const foot = isUnit ? y + world.radius[id]! : y + BATTLE.plot / 2;
+      const foot = isUnit ? y + world.radius[id]! : y + BUILDING_FOOT_DY;
       const sprite = slot.sprite;
       sprite.setPosition(Math.round(x), Math.round(foot)).setDepth(foot);
       if (isUnit) this.animate(world, id, slot, now);

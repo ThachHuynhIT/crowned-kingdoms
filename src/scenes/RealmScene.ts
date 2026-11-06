@@ -2,7 +2,7 @@ import Phaser from 'phaser';
 import type { EventBus } from '../core/events';
 import { PALETTE } from '../data/palette';
 import type { Edge } from '../game/battle/types';
-import { drainEvents, plotCenter } from '../game/battle/world';
+import { drainEvents, structureFoot } from '../game/battle/world';
 import { CONTENT } from '../game/cards/registry';
 import { createGameBus, type GameEvents } from '../game/events';
 import { RunController } from '../game/run/RunController';
@@ -196,7 +196,7 @@ export class RealmScene extends Phaser.Scene {
     const state = this.controller.state;
     if (target.kind === 'plot') {
       const specs = buildingRanges(state, target.plot, CONTENT);
-      return specs.length === 0 ? range.hide() : range.show(plotCenter(target.plot), specs);
+      return specs.length === 0 ? range.hide() : range.show(structureFoot(target.plot), specs);
     }
     const world = this.controller.runner?.world;
     const specs = world ? entityRanges(world, target.id) : [];

@@ -1,4 +1,5 @@
 /** Vua Lúa Mì (spec §6.3): Ngai, 9 thẻ, đơn vị, cờ hiệu và roster khi làm địch. */
+import { cells } from '../boardGeometry';
 import type { KingDef } from '../types';
 
 export const WHEAT: KingDef = {
@@ -19,7 +20,7 @@ export const WHEAT: KingDef = {
       'Ngai của Vua Lúa Mì: bắn kẻ địch trong tầm. Mùa Gặt: đầu năm +1 vàng cho mỗi 2 Ruộng Lúa (từ Ngai cấp 3: mỗi Ruộng Lúa).',
     hp: 300,
     armor: 0,
-    attack: { dmg: 8, type: 'physical', range: 72, interval: 10, projectileSpeed: 8 },
+    attack: { dmg: 8, type: 'physical', range: cells(1.6875), interval: 10, projectileSpeed: 16 },
     passive: [{ type: 'custom', id: 'wheat_harvest' }],
   },
   cards: [
@@ -157,9 +158,9 @@ export const WHEAT: KingDef = {
           attack: {
             dmg: 6,
             type: 'physical',
-            range: 72,
+            range: cells(1.6875),
             interval: 12,
-            projectileSpeed: 6,
+            projectileSpeed: 12,
             onHit: [{ type: 'slow', pct: 20, ticks: 20 }],
           },
           targeting: 'closestToThrone',
@@ -173,7 +174,7 @@ export const WHEAT: KingDef = {
       nameVi: 'Dân Quân',
       hp: 32,
       attack: { dmg: 5, type: 'physical', range: 2, interval: 10 },
-      speed: 1,
+      speed: 2,
       radius: 4,
       armor: 0,
       tags: ['melee', 'human'],
@@ -185,7 +186,7 @@ export const WHEAT: KingDef = {
       nameVi: 'Thợ Gặt',
       hp: 45,
       attack: { dmg: 9, type: 'physical', range: 2, interval: 12, cleave: 2 },
-      speed: 0.9,
+      speed: 1.8,
       radius: 4,
       armor: 0.05,
       tags: ['melee', 'human'],
@@ -197,7 +198,7 @@ export const WHEAT: KingDef = {
       nameVi: 'Nông Binh',
       hp: 28,
       attack: { dmg: 6, type: 'physical', range: 2, interval: 10 },
-      speed: 1.1,
+      speed: 2.2,
       radius: 4,
       armor: 0,
       tags: ['melee', 'human'],

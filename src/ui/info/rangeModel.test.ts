@@ -15,17 +15,17 @@ const tower = (decrees: DecreeId[] = []): RunState => ({
 const worldOf = (s: RunState): BattleWorld => createBattle(buildBattleSetup(s, CONTENT));
 
 describe('buildingRanges', () => {
-  it('ranges_share_setup: the royal archers decree gives 116 plus the structure radius', () => {
+  it('ranges_share_setup: the royal archers decree gives 174 plus the structure radius', () => {
     const r = buildingRanges(tower(['decree_royal_archers' as DecreeId]), 6, CONTENT);
-    expect(r.find((x) => x.kind === 'attack')!.radius).toBe(116 + BATTLE.structureRadius);
+    expect(r.find((x) => x.kind === 'attack')!.radius).toBe(174 + BATTLE.structureRadius);
     const plain = buildingRanges(tower(), 6, CONTENT);
-    expect(plain.find((x) => x.kind === 'attack')!.radius).toBe(104 + BATTLE.structureRadius);
+    expect(plain.find((x) => x.kind === 'attack')!.radius).toBe(156 + BATTLE.structureRadius);
   });
 
-  it('Mountain Heart L5 pulses at 64 from its centre, with no attack ring', () => {
+  it('Mountain Heart L5 pulses at 128 from its centre, with no attack ring', () => {
     const s = withBuilding(runState(), 6, 'stone_mountain_heart', 5);
     const r = buildingRanges(s, 6, CONTENT);
-    expect(r.find((x) => x.kind === 'pulse')!.radius).toBe(64);
+    expect(r.find((x) => x.kind === 'pulse')!.radius).toBe(128);
     expect(r.some((x) => x.kind === 'attack')).toBe(false);
   });
 

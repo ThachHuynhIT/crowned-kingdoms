@@ -1,3 +1,4 @@
+import { SPEC_MOVE_SCALE } from '../../data/boardGeometry';
 /** Final stats of every G2 card through the real content (spec §6, §13.1 "mỗi thẻ có test hiệu ứng"). */
 import { describe, expect, it } from 'vitest';
 import { RUN } from '../../data/run';
@@ -65,7 +66,7 @@ describe('neutral G2 cards (spec §6.1)', () => {
       expect(CONTENT.card(id)).toMatchObject({ kind, rarity, owner: 'neutral' });
     }
     expect(CONTENT.card('neutral_demolish').tags).toContain('sacrifice');
-    expect(CONTENT.unit('mercenary')).toMatchObject({ hp: 60, speed: 1, radius: 5, armor: 0.1, enemyCost: 2 });
+    expect(CONTENT.unit('mercenary')).toMatchObject({ hp: 60, speed: 1 * SPEC_MOVE_SCALE, radius: 5, armor: 0.1, enemyCost: 2 });
     expect(CONTENT.unit('mercenary').attack).toMatchObject({ dmg: 10, range: 2, interval: 10 });
   });
 
@@ -169,7 +170,7 @@ describe('Wheat King (spec §6.3)', () => {
     expect(byRarity('rare').sort()).toEqual(['wheat_granary', 'wheat_peasant_horde'].sort());
     for (const c of wheat.cards) expect(c.id.startsWith('wheat_')).toBe(true);
     expect(wheat.throne).toMatchObject({ hp: 300, armor: 0 });
-    expect(wheat.throne.attack).toMatchObject({ dmg: 8, range: 72, interval: 10, projectileSpeed: 8 });
+    expect(wheat.throne.attack).toMatchObject({ dmg: 8, range: 108, interval: 10, projectileSpeed: 8 * SPEC_MOVE_SCALE }); // 72 × 1,5
   });
 
   it('has the Đông Như Kiến banner and the 50/25/25 roster with the peasant unit', () => {
@@ -179,7 +180,7 @@ describe('Wheat King (spec §6.3)', () => {
       { unit: 'reaper', weight: 25 },
       { unit: 'peasant', weight: 25 },
     ]);
-    expect(CONTENT.unit('peasant')).toMatchObject({ hp: 28, speed: 1.1, radius: 4, armor: 0, enemyCost: 0.8 });
+    expect(CONTENT.unit('peasant')).toMatchObject({ hp: 28, speed: 1.1 * SPEC_MOVE_SCALE, radius: 4, armor: 0, enemyCost: 0.8 });
     expect(CONTENT.unit('peasant').attack).toMatchObject({ dmg: 6, range: 2, interval: 10 });
   });
 
@@ -264,7 +265,7 @@ describe('Stone King (spec §6.4)', () => {
     expect(ids('rare')).toEqual(['stone_rune_carving', 'stone_mountain_heart'].sort());
     for (const c of stone.cards) expect(c.id.startsWith('stone_')).toBe(true);
     expect(stone.throne).toMatchObject({ id: 'stone_throne', hp: 450, armor: 0.2 });
-    expect(stone.throne.attack).toMatchObject({ dmg: 12, type: 'physical', range: 56, interval: 14, projectileSpeed: 6 });
+    expect(stone.throne.attack).toMatchObject({ dmg: 12, type: 'physical', range: 84, interval: 14, projectileSpeed: 6 * SPEC_MOVE_SCALE }); // 56 × 1,5
   });
 
   it('has the Da Đá banner, the 50/35/15 roster and the four units', () => {
@@ -277,13 +278,13 @@ describe('Stone King (spec §6.4)', () => {
       { unit: 'slinger', weight: 35 },
       { unit: 'golem', weight: 15 },
     ]);
-    expect(CONTENT.unit('golem')).toMatchObject({ hp: 220, speed: 0.6, radius: 7, armor: 0.3, enemyCost: 6 });
+    expect(CONTENT.unit('golem')).toMatchObject({ hp: 220, speed: 0.6 * SPEC_MOVE_SCALE, radius: 7, armor: 0.3, enemyCost: 6 });
     expect(CONTENT.unit('golem').attack).toMatchObject({ dmg: 14, range: 3, interval: 15 });
-    expect(CONTENT.unit('miner')).toMatchObject({ hp: 70, speed: 0.8, radius: 5, armor: 0.2, enemyCost: 2.2 });
+    expect(CONTENT.unit('miner')).toMatchObject({ hp: 70, speed: 0.8 * SPEC_MOVE_SCALE, radius: 5, armor: 0.2, enemyCost: 2.2 });
     expect(CONTENT.unit('miner').behaviours).toEqual([{ type: 'deathSpawn', unit: 'rubble', count: 1 }]);
-    expect(CONTENT.unit('rubble')).toMatchObject({ hp: 40, speed: 0.7, radius: 4, armor: 0.2, enemyCost: 0 });
-    expect(CONTENT.unit('slinger')).toMatchObject({ hp: 30, speed: 0.8, enemyCost: 1.5 });
-    expect(CONTENT.unit('slinger').attack).toMatchObject({ dmg: 7, range: 64, interval: 16, projectileSpeed: 6 });
+    expect(CONTENT.unit('rubble')).toMatchObject({ hp: 40, speed: 0.7 * SPEC_MOVE_SCALE, radius: 4, armor: 0.2, enemyCost: 0 });
+    expect(CONTENT.unit('slinger')).toMatchObject({ hp: 30, speed: 0.8 * SPEC_MOVE_SCALE, enemyCost: 1.5 });
+    expect(CONTENT.unit('slinger').attack).toMatchObject({ dmg: 7, range: 64, interval: 16, projectileSpeed: 6 * SPEC_MOVE_SCALE });
   });
 
   it('the throne gives every tower +10/12/15/18/20% damage by throne level', () => {
@@ -300,10 +301,10 @@ describe('Stone King (spec §6.4)', () => {
 
   it('Tháp Ném Đá throws splash shells with a minimum range', () => {
     const a = structureAt(setupOf([[6, bld(1, 'stone_catapult')]]), 6).attack!;
-    expect(a).toMatchObject({ dmg: 14, range: 96, minRange: 24, interval: 25, projectileSpeed: 5, splash: 16 });
+    expect(a).toMatchObject({ dmg: 14, range: 144, minRange: 48, interval: 25, projectileSpeed: 5 * SPEC_MOVE_SCALE, splash: 32 });
     const l5 = structureAt(setupOf([[6, bld(1, 'stone_catapult', 5)]]), 6).attack!;
     expect(l5.dmg).toBeCloseTo(14 * 2.4, 9);
-    expect(l5.range).toBe(96 + 16);
+    expect(l5.range).toBe(144 + 24);
   });
 
   it('Xưởng Người Đá spawns 1/1/2/2/3 golems', () => {
@@ -340,7 +341,7 @@ describe('Stone King (spec §6.4)', () => {
       const w = structureAt(setupOf([[6, bld(1, 'stone_wall', level)]]), 6);
       expect(w.hp).toBe(hp[level - 1]);
       expect(w.armor).toBeCloseTo(0.3, 9);
-      expect(w.taunt).toBe(40);
+      expect(w.taunt).toBe(80); // 1,25 ô
     }
     const plain = structureAt(setupOf([[7, bld(2, 'wheat_militia')]]), 7).hp;
     const near = structureAt(setupOf([[6, bld(1, 'stone_wall')], [7, bld(2, 'wheat_militia')]]), 7).hp;
@@ -352,7 +353,7 @@ describe('Stone King (spec §6.4)', () => {
     expect(a).toMatchObject({
       dmg: 4,
       dmgType: 'magic',
-      range: 64,
+      range: 96, // 64 × 1,5
       interval: 3,
       projectileSpeed: 0,
       rampPctPerHit: 20,
@@ -395,7 +396,7 @@ describe('Stone King (spec §6.4)', () => {
       expect(structureAt(setupOf([[6, bld(1, 'stone_mountain_heart', level)]]), 6).hp).toBe(hp[level - 1]);
     }
     const heart = structureAt(setupOf([[6, bld(1, 'stone_mountain_heart')]]), 6);
-    expect(heart.pulse).toEqual({ everyTicks: 40, radius: 48, dmg: 30, dmgType: 'physical', stunTicks: 10 });
+    expect(heart.pulse).toEqual({ everyTicks: 40, radius: 96, dmg: 30, dmgType: 'physical', stunTicks: 10 });
     expect(heart.attack).toBeNull();
     const plain = structureAt(setupOf([[7, bld(2, 'stone_golem_forge')]]), 7).spawn!.stats.hp;
     const near = structureAt(setupOf([[6, bld(1, 'stone_mountain_heart')], [7, bld(2, 'stone_golem_forge')]]), 7).spawn!.stats.hp;
@@ -420,7 +421,7 @@ describe('Arcane King (spec §6.5)', () => {
     expect(ids('rare')).toEqual(['arcane_ward', 'arcane_archmage'].sort());
     for (const c of arcane.cards) expect(c.id.startsWith('arcane_')).toBe(true);
     expect(arcane.throne).toMatchObject({ id: 'arcane_throne', hp: 280, armor: 0 });
-    expect(arcane.throne.attack).toMatchObject({ dmg: 10, type: 'magic', range: 80, interval: 12, projectileSpeed: 8 });
+    expect(arcane.throne.attack).toMatchObject({ dmg: 10, type: 'magic', range: 120, interval: 12, projectileSpeed: 8 * SPEC_MOVE_SCALE }); // 80 × 1,5
   });
 
   it('has the Kết Giới banner, the 50/25/25 roster and the four units', () => {
@@ -430,12 +431,12 @@ describe('Arcane King (spec §6.5)', () => {
       { unit: 'frost_mage', weight: 25 },
       { unit: 'construct', weight: 25 },
     ]);
-    expect(CONTENT.unit('apprentice')).toMatchObject({ hp: 24, speed: 0.9, radius: 4, armor: 0, enemyCost: 1.4 });
-    expect(CONTENT.unit('apprentice').attack).toMatchObject({ dmg: 7, type: 'magic', range: 56, interval: 14, projectileSpeed: 7 });
+    expect(CONTENT.unit('apprentice')).toMatchObject({ hp: 24, speed: 0.9 * SPEC_MOVE_SCALE, radius: 4, armor: 0, enemyCost: 1.4 });
+    expect(CONTENT.unit('apprentice').attack).toMatchObject({ dmg: 7, type: 'magic', range: 56, interval: 14, projectileSpeed: 7 * SPEC_MOVE_SCALE });
     expect(CONTENT.unit('frost_mage').attack).toMatchObject({ dmg: 6, range: 64, interval: 14, onHit: [{ type: 'slow', pct: 30, ticks: 20 }] });
-    expect(CONTENT.unit('archmage')).toMatchObject({ hp: 90, speed: 0.7, radius: 5, enemyCost: 8 });
-    expect(CONTENT.unit('archmage').attack).toMatchObject({ dmg: 22, range: 88, interval: 20, splash: 20, projectileSpeed: 6 });
-    expect(CONTENT.unit('construct')).toMatchObject({ hp: 90, speed: 0.8, radius: 6, armor: 0.1, enemyCost: 2.5 });
+    expect(CONTENT.unit('archmage')).toMatchObject({ hp: 90, speed: 0.7 * SPEC_MOVE_SCALE, radius: 5, enemyCost: 8 });
+    expect(CONTENT.unit('archmage').attack).toMatchObject({ dmg: 22, range: 88, interval: 20, splash: 20, projectileSpeed: 6 * SPEC_MOVE_SCALE });
+    expect(CONTENT.unit('construct')).toMatchObject({ hp: 90, speed: 0.8 * SPEC_MOVE_SCALE, radius: 6, armor: 0.1, enemyCost: 2.5 });
     expect(CONTENT.unit('construct').attack).toMatchObject({ dmg: 8, type: 'magic', range: 2, interval: 12 });
   });
 
@@ -444,10 +445,10 @@ describe('Arcane King (spec §6.5)', () => {
     expect(a).toMatchObject({
       dmg: 9,
       dmgType: 'magic',
-      range: 80,
+      range: 120, // 80 × 1,5
       interval: 14,
-      projectileSpeed: 8,
-      chain: { count: 1, radius: 32, falloff: 0.6 },
+      projectileSpeed: 8 * SPEC_MOVE_SCALE,
+      chain: { count: 1, radius: 64, falloff: 0.6 },
     });
   });
 
@@ -537,7 +538,7 @@ describe('Arcane King (spec §6.5)', () => {
   it('Vòng Kết Giới pulses a 20..40 shield every 50 ticks in 64 px', () => {
     for (const level of [1, 2, 3, 4, 5] as const) {
       const s = structureAt(setupOf([[6, bld(1, 'arcane_ward', level)]]), 6);
-      expect(s.shieldPulse).toEqual({ everyTicks: 50, radius: 64, amount: [20, 25, 30, 35, 40][level - 1] });
+      expect(s.shieldPulse).toEqual({ everyTicks: 50, radius: 128, amount: [20, 25, 30, 35, 40][level - 1] });
     }
   });
 
@@ -576,15 +577,15 @@ describe('Arcane King (spec §6.5)', () => {
 describe('tooltips at the viewed level (spec §5.6)', () => {
   it('Tim Núi shows its pulse radius and damage scaled by level', () => {
     const heart = CONTENT.card('stone_mountain_heart');
-    expect(describeCard(heart, 1).lines[0]).toContain('48 px');
+    expect(describeCard(heart, 1).lines[0]).toContain('96 px');
     expect(describeCard(heart, 1).lines[0]).toContain('30 sát');
-    expect(describeCard(heart, 3).lines[0]).toContain('56 px'); // 48 + TOWER_RANGE[2]
+    expect(describeCard(heart, 3).lines[0]).toContain('112 px'); // 96 + PULSE_RADIUS_BONUS[2]
     expect(describeCard(heart, 3).lines[0]).toContain('51 sát'); // 30 × TOWER_STD[2]
   });
 
   it('a tower shows damage and range scaled by level', () => {
     const line = describeCard(CONTENT.card('wheat_scarecrow'), 3).lines[0]!;
-    expect(line).toContain('tầm 80'); // 72 + 8
+    expect(line).toContain('tầm 120'); // 108 + 12
     expect(line).toContain(`${Math.round(6 * 1.7)} sát`);
   });
 });

@@ -1,4 +1,5 @@
 /** Thẻ và đơn vị trung lập của G1–G2 (spec §6.1); hai thẻ meta (`neutral_duplicate`, `neutral_royal_seal`) thuộc G4. */
+import { cells } from './boardGeometry';
 import type { CardDef, UnitDef } from './types';
 
 export const NEUTRAL_UNITS: readonly UnitDef[] = [
@@ -7,7 +8,7 @@ export const NEUTRAL_UNITS: readonly UnitDef[] = [
     nameVi: 'Lính Bộ',
     hp: 45,
     attack: { dmg: 7, type: 'physical', range: 2, interval: 10 },
-    speed: 0.9,
+    speed: 1.8,
     radius: 4,
     armor: 0.1,
     tags: ['melee', 'human'],
@@ -19,7 +20,7 @@ export const NEUTRAL_UNITS: readonly UnitDef[] = [
     nameVi: 'Lính Đánh Thuê',
     hp: 60,
     attack: { dmg: 10, type: 'physical', range: 2, interval: 10 },
-    speed: 1.0,
+    speed: 2,
     radius: 5,
     armor: 0.1,
     tags: ['melee', 'human'],
@@ -52,7 +53,7 @@ export const NEUTRAL_CARDS: readonly CardDef[] = [
     effects: [
       {
         type: 'tower',
-        attack: { dmg: 7, type: 'physical', range: 88, interval: 12, projectileSpeed: 8 },
+        attack: { dmg: 7, type: 'physical', range: cells(2.0625), interval: 12, projectileSpeed: 16 },
         targeting: 'closestToThrone',
       },
     ],
