@@ -88,10 +88,10 @@ export const decorFile = (id: string): string => `iso/wilds/${id}`;
 
 /**
  * Seamless ground textures that colour the river and its sand banks (`docs/art-review/iso-board/terrain`,
- * 128 px, density 2). Only the terrains in `GROUND_TEXTURES_APPROVED` (approved by the owner) are loaded.
+ * 128 px, density 2). Only the terrains in `GROUND_TEXTURES_APPROVED` (owner approved both, 2026-11-06) are loaded.
  */
 export const GROUND_TEXTURE_FILES = { water: 'iso/terrain/water', sand: 'iso/terrain/sand' } as const;
-export const GROUND_TEXTURES_APPROVED: readonly (keyof typeof GROUND_TEXTURE_FILES)[] = [];
+export const GROUND_TEXTURES_APPROVED: readonly (keyof typeof GROUND_TEXTURE_FILES)[] = ['water', 'sand'];
 
 /** Every PNG of the set (file name without `.png`). */
 export const IMAGE_ART_FILES: readonly string[] = [

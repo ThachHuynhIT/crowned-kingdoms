@@ -2985,3 +2985,31 @@ assets:
     nativeSize: 1536x1024
     finalSize: 480x356
     notes: Mountain cliff segment for the north edge, isometric (v2 approved 2026-11-06 with the slope to be fixed in production): every column shifted so the foot runs at exactly 2:1, then box-reduced to 480 px wide by docs/art-review/iso-board/make_assets.py; tiled along the wall line by src/render/IsoWallRenderer.ts
+  - id: terrain_water_iso
+    path: public/assets/art/ai-v1/iso/terrain/water.png
+    category: terrain
+    origin: custom
+    source: docs/art-review/iso-board/terrain/terrain_water/source.png
+    creator: Project owner (OpenAI imagegen via Codex; prompt in docs/art-review/iso-board/terrain/terrain_water/prompt.md)
+    license: project-owned
+    attribution: false
+    redistribute: true
+    evidence: docs/art-review/iso-board/terrain/
+    modified: true
+    nativeSize: 1024x1024
+    finalSize: 128x128
+    notes: River and pond water seamless ground texture, top-down (approved 2026-11-06); box-reduced 8x by docs/art-review/iso-board/terrain/make_textures.py; sampled at absolute art position by paintField (src/render/imageArt.ts GROUND_TEXTURE_FILES)
+  - id: terrain_sand_iso
+    path: public/assets/art/ai-v1/iso/terrain/sand.png
+    category: terrain
+    origin: custom
+    source: docs/art-review/iso-board/terrain/terrain_sand/source.png
+    creator: Project owner (OpenAI imagegen via Codex; prompt in docs/art-review/iso-board/terrain/terrain_sand/prompt.md)
+    license: project-owned
+    attribution: false
+    redistribute: true
+    evidence: docs/art-review/iso-board/terrain/
+    modified: true
+    nativeSize: 1024x1024
+    finalSize: 128x128
+    notes: Sand bank seamless ground texture, top-down (approved 2026-11-06); box-reduced 8x by docs/art-review/iso-board/terrain/make_textures.py; sampled at absolute art position by paintField (src/render/imageArt.ts GROUND_TEXTURE_FILES)
