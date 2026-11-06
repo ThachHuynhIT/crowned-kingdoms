@@ -11,7 +11,9 @@ import { unlockCost } from '../data/run';
 import { THRONE_PLOT, adjacentToUnlocked } from '../game/run/board';
 import type { RunState } from '../game/run/state';
 import { FONT_UI } from '../ui/theme';
+import { ISO } from '../core/iso';
 import { SPRITES_KEY, buildingFrame, imageFrameScale, kingPlotFrame, plotFrame } from './atlas';
+import { ISO_SPRITE_SCALE, fillPoly, insetPoly, iso, isoQuad, strokePoly } from './isoView';
 
 const SIZE = 5;
 const PLOTS = SIZE * SIZE;
@@ -38,28 +40,35 @@ const HIGHLIGHT_COLOR: Readonly<Record<PlotHighlight, number>> = {
   selected: UI_PALETTE.gold,
 };
 
-/** World px one plot frame covers at its frame scale (the 32 px plot art of the old 32 px cells). */
-export const PLOT_ART_PX = 32;
 /**
- * A building sprite's foot sits this far south of its structure position (spec 06/11/2026): half a
- * 32 px building, so the sprite is centred on the body that collides in battle.
+ * A building sprite's foot sits this far below its projected structure position on screen (spec
+ * 06/11/2026): the bottom corner of a 32 px footprint centred on the structure is (16 + 16) / 2
+ * below it, so the sprite stands on the body that collides in battle.
  */
 export const BUILDING_FOOT_DY = 16;
 /** Ground layer just above the plots: the dirt deploy boxes. */
 const BOX_DEPTH = 1.5;
 
-/** Where a building on `plot` is drawn: its structure foot (the plot centre), lowered by `BUILDING_FOOT_DY`. */
+/** Where a building on `plot` is drawn (camera space): its projected structure foot, lowered by `BUILDING_FOOT_DY`. */
 export const buildingFoot = (plot: number): { x: number; y: number } => {
-  const f = structureFoot(plot);
+  const f = iso(structureFoot(plot));
   return { x: f.x, y: f.y + BUILDING_FOOT_DY };
+};
+
+/** The projected diamond of `plot`: top, right, bottom, left corners. */
+const plotDiamond = (plot: number) => {
+  const c = plotCenter(plot);
+  const half = BATTLE.plot / 2;
+  return isoQuad(c.x - half, c.y - half, BATTLE.plot, BATTLE.plot);
 };
 
 /** Foot y of a building standing on `plot`. */
 export const buildingFootY = (plot: number): number => buildingFoot(plot).y;
 
 /**
- * The 5x5 board outside battle: plot ground, buildings anchored at their feet on the bottom
- * edge of their cell (depth = foot y), placement highlights and incoming-army edge arrows.
+ * The 5x5 board outside battle, isometric (spec 2026-11-06): plot diamonds, buildings standing
+ * upright on their projected feet (depth = foot y on screen), diamond placement highlights,
+ * deploy strips and the incoming-army arrow. `plotAt` still takes world coordinates.
  */
 export class BoardRenderer {
   private readonly scene: Phaser.Scene;
@@ -82,7 +91,7 @@ export class BoardRenderer {
     this.scene = scene;
     this.content = content;
     for (let p = 0; p < PLOTS; p++) {
-      const c = plotCenter(p);
+      const c = iso(plotCenter(p));
       this.plots.push(
         scene.add.image(c.x, c.y, SPRITES_KEY, plotFrame('locked')).setDepth(PLOT_DEPTH),
       );
@@ -102,7 +111,9 @@ export class BoardRenderer {
       const plot = state.plots[p];
       const ground = p === THRONE_PLOT ? 'throne' : plot?.unlocked ? 'open' : 'locked';
       const frame = kingPlotFrame(state.kingId, ground);
-      this.plots[p]!.setFrame(frame).setScale(imageFrameScale(frame) * (BATTLE.plot / PLOT_ART_PX));
+      // Plot frames are diamonds (atlas): scale each to the 128×64 diamond of a plot.
+      const img = this.plots[p]!.setFrame(frame);
+      img.setScale(ISO.plotW / img.frame.width);
       const cardId = p === THRONE_PLOT ? throneId : (plot?.building?.cardId ?? null);
       this.setBuilding(p, cardId);
     }
@@ -126,14 +137,13 @@ export class BoardRenderer {
     const plots = [...map.keys()].sort((a, b) => a - b);
     for (const p of plots) {
       if (p < 0 || p >= PLOTS) continue;
-      const c = plotCenter(p);
-      const half = BATTLE.plot / 2;
+      const d = plotDiamond(p);
       g.lineStyle(2, HIGHLIGHT_COLOR[map.get(p) ?? 'bad'], 1);
-      g.strokeRect(c.x - half + 1, c.y - half + 1, BATTLE.plot - 2, BATTLE.plot - 2);
+      strokePoly(g, insetPoly(d, 0.03));
       if (map.get(p) === 'levelUp') {
         // A second, gold ring inside marks "this plays as a level-up".
         g.lineStyle(1, UI_PALETTE.gold, 1);
-        g.strokeRect(c.x - half + 4, c.y - half + 4, BATTLE.plot - 8, BATTLE.plot - 8);
+        strokePoly(g, insetPoly(d, 0.12));
       }
     }
   }
@@ -151,10 +161,16 @@ export class BoardRenderer {
     const hi = BATTLE.boardOrigin + BATTLE.plot * SIZE;
     const mid = (lo + hi) / 2;
     const h = ARROW_HALF;
-    const s = hi + ARROW_GAP; // tip of the arrow below the board
+    // Tip just south of the board's south edge (world), drawn upright on screen, pointing back at the board.
+    const tip = iso({ x: mid, y: hi + ARROW_GAP });
     // Enemies only march in from the front (south): every non-empty input shows one arrow there.
     if (edges.length === 0) return;
-    const tri: [number, number, number, number, number, number] = [mid - h, s + h, mid + h, s + h, mid, s];
+    // The road comes up from the south: on screen it runs from the lower left (direction (−2, 1)),
+    // so the arrow's base sits that way from the tip, across the road (direction (1, 2)).
+    const base = { x: tip.x - 2 * h, y: tip.y + h };
+    const tri: [number, number, number, number, number, number] = [
+      base.x + h / 2, base.y + h, base.x - h / 2, base.y - h, tip.x, tip.y,
+    ];
     g.fillStyle(UI_PALETTE.gold, 1);
     g.fillTriangle(...tri);
     g.lineStyle(1, UI_PALETTE.outline, 1);
@@ -190,8 +206,9 @@ export class BoardRenderer {
     for (let p = 0; p < PLOTS; p++) {
       const b = state.plots[p]?.building;
       if (!b) continue;
-      const c = plotCenter(p);
-      const left = c.x - BATTLE.plot / 2 + 3;
+      // Pips sit on the diamond's lower-left edge (level) and upper-left edge (enchantments).
+      const c = iso(plotCenter(p));
+      const left = c.x - ISO.plotW / 4;
       const level = p === THRONE_PLOT ? state.throneLevel : b.level;
       const stacks = b.enchants.reduce((n, e) => n + e.stacks, 0);
       const pip = (i: number, y: number, color: number): void => {
@@ -200,8 +217,8 @@ export class BoardRenderer {
         g.fillStyle(color, 1);
         g.fillRect(left + i * PIP_STEP, y, PIP, PIP);
       };
-      if (level > 1) for (let i = 0; i < level; i++) pip(i, c.y + BATTLE.plot / 2 - 6, UI_PALETTE.gold);
-      for (let i = 0; i < stacks; i++) pip(i, c.y - BATTLE.plot / 2 + 3, UI_PALETTE.select);
+      if (level > 1) for (let i = 0; i < level; i++) pip(i, c.y + ISO.plotH / 4 - 2, UI_PALETTE.gold);
+      for (let i = 0; i < stacks; i++) pip(i, c.y - ISO.plotH / 4 - 2, UI_PALETTE.select);
     }
   }
 
@@ -215,10 +232,11 @@ export class BoardRenderer {
       const b = state.plots[p]?.building;
       if (!b || p === THRONE_PLOT || this.content.card(b.cardId).kind !== 'troop') continue;
       const c = plotCenter(p);
+      const box = isoQuad(c.x + DEPLOY_BOX.x0, c.y + DEPLOY_BOX.y0, w, h);
       g.fillStyle(PALETTE.soil, 1);
-      g.fillRect(c.x + DEPLOY_BOX.x0, c.y + DEPLOY_BOX.y0, w, h);
+      fillPoly(g, box);
       g.lineStyle(1, PALETTE.path, 1);
-      g.strokeRect(c.x + DEPLOY_BOX.x0, c.y + DEPLOY_BOX.y0, w, h);
+      strokePoly(g, box);
     }
   }
 
@@ -238,7 +256,7 @@ export class BoardRenderer {
           .setDepth(MARK_DEPTH + 1);
         this.prices.push(text);
       }
-      const c = plotCenter(p);
+      const c = iso(plotCenter(p));
       text.setText(`${price}`).setPosition(c.x, c.y).setData('on', true).setVisible(this.buildingsVisible);
       used++;
     }
@@ -268,11 +286,11 @@ export class BoardRenderer {
       img = this.scene.add
         .image(foot.x, foot.y, SPRITES_KEY, buildingFrame(cardId))
         .setOrigin(0.5, 1)
-        .setScale(imageFrameScale(buildingFrame(cardId)))
+        .setScale(imageFrameScale(buildingFrame(cardId)) * ISO_SPRITE_SCALE)
         .setDepth(foot.y);
       this.buildings[plot] = img;
     } else if (shown !== cardId) {
-      img.setFrame(buildingFrame(cardId)).setScale(imageFrameScale(buildingFrame(cardId)));
+      img.setFrame(buildingFrame(cardId)).setScale(imageFrameScale(buildingFrame(cardId)) * ISO_SPRITE_SCALE);
     }
     img.setVisible(this.buildingsVisible);
   }

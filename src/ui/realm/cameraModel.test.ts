@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest';
-import { BATTLE } from '../../data/battle';
+import { ISO, unproject } from '../../core/iso';
 import type { Size } from '../hud/layout';
 import {
   MAP_BOUNDS,
@@ -33,7 +33,7 @@ describe('camera model (spec 06/11/2026, P2 zoom)', () => {
       expect(zoomSteps(s, 'planning')).toEqual([1, 2, 3]);
     }
     expect(ZOOM_MAX).toBe(3);
-    expect(zoomSteps({ w: 2560, h: 1600 }, 'battle')).toEqual([2, 3]);
+    expect(zoomSteps({ w: 4000, h: 2000 }, 'battle')).toEqual([2, 3]);
   });
 
   it('wheel_steps_keep_the_world_point_under_the_cursor', () => {
@@ -68,9 +68,11 @@ describe('camera model (spec 06/11/2026, P2 zoom)', () => {
     expect(r.y1).toBeCloseTo(MAP_BOUNDS.y1, 6);
   });
 
-  it('does not pan at the overview step', () => {
-    const base = overviewView(DESKTOP, 'battle');
-    expect(panBy(base, { x: 50, y: -30 }, DESKTOP, 'battle')).toEqual(base);
+  it('pans at the overview step too: the isometric board is wider than a phone', () => {
+    const base = overviewView(MOBILE, 'planning');
+    const moved = panBy(base, { x: 120, y: 0 }, MOBILE, 'planning');
+    expect(moved.zoom).toBe(base.zoom);
+    expect(moved.scroll.x).toBeCloseTo(base.scroll.x - 120, 6);
   });
 
   it('centres a view wider than the map instead of clamping one side', () => {
@@ -100,15 +102,18 @@ describe('camera model (spec 06/11/2026, P2 zoom)', () => {
     expect(plotRectAtView(base, DESKTOP, 12)).toEqual(plotScreenRect(lay, 12));
     const z = zoomAt(base, { x: 640, y: 360 }, 3, DESKTOP, 'planning');
     const r = plotRectAtView(z, DESKTOP, 7);
-    expect([r.w, r.h]).toEqual([BATTLE.plot * 3, BATTLE.plot * 3]);
-    expect(plotAtView(z, DESKTOP, { x: r.x + 1, y: r.y + 1 })).toBe(7);
-    expect(plotAtView(z, DESKTOP, { x: r.x + r.w + 1, y: r.y + 1 })).toBe(8);
+    expect([r.w, r.h]).toEqual([ISO.plotW * 3, ISO.plotH * 3]);
+    const c = { x: r.x + r.w / 2, y: r.y + r.h / 2 };
+    expect(plotAtView(z, DESKTOP, c)).toBe(7);
+    // half a diamond right and down is the next column (plot 8); the box corner is not plot 7
+    expect(plotAtView(z, DESKTOP, { x: c.x + r.w / 2, y: c.y + r.h / 2 })).toBe(8);
+    expect(plotAtView(z, DESKTOP, { x: r.x + 1, y: r.y + 1 })).not.toBe(7);
   });
 
   it('maps battle aim through the live view and returns null off the field', () => {
     const z = zoomAt(overviewView(DESKTOP, 'battle'), { x: 640, y: 360 }, 2, DESKTOP, 'battle');
     const w = worldAtView(z, DESKTOP, { x: 640, y: 360 })!;
-    expect(w).toEqual(screenToWorld({ x: 640, y: 360 }, z.scroll, DESKTOP, 2));
+    expect(w).toEqual(unproject(screenToWorld({ x: 640, y: 360 }, z.scroll, DESKTOP, 2)));
     const far = panBy(z, { x: 100000, y: 0 }, DESKTOP, 'battle');
     expect(worldAtView(far, DESKTOP, { x: 1, y: 360 })).toBeNull();
   });

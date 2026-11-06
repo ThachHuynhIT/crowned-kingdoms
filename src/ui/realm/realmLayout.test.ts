@@ -1,4 +1,5 @@
 import { describe, expect, it } from 'vitest';
+import { unproject } from '../../core/iso';
 import { BATTLE } from '../../data/battle';
 import { cardLayout, fitArt } from '../cards/cardLayout';
 import { CARD_LIFT, type Rect, type Size } from '../hud/layout';
@@ -30,13 +31,26 @@ const inside = (r: Rect, s: Size): boolean =>
 const overlaps = (a: Rect, b: Rect): boolean =>
   a.x < b.x + b.w && b.x < a.x + a.w && a.y < b.y + b.h && b.y < a.y + a.h;
 
+/**
+ * The board is an isometric diamond inside its box (spec 2026-11-06): a rect overlaps it when the
+ * point of the rect nearest the diamond centre lies strictly inside the diamond.
+ */
+const overlapsDiamond = (r: Rect, box: Rect): boolean => {
+  const cx = box.x + box.w / 2;
+  const cy = box.y + box.h / 2;
+  const nx = Math.min(r.x + r.w, Math.max(r.x, cx));
+  const ny = Math.min(r.y + r.h, Math.max(r.y, cy));
+  return Math.abs(nx - cx) / (box.w / 2) + Math.abs(ny - cy) / (box.h / 2) < 1;
+};
+
 const expectSeparate = (named: Record<string, Rect>): void => {
   const entries = Object.entries(named);
   for (let i = 0; i < entries.length; i++)
     for (let j = i + 1; j < entries.length; j++) {
       const [na, a] = entries[i]!;
       const [nb, b] = entries[j]!;
-      expect(overlaps(a, b), `${na} overlaps ${nb}`).toBe(false);
+      const hit = na === 'board' ? overlapsDiamond(b, a) : nb === 'board' ? overlapsDiamond(a, b) : overlaps(a, b);
+      expect(hit, `${na} overlaps ${nb}`).toBe(false);
     }
 };
 
@@ -55,7 +69,7 @@ describe('planningLayout', () => {
     expect(l.desktop).toBe(true);
     expect(l.lives).toEqual({ x: 10, y: 10, w: 120, h: 52 });
     expect(l.year).toEqual({ x: 560, y: 66, w: 160, h: 26 });
-    expect(l.board).toEqual({ x: 480, y: 200, w: 320, h: 320 });
+    expect(l.board).toEqual({ x: 320, y: 200, w: 640, h: 320 }); // the 640×320 isometric diamond's box
     expect(l.zoom).toBe(1); // 64 px plots at zoom 1 (spec 06/11/2026)
     expect(l.scout).toMatchObject({ x: 1010, w: 260, y: 92, h: 426 });
     expect(l.scoutButton).toBeNull();
@@ -79,7 +93,7 @@ describe('planningLayout', () => {
     expect(l.help).toEqual({ x: 210, y: 10, w: 52, h: 48 });
     expect(l.year.x).toBe(266);
     expect(l.year.x + l.year.w).toBe(365);
-    expect(l.board).toEqual({ x: 28, y: 180, w: 320, h: 320 });
+    expect(l.board).toEqual({ x: -132, y: 180, w: 640, h: 320 }); // wider than a phone: the map pans
     expect(l.zoom).toBe(1);
     expect(l.hand).toHaveLength(3);
     expect(l.hand[0]).toEqual({ x: 18, y: 640, w: 108, h: 162 });
@@ -136,7 +150,11 @@ describe('planningLayout', () => {
       };
       if (l.scout) named.scout = l.scout;
       if (l.scoutButton) named.scoutButton = l.scoutButton;
-      for (const [n, r] of Object.entries(named)) expect(inside(r, screen), `${n} ${JSON.stringify(r)}`).toBe(true);
+      for (const [n, r] of Object.entries(named)) {
+        // The board is world, not HUD: on a phone its 640 px diamond runs past both sides.
+        if (n === 'board' && !l.desktop) continue;
+        expect(inside(r, screen), `${n} ${JSON.stringify(r)}`).toBe(true);
+      }
       expect(inside(l.fight, screen)).toBe(true);
       expect(l.calendar).toHaveLength(5);
       for (const c of l.calendar) {
@@ -151,7 +169,8 @@ describe('planningLayout', () => {
       expectSeparate(named);
       // Exactly one of the scout panel (desktop) and the scout button (mobile).
       expect((l.scout === null) !== (l.scoutButton === null)).toBe(true);
-      expect(l.desktop ? l.scout !== null : l.scoutButton !== null).toBe(true);
+      // The scout panel needs room beside the 640 px board: ≥ 1200 px desktops only.
+      expect(l.desktop && screen.w >= 1200 ? l.scout !== null : l.scoutButton !== null).toBe(true);
       // ✓/✕ and the hint never sit on the calendar or the buttons.
       for (const r of [l.confirm, l.cancel, l.hint])
         for (const other of [...l.calendar, l.reroll, l.sell, l.deck])
@@ -209,9 +228,9 @@ describe('planning header and status zones', () => {
     expect(l.year.x + l.year.w / 2).toBeCloseTo(DESKTOP.w / 2, 0);
   });
 
-  it('phone_board_is_320_square: the board keeps its size under the new header', () => {
+  it('phone_board_is_the_640x320_diamond: the board keeps its size under the new header', () => {
     const l = planningLayout(MOBILE);
-    expect([l.board.w, l.board.h]).toEqual([320, 320]);
+    expect([l.board.w, l.board.h]).toEqual([640, 320]);
     for (const r of [...l.calendar, l.year, l.help]) expect(r.y + r.h).toBeLessThanOrEqual(l.board.y);
   });
 
@@ -237,12 +256,14 @@ describe('planning header and status zones', () => {
 });
 
 describe('plotScreenRect', () => {
-  it('maps plots to 64 px screen cells of the board', () => {
+  it('maps plots to the 128×64 diamonds of the isometric board (boxes)', () => {
     const l = planningLayout(DESKTOP);
     expect(PLANNING_ZOOM).toBe(1);
-    expect(plotScreenRect(l, 12)).toEqual({ x: 608, y: 328, w: 64, h: 64 });
-    expect(plotScreenRect(l, 0)).toEqual({ x: l.board.x, y: l.board.y, w: 64, h: 64 });
-    expect(plotScreenRect(l, 24)).toEqual({ x: 480 + 256, y: 200 + 256, w: 64, h: 64 });
+    expect(plotScreenRect(l, 12)).toEqual({ x: 576, y: 328, w: 128, h: 64 });
+    expect(plotScreenRect(l, 0)).toEqual({ x: 576, y: l.board.y, w: 128, h: 64 }); // the top corner
+    expect(plotScreenRect(l, 4)).toEqual({ x: 832, y: 328, w: 128, h: 64 }); // the right corner
+    expect(plotScreenRect(l, 20)).toEqual({ x: 320, y: 328, w: 128, h: 64 }); // the left corner
+    expect(plotScreenRect(l, 24)).toEqual({ x: 576, y: 456, w: 128, h: 64 }); // the bottom corner
   });
 });
 
@@ -312,8 +333,9 @@ describe('planningZoom / realmCamera', () => {
     for (const screen of [DESKTOP, MOBILE, { w: 1920, h: 1080 }]) {
       const l = planningLayout(screen);
       const cam = realmCamera(screen, 'planning');
-      const p = screenToWorld({ x: l.board.x, y: l.board.y }, cam.scroll, screen, cam.zoom);
-      expect(p.x).toBeCloseTo(BATTLE.boardOrigin, 6); // the board's top-left corner
+      // The top corner of the diamond is the board's world north-west corner.
+      const p = unproject(screenToWorld({ x: l.board.x + l.board.w / 2, y: l.board.y }, cam.scroll, screen, cam.zoom));
+      expect(p.x).toBeCloseTo(BATTLE.boardOrigin, 6);
       expect(p.y).toBeCloseTo(BATTLE.boardOrigin, 6);
     }
   });
@@ -338,7 +360,7 @@ describe('realmCameraMix', () => {
   it('never mixes a fractional zoom on mobile: both phases are at zoom 1', () => {
     const mid = realmCameraMix(MOBILE, 'planning', 'battle', 0.5);
     expect(mid.zoom).toBe(1);
-    const centre = screenToWorld({ x: MOBILE.w / 2, y: MOBILE.h / 2 }, mid.scroll, MOBILE, mid.zoom);
+    const centre = unproject(screenToWorld({ x: MOBILE.w / 2, y: MOBILE.h / 2 }, mid.scroll, MOBILE, mid.zoom));
     expect(Math.abs(centre.x - BATTLE.field / 2)).toBeLessThan(200);
   });
 
@@ -369,11 +391,15 @@ describe('plotAtScreen', () => {
       const l = planningLayout(screen);
       for (const plot of [0, 7, 12, 24]) {
         const r = plotScreenRect(l, plot);
-        expect(plotAtScreen(l, { x: r.x, y: r.y })).toBe(plot);
-        expect(plotAtScreen(l, { x: r.x + r.w - 0.5, y: r.y + r.h - 0.5 })).toBe(plot);
+        const c = { x: r.x + r.w / 2, y: r.y + r.h / 2 };
+        expect(plotAtScreen(l, c)).toBe(plot);
+        // just inside each of the diamond's four corners
+        for (const p of [{ x: c.x, y: r.y + 1 }, { x: r.x + 2, y: c.y }, { x: r.x + r.w - 2, y: c.y }, { x: c.x, y: r.y + r.h - 1 }])
+          expect(plotAtScreen(l, p), JSON.stringify(p)).toBe(plot);
       }
-      expect(plotAtScreen(l, { x: l.board.x - 1, y: l.board.y })).toBeNull();
-      expect(plotAtScreen(l, { x: l.board.x, y: l.board.y + l.board.h })).toBeNull();
+      // the box corners are outside the diamond
+      expect(plotAtScreen(l, { x: l.board.x + 1, y: l.board.y + 1 })).toBeNull();
+      expect(plotAtScreen(l, { x: l.board.x + l.board.w - 1, y: l.board.y + l.board.h - 1 })).toBeNull();
     }
   });
 });
@@ -445,7 +471,8 @@ describe('battleZoom', () => {
     expect(battleZoom(1280, 720)).toBe(1);
     expect(battleZoom(375, 812)).toBe(1);
     expect(battleZoom(1920, 1080)).toBe(1);
-    expect(battleZoom(2560, 1600)).toBe(2);
+    expect(battleZoom(2560, 1600)).toBe(1); // the isometric field is 1536 wide: min(1280, 1696) / 768
+    expect(battleZoom(4000, 2000)).toBe(2);
     expect(battleZoom(100, 100)).toBe(1);
   });
 });
@@ -601,13 +628,15 @@ describe('battleCamera / battleWorldAt', () => {
   });
 
   it('maps screen offsets by 1 / zoom and returns null off the field', () => {
+    // Screen (+100, −50) from the centre is projected (100, 334): world (334 + 50, 334 − 50).
     const p = battleWorldAt({ x: 640 + 100, y: 360 - 50 }, DESKTOP)!;
-    expect(p.x).toBeCloseTo(484, 9);
-    expect(p.y).toBeCloseTo(334, 9);
-    // Desktop shows world x 384 ± 640: the screen's left edge is off the field.
-    expect(battleWorldAt({ x: 0, y: 360 }, DESKTOP)).toBeNull();
-    expect(battleWorldAt({ x: 187.5 - 384, y: 406 }, MOBILE)!.x).toBeCloseTo(0, 9);
-    expect(battleWorldAt({ x: 187.5 - 385, y: 406 }, MOBILE)).toBeNull();
+    expect(p.x).toBeCloseTo(384, 9);
+    expect(p.y).toBeCloseTo(284, 9);
+    // The screen's top-left corner is off the field (west of it).
+    expect(battleWorldAt({ x: 0, y: 0 }, DESKTOP)).toBeNull();
+    // On the board-centre row, the field's west edge (world x 0) is 768 projected px left of the centre.
+    expect(battleWorldAt({ x: 187.5 - 768, y: 406 }, MOBILE)!.x).toBeCloseTo(0, 9);
+    expect(battleWorldAt({ x: 187.5 - 770, y: 406 }, MOBILE)).toBeNull();
   });
 });
 
@@ -687,10 +716,11 @@ describe('decree and quest panel', () => {
       expect(b.w).toBeGreaterThanOrEqual(44);
       expect(b.h).toBeGreaterThanOrEqual(44);
       expect(inside(b, screen)).toBe(true);
-      const others: Rect[] = [l.board, l.lives, l.gold, l.year, l.reroll, l.sell, l.deck, ...l.calendar, ...l.hand];
+      const others: Rect[] = [l.lives, l.gold, l.year, l.reroll, l.sell, l.deck, ...l.calendar, ...l.hand];
       if (l.scoutButton) others.push(l.scoutButton);
       if (l.scout) others.push(l.scout);
       for (const other of others) expect(overlaps(b, other), JSON.stringify(other)).toBe(false);
+      expect(overlapsDiamond(b, l.board), 'board').toBe(false);
     }
   });
 });

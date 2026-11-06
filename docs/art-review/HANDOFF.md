@@ -85,3 +85,14 @@ PR #13 (nhánh `iso-board-redesign`) đã xong P1 (ô 64 px, Ngai hàng sau, khu
 
 - ART_STYLE có thêm mục "Isometric (trục đo 2.5D) cho sprite thế giới" và khối "Prompt isometric dùng lại". Tranh thẻ vẫn theo khối chính diện 45°.
 - Ba mẫu ở `docs/art-review/iso-board/` (nhà Thợ Gặt bản 3, ô trống bản 2, ô lát đá bản 2) **đã được chủ dự án duyệt ngày 06/11/2026** và đã chép vào `style-references/`. Bước tiếp theo là phép chiếu và renderer isometric (Task 9–10), rồi vẽ lại bộ Lúa Mì (Task 11).
+
+### Phép chiếu và vẽ isometric (Task 9–10, 06/11/2026)
+
+- `src/core/iso.ts` là phép chiếu duy nhất: ô 64 px hiện thành thoi 128×64 ở zoom 1, đúng tỉ lệ chủ dự án chọn. Mô phỏng trận không đổi.
+- Camera và bố cục làm việc trong không gian đã chiếu. Mọi thao tác chuyển từ màn hình về thế giới (thả thẻ, bấm, ngắm đá) đều qua `unproject`.
+- **Đã chuyển sang isometric:** nền sân (`squareToIso`, lấy mẫu điểm gần nhất), ô đất, ô sáng khi chọn, dải tập kết lính, nhà, lính, đạn, hiệu ứng, vòng tầm (elip) và mũi tên con đường.
+- **Đang dùng bản tạm:**
+  - Tường núi vẽ bằng code (`IsoWallRenderer`) cho tới khi có art tường isometric.
+  - Ô đất và nhà vẫn là art vuông/chính diện cũ, được biến hình hoặc dựng thẳng. Bộ art Lúa Mì isometric là Task 11.
+  - Ô đã xây (sân lát đá) chưa có trong game, chờ art ở Task 11.
+- **Đã kiểm trong trình duyệt** (cửa sổ phiên đang ẩn nên phải tự đẩy vòng lặp game): ở 1024×768 bàn thoi, ngai ở hàng sau, con đường đi từ góc dưới trái, trận chạy đúng, console không lỗi. Ở 375×812 bàn rộng hơn màn hình nên kéo được.

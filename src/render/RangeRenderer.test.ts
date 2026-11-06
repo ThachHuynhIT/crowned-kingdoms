@@ -73,14 +73,14 @@ describe('RangeRenderer', () => {
     expect(made[0]!.depth).toBe(RANGE_DEPTH);
   });
 
-  it('move only repositions: it does not clear or redraw', () => {
+  it('move only repositions (to the projected world point): it does not clear or redraw', () => {
     const { scene, made } = fakeScene();
     const r = new RangeRenderer(scene);
     r.show({ x: 100, y: 100 }, [ring(30)]);
     const clears = made[0]!.clears;
     const drawn = made[0]!.rects.length;
     r.move({ x: 250, y: 90 });
-    expect([made[0]!.x, made[0]!.y]).toEqual([250, 90]);
+    expect([made[0]!.x, made[0]!.y]).toEqual([250 - 90, (250 + 90) / 2]); // the projected world point
     expect(made[0]!.clears).toBe(clears);
     expect(made[0]!.rects).toHaveLength(drawn);
   });
@@ -102,7 +102,8 @@ describe('RangeRenderer', () => {
       { x: 0, y: 0 },
       Array.from({ length: 20 }, (_, i) => ring(10 + i)),
     );
-    const radii = new Set(made[0]!.rects.map((p) => Math.round(Math.sqrt(p.x * p.x + p.y * p.y))));
+    // an isometric ring of world radius R holds the points with x²/2 + 2y² = R²
+    const radii = new Set(made[0]!.rects.map((p) => Math.round(Math.sqrt((p.x * p.x) / 2 + 2 * p.y * p.y))));
     expect(radii.size).toBeLessThanOrEqual(RANGE_MAX_RINGS + 2);
     for (let i = 0; i < 300; i++) r.show({ x: 0, y: 0 }, [ring(5 + i)]);
     expect(r.cacheSize).toBeLessThanOrEqual(RANGE_CACHE_MAX);

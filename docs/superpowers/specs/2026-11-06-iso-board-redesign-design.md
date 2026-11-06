@@ -102,13 +102,13 @@ Người thực thi chỉ tạo **1 mẫu công trình + 1 mẫu ô đất iso**
 Hàm thuần trong `src/core/iso.ts`, không Phaser/UI/data/game import:
 
 ```text
-project({x,y})   = {x:(x-y)/2, y:(x+y)/4}
-unproject({x,y}) = {x:x+2*y,   y:2*y-x}
+project({x,y})   = {x: x-y,      y: (x+y)/2}
+unproject({x,y}) = {x: y + x/2, y: y - x/2}
 ```
 
 Từ P3 trở đi, mọi hướng đông/tây/nam/bắc trong spec và plan đều là **hướng world**, hiển thị iso là chéo: đông xuống-phải, tây lên-trái, nam xuống-trái, bắc lên-phải.
 
-Chỉ + − × ÷; origin/bù vị trí do view/camera quyết định. Ô vuông 64 chiếu thành thoi 64×32, bàn AABB 320×160; sân 768 chiếu AABB 768×384. Điểm âm hợp lệ. Không làm tròn trước inverse/hit-test; chỉ snap toạ độ cuối lúc hiển thị. Giữ nguyên `BattleWorld`, `plotCenter`, spatial hash, bounds, khoảng cách, RNG và hash P1. Phép chiếu không được nhập vào simulation.
+Chỉ + − × ÷; origin/bù vị trí do view/camera quyết định. **Sửa 06/11/2026 (chủ dự án chọn):** ô vuông 64 chiếu thành thoi **128×64** ở zoom 1 (bản đầu đề xuất 64×32), để art mật độ 2 hiện đúng độ nét gốc; sprite đứng vẽ ×2 (`ISO_SPRITE_SCALE`). Bàn là hình thoi 640×320; sân 768 chiếu thành 1536×768. Desktop dưới 1200 px và điện thoại dùng nút Trinh Sát / Sắc Lệnh thay bảng hai bên; trên điện thoại bàn rộng hơn màn hình nên kéo được bản đồ ở mọi bậc zoom. Điểm âm hợp lệ. Không làm tròn trước inverse/hit-test; chỉ snap toạ độ cuối lúc hiển thị. Giữ nguyên `BattleWorld`, `plotCenter`, spatial hash, bounds, khoảng cách, RNG và hash P1. Phép chiếu không được nhập vào simulation.
 
 - Mọi điểm đất, chân nhà/quân, đạn, boulder, target marker, shadow và health/inspection anchor thế giới cùng qua phép chiếu; UI overlay vẫn screen-space. Không shear/rotate sprite đứng. Neo chân 0,5/1, kích thước công trình không đổi.
 - Depth theo **iso foot y = (worldX+worldY)/4**, hoà theo id/plot ổn định; dùng giá trị chưa snap. Plot/nền ở lớp đất; các vật đứng cùng miền depth, không đặt toàn bộ tường ở depth 0,2 khiến vật bị che sai. Tường bắc vẫn logic y=176; renderer ghép chân dọc đường chiếu của (x,176), không kẹp theo screen y.

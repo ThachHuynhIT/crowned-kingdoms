@@ -1,3 +1,4 @@
+import { project, unproject } from '../../core/iso';
 import { BATTLE } from '../../data/battle';
 import type { Point, Rect, Size } from '../hud/layout';
 import { cameraScroll, realmCamera, screenToWorld, type RealmPhase } from './realmLayout';
@@ -18,12 +19,20 @@ export interface CameraView {
 /** Highest zoom step. */
 export const ZOOM_MAX = 3;
 
-/** The world area a zoomed view may show: the field with the spawn rows south and a margin east/west. */
-export const MAP_BOUNDS = {
+/** The world area the camera may show: the field with the spawn rows south and a margin east/west. */
+const WORLD_BOUNDS = {
   x0: -BATTLE.plot,
   y0: 0,
   x1: BATTLE.field + BATTLE.plot,
   y1: BATTLE.field + BATTLE.plot + BATTLE.spawnOutside + BATTLE.spawnRowGap,
+} as const;
+
+/** `WORLD_BOUNDS` as the camera sees it: the bounding box of its isometric diamond (camera space). */
+export const MAP_BOUNDS = {
+  x0: WORLD_BOUNDS.x0 - WORLD_BOUNDS.y1,
+  y0: (WORLD_BOUNDS.x0 + WORLD_BOUNDS.y0) / 2,
+  x1: WORLD_BOUNDS.x1 - WORLD_BOUNDS.y0,
+  y1: (WORLD_BOUNDS.x1 + WORLD_BOUNDS.y1) / 2,
 } as const;
 
 /** Pinch: one step in once the finger spread grows by 25%, one step out once it shrinks by 20%. */
@@ -67,9 +76,11 @@ export const zoomAt = (view: CameraView, p: Point, next: number, screen: Size, p
   return clampView({ zoom, scroll: cameraScroll(world, p, screen, zoom) }, screen);
 };
 
-/** Drag the map by a screen delta (the world follows the finger); no pan at the overview step. */
-export const panBy = (view: CameraView, delta: Point, screen: Size, phase: RealmPhase): CameraView => {
-  if (view.zoom <= overviewView(screen, phase).zoom) return view;
+/**
+ * Drag the map by a screen delta (the world follows the finger), at any zoom step: the isometric
+ * board is wider than a phone even at the overview step.
+ */
+export const panBy = (view: CameraView, delta: Point, screen: Size, _phase: RealmPhase): CameraView => {
   return clampView(
     { zoom: view.zoom, scroll: { x: view.scroll.x - delta.x / view.zoom, y: view.scroll.y - delta.y / view.zoom } },
     screen,
@@ -84,36 +95,43 @@ export const resizeView = (view: CameraView, from: Size, to: Size, phase: RealmP
   return clampView({ zoom: view.zoom, scroll: cameraScroll(centre, { x: to.w / 2, y: to.h / 2 }, to, view.zoom) }, to);
 };
 
-/** World point under screen point `p`, null outside the field. */
+/** World point under screen point `p` (camera, then the inverse isometric projection), null outside the field. */
 export const worldAtView = (view: CameraView, screen: Size, p: Point): Point | null => {
-  const w = screenToWorld(p, view.scroll, screen, view.zoom);
+  const w = unproject(screenToWorld(p, view.scroll, screen, view.zoom));
   if (w.x < 0 || w.x > BATTLE.field || w.y < 0 || w.y > BATTLE.field) return null;
   return w;
 };
 
 const SIDE = 5;
 
-/** Plot under screen point `p` through the live view, null off the board. */
+/** Plot whose diamond holds screen point `p` through the live view, null off the board. */
 export const plotAtView = (view: CameraView, screen: Size, p: Point): number | null => {
-  const w = screenToWorld(p, view.scroll, screen, view.zoom);
+  const w = unproject(screenToWorld(p, view.scroll, screen, view.zoom));
   const col = Math.floor((w.x - BATTLE.boardOrigin) / BATTLE.plot);
   const row = Math.floor((w.y - BATTLE.boardOrigin) / BATTLE.plot);
   if (col < 0 || col >= SIDE || row < 0 || row >= SIDE) return null;
   return row * SIDE + col;
 };
 
-/** Screen rect of `plot` through the live view. */
+/** World point `w` on screen through the live view (isometric projection, then the camera). */
+export const worldToScreen = (view: CameraView, screen: Size, w: Point): Point => {
+  const q = project(w);
+  const mx = screen.w / 2;
+  const my = screen.h / 2;
+  return { x: (q.x - view.scroll.x - mx) * view.zoom + mx, y: (q.y - view.scroll.y - my) * view.zoom + my };
+};
+
+/** Screen bounding box of `plot`'s diamond through the live view. */
 export const plotRectAtView = (view: CameraView, screen: Size, plot: number): Rect => {
   const col = plot % SIDE;
   const row = Math.floor(plot / SIDE);
-  const mx = screen.w / 2;
-  const my = screen.h / 2;
-  const toScreen = (wx: number, wy: number): Point => ({
-    x: (wx - view.scroll.x - mx) * view.zoom + mx,
-    y: (wy - view.scroll.y - my) * view.zoom + my,
-  });
-  const tl = toScreen(BATTLE.boardOrigin + col * BATTLE.plot, BATTLE.boardOrigin + row * BATTLE.plot);
-  return { x: tl.x, y: tl.y, w: BATTLE.plot * view.zoom, h: BATTLE.plot * view.zoom };
+  const x0 = BATTLE.boardOrigin + col * BATTLE.plot;
+  const y0 = BATTLE.boardOrigin + row * BATTLE.plot;
+  const top = worldToScreen(view, screen, { x: x0, y: y0 });
+  const left = worldToScreen(view, screen, { x: x0, y: y0 + BATTLE.plot });
+  const right = worldToScreen(view, screen, { x: x0 + BATTLE.plot, y: y0 });
+  const bottom = worldToScreen(view, screen, { x: x0 + BATTLE.plot, y: y0 + BATTLE.plot });
+  return { x: left.x, y: top.y, w: right.x - left.x, h: bottom.y - top.y };
 };
 
 /** −1, 0 or +1 zoom step for a pinch whose squared finger spread went from `startSq` to `nowSq`. */

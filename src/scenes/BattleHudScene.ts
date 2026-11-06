@@ -43,6 +43,7 @@ import {
   type BattleLayout,
 } from '../ui/realm/realmLayout';
 import { overviewView, worldAtView, type CameraView } from '../ui/realm/cameraModel';
+import { unproject } from '../core/iso';
 import {
   addUiText,
   createButton,
@@ -493,12 +494,14 @@ export class BattleHudScene extends Phaser.Scene {
     g.clear();
     const at = this.aimAt;
     if (!this.aiming || !at) return;
-    const radius = INTERVENTION.radius * this.view.zoom;
+    // A world circle of the boulder radius is a 2:1 ellipse on the isometric ground: r·√2 wide, r/√2 tall.
+    const rx = INTERVENTION.radius * Math.SQRT2 * this.view.zoom;
+    const ry = (INTERVENTION.radius / Math.SQRT2) * this.view.zoom;
     const onField = worldAtView(this.view, this.screen(), at) !== null;
     g.lineStyle(3, UI_PALETTE.outline, 0.8);
-    g.strokeCircle(at.x, at.y, radius);
+    g.strokeEllipse(at.x, at.y, rx * 2, ry * 2);
     g.lineStyle(2, onField ? UI_PALETTE.gold : UI_PALETTE.bad, 1);
-    g.strokeCircle(at.x, at.y, radius);
+    g.strokeEllipse(at.x, at.y, rx * 2, ry * 2);
   }
 
   private showSpeed(speed: GameSpeed): void {
@@ -513,7 +516,7 @@ export class BattleHudScene extends Phaser.Scene {
   private inspectAt(p: Point): void {
     const world = this.world;
     if (!world) return;
-    const at = screenToWorld(p, this.view.scroll, this.screen(), this.view.zoom);
+    const at = unproject(screenToWorld(p, this.view.scroll, this.screen(), this.view.zoom));
     const id = entityAt(world, at.x, at.y);
     if (id === null) {
       this.hideInfo();
@@ -668,7 +671,7 @@ export class BattleHudScene extends Phaser.Scene {
     const world = this.world;
     let id: number | null = null;
     if (world && !this.aiming && !pointer.wasTouch) {
-      const at = screenToWorld({ x: pointer.x, y: pointer.y }, this.view.scroll, this.screen(), this.view.zoom);
+      const at = unproject(screenToWorld({ x: pointer.x, y: pointer.y }, this.view.scroll, this.screen(), this.view.zoom));
       id = entityAt(world, at.x, at.y);
     }
     if (id === this.hoveredId) return;

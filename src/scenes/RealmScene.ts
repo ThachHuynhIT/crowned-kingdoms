@@ -22,6 +22,7 @@ import { DRAG_SLOP, type Size } from '../ui/hud/layout';
 import { lockedPlotTap, plotHighlights, plotIllegalReason } from '../ui/planning/targetHints';
 import { lockedPlotPrice } from '../ui/realm/calendarModel';
 import { buildingRanges, entityRanges } from '../ui/info/rangeModel';
+import { unproject } from '../core/iso';
 import { overviewView, panBy, pinchStep, resizeView, zoomAt, type CameraView } from '../ui/realm/cameraModel';
 import { realmCamera, realmCameraMix, type RealmPhase } from '../ui/realm/realmLayout';
 import { SCENES } from './keys';
@@ -488,7 +489,9 @@ export class RealmScene extends Phaser.Scene {
     const dx = pointer.x - down.x;
     const dy = pointer.y - down.y;
     if (dx * dx + dy * dy > DRAG_SLOP * DRAG_SLOP) return;
-    const world = this.cameras.main.getWorldPoint(pointer.x, pointer.y);
+    // The camera works in projected (isometric) space: back to the square world first.
+    const cam = this.cameras.main.getWorldPoint(pointer.x, pointer.y);
+    const world = unproject({ x: cam.x, y: cam.y });
     const plot = this.board.plotAt(world.x, world.y);
     const state = this.controller.state;
     const aimedId = this.pending ? state.hand[this.pending.handIndex] : undefined;
