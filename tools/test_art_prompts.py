@@ -109,6 +109,40 @@ class IsoSamplePromptGateTest(unittest.TestCase):
             mp.ROOT = old_root
 
 
+class IsoWheatSetPromptGateTest(unittest.TestCase):
+    """Task 11 (2026-11-06): the isometric Wheat set reads the doc and carries both the style and the iso references."""
+
+    def test_the_set_covers_seven_buildings_two_plots_and_a_wall_sample(self):
+        kinds = [k for _, k, _, _ in mp.ISO_WHEAT]
+        self.assertEqual(kinds.count('building'), 7)
+        self.assertEqual(kinds.count('plot'), 2)
+        self.assertEqual(kinds.count('wall'), 1)
+        ids = {i for i, _, _, _ in mp.ISO_WHEAT}
+        self.assertNotIn('building_wheat_reapers', ids)  # the approved sample is the Reapers barn
+
+    def test_every_prompt_reads_the_doc_and_names_its_isometric_references(self):
+        for ident, kind, name, desc in mp.ISO_WHEAT:
+            p = mp.build_iso_set_prompt(f'x/{ident}/source.png', kind, name, desc)
+            self.assertIn('docs/ART_STYLE.md', p, ident)
+            self.assertIn('BẮT BUỘC TRƯỚC KHI VẼ', p, ident)
+            self.assertIn(mp.REFERENCE, p, ident)
+            self.assertIn('ISOMETRIC', p, ident)
+            self.assertIn('#000000', p, ident)
+            for r in mp.ISO_REFS[kind].split():
+                self.assertIn(r, p, ident)
+            if kind == 'building':
+                self.assertIn('MAIN DOOR is on the RIGHT wall', p, ident)
+                self.assertIn('MIDDLE of its plot', p, ident)
+
+    def test_runner_attaches_the_style_and_isometric_references(self):
+        mp.main('wheat-iso')
+        runner = (ROOT / '.superpowers/b-wheat-iso.sh').read_text(encoding='utf-8')
+        self.assertEqual(runner.count('codex exec'), len(mp.ISO_WHEAT))
+        self.assertEqual(runner.count(f'-i {mp.REFERENCE}'), len(mp.ISO_WHEAT))
+        self.assertIn('-i docs/art-review/style-references/iso-building-approved.png', runner)
+        self.assertIn('-i docs/art-review/style-references/iso-plot-built-approved.png', runner)
+
+
 pspec = importlib.util.spec_from_file_location('portrait_prompts', ROOT / 'docs/art-review/g3e/portraits/make_prompts.py')
 pp = importlib.util.module_from_spec(pspec)
 pspec.loader.exec_module(pp)

@@ -154,6 +154,117 @@ def main_iso_sample(only=None):
     print(path)
 
 
+# ---- Task 11: the isometric Wheat set (after the sample gate passed on 2026-11-06) ----------------------------
+
+ISO_REFS = {
+    'building': 'docs/art-review/style-references/iso-building-approved.png',
+    'plot': 'docs/art-review/style-references/iso-plot-open-approved.png docs/art-review/style-references/iso-plot-built-approved.png',
+    'wall': 'docs/art-review/style-references/iso-plot-open-approved.png',
+}
+
+# Every building: door on the right (south-east) wall, middle of its plot, no deck, roof squarely on the walls.
+_B = (' The MAIN DOOR is on the RIGHT wall (facing south-east, right of the image). No deck or platform under it: the '
+      'walls stand directly on the ground; it stands in the MIDDLE of its plot and its footprint is one small diamond. '
+      'ROOF: sits squarely on the walls, all four eave corners at the SAME height, every eave parallel to the wall top '
+      'below it at the true 2:1 slope, left and right eave corners on the same screen row; no back corner raised. '
+      'Same scale, camera and finish as the attached approved isometric Reapers barn. Theme: farm kingdom, warm bright '
+      'wood, golden straw, clay tiles, gold and earth tones.')
+
+ISO_WHEAT = [
+    ('building_wheat_militia', 'building', 'Dân Quân (village militia guardhouse, troop building), 2:1 isometric',
+     'A small cosy village guardhouse with a golden thatched roof, cream plaster walls with dark timber beams, a wooden '
+     'rack of short spears and two round wooden shields with a plank cross leaning beside the door, a small blue pennant '
+     'on the ridge, a water barrel.' + _B),
+    ('building_wheat_peasant_horde', 'building', 'Khởi Nghĩa Nông Dân (peasant uprising camp, troop building), 2:1 isometric',
+     'A rough camp longhouse with a patched cloth-and-straw roof, a torn red banner on the ridge, pitchforks and '
+     'scythes leaning on a rack beside the door, a small hay cart beside the house.' + _B),
+    ('building_wheat_granary', 'building', 'Kho Thóc (granary, support building), 2:1 isometric',
+     'A wooden granary raised on short stone stilts with a short ladder up to the door, a broad thatched roof, sacks '
+     'of grain at the foot of the ladder, bundles of wheat hanging under the eaves.' + _B),
+    ('building_wheat_windmill', 'building', 'Cối Xay Gió (windmill, economy building), 2:1 isometric, TALL (up to 520 px)',
+     'A stone-and-timber windmill: an upright tower body standing on a diamond footprint, its rounded thatched cap '
+     'clearly seen from above, four cloth sails mounted on the RIGHT (south-east) face of the cap, drawn in the plane '
+     'of that face (an X slanted along the 2:1 axes, not a frontal circle); a door on the right wall at the bottom, a '
+     'short stone base and flour sacks.' + _B),
+    ('building_wheat_scarecrow', 'building', 'Bù Nhìn Gác (scarecrow watch tower, tower building), 2:1 isometric, TALL (up to 520 px)',
+     'A short square wooden watch platform on four posts with a small straw roof seen from above, a big straw-hat '
+     'scarecrow standing on the platform holding a sling, a ladder up the right side, sacks on the rail. The '
+     '"door" rule means the ladder and opening are on the right (south-east) side.' + _B),
+    ('building_wheat_field', 'building', 'Ruộng Lúa (wheat field, economy building), 2:1 isometric, LOW (about 220 px tall)',
+     'A small fenced patch of ripe golden wheat whose rows follow one diagonal axis, a low wooden fence along the four '
+     'edges of the small diamond footprint with a little gate on the right (south-east) side; flat ground plus the '
+     'standing wheat and the fence only, no roof, no house.' + _B.replace(' ROOF: sits squarely on the walls, all four eave corners at the SAME height, every eave parallel to the wall top below it at the true 2:1 slope, left and right eave corners on the same screen row; no back corner raised.', '')),
+    ('building_wheat_throne', 'building', "Ngai Bó Lúa (the Wheat king's throne keep, the TALLEST building of the kingdom, up to 520 px tall), 2:1 isometric",
+     'A sturdy round stone-and-timber keep, upright, its round top seen from above as a 2:1 ellipse with a flat '
+     'crenellated platform on which a giant golden wheat-sheaf crown stands; golden wheat banners with a blue trim '
+     'hang on the walls, a wide arched wooden door on the right (south-east) side, stacked grain sacks at the base, a '
+     'small archer slit. Royal but rustic, gold and warm stone.' + _B),
+    ('plot_wheat_locked', 'plot', 'one locked (unclaimed) plot of the Wheat king, a single flat 2:1 isometric ground tile',
+     'The SAME diamond tile as the attached approved open plot (same size, same thin rim of short grass, the same four '
+     'TINY, LOW wooden corner stakes, the same few pixels of earth thickness on the two front edges), but the inside is '
+     'wild unclaimed land: thick uncut meadow grass in darker greens, a few wild flowers and one small bush, no path, '
+     'no building, no sign, no text. Flat ground only. Theme: farm kingdom, warm earth and grass.'),
+    ('plot_wheat_throne', 'plot', "the Wheat king's throne plot, a single flat 2:1 isometric ground tile",
+     'The SAME diamond tile as the attached approved plots (same size, same thin rim of short grass, the same four TINY, '
+     'LOW wooden corner stakes, the same few pixels of earth thickness), but the inside is a royal stone dais: large pale '
+     'cut-stone slabs laid along the two diagonal axes, a thin inlaid border of gold and blue tiles just inside the grass '
+     'rim and a small golden wheat-sheaf emblem carved in the centre. Flat ground only, no building. Theme: farm '
+     'kingdom, warm stone, gold and blue.'),
+    ('terrain_wall_iso_sample', 'wall', 'one segment of the rocky mountain cliff on the north edge of the battlefield, 2:1 isometric',
+     # v2 (2026-11-06): v1 ran up-right at about 3:1; the north edge of the board runs DOWN-right at exactly 2:1.
+     'A long rocky cliff segment: its FOOT runs along the DOWN-RIGHT diagonal of the 2:1 grid (from the UPPER-LEFT to '
+     'the LOWER-RIGHT of the image, exactly 1 px down for every 2 px across, the same slope as the upper-right edges '
+     'of the attached approved plots); its vertical rock face, about 300 px tall, faces the viewer on the LOWER-LEFT '
+     '(south-west) side; mossy grey-brown rock in large blocks with grass tufts and a few small bushes on top; '
+     'the top of the cliff is a grassy plateau seen from above. Both ends of the segment are cut cleanly along VERTICAL '
+     'lines so identical segments can be placed end to end along the diagonal. No water, no sky, no buildings.'),
+]
+
+ISO_SET_FOOTER = {
+    'building': ISO_FOOTER,
+    'plot': ISO_FOOTER,
+    'wall': """
+YÊU CẦU SẢN XUẤT (ghi đè phần "transparent background" ở trên): ảnh 1536×1024, nền ĐEN PHẲNG #000000 hoàn toàn (không quầng sáng, không bóng, không trời/biển). MỘT đoạn vách đá duy nhất: chân vách là đường chéo 2:1 đi XUỐNG từ khoảng (168, 400) tới khoảng (1368, 1000) (cứ sang phải 2 px thì xuống 1 px); mặt vách đứng thẳng cao khoảng 300 px phía trên đường chân; hai đầu đoạn cắt thẳng đứng. "Pixel" lớn khoảng 7×7 điểm ảnh.
+Khi xong, in đường dẫn file đã lưu và kích thước ảnh.
+""",
+}
+
+
+def build_iso_set_prompt(out, kind, name, desc, template=None):
+    refs = ISO_REFS[kind].split()
+    note = (f'\n\nẢNH THAM CHIẾU GÓC NHÌN ISOMETRIC ĐÃ DUYỆT (đính kèm): {", ".join(f"`{r}`" for r in refs)} — lấy đúng GÓC NHÌN, '
+            'tỉ lệ thoi 2:1, cỡ và độ hoàn thiện từ các ảnh này.\n\n')
+    p = build_iso_prompt(out, name, desc, template)
+    head, sep, rest = p.partition('\n\n')
+    p = head + note + rest
+    return p.replace(ISO_FOOTER, ISO_SET_FOOTER[kind])
+
+
+def main_iso_set(only=None):
+    template = iso_template()
+    for refs in ISO_REFS.values():
+        for r in refs.split():
+            if not (ROOT / r).exists():
+                raise SystemExit(f'{r} is missing: refusing to draw without the approved isometric reference')
+    runner = ['#!/bin/bash', f'cd "{ROOT.as_posix()}"']
+    for ident, kind, name, desc in ISO_WHEAT:
+        if only and ident not in only:
+            continue
+        d = ROOT / ISO_DIR / 'wheat' / ident
+        d.mkdir(parents=True, exist_ok=True)
+        out = (d / 'source.png').relative_to(ROOT).as_posix()
+        (d / 'prompt.md').write_text(build_iso_set_prompt(out, kind, name, desc, template), encoding='utf-8')
+        prompt = (d / 'prompt.md').relative_to(ROOT).as_posix()
+        images = ' '.join(f'-i {r}' for r in [REFERENCE, *ISO_REFS[kind].split()])
+        runner.append(f'codex exec --sandbox workspace-write -C "$PWD" {images} - < {prompt} > .superpowers/codex-iso-{ident}.out 2>&1')
+        runner.append(f'if [ -s {out} ]; then echo "{ident} ok" >> .superpowers/b-wheat-iso.log; else echo "{ident} MISSING" >> .superpowers/b-wheat-iso.log; fi')
+    runner.append('echo done >> .superpowers/b-wheat-iso.log')
+    (ROOT / '.superpowers').mkdir(exist_ok=True)
+    path = ROOT / '.superpowers/b-wheat-iso.sh'
+    path.write_text('\n'.join(runner) + '\n', encoding='utf-8', newline='\n')
+    print(path)
+
+
 def build_prompt(out, name, desc, theme, template=None):
     template = template or style_template()
     body = template.replace('[building and function]', f'{name}').replace(
@@ -164,6 +275,9 @@ def build_prompt(out, name, desc, theme, template=None):
 def main(group, only=None):
     if group == 'iso-sample':
         main_iso_sample(only)
+        return
+    if group == 'wheat-iso':
+        main_iso_set(only)
         return
     cfg = GROUPS[group]
     template = style_template()
