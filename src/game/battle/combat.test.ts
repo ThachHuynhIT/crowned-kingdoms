@@ -356,7 +356,7 @@ describe('deaths', () => {
     const soldier = 3;
     const f = unit(w, TEAM_FOE, TW.x, TW.y - 19, { hp: 1000, dmg: 0, speed: 0 }); // tower edge 3
     retarget(w);
-    expect(w.target[f]).toBe(towerId);
+    expect(w.target[f]).toBe(soldier); // our units before our buildings, even next to the tower (spec 2026-11-08 §2)
     w.hp[towerId] = 0;
     deathPhase(w);
     expect(w.alive[towerId]).toBe(0);
@@ -482,6 +482,60 @@ describe('chain', () => {
     fight(w);
     expect(w.hp[up]).toBe(995);
     expect(w.hp[down]).toBe(1000);
+  });
+});
+
+describe('enemy chain and area hits under "units before buildings" (spec 2026-11-08 §2)', () => {
+  /** A building of ours at plot 7 (id 1, foot TW), a unit of ours just south of it, a chaining foe further south. */
+  const scene = (extra: (w: BattleWorld) => void = () => {}) => {
+    const w = world([structure(7, { uid: 70, hp: 1000 })]);
+    const victim = unit(w, TEAM_ALLY, TW.x, TW.y + 30, { hp: 1000 });
+    const f = unit(w, TEAM_FOE, TW.x, TW.y + 60, { dmg: 10, range: 60, chain: { count: 1, radius: 40, falloff: 0.5 } });
+    extra(w);
+    w.target[f] = victim;
+    return { w, f, victim, building: 1 };
+  };
+
+  it('enemy_chain_jumps_prefer_units_while_units_exist: skips the nearer building for a unit of ours', () => {
+    let other = -1;
+    const { w, victim, building } = scene((ww) => {
+      other = unit(ww, TEAM_ALLY, TW.x + 36, TW.y + 30, { hp: 1000 }); // 36 from the victim; the building is 30
+    });
+    fight(w);
+    expect(w.hp[victim]).toBe(990);
+    expect(w.hp[other]).toBe(995);
+    expect(w.hp[building]).toBe(1000);
+  });
+
+  it('enemy_chain_stops_instead_of_jumping_to_a_building_while units of ours remain', () => {
+    const { w, victim, building } = scene();
+    fight(w);
+    expect(w.hp[victim]).toBe(990);
+    expect(w.hp[building]).toBe(1000);
+  });
+
+  it('enemy_chain_jumps_to_a_building_in_the_rage', () => {
+    const { w, building } = scene();
+    w.tick = BATTLE.rageTick;
+    fight(w);
+    expect(w.hp[building]).toBeLessThan(1000);
+  });
+
+  it('enemy_splash_cleave_cone_still_hit_structures_as_collateral', () => {
+    const splash = world([structure(7, { uid: 70, hp: 1000 })]);
+    const v1 = unit(splash, TEAM_ALLY, TW.x, TW.y + 20, { hp: 1000 });
+    const f1 = unit(splash, TEAM_FOE, TW.x, TW.y + 60, { dmg: 20, range: 60, splash: 40 });
+    splash.target[f1] = v1;
+    fight(splash);
+    expect(splash.hp[1]).toBeLessThan(1000);
+
+    const cleave = world([structure(7, { uid: 70, hp: 1000 })]);
+    // north of the building, so the fixture Ngai (one row south) is not the nearer second victim
+    const v2 = unit(cleave, TEAM_ALLY, TW.x, TW.y - 26, { hp: 1000 });
+    const f2 = unit(cleave, TEAM_FOE, TW.x, TW.y - 36, { dmg: 20, range: 20, cleave: 2 }); // building edge 36 − 16 = 20
+    cleave.target[f2] = v2;
+    fight(cleave);
+    expect(cleave.hp[1]).toBeLessThan(1000);
   });
 });
 

@@ -1,10 +1,11 @@
 import { describe, expect, it } from 'vitest';
+import { BATTLE } from '../../data/battle';
 import { BOSS_RULES } from '../../data/bosses';
 import { attackStats, structure, unitStats } from '../testing/fixtures';
 import { bossWorld } from './bossKit';
 import { afterBossDamage, spawnBossSummons, tickBosses } from './bosses';
 import { applyDamagePhase, attackPhase, deathPhase } from './combat';
-import { TEAM_FOE, addUnit, structureFoot, type BattleWorld } from './world';
+import { TEAM_ALLY, TEAM_FOE, addUnit, structureFoot, type BattleWorld } from './world';
 
 const tower = (plot: number, dmg: number) =>
   structure(plot, {
@@ -81,6 +82,35 @@ describe('Ông Kẹ Đầm Lầy: Ném Bùn', () => {
     at(w, 200);
     applyDamagePhase(w);
     expect(w.alive[idAt(w, 7)]).toBe(1);
+  });
+});
+
+describe('Ông Kẹ Đầm Lầy: Ném Bùn waits until our units are gone (spec 2026-11-08 §2)', () => {
+  const spot = { x: structureFoot(7).x, y: structureFoot(7).y + 100 };
+  const scene = () => bossWorld(1, [tower(6, 7), tower(7, 12), tower(8, 12), troop(11)], spot);
+
+  it('mud_skips_tower_while_hittable_ally_exists_without_catchup', () => {
+    const w = scene();
+    const ally = addUnit(w, unitStats({ hp: 1000 }), TEAM_ALLY, spot.x + 300, spot.y, spot.x + 300, spot.y, -1);
+    at(w, 200);
+    expect(w.damageQueue).toHaveLength(0); // a unit of ours is alive: no throw at a tower
+    w.alive[ally] = 0;
+    for (const t of [201, 240, 279]) {
+      at(w, t);
+      expect(w.damageQueue, `tick ${t}`).toHaveLength(0); // the skipped throw is not made up
+    }
+    at(w, 280);
+    expect(w.damageQueue).toHaveLength(1);
+    expect(w.damageQueue[0]!.victim).toBe(idAt(w, 7));
+  });
+
+  it('throws in the rage (tick 600 = boss age 480, a throw step) even with units of ours alive', () => {
+    const w = scene();
+    addUnit(w, unitStats({ hp: 1000 }), TEAM_ALLY, spot.x + 300, spot.y, spot.x + 300, spot.y, -1);
+    expect(BATTLE.rageTick).toBe(600);
+    at(w, BATTLE.rageTick);
+    expect(w.damageQueue).toHaveLength(1);
+    expect(w.damageQueue[0]!.victim).toBe(idAt(w, 7));
   });
 });
 

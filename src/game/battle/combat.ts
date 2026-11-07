@@ -8,7 +8,7 @@ import { deathBehaviours, hitBehaviours } from './behaviours';
 import { afterBossDamage } from './bosses';
 import { mitigate } from './damage';
 import { BOSS_RULES } from '../../data/bosses';
-import { edgeDistance, inRange, pickShotTarget, pickShotTargets } from './targeting';
+import { allowsFoeStructureTarget, canHit, edgeDistance, inRange, pickShotTarget, pickShotTargets } from './targeting';
 import {
   DMG_FIRE,
   DMG_MAGIC,
@@ -129,10 +129,16 @@ const splashAround = (
   }
 };
 
-/** Chain: nhảy `count` lần sang địch gần nhất chưa trúng trong `radius`, mỗi lần × falloff (hòa → id nhỏ). */
+/**
+ * Chain: nhảy `count` lần sang địch gần nhất chưa trúng trong `radius`, mỗi lần × falloff (hòa → id nhỏ).
+ * Chain của địch chọn nạn nhân mới theo luật "đánh hết lính rồi mới đánh nhà" (spec 2026-11-08 §2): khi
+ * `allowsFoeStructureTarget` sai, chỉ nhảy sang lính phe mình đánh được; không còn lính như vậy trong bán
+ * kính thì dừng.
+ */
 const chainFrom = (w: BattleWorld, attacker: number, victim: number, raw: number): void => {
   const jumps = w.chainCount[attacker]!;
   if (jumps <= 0) return;
+  const unitsOnly = w.team[attacker] === TEAM_FOE && !allowsFoeStructureTarget(w, attacker);
   const hit = [victim];
   let from = victim;
   let dmg = raw;
@@ -142,6 +148,7 @@ const chainFrom = (w: BattleWorld, attacker: number, victim: number, raw: number
     let best = -1;
     let bestD2 = Infinity;
     for (const j of foesNear(w, attacker, cx, cy, w.chainRadius[attacker]!, hit)) {
+      if (unitsOnly && (w.kind[j] !== KIND_UNIT || !canHit(w, attacker, j))) continue;
       const dx = w.x[j]! - cx;
       const dy = w.y[j]! - cy;
       const d2 = dx * dx + dy * dy;

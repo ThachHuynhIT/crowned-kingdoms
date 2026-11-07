@@ -2,7 +2,7 @@ import { describe, expect, it } from 'vitest';
 import { BATTLE } from '../../data/battle';
 import { attackStats, battleSetup, structure, unitStats } from '../testing/fixtures';
 import type { StructureSetup, UnitStats } from './types';
-import { edgeDistance, inRange, pickShotTarget, retarget } from './targeting';
+import { allowsFoeStructureTarget, edgeDistance, inRange, nearestHittableAllyUnit, pickShotTarget, retarget } from './targeting';
 import { TEAM_ALLY, TEAM_FOE, addUnit, createBattle, structureFoot, type BattleWorld } from './world';
 
 const world = (structures: StructureSetup[] = []): BattleWorld =>
@@ -85,8 +85,8 @@ describe('retarget — allies', () => {
 });
 
 describe('retarget — foes', () => {
-  it('picks the nearest ally unit within enemyAggro, else the throne', () => {
-    // far west of the throne, so only the test ally can be within aggro
+  it('goes for one of our units anywhere on the field, beyond enemyAggro too (spec 2026-11-08 §2)', () => {
+    // far west of the throne
     const w = world();
     const f = unit(w, TEAM_FOE, 100, 300);
     const a = unit(w, TEAM_ALLY, 100, 300 + 8 + BATTLE.enemyAggro - 16); // edge aggro − 16
@@ -95,37 +95,41 @@ describe('retarget — foes', () => {
 
     const w2 = world();
     const f2 = unit(w2, TEAM_FOE, 100, 300);
-    unit(w2, TEAM_ALLY, 100, 300 + 8 + BATTLE.enemyAggro + 4); // edge aggro + 4
+    const far = unit(w2, TEAM_ALLY, 100, 300 + 8 + BATTLE.enemyAggro + 400); // well beyond aggro
     retarget(w2);
-    expect(w2.target[f2]).toBe(w2.throneId);
+    expect(w2.target[f2]).toBe(far);
   });
 
-  it('picks the nearer of two allies, structures included (edge distance)', () => {
+  it('with no unit of ours left, picks the nearer structure within enemyAggro (edge distance), else the throne', () => {
     const s = structureFoot(4); // id 1
     const w = world([structure(4)]);
     const f = unit(w, TEAM_FOE, s.x, s.y + 58); // structure edge 58 − 4 − 12 = 42
-    const a = unit(w, TEAM_ALLY, s.x, s.y + 108); // edge 42 too, larger id
-    retarget(w);
-    expect(w.target[f]).toBe(1);
-    w.y[a] = s.y + 103; // edge 37
-    w.tick = BATTLE.retargetTicks;
-    retarget(w);
-    expect(w.target[f]).toBe(a);
-  });
-
-  it('siege units ignore ally units and pick structures within siegeAggro, then the throne', () => {
-    const s = structureFoot(4);
-    const w = world([structure(4)]);
-    const f = unit(w, TEAM_FOE, s.x + 44, s.y - 38, { siege: true }); // structure edge ≈ 42.1
-    unit(w, TEAM_ALLY, s.x + 44, s.y - 30);
     retarget(w);
     expect(w.target[f]).toBe(1);
 
     const w2 = world([structure(4)]);
-    const f2 = unit(w2, TEAM_FOE, 20, 380, { siege: true });
-    unit(w2, TEAM_ALLY, 20, 388);
+    const f2 = unit(w2, TEAM_FOE, 20, 380);
     retarget(w2);
     expect(w2.target[f2]).toBe(w2.throneId);
+  });
+
+  it('siege units go for our units first too, then structures within siegeAggro, then the throne', () => {
+    const s = structureFoot(4);
+    const w = world([structure(4)]);
+    const f = unit(w, TEAM_FOE, s.x + 44, s.y - 38, { siege: true }); // structure edge ≈ 42.1
+    const a = unit(w, TEAM_ALLY, s.x + 44, s.y + 300);
+    retarget(w);
+    expect(w.target[f]).toBe(a);
+
+    const w2 = world([structure(4)]);
+    const f2 = unit(w2, TEAM_FOE, s.x + 44, s.y - 38, { siege: true });
+    retarget(w2);
+    expect(w2.target[f2]).toBe(1);
+
+    const w3 = world([structure(4)]);
+    const f3 = unit(w3, TEAM_FOE, 20, 380, { siege: true });
+    retarget(w3);
+    expect(w3.target[f3]).toBe(w3.throneId);
   });
 
   it('during rage targets only the throne', () => {
@@ -154,6 +158,106 @@ describe('retarget — foes', () => {
     w.tick = BATTLE.rageTick;
     retarget(w);
     expect(w.target[f]).toBe(w.throneId);
+  });
+});
+
+describe('retarget — foes kill our units before our buildings (spec 2026-11-08 §2)', () => {
+  const S4 = structureFoot(4);
+
+  it('foe_prefers_far_hittable_unit_over_near_structure', () => {
+    const w = world([structure(4)]);
+    const f = unit(w, TEAM_FOE, S4.x, S4.y + 20); // touching the structure
+    const a = unit(w, TEAM_ALLY, S4.x + 300, S4.y + 300);
+    retarget(w);
+    expect(w.target[f]).toBe(a);
+  });
+
+  it('nearest_unit_edge_distance_ties_by_id', () => {
+    const w = world();
+    const f = unit(w, TEAM_FOE, 100, 300);
+    const first = unit(w, TEAM_ALLY, 140, 300);
+    unit(w, TEAM_ALLY, 60, 300);
+    const big = unit(w, TEAM_ALLY, 100, 356, { radius: 20 }); // edge 56 − 4 − 20 = 32, same as `first` (40 − 8): tie → smaller id
+    retarget(w);
+    expect(w.target[f]).toBe(first);
+    w.y[big] = 355; // edge 31: nearer by edge distance although its centre is farther than 40
+    w.tick = BATTLE.retargetTicks;
+    retarget(w);
+    expect(w.target[f]).toBe(big);
+  });
+
+  it('only_unhittable_flyer_falls_back_to_structure, and a ranged foe pursues the flyer', () => {
+    const w = world([structure(4)]);
+    const melee = unit(w, TEAM_FOE, S4.x, S4.y + 58, { range: 4 });
+    const archer = unit(w, TEAM_FOE, S4.x, S4.y + 60, { range: BATTLE.flyingHitMinRange });
+    const flyer = unit(w, TEAM_ALLY, S4.x + 200, S4.y + 200, { tags: ['flying'] });
+    retarget(w);
+    expect(w.target[melee]).toBe(1);
+    expect(w.target[archer]).toBe(flyer);
+  });
+
+  it('invalid_flying_target_retargets_before_periodic_tick', () => {
+    const w = world([structure(4)]);
+    const f = unit(w, TEAM_FOE, S4.x, S4.y + 58, { range: 4 });
+    const a = unit(w, TEAM_ALLY, S4.x + 200, S4.y + 200);
+    retarget(w);
+    expect(w.target[f]).toBe(a);
+    w.flying[a] = 1; // it takes off: our melee foe can no longer hit it
+    w.tick = 1;
+    retarget(w);
+    expect(w.target[f]).toBe(1);
+  });
+
+  it('new_ally_replaces_structure_by_next_retarget', () => {
+    const w = world([structure(4)]);
+    const f = unit(w, TEAM_FOE, S4.x, S4.y + 58);
+    retarget(w);
+    expect(w.target[f]).toBe(1);
+    const a = unit(w, TEAM_ALLY, S4.x + 200, S4.y + 200);
+    w.tick = 1;
+    retarget(w);
+    expect(w.target[f]).toBe(1);
+    w.tick = BATTLE.retargetTicks;
+    retarget(w);
+    expect(w.target[f]).toBe(a);
+  });
+
+  it('taunt_beats_units_but_global_rage_beats_taunt', () => {
+    const W6 = structureFoot(6);
+    const w = world([structure(6, { taunt: 40 })]);
+    unit(w, TEAM_ALLY, W6.x + 200, W6.y);
+    const foe = unit(w, TEAM_FOE, W6.x + 30, W6.y);
+    retarget(w);
+    expect(w.target[foe]).toBe(1);
+    w.tick = BATTLE.rageTick;
+    retarget(w);
+    expect(w.target[foe]).toBe(w.throneId);
+  });
+
+  it('dead_throne_with_no_targets_returns_minus_one', () => {
+    const w = world();
+    const f = unit(w, TEAM_FOE, 20, 380);
+    w.alive[w.throneId] = 0;
+    retarget(w);
+    expect(w.target[f]).toBe(-1);
+  });
+
+  it('allowsFoeStructureTarget: only in the rage, under a taunt, or with no unit of ours it can hit', () => {
+    const W6 = structureFoot(6);
+    const w = world([structure(6, { taunt: 40 })]);
+    const f = unit(w, TEAM_FOE, W6.x + 200, W6.y, { range: 4 });
+    expect(allowsFoeStructureTarget(w, f)).toBe(true); // no unit of ours
+    const a = unit(w, TEAM_ALLY, W6.x + 260, W6.y);
+    expect(nearestHittableAllyUnit(w, f)).toBe(a);
+    expect(allowsFoeStructureTarget(w, f)).toBe(false);
+    w.flying[a] = 1;
+    expect(allowsFoeStructureTarget(w, f)).toBe(true); // it cannot hit the flyer
+    w.flying[a] = 0;
+    w.x[f] = W6.x + 30; // inside the taunt
+    expect(allowsFoeStructureTarget(w, f)).toBe(true);
+    w.x[f] = W6.x + 200;
+    w.tick = BATTLE.rageTick;
+    expect(allowsFoeStructureTarget(w, f)).toBe(true);
   });
 });
 

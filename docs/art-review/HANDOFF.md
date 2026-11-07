@@ -13,6 +13,11 @@ Nhánh `iso-board-redesign`, PR #13 vào `develop` (chưa merge). Spec `docs/sup
 - Benchmark `stepBattle`: 0,364 ms/tick (chuẩn), 0,461 ms/tick (G2); test determinism (hash mọi tick, boss năm 10/20/30, sáu vua) đều pass.
 - Trình duyệt (dev server): 1280×720 — khởi động lại ván 3 lần (texture sân cũ được dọn, chỉ còn sân của ván hiện tại), zoom 2× rồi pan ra 4 mép, đặt Đội Thợ Gặt rồi vào trận: địch vào từ bên phải theo con đường, đi qua vùng có trang trí; 375×812 — bàn, HUD và tay bài hiển thị đúng. Không có lỗi console.
 
+## Đợt hoàn thiện 08/11 (plan `docs/superpowers/plans/2026-11-08-iso-board-polish.md`)
+- **Q1 xong phần code (08/11):** địch (cả boss, quân công thành) đánh hết lính phe mình nó đánh được rồi mới nhắm công trình/Ngai; giữ Khiêu khích và Cuồng Nộ. Chain của địch và Ném Bùn theo cùng luật; splash/cleave/cone vẫn trúng nhà như cũ. Số đo trước–sau: `docs/art-review/iso-board/polish/logic-report.md`.
+- **Còn của Q1:** kiểm trên trình duyệt (trận thường và trận boss) chưa làm; Q2–Q5 chưa bắt đầu.
+- **Lỗi bot có sẵn:** bot random/scripted có thể chơi Giao Ước Nguyệt Thực khi còn 1 mạng (lệnh bị từ chối `lastLife`); bộ đo ghi các ván đó là crashed.
+
 ## Còn lại / ghi nhận
 - Đã sửa 08/11: pan về góc tây bắc từng lộ một vùng xanh đậm trống phía trên vách núi. Nay tâm màn hình luôn nằm trên sân, phía nam vách núi (`clampView`, `CENTRE_BOUNDS`); bốn góc trống của hình chữ nhật bao bản đồ không còn tới được.
 - Lính vẫn vẽ nhìn thẳng (chưa có art isometric); các vua khác ngoài Lúa Mì dùng ô chung được nắn thành hình thoi và art cũ.

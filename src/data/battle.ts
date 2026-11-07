@@ -49,6 +49,7 @@ export const BATTLE = {
   structureRadius: 12,
   throneRadius: 14,
   retargetTicks: 5,
+  // Tầm phát hiện công trình/Ngai của địch, chỉ dùng khi không còn lính phe mình nó đánh được (spec 2026-11-08 §2).
   enemyAggro: cells(1.5),
   siegeAggro: cells(3),
   tauntRadiusDefault: cells(1.25),

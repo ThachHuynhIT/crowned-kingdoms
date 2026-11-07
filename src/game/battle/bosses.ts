@@ -14,6 +14,7 @@ import {
   spawnOffset,
   type BattleWorld,
 } from './world';
+import { allowsFoeStructureTarget } from './targeting';
 import type { UnitStats } from './types';
 
 /** Bước 1: nếu đến `spawnTick` và boss chưa xuất hiện thì đặt boss ở mép đã chọn (đúng một lần). */
@@ -52,8 +53,12 @@ export function spawnBossSummons(world: BattleWorld, stats: UnitStats, count: nu
   return made;
 }
 
-/** Ném Bùn: 60 vật lý vào tháp có DMG cao nhất trong tầm (hoà → ô nhỏ nhất) và vô hiệu nó 30 tick. */
+/**
+ * Ném Bùn: 60 vật lý vào tháp có DMG cao nhất trong tầm (hoà → ô nhỏ nhất) và vô hiệu nó 30 tick. Chỉ khi boss
+ * được nhắm công trình (spec 2026-11-08 §2: còn lính phe mình nó đánh được thì lần ném này bỏ qua, không bù).
+ */
 function mudThrow(world: BattleWorld, boss: number): void {
+  if (!allowsFoeStructureTarget(world, boss)) return;
   const rules = BOSS_RULES.bog;
   const r2 = rules.mudRange * rules.mudRange;
   let best = -1;
