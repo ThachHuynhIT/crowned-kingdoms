@@ -14,7 +14,7 @@ Nhánh `iso-board-redesign`, PR #13 vào `develop` (chưa merge). Spec `docs/sup
 - Trình duyệt (dev server): 1280×720 — khởi động lại ván 3 lần (texture sân cũ được dọn, chỉ còn sân của ván hiện tại), zoom 2× rồi pan ra 4 mép, đặt Đội Thợ Gặt rồi vào trận: địch vào từ bên phải theo con đường, đi qua vùng có trang trí; 375×812 — bàn, HUD và tay bài hiển thị đúng. Không có lỗi console.
 
 ## Còn lại / ghi nhận
-- Pan về góc tây bắc ở zoom 2× lộ một vùng xanh đậm trống phía trên vách núi (giới hạn camera `MAP_BOUNDS` rộng hơn phần có hình).
+- Đã sửa 08/11: pan về góc tây bắc từng lộ một vùng xanh đậm trống phía trên vách núi. Nay tâm màn hình luôn nằm trên sân, phía nam vách núi (`clampView`, `CENTRE_BOUNDS`); bốn góc trống của hình chữ nhật bao bản đồ không còn tới được.
 - Lính vẫn vẽ nhìn thẳng (chưa có art isometric); các vua khác ngoài Lúa Mì dùng ô chung được nắn thành hình thoi và art cũ.
 - Bộ art Lúa Mì góc 45° cũ không còn dùng nhưng vẫn nằm trong repo.
 - Lỗi đổi kích thước NineSlice trong `theme.ts` (ghi từ 06/11) chưa sửa, ngoài phạm vi PR này.

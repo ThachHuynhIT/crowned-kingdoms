@@ -1,5 +1,6 @@
 import { describe, expect, it } from 'vitest';
 import { ISO, unproject } from '../../core/iso';
+import { BATTLE } from '../../data/battle';
 import type { Size } from '../hud/layout';
 import {
   MAP_BOUNDS,
@@ -12,6 +13,7 @@ import {
   plotRectAtView,
   resizeView,
   worldAtView,
+  worldToScreen,
   zoomAt,
   zoomSteps,
 } from './cameraModel';
@@ -56,16 +58,23 @@ describe('camera model (spec 06/11/2026, P2 zoom)', () => {
     expect(zoomAt(z2, { x: 0, y: 0 }, 9, MOBILE, 'planning').zoom).toBe(3);
   });
 
-  it('pan_clamps_to_the_map: a zoomed view never shows past the map edges', () => {
-    let v = zoomAt(overviewView(MOBILE, 'planning'), { x: 187, y: 400 }, 3, MOBILE, 'planning');
-    v = panBy(v, { x: 100000, y: 100000 }, MOBILE, 'planning');
-    let r = visible(v, MOBILE);
-    expect(r.x0).toBeCloseTo(MAP_BOUNDS.x0, 6);
-    expect(r.y0).toBeCloseTo(MAP_BOUNDS.y0, 6);
-    v = panBy(v, { x: -200000, y: -200000 }, MOBILE, 'planning');
-    r = visible(v, MOBILE);
-    expect(r.x1).toBeCloseTo(MAP_BOUNDS.x1, 6);
-    expect(r.y1).toBeCloseTo(MAP_BOUNDS.y1, 6);
+  it('pan_clamps_to_the_map and never_centres_past_the_cliff: the view stays in the map, its centre on the field south of the wall', () => {
+    for (const s of [DESKTOP, MOBILE])
+      for (const z of [1, 2, 3]) {
+        let v = zoomAt(overviewView(s, 'planning'), { x: s.w / 2, y: s.h / 2 }, z, s, 'planning');
+        for (const d of [{ x: 1e5, y: 1e5 }, { x: -1e5, y: 1e5 }, { x: 1e5, y: -1e5 }, { x: -1e5, y: -1e5 }, { x: 1e5, y: 0 }, { x: 0, y: 1e5 }]) {
+          v = panBy(v, d, s, 'planning');
+          const c = unproject(screenToWorld({ x: s.w / 2, y: s.h / 2 }, v.scroll, s, v.zoom));
+          expect(c.y, `${s.w} z${z} ${d.x},${d.y}`).toBeGreaterThanOrEqual(BATTLE.wallY - 1e-6);
+          expect(c.x).toBeGreaterThanOrEqual(-BATTLE.plot - 1e-6);
+          expect(c.x).toBeLessThanOrEqual(BATTLE.field + BATTLE.plot + 1e-6);
+          const r = visible(v, s);
+          expect(r.x0).toBeGreaterThanOrEqual(MAP_BOUNDS.x0 - 1e-6);
+          expect(r.y0).toBeGreaterThanOrEqual(MAP_BOUNDS.y0 - 1e-6);
+          expect(r.x1).toBeLessThanOrEqual(MAP_BOUNDS.x1 + 1e-6);
+          expect(r.y1).toBeLessThanOrEqual(MAP_BOUNDS.y1 + 1e-6);
+        }
+      }
   });
 
   it('pans at the overview step too: the isometric board is wider than a phone', () => {
@@ -115,8 +124,9 @@ describe('camera model (spec 06/11/2026, P2 zoom)', () => {
     const z = zoomAt(overviewView(DESKTOP, 'battle'), { x: 640, y: 360 }, 2, DESKTOP, 'battle');
     const w = worldAtView(z, DESKTOP, { x: 640, y: 360 })!;
     expect(w).toEqual(unproject(screenToWorld({ x: 640, y: 360 }, z.scroll, DESKTOP, 2)));
-    const far = panBy(z, { x: 100000, y: 0 }, DESKTOP, 'battle');
-    expect(worldAtView(far, DESKTOP, { x: 1, y: 360 })).toBeNull();
+    // a point west of the field (and one north of it) is off the field
+    expect(worldAtView(z, DESKTOP, worldToScreen(z, DESKTOP, { x: -40, y: 400 }))).toBeNull();
+    expect(worldAtView(z, DESKTOP, worldToScreen(z, DESKTOP, { x: 400, y: -20 }))).toBeNull();
   });
 
   it('pinch steps one zoom once the finger spread grows by 25% or shrinks by 20%', () => {

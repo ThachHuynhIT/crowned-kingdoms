@@ -49,8 +49,35 @@ export const zoomSteps = (screen: Size, phase: RealmPhase): number[] => {
   return out;
 };
 
-/** Keeps the shown world rect inside `MAP_BOUNDS`; a view wider (or taller) than the map is centred on it. */
+/**
+ * Where the screen centre may sit, in world px: on the map, and never north of the mountain wall. `MAP_BOUNDS`
+ * alone is the diamond's bounding box, whose north-west corner is empty sky past the cliff.
+ */
+const CENTRE_BOUNDS = { x0: WORLD_BOUNDS.x0, y0: BATTLE.wallY, x1: WORLD_BOUNDS.x1, y1: WORLD_BOUNDS.y1 } as const;
+
+/**
+ * Keeps the shown world rect inside `MAP_BOUNDS` (a view wider or taller than the map is centred on it), then
+ * slides the screen centre sideways, along its screen row, onto the part of that row inside `CENTRE_BOUNDS`
+ * (on the field, south of the wall), as far as the rect still allows. Sideways only, so the rect clamp holds.
+ */
 export const clampView = (view: CameraView, screen: Size): CameraView => {
+  const rect = clampRect(view, screen);
+  const hx = screen.w / 2;
+  const cx = rect.scroll.x + hx;
+  const cy = rect.scroll.y + screen.h / 2;
+  // The centre's allowed screen x from the rect: [x0 + hw, x1 − hw], a single point when the view is wider.
+  const hw = hx / view.zoom;
+  const [bx0, bx1] = 2 * hw >= MAP_BOUNDS.x1 - MAP_BOUNDS.x0
+    ? [cx, cx]
+    : [MAP_BOUNDS.x0 + hw, MAP_BOUNDS.x1 - hw];
+  // World (x, y) = (cy − cx/2, cy + cx/2): each CENTRE_BOUNDS side is a bound on cx for this row.
+  const lo = Math.max(bx0, 2 * (CENTRE_BOUNDS.y0 - cy), 2 * (cy - CENTRE_BOUNDS.x1));
+  const hi = Math.min(bx1, 2 * (CENTRE_BOUNDS.y1 - cy), 2 * (cy - CENTRE_BOUNDS.x0));
+  if (lo > hi) return rect; // this row never crosses the field (a view taller than the map): keep the rect clamp
+  return { zoom: rect.zoom, scroll: { x: Math.min(hi, Math.max(lo, cx)) - hx, y: rect.scroll.y } };
+};
+
+const clampRect = (view: CameraView, screen: Size): CameraView => {
   const axis = (scroll: number, half: number, size: number, lo: number, hi: number): number => {
     // The shown span is [scroll + half − half/zoom, … + size/zoom].
     const span = size / view.zoom;
