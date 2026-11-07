@@ -5,7 +5,7 @@ import type { CardDef, CardId, UnitId } from '../data/types';
 import type { Content } from '../game/cards/registry';
 import { paintBuilding, paintThrone } from './buildingArt';
 import { paintCardArt } from './cardArt';
-import { paintField, paintGroundTile } from './fieldArt';
+import { paintField, paintGroundTile, type GroundTextures } from './fieldArt';
 import {
   ARROW_DIRS,
   paintArrow,
@@ -19,6 +19,8 @@ import {
 import { ICON_IDS, paintIcon, type IconId } from './iconArt';
 import {
   GRASS_FILES,
+  GROUND_TEXTURE_FILES,
+  GROUND_TEXTURES_APPROVED,
   IMAGE_ART_SCALE,
   IMAGE_BUILDINGS,
   IMAGE_PLOTS,
@@ -27,6 +29,7 @@ import {
   imageArtKey,
   unitPoseFile,
 } from './imageArt';
+import { squareToIso } from './isoArt';
 import { PixelCanvas } from './pixel';
 import { paintPlot, type PlotState } from './plotArt';
 import {
@@ -257,13 +260,30 @@ export const grassArt = (textures: Phaser.Textures.TextureManager): PixelCanvas[
   return tiles.every((t) => t !== null) ? (tiles as PixelCanvas[]) : null;
 };
 
+/** The approved, loaded river and sand textures (a missing one keeps the generated look). */
+export const groundTextures = (textures: Phaser.Textures.TextureManager): GroundTextures => {
+  const out: { water?: PixelCanvas; sand?: PixelCanvas } = {};
+  for (const t of GROUND_TEXTURES_APPROVED) {
+    const art = imageFile(textures, GROUND_TEXTURE_FILES[t]);
+    if (art) out[t] = art;
+  }
+  return out;
+};
+
+/**
+ * Plot frames laid onto the isometric ground (spec 2026-11-06): each square plot picture becomes
+ * a 2:1 diamond (`squareToIso`) until isometric plot art replaces it (Task 11).
+ */
+export const isoPlots = (list: { name: string; art: PixelCanvas }[]): { name: string; art: PixelCanvas }[] =>
+  list.map((s) => (s.name.startsWith('plot_') && s.art.width === s.art.height ? { name: s.name, art: squareToIso(s.art) } : s));
+
 /** Build the `sprites` atlas once (no-op if it already exists). */
 export const buildSpritesTexture = (
   textures: Phaser.Textures.TextureManager,
   content: Content,
 ): void => {
   if (textures.exists(SPRITES_KEY)) return;
-  const { placed, height } = packShelves(withImageArt(textures, spriteList(content)), SPRITES_WIDTH);
+  const { placed, height } = packShelves(isoPlots(withImageArt(textures, spriteList(content))), SPRITES_WIDTH);
   const sheet = new PixelCanvas(SPRITES_WIDTH, height);
   for (const p of placed) sheet.blit(p.art, p.x, p.y);
   const texture = textures.addCanvas(SPRITES_KEY, toCanvas(sheet));
@@ -279,9 +299,12 @@ export const ensureGroundTexture = (textures: Phaser.Textures.TextureManager): s
   return GROUND_KEY;
 };
 
-/** Display scale of the painted field (`field-<seed>`): 0.5 when it was painted from the 2×-density grass art. */
+/**
+ * Display scale of the painted field (`field-<seed>`), an isometric diamond 2 × field wide at
+ * zoom 1: 0.5 when it was painted from the 2×-density grass art.
+ */
 export const fieldTextureScale = (textures: Phaser.Textures.TextureManager, key: string): number =>
-  textures.get(key).getSourceImage().width > BATTLE.field ? IMAGE_ART_SCALE : 1;
+  textures.get(key).getSourceImage().width > 2 * BATTLE.field ? IMAGE_ART_SCALE : 1;
 
 /** Display scale of the tiling ground: 0.5 when it is the grass art. */
 export const groundTextureScale = (textures: Phaser.Textures.TextureManager): number =>
@@ -297,6 +320,7 @@ export const ensureFieldTexture = (
   seed: number,
 ): string => {
   const key = fieldKey(seed);
-  if (!textures.exists(key)) addPixelTexture(textures, key, paintField(seed, grassArt(textures) ?? undefined));
+  // The square field laid onto the isometric ground (spec 2026-11-06): a diamond, top corner = world (0, 0).
+  if (!textures.exists(key)) addPixelTexture(textures, key, squareToIso(paintField(seed, grassArt(textures) ?? undefined, groundTextures(textures))));
   return key;
 };

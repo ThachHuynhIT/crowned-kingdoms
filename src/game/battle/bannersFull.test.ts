@@ -1,4 +1,5 @@
 import { describe, expect, it } from 'vitest';
+import { SPEC_MOVE_SCALE } from '../../data/boardGeometry';
 import type { KingId } from '../../data/types';
 import { CONTENT } from '../cards/registry';
 import { buildBattleSetup } from '../run/battleSetup';
@@ -48,8 +49,8 @@ describe('banner_effects: stat banners reach the battle setup', () => {
 
   it('nomad: +25% speed on every foe', () => {
     const setup = attackedBy('nomad');
-    expect(byUnit(setup, 'rider').speed).toBeCloseTo(2.0 * 1.25);
-    expect(byUnit(setup, 'khan_guard').speed).toBeCloseTo(1.6 * 1.25);
+    expect(byUnit(setup, 'rider').speed).toBeCloseTo(2.0 * SPEC_MOVE_SCALE * 1.25);
+    expect(byUnit(setup, 'khan_guard').speed).toBeCloseTo(1.6 * SPEC_MOVE_SCALE * 1.25);
     expect(setup.banner?.effects).toContainEqual({ type: 'extraEdge', count: 1 });
   });
 

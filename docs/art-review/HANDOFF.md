@@ -1,3 +1,25 @@
+# Bàn giao — bàn cờ isometric (cập nhật 07/11/2026)
+
+Nhánh `iso-board-redesign`, PR #13 vào `develop` (chưa merge). Spec `docs/superpowers/specs/2026-11-06-iso-board-redesign-design.md`, plan `docs/superpowers/plans/2026-11-06-iso-board-redesign.md` (P1–P4 đã làm). Phần bàn giao 29/10 bên dưới vẫn đúng cho những gì không nói lại ở đây, trừ các số bàn cờ cũ (ô 32, sân 384, Ngai ở ô 12).
+
+## Đã xong theo pha
+- **P1 luật:** Ngai ở ô 2, save 4 → 5 (migrator hoán vị nhà 12↔2, save 3 chạy 3→4→5); ô 64 px, sân 768, tốc độ và đạn ×2 để giữ số ô/tick; khu tập kết trước cửa (`DEPLOY_BOX`); chỉ lính mình đi xuyên nhà mình; tầm công trình +50%; một con đường phía nam.
+- **P2 camera:** zoom nguyên 1–3× (bánh xe, chụm hai ngón), kéo để pan; HUD nhận camera qua sự kiện `realm:view`.
+- **P3 isometric:** chiếu 2:1 lật gương (địch vào từ bên phải màn hình), mọi input qua `unproject`; bộ art isometric Lúa Mì đã duyệt (8 công trình, ô mở/đã xây/khoá/Ngai, vách núi) trong `public/assets/art/ai-v1/iso/`. Nhà giữa ô, cửa bên phải, lính đứng trước cửa, ô đã xây lát đá.
+- **P4 cảnh:** sông từ mép tây xuống mép nam và một hồ ở góc đông, bờ cát liền một dải; nước và cát có texture liền mạch (`iso/terrain/`); 15 vật hoang dã đã duyệt (`iso/wilds/`), rải theo seed riêng, không dùng RNG của ván, không vào trận.
+
+## Bằng chứng nghiệm thu (07/11/2026)
+- Cổng `npm run lint && npm run typecheck && npm test && npm run build`: xanh (158 file, 1992 test); `python tools/test_art_prompts.py`: 41 test pass.
+- Benchmark `stepBattle`: 0,364 ms/tick (chuẩn), 0,461 ms/tick (G2); test determinism (hash mọi tick, boss năm 10/20/30, sáu vua) đều pass.
+- Trình duyệt (dev server): 1280×720 — khởi động lại ván 3 lần (texture sân cũ được dọn, chỉ còn sân của ván hiện tại), zoom 2× rồi pan ra 4 mép, đặt Đội Thợ Gặt rồi vào trận: địch vào từ bên phải theo con đường, đi qua vùng có trang trí; 375×812 — bàn, HUD và tay bài hiển thị đúng. Không có lỗi console.
+
+## Còn lại / ghi nhận
+- Pan về góc tây bắc ở zoom 2× lộ một vùng xanh đậm trống phía trên vách núi (giới hạn camera `MAP_BOUNDS` rộng hơn phần có hình).
+- Lính vẫn vẽ nhìn thẳng (chưa có art isometric); các vua khác ngoài Lúa Mì dùng ô chung được nắn thành hình thoi và art cũ.
+- Bộ art Lúa Mì góc 45° cũ không còn dùng nhưng vẫn nằm trong repo.
+- Lỗi đổi kích thước NineSlice trong `theme.ts` (ghi từ 06/11) chưa sửa, ngoài phạm vi PR này.
+- Trên điện thoại ở zoom 1, hai góc trái/phải của bàn nằm ngoài màn hình (bàn rộng 640 px); người chơi kéo để xem (sửa sau review 07/11: kéo-pan chạy cả ở zoom 1, và mua ô/đổi bài/bỏ bài không còn đưa camera về chỗ cũ).
+
 # Bàn giao phiên làm việc — art, cảnh 45° và giao diện mới (cập nhật 29/10/2026)
 
 Nhánh `g3e-ux-and-art`, PR #12 vào `develop` (chưa merge). Đọc theo thứ tự: `CLAUDE.md` → `docs/ART_STYLE.md` (**mục "Góc nhìn" là khung BẮT BUỘC cho mọi lần tạo ảnh**) → tài liệu này.
@@ -78,3 +100,40 @@ Việc G3e khác (giữ nguyên): biểu tượng UI chung (12 mẫu chờ duy�
 - Duyệt từng nhóm nhỏ; thử một mẫu trước khi vẽ cả nhóm; mọi prompt lấy từ `docs/ART_STYLE.md` kèm ảnh tham chiếu (`tools/test_art_prompts.py` chặn khi thiếu).
 - Chưa nối ảnh mới vào `src` khi người dùng chưa duyệt; ảnh bị loại cất vào thư mục `_rejected_*`.
 - PR chỉ vào `develop`; không đụng `.agents/` và `AGENTS.md`; Codex không chạy được node nên phải tự kiểm lại kết quả của nó.
+
+## Bàn cờ isometric — cổng mẫu P3 (06/11/2026)
+
+PR #13 (nhánh `iso-board-redesign`) đã xong P1 (ô 64 px, Ngai hàng sau, khu tập kết, một đường) và P2 (zoom 1×–3×, kéo bản đồ). Với P3:
+
+- ART_STYLE có thêm mục "Isometric (trục đo 2.5D) cho sprite thế giới" và khối "Prompt isometric dùng lại". Tranh thẻ vẫn theo khối chính diện 45°.
+- Ba mẫu ở `docs/art-review/iso-board/` (nhà Thợ Gặt bản 3, ô trống bản 2, ô lát đá bản 2) **đã được chủ dự án duyệt ngày 06/11/2026** và đã chép vào `style-references/`. Bước tiếp theo là phép chiếu và renderer isometric (Task 9–10), rồi vẽ lại bộ Lúa Mì (Task 11).
+
+### Phép chiếu và vẽ isometric (Task 9–10, 06/11/2026)
+
+- `src/core/iso.ts` là phép chiếu duy nhất: ô 64 px hiện thành thoi 128×64 ở zoom 1, đúng tỉ lệ chủ dự án chọn. Mô phỏng trận không đổi.
+- Camera và bố cục làm việc trong không gian đã chiếu. Mọi thao tác chuyển từ màn hình về thế giới (thả thẻ, bấm, ngắm đá) đều qua `unproject`.
+- **Đã chuyển sang isometric:** nền sân (`squareToIso`, lấy mẫu điểm gần nhất), ô đất, ô sáng khi chọn, dải tập kết lính, nhà, lính, đạn, hiệu ứng, vòng tầm (elip) và mũi tên con đường.
+- **Đang dùng bản tạm:**
+  - Tường núi vẽ bằng code (`IsoWallRenderer`) cho tới khi có art tường isometric.
+  - Ô đất và nhà vẫn là art vuông/chính diện cũ, được biến hình hoặc dựng thẳng. Bộ art Lúa Mì isometric là Task 11.
+  - Ô đã xây (sân lát đá) chưa có trong game, chờ art ở Task 11.
+- **Đã kiểm trong trình duyệt** (cửa sổ phiên đang ẩn nên phải tự đẩy vòng lặp game): ở 1024×768 bàn thoi, ngai ở hàng sau, con đường đi từ góc dưới trái, trận chạy đúng, console không lỗi. Ở 375×812 bàn rộng hơn màn hình nên kéo được.
+
+### Bộ Lúa Mì isometric trong game (Task 11, 06/11/2026)
+
+- **Đã duyệt (chủ dự án):** 7 công trình mới, ô khoá, ô Ngai, cùng mẫu tường (độ dốc sửa lúc sản xuất). Nguồn và ghi chú ở `docs/art-review/iso-board/wheat/`.
+- **Cắt sprite:** `docs/art-review/iso-board/make_assets.py` ghi ra `public/assets/art/ai-v1/iso/`:
+  - 8 nhà (kể cả Ngai) thu cùng một tỉ lệ, nhà Thợ Gặt rộng 64 px;
+  - 4 ô (trống, đã xây, khoá, Ngai) rộng 128 px, tâm hình thoi đặt ở hàng giữa ảnh;
+  - đoạn vách núi được nắn chân từ dốc 0,388 về đúng 0,5 bằng cách dịch từng cột, rộng 480 px.
+- **Đã nối vào game:**
+  - `IMAGE_BUILDINGS` và `IMAGE_PLOTS` trỏ sang bộ isometric;
+  - ô có nhà hiện thành sân lát đá (trạng thái `built`, có bản vẽ bằng code dự phòng);
+  - `IsoWallRenderer` xếp các đoạn vách nối tiếp dọc mép bắc.
+- **Đăng ký:** 13 mục `*_iso` trong `assets.manifest.yml` và một dòng trong CREDITS.
+- **Bộ 45° cũ:** ảnh và mục manifest cũ của bộ Lúa Mì 45° vẫn nằm trong repo nhưng game không còn dùng (tranh thẻ vẫn dùng ảnh 45° riêng của chúng).
+- **Đã kiểm trong trình duyệt** (tự đẩy vòng lặp game) ở zoom 1× và 2×.
+- **Chưa làm:**
+  - Lính vẫn vẽ nhìn chính diện;
+  - các vua khác vẫn dùng ô vuông biến hình và nhà vẽ bằng code;
+  - Ruộng Lúa trên sân lát đá trông nhỏ, vì thu theo chân nhà.

@@ -251,3 +251,30 @@ describe('separationPush between teams', () => {
     expect([outX[0]! + 0, outX[1]! + 0]).toEqual([-3, 3]);
   });
 });
+
+describe('separationPush pass-through team (spec 06/11/2026, D)', () => {
+  const withPass = (list: readonly Body[], passTeam: number | undefined): [number, number][] => {
+    const outX = new Float64Array(list.length);
+    const outY = new Float64Array(list.length);
+    separationPush({ ...bodies(list), passTeam }, 10, outX, outY, 0.2);
+    return list.map((_, i) => [outX[i]! + 0, outY[i]! + 0]);
+  };
+  // A radius-12 structure of team 0 at x 0 and a radius-4 unit 6 px east: overlap 10.
+  const building = { x: 0, r: 12, fixed: true, team: 0 };
+
+  it('lets a unit of the pass team walk through a structure of the same team', () => {
+    expect(withPass([building, { x: 6, r: 4, team: 0 }], 0)).toEqual([[0, 0], [0, 0]]);
+  });
+
+  it('still pushes a foe out of that structure', () => {
+    expect(withPass([building, { x: 6, r: 4, team: 1 }], 0)).toEqual([[0, 0], [10, 0]]);
+  });
+
+  it('gives no passage to a team that is not the pass team, even past its own structure', () => {
+    expect(withPass([{ ...building, team: 1 }, { x: 6, r: 4, team: 1 }], 0)).toEqual([[0, 0], [10, 0]]);
+  });
+
+  it('keeps the old push without a pass team', () => {
+    expect(withPass([building, { x: 6, r: 4, team: 0 }], undefined)).toEqual([[0, 0], [10, 0]]);
+  });
+});

@@ -14,8 +14,8 @@ const make = (over: Partial<BattleSetup> = {}): BattleWorld =>
   createBattle(battleSetup({ structures: [structure(12)], ...over }));
 
 describe('north mountain wall', () => {
-  it('wallY is 88', () => {
-    expect(BATTLE.wallY).toBe(88);
+  it('wallY is 176 (88 × 2 on the 64 px board, spec 06/11/2026)', () => {
+    expect(BATTLE.wallY).toBe(176);
   });
 
   it('addUnit clamps position, prev and home to the wall', () => {

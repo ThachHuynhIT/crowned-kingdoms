@@ -10,11 +10,11 @@ import { describeCard } from '../../game/cards/describe';
 import { ageOf } from '../../game/cards/custom/grove';
 import type { Content } from '../../game/cards/registry';
 import { structureFor } from '../../game/run/battleSetup';
+import { THRONE_PLOT } from '../../game/run/board';
 import type { RunState } from '../../game/run/state';
 import { behaviourLabel, damageTypeLabel, unitTagLabel } from './labels';
 import { statusLines } from './infoLines';
 
-const THRONE_PLOT = 12;
 const DMG_BY_CODE = ['physical', 'fire', 'magic'] as const;
 
 export interface LevelStars {

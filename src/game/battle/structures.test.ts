@@ -2,7 +2,8 @@ import { describe, expect, it } from 'vitest';
 import { battleSetup, structure, throneSetup, unitStats } from '../testing/fixtures';
 import { pulsePhase, shieldPulsePhase } from './structures';
 import type { StructureSetup, UnitStats } from './types';
-import { TEAM_ALLY, TEAM_FOE, addUnit, createBattle, drainEvents, type BattleWorld } from './world';
+import { BATTLE } from '../../data/battle';
+import { TEAM_ALLY, TEAM_FOE, addUnit, createBattle, drainEvents, structureFoot, type BattleWorld } from './world';
 
 const world = (structures: StructureSetup[]): BattleWorld =>
   createBattle(battleSetup({ throne: throneSetup({ attack: null }), structures }));
@@ -10,15 +11,16 @@ const world = (structures: StructureSetup[]): BattleWorld =>
 const unit = (w: BattleWorld, team: number, x: number, y: number, over: Partial<UnitStats> = {}): number =>
   addUnit(w, unitStats(over), team, x, y, x, y, -1);
 
-/** Plot 6 centre is (160, 160). */
+/** The structure on plot 6 stands at S. */
+const S = structureFoot(6);
 const PULSE = { everyTicks: 40, radius: 48, dmg: 30, dmgType: 'physical' as const, stunTicks: 10 };
 
 describe('pulsePhase', () => {
   const setup = () => {
     const w = world([structure(6, { uid: 60, pulse: PULSE })]);
-    const inside = unit(w, TEAM_FOE, 180, 160); // 20 px away
-    const outside = unit(w, TEAM_FOE, 220, 160); // 60 px away
-    const friend = unit(w, TEAM_ALLY, 166, 160);
+    const inside = unit(w, TEAM_FOE, S.x + 20, S.y); // 20 px away
+    const outside = unit(w, TEAM_FOE, S.x + 60, S.y); // 60 px away
+    const friend = unit(w, TEAM_ALLY, S.x + 6, S.y);
     drainEvents(w);
     return { w, inside, outside, friend };
   };
@@ -61,7 +63,7 @@ describe('pulsePhase', () => {
 
   it('does nothing for structures without a pulse', () => {
     const w = world([structure(6)]);
-    unit(w, TEAM_FOE, 166, 160);
+    unit(w, TEAM_FOE, S.x + 6, S.y);
     w.tick = 40;
     pulsePhase(w);
     expect(w.damageQueue).toEqual([]);
@@ -72,9 +74,9 @@ describe('shieldPulsePhase', () => {
   const SHIELD = { everyTicks: 50, radius: 64, amount: 20 };
   const setup = () => {
     const w = world([structure(6, { shieldPulse: SHIELD })]);
-    const a = unit(w, TEAM_ALLY, 166, 160);
-    const far = unit(w, TEAM_ALLY, 260, 160); // 100 px away
-    const foe = unit(w, TEAM_FOE, 166, 166);
+    const a = unit(w, TEAM_ALLY, S.x + 6, S.y);
+    const far = unit(w, TEAM_ALLY, S.x + 100, S.y); // 100 px away
+    const foe = unit(w, TEAM_FOE, S.x + 6, S.y + 6);
     drainEvents(w);
     return { w, a, far, foe };
   };
@@ -98,11 +100,13 @@ describe('shieldPulsePhase', () => {
   });
 
   it('a weaker ward never shrinks a shield a stronger ward gave', () => {
+    // plots 6 and 7 are one cell apart; the unit between them is inside both wards
+    const radius = BATTLE.plot;
     const w = world([
-      structure(6, { shieldPulse: { everyTicks: 50, radius: 64, amount: 40 } }),
-      structure(7, { shieldPulse: { everyTicks: 50, radius: 64, amount: 20 } }),
+      structure(6, { shieldPulse: { everyTicks: 50, radius, amount: 40 } }),
+      structure(7, { shieldPulse: { everyTicks: 50, radius, amount: 20 } }),
     ]);
-    const a = unit(w, TEAM_ALLY, 180, 160);
+    const a = unit(w, TEAM_ALLY, S.x + BATTLE.plot / 2, S.y);
     w.shield[a] = 80; // the strong ward's cap
     w.tick = 50;
     shieldPulsePhase(w);

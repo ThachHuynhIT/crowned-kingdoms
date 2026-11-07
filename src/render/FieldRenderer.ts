@@ -1,7 +1,9 @@
 import type Phaser from 'phaser';
 import { BATTLE } from '../data/battle';
 import type { KingId } from '../data/types';
-import { MountainWallRenderer } from './MountainWallRenderer';
+import { project } from '../core/iso';
+import { DecorationRenderer } from './DecorationRenderer';
+import { IsoWallRenderer } from './IsoWallRenderer';
 import { ensureFieldTexture, ensureGroundTexture, fieldTextureScale, groundTextureScale } from './atlas';
 
 /** The ground tile spans this many world px each way around the field (covers any zoom ≥ 1). */
@@ -16,22 +18,27 @@ export class FieldRenderer {
   private readonly key: string;
   private image: Phaser.GameObjects.Image | null;
   private ground: Phaser.GameObjects.TileSprite | null;
-  private wall: MountainWallRenderer | null;
+  private wall: IsoWallRenderer | null;
+  private decor: DecorationRenderer | null;
 
   constructor(scene: Phaser.Scene, seed: number, kingId?: KingId) {
     this.textures = scene.textures;
     this.key = ensureFieldTexture(scene.textures, seed);
-    const mid = BATTLE.field / 2;
+    const mid = project({ x: BATTLE.field / 2, y: BATTLE.field / 2 });
     this.ground = scene.add
-      .tileSprite(mid, mid, GROUND_SPAN, GROUND_SPAN, ensureGroundTexture(scene.textures))
+      .tileSprite(mid.x, mid.y, GROUND_SPAN, GROUND_SPAN, ensureGroundTexture(scene.textures))
       .setTileScale(groundTextureScale(scene.textures))
       .setDepth(-1);
+    // The isometric field: its top corner is world (0, 0), projected (0, 0).
     this.image = scene.add
       .image(0, 0, this.key)
-      .setOrigin(0, 0)
+      .setOrigin(0.5, 0)
       .setScale(fieldTextureScale(scene.textures, this.key))
       .setDepth(0);
-    this.wall = new MountainWallRenderer(scene, seed, kingId);
+    // Isometric cliff drawn in code until the isometric wall art (Task 11); the king skin waits for it.
+    void kingId;
+    this.wall = new IsoWallRenderer(scene, seed);
+    this.decor = new DecorationRenderer(scene, seed);
   }
 
   /** Destroys the images, then removes the `field-<seed>` texture (nothing else uses it). */
@@ -39,6 +46,8 @@ export class FieldRenderer {
     if (this.image === null) return;
     this.wall?.destroy();
     this.wall = null;
+    this.decor?.destroy();
+    this.decor = null;
     this.ground?.destroy();
     this.ground = null;
     this.image.destroy();

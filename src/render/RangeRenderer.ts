@@ -1,7 +1,7 @@
 import type Phaser from 'phaser';
 import { PALETTE } from '../data/palette';
 import type { Point } from '../ui/hud/layout';
-import { pixelCircle } from '../ui/info/pixelCircle';
+import { iso, isoRingPixels } from './isoView';
 import type { RangeSpec } from '../ui/info/rangeModel';
 
 /** Trên nhà/quân, dưới thanh máu (99 000) và mũi tên (100 000). */
@@ -21,8 +21,10 @@ const COLORS: Record<RangeSpec['kind'], number> = {
 };
 
 /**
- * Vòng tầm của thứ đang chọn/rê: MỘT Graphics dùng lại, vẽ quanh gốc (0,0) bằng ô 1 px thế giới nên camera
- * (zoom nguyên) tự phóng; di chuyển chỉ đổi vị trí Graphics, không vẽ lại. Đường viền nguyên lấy từ cache 64 bán kính.
+ * Vòng tầm của thứ đang chọn/rê: MỘT Graphics dùng lại, vẽ quanh gốc (0,0) bằng ô 1 px nên camera
+ * (zoom nguyên) tự phóng; di chuyển chỉ đổi vị trí Graphics, không vẽ lại. Isometric (spec 06/11/2026):
+ * tâm là điểm thế giới được chiếu, vòng tròn bán kính R thế giới là elip rộng R·√2, cao R/√2.
+ * Đường viền nguyên lấy từ cache 64 bán kính.
  */
 export class RangeRenderer {
   private readonly g: Phaser.GameObjects.Graphics;
@@ -56,8 +58,10 @@ export class RangeRenderer {
     this.g.setVisible(true);
   }
 
+  /** `center` is a world point; the rings are drawn around its projection. */
   move(center: Point): void {
-    this.g.setPosition(Math.round(center.x), Math.round(center.y));
+    const p = iso(center);
+    this.g.setPosition(Math.round(p.x), Math.round(p.y));
   }
 
   hide(): void {
@@ -77,7 +81,7 @@ export class RangeRenderer {
       this.cache.set(key, hit); // most recently used last
       return hit;
     }
-    const made = pixelCircle(key);
+    const made = isoRingPixels(key);
     this.cache.set(key, made);
     if (this.cache.size > RANGE_CACHE_MAX) this.cache.delete(this.cache.keys().next().value as number);
     return made;

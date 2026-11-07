@@ -6,14 +6,15 @@ import { CONTENT } from '../cards/registry';
 import { enqueueOffers, finishYearStart } from './flow';
 import { RUN_SAVE_VERSION, type OfferState, type RunState } from './state';
 import { newRun } from './yearFlow';
+import { THRONE_PLOT } from './board';
 
 const multiset = (cards: readonly string[]): string[] => [...cards].sort();
 
-describe('new run (state 4)', () => {
-  it('new_state4_defaults', () => {
+describe('new run (state 5)', () => {
+  it('new_state5_defaults', () => {
     const s = newRun(7, 'wheat', CONTENT, RULES_G2);
-    expect(RUN_SAVE_VERSION).toBe(4);
-    expect(s.version).toBe(4);
+    expect(RUN_SAVE_VERSION).toBe(5);
+    expect(s.version).toBe(5);
     expect(s.difficulty).toBe(0);
     expect(s.decrees).toEqual([]);
     expect(s.quests).toEqual([]);
@@ -27,7 +28,7 @@ describe('new run (state 4)', () => {
     expect(s.rng.quest).toBe(hashSeed('7:quest'));
     expect(s.rng.draw).not.toBe(hashSeed('7:draw')); // year 1 already drew a hand
     expect(s.rng.reward).toBe(hashSeed('7:reward'));
-    const throne = s.plots[12]!.building!;
+    const throne = s.plots[THRONE_PLOT]!.building!;
     expect(throne).toMatchObject({ ageBonus: 0, counters: {}, movedYear: null });
   });
 

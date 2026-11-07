@@ -8,7 +8,7 @@ import { BATTLE } from '../../data/battle';
 import { clampNorthY } from './bounds';
 import { separationPush } from './steering';
 import { edgeDistance, isRage } from './targeting';
-import { KIND_UNIT, TEAM_FOE, type BattleWorld } from './world';
+import { KIND_UNIT, TEAM_ALLY, TEAM_FOE, type BattleWorld } from './world';
 
 /** Rảnh và cách nhà < SNAP px → đặt đúng vào nhà (không rung). */
 const SNAP = 0.5;
@@ -104,6 +104,7 @@ export const moveEntities = (world: BattleWorld): void => {
       flying: sFlying,
       team: sTeam,
       anchored: sAnchored,
+      passTeam: TEAM_ALLY, // lính mình đi xuyên công trình mình (spec 06/11/2026)
     },
     BATTLE.separationPushMax,
     outX,

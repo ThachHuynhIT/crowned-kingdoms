@@ -38,13 +38,12 @@ import { createOverlay, fitOverlay } from '../ui/modals/overlay';
 import { ScoutPanel, tickClock } from '../ui/planning/ScoutPanel';
 import {
   battleLayout,
-  battleCamera,
-  battleWorldAt,
-  battleZoom,
   screenToWorld,
   isDesktop,
   type BattleLayout,
 } from '../ui/realm/realmLayout';
+import { overviewView, worldAtView, type CameraView } from '../ui/realm/cameraModel';
+import { unproject } from '../core/iso';
 import {
   addUiText,
   createButton,
@@ -175,6 +174,9 @@ export class BattleHudScene extends Phaser.Scene {
     super(SCENES.battleHud);
   }
 
+  /** The realm camera as RealmScene last set it (`realm:view`): aim and taps map to the world through it. */
+  private view: CameraView = { zoom: 1, scroll: { x: 0, y: 0 } };
+
   create(data: RealmHudData): void {
     // Scene instances are reused: reset every per-battle field first.
     this.bus = data.bus;
@@ -199,6 +201,7 @@ export class BattleHudScene extends Phaser.Scene {
     this.inspected = null;
     this.hoveredId = null;
     this.lay = this.currentLayout();
+    this.view = overviewView(this.screen(), 'battle');
 
     this.tooltip = new Tooltip(this);
     this.toasts = new ToastStack(this, TOAST_DEPTH);
@@ -330,6 +333,10 @@ export class BattleHudScene extends Phaser.Scene {
         this.showYear(state);
       }),
       bus.on('log', ({ text }) => this.toasts.push(text)),
+      bus.on('realm:view', (view) => {
+        this.view = view;
+        this.drawRing();
+      }),
       bus.on('battle:ended', ({ result }) => this.onEnded(result)),
       bus.on('ui:help', ({ open, tab }) => {
         if (open) openHelp(this, this.bus, this.controller.runner?.clock.speed ?? null, tab);
@@ -487,12 +494,14 @@ export class BattleHudScene extends Phaser.Scene {
     g.clear();
     const at = this.aimAt;
     if (!this.aiming || !at) return;
-    const radius = INTERVENTION.radius * battleZoom(this.scale.width, this.scale.height);
-    const onField = battleWorldAt(at, this.screen()) !== null;
+    // A world circle of the boulder radius is a 2:1 ellipse on the isometric ground: r·√2 wide, r/√2 tall.
+    const rx = INTERVENTION.radius * Math.SQRT2 * this.view.zoom;
+    const ry = (INTERVENTION.radius / Math.SQRT2) * this.view.zoom;
+    const onField = worldAtView(this.view, this.screen(), at) !== null;
     g.lineStyle(3, UI_PALETTE.outline, 0.8);
-    g.strokeCircle(at.x, at.y, radius);
+    g.strokeEllipse(at.x, at.y, rx * 2, ry * 2);
     g.lineStyle(2, onField ? UI_PALETTE.gold : UI_PALETTE.bad, 1);
-    g.strokeCircle(at.x, at.y, radius);
+    g.strokeEllipse(at.x, at.y, rx * 2, ry * 2);
   }
 
   private showSpeed(speed: GameSpeed): void {
@@ -507,8 +516,7 @@ export class BattleHudScene extends Phaser.Scene {
   private inspectAt(p: Point): void {
     const world = this.world;
     if (!world) return;
-    const { zoom, scroll } = battleCamera(this.screen());
-    const at = screenToWorld(p, scroll, this.screen(), zoom);
+    const at = unproject(screenToWorld(p, this.view.scroll, this.screen(), this.view.zoom));
     const id = entityAt(world, at.x, at.y);
     if (id === null) {
       this.hideInfo();
@@ -631,7 +639,7 @@ export class BattleHudScene extends Phaser.Scene {
 
   /** Drop the boulder at screen point `p` (ignored off the field: keep aiming). */
   private drop(p: Point): void {
-    const world = battleWorldAt(p, this.screen());
+    const world = worldAtView(this.view, this.screen(), p);
     if (!world || !this.isReady()) return;
     this.bus.emit('ui:intervene', { x: world.x, y: world.y });
     this.setAiming(false);
@@ -663,8 +671,7 @@ export class BattleHudScene extends Phaser.Scene {
     const world = this.world;
     let id: number | null = null;
     if (world && !this.aiming && !pointer.wasTouch) {
-      const { zoom, scroll } = battleCamera(this.screen());
-      const at = screenToWorld({ x: pointer.x, y: pointer.y }, scroll, this.screen(), zoom);
+      const at = unproject(screenToWorld({ x: pointer.x, y: pointer.y }, this.view.scroll, this.screen(), this.view.zoom));
       id = entityAt(world, at.x, at.y);
     }
     if (id === this.hoveredId) return;

@@ -15,6 +15,7 @@ import { refillHand } from './deck';
 import { cardOffer } from './flow';
 import { startDeck } from './calendar';
 import { newRun } from './yearFlow';
+import { THRONE_PLOT } from './board';
 
 const sorted = (arr: readonly CardId[]): CardId[] => [...arr].sort();
 
@@ -80,7 +81,7 @@ describe('newRun under the G2 rules', () => {
   });
 
   it('gives the throne an empty enchant list and no permanent bonuses', () => {
-    expect(s.plots[12]!.building).toMatchObject({ enchants: [], permanent: {} });
+    expect(s.plots[THRONE_PLOT]!.building).toMatchObject({ enchants: [], permanent: {} });
   });
 
   it('is deterministic per seed', () => {
@@ -101,9 +102,9 @@ describe('newRun', () => {
     expect(s.year).toBe(1);
     expect(s.phase).toBe('planning');
     expect(s.lives).toBe(3);
-    expect(s.plots.filter((p) => p.unlocked)).toHaveLength(9);
-    expect(s.plots[12]!.building!.cardId).toBe('wheat_throne');
-    expect(s.plots[12]!.building!.uid).toBe(0);
+    expect(s.plots.filter((p) => p.unlocked)).toHaveLength(10);
+    expect(s.plots[THRONE_PLOT]!.building!.cardId).toBe('wheat_throne');
+    expect(s.plots[THRONE_PLOT]!.building!.uid).toBe(0);
     expect(s.deck).toEqual([...START_DECK_G1]);
     expect(s.hand).toHaveLength(3);
     for (const c of s.hand) expect(s.deck).toContain(c);
@@ -244,7 +245,7 @@ describe('errors', () => {
   it('checkPlay reasons', () => {
     const s = runState({ hand });
     expect(errorOf(s, play(0, plot(0)))).toBe('locked');
-    expect(errorOf(s, play(0, plot(12)))).toBe('throne');
+    expect(errorOf(s, play(0, plot(THRONE_PLOT)))).toBe('throne');
     expect(errorOf(s, play(0, { kind: 'none' }))).toBe('badTarget');
     expect(errorOf(s, play(2, two(7, 6)))).toBe('noTarget');
     const occ = runState({ hand });
@@ -308,7 +309,7 @@ describe('gold', () => {
     expect(s.gold).toBe(20 - unlockCost(0));
     expect(s.purchasedPlots).toBe(1);
     expect(s.played).toBe(false);
-    s = ok(applyCommand(s, { type: 'unlockPlot', plot: 2 }, CONTENT)).state;
+    s = ok(applyCommand(s, { type: 'unlockPlot', plot: 3 }, CONTENT)).state;
     expect(s.gold).toBe(20 - unlockCost(0) - unlockCost(1));
     expect(s.purchasedPlots).toBe(2);
   });
@@ -411,7 +412,7 @@ describe('a hand with no playable card', () => {
       played: true,
     });
     const plots = s.plots.map((p, i) =>
-      p.unlocked && i !== 12
+      p.unlocked && i !== THRONE_PLOT
         ? { ...p, building: { uid: i + 10, cardId: 'wheat_scarecrow' as const, level: 1 as const, enchants: [], placedYear: 1, permanent: {}, ageBonus: 0, counters: {}, movedYear: null } }
         : p,
     );

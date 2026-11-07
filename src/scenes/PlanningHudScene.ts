@@ -45,10 +45,9 @@ import {
   centerHand,
   confirmFor,
   planningLayout,
-  plotAtScreen,
-  plotScreenRect,
   type PlanningLayout,
 } from '../ui/realm/realmLayout';
+import { overviewView, plotAtView, plotRectAtView, type CameraView } from '../ui/realm/cameraModel';
 import {
   addUiText,
   textStyle,
@@ -144,6 +143,9 @@ export class PlanningHudScene extends Phaser.Scene {
     super(SCENES.planningHud);
   }
 
+  /** The realm camera as RealmScene last set it (`realm:view`): screen points map to plots through it. */
+  private view: CameraView = { zoom: 1, scroll: { x: 0, y: 0 } };
+
   create(data: RealmHudData): void {
     // Scene instances are reused: reset every per-launch field first.
     this.bus = data.bus;
@@ -165,6 +167,7 @@ export class PlanningHudScene extends Phaser.Scene {
     this.plotTimer = null;
     this.hoveredPlot = null;
     this.lay = this.currentLayout();
+    this.view = overviewView({ w: this.scale.width, h: this.scale.height }, 'planning');
 
     this.tooltip = new Tooltip(this);
     this.toasts = new ToastStack(this, MODAL_DEPTH + 50);
@@ -257,6 +260,10 @@ export class PlanningHudScene extends Phaser.Scene {
     const bus = this.bus;
     this.offs.push(
       bus.on('run:state', ({ state }) => this.refresh(state)),
+      bus.on('realm:view', (view) => {
+        this.view = view;
+        this.tooltip.hide(PLOT_TIP);
+      }),
       bus.on('ui:pending-play', (p) => {
         this.pending = { handIndex: p.handIndex, targets: [...p.targets], ready: p.ready };
         this.refreshPending();
@@ -427,7 +434,7 @@ export class PlanningHudScene extends Phaser.Scene {
       const { confirm, cancel } =
         last === undefined
           ? { confirm: this.lay.confirm, cancel: this.lay.cancel }
-          : confirmFor(this.lay, plotScreenRect(this.lay, last), screen);
+          : confirmFor(this.lay, this.plotRect(last), screen);
       this.confirmBtn.container.setPosition(confirm.x + confirm.w / 2, confirm.y + confirm.h / 2);
       this.cancelBtn.container.setPosition(cancel.x + cancel.w / 2, cancel.y + cancel.h / 2);
     }
@@ -519,7 +526,7 @@ export class PlanningHudScene extends Phaser.Scene {
     const cardId = state.hand[index];
     if (state.phase !== 'planning' || state.played || cardId === undefined) return;
     if (this.modalOpen()) return;
-    const plot = plotAtScreen(this.lay, { x, y });
+    const plot = this.plotAt({ x, y });
     if (plot === null) return; // released off the board: the card just returns to the hand
     const out = dropOutcome(state.plots, CONTENT.card(cardId), plot);
     if (out.action === 'reject') {
@@ -628,7 +635,7 @@ export class PlanningHudScene extends Phaser.Scene {
     const state = this.controller.state;
     const cardId = p.handIndex === null ? undefined : state.hand[p.handIndex];
     if (cardId === undefined) return null;
-    const plot = plotAtScreen(this.lay, { x, y });
+    const plot = this.plotAt({ x, y });
     if (plot === null) return null;
     const reason = plotIllegalReason(state.plots, CONTENT.card(cardId), p.targets, plot);
     return reason === null ? null : { plot, reason };
@@ -649,7 +656,7 @@ export class PlanningHudScene extends Phaser.Scene {
   private hoverRange(pointer: Phaser.Input.Pointer): void {
     const state = this.controller.state;
     const plot =
-      this.modalOpen() || state.phase !== 'planning' ? null : plotAtScreen(this.lay, { x: pointer.x, y: pointer.y });
+      this.modalOpen() || state.phase !== 'planning' ? null : this.plotAt({ x: pointer.x, y: pointer.y });
     const built = plot !== null && state.plots[plot]?.building ? plot : null;
     if (built === this.hoveredPlot) return;
     this.hoveredPlot = built;
@@ -666,7 +673,7 @@ export class PlanningHudScene extends Phaser.Scene {
     if (!hit) return;
     this.plotTimer = this.time.delayedCall(LONG_PRESS_MS, () => {
       this.plotTimer = null;
-      const r = plotScreenRect(this.lay, hit.plot);
+      const r = this.plotRect(hit.plot);
       this.tooltip.showAbove({ title: illegalText(hit.reason), lines: [] }, r, PLOT_TIP);
     });
   }
@@ -675,6 +682,16 @@ export class PlanningHudScene extends Phaser.Scene {
     if (!pointer.wasTouch) return;
     this.stopPlotTimer();
     this.tooltip.hide(PLOT_TIP);
+  }
+
+  /** Plot under a screen point through the live realm camera (zoom and pan), null off the board. */
+  private plotAt(p: { x: number; y: number }): number | null {
+    return plotAtView(this.view, { w: this.scale.width, h: this.scale.height }, p);
+  }
+
+  /** Screen rect of a plot through the live realm camera. */
+  private plotRect(plot: number): { x: number; y: number; w: number; h: number } {
+    return plotRectAtView(this.view, { w: this.scale.width, h: this.scale.height }, plot);
   }
 
   private stopPlotTimer(): void {

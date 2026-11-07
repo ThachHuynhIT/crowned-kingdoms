@@ -74,10 +74,10 @@ describe('extra_edge_becomes_rows', () => {
     expect(formationRowsFor(10, 1, 120)).toBe(7);
   });
 
-  it('edgePositions with 1 row is unchanged; 2 rows split 4/4 at depths 12 and 22', () => {
-    expect(edgePositions('N', 25).map((p) => p.y).slice(23)).toEqual([-12, -22]);
+  it('edgePositions with 1 row is unchanged; 2 rows split 4/4 at depths 24 and 44', () => {
+    expect(edgePositions('N', 25).map((p) => p.y).slice(23)).toEqual([-24, -44]);
     const two = edgePositions('S', 8, 2);
-    expect(two.map((p) => p.y)).toEqual([396, 396, 396, 396, 406, 406, 406, 406]);
+    expect(two.map((p) => p.y)).toEqual([792, 792, 792, 792, 812, 812, 812, 812]);
     expect(edgePositions('S', 0, 3)).toEqual([]);
     expect(edgePositions('S', 1, 4)).toHaveLength(1);
     expect(edgePositions('S', 2, 4)).toHaveLength(2);
@@ -121,6 +121,6 @@ describe('south_spawn_progress', () => {
     spawnWave(w, 0);
     const ys = new Set<number>();
     for (let i = 0; i < w.count; i++) if (w.team[i] === 1) ys.add(w.y[i]!);
-    expect([...ys].sort((a, b) => a - b)).toEqual([396, 406]);
+    expect([...ys].sort((a, b) => a - b)).toEqual([792, 812]);
   });
 });

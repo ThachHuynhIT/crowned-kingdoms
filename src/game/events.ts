@@ -40,6 +40,11 @@ export interface GameEvents {
   };
   /** Ask the Help view to open (or close); handled by the Help scene wiring (G3e E4d). */
   'ui:help': { open: boolean; tab?: HelpTab };
+  /**
+   * The realm camera after every change (zoom step, pan, resize, phase): the HUD scenes map
+   * screen points to plots and world points through it. View-only: never saved, never a command.
+   */
+  'realm:view': { zoom: number; scroll: { x: number; y: number } };
   'ui:open-modal': { modal: 'scout' | 'calendar' | 'deck' };
   'ui:close-modal': Record<string, never>;
 }

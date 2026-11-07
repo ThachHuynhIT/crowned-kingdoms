@@ -118,7 +118,7 @@ describe('level scaling (spec §5.2)', () => {
   it('scales tower damage by TOWER_STD and adds TOWER_RANGE', () => {
     const t5 = at(setupOf([[6, bld(1, 'neutral_archer_tower', 5)]]), 6).attack!;
     expect(t5.dmg).toBeCloseTo(7 * 2.4, 9);
-    expect(t5.range).toBe(88 + 16);
+    expect(t5.range).toBe(88 + 24); // test card keeps 88; TOWER_RANGE L5 is +24
     const t1 = at(setupOf([[6, bld(1, 'neutral_archer_tower', 1)]]), 6).attack!;
     expect(t1.dmg).toBe(7);
     expect(t1.range).toBe(88);
@@ -349,7 +349,7 @@ describe('structure effects map to the battle setup', () => {
     expect(l1.pulse).toEqual({ everyTicks: 40, radius: 48, dmg: 30, dmgType: 'physical', stunTicks: 10 });
     const l3 = setup2([[6, bld(1, 'stone_heart', 3)]]).structures[0]!;
     expect(l3.pulse!.dmg).toBeCloseTo(30 * 1.7, 9);
-    expect(l3.pulse!.radius).toBe(48 + 8);
+    expect(l3.pulse!.radius).toBe(48 + 16); // test card keeps 48; PULSE_RADIUS_BONUS L3 is +16
     expect(l3.hp).toBe(900); // the card's own HP table
   });
 

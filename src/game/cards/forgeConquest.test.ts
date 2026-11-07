@@ -3,7 +3,7 @@ import { CONE } from '../../data/battle';
 import { TOWER_RANGE, TOWER_STD } from '../../data/scaling';
 import type { CardId, Level } from '../../data/types';
 import { stepBattle } from '../battle/step';
-import { TEAM_FOE, addUnit, createBattle } from '../battle/world';
+import { TEAM_FOE, addUnit, createBattle, structureFoot } from '../battle/world';
 import { buildBattleSetup } from '../run/battleSetup';
 import { applyCommand } from '../run/commands';
 import { yearIncome } from '../run/income';
@@ -59,13 +59,13 @@ describe('the nine Forge King cards (spec 6.8)', () => {
   });
 
   describe('forge_flame_tower', () => {
-    it('breathes 4 fire over a 40 px 45-degree cone every 4 ticks with a 1/s, 20 tick burn', () => {
+    it('breathes 4 fire over a 60 px 45-degree cone every 4 ticks with a 1/s, 20 tick burn', () => {
       for (const level of [1, 5] as Level[]) {
         const a = at(withBuilding(runState(), 6, 'forge_flame_tower', level), 6).attack!;
         expect(a.dmg).toBeCloseTo(4 * TOWER_STD[level - 1]!);
         expect([a.dmgType, a.interval, a.projectileSpeed]).toEqual(['fire', 4, 0]);
-        expect(a.range).toBe(40 + TOWER_RANGE[level - 1]!);
-        expect(a.cone).toEqual({ range: 40, halfAngleCos: CONE.cos45 });
+        expect(a.range).toBe(60 + TOWER_RANGE[level - 1]!); // 40 × 1,5
+        expect(a.cone).toEqual({ range: 60, halfAngleCos: CONE.cos45 });
         expect(a.onHit).toEqual([{ type: 'burn', dps: 1, ticks: 20 }]);
       }
     });
@@ -73,8 +73,9 @@ describe('the nine Forge King cards (spec 6.8)', () => {
     it('sets foes in the cone alight, keyed on the tower uid', () => {
       const w = createBattle(setupOf(withBuilding(runState(), 6, 'forge_flame_tower', 1)));
       const still = unitStats({ hp: 2000, speed: 0, dmg: 0, interval: 0 });
-      const a = addUnit(w, still, TEAM_FOE, 130, 160, 130, 160, -1);
-      const b = addUnit(w, still, TEAM_FOE, 130, 168, 130, 168, -1);
+      const t = structureFoot(6);
+      const a = addUnit(w, still, TEAM_FOE, t.x - 30, t.y, t.x - 30, t.y, -1);
+      const b = addUnit(w, still, TEAM_FOE, t.x - 30, t.y + 8, t.x - 30, t.y + 8, -1);
       for (let i = 0; i < 12; i++) stepBattle(w, []);
       expect(w.hp[a]).toBeLessThan(2000);
       expect(w.hp[b]).toBeLessThan(2000);

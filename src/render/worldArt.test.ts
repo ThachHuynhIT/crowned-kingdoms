@@ -126,12 +126,83 @@ describe('buildings and plots', () => {
 });
 
 describe('field art', () => {
-  it('generates a 24x24 field with a clear board area', () => {
+  it('generates a 48x48 field (768 px of 16 px cells) with a clear board area', () => {
     const f = generateField(1);
-    expect(f.length).toBe(576);
+    expect(f.length).toBe(48 * 48);
     for (const v of f) expect(v).toBeLessThan(FIELD_TERRAINS.length);
-    for (let row = 7; row <= 16; row++)
-      for (let col = 7; col <= 16; col++) expect([0, 1]).toContain(f[row * 24 + col]);
+    for (let row = 14; row <= 33; row++)
+      for (let col = 14; col <= 33; col++) expect([0, 1]).toContain(f[row * 48 + col]);
+  });
+
+  it('keeps a single road: south of the board only, nothing north, east or west (spec 06/11/2026, G)', () => {
+    const PATH = FIELD_TERRAINS.indexOf('path');
+    for (let seed = 1; seed <= 12; seed++) {
+      const f = generateField(seed);
+      const at = (col: number, row: number): number => f[row * 48 + col]!;
+      // The road: the two middle columns from the board's south edge (row 34) to the field edge.
+      for (let row = 34; row < 48; row++) for (const col of [23, 24]) expect(at(col, row), `seed ${seed} ${col},${row}`).toBe(PATH);
+      // No path anywhere else: not north of the board, not in the west or east strips.
+      for (let row = 0; row < 48; row++)
+        for (let col = 0; col < 48; col++) {
+          if (row >= 34 && (col === 23 || col === 24)) continue;
+          expect(at(col, row), `seed ${seed} ${col},${row}`).not.toBe(PATH);
+        }
+    }
+  });
+
+  it('runs a river from the west edge to the south edge, never on the board or the road (P4)', () => {
+    const WATER = FIELD_TERRAINS.indexOf('water');
+    const PATH = FIELD_TERRAINS.indexOf('path');
+    for (let seed = 1; seed <= 12; seed++) {
+      const f = generateField(seed);
+      const at = (col: number, row: number): number => f[row * 48 + col]!;
+      // water reaches the west edge and the south edge
+      expect(Array.from({ length: 48 }, (_, r) => at(0, r)).includes(WATER), `seed ${seed} west`).toBe(true);
+      expect(Array.from({ length: 48 }, (_, c) => at(c, 47)).includes(WATER), `seed ${seed} south`).toBe(true);
+      // and the water cells connect them (4-neighbour flood from the west edge reaches the south edge)
+      const seen = new Set<number>();
+      const queue: number[] = [];
+      for (let r = 0; r < 48; r++) if (at(0, r) === WATER) queue.push(r * 48);
+      while (queue.length) {
+        const i = queue.pop()!;
+        if (seen.has(i)) continue;
+        seen.add(i);
+        const c = i % 48;
+        const r = (i - c) / 48;
+        for (const [dc, dr] of [[1, 0], [-1, 0], [0, 1], [0, -1]] as const) {
+          const nc = c + dc;
+          const nr = r + dr;
+          if (nc >= 0 && nc < 48 && nr >= 0 && nr < 48 && at(nc, nr) === WATER) queue.push(nr * 48 + nc);
+        }
+      }
+      expect([...seen].some((i) => i >= 47 * 48), `seed ${seed} connected`).toBe(true);
+      // never on the board, and the road stays a road
+      for (let r = 14; r <= 33; r++) for (let c = 14; c <= 33; c++) expect(at(c, r)).not.toBe(WATER);
+      for (let r = 34; r < 48; r++) for (const c of [23, 24]) expect(at(c, r)).toBe(PATH);
+    }
+  });
+
+  it('rings all water with an unbroken sand bank, diagonals too (river and sand join up, 2026-11-06)', () => {
+    const WATER = FIELD_TERRAINS.indexOf('water');
+    const SAND = FIELD_TERRAINS.indexOf('sand');
+    const PATH = FIELD_TERRAINS.indexOf('path');
+    for (let seed = 1; seed <= 12; seed++) {
+      const f = generateField(seed);
+      const at = (col: number, row: number): number => f[row * 48 + col]!;
+      for (let r = 0; r < 48; r++)
+        for (let c = 0; c < 48; c++) {
+          if (at(c, r) !== WATER) continue;
+          for (let dr = -1; dr <= 1; dr++)
+            for (let dc = -1; dc <= 1; dc++) {
+              const nr = r + dr;
+              const nc = c + dc;
+              if (nr < 0 || nc < 0 || nr >= 48 || nc >= 48) continue;
+              const t = at(nc, nr);
+              // only the road may cut a bank (it is drawn last)
+              expect([WATER, SAND, PATH], `seed ${seed} ${nc},${nr} next to water`).toContain(t);
+            }
+        }
+    }
   });
 
   it('is deterministic per seed and varies between seeds', () => {
@@ -159,9 +230,9 @@ describe('field art', () => {
     expect(same(t, paintGroundTile())).toBe(true);
   });
 
-  it('paints the whole field opaque at 384x384, deterministically', () => {
+  it('paints the whole field opaque at 768x768, deterministically', () => {
     const f = paintField(1);
-    expect([f.width, f.height]).toEqual([384, 384]);
+    expect([f.width, f.height]).toEqual([768, 768]);
     expect(foreign(f)).toEqual([]);
     for (let i = 3; i < f.data.length; i += 4) if (f.data[i] !== 255) throw new Error(`hole at ${i}`);
     expect(same(f, paintField(1))).toBe(true);

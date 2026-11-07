@@ -1,7 +1,6 @@
 /**
- * Nâng cấp RunState đã lưu lên phiên bản hiện tại (thuần, không sửa đầu vào). Chỉ có migrator cho
- * state 3 → 4 vì state 1 và 2 chưa từng có định dạng trên đĩa; phiên bản khác được trả nguyên để
- * `decodeRun` từ chối.
+ * Nâng cấp RunState đã lưu lên phiên bản hiện tại (thuần, không sửa đầu vào): state 3 → 4 → 5.
+ * State 1 và 2 chưa từng có định dạng trên đĩa; phiên bản khác được trả nguyên để `decodeRun` từ chối.
  */
 import { hashSeed } from '../../core/random';
 
@@ -45,7 +44,42 @@ const v3to4 = (raw: Loose): Loose => {
   };
 };
 
+/** Ô của Ngai tới state 4 (giữa bàn) và từ state 5 (giữa hàng sau cùng, spec 06/11/2026). */
+const OLD_THRONE_PLOT = 12;
+const NEW_THRONE_PLOT = 2;
+const moved = (plot: unknown): boolean => plot === OLD_THRONE_PLOT || plot === NEW_THRONE_PLOT;
+
+/** Hội đồng đang chờ có chọn ô 2 hoặc 12: bỏ phần chọn ô (người chơi chọn lại), giữ sắc lệnh đã chọn. */
+const clearMovedPlotChoice = (offer: unknown): unknown => {
+  if (!isObject(offer) || offer.kind !== 'council' || !isObject(offer.selection)) return offer;
+  const plots = offer.selection.plots;
+  if (!Array.isArray(plots) || !plots.some(moved)) return offer;
+  return { ...offer, selection: { ...offer.selection, plots: [] } };
+};
+
+/**
+ * State 4 → 5: Ngai chuyển từ ô giữa (12) lên ô giữa hàng sau cùng (2). Đổi chỗ công trình hai ô
+ * (công trình đang ở ô 2, nếu có, về ô 12) và mở cả hai, nên không mất công trình nào. Dữ liệu sai
+ * vẫn được đổi chỗ y nguyên để `decodeRun` kiểm và từ chối, không "chữa" thành ván hợp lệ.
+ */
+const v4to5 = (raw: Loose): Loose => {
+  const plots = Array.isArray(raw.plots) ? [...(raw.plots as unknown[])] : [];
+  const oldP = plots[OLD_THRONE_PLOT];
+  const newP = plots[NEW_THRONE_PLOT];
+  if (isObject(oldP) && isObject(newP)) {
+    plots[NEW_THRONE_PLOT] = { ...newP, unlocked: true, building: oldP.building ?? null };
+    plots[OLD_THRONE_PLOT] = { ...oldP, unlocked: true, building: newP.building ?? null };
+  }
+  const out: Loose = { ...raw, version: 5, plots };
+  if ('offers' in raw) out.offers = clearMovedPlotChoice(raw.offers);
+  if (Array.isArray(raw.pendingOffers)) out.pendingOffers = raw.pendingOffers.map(clearMovedPlotChoice);
+  return out;
+};
+
 export function migrateRunState(raw: unknown): unknown {
   if (!isObject(raw)) return raw;
-  return raw.version === 3 ? v3to4(raw) : raw;
+  let out = raw;
+  if (out.version === 3) out = v3to4(out);
+  if (out.version === 4) out = v4to5(out);
+  return out;
 }

@@ -1,3 +1,4 @@
+import { SPEC_MOVE_SCALE } from '../../data/boardGeometry';
 import { describe, expect, it } from 'vitest';
 import { TOWER_RANGE, TOWER_STD } from '../../data/scaling';
 import type { CardId, Level } from '../../data/types';
@@ -55,7 +56,7 @@ describe('the nine Nomad King cards (spec 6.11)', () => {
 
   it('the riders charge and the khan guard stuns on its charge', () => {
     expect(at(withBuilding(runState(), 6, 'nomad_riders', 1), 6).spawn!.stats.behaviours).toEqual([
-      { type: 'charge', dmgMult: 2, knockback: 8, stunTicks: 0 },
+      { type: 'charge', dmgMult: 2, knockback: 8 * SPEC_MOVE_SCALE, stunTicks: 0 },
     ]);
     expect(at(withBuilding(runState(), 6, 'nomad_khan_guard', 1), 6).spawn!.stats.behaviours).toEqual([
       { type: 'charge', dmgMult: 2, knockback: 0, stunTicks: 10 },
@@ -114,7 +115,7 @@ describe('the nine Nomad King cards (spec 6.11)', () => {
       s = withBuilding(s, 7, 'wheat_militia');
       s = withBuilding(s, 5, 'wheat_scarecrow'); // troop again: same kind
       s = withBuilding(s, 1, 'neutral_archer_tower');
-      s = withBuilding(s, 11, 'neutral_well'); // 12 is the Ngai, never a kind
+      s = withBuilding(s, 11, 'neutral_well'); // THRONE_PLOT (2) is the Ngai, never a kind
       const base = incomeOf(withBuilding(withBuilding(withBuilding(withBuilding(runState(), 7, 'wheat_militia'), 5, 'wheat_scarecrow'), 1, 'neutral_archer_tower'), 11, 'neutral_well'));
       expect(incomeOf(s) - base).toBe(1 + 3); // base gold + three different kinds
     });
@@ -144,9 +145,9 @@ describe('the nine Nomad King cards (spec 6.11)', () => {
   describe('nomad_watchtower', () => {
     it('shoots 7 physical at range 96 every 12 ticks, shell speed 9', () => {
       for (const level of [1, 5] as Level[]) {
-        const a = at(withBuilding(runState(), 2, 'nomad_watchtower', level), 2).attack!;
+        const a = at(withBuilding(runState(), 22, 'nomad_watchtower', level), 22).attack!;
         // a plot on the edge has 3 neighbours, none open and empty at the start except those unlocked
-        expect([a.range, a.interval, a.projectileSpeed]).toEqual([96 + TOWER_RANGE[level - 1]!, 12, 9]);
+        expect([a.range, a.interval, a.projectileSpeed]).toEqual([144 + TOWER_RANGE[level - 1]!, 12, 9 * SPEC_MOVE_SCALE]);
         expect(a.dmg).toBeGreaterThanOrEqual(7 * TOWER_STD[level - 1]!);
       }
     });

@@ -2,7 +2,7 @@ import Phaser from 'phaser';
 import type { EventBus } from '../core/events';
 import { PALETTE } from '../data/palette';
 import type { Edge } from '../game/battle/types';
-import { drainEvents, plotCenter } from '../game/battle/world';
+import { drainEvents, structureFoot } from '../game/battle/world';
 import { CONTENT } from '../game/cards/registry';
 import { createGameBus, type GameEvents } from '../game/events';
 import { RunController } from '../game/run/RunController';
@@ -22,7 +22,9 @@ import { DRAG_SLOP, type Size } from '../ui/hud/layout';
 import { lockedPlotTap, plotHighlights, plotIllegalReason } from '../ui/planning/targetHints';
 import { lockedPlotPrice } from '../ui/realm/calendarModel';
 import { buildingRanges, entityRanges } from '../ui/info/rangeModel';
-import { realmCamera, realmCameraMix } from '../ui/realm/realmLayout';
+import { unproject } from '../core/iso';
+import { panBy, pinchStep, resizeView, zoomAt, type CameraView } from '../ui/realm/cameraModel';
+import { realmCamera, realmCameraMix, type RealmPhase } from '../ui/realm/realmLayout';
 import { SCENES } from './keys';
 import { STORAGE_WARNING_KEY, WARNING_EVENT, getSession } from './sessionRegistry';
 import type { RunEndData } from './RunEndScene';
@@ -81,7 +83,18 @@ export class RealmScene extends Phaser.Scene {
   private awaitingAdvance = false;
   /** The battle HUD (and its summary with Tiếp tục) is the screen in charge until the planning HUD comes back. */
   private battleHudUp = false;
-  private readonly onResize = (): void => this.placeCamera();
+  private readonly onResize = (): void => this.resizeCamera();
+  /** The live camera (zoom step and scroll) and the screen size it was set for. */
+  private view: CameraView | null = null;
+  private viewScreen: Size = { w: 0, h: 0 };
+  /** A modal or the help view is open: the map takes no wheel, pan or pinch. */
+  private mapBlocked = false;
+  /** Pointers pressed on the map (id -> last screen point). */
+  private readonly pointers = new Map<number, { x: number; y: number }>();
+  /** Squared finger spread when the pinch (or its last zoom step) started; null = no pinch. */
+  private pinchSq: number | null = null;
+  /** The press became a map drag: its release is not a click. */
+  private panning = false;
   /** The running planning ↔ battle camera ease, if any. */
   private cameraEase: Phaser.Tweens.Tween | null = null;
   /** One renderer for every range ring; the chosen and the hovered thing it may follow. */
@@ -109,6 +122,11 @@ export class RealmScene extends Phaser.Scene {
     this.rangeSelected = null;
     this.rangeHover = null;
     this.down = null;
+    this.view = null;
+    this.mapBlocked = false;
+    this.pointers.clear();
+    this.pinchSq = null;
+    this.panning = false;
     const preview = import.meta.env.DEV && data !== undefined && 'preview' in data ? data.preview : null;
     const resume = data !== undefined && 'resume' in data ? data.resume : null;
     const fresh = data !== undefined && 'seed' in data ? data : { seed: 1, kingId: 'wheat' as KingId };
@@ -147,8 +165,14 @@ export class RealmScene extends Phaser.Scene {
       else this.rangeSelected = target;
     });
 
+    bus.on('ui:open-modal', () => (this.mapBlocked = true));
+    bus.on('ui:close-modal', () => (this.mapBlocked = false));
+    bus.on('ui:help', ({ open }) => (this.mapBlocked = open));
+
     this.input.on(Phaser.Input.Events.POINTER_DOWN, this.onPointerDown, this);
+    this.input.on(Phaser.Input.Events.POINTER_MOVE, this.onPointerMove, this);
     this.input.on(Phaser.Input.Events.POINTER_UP, this.onPointerUp, this);
+    this.input.on(Phaser.Input.Events.POINTER_WHEEL, this.onWheel, this);
     this.scale.on(Phaser.Scale.Events.RESIZE, this.onResize, this);
     this.events.once(Phaser.Scenes.Events.SHUTDOWN, this.teardown, this);
 
@@ -196,7 +220,7 @@ export class RealmScene extends Phaser.Scene {
     const state = this.controller.state;
     if (target.kind === 'plot') {
       const specs = buildingRanges(state, target.plot, CONTENT);
-      return specs.length === 0 ? range.hide() : range.show(plotCenter(target.plot), specs);
+      return specs.length === 0 ? range.hide() : range.show(structureFoot(target.plot), specs);
     }
     const world = this.controller.runner?.world;
     const specs = world ? entityRanges(world, target.id) : [];
@@ -230,6 +254,9 @@ export class RealmScene extends Phaser.Scene {
   }
 
   private showPlanning(state: RunState): void {
+    // Only a fresh view or the way back from a battle re-frames the camera; buying a plot, rerolling or
+    // discarding keeps the player's zoom and pan.
+    const reframe = this.inBattle || !this.view;
     if (this.inBattle) {
       // Back from a battle: drop its sprites, show the buildings again.
       this.inBattle = false;
@@ -246,7 +273,7 @@ export class RealmScene extends Phaser.Scene {
     this.board?.setEdgeArrows([...edges].sort());
     if (state.played) this.setPending(null);
     else this.refreshHighlights();
-    this.placeCamera();
+    if (reframe) this.placeCamera();
   }
 
   private onBattleStarted(): void {
@@ -391,18 +418,84 @@ export class RealmScene extends Phaser.Scene {
   // ---- input -----------------------------------------------------------------------------
 
   private onPointerDown(pointer: Phaser.Input.Pointer): void {
+    this.pointers.set(pointer.id, { x: pointer.x, y: pointer.y });
+    if (this.pointers.size === 2 && !this.mapBlocked) {
+      // A second finger on the map: a pinch, never a click or a pan.
+      this.pinchSq = this.spreadSq();
+      this.down = null;
+      this.panning = false;
+      return;
+    }
+    if (this.pointers.size > 2) return;
     this.down = { id: pointer.id, x: pointer.x, y: pointer.y };
+    this.panning = false;
+  }
+
+  private onPointerMove(pointer: Phaser.Input.Pointer): void {
+    const last = this.pointers.get(pointer.id);
+    if (!last || !pointer.isDown) return;
+    this.pointers.set(pointer.id, { x: pointer.x, y: pointer.y });
+    if (this.mapBlocked || !this.view) return;
+    if (this.pinchSq !== null) {
+      const now = this.spreadSq();
+      const step = pinchStep(this.pinchSq, now);
+      if (step !== 0) {
+        const [a, b] = [...this.pointers.values()];
+        const mid = { x: (a!.x + b!.x) / 2, y: (a!.y + b!.y) / 2 };
+        this.applyView(zoomAt(this.view, mid, this.view.zoom + step, this.screen(), this.phase()));
+        this.pinchSq = now;
+      }
+      return;
+    }
+    const down = this.down;
+    if (!down || down.id !== pointer.id) return;
+    if (!this.panning) {
+      const dx = pointer.x - down.x;
+      const dy = pointer.y - down.y;
+      if (dx * dx + dy * dy <= DRAG_SLOP * DRAG_SLOP) return;
+      // Pan at every zoom step, the overview too: on a phone the 640 px board is wider than the screen and the
+      // player drags to reach the side plots (clampView keeps the view on the map).
+      this.panning = true;
+    }
+    this.applyView(panBy(this.view, { x: pointer.x - last.x, y: pointer.y - last.y }, this.screen(), this.phase()));
+  }
+
+  /** Mouse wheel: one zoom step in (up) or out (down), keeping the world point under the cursor. */
+  private onWheel(pointer: Phaser.Input.Pointer, _over: unknown, _dx: number, dy: number): void {
+    if (this.mapBlocked || !this.view || dy === 0) return;
+    const next = this.view.zoom + (dy < 0 ? 1 : -1);
+    this.applyView(zoomAt(this.view, { x: pointer.x, y: pointer.y }, next, this.screen(), this.phase()));
+  }
+
+  /** Squared distance between the two pointers on the map. */
+  private spreadSq(): number {
+    const [a, b] = [...this.pointers.values()];
+    if (!a || !b) return 0;
+    return (a.x - b.x) * (a.x - b.x) + (a.y - b.y) * (a.y - b.y);
   }
 
   private onPointerUp(pointer: Phaser.Input.Pointer): void {
+    this.pointers.delete(pointer.id);
+    if (this.pinchSq !== null) {
+      // Lifting a finger ends the pinch; the other finger's release is not a click either.
+      if (this.pointers.size < 2) this.pinchSq = null;
+      this.down = null;
+      return;
+    }
     const down = this.down;
     if (!down || down.id !== pointer.id) return;
     this.down = null;
+    if (this.panning) {
+      this.panning = false;
+      return;
+    }
     if (this.inBattle || !this.board) return;
     const dx = pointer.x - down.x;
     const dy = pointer.y - down.y;
     if (dx * dx + dy * dy > DRAG_SLOP * DRAG_SLOP) return;
-    const world = this.cameras.main.getWorldPoint(pointer.x, pointer.y);
+    // The camera works in projected (isometric) space: back to the square world first.
+    const cam = this.cameras.main.getWorldPoint(pointer.x, pointer.y);
+    const world = unproject({ x: cam.x, y: cam.y });
     const plot = this.board.plotAt(world.x, world.y);
     const state = this.controller.state;
     const aimedId = this.pending ? state.hand[this.pending.handIndex] : undefined;
@@ -449,10 +542,10 @@ export class RealmScene extends Phaser.Scene {
     const cam = this.cameras.main;
     this.cameraEase?.stop();
     this.cameraEase = null;
-    const phase = this.inBattle ? 'battle' : 'planning';
+    const phase = this.phase();
     const target = realmCamera(screen, phase);
     if (!ease || realmCamera(screen, 'planning').zoom === target.zoom) {
-      cam.setZoom(target.zoom).setScroll(target.scroll.x, target.scroll.y);
+      this.applyView(target);
       return;
     }
     this.cameraEase = this.tweens.addCounter({
@@ -465,10 +558,35 @@ export class RealmScene extends Phaser.Scene {
         cam.setZoom(now.zoom).setScroll(now.scroll.x, now.scroll.y);
       },
       onComplete: () => {
-        cam.setZoom(target.zoom).setScroll(target.scroll.x, target.scroll.y);
+        this.applyView(target);
         this.cameraEase = null;
       },
     });
+  }
+
+  private screen(): Size {
+    return { w: this.scale.width, h: this.scale.height };
+  }
+
+  private phase(): RealmPhase {
+    return this.inBattle ? 'battle' : 'planning';
+  }
+
+  /** Set the main camera to `view` (a whole zoom) and tell the HUDs (`realm:view`). */
+  private applyView(view: CameraView): void {
+    this.view = view;
+    this.viewScreen = this.screen();
+    this.cameras.main.setZoom(view.zoom).setScroll(view.scroll.x, view.scroll.y);
+    this.bus.emit('realm:view', { zoom: view.zoom, scroll: { x: view.scroll.x, y: view.scroll.y } });
+  }
+
+  /** A resize keeps a zoomed view's centre; the overview stays the overview. */
+  private resizeCamera(): void {
+    if (!this.view || this.cameraEase) {
+      this.placeCamera();
+      return;
+    }
+    this.applyView(resizeView(this.view, this.viewScreen, this.screen(), this.phase()));
   }
 
   private teardown(): void {
@@ -479,7 +597,10 @@ export class RealmScene extends Phaser.Scene {
     this.game.events.off(WARNING_EVENT, this.onStorageWarning, this);
     this.scale.off(Phaser.Scale.Events.RESIZE, this.onResize, this);
     this.input.off(Phaser.Input.Events.POINTER_DOWN, this.onPointerDown, this);
+    this.input.off(Phaser.Input.Events.POINTER_MOVE, this.onPointerMove, this);
     this.input.off(Phaser.Input.Events.POINTER_UP, this.onPointerUp, this);
+    this.input.off(Phaser.Input.Events.POINTER_WHEEL, this.onWheel, this);
+    this.pointers.clear();
     this.scene.stop(SCENES.planningHud);
     this.scene.stop(SCENES.battleHud);
     this.controller.dispose();

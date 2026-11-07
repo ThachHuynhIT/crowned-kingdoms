@@ -2795,3 +2795,446 @@ assets:
     nativeSize: 1024x1024
     finalSize: 16x16
     notes: Wheat king badge (shield with a wheat sheaf) on the year calendar; magenta keyed out and box-reduced by docs/art-review/g3e/icons/make_assets.py (src/ui/realm/kingBadge.ts, 2026-11-06)
+  - id: building_wheat_reapers_iso
+    path: public/assets/art/ai-v1/iso/wheat_reapers.png
+    category: building
+    origin: custom
+    source: docs/art-review/iso-board/sample-building/source.png
+    creator: Project owner (OpenAI imagegen via Codex; prompt in docs/art-review/iso-board/sample-building/prompt.md)
+    license: project-owned
+    attribution: false
+    redistribute: true
+    evidence: docs/art-review/iso-board/
+    modified: true
+    nativeSize: 1024x1024
+    finalSize: 64x54
+    anchor: feet
+    notes: Đội Thợ Gặt (reapers barn), isometric 2:1 (approved 2026-11-06); black keyed and box-reduced at one shared scale (Reapers = 64 px wide) by docs/art-review/iso-board/make_assets.py; drawn at 0.5 x 2 (src/render/imageArt.ts IMAGE_BUILDINGS)
+  - id: building_wheat_militia_iso
+    path: public/assets/art/ai-v1/iso/wheat_militia.png
+    category: building
+    origin: custom
+    source: docs/art-review/iso-board/wheat/building_wheat_militia/source.png
+    creator: Project owner (OpenAI imagegen via Codex; prompt in docs/art-review/iso-board/wheat/building_wheat_militia/prompt.md)
+    license: project-owned
+    attribution: false
+    redistribute: true
+    evidence: docs/art-review/iso-board/
+    modified: true
+    nativeSize: 1024x1024
+    finalSize: 62x67
+    anchor: feet
+    notes: Dân Quân (militia guardhouse), isometric 2:1 (approved 2026-11-06); black keyed and box-reduced at one shared scale (Reapers = 64 px wide) by docs/art-review/iso-board/make_assets.py; drawn at 0.5 x 2 (src/render/imageArt.ts IMAGE_BUILDINGS)
+  - id: building_wheat_peasant_horde_iso
+    path: public/assets/art/ai-v1/iso/wheat_peasant_horde.png
+    category: building
+    origin: custom
+    source: docs/art-review/iso-board/wheat/building_wheat_peasant_horde/source.png
+    creator: Project owner (OpenAI imagegen via Codex; prompt in docs/art-review/iso-board/wheat/building_wheat_peasant_horde/prompt.md)
+    license: project-owned
+    attribution: false
+    redistribute: true
+    evidence: docs/art-review/iso-board/
+    modified: true
+    nativeSize: 1024x1024
+    finalSize: 64x62
+    anchor: feet
+    notes: Khởi Nghĩa Nông Dân (peasant uprising camp), isometric 2:1 (approved 2026-11-06); black keyed and box-reduced at one shared scale (Reapers = 64 px wide) by docs/art-review/iso-board/make_assets.py; drawn at 0.5 x 2 (src/render/imageArt.ts IMAGE_BUILDINGS)
+  - id: building_wheat_granary_iso
+    path: public/assets/art/ai-v1/iso/wheat_granary.png
+    category: building
+    origin: custom
+    source: docs/art-review/iso-board/wheat/building_wheat_granary/source.png
+    creator: Project owner (OpenAI imagegen via Codex; prompt in docs/art-review/iso-board/wheat/building_wheat_granary/prompt.md)
+    license: project-owned
+    attribution: false
+    redistribute: true
+    evidence: docs/art-review/iso-board/
+    modified: true
+    nativeSize: 1024x1024
+    finalSize: 63x63
+    anchor: feet
+    notes: Kho Thóc (granary), isometric 2:1 (approved 2026-11-06); black keyed and box-reduced at one shared scale (Reapers = 64 px wide) by docs/art-review/iso-board/make_assets.py; drawn at 0.5 x 2 (src/render/imageArt.ts IMAGE_BUILDINGS)
+  - id: building_wheat_windmill_iso
+    path: public/assets/art/ai-v1/iso/wheat_windmill.png
+    category: building
+    origin: custom
+    source: docs/art-review/iso-board/wheat/building_wheat_windmill/source.png
+    creator: Project owner (OpenAI imagegen via Codex; prompt in docs/art-review/iso-board/wheat/building_wheat_windmill/prompt.md)
+    license: project-owned
+    attribution: false
+    redistribute: true
+    evidence: docs/art-review/iso-board/
+    modified: true
+    nativeSize: 1024x1024
+    finalSize: 39x61
+    anchor: feet
+    notes: Cối Xay Gió (windmill), isometric 2:1 (approved 2026-11-06); black keyed and box-reduced at one shared scale (Reapers = 64 px wide) by docs/art-review/iso-board/make_assets.py; drawn at 0.5 x 2 (src/render/imageArt.ts IMAGE_BUILDINGS)
+  - id: building_wheat_scarecrow_iso
+    path: public/assets/art/ai-v1/iso/wheat_scarecrow.png
+    category: building
+    origin: custom
+    source: docs/art-review/iso-board/wheat/building_wheat_scarecrow/source.png
+    creator: Project owner (OpenAI imagegen via Codex; prompt in docs/art-review/iso-board/wheat/building_wheat_scarecrow/prompt.md)
+    license: project-owned
+    attribution: false
+    redistribute: true
+    evidence: docs/art-review/iso-board/
+    modified: true
+    nativeSize: 1024x1024
+    finalSize: 45x61
+    anchor: feet
+    notes: Bù Nhìn Gác (scarecrow watch tower), isometric 2:1 (approved 2026-11-06); black keyed and box-reduced at one shared scale (Reapers = 64 px wide) by docs/art-review/iso-board/make_assets.py; drawn at 0.5 x 2 (src/render/imageArt.ts IMAGE_BUILDINGS)
+  - id: building_wheat_field_iso
+    path: public/assets/art/ai-v1/iso/wheat_field.png
+    category: building
+    origin: custom
+    source: docs/art-review/iso-board/wheat/building_wheat_field/source.png
+    creator: Project owner (OpenAI imagegen via Codex; prompt in docs/art-review/iso-board/wheat/building_wheat_field/prompt.md)
+    license: project-owned
+    attribution: false
+    redistribute: true
+    evidence: docs/art-review/iso-board/
+    modified: true
+    nativeSize: 1024x1024
+    finalSize: 75x43
+    anchor: feet
+    notes: Ruộng Lúa (wheat field), isometric 2:1 (approved 2026-11-06); black keyed and box-reduced at one shared scale (Reapers = 64 px wide) by docs/art-review/iso-board/make_assets.py; drawn at 0.5 x 2 (src/render/imageArt.ts IMAGE_BUILDINGS)
+  - id: building_wheat_throne_iso
+    path: public/assets/art/ai-v1/iso/wheat_throne.png
+    category: building
+    origin: custom
+    source: docs/art-review/iso-board/wheat/building_wheat_throne/source.png
+    creator: Project owner (OpenAI imagegen via Codex; prompt in docs/art-review/iso-board/wheat/building_wheat_throne/prompt.md)
+    license: project-owned
+    attribution: false
+    redistribute: true
+    evidence: docs/art-review/iso-board/
+    modified: true
+    nativeSize: 1024x1024
+    finalSize: 54x71
+    anchor: feet
+    notes: Ngai Bó Lúa (Wheat throne keep), isometric 2:1 (approved 2026-11-06); black keyed and box-reduced at one shared scale (Reapers = 64 px wide) by docs/art-review/iso-board/make_assets.py; drawn at 0.5 x 2 (src/render/imageArt.ts IMAGE_BUILDINGS)
+  - id: plot_wheat_open_iso
+    path: public/assets/art/ai-v1/iso/plots/wheat_open.png
+    category: terrain
+    origin: custom
+    source: docs/art-review/iso-board/sample-plot/source.png
+    creator: Project owner (OpenAI imagegen via Codex; prompt in docs/art-review/iso-board/sample-plot/prompt.md)
+    license: project-owned
+    attribution: false
+    redistribute: true
+    evidence: docs/art-review/iso-board/
+    modified: true
+    nativeSize: 1024x1024
+    finalSize: 128x65
+    notes: Wheat king open (empty land) plot, isometric diamond (approved 2026-11-06); reduced to 128 px wide and padded so the diamond centre is the middle row by docs/art-review/iso-board/make_assets.py (src/render/imageArt.ts IMAGE_PLOTS)
+  - id: plot_wheat_built_iso
+    path: public/assets/art/ai-v1/iso/plots/wheat_built.png
+    category: terrain
+    origin: custom
+    source: docs/art-review/iso-board/sample-plot-built/source.png
+    creator: Project owner (OpenAI imagegen via Codex; prompt in docs/art-review/iso-board/sample-plot-built/prompt.md)
+    license: project-owned
+    attribution: false
+    redistribute: true
+    evidence: docs/art-review/iso-board/
+    modified: true
+    nativeSize: 1024x1024
+    finalSize: 128x67
+    notes: Wheat king built plot (stone-paved yard under a building), isometric diamond (approved 2026-11-06); reduced to 128 px wide and padded so the diamond centre is the middle row by docs/art-review/iso-board/make_assets.py (src/render/imageArt.ts IMAGE_PLOTS)
+  - id: plot_wheat_locked_iso
+    path: public/assets/art/ai-v1/iso/plots/wheat_locked.png
+    category: terrain
+    origin: custom
+    source: docs/art-review/iso-board/wheat/plot_wheat_locked/source.png
+    creator: Project owner (OpenAI imagegen via Codex; prompt in docs/art-review/iso-board/wheat/plot_wheat_locked/prompt.md)
+    license: project-owned
+    attribution: false
+    redistribute: true
+    evidence: docs/art-review/iso-board/
+    modified: true
+    nativeSize: 1024x1024
+    finalSize: 128x69
+    notes: Wheat king locked (wild meadow) plot, isometric diamond (approved 2026-11-06); reduced to 128 px wide and padded so the diamond centre is the middle row by docs/art-review/iso-board/make_assets.py (src/render/imageArt.ts IMAGE_PLOTS)
+  - id: plot_wheat_throne_iso
+    path: public/assets/art/ai-v1/iso/plots/wheat_throne.png
+    category: terrain
+    origin: custom
+    source: docs/art-review/iso-board/wheat/plot_wheat_throne/source.png
+    creator: Project owner (OpenAI imagegen via Codex; prompt in docs/art-review/iso-board/wheat/plot_wheat_throne/prompt.md)
+    license: project-owned
+    attribution: false
+    redistribute: true
+    evidence: docs/art-review/iso-board/
+    modified: true
+    nativeSize: 1024x1024
+    finalSize: 128x71
+    notes: Wheat king throne plot (royal stone dais), isometric diamond (approved 2026-11-06); reduced to 128 px wide and padded so the diamond centre is the middle row by docs/art-review/iso-board/make_assets.py (src/render/imageArt.ts IMAGE_PLOTS)
+  - id: terrain_wall_cliff_iso
+    path: public/assets/art/ai-v1/iso/wall_cliff.png
+    category: terrain
+    origin: custom
+    source: docs/art-review/iso-board/wheat/terrain_wall_iso_sample/source.png
+    creator: Project owner (OpenAI imagegen via Codex; prompt in docs/art-review/iso-board/wheat/terrain_wall_iso_sample/prompt.md)
+    license: project-owned
+    attribution: false
+    redistribute: true
+    evidence: docs/art-review/iso-board/
+    modified: true
+    nativeSize: 1536x1024
+    finalSize: 480x356
+    notes: Mountain cliff segment for the north edge, isometric (v2 approved 2026-11-06 with the slope to be fixed in production): every column shifted so the foot runs at exactly 2:1, then box-reduced to 480 px wide by docs/art-review/iso-board/make_assets.py; tiled along the wall line by src/render/IsoWallRenderer.ts
+  - id: terrain_water_iso
+    path: public/assets/art/ai-v1/iso/terrain/water.png
+    category: terrain
+    origin: custom
+    source: docs/art-review/iso-board/terrain/terrain_water/source.png
+    creator: Project owner (OpenAI imagegen via Codex; prompt in docs/art-review/iso-board/terrain/terrain_water/prompt.md)
+    license: project-owned
+    attribution: false
+    redistribute: true
+    evidence: docs/art-review/iso-board/terrain/
+    modified: true
+    nativeSize: 1024x1024
+    finalSize: 128x128
+    notes: River and pond water seamless ground texture, top-down (approved 2026-11-06); box-reduced 8x by docs/art-review/iso-board/terrain/make_textures.py; sampled at absolute art position by paintField (src/render/imageArt.ts GROUND_TEXTURE_FILES)
+  - id: terrain_sand_iso
+    path: public/assets/art/ai-v1/iso/terrain/sand.png
+    category: terrain
+    origin: custom
+    source: docs/art-review/iso-board/terrain/terrain_sand/source.png
+    creator: Project owner (OpenAI imagegen via Codex; prompt in docs/art-review/iso-board/terrain/terrain_sand/prompt.md)
+    license: project-owned
+    attribution: false
+    redistribute: true
+    evidence: docs/art-review/iso-board/terrain/
+    modified: true
+    nativeSize: 1024x1024
+    finalSize: 128x128
+    notes: Sand bank seamless ground texture, top-down (approved 2026-11-06); box-reduced 8x by docs/art-review/iso-board/terrain/make_textures.py; sampled at absolute art position by paintField (src/render/imageArt.ts GROUND_TEXTURE_FILES)
+  - id: decor_tree_pine_dark_iso
+    path: public/assets/art/ai-v1/iso/wilds/tree_pine_dark.png
+    category: doodad
+    origin: custom
+    source: docs/art-review/g3e/batch-06-wilds/source.png
+    creator: Project owner (OpenAI imagegen via Codex; prompt in docs/art-review/g3e/batch-06-wilds/prompt.md)
+    license: project-owned
+    attribution: false
+    redistribute: true
+    evidence: docs/art-review/iso-board/wilds/
+    modified: true
+    nativeSize: 1536x1024
+    finalSize: 77x102
+    anchor: feet
+    notes: Wild tall (outside the field) decoration (approved 2026-11-06); cut from the wilds sheet, black keyed and box-reduced 4x by docs/art-review/iso-board/wilds/make_wilds.py; placed by src/render/decorationModel.ts (DECOR_CATALOG)
+  - id: decor_tree_pine_light_iso
+    path: public/assets/art/ai-v1/iso/wilds/tree_pine_light.png
+    category: doodad
+    origin: custom
+    source: docs/art-review/g3e/batch-06-wilds/source.png
+    creator: Project owner (OpenAI imagegen via Codex; prompt in docs/art-review/g3e/batch-06-wilds/prompt.md)
+    license: project-owned
+    attribution: false
+    redistribute: true
+    evidence: docs/art-review/iso-board/wilds/
+    modified: true
+    nativeSize: 1536x1024
+    finalSize: 73x102
+    anchor: feet
+    notes: Wild tall (outside the field) decoration (approved 2026-11-06); cut from the wilds sheet, black keyed and box-reduced 4x by docs/art-review/iso-board/wilds/make_wilds.py; placed by src/render/decorationModel.ts (DECOR_CATALOG)
+  - id: decor_tree_oak_iso
+    path: public/assets/art/ai-v1/iso/wilds/tree_oak.png
+    category: doodad
+    origin: custom
+    source: docs/art-review/g3e/batch-06-wilds/source.png
+    creator: Project owner (OpenAI imagegen via Codex; prompt in docs/art-review/g3e/batch-06-wilds/prompt.md)
+    license: project-owned
+    attribution: false
+    redistribute: true
+    evidence: docs/art-review/iso-board/wilds/
+    modified: true
+    nativeSize: 1536x1024
+    finalSize: 94x100
+    anchor: feet
+    notes: Wild tall (outside the field) decoration (approved 2026-11-06); cut from the wilds sheet, black keyed and box-reduced 4x by docs/art-review/iso-board/wilds/make_wilds.py; placed by src/render/decorationModel.ts (DECOR_CATALOG)
+  - id: decor_tree_autumn_iso
+    path: public/assets/art/ai-v1/iso/wilds/tree_autumn.png
+    category: doodad
+    origin: custom
+    source: docs/art-review/g3e/batch-06-wilds/source.png
+    creator: Project owner (OpenAI imagegen via Codex; prompt in docs/art-review/g3e/batch-06-wilds/prompt.md)
+    license: project-owned
+    attribution: false
+    redistribute: true
+    evidence: docs/art-review/iso-board/wilds/
+    modified: true
+    nativeSize: 1536x1024
+    finalSize: 95x97
+    anchor: feet
+    notes: Wild tall (outside the field) decoration (approved 2026-11-06); cut from the wilds sheet, black keyed and box-reduced 4x by docs/art-review/iso-board/wilds/make_wilds.py; placed by src/render/decorationModel.ts (DECOR_CATALOG)
+  - id: decor_mountain_snow_iso
+    path: public/assets/art/ai-v1/iso/wilds/mountain_snow.png
+    category: doodad
+    origin: custom
+    source: docs/art-review/g3e/batch-06-wilds/source.png
+    creator: Project owner (OpenAI imagegen via Codex; prompt in docs/art-review/g3e/batch-06-wilds/prompt.md)
+    license: project-owned
+    attribution: false
+    redistribute: true
+    evidence: docs/art-review/iso-board/wilds/
+    modified: true
+    nativeSize: 1536x1024
+    finalSize: 121x88
+    anchor: feet
+    notes: Wild tall (outside the field) decoration (approved 2026-11-06); cut from the wilds sheet, black keyed and box-reduced 4x by docs/art-review/iso-board/wilds/make_wilds.py; placed by src/render/decorationModel.ts (DECOR_CATALOG)
+  - id: decor_cliff_mossy_iso
+    path: public/assets/art/ai-v1/iso/wilds/cliff_mossy.png
+    category: doodad
+    origin: custom
+    source: docs/art-review/g3e/batch-06-wilds/source.png
+    creator: Project owner (OpenAI imagegen via Codex; prompt in docs/art-review/g3e/batch-06-wilds/prompt.md)
+    license: project-owned
+    attribution: false
+    redistribute: true
+    evidence: docs/art-review/iso-board/wilds/
+    modified: true
+    nativeSize: 1536x1024
+    finalSize: 108x86
+    anchor: feet
+    notes: Wild tall (outside the field) decoration (approved 2026-11-06); cut from the wilds sheet, black keyed and box-reduced 4x by docs/art-review/iso-board/wilds/make_wilds.py; placed by src/render/decorationModel.ts (DECOR_CATALOG)
+  - id: decor_boulders_big_iso
+    path: public/assets/art/ai-v1/iso/wilds/boulders_big.png
+    category: doodad
+    origin: custom
+    source: docs/art-review/g3e/batch-06-wilds/source.png
+    creator: Project owner (OpenAI imagegen via Codex; prompt in docs/art-review/g3e/batch-06-wilds/prompt.md)
+    license: project-owned
+    attribution: false
+    redistribute: true
+    evidence: docs/art-review/iso-board/wilds/
+    modified: true
+    nativeSize: 1536x1024
+    finalSize: 129x84
+    anchor: feet
+    notes: Wild tall (outside the field) decoration (approved 2026-11-06); cut from the wilds sheet, black keyed and box-reduced 4x by docs/art-review/iso-board/wilds/make_wilds.py; placed by src/render/decorationModel.ts (DECOR_CATALOG)
+  - id: decor_bush_green_iso
+    path: public/assets/art/ai-v1/iso/wilds/bush_green.png
+    category: doodad
+    origin: custom
+    source: docs/art-review/g3e/batch-06-wilds/source.png
+    creator: Project owner (OpenAI imagegen via Codex; prompt in docs/art-review/g3e/batch-06-wilds/prompt.md)
+    license: project-owned
+    attribution: false
+    redistribute: true
+    evidence: docs/art-review/iso-board/wilds/
+    modified: true
+    nativeSize: 1536x1024
+    finalSize: 41x31
+    anchor: feet
+    notes: Wild low (inside the field) decoration (approved 2026-11-06); cut from the wilds sheet, black keyed and box-reduced 4x by docs/art-review/iso-board/wilds/make_wilds.py; placed by src/render/decorationModel.ts (DECOR_CATALOG)
+  - id: decor_bush_berry_iso
+    path: public/assets/art/ai-v1/iso/wilds/bush_berry.png
+    category: doodad
+    origin: custom
+    source: docs/art-review/g3e/batch-06-wilds/source.png
+    creator: Project owner (OpenAI imagegen via Codex; prompt in docs/art-review/g3e/batch-06-wilds/prompt.md)
+    license: project-owned
+    attribution: false
+    redistribute: true
+    evidence: docs/art-review/iso-board/wilds/
+    modified: true
+    nativeSize: 1536x1024
+    finalSize: 41x30
+    anchor: feet
+    notes: Wild low (inside the field) decoration (approved 2026-11-06); cut from the wilds sheet, black keyed and box-reduced 4x by docs/art-review/iso-board/wilds/make_wilds.py; placed by src/render/decorationModel.ts (DECOR_CATALOG)
+  - id: decor_bush_dry_iso
+    path: public/assets/art/ai-v1/iso/wilds/bush_dry.png
+    category: doodad
+    origin: custom
+    source: docs/art-review/g3e/batch-06-wilds/source.png
+    creator: Project owner (OpenAI imagegen via Codex; prompt in docs/art-review/g3e/batch-06-wilds/prompt.md)
+    license: project-owned
+    attribution: false
+    redistribute: true
+    evidence: docs/art-review/iso-board/wilds/
+    modified: true
+    nativeSize: 1536x1024
+    finalSize: 40x34
+    anchor: feet
+    notes: Wild low (inside the field) decoration (approved 2026-11-06); cut from the wilds sheet, black keyed and box-reduced 4x by docs/art-review/iso-board/wilds/make_wilds.py; placed by src/render/decorationModel.ts (DECOR_CATALOG)
+  - id: decor_rock_large_iso
+    path: public/assets/art/ai-v1/iso/wilds/rock_large.png
+    category: doodad
+    origin: custom
+    source: docs/art-review/g3e/batch-06-wilds/source.png
+    creator: Project owner (OpenAI imagegen via Codex; prompt in docs/art-review/g3e/batch-06-wilds/prompt.md)
+    license: project-owned
+    attribution: false
+    redistribute: true
+    evidence: docs/art-review/iso-board/wilds/
+    modified: true
+    nativeSize: 1536x1024
+    finalSize: 52x34
+    anchor: feet
+    notes: Wild low (inside the field) decoration (approved 2026-11-06); cut from the wilds sheet, black keyed and box-reduced 4x by docs/art-review/iso-board/wilds/make_wilds.py; placed by src/render/decorationModel.ts (DECOR_CATALOG)
+  - id: decor_rock_medium_iso
+    path: public/assets/art/ai-v1/iso/wilds/rock_medium.png
+    category: doodad
+    origin: custom
+    source: docs/art-review/g3e/batch-06-wilds/source.png
+    creator: Project owner (OpenAI imagegen via Codex; prompt in docs/art-review/g3e/batch-06-wilds/prompt.md)
+    license: project-owned
+    attribution: false
+    redistribute: true
+    evidence: docs/art-review/iso-board/wilds/
+    modified: true
+    nativeSize: 1536x1024
+    finalSize: 36x25
+    anchor: feet
+    notes: Wild low (inside the field) decoration (approved 2026-11-06); cut from the wilds sheet, black keyed and box-reduced 4x by docs/art-review/iso-board/wilds/make_wilds.py; placed by src/render/decorationModel.ts (DECOR_CATALOG)
+  - id: decor_rock_small_iso
+    path: public/assets/art/ai-v1/iso/wilds/rock_small.png
+    category: doodad
+    origin: custom
+    source: docs/art-review/g3e/batch-06-wilds/source.png
+    creator: Project owner (OpenAI imagegen via Codex; prompt in docs/art-review/g3e/batch-06-wilds/prompt.md)
+    license: project-owned
+    attribution: false
+    redistribute: true
+    evidence: docs/art-review/iso-board/wilds/
+    modified: true
+    nativeSize: 1536x1024
+    finalSize: 29x20
+    anchor: feet
+    notes: Wild low (inside the field) decoration (approved 2026-11-06); cut from the wilds sheet, black keyed and box-reduced 4x by docs/art-review/iso-board/wilds/make_wilds.py; placed by src/render/decorationModel.ts (DECOR_CATALOG)
+  - id: decor_stump_iso
+    path: public/assets/art/ai-v1/iso/wilds/stump.png
+    category: doodad
+    origin: custom
+    source: docs/art-review/g3e/batch-06-wilds/source.png
+    creator: Project owner (OpenAI imagegen via Codex; prompt in docs/art-review/g3e/batch-06-wilds/prompt.md)
+    license: project-owned
+    attribution: false
+    redistribute: true
+    evidence: docs/art-review/iso-board/wilds/
+    modified: true
+    nativeSize: 1536x1024
+    finalSize: 41x29
+    anchor: feet
+    notes: Wild low (inside the field) decoration (approved 2026-11-06); cut from the wilds sheet, black keyed and box-reduced 4x by docs/art-review/iso-board/wilds/make_wilds.py; placed by src/render/decorationModel.ts (DECOR_CATALOG)
+  - id: decor_log_iso
+    path: public/assets/art/ai-v1/iso/wilds/log.png
+    category: doodad
+    origin: custom
+    source: docs/art-review/g3e/batch-06-wilds/source.png
+    creator: Project owner (OpenAI imagegen via Codex; prompt in docs/art-review/g3e/batch-06-wilds/prompt.md)
+    license: project-owned
+    attribution: false
+    redistribute: true
+    evidence: docs/art-review/iso-board/wilds/
+    modified: true
+    nativeSize: 1536x1024
+    finalSize: 64x32
+    anchor: feet
+    notes: Wild low (inside the field) decoration (approved 2026-11-06); cut from the wilds sheet, black keyed and box-reduced 4x by docs/art-review/iso-board/wilds/make_wilds.py; placed by src/render/decorationModel.ts (DECOR_CATALOG)

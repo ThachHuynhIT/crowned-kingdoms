@@ -6,7 +6,10 @@ export const TOWER_STD: PerLevel = [1, 1.35, 1.7, 2.05, 2.4]; // DMG tháp / đ�
 export const STRUCT_STD: PerLevel = [1, 1.25, 1.5, 1.75, 2]; // máu công trình
 export const THRONE_STD: PerLevel = [1, 1.25, 1.5, 1.75, 2]; // HP và DMG của Ngai
 /** Cộng vào tầm tháp / bán kính pulse (px) theo cấp. */
-export const TOWER_RANGE: PerLevel = [0, 4, 8, 12, 16];
+/** +tầm đạn của tháp theo cấp (world px): +50% so với ô 32 (spec 06/11/2026). */
+export const TOWER_RANGE: PerLevel = [0, 6, 12, 18, 24];
+/** +bán kính xung (pulse) của tháp theo cấp (world px): giữ số ô cũ, ×2 px. */
+export const PULSE_RADIUS_BONUS: PerLevel = [0, 8, 16, 24, 32];
 
 /** Giá trị của hồ sơ ở cấp `level`. */
 export const levelMult = (profile: PerLevel, level: Level): number => profile[level - 1]!;

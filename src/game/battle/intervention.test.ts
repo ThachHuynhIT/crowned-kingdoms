@@ -16,10 +16,12 @@ import {
   createBattle,
   drainEvents,
   spawnWave,
+  structureFoot,
   type BattleWorld,
 } from './world';
 
-const at = (w: BattleWorld, tick: number, x = 192, y = 100): BattleInput => {
+/** Default drop point: mid-field, well south of the north wall (so it is never clamped). */
+const at = (w: BattleWorld, tick: number, x = BATTLE.field / 2, y = 300): BattleInput => {
   w.tick = tick;
   return { tick, x, y };
 };
@@ -33,12 +35,12 @@ describe('tryIntervene', () => {
     expect(w.boulders).toEqual([]);
     drainEvents(w);
 
-    expect(tryIntervene(w, at(w, 30, 150, 160))).toBe(true);
-    expect(w.inputs).toEqual([{ tick: 30, x: 150, y: 160 }]);
+    expect(tryIntervene(w, at(w, 30, 150, 360))).toBe(true);
+    expect(w.inputs).toEqual([{ tick: 30, x: 150, y: 360 }]);
     expect(w.interventionsUsed).toBe(1);
     expect(w.readyTick).toBe(30 + INTERVENTION.cooldownTicks);
-    expect(w.boulders).toEqual([{ x: 150, y: 160, dropTick: 30, impactTick: 36 }]);
-    expect(drainEvents(w)).toEqual([{ type: 'boulder', phase: 'drop', x: 150, y: 160 }]);
+    expect(w.boulders).toEqual([{ x: 150, y: 360, dropTick: 30, impactTick: 36 }]);
+    expect(drainEvents(w)).toEqual([{ type: 'boulder', phase: 'drop', x: 150, y: 360 }]);
   });
 
   it('cools down 150 ticks from the drop', () => {
@@ -54,10 +56,10 @@ describe('tryIntervene', () => {
   });
 
   it.each([
-    ['x NaN', Number.NaN, 100],
+    ['x NaN', Number.NaN, 300],
     ['y −1', 100, -1],
-    ['x 385', 385, 100],
-    ['x Infinity', Number.POSITIVE_INFINITY, 100],
+    ['x field + 1', BATTLE.field + 1, 300],
+    ['x Infinity', Number.POSITIVE_INFINITY, 300],
   ])('rejects an invalid point (%s)', (_name, x, y) => {
     const w = createBattle(battleSetup());
     w.tick = 30;
@@ -67,7 +69,7 @@ describe('tryIntervene', () => {
     expect(w.readyTick).toBe(INTERVENTION.firstReadyTick);
   });
 
-  it('accepts the field corners 0 and 384', () => {
+  it('accepts the field corners 0 and field', () => {
     const w = createBattle(battleSetup());
     expect(tryIntervene(w, at(w, 30, 0, BATTLE.field))).toBe(true);
   });
@@ -75,19 +77,21 @@ describe('tryIntervene', () => {
   it('rejects an input whose tick is not the current tick', () => {
     const w = createBattle(battleSetup());
     w.tick = 40;
-    expect(tryIntervene(w, { tick: 39, x: 100, y: 100 })).toBe(false);
-    expect(tryIntervene(w, { tick: 41, x: 100, y: 100 })).toBe(false);
+    expect(tryIntervene(w, { tick: 39, x: 100, y: 300 })).toBe(false);
+    expect(tryIntervene(w, { tick: 41, x: 100, y: 300 })).toBe(false);
     expect(w.inputs).toEqual([]);
   });
 });
 
 /**
- * Ô 0 (tâm 128,128) có công trình; tảng đá rơi ở (128,148): công trình cách 20 px (trong 24).
- * Địch A cách tâm 18 px (trong), địch B cách 30 px (ngoài), lính phe mình cách 10 px (trong).
+ * Ô 0 có công trình; tảng đá rơi 40 px ngay nam chân công trình (trong bán kính 48).
+ * Địch A cách tâm 36 px (trong), địch B cách 60 px (ngoài), lính phe mình cách 20 px (trong).
  * Mọi thứ đứng yên (speed 0, không đòn) và không chồng nhau, để chỉ tảng đá tác động.
  */
-const BX = 128;
-const BY = 148;
+const BX = structureFoot(0).x;
+const BY = structureFoot(0).y + 40;
+const DA = 36; // A: inside INTERVENTION.radius (48)
+const DB = 60; // B: outside it
 const A = 3; // id: Ngai 0, công trình 1, lính 2, địch 3, 4
 
 const scene = (year: number, foeHp = 1000, foeArmor = 0.5): BattleWorld => {
@@ -115,9 +119,9 @@ const scene = (year: number, foeHp = 1000, foeArmor = 0.5): BattleWorld => {
     w.x[id] = x;
     w.y[id] = y;
   };
-  put(2, BX, BY + 10);
-  put(A, BX + 18, BY);
-  put(4, BX - 30, BY);
+  put(2, BX, BY + 20);
+  put(A, BX + DA, BY);
+  put(4, BX - DB, BY);
   drainEvents(w);
   return w;
 };
@@ -156,7 +160,7 @@ describe('boulder impact', () => {
     expect(Array.from(w.hp.subarray(0, w.count))).toEqual(hp0);
     dropAndRun(w, 36);
     expect(w.hp[A]).toBe(1000 - 40);
-    expect(w.hp[4]).toBe(1000); // ngoài 24 px
+    expect(w.hp[4]).toBe(1000); // ngoài bán kính
     expect(w.hp[2]).toBe(hp0[2]); // lính phe mình
     expect(w.hp[1]).toBe(hp0[1]); // công trình
     expect(w.hp[0]).toBe(hp0[0]); // Ngai
@@ -168,20 +172,20 @@ describe('boulder impact', () => {
     expect(w.hp[A]).toBe(1000 - 80);
   });
 
-  it('knocks foes 12 px away from the centre over 3 ticks; allies stay put', () => {
+  it('knocks foes INTERVENTION.knockback (24) px away from the centre over 3 ticks; allies stay put', () => {
     const w = scene(1);
     dropAndRun(w, 35);
-    expect([w.x[A], w.y[A]]).toEqual([BX + 18, BY]);
+    expect([w.x[A], w.y[A]]).toEqual([BX + DA, BY]);
     dropAndRun(w, 36);
-    expect(w.x[A]).toBeCloseTo(BX + 18 + 4, 10);
+    expect(w.x[A]).toBeCloseTo(BX + DA + INTERVENTION.knockback / BATTLE.knockbackTicks, 10);
     dropAndRun(w, 38);
-    expect(w.x[A]).toBeCloseTo(BX + 18 + INTERVENTION.knockback, 10);
+    expect(w.x[A]).toBeCloseTo(BX + DA + INTERVENTION.knockback, 10);
     expect(w.y[A]).toBeCloseTo(BY, 10);
     expect(w.kbTicks[A]).toBe(0);
     dropAndRun(w, 40);
-    expect(w.x[A]).toBeCloseTo(BX + 18 + INTERVENTION.knockback, 10);
-    expect([w.x[2], w.y[2]]).toEqual([BX, BY + 10]);
-    expect([w.x[4], w.y[4]]).toEqual([BX - 30, BY]);
+    expect(w.x[A]).toBeCloseTo(BX + DA + INTERVENTION.knockback, 10);
+    expect([w.x[2], w.y[2]]).toEqual([BX, BY + 20]);
+    expect([w.x[4], w.y[4]]).toEqual([BX - DB, BY]);
   });
 
   it('counts foes killed by the boulder in kills (not in killsBySource)', () => {
@@ -244,16 +248,16 @@ describe('pickAutoTarget', () => {
 
   it('breaks ties by the lowest enemy id', () => {
     const w = worldWithFoes([
-      [100, 100],
-      [105, 100],
-      [300, 300],
-      [305, 300],
+      [100, 300],
+      [105, 300],
+      [500, 500],
+      [505, 500],
     ]);
-    expect(pickAutoTarget(w)).toEqual({ x: 100, y: 100 });
+    expect(pickAutoTarget(w)).toEqual({ x: 100, y: 300 });
   });
 
   it('returns null when no foe is alive', () => {
-    const w = worldWithFoes([[100, 100]]);
+    const w = worldWithFoes([[100, 300]]);
     w.alive[1] = 0;
     expect(pickAutoTarget(w)).toBeNull();
   });
@@ -264,27 +268,30 @@ describe('pickAutoTarget', () => {
   });
 
   it('clamps the aim point into the playable area (x in the field, y down to the deepest southern rank)', () => {
-    const w = worldWithFoes([[-20, 500]]);
+    const w = worldWithFoes([[-20, BATTLE.field + 2 * BATTLE.fieldClampMargin]]);
+    expect(w.maxY).toBe(BATTLE.field + BATTLE.fieldClampMargin);
     expect(pickAutoTarget(w)).toEqual({ x: 0, y: w.maxY });
   });
 
   it('uses world.boulderRadius for both the cluster count and the blast', () => {
+    // 70 px apart: outside the default radius (INTERVENTION.radius 48), inside a radius of 80
     const pts: [number, number][] = [
-      [100, 100],
-      [135, 100],
+      [100, 300],
+      [170, 300],
     ];
     const narrow = worldWithFoes(pts);
-    expect(pickAutoTarget(narrow)).toEqual({ x: 100, y: 100 });
-    const chain: [number, number][] = [...pts, [170, 100]];
-    expect(pickAutoTarget(worldWithFoes(chain))).toEqual({ x: 100, y: 100 }); // default radius 24: all tie at 1
+    expect(narrow.boulderRadius).toBe(INTERVENTION.radius);
+    expect(pickAutoTarget(narrow)).toEqual({ x: 100, y: 300 });
+    const chain: [number, number][] = [...pts, [240, 300]];
+    expect(pickAutoTarget(worldWithFoes(chain))).toEqual({ x: 100, y: 300 }); // default radius 48: all tie at 1
     const wide = worldWithFoes(chain);
-    wide.boulderRadius = 40;
-    expect(pickAutoTarget(wide)).toEqual({ x: 135, y: 100 }); // the middle foe has both others within 40
+    wide.boulderRadius = 80;
+    expect(pickAutoTarget(wide)).toEqual({ x: 170, y: 300 }); // the middle foe has both others within 80
 
-    const hit = worldWithFoes([[100, 100], [135, 100]], false);
-    hit.boulderRadius = 40;
+    const hit = worldWithFoes([[100, 300], [170, 300]], false);
+    hit.boulderRadius = 80;
     hit.tick = 30;
-    expect(tryIntervene(hit, { tick: 30, x: 100, y: 100 })).toBe(true);
+    expect(tryIntervene(hit, { tick: 30, x: 100, y: 300 })).toBe(true);
     hit.tick = 36;
     boulderPhase(hit);
     expect(hit.damageQueue.map((q) => q.victim)).toEqual([1, 2]);
@@ -293,7 +300,7 @@ describe('pickAutoTarget', () => {
 
 describe('setAutoFire', () => {
   it('toggles the flag, records the input and rejects a wrong tick or an ended battle', () => {
-    const w = worldWithFoes([[100, 100]], false);
+    const w = worldWithFoes([[100, 300]], false);
     expect(setAutoFire(w, { tick: 5, auto: true })).toBe(false);
     expect(w.autoFire).toBe(false);
     expect(setAutoFire(w, auto(w, 5, true))).toBe(true);
@@ -307,7 +314,7 @@ describe('setAutoFire', () => {
 
 describe('autoFirePhase', () => {
   it('does nothing while auto-fire is off', () => {
-    const w = worldWithFoes([[100, 100]], false);
+    const w = worldWithFoes([[100, 300]], false);
     w.tick = INTERVENTION.firstReadyTick;
     autoFirePhase(w);
     expect(w.boulders).toEqual([]);
@@ -315,7 +322,7 @@ describe('autoFirePhase', () => {
   });
 
   it('is not ready before firstReadyTick and fires exactly on it', () => {
-    const w = worldWithFoes([[100, 100]]);
+    const w = worldWithFoes([[100, 300]]);
     w.tick = INTERVENTION.firstReadyTick - 1;
     autoFirePhase(w);
     expect(w.interventionsUsed).toBe(0);
@@ -324,26 +331,26 @@ describe('autoFirePhase', () => {
     expect(w.interventionsUsed).toBe(1);
     expect(w.readyTick).toBe(INTERVENTION.firstReadyTick + INTERVENTION.cooldownTicks);
     expect(w.boulders).toEqual([
-      { x: 100, y: 100, dropTick: 30, impactTick: 30 + INTERVENTION.delayTicks },
+      { x: 100, y: 300, dropTick: 30, impactTick: 30 + INTERVENTION.delayTicks },
     ]);
-    expect(drainEvents(w)).toContainEqual({ type: 'boulder', phase: 'drop', x: 100, y: 100 });
+    expect(drainEvents(w)).toContainEqual({ type: 'boulder', phase: 'drop', x: 100, y: 300 });
     expect(w.inputs).toEqual([]); // automatic drops are re-derived on replay, never recorded
   });
 
   it('shares the cooldown with manual drops in both directions', () => {
-    const w = worldWithFoes([[100, 100]]);
-    expect(tryIntervene(w, at(w, 30, 100, 100))).toBe(true);
+    const w = worldWithFoes([[100, 300]]);
+    expect(tryIntervene(w, at(w, 30, 100, 300))).toBe(true);
     w.tick = 31;
     autoFirePhase(w);
     expect(w.interventionsUsed).toBe(1);
     w.tick = 30 + INTERVENTION.cooldownTicks;
     autoFirePhase(w);
     expect(w.interventionsUsed).toBe(2);
-    expect(tryIntervene(w, at(w, 30 + INTERVENTION.cooldownTicks + 1, 100, 100))).toBe(false);
+    expect(tryIntervene(w, at(w, 30 + INTERVENTION.cooldownTicks + 1, 100, 300))).toBe(false);
   });
 
   it('does not drop and does not spend the cooldown when no foe is alive', () => {
-    const w = worldWithFoes([[100, 100]]);
+    const w = worldWithFoes([[100, 300]]);
     w.alive[1] = 0;
     w.tick = 40;
     autoFirePhase(w);
@@ -354,7 +361,7 @@ describe('autoFirePhase', () => {
 
 describe('auto-fire inside stepBattle', () => {
   it('lets a manual drop on the ready tick win, then auto-fires after the cooldown', () => {
-    const w = worldWithFoes([[100, 100]]);
+    const w = worldWithFoes([[100, 300]]);
     const run = (until: number, inputs: readonly (BattleInput | AutoFireInput)[] = []): void => {
       while (w.tick < until) {
         const tick = w.tick;
@@ -365,16 +372,16 @@ describe('auto-fire inside stepBattle', () => {
         drainEvents(w);
       }
     };
-    run(31, [{ tick: 30, x: 100, y: 100 }]);
+    run(31, [{ tick: 30, x: 100, y: 300 }]);
     expect(w.interventionsUsed).toBe(1);
-    expect(w.inputs).toEqual([{ tick: 30, x: 100, y: 100 }]);
+    expect(w.inputs).toEqual([{ tick: 30, x: 100, y: 300 }]);
     run(30 + INTERVENTION.cooldownTicks + 1);
     expect(w.interventionsUsed).toBe(2);
     expect(w.inputs).toHaveLength(1);
   });
 
   it('records a mid-battle toggle in the result inputs', () => {
-    const w = worldWithFoes([[100, 100]], false);
+    const w = worldWithFoes([[100, 300]], false);
     while (w.tick < 20) stepBattle(w, []);
     stepBattle(w, [{ tick: 20, auto: true }]);
     expect(w.autoFire).toBe(true);
@@ -386,11 +393,11 @@ describe('decree-driven boulder (damage %, radius, cooldown from the setup)', ()
   it('hits for +50% (60 in year 1), covers the wider radius and cools down in 105 ticks', () => {
     const w = scene(1);
     w.boulderDmgPct = 50;
-    w.boulderRadius = 32;
+    w.boulderRadius = 64;
     w.cooldownTicks = 105;
     dropAndRun(w, 36);
     expect(w.hp[A]).toBe(1000 - 60);
-    expect(w.hp[4]).toBe(1000 - 60); // 30 px away: outside 24, inside 32
+    expect(w.hp[4]).toBe(1000 - 60); // DB = 60 px away: outside 48, inside 64
     expect(w.readyTick).toBe(30 + 105);
   });
 

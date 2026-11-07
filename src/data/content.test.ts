@@ -1,3 +1,4 @@
+import { SPEC_MOVE_SCALE } from './boardGeometry';
 import { describe, expect, it } from 'vitest';
 import { PALETTE } from './palette';
 import { NEUTRAL_CARDS, NEUTRAL_UNITS } from './neutral';
@@ -80,31 +81,31 @@ describe('G1 content integrity', () => {
     expect(WHEAT.throne.attack).toEqual({
       dmg: 8,
       type: 'physical',
-      range: 72,
+      range: 108, // 72 × 1,5 (spec 06/11/2026)
       interval: 10,
-      projectileSpeed: 8,
+      projectileSpeed: 8 * SPEC_MOVE_SCALE,
     });
   });
 
   it('matches unit stats', () => {
     const m = unit('militia');
     expect([m.hp, m.attack.dmg, m.attack.range, m.attack.interval, m.speed, m.radius, m.enemyCost]).toEqual([
-      32, 5, 2, 10, 1, 4, 0.8,
+      32, 5, 2, 10, 1 * SPEC_MOVE_SCALE, 4, 0.8,
     ]);
     const r = unit('reaper');
     expect([r.hp, r.attack.dmg, r.attack.cleave, r.attack.interval, r.speed, r.armor, r.enemyCost]).toEqual([
-      45, 9, 2, 12, 0.9, 0.05, 1.6,
+      45, 9, 2, 12, 0.9 * SPEC_MOVE_SCALE, 0.05, 1.6,
     ]);
     const f = unit('footman');
-    expect([f.hp, f.attack.dmg, f.speed, f.armor]).toEqual([45, 7, 0.9, 0.1]);
+    expect([f.hp, f.attack.dmg, f.speed, f.armor]).toEqual([45, 7, 0.9 * SPEC_MOVE_SCALE, 0.1]);
     const o = unit('ogre');
     expect([o.hp, o.attack.dmg, o.attack.range, o.attack.interval, o.speed, o.radius, o.armor]).toEqual([
-      180, 16, 4, 18, 0.6, 9, 0.2,
+      180, 16, 4, 18, 0.6 * SPEC_MOVE_SCALE, 9, 0.2,
     ]);
     expect(o.tags).toContain('siege');
     expect(unit('bandit').enemyCost).toBe(1);
-    expect(unit('bandit_archer').attack.projectileSpeed).toBe(7);
-    expect(unit('boar_rider').speed).toBe(1.5);
+    expect(unit('bandit_archer').attack.projectileSpeed).toBe(7 * SPEC_MOVE_SCALE);
+    expect(unit('boar_rider').speed).toBe(1.5 * SPEC_MOVE_SCALE);
   });
 
   it('gives units the right sprite sizes', () => {
@@ -152,9 +153,9 @@ describe('G1 content integrity', () => {
       type: 'tower',
       attack: {
         dmg: 6,
-        range: 72,
+        range: 108, // 72 × 1,5
         interval: 12,
-        projectileSpeed: 6,
+        projectileSpeed: 6 * SPEC_MOVE_SCALE,
         onHit: [{ type: 'slow', pct: 20, ticks: 20 }],
       },
     });
@@ -164,7 +165,7 @@ describe('G1 content integrity', () => {
     expect(at.effects[0]).toMatchObject({
       type: 'tower',
       targeting: 'closestToThrone',
-      attack: { dmg: 7, range: 88, interval: 12, projectileSpeed: 8 },
+      attack: { dmg: 7, range: 132, interval: 12, projectileSpeed: 8 * SPEC_MOVE_SCALE }, // 88 × 1,5
     });
 
     expect(card('neutral_clear_land')).toMatchObject({

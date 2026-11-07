@@ -7,6 +7,7 @@ import { BATTLE } from '../../data/battle';
 import { KIND_STRUCTURE, KIND_THRONE, type BattleWorld } from '../../game/battle/world';
 import type { Content } from '../../game/cards/registry';
 import { structureFor } from '../../game/run/battleSetup';
+import { THRONE_PLOT } from '../../game/run/board';
 import type { RunState } from '../../game/run/state';
 
 export interface RangeSpec {
@@ -15,8 +16,6 @@ export interface RangeSpec {
   readonly radius: number;
   readonly label: string;
 }
-
-const THRONE_PLOT = 12;
 
 const LABEL = {
   attack: 'Tầm bắn (tới mép mục tiêu)',

@@ -1,5 +1,6 @@
 /** Vua Đá Núi (spec §6.4): tháp, người đá trâu bò. */
 import { BATTLE } from '../battle';
+import { cells } from '../boardGeometry';
 import type { KingDef } from '../types';
 
 export const STONE: KingDef = {
@@ -19,7 +20,7 @@ export const STONE: KingDef = {
     textVi: 'Ngai của Vua Đá Núi: ném đá vào kẻ địch. Núi Che Chở: mọi tháp +{pct}% sát thương.',
     hp: 450,
     armor: 0.2,
-    attack: { dmg: 12, type: 'physical', range: 56, interval: 14, projectileSpeed: 6 },
+    attack: { dmg: 12, type: 'physical', range: cells(1.3125), interval: 14, projectileSpeed: 12 },
     passive: [
       {
         type: 'stat',
@@ -40,18 +41,18 @@ export const STONE: KingDef = {
       kind: 'tower',
       rarity: 'common',
       tags: [],
-      textVi: 'Ném {dmg} sát thương lan, tầm {range}, không bắn được địch trong 24 px.',
+      textVi: 'Ném {dmg} sát thương lan, tầm {range}, không bắn được địch trong 48 px.',
       effects: [
         {
           type: 'tower',
           attack: {
             dmg: 14,
             type: 'physical',
-            range: 96,
-            minRange: 24,
+            range: cells(2.25),
+            minRange: cells(0.75),
             interval: 25,
-            projectileSpeed: 5,
-            splash: 16,
+            projectileSpeed: 10,
+            splash: cells(0.5),
           },
           targeting: 'closestToThrone',
         },
@@ -136,7 +137,7 @@ export const STONE: KingDef = {
           attack: {
             dmg: 4,
             type: 'magic',
-            range: 64,
+            range: cells(1.5),
             interval: 3,
             onHit: [{ type: 'rampSameTarget', pctPerHit: 20, cap: 200 }],
           },
@@ -182,7 +183,7 @@ export const STONE: KingDef = {
         {
           type: 'pulse',
           everyTicks: 40,
-          radius: 48,
+          radius: cells(1.5),
           attack: {
             dmg: 30,
             type: 'physical',
@@ -208,7 +209,7 @@ export const STONE: KingDef = {
       nameVi: 'Người Đá',
       hp: 220,
       attack: { dmg: 14, type: 'physical', range: 3, interval: 15 },
-      speed: 0.6,
+      speed: 1.2,
       radius: 7,
       armor: 0.3,
       tags: ['melee', 'golem'],
@@ -220,7 +221,7 @@ export const STONE: KingDef = {
       nameVi: 'Thợ Mỏ',
       hp: 70,
       attack: { dmg: 8, type: 'physical', range: 2, interval: 12 },
-      speed: 0.8,
+      speed: 1.6,
       radius: 5,
       armor: 0.2,
       tags: ['melee', 'human'],
@@ -233,7 +234,7 @@ export const STONE: KingDef = {
       nameVi: 'Đá Vụn',
       hp: 40,
       attack: { dmg: 4, type: 'physical', range: 2, interval: 12 },
-      speed: 0.7,
+      speed: 1.4,
       radius: 4,
       armor: 0.2,
       tags: ['melee', 'golem', 'summon'],
@@ -244,8 +245,8 @@ export const STONE: KingDef = {
       id: 'slinger',
       nameVi: 'Lính Ném Đá',
       hp: 30,
-      attack: { dmg: 7, type: 'physical', range: 64, interval: 16, projectileSpeed: 6 },
-      speed: 0.8,
+      attack: { dmg: 7, type: 'physical', range: 64, interval: 16, projectileSpeed: 12 },
+      speed: 1.6,
       radius: 4,
       armor: 0.05,
       tags: ['ranged', 'human'],

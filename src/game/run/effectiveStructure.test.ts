@@ -4,17 +4,18 @@ import { CONTENT } from '../cards/registry';
 import { runState, withBuilding } from '../testing/fixtures';
 import { attackStats, buildBattleSetup, structureFor } from './battleSetup';
 import type { RunState } from './state';
+import { THRONE_PLOT } from './board';
 
-const THRONE = 12;
+const THRONE = THRONE_PLOT;
 const withDecree = (s: RunState, id: DecreeId): RunState => ({ ...s, decrees: [...s.decrees, id] });
 const tower = (level: 1 | 2 | 3 | 4 | 5 = 5): RunState =>
   withBuilding(runState(), 6, 'neutral_archer_tower', level);
 
 describe('shared effective structure stats', () => {
-  it('shared_ranges_and_edge_semantics: L5 tower is 88 + 16, the royal archers decree adds 12', () => {
-    expect(structureFor(tower(), 6, CONTENT).attack!.range).toBe(104);
+  it('shared_ranges_and_edge_semantics: L5 tower is 132 + 24, the royal archers decree adds 18', () => {
+    expect(structureFor(tower(), 6, CONTENT).attack!.range).toBe(156);
     const decreed = withDecree(tower(), 'decree_royal_archers' as DecreeId);
-    expect(structureFor(decreed, 6, CONTENT).attack!.range).toBe(116);
+    expect(structureFor(decreed, 6, CONTENT).attack!.range).toBe(174);
   });
 
   it('structureFor equals the structure of the same plot in buildBattleSetup, throne included', () => {
@@ -26,11 +27,11 @@ describe('shared effective structure stats', () => {
     expect(structureFor(s, THRONE, CONTENT)).toEqual(setup.throne);
   });
 
-  it('pulse_is_runtime_not_invented_buff: Mountain Heart L5 radius is 48 + 16 and ignores the range decree', () => {
+  it('pulse_is_runtime_not_invented_buff: Mountain Heart L5 radius is 96 + 32 and ignores the range decree', () => {
     const heart = withBuilding(runState(), 6, 'stone_mountain_heart', 5);
-    expect(structureFor(heart, 6, CONTENT).pulse!.radius).toBe(64);
+    expect(structureFor(heart, 6, CONTENT).pulse!.radius).toBe(128);
     const decreed = withDecree(heart, 'decree_royal_archers' as DecreeId);
-    expect(structureFor(decreed, 6, CONTENT).pulse!.radius).toBe(64);
+    expect(structureFor(decreed, 6, CONTENT).pulse!.radius).toBe(128);
   });
 
   it('attackStats applies a flat range bonus on top of the base range', () => {

@@ -8,6 +8,8 @@
  *   target) is never pushed by an enemy, so a crowd cannot shove a fighting unit away.
  * - A structure (`fixed`) never moves; it pushes a non-flying unit fully out of its radius.
  *   Flying units ignore structures. Two structures never push each other.
+ * - Pass-through (optional `passTeam`, spec 06/11/2026): a unit of that team is not pushed by a
+ *   structure of the same team, so our troops walk through our buildings; foes still are.
  * - Exactly coincident centres split along the fixed axis (1, 0), as the old code did.
  *
  * Deterministic: pushes are computed from the positions as given (a snapshot) and only
@@ -28,6 +30,8 @@ export interface SeparationBodies {
   readonly team?: ArrayLike<number>;
   /** 1 = in contact with its target: ignores pushes from enemy units. */
   readonly anchored?: ArrayLike<number>;
+  /** Units of this team pass through structures of the same team (needs `team`). */
+  readonly passTeam?: number;
 }
 
 /** Below this centre distance two bodies count as coincident. */
@@ -41,7 +45,7 @@ export const separationPush = (
   outY: Float64Array,
   crossMax: number = pushMax,
 ): void => {
-  const { count, x, y, radius, fixed, flying, team, anchored } = bodies;
+  const { count, x, y, radius, fixed, flying, team, anchored, passTeam } = bodies;
   outX.fill(0, 0, count);
   outY.fill(0, 0, count);
   for (let i = 0; i < count; i++) {
@@ -50,6 +54,7 @@ export const separationPush = (
       const fixedJ = fixed[j] === 1;
       if (fixedI && fixedJ) continue;
       if ((fixedI && flying[j] === 1) || (fixedJ && flying[i] === 1)) continue;
+      if ((fixedI || fixedJ) && passTeam !== undefined && team !== undefined && team[i] === passTeam && team[j] === passTeam) continue;
       const minDist = radius[i]! + radius[j]!;
       let dx = x[j]! - x[i]!;
       let dy = y[j]! - y[i]!;
