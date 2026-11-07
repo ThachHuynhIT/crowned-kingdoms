@@ -23,7 +23,7 @@ import { lockedPlotTap, plotHighlights, plotIllegalReason } from '../ui/planning
 import { lockedPlotPrice } from '../ui/realm/calendarModel';
 import { buildingRanges, entityRanges } from '../ui/info/rangeModel';
 import { unproject } from '../core/iso';
-import { overviewView, panBy, pinchStep, resizeView, zoomAt, type CameraView } from '../ui/realm/cameraModel';
+import { panBy, pinchStep, resizeView, zoomAt, type CameraView } from '../ui/realm/cameraModel';
 import { realmCamera, realmCameraMix, type RealmPhase } from '../ui/realm/realmLayout';
 import { SCENES } from './keys';
 import { STORAGE_WARNING_KEY, WARNING_EVENT, getSession } from './sessionRegistry';
@@ -254,6 +254,9 @@ export class RealmScene extends Phaser.Scene {
   }
 
   private showPlanning(state: RunState): void {
+    // Only a fresh view or the way back from a battle re-frames the camera; buying a plot, rerolling or
+    // discarding keeps the player's zoom and pan.
+    const reframe = this.inBattle || !this.view;
     if (this.inBattle) {
       // Back from a battle: drop its sprites, show the buildings again.
       this.inBattle = false;
@@ -270,7 +273,7 @@ export class RealmScene extends Phaser.Scene {
     this.board?.setEdgeArrows([...edges].sort());
     if (state.played) this.setPending(null);
     else this.refreshHighlights();
-    this.placeCamera();
+    if (reframe) this.placeCamera();
   }
 
   private onBattleStarted(): void {
@@ -450,7 +453,8 @@ export class RealmScene extends Phaser.Scene {
       const dx = pointer.x - down.x;
       const dy = pointer.y - down.y;
       if (dx * dx + dy * dy <= DRAG_SLOP * DRAG_SLOP) return;
-      if (this.view.zoom <= overviewView(this.screen(), this.phase()).zoom) return;
+      // Pan at every zoom step, the overview too: on a phone the 640 px board is wider than the screen and the
+      // player drags to reach the side plots (clampView keeps the view on the map).
       this.panning = true;
     }
     this.applyView(panBy(this.view, { x: pointer.x - last.x, y: pointer.y - last.y }, this.screen(), this.phase()));

@@ -18,7 +18,7 @@ Nhánh `iso-board-redesign`, PR #13 vào `develop` (chưa merge). Spec `docs/sup
 - Lính vẫn vẽ nhìn thẳng (chưa có art isometric); các vua khác ngoài Lúa Mì dùng ô chung được nắn thành hình thoi và art cũ.
 - Bộ art Lúa Mì góc 45° cũ không còn dùng nhưng vẫn nằm trong repo.
 - Lỗi đổi kích thước NineSlice trong `theme.ts` (ghi từ 06/11) chưa sửa, ngoài phạm vi PR này.
-- Trên điện thoại ở zoom 1, hai góc trái/phải của bàn bị cắt (bàn rộng 640 px); người chơi pan để xem.
+- Trên điện thoại ở zoom 1, hai góc trái/phải của bàn nằm ngoài màn hình (bàn rộng 640 px); người chơi kéo để xem (sửa sau review 07/11: kéo-pan chạy cả ở zoom 1, và mua ô/đổi bài/bỏ bài không còn đưa camera về chỗ cũ).
 
 # Bàn giao phiên làm việc — art, cảnh 45° và giao diện mới (cập nhật 29/10/2026)
 
