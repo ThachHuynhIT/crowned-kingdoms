@@ -44,6 +44,19 @@ export const IMAGE_UNITS: Readonly<Record<string, string>> = {
   bombardier: 'bombardier',
   shieldbearer: 'shieldbearer',
   iron_drake: 'iron_drake',
+  // Clock, Moon, Nomad and the neutral mercenary (2026-11-09, same pipeline and approval)
+  tin_soldier: 'tin_soldier',
+  spider: 'spider',
+  gear_gunner: 'gear_gunner',
+  colossus: 'colossus',
+  skeleton: 'skeleton',
+  wraith: 'wraith',
+  vampire: 'vampire',
+  moon_reaper: 'moon_reaper',
+  rider: 'rider',
+  horse_archer: 'horse_archer',
+  khan_guard: 'khan_guard',
+  mercenary: 'mercenary',
 };
 
 const POSE_INDEXES = [0, 1, 2, 3, 4, 5];

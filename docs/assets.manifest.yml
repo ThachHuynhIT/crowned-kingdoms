@@ -7630,3 +7630,2163 @@ assets:
     finalSize: 48x39
     anchor: feet
     notes: Forge iron_drake foe recolour, pose 5 (attack 1); reduced and outlined by docs/art-review/g3e/units/make_poses.py --export (approved 2026-11-09 by Claude under the owner's delegation); drawn at scale 0.5 (src/render/imageArt.ts)
+  - id: world_ai_v1_tin_soldier_0
+    path: public/assets/art/ai-v1/tin_soldier_0.png
+    category: unit
+    origin: custom
+    source: docs/art-review/g3e/units/tin_soldier/poses-source.png
+    creator: Project owner (OpenAI imagegen via Codex; prompt in docs/art-review/g3e/units/tin_soldier/poses-prompt.md)
+    license: project-owned
+    attribution: false
+    redistribute: true
+    evidence: docs/art-review/g3e/units/tin_soldier/poses/
+    modified: true
+    nativeSize: 1536x1024
+    finalSize: 36x26
+    anchor: feet
+    notes: Clock tin_soldier pose 0 (idle 0); reduced and outlined by docs/art-review/g3e/units/make_poses.py --export (approved 2026-11-09 by Claude under the owner's delegation); drawn at scale 0.5 (src/render/imageArt.ts)
+  - id: world_ai_v1_tin_soldier_1
+    path: public/assets/art/ai-v1/tin_soldier_1.png
+    category: unit
+    origin: custom
+    source: docs/art-review/g3e/units/tin_soldier/poses-source.png
+    creator: Project owner (OpenAI imagegen via Codex; prompt in docs/art-review/g3e/units/tin_soldier/poses-prompt.md)
+    license: project-owned
+    attribution: false
+    redistribute: true
+    evidence: docs/art-review/g3e/units/tin_soldier/poses/
+    modified: true
+    nativeSize: 1536x1024
+    finalSize: 36x26
+    anchor: feet
+    notes: Clock tin_soldier pose 1 (idle 1); reduced and outlined by docs/art-review/g3e/units/make_poses.py --export (approved 2026-11-09 by Claude under the owner's delegation); drawn at scale 0.5 (src/render/imageArt.ts)
+  - id: world_ai_v1_tin_soldier_2
+    path: public/assets/art/ai-v1/tin_soldier_2.png
+    category: unit
+    origin: custom
+    source: docs/art-review/g3e/units/tin_soldier/poses-source.png
+    creator: Project owner (OpenAI imagegen via Codex; prompt in docs/art-review/g3e/units/tin_soldier/poses-prompt.md)
+    license: project-owned
+    attribution: false
+    redistribute: true
+    evidence: docs/art-review/g3e/units/tin_soldier/poses/
+    modified: true
+    nativeSize: 1536x1024
+    finalSize: 36x26
+    anchor: feet
+    notes: Clock tin_soldier pose 2 (walk 0); reduced and outlined by docs/art-review/g3e/units/make_poses.py --export (approved 2026-11-09 by Claude under the owner's delegation); drawn at scale 0.5 (src/render/imageArt.ts)
+  - id: world_ai_v1_tin_soldier_3
+    path: public/assets/art/ai-v1/tin_soldier_3.png
+    category: unit
+    origin: custom
+    source: docs/art-review/g3e/units/tin_soldier/poses-source.png
+    creator: Project owner (OpenAI imagegen via Codex; prompt in docs/art-review/g3e/units/tin_soldier/poses-prompt.md)
+    license: project-owned
+    attribution: false
+    redistribute: true
+    evidence: docs/art-review/g3e/units/tin_soldier/poses/
+    modified: true
+    nativeSize: 1536x1024
+    finalSize: 36x26
+    anchor: feet
+    notes: Clock tin_soldier pose 3 (walk 1); reduced and outlined by docs/art-review/g3e/units/make_poses.py --export (approved 2026-11-09 by Claude under the owner's delegation); drawn at scale 0.5 (src/render/imageArt.ts)
+  - id: world_ai_v1_tin_soldier_4
+    path: public/assets/art/ai-v1/tin_soldier_4.png
+    category: unit
+    origin: custom
+    source: docs/art-review/g3e/units/tin_soldier/poses-source.png
+    creator: Project owner (OpenAI imagegen via Codex; prompt in docs/art-review/g3e/units/tin_soldier/poses-prompt.md)
+    license: project-owned
+    attribution: false
+    redistribute: true
+    evidence: docs/art-review/g3e/units/tin_soldier/poses/
+    modified: true
+    nativeSize: 1536x1024
+    finalSize: 36x26
+    anchor: feet
+    notes: Clock tin_soldier pose 4 (attack 0); reduced and outlined by docs/art-review/g3e/units/make_poses.py --export (approved 2026-11-09 by Claude under the owner's delegation); drawn at scale 0.5 (src/render/imageArt.ts)
+  - id: world_ai_v1_tin_soldier_5
+    path: public/assets/art/ai-v1/tin_soldier_5.png
+    category: unit
+    origin: custom
+    source: docs/art-review/g3e/units/tin_soldier/poses-source.png
+    creator: Project owner (OpenAI imagegen via Codex; prompt in docs/art-review/g3e/units/tin_soldier/poses-prompt.md)
+    license: project-owned
+    attribution: false
+    redistribute: true
+    evidence: docs/art-review/g3e/units/tin_soldier/poses/
+    modified: true
+    nativeSize: 1536x1024
+    finalSize: 36x26
+    anchor: feet
+    notes: Clock tin_soldier pose 5 (attack 1); reduced and outlined by docs/art-review/g3e/units/make_poses.py --export (approved 2026-11-09 by Claude under the owner's delegation); drawn at scale 0.5 (src/render/imageArt.ts)
+  - id: world_ai_v1_tin_soldier_foe_0
+    path: public/assets/art/ai-v1/tin_soldier_foe_0.png
+    category: unit
+    origin: custom
+    source: docs/art-review/g3e/units/tin_soldier/poses-source.png
+    creator: Project owner (OpenAI imagegen via Codex; prompt in docs/art-review/g3e/units/tin_soldier/poses-prompt.md)
+    license: project-owned
+    attribution: false
+    redistribute: true
+    evidence: docs/art-review/g3e/units/tin_soldier/poses/
+    modified: true
+    nativeSize: 1536x1024
+    finalSize: 36x26
+    anchor: feet
+    notes: Clock tin_soldier foe recolour, pose 0 (idle 0); reduced and outlined by docs/art-review/g3e/units/make_poses.py --export (approved 2026-11-09 by Claude under the owner's delegation); drawn at scale 0.5 (src/render/imageArt.ts)
+  - id: world_ai_v1_tin_soldier_foe_1
+    path: public/assets/art/ai-v1/tin_soldier_foe_1.png
+    category: unit
+    origin: custom
+    source: docs/art-review/g3e/units/tin_soldier/poses-source.png
+    creator: Project owner (OpenAI imagegen via Codex; prompt in docs/art-review/g3e/units/tin_soldier/poses-prompt.md)
+    license: project-owned
+    attribution: false
+    redistribute: true
+    evidence: docs/art-review/g3e/units/tin_soldier/poses/
+    modified: true
+    nativeSize: 1536x1024
+    finalSize: 36x26
+    anchor: feet
+    notes: Clock tin_soldier foe recolour, pose 1 (idle 1); reduced and outlined by docs/art-review/g3e/units/make_poses.py --export (approved 2026-11-09 by Claude under the owner's delegation); drawn at scale 0.5 (src/render/imageArt.ts)
+  - id: world_ai_v1_tin_soldier_foe_2
+    path: public/assets/art/ai-v1/tin_soldier_foe_2.png
+    category: unit
+    origin: custom
+    source: docs/art-review/g3e/units/tin_soldier/poses-source.png
+    creator: Project owner (OpenAI imagegen via Codex; prompt in docs/art-review/g3e/units/tin_soldier/poses-prompt.md)
+    license: project-owned
+    attribution: false
+    redistribute: true
+    evidence: docs/art-review/g3e/units/tin_soldier/poses/
+    modified: true
+    nativeSize: 1536x1024
+    finalSize: 36x26
+    anchor: feet
+    notes: Clock tin_soldier foe recolour, pose 2 (walk 0); reduced and outlined by docs/art-review/g3e/units/make_poses.py --export (approved 2026-11-09 by Claude under the owner's delegation); drawn at scale 0.5 (src/render/imageArt.ts)
+  - id: world_ai_v1_tin_soldier_foe_3
+    path: public/assets/art/ai-v1/tin_soldier_foe_3.png
+    category: unit
+    origin: custom
+    source: docs/art-review/g3e/units/tin_soldier/poses-source.png
+    creator: Project owner (OpenAI imagegen via Codex; prompt in docs/art-review/g3e/units/tin_soldier/poses-prompt.md)
+    license: project-owned
+    attribution: false
+    redistribute: true
+    evidence: docs/art-review/g3e/units/tin_soldier/poses/
+    modified: true
+    nativeSize: 1536x1024
+    finalSize: 36x26
+    anchor: feet
+    notes: Clock tin_soldier foe recolour, pose 3 (walk 1); reduced and outlined by docs/art-review/g3e/units/make_poses.py --export (approved 2026-11-09 by Claude under the owner's delegation); drawn at scale 0.5 (src/render/imageArt.ts)
+  - id: world_ai_v1_tin_soldier_foe_4
+    path: public/assets/art/ai-v1/tin_soldier_foe_4.png
+    category: unit
+    origin: custom
+    source: docs/art-review/g3e/units/tin_soldier/poses-source.png
+    creator: Project owner (OpenAI imagegen via Codex; prompt in docs/art-review/g3e/units/tin_soldier/poses-prompt.md)
+    license: project-owned
+    attribution: false
+    redistribute: true
+    evidence: docs/art-review/g3e/units/tin_soldier/poses/
+    modified: true
+    nativeSize: 1536x1024
+    finalSize: 36x26
+    anchor: feet
+    notes: Clock tin_soldier foe recolour, pose 4 (attack 0); reduced and outlined by docs/art-review/g3e/units/make_poses.py --export (approved 2026-11-09 by Claude under the owner's delegation); drawn at scale 0.5 (src/render/imageArt.ts)
+  - id: world_ai_v1_tin_soldier_foe_5
+    path: public/assets/art/ai-v1/tin_soldier_foe_5.png
+    category: unit
+    origin: custom
+    source: docs/art-review/g3e/units/tin_soldier/poses-source.png
+    creator: Project owner (OpenAI imagegen via Codex; prompt in docs/art-review/g3e/units/tin_soldier/poses-prompt.md)
+    license: project-owned
+    attribution: false
+    redistribute: true
+    evidence: docs/art-review/g3e/units/tin_soldier/poses/
+    modified: true
+    nativeSize: 1536x1024
+    finalSize: 36x26
+    anchor: feet
+    notes: Clock tin_soldier foe recolour, pose 5 (attack 1); reduced and outlined by docs/art-review/g3e/units/make_poses.py --export (approved 2026-11-09 by Claude under the owner's delegation); drawn at scale 0.5 (src/render/imageArt.ts)
+  - id: world_ai_v1_spider_0
+    path: public/assets/art/ai-v1/spider_0.png
+    category: unit
+    origin: custom
+    source: docs/art-review/g3e/units/spider/poses-source.png
+    creator: Project owner (OpenAI imagegen via Codex; prompt in docs/art-review/g3e/units/spider/poses-prompt.md)
+    license: project-owned
+    attribution: false
+    redistribute: true
+    evidence: docs/art-review/g3e/units/spider/poses/
+    modified: true
+    nativeSize: 1536x1024
+    finalSize: 28x19
+    anchor: feet
+    notes: Clock spider pose 0 (idle 0); reduced and outlined by docs/art-review/g3e/units/make_poses.py --export (approved 2026-11-09 by Claude under the owner's delegation); drawn at scale 0.5 (src/render/imageArt.ts)
+  - id: world_ai_v1_spider_1
+    path: public/assets/art/ai-v1/spider_1.png
+    category: unit
+    origin: custom
+    source: docs/art-review/g3e/units/spider/poses-source.png
+    creator: Project owner (OpenAI imagegen via Codex; prompt in docs/art-review/g3e/units/spider/poses-prompt.md)
+    license: project-owned
+    attribution: false
+    redistribute: true
+    evidence: docs/art-review/g3e/units/spider/poses/
+    modified: true
+    nativeSize: 1536x1024
+    finalSize: 28x19
+    anchor: feet
+    notes: Clock spider pose 1 (idle 1); reduced and outlined by docs/art-review/g3e/units/make_poses.py --export (approved 2026-11-09 by Claude under the owner's delegation); drawn at scale 0.5 (src/render/imageArt.ts)
+  - id: world_ai_v1_spider_2
+    path: public/assets/art/ai-v1/spider_2.png
+    category: unit
+    origin: custom
+    source: docs/art-review/g3e/units/spider/poses-source.png
+    creator: Project owner (OpenAI imagegen via Codex; prompt in docs/art-review/g3e/units/spider/poses-prompt.md)
+    license: project-owned
+    attribution: false
+    redistribute: true
+    evidence: docs/art-review/g3e/units/spider/poses/
+    modified: true
+    nativeSize: 1536x1024
+    finalSize: 28x19
+    anchor: feet
+    notes: Clock spider pose 2 (walk 0); reduced and outlined by docs/art-review/g3e/units/make_poses.py --export (approved 2026-11-09 by Claude under the owner's delegation); drawn at scale 0.5 (src/render/imageArt.ts)
+  - id: world_ai_v1_spider_3
+    path: public/assets/art/ai-v1/spider_3.png
+    category: unit
+    origin: custom
+    source: docs/art-review/g3e/units/spider/poses-source.png
+    creator: Project owner (OpenAI imagegen via Codex; prompt in docs/art-review/g3e/units/spider/poses-prompt.md)
+    license: project-owned
+    attribution: false
+    redistribute: true
+    evidence: docs/art-review/g3e/units/spider/poses/
+    modified: true
+    nativeSize: 1536x1024
+    finalSize: 28x19
+    anchor: feet
+    notes: Clock spider pose 3 (walk 1); reduced and outlined by docs/art-review/g3e/units/make_poses.py --export (approved 2026-11-09 by Claude under the owner's delegation); drawn at scale 0.5 (src/render/imageArt.ts)
+  - id: world_ai_v1_spider_4
+    path: public/assets/art/ai-v1/spider_4.png
+    category: unit
+    origin: custom
+    source: docs/art-review/g3e/units/spider/poses-source.png
+    creator: Project owner (OpenAI imagegen via Codex; prompt in docs/art-review/g3e/units/spider/poses-prompt.md)
+    license: project-owned
+    attribution: false
+    redistribute: true
+    evidence: docs/art-review/g3e/units/spider/poses/
+    modified: true
+    nativeSize: 1536x1024
+    finalSize: 28x19
+    anchor: feet
+    notes: Clock spider pose 4 (attack 0); reduced and outlined by docs/art-review/g3e/units/make_poses.py --export (approved 2026-11-09 by Claude under the owner's delegation); drawn at scale 0.5 (src/render/imageArt.ts)
+  - id: world_ai_v1_spider_5
+    path: public/assets/art/ai-v1/spider_5.png
+    category: unit
+    origin: custom
+    source: docs/art-review/g3e/units/spider/poses-source.png
+    creator: Project owner (OpenAI imagegen via Codex; prompt in docs/art-review/g3e/units/spider/poses-prompt.md)
+    license: project-owned
+    attribution: false
+    redistribute: true
+    evidence: docs/art-review/g3e/units/spider/poses/
+    modified: true
+    nativeSize: 1536x1024
+    finalSize: 28x19
+    anchor: feet
+    notes: Clock spider pose 5 (attack 1); reduced and outlined by docs/art-review/g3e/units/make_poses.py --export (approved 2026-11-09 by Claude under the owner's delegation); drawn at scale 0.5 (src/render/imageArt.ts)
+  - id: world_ai_v1_spider_foe_0
+    path: public/assets/art/ai-v1/spider_foe_0.png
+    category: unit
+    origin: custom
+    source: docs/art-review/g3e/units/spider/poses-source.png
+    creator: Project owner (OpenAI imagegen via Codex; prompt in docs/art-review/g3e/units/spider/poses-prompt.md)
+    license: project-owned
+    attribution: false
+    redistribute: true
+    evidence: docs/art-review/g3e/units/spider/poses/
+    modified: true
+    nativeSize: 1536x1024
+    finalSize: 28x19
+    anchor: feet
+    notes: Clock spider foe recolour, pose 0 (idle 0); reduced and outlined by docs/art-review/g3e/units/make_poses.py --export (approved 2026-11-09 by Claude under the owner's delegation); drawn at scale 0.5 (src/render/imageArt.ts)
+  - id: world_ai_v1_spider_foe_1
+    path: public/assets/art/ai-v1/spider_foe_1.png
+    category: unit
+    origin: custom
+    source: docs/art-review/g3e/units/spider/poses-source.png
+    creator: Project owner (OpenAI imagegen via Codex; prompt in docs/art-review/g3e/units/spider/poses-prompt.md)
+    license: project-owned
+    attribution: false
+    redistribute: true
+    evidence: docs/art-review/g3e/units/spider/poses/
+    modified: true
+    nativeSize: 1536x1024
+    finalSize: 28x19
+    anchor: feet
+    notes: Clock spider foe recolour, pose 1 (idle 1); reduced and outlined by docs/art-review/g3e/units/make_poses.py --export (approved 2026-11-09 by Claude under the owner's delegation); drawn at scale 0.5 (src/render/imageArt.ts)
+  - id: world_ai_v1_spider_foe_2
+    path: public/assets/art/ai-v1/spider_foe_2.png
+    category: unit
+    origin: custom
+    source: docs/art-review/g3e/units/spider/poses-source.png
+    creator: Project owner (OpenAI imagegen via Codex; prompt in docs/art-review/g3e/units/spider/poses-prompt.md)
+    license: project-owned
+    attribution: false
+    redistribute: true
+    evidence: docs/art-review/g3e/units/spider/poses/
+    modified: true
+    nativeSize: 1536x1024
+    finalSize: 28x19
+    anchor: feet
+    notes: Clock spider foe recolour, pose 2 (walk 0); reduced and outlined by docs/art-review/g3e/units/make_poses.py --export (approved 2026-11-09 by Claude under the owner's delegation); drawn at scale 0.5 (src/render/imageArt.ts)
+  - id: world_ai_v1_spider_foe_3
+    path: public/assets/art/ai-v1/spider_foe_3.png
+    category: unit
+    origin: custom
+    source: docs/art-review/g3e/units/spider/poses-source.png
+    creator: Project owner (OpenAI imagegen via Codex; prompt in docs/art-review/g3e/units/spider/poses-prompt.md)
+    license: project-owned
+    attribution: false
+    redistribute: true
+    evidence: docs/art-review/g3e/units/spider/poses/
+    modified: true
+    nativeSize: 1536x1024
+    finalSize: 28x19
+    anchor: feet
+    notes: Clock spider foe recolour, pose 3 (walk 1); reduced and outlined by docs/art-review/g3e/units/make_poses.py --export (approved 2026-11-09 by Claude under the owner's delegation); drawn at scale 0.5 (src/render/imageArt.ts)
+  - id: world_ai_v1_spider_foe_4
+    path: public/assets/art/ai-v1/spider_foe_4.png
+    category: unit
+    origin: custom
+    source: docs/art-review/g3e/units/spider/poses-source.png
+    creator: Project owner (OpenAI imagegen via Codex; prompt in docs/art-review/g3e/units/spider/poses-prompt.md)
+    license: project-owned
+    attribution: false
+    redistribute: true
+    evidence: docs/art-review/g3e/units/spider/poses/
+    modified: true
+    nativeSize: 1536x1024
+    finalSize: 28x19
+    anchor: feet
+    notes: Clock spider foe recolour, pose 4 (attack 0); reduced and outlined by docs/art-review/g3e/units/make_poses.py --export (approved 2026-11-09 by Claude under the owner's delegation); drawn at scale 0.5 (src/render/imageArt.ts)
+  - id: world_ai_v1_spider_foe_5
+    path: public/assets/art/ai-v1/spider_foe_5.png
+    category: unit
+    origin: custom
+    source: docs/art-review/g3e/units/spider/poses-source.png
+    creator: Project owner (OpenAI imagegen via Codex; prompt in docs/art-review/g3e/units/spider/poses-prompt.md)
+    license: project-owned
+    attribution: false
+    redistribute: true
+    evidence: docs/art-review/g3e/units/spider/poses/
+    modified: true
+    nativeSize: 1536x1024
+    finalSize: 28x19
+    anchor: feet
+    notes: Clock spider foe recolour, pose 5 (attack 1); reduced and outlined by docs/art-review/g3e/units/make_poses.py --export (approved 2026-11-09 by Claude under the owner's delegation); drawn at scale 0.5 (src/render/imageArt.ts)
+  - id: world_ai_v1_gear_gunner_0
+    path: public/assets/art/ai-v1/gear_gunner_0.png
+    category: unit
+    origin: custom
+    source: docs/art-review/g3e/units/gear_gunner/poses-source.png
+    creator: Project owner (OpenAI imagegen via Codex; prompt in docs/art-review/g3e/units/gear_gunner/poses-prompt.md)
+    license: project-owned
+    attribution: false
+    redistribute: true
+    evidence: docs/art-review/g3e/units/gear_gunner/poses/
+    modified: true
+    nativeSize: 1536x1024
+    finalSize: 30x26
+    anchor: feet
+    notes: Clock gear_gunner pose 0 (idle 0); reduced and outlined by docs/art-review/g3e/units/make_poses.py --export (approved 2026-11-09 by Claude under the owner's delegation); drawn at scale 0.5 (src/render/imageArt.ts)
+  - id: world_ai_v1_gear_gunner_1
+    path: public/assets/art/ai-v1/gear_gunner_1.png
+    category: unit
+    origin: custom
+    source: docs/art-review/g3e/units/gear_gunner/poses-source.png
+    creator: Project owner (OpenAI imagegen via Codex; prompt in docs/art-review/g3e/units/gear_gunner/poses-prompt.md)
+    license: project-owned
+    attribution: false
+    redistribute: true
+    evidence: docs/art-review/g3e/units/gear_gunner/poses/
+    modified: true
+    nativeSize: 1536x1024
+    finalSize: 30x26
+    anchor: feet
+    notes: Clock gear_gunner pose 1 (idle 1); reduced and outlined by docs/art-review/g3e/units/make_poses.py --export (approved 2026-11-09 by Claude under the owner's delegation); drawn at scale 0.5 (src/render/imageArt.ts)
+  - id: world_ai_v1_gear_gunner_2
+    path: public/assets/art/ai-v1/gear_gunner_2.png
+    category: unit
+    origin: custom
+    source: docs/art-review/g3e/units/gear_gunner/poses-source.png
+    creator: Project owner (OpenAI imagegen via Codex; prompt in docs/art-review/g3e/units/gear_gunner/poses-prompt.md)
+    license: project-owned
+    attribution: false
+    redistribute: true
+    evidence: docs/art-review/g3e/units/gear_gunner/poses/
+    modified: true
+    nativeSize: 1536x1024
+    finalSize: 30x26
+    anchor: feet
+    notes: Clock gear_gunner pose 2 (walk 0); reduced and outlined by docs/art-review/g3e/units/make_poses.py --export (approved 2026-11-09 by Claude under the owner's delegation); drawn at scale 0.5 (src/render/imageArt.ts)
+  - id: world_ai_v1_gear_gunner_3
+    path: public/assets/art/ai-v1/gear_gunner_3.png
+    category: unit
+    origin: custom
+    source: docs/art-review/g3e/units/gear_gunner/poses-source.png
+    creator: Project owner (OpenAI imagegen via Codex; prompt in docs/art-review/g3e/units/gear_gunner/poses-prompt.md)
+    license: project-owned
+    attribution: false
+    redistribute: true
+    evidence: docs/art-review/g3e/units/gear_gunner/poses/
+    modified: true
+    nativeSize: 1536x1024
+    finalSize: 30x26
+    anchor: feet
+    notes: Clock gear_gunner pose 3 (walk 1); reduced and outlined by docs/art-review/g3e/units/make_poses.py --export (approved 2026-11-09 by Claude under the owner's delegation); drawn at scale 0.5 (src/render/imageArt.ts)
+  - id: world_ai_v1_gear_gunner_4
+    path: public/assets/art/ai-v1/gear_gunner_4.png
+    category: unit
+    origin: custom
+    source: docs/art-review/g3e/units/gear_gunner/poses-source.png
+    creator: Project owner (OpenAI imagegen via Codex; prompt in docs/art-review/g3e/units/gear_gunner/poses-prompt.md)
+    license: project-owned
+    attribution: false
+    redistribute: true
+    evidence: docs/art-review/g3e/units/gear_gunner/poses/
+    modified: true
+    nativeSize: 1536x1024
+    finalSize: 30x26
+    anchor: feet
+    notes: Clock gear_gunner pose 4 (attack 0); reduced and outlined by docs/art-review/g3e/units/make_poses.py --export (approved 2026-11-09 by Claude under the owner's delegation); drawn at scale 0.5 (src/render/imageArt.ts)
+  - id: world_ai_v1_gear_gunner_5
+    path: public/assets/art/ai-v1/gear_gunner_5.png
+    category: unit
+    origin: custom
+    source: docs/art-review/g3e/units/gear_gunner/poses-source.png
+    creator: Project owner (OpenAI imagegen via Codex; prompt in docs/art-review/g3e/units/gear_gunner/poses-prompt.md)
+    license: project-owned
+    attribution: false
+    redistribute: true
+    evidence: docs/art-review/g3e/units/gear_gunner/poses/
+    modified: true
+    nativeSize: 1536x1024
+    finalSize: 30x26
+    anchor: feet
+    notes: Clock gear_gunner pose 5 (attack 1); reduced and outlined by docs/art-review/g3e/units/make_poses.py --export (approved 2026-11-09 by Claude under the owner's delegation); drawn at scale 0.5 (src/render/imageArt.ts)
+  - id: world_ai_v1_gear_gunner_foe_0
+    path: public/assets/art/ai-v1/gear_gunner_foe_0.png
+    category: unit
+    origin: custom
+    source: docs/art-review/g3e/units/gear_gunner/poses-source.png
+    creator: Project owner (OpenAI imagegen via Codex; prompt in docs/art-review/g3e/units/gear_gunner/poses-prompt.md)
+    license: project-owned
+    attribution: false
+    redistribute: true
+    evidence: docs/art-review/g3e/units/gear_gunner/poses/
+    modified: true
+    nativeSize: 1536x1024
+    finalSize: 30x26
+    anchor: feet
+    notes: Clock gear_gunner foe recolour, pose 0 (idle 0); reduced and outlined by docs/art-review/g3e/units/make_poses.py --export (approved 2026-11-09 by Claude under the owner's delegation); drawn at scale 0.5 (src/render/imageArt.ts)
+  - id: world_ai_v1_gear_gunner_foe_1
+    path: public/assets/art/ai-v1/gear_gunner_foe_1.png
+    category: unit
+    origin: custom
+    source: docs/art-review/g3e/units/gear_gunner/poses-source.png
+    creator: Project owner (OpenAI imagegen via Codex; prompt in docs/art-review/g3e/units/gear_gunner/poses-prompt.md)
+    license: project-owned
+    attribution: false
+    redistribute: true
+    evidence: docs/art-review/g3e/units/gear_gunner/poses/
+    modified: true
+    nativeSize: 1536x1024
+    finalSize: 30x26
+    anchor: feet
+    notes: Clock gear_gunner foe recolour, pose 1 (idle 1); reduced and outlined by docs/art-review/g3e/units/make_poses.py --export (approved 2026-11-09 by Claude under the owner's delegation); drawn at scale 0.5 (src/render/imageArt.ts)
+  - id: world_ai_v1_gear_gunner_foe_2
+    path: public/assets/art/ai-v1/gear_gunner_foe_2.png
+    category: unit
+    origin: custom
+    source: docs/art-review/g3e/units/gear_gunner/poses-source.png
+    creator: Project owner (OpenAI imagegen via Codex; prompt in docs/art-review/g3e/units/gear_gunner/poses-prompt.md)
+    license: project-owned
+    attribution: false
+    redistribute: true
+    evidence: docs/art-review/g3e/units/gear_gunner/poses/
+    modified: true
+    nativeSize: 1536x1024
+    finalSize: 30x26
+    anchor: feet
+    notes: Clock gear_gunner foe recolour, pose 2 (walk 0); reduced and outlined by docs/art-review/g3e/units/make_poses.py --export (approved 2026-11-09 by Claude under the owner's delegation); drawn at scale 0.5 (src/render/imageArt.ts)
+  - id: world_ai_v1_gear_gunner_foe_3
+    path: public/assets/art/ai-v1/gear_gunner_foe_3.png
+    category: unit
+    origin: custom
+    source: docs/art-review/g3e/units/gear_gunner/poses-source.png
+    creator: Project owner (OpenAI imagegen via Codex; prompt in docs/art-review/g3e/units/gear_gunner/poses-prompt.md)
+    license: project-owned
+    attribution: false
+    redistribute: true
+    evidence: docs/art-review/g3e/units/gear_gunner/poses/
+    modified: true
+    nativeSize: 1536x1024
+    finalSize: 30x26
+    anchor: feet
+    notes: Clock gear_gunner foe recolour, pose 3 (walk 1); reduced and outlined by docs/art-review/g3e/units/make_poses.py --export (approved 2026-11-09 by Claude under the owner's delegation); drawn at scale 0.5 (src/render/imageArt.ts)
+  - id: world_ai_v1_gear_gunner_foe_4
+    path: public/assets/art/ai-v1/gear_gunner_foe_4.png
+    category: unit
+    origin: custom
+    source: docs/art-review/g3e/units/gear_gunner/poses-source.png
+    creator: Project owner (OpenAI imagegen via Codex; prompt in docs/art-review/g3e/units/gear_gunner/poses-prompt.md)
+    license: project-owned
+    attribution: false
+    redistribute: true
+    evidence: docs/art-review/g3e/units/gear_gunner/poses/
+    modified: true
+    nativeSize: 1536x1024
+    finalSize: 30x26
+    anchor: feet
+    notes: Clock gear_gunner foe recolour, pose 4 (attack 0); reduced and outlined by docs/art-review/g3e/units/make_poses.py --export (approved 2026-11-09 by Claude under the owner's delegation); drawn at scale 0.5 (src/render/imageArt.ts)
+  - id: world_ai_v1_gear_gunner_foe_5
+    path: public/assets/art/ai-v1/gear_gunner_foe_5.png
+    category: unit
+    origin: custom
+    source: docs/art-review/g3e/units/gear_gunner/poses-source.png
+    creator: Project owner (OpenAI imagegen via Codex; prompt in docs/art-review/g3e/units/gear_gunner/poses-prompt.md)
+    license: project-owned
+    attribution: false
+    redistribute: true
+    evidence: docs/art-review/g3e/units/gear_gunner/poses/
+    modified: true
+    nativeSize: 1536x1024
+    finalSize: 30x26
+    anchor: feet
+    notes: Clock gear_gunner foe recolour, pose 5 (attack 1); reduced and outlined by docs/art-review/g3e/units/make_poses.py --export (approved 2026-11-09 by Claude under the owner's delegation); drawn at scale 0.5 (src/render/imageArt.ts)
+  - id: world_ai_v1_colossus_0
+    path: public/assets/art/ai-v1/colossus_0.png
+    category: unit
+    origin: custom
+    source: docs/art-review/g3e/units/colossus/poses-source.png
+    creator: Project owner (OpenAI imagegen via Codex; prompt in docs/art-review/g3e/units/colossus/poses-prompt.md)
+    license: project-owned
+    attribution: false
+    redistribute: true
+    evidence: docs/art-review/g3e/units/colossus/poses/
+    modified: true
+    nativeSize: 1536x1024
+    finalSize: 44x43
+    anchor: feet
+    notes: Clock colossus pose 0 (idle 0); reduced and outlined by docs/art-review/g3e/units/make_poses.py --export (approved 2026-11-09 by Claude under the owner's delegation); drawn at scale 0.5 (src/render/imageArt.ts)
+  - id: world_ai_v1_colossus_1
+    path: public/assets/art/ai-v1/colossus_1.png
+    category: unit
+    origin: custom
+    source: docs/art-review/g3e/units/colossus/poses-source.png
+    creator: Project owner (OpenAI imagegen via Codex; prompt in docs/art-review/g3e/units/colossus/poses-prompt.md)
+    license: project-owned
+    attribution: false
+    redistribute: true
+    evidence: docs/art-review/g3e/units/colossus/poses/
+    modified: true
+    nativeSize: 1536x1024
+    finalSize: 44x43
+    anchor: feet
+    notes: Clock colossus pose 1 (idle 1); reduced and outlined by docs/art-review/g3e/units/make_poses.py --export (approved 2026-11-09 by Claude under the owner's delegation); drawn at scale 0.5 (src/render/imageArt.ts)
+  - id: world_ai_v1_colossus_2
+    path: public/assets/art/ai-v1/colossus_2.png
+    category: unit
+    origin: custom
+    source: docs/art-review/g3e/units/colossus/poses-source.png
+    creator: Project owner (OpenAI imagegen via Codex; prompt in docs/art-review/g3e/units/colossus/poses-prompt.md)
+    license: project-owned
+    attribution: false
+    redistribute: true
+    evidence: docs/art-review/g3e/units/colossus/poses/
+    modified: true
+    nativeSize: 1536x1024
+    finalSize: 44x43
+    anchor: feet
+    notes: Clock colossus pose 2 (walk 0); reduced and outlined by docs/art-review/g3e/units/make_poses.py --export (approved 2026-11-09 by Claude under the owner's delegation); drawn at scale 0.5 (src/render/imageArt.ts)
+  - id: world_ai_v1_colossus_3
+    path: public/assets/art/ai-v1/colossus_3.png
+    category: unit
+    origin: custom
+    source: docs/art-review/g3e/units/colossus/poses-source.png
+    creator: Project owner (OpenAI imagegen via Codex; prompt in docs/art-review/g3e/units/colossus/poses-prompt.md)
+    license: project-owned
+    attribution: false
+    redistribute: true
+    evidence: docs/art-review/g3e/units/colossus/poses/
+    modified: true
+    nativeSize: 1536x1024
+    finalSize: 44x43
+    anchor: feet
+    notes: Clock colossus pose 3 (walk 1); reduced and outlined by docs/art-review/g3e/units/make_poses.py --export (approved 2026-11-09 by Claude under the owner's delegation); drawn at scale 0.5 (src/render/imageArt.ts)
+  - id: world_ai_v1_colossus_4
+    path: public/assets/art/ai-v1/colossus_4.png
+    category: unit
+    origin: custom
+    source: docs/art-review/g3e/units/colossus/poses-source.png
+    creator: Project owner (OpenAI imagegen via Codex; prompt in docs/art-review/g3e/units/colossus/poses-prompt.md)
+    license: project-owned
+    attribution: false
+    redistribute: true
+    evidence: docs/art-review/g3e/units/colossus/poses/
+    modified: true
+    nativeSize: 1536x1024
+    finalSize: 44x43
+    anchor: feet
+    notes: Clock colossus pose 4 (attack 0); reduced and outlined by docs/art-review/g3e/units/make_poses.py --export (approved 2026-11-09 by Claude under the owner's delegation); drawn at scale 0.5 (src/render/imageArt.ts)
+  - id: world_ai_v1_colossus_5
+    path: public/assets/art/ai-v1/colossus_5.png
+    category: unit
+    origin: custom
+    source: docs/art-review/g3e/units/colossus/poses-source.png
+    creator: Project owner (OpenAI imagegen via Codex; prompt in docs/art-review/g3e/units/colossus/poses-prompt.md)
+    license: project-owned
+    attribution: false
+    redistribute: true
+    evidence: docs/art-review/g3e/units/colossus/poses/
+    modified: true
+    nativeSize: 1536x1024
+    finalSize: 44x43
+    anchor: feet
+    notes: Clock colossus pose 5 (attack 1); reduced and outlined by docs/art-review/g3e/units/make_poses.py --export (approved 2026-11-09 by Claude under the owner's delegation); drawn at scale 0.5 (src/render/imageArt.ts)
+  - id: world_ai_v1_colossus_foe_0
+    path: public/assets/art/ai-v1/colossus_foe_0.png
+    category: unit
+    origin: custom
+    source: docs/art-review/g3e/units/colossus/poses-source.png
+    creator: Project owner (OpenAI imagegen via Codex; prompt in docs/art-review/g3e/units/colossus/poses-prompt.md)
+    license: project-owned
+    attribution: false
+    redistribute: true
+    evidence: docs/art-review/g3e/units/colossus/poses/
+    modified: true
+    nativeSize: 1536x1024
+    finalSize: 44x43
+    anchor: feet
+    notes: Clock colossus foe recolour, pose 0 (idle 0); reduced and outlined by docs/art-review/g3e/units/make_poses.py --export (approved 2026-11-09 by Claude under the owner's delegation); drawn at scale 0.5 (src/render/imageArt.ts)
+  - id: world_ai_v1_colossus_foe_1
+    path: public/assets/art/ai-v1/colossus_foe_1.png
+    category: unit
+    origin: custom
+    source: docs/art-review/g3e/units/colossus/poses-source.png
+    creator: Project owner (OpenAI imagegen via Codex; prompt in docs/art-review/g3e/units/colossus/poses-prompt.md)
+    license: project-owned
+    attribution: false
+    redistribute: true
+    evidence: docs/art-review/g3e/units/colossus/poses/
+    modified: true
+    nativeSize: 1536x1024
+    finalSize: 44x43
+    anchor: feet
+    notes: Clock colossus foe recolour, pose 1 (idle 1); reduced and outlined by docs/art-review/g3e/units/make_poses.py --export (approved 2026-11-09 by Claude under the owner's delegation); drawn at scale 0.5 (src/render/imageArt.ts)
+  - id: world_ai_v1_colossus_foe_2
+    path: public/assets/art/ai-v1/colossus_foe_2.png
+    category: unit
+    origin: custom
+    source: docs/art-review/g3e/units/colossus/poses-source.png
+    creator: Project owner (OpenAI imagegen via Codex; prompt in docs/art-review/g3e/units/colossus/poses-prompt.md)
+    license: project-owned
+    attribution: false
+    redistribute: true
+    evidence: docs/art-review/g3e/units/colossus/poses/
+    modified: true
+    nativeSize: 1536x1024
+    finalSize: 44x43
+    anchor: feet
+    notes: Clock colossus foe recolour, pose 2 (walk 0); reduced and outlined by docs/art-review/g3e/units/make_poses.py --export (approved 2026-11-09 by Claude under the owner's delegation); drawn at scale 0.5 (src/render/imageArt.ts)
+  - id: world_ai_v1_colossus_foe_3
+    path: public/assets/art/ai-v1/colossus_foe_3.png
+    category: unit
+    origin: custom
+    source: docs/art-review/g3e/units/colossus/poses-source.png
+    creator: Project owner (OpenAI imagegen via Codex; prompt in docs/art-review/g3e/units/colossus/poses-prompt.md)
+    license: project-owned
+    attribution: false
+    redistribute: true
+    evidence: docs/art-review/g3e/units/colossus/poses/
+    modified: true
+    nativeSize: 1536x1024
+    finalSize: 44x43
+    anchor: feet
+    notes: Clock colossus foe recolour, pose 3 (walk 1); reduced and outlined by docs/art-review/g3e/units/make_poses.py --export (approved 2026-11-09 by Claude under the owner's delegation); drawn at scale 0.5 (src/render/imageArt.ts)
+  - id: world_ai_v1_colossus_foe_4
+    path: public/assets/art/ai-v1/colossus_foe_4.png
+    category: unit
+    origin: custom
+    source: docs/art-review/g3e/units/colossus/poses-source.png
+    creator: Project owner (OpenAI imagegen via Codex; prompt in docs/art-review/g3e/units/colossus/poses-prompt.md)
+    license: project-owned
+    attribution: false
+    redistribute: true
+    evidence: docs/art-review/g3e/units/colossus/poses/
+    modified: true
+    nativeSize: 1536x1024
+    finalSize: 44x43
+    anchor: feet
+    notes: Clock colossus foe recolour, pose 4 (attack 0); reduced and outlined by docs/art-review/g3e/units/make_poses.py --export (approved 2026-11-09 by Claude under the owner's delegation); drawn at scale 0.5 (src/render/imageArt.ts)
+  - id: world_ai_v1_colossus_foe_5
+    path: public/assets/art/ai-v1/colossus_foe_5.png
+    category: unit
+    origin: custom
+    source: docs/art-review/g3e/units/colossus/poses-source.png
+    creator: Project owner (OpenAI imagegen via Codex; prompt in docs/art-review/g3e/units/colossus/poses-prompt.md)
+    license: project-owned
+    attribution: false
+    redistribute: true
+    evidence: docs/art-review/g3e/units/colossus/poses/
+    modified: true
+    nativeSize: 1536x1024
+    finalSize: 44x43
+    anchor: feet
+    notes: Clock colossus foe recolour, pose 5 (attack 1); reduced and outlined by docs/art-review/g3e/units/make_poses.py --export (approved 2026-11-09 by Claude under the owner's delegation); drawn at scale 0.5 (src/render/imageArt.ts)
+  - id: world_ai_v1_skeleton_0
+    path: public/assets/art/ai-v1/skeleton_0.png
+    category: unit
+    origin: custom
+    source: docs/art-review/g3e/units/skeleton/poses-source.png
+    creator: Project owner (OpenAI imagegen via Codex; prompt in docs/art-review/g3e/units/skeleton/poses-prompt.md)
+    license: project-owned
+    attribution: false
+    redistribute: true
+    evidence: docs/art-review/g3e/units/skeleton/poses/
+    modified: true
+    nativeSize: 1536x1024
+    finalSize: 30x25
+    anchor: feet
+    notes: Moon skeleton pose 0 (idle 0); reduced and outlined by docs/art-review/g3e/units/make_poses.py --export (approved 2026-11-09 by Claude under the owner's delegation); drawn at scale 0.5 (src/render/imageArt.ts)
+  - id: world_ai_v1_skeleton_1
+    path: public/assets/art/ai-v1/skeleton_1.png
+    category: unit
+    origin: custom
+    source: docs/art-review/g3e/units/skeleton/poses-source.png
+    creator: Project owner (OpenAI imagegen via Codex; prompt in docs/art-review/g3e/units/skeleton/poses-prompt.md)
+    license: project-owned
+    attribution: false
+    redistribute: true
+    evidence: docs/art-review/g3e/units/skeleton/poses/
+    modified: true
+    nativeSize: 1536x1024
+    finalSize: 30x25
+    anchor: feet
+    notes: Moon skeleton pose 1 (idle 1); reduced and outlined by docs/art-review/g3e/units/make_poses.py --export (approved 2026-11-09 by Claude under the owner's delegation); drawn at scale 0.5 (src/render/imageArt.ts)
+  - id: world_ai_v1_skeleton_2
+    path: public/assets/art/ai-v1/skeleton_2.png
+    category: unit
+    origin: custom
+    source: docs/art-review/g3e/units/skeleton/poses-source.png
+    creator: Project owner (OpenAI imagegen via Codex; prompt in docs/art-review/g3e/units/skeleton/poses-prompt.md)
+    license: project-owned
+    attribution: false
+    redistribute: true
+    evidence: docs/art-review/g3e/units/skeleton/poses/
+    modified: true
+    nativeSize: 1536x1024
+    finalSize: 30x25
+    anchor: feet
+    notes: Moon skeleton pose 2 (walk 0); reduced and outlined by docs/art-review/g3e/units/make_poses.py --export (approved 2026-11-09 by Claude under the owner's delegation); drawn at scale 0.5 (src/render/imageArt.ts)
+  - id: world_ai_v1_skeleton_3
+    path: public/assets/art/ai-v1/skeleton_3.png
+    category: unit
+    origin: custom
+    source: docs/art-review/g3e/units/skeleton/poses-source.png
+    creator: Project owner (OpenAI imagegen via Codex; prompt in docs/art-review/g3e/units/skeleton/poses-prompt.md)
+    license: project-owned
+    attribution: false
+    redistribute: true
+    evidence: docs/art-review/g3e/units/skeleton/poses/
+    modified: true
+    nativeSize: 1536x1024
+    finalSize: 30x25
+    anchor: feet
+    notes: Moon skeleton pose 3 (walk 1); reduced and outlined by docs/art-review/g3e/units/make_poses.py --export (approved 2026-11-09 by Claude under the owner's delegation); drawn at scale 0.5 (src/render/imageArt.ts)
+  - id: world_ai_v1_skeleton_4
+    path: public/assets/art/ai-v1/skeleton_4.png
+    category: unit
+    origin: custom
+    source: docs/art-review/g3e/units/skeleton/poses-source.png
+    creator: Project owner (OpenAI imagegen via Codex; prompt in docs/art-review/g3e/units/skeleton/poses-prompt.md)
+    license: project-owned
+    attribution: false
+    redistribute: true
+    evidence: docs/art-review/g3e/units/skeleton/poses/
+    modified: true
+    nativeSize: 1536x1024
+    finalSize: 30x25
+    anchor: feet
+    notes: Moon skeleton pose 4 (attack 0); reduced and outlined by docs/art-review/g3e/units/make_poses.py --export (approved 2026-11-09 by Claude under the owner's delegation); drawn at scale 0.5 (src/render/imageArt.ts)
+  - id: world_ai_v1_skeleton_5
+    path: public/assets/art/ai-v1/skeleton_5.png
+    category: unit
+    origin: custom
+    source: docs/art-review/g3e/units/skeleton/poses-source.png
+    creator: Project owner (OpenAI imagegen via Codex; prompt in docs/art-review/g3e/units/skeleton/poses-prompt.md)
+    license: project-owned
+    attribution: false
+    redistribute: true
+    evidence: docs/art-review/g3e/units/skeleton/poses/
+    modified: true
+    nativeSize: 1536x1024
+    finalSize: 30x25
+    anchor: feet
+    notes: Moon skeleton pose 5 (attack 1); reduced and outlined by docs/art-review/g3e/units/make_poses.py --export (approved 2026-11-09 by Claude under the owner's delegation); drawn at scale 0.5 (src/render/imageArt.ts)
+  - id: world_ai_v1_skeleton_foe_0
+    path: public/assets/art/ai-v1/skeleton_foe_0.png
+    category: unit
+    origin: custom
+    source: docs/art-review/g3e/units/skeleton/poses-source.png
+    creator: Project owner (OpenAI imagegen via Codex; prompt in docs/art-review/g3e/units/skeleton/poses-prompt.md)
+    license: project-owned
+    attribution: false
+    redistribute: true
+    evidence: docs/art-review/g3e/units/skeleton/poses/
+    modified: true
+    nativeSize: 1536x1024
+    finalSize: 30x25
+    anchor: feet
+    notes: Moon skeleton foe recolour, pose 0 (idle 0); reduced and outlined by docs/art-review/g3e/units/make_poses.py --export (approved 2026-11-09 by Claude under the owner's delegation); drawn at scale 0.5 (src/render/imageArt.ts)
+  - id: world_ai_v1_skeleton_foe_1
+    path: public/assets/art/ai-v1/skeleton_foe_1.png
+    category: unit
+    origin: custom
+    source: docs/art-review/g3e/units/skeleton/poses-source.png
+    creator: Project owner (OpenAI imagegen via Codex; prompt in docs/art-review/g3e/units/skeleton/poses-prompt.md)
+    license: project-owned
+    attribution: false
+    redistribute: true
+    evidence: docs/art-review/g3e/units/skeleton/poses/
+    modified: true
+    nativeSize: 1536x1024
+    finalSize: 30x25
+    anchor: feet
+    notes: Moon skeleton foe recolour, pose 1 (idle 1); reduced and outlined by docs/art-review/g3e/units/make_poses.py --export (approved 2026-11-09 by Claude under the owner's delegation); drawn at scale 0.5 (src/render/imageArt.ts)
+  - id: world_ai_v1_skeleton_foe_2
+    path: public/assets/art/ai-v1/skeleton_foe_2.png
+    category: unit
+    origin: custom
+    source: docs/art-review/g3e/units/skeleton/poses-source.png
+    creator: Project owner (OpenAI imagegen via Codex; prompt in docs/art-review/g3e/units/skeleton/poses-prompt.md)
+    license: project-owned
+    attribution: false
+    redistribute: true
+    evidence: docs/art-review/g3e/units/skeleton/poses/
+    modified: true
+    nativeSize: 1536x1024
+    finalSize: 30x25
+    anchor: feet
+    notes: Moon skeleton foe recolour, pose 2 (walk 0); reduced and outlined by docs/art-review/g3e/units/make_poses.py --export (approved 2026-11-09 by Claude under the owner's delegation); drawn at scale 0.5 (src/render/imageArt.ts)
+  - id: world_ai_v1_skeleton_foe_3
+    path: public/assets/art/ai-v1/skeleton_foe_3.png
+    category: unit
+    origin: custom
+    source: docs/art-review/g3e/units/skeleton/poses-source.png
+    creator: Project owner (OpenAI imagegen via Codex; prompt in docs/art-review/g3e/units/skeleton/poses-prompt.md)
+    license: project-owned
+    attribution: false
+    redistribute: true
+    evidence: docs/art-review/g3e/units/skeleton/poses/
+    modified: true
+    nativeSize: 1536x1024
+    finalSize: 30x25
+    anchor: feet
+    notes: Moon skeleton foe recolour, pose 3 (walk 1); reduced and outlined by docs/art-review/g3e/units/make_poses.py --export (approved 2026-11-09 by Claude under the owner's delegation); drawn at scale 0.5 (src/render/imageArt.ts)
+  - id: world_ai_v1_skeleton_foe_4
+    path: public/assets/art/ai-v1/skeleton_foe_4.png
+    category: unit
+    origin: custom
+    source: docs/art-review/g3e/units/skeleton/poses-source.png
+    creator: Project owner (OpenAI imagegen via Codex; prompt in docs/art-review/g3e/units/skeleton/poses-prompt.md)
+    license: project-owned
+    attribution: false
+    redistribute: true
+    evidence: docs/art-review/g3e/units/skeleton/poses/
+    modified: true
+    nativeSize: 1536x1024
+    finalSize: 30x25
+    anchor: feet
+    notes: Moon skeleton foe recolour, pose 4 (attack 0); reduced and outlined by docs/art-review/g3e/units/make_poses.py --export (approved 2026-11-09 by Claude under the owner's delegation); drawn at scale 0.5 (src/render/imageArt.ts)
+  - id: world_ai_v1_skeleton_foe_5
+    path: public/assets/art/ai-v1/skeleton_foe_5.png
+    category: unit
+    origin: custom
+    source: docs/art-review/g3e/units/skeleton/poses-source.png
+    creator: Project owner (OpenAI imagegen via Codex; prompt in docs/art-review/g3e/units/skeleton/poses-prompt.md)
+    license: project-owned
+    attribution: false
+    redistribute: true
+    evidence: docs/art-review/g3e/units/skeleton/poses/
+    modified: true
+    nativeSize: 1536x1024
+    finalSize: 30x25
+    anchor: feet
+    notes: Moon skeleton foe recolour, pose 5 (attack 1); reduced and outlined by docs/art-review/g3e/units/make_poses.py --export (approved 2026-11-09 by Claude under the owner's delegation); drawn at scale 0.5 (src/render/imageArt.ts)
+  - id: world_ai_v1_wraith_0
+    path: public/assets/art/ai-v1/wraith_0.png
+    category: unit
+    origin: custom
+    source: docs/art-review/g3e/units/wraith/poses-source.png
+    creator: Project owner (OpenAI imagegen via Codex; prompt in docs/art-review/g3e/units/wraith/poses-prompt.md)
+    license: project-owned
+    attribution: false
+    redistribute: true
+    evidence: docs/art-review/g3e/units/wraith/poses/
+    modified: true
+    nativeSize: 1536x1024
+    finalSize: 22x25
+    anchor: feet
+    notes: Moon wraith pose 0 (idle 0); reduced and outlined by docs/art-review/g3e/units/make_poses.py --export (approved 2026-11-09 by Claude under the owner's delegation); drawn at scale 0.5 (src/render/imageArt.ts)
+  - id: world_ai_v1_wraith_1
+    path: public/assets/art/ai-v1/wraith_1.png
+    category: unit
+    origin: custom
+    source: docs/art-review/g3e/units/wraith/poses-source.png
+    creator: Project owner (OpenAI imagegen via Codex; prompt in docs/art-review/g3e/units/wraith/poses-prompt.md)
+    license: project-owned
+    attribution: false
+    redistribute: true
+    evidence: docs/art-review/g3e/units/wraith/poses/
+    modified: true
+    nativeSize: 1536x1024
+    finalSize: 22x25
+    anchor: feet
+    notes: Moon wraith pose 1 (idle 1); reduced and outlined by docs/art-review/g3e/units/make_poses.py --export (approved 2026-11-09 by Claude under the owner's delegation); drawn at scale 0.5 (src/render/imageArt.ts)
+  - id: world_ai_v1_wraith_2
+    path: public/assets/art/ai-v1/wraith_2.png
+    category: unit
+    origin: custom
+    source: docs/art-review/g3e/units/wraith/poses-source.png
+    creator: Project owner (OpenAI imagegen via Codex; prompt in docs/art-review/g3e/units/wraith/poses-prompt.md)
+    license: project-owned
+    attribution: false
+    redistribute: true
+    evidence: docs/art-review/g3e/units/wraith/poses/
+    modified: true
+    nativeSize: 1536x1024
+    finalSize: 22x25
+    anchor: feet
+    notes: Moon wraith pose 2 (walk 0); reduced and outlined by docs/art-review/g3e/units/make_poses.py --export (approved 2026-11-09 by Claude under the owner's delegation); drawn at scale 0.5 (src/render/imageArt.ts)
+  - id: world_ai_v1_wraith_3
+    path: public/assets/art/ai-v1/wraith_3.png
+    category: unit
+    origin: custom
+    source: docs/art-review/g3e/units/wraith/poses-source.png
+    creator: Project owner (OpenAI imagegen via Codex; prompt in docs/art-review/g3e/units/wraith/poses-prompt.md)
+    license: project-owned
+    attribution: false
+    redistribute: true
+    evidence: docs/art-review/g3e/units/wraith/poses/
+    modified: true
+    nativeSize: 1536x1024
+    finalSize: 22x25
+    anchor: feet
+    notes: Moon wraith pose 3 (walk 1); reduced and outlined by docs/art-review/g3e/units/make_poses.py --export (approved 2026-11-09 by Claude under the owner's delegation); drawn at scale 0.5 (src/render/imageArt.ts)
+  - id: world_ai_v1_wraith_4
+    path: public/assets/art/ai-v1/wraith_4.png
+    category: unit
+    origin: custom
+    source: docs/art-review/g3e/units/wraith/poses-source.png
+    creator: Project owner (OpenAI imagegen via Codex; prompt in docs/art-review/g3e/units/wraith/poses-prompt.md)
+    license: project-owned
+    attribution: false
+    redistribute: true
+    evidence: docs/art-review/g3e/units/wraith/poses/
+    modified: true
+    nativeSize: 1536x1024
+    finalSize: 22x25
+    anchor: feet
+    notes: Moon wraith pose 4 (attack 0); reduced and outlined by docs/art-review/g3e/units/make_poses.py --export (approved 2026-11-09 by Claude under the owner's delegation); drawn at scale 0.5 (src/render/imageArt.ts)
+  - id: world_ai_v1_wraith_5
+    path: public/assets/art/ai-v1/wraith_5.png
+    category: unit
+    origin: custom
+    source: docs/art-review/g3e/units/wraith/poses-source.png
+    creator: Project owner (OpenAI imagegen via Codex; prompt in docs/art-review/g3e/units/wraith/poses-prompt.md)
+    license: project-owned
+    attribution: false
+    redistribute: true
+    evidence: docs/art-review/g3e/units/wraith/poses/
+    modified: true
+    nativeSize: 1536x1024
+    finalSize: 22x25
+    anchor: feet
+    notes: Moon wraith pose 5 (attack 1); reduced and outlined by docs/art-review/g3e/units/make_poses.py --export (approved 2026-11-09 by Claude under the owner's delegation); drawn at scale 0.5 (src/render/imageArt.ts)
+  - id: world_ai_v1_wraith_foe_0
+    path: public/assets/art/ai-v1/wraith_foe_0.png
+    category: unit
+    origin: custom
+    source: docs/art-review/g3e/units/wraith/poses-source.png
+    creator: Project owner (OpenAI imagegen via Codex; prompt in docs/art-review/g3e/units/wraith/poses-prompt.md)
+    license: project-owned
+    attribution: false
+    redistribute: true
+    evidence: docs/art-review/g3e/units/wraith/poses/
+    modified: true
+    nativeSize: 1536x1024
+    finalSize: 22x25
+    anchor: feet
+    notes: Moon wraith foe recolour, pose 0 (idle 0); reduced and outlined by docs/art-review/g3e/units/make_poses.py --export (approved 2026-11-09 by Claude under the owner's delegation); drawn at scale 0.5 (src/render/imageArt.ts)
+  - id: world_ai_v1_wraith_foe_1
+    path: public/assets/art/ai-v1/wraith_foe_1.png
+    category: unit
+    origin: custom
+    source: docs/art-review/g3e/units/wraith/poses-source.png
+    creator: Project owner (OpenAI imagegen via Codex; prompt in docs/art-review/g3e/units/wraith/poses-prompt.md)
+    license: project-owned
+    attribution: false
+    redistribute: true
+    evidence: docs/art-review/g3e/units/wraith/poses/
+    modified: true
+    nativeSize: 1536x1024
+    finalSize: 22x25
+    anchor: feet
+    notes: Moon wraith foe recolour, pose 1 (idle 1); reduced and outlined by docs/art-review/g3e/units/make_poses.py --export (approved 2026-11-09 by Claude under the owner's delegation); drawn at scale 0.5 (src/render/imageArt.ts)
+  - id: world_ai_v1_wraith_foe_2
+    path: public/assets/art/ai-v1/wraith_foe_2.png
+    category: unit
+    origin: custom
+    source: docs/art-review/g3e/units/wraith/poses-source.png
+    creator: Project owner (OpenAI imagegen via Codex; prompt in docs/art-review/g3e/units/wraith/poses-prompt.md)
+    license: project-owned
+    attribution: false
+    redistribute: true
+    evidence: docs/art-review/g3e/units/wraith/poses/
+    modified: true
+    nativeSize: 1536x1024
+    finalSize: 22x25
+    anchor: feet
+    notes: Moon wraith foe recolour, pose 2 (walk 0); reduced and outlined by docs/art-review/g3e/units/make_poses.py --export (approved 2026-11-09 by Claude under the owner's delegation); drawn at scale 0.5 (src/render/imageArt.ts)
+  - id: world_ai_v1_wraith_foe_3
+    path: public/assets/art/ai-v1/wraith_foe_3.png
+    category: unit
+    origin: custom
+    source: docs/art-review/g3e/units/wraith/poses-source.png
+    creator: Project owner (OpenAI imagegen via Codex; prompt in docs/art-review/g3e/units/wraith/poses-prompt.md)
+    license: project-owned
+    attribution: false
+    redistribute: true
+    evidence: docs/art-review/g3e/units/wraith/poses/
+    modified: true
+    nativeSize: 1536x1024
+    finalSize: 22x25
+    anchor: feet
+    notes: Moon wraith foe recolour, pose 3 (walk 1); reduced and outlined by docs/art-review/g3e/units/make_poses.py --export (approved 2026-11-09 by Claude under the owner's delegation); drawn at scale 0.5 (src/render/imageArt.ts)
+  - id: world_ai_v1_wraith_foe_4
+    path: public/assets/art/ai-v1/wraith_foe_4.png
+    category: unit
+    origin: custom
+    source: docs/art-review/g3e/units/wraith/poses-source.png
+    creator: Project owner (OpenAI imagegen via Codex; prompt in docs/art-review/g3e/units/wraith/poses-prompt.md)
+    license: project-owned
+    attribution: false
+    redistribute: true
+    evidence: docs/art-review/g3e/units/wraith/poses/
+    modified: true
+    nativeSize: 1536x1024
+    finalSize: 22x25
+    anchor: feet
+    notes: Moon wraith foe recolour, pose 4 (attack 0); reduced and outlined by docs/art-review/g3e/units/make_poses.py --export (approved 2026-11-09 by Claude under the owner's delegation); drawn at scale 0.5 (src/render/imageArt.ts)
+  - id: world_ai_v1_wraith_foe_5
+    path: public/assets/art/ai-v1/wraith_foe_5.png
+    category: unit
+    origin: custom
+    source: docs/art-review/g3e/units/wraith/poses-source.png
+    creator: Project owner (OpenAI imagegen via Codex; prompt in docs/art-review/g3e/units/wraith/poses-prompt.md)
+    license: project-owned
+    attribution: false
+    redistribute: true
+    evidence: docs/art-review/g3e/units/wraith/poses/
+    modified: true
+    nativeSize: 1536x1024
+    finalSize: 22x25
+    anchor: feet
+    notes: Moon wraith foe recolour, pose 5 (attack 1); reduced and outlined by docs/art-review/g3e/units/make_poses.py --export (approved 2026-11-09 by Claude under the owner's delegation); drawn at scale 0.5 (src/render/imageArt.ts)
+  - id: world_ai_v1_vampire_0
+    path: public/assets/art/ai-v1/vampire_0.png
+    category: unit
+    origin: custom
+    source: docs/art-review/g3e/units/vampire/poses-source.png
+    creator: Project owner (OpenAI imagegen via Codex; prompt in docs/art-review/g3e/units/vampire/poses-prompt.md)
+    license: project-owned
+    attribution: false
+    redistribute: true
+    evidence: docs/art-review/g3e/units/vampire/poses/
+    modified: true
+    nativeSize: 1536x1024
+    finalSize: 36x29
+    anchor: feet
+    notes: Moon vampire pose 0 (idle 0); reduced and outlined by docs/art-review/g3e/units/make_poses.py --export (approved 2026-11-09 by Claude under the owner's delegation); drawn at scale 0.5 (src/render/imageArt.ts)
+  - id: world_ai_v1_vampire_1
+    path: public/assets/art/ai-v1/vampire_1.png
+    category: unit
+    origin: custom
+    source: docs/art-review/g3e/units/vampire/poses-source.png
+    creator: Project owner (OpenAI imagegen via Codex; prompt in docs/art-review/g3e/units/vampire/poses-prompt.md)
+    license: project-owned
+    attribution: false
+    redistribute: true
+    evidence: docs/art-review/g3e/units/vampire/poses/
+    modified: true
+    nativeSize: 1536x1024
+    finalSize: 36x29
+    anchor: feet
+    notes: Moon vampire pose 1 (idle 1); reduced and outlined by docs/art-review/g3e/units/make_poses.py --export (approved 2026-11-09 by Claude under the owner's delegation); drawn at scale 0.5 (src/render/imageArt.ts)
+  - id: world_ai_v1_vampire_2
+    path: public/assets/art/ai-v1/vampire_2.png
+    category: unit
+    origin: custom
+    source: docs/art-review/g3e/units/vampire/poses-source.png
+    creator: Project owner (OpenAI imagegen via Codex; prompt in docs/art-review/g3e/units/vampire/poses-prompt.md)
+    license: project-owned
+    attribution: false
+    redistribute: true
+    evidence: docs/art-review/g3e/units/vampire/poses/
+    modified: true
+    nativeSize: 1536x1024
+    finalSize: 36x29
+    anchor: feet
+    notes: Moon vampire pose 2 (walk 0); reduced and outlined by docs/art-review/g3e/units/make_poses.py --export (approved 2026-11-09 by Claude under the owner's delegation); drawn at scale 0.5 (src/render/imageArt.ts)
+  - id: world_ai_v1_vampire_3
+    path: public/assets/art/ai-v1/vampire_3.png
+    category: unit
+    origin: custom
+    source: docs/art-review/g3e/units/vampire/poses-source.png
+    creator: Project owner (OpenAI imagegen via Codex; prompt in docs/art-review/g3e/units/vampire/poses-prompt.md)
+    license: project-owned
+    attribution: false
+    redistribute: true
+    evidence: docs/art-review/g3e/units/vampire/poses/
+    modified: true
+    nativeSize: 1536x1024
+    finalSize: 36x29
+    anchor: feet
+    notes: Moon vampire pose 3 (walk 1); reduced and outlined by docs/art-review/g3e/units/make_poses.py --export (approved 2026-11-09 by Claude under the owner's delegation); drawn at scale 0.5 (src/render/imageArt.ts)
+  - id: world_ai_v1_vampire_4
+    path: public/assets/art/ai-v1/vampire_4.png
+    category: unit
+    origin: custom
+    source: docs/art-review/g3e/units/vampire/poses-source.png
+    creator: Project owner (OpenAI imagegen via Codex; prompt in docs/art-review/g3e/units/vampire/poses-prompt.md)
+    license: project-owned
+    attribution: false
+    redistribute: true
+    evidence: docs/art-review/g3e/units/vampire/poses/
+    modified: true
+    nativeSize: 1536x1024
+    finalSize: 36x29
+    anchor: feet
+    notes: Moon vampire pose 4 (attack 0); reduced and outlined by docs/art-review/g3e/units/make_poses.py --export (approved 2026-11-09 by Claude under the owner's delegation); drawn at scale 0.5 (src/render/imageArt.ts)
+  - id: world_ai_v1_vampire_5
+    path: public/assets/art/ai-v1/vampire_5.png
+    category: unit
+    origin: custom
+    source: docs/art-review/g3e/units/vampire/poses-source.png
+    creator: Project owner (OpenAI imagegen via Codex; prompt in docs/art-review/g3e/units/vampire/poses-prompt.md)
+    license: project-owned
+    attribution: false
+    redistribute: true
+    evidence: docs/art-review/g3e/units/vampire/poses/
+    modified: true
+    nativeSize: 1536x1024
+    finalSize: 36x29
+    anchor: feet
+    notes: Moon vampire pose 5 (attack 1); reduced and outlined by docs/art-review/g3e/units/make_poses.py --export (approved 2026-11-09 by Claude under the owner's delegation); drawn at scale 0.5 (src/render/imageArt.ts)
+  - id: world_ai_v1_vampire_foe_0
+    path: public/assets/art/ai-v1/vampire_foe_0.png
+    category: unit
+    origin: custom
+    source: docs/art-review/g3e/units/vampire/poses-source.png
+    creator: Project owner (OpenAI imagegen via Codex; prompt in docs/art-review/g3e/units/vampire/poses-prompt.md)
+    license: project-owned
+    attribution: false
+    redistribute: true
+    evidence: docs/art-review/g3e/units/vampire/poses/
+    modified: true
+    nativeSize: 1536x1024
+    finalSize: 36x29
+    anchor: feet
+    notes: Moon vampire foe recolour, pose 0 (idle 0); reduced and outlined by docs/art-review/g3e/units/make_poses.py --export (approved 2026-11-09 by Claude under the owner's delegation); drawn at scale 0.5 (src/render/imageArt.ts)
+  - id: world_ai_v1_vampire_foe_1
+    path: public/assets/art/ai-v1/vampire_foe_1.png
+    category: unit
+    origin: custom
+    source: docs/art-review/g3e/units/vampire/poses-source.png
+    creator: Project owner (OpenAI imagegen via Codex; prompt in docs/art-review/g3e/units/vampire/poses-prompt.md)
+    license: project-owned
+    attribution: false
+    redistribute: true
+    evidence: docs/art-review/g3e/units/vampire/poses/
+    modified: true
+    nativeSize: 1536x1024
+    finalSize: 36x29
+    anchor: feet
+    notes: Moon vampire foe recolour, pose 1 (idle 1); reduced and outlined by docs/art-review/g3e/units/make_poses.py --export (approved 2026-11-09 by Claude under the owner's delegation); drawn at scale 0.5 (src/render/imageArt.ts)
+  - id: world_ai_v1_vampire_foe_2
+    path: public/assets/art/ai-v1/vampire_foe_2.png
+    category: unit
+    origin: custom
+    source: docs/art-review/g3e/units/vampire/poses-source.png
+    creator: Project owner (OpenAI imagegen via Codex; prompt in docs/art-review/g3e/units/vampire/poses-prompt.md)
+    license: project-owned
+    attribution: false
+    redistribute: true
+    evidence: docs/art-review/g3e/units/vampire/poses/
+    modified: true
+    nativeSize: 1536x1024
+    finalSize: 36x29
+    anchor: feet
+    notes: Moon vampire foe recolour, pose 2 (walk 0); reduced and outlined by docs/art-review/g3e/units/make_poses.py --export (approved 2026-11-09 by Claude under the owner's delegation); drawn at scale 0.5 (src/render/imageArt.ts)
+  - id: world_ai_v1_vampire_foe_3
+    path: public/assets/art/ai-v1/vampire_foe_3.png
+    category: unit
+    origin: custom
+    source: docs/art-review/g3e/units/vampire/poses-source.png
+    creator: Project owner (OpenAI imagegen via Codex; prompt in docs/art-review/g3e/units/vampire/poses-prompt.md)
+    license: project-owned
+    attribution: false
+    redistribute: true
+    evidence: docs/art-review/g3e/units/vampire/poses/
+    modified: true
+    nativeSize: 1536x1024
+    finalSize: 36x29
+    anchor: feet
+    notes: Moon vampire foe recolour, pose 3 (walk 1); reduced and outlined by docs/art-review/g3e/units/make_poses.py --export (approved 2026-11-09 by Claude under the owner's delegation); drawn at scale 0.5 (src/render/imageArt.ts)
+  - id: world_ai_v1_vampire_foe_4
+    path: public/assets/art/ai-v1/vampire_foe_4.png
+    category: unit
+    origin: custom
+    source: docs/art-review/g3e/units/vampire/poses-source.png
+    creator: Project owner (OpenAI imagegen via Codex; prompt in docs/art-review/g3e/units/vampire/poses-prompt.md)
+    license: project-owned
+    attribution: false
+    redistribute: true
+    evidence: docs/art-review/g3e/units/vampire/poses/
+    modified: true
+    nativeSize: 1536x1024
+    finalSize: 36x29
+    anchor: feet
+    notes: Moon vampire foe recolour, pose 4 (attack 0); reduced and outlined by docs/art-review/g3e/units/make_poses.py --export (approved 2026-11-09 by Claude under the owner's delegation); drawn at scale 0.5 (src/render/imageArt.ts)
+  - id: world_ai_v1_vampire_foe_5
+    path: public/assets/art/ai-v1/vampire_foe_5.png
+    category: unit
+    origin: custom
+    source: docs/art-review/g3e/units/vampire/poses-source.png
+    creator: Project owner (OpenAI imagegen via Codex; prompt in docs/art-review/g3e/units/vampire/poses-prompt.md)
+    license: project-owned
+    attribution: false
+    redistribute: true
+    evidence: docs/art-review/g3e/units/vampire/poses/
+    modified: true
+    nativeSize: 1536x1024
+    finalSize: 36x29
+    anchor: feet
+    notes: Moon vampire foe recolour, pose 5 (attack 1); reduced and outlined by docs/art-review/g3e/units/make_poses.py --export (approved 2026-11-09 by Claude under the owner's delegation); drawn at scale 0.5 (src/render/imageArt.ts)
+  - id: world_ai_v1_moon_reaper_0
+    path: public/assets/art/ai-v1/moon_reaper_0.png
+    category: unit
+    origin: custom
+    source: docs/art-review/g3e/units/moon_reaper/poses-source.png
+    creator: Project owner (OpenAI imagegen via Codex; prompt in docs/art-review/g3e/units/moon_reaper/poses-prompt.md)
+    license: project-owned
+    attribution: false
+    redistribute: true
+    evidence: docs/art-review/g3e/units/moon_reaper/poses/
+    modified: true
+    nativeSize: 1536x1024
+    finalSize: 44x36
+    anchor: feet
+    notes: Moon moon_reaper pose 0 (idle 0); reduced and outlined by docs/art-review/g3e/units/make_poses.py --export (approved 2026-11-09 by Claude under the owner's delegation); drawn at scale 0.5 (src/render/imageArt.ts)
+  - id: world_ai_v1_moon_reaper_1
+    path: public/assets/art/ai-v1/moon_reaper_1.png
+    category: unit
+    origin: custom
+    source: docs/art-review/g3e/units/moon_reaper/poses-source.png
+    creator: Project owner (OpenAI imagegen via Codex; prompt in docs/art-review/g3e/units/moon_reaper/poses-prompt.md)
+    license: project-owned
+    attribution: false
+    redistribute: true
+    evidence: docs/art-review/g3e/units/moon_reaper/poses/
+    modified: true
+    nativeSize: 1536x1024
+    finalSize: 44x36
+    anchor: feet
+    notes: Moon moon_reaper pose 1 (idle 1); reduced and outlined by docs/art-review/g3e/units/make_poses.py --export (approved 2026-11-09 by Claude under the owner's delegation); drawn at scale 0.5 (src/render/imageArt.ts)
+  - id: world_ai_v1_moon_reaper_2
+    path: public/assets/art/ai-v1/moon_reaper_2.png
+    category: unit
+    origin: custom
+    source: docs/art-review/g3e/units/moon_reaper/poses-source.png
+    creator: Project owner (OpenAI imagegen via Codex; prompt in docs/art-review/g3e/units/moon_reaper/poses-prompt.md)
+    license: project-owned
+    attribution: false
+    redistribute: true
+    evidence: docs/art-review/g3e/units/moon_reaper/poses/
+    modified: true
+    nativeSize: 1536x1024
+    finalSize: 44x36
+    anchor: feet
+    notes: Moon moon_reaper pose 2 (walk 0); reduced and outlined by docs/art-review/g3e/units/make_poses.py --export (approved 2026-11-09 by Claude under the owner's delegation); drawn at scale 0.5 (src/render/imageArt.ts)
+  - id: world_ai_v1_moon_reaper_3
+    path: public/assets/art/ai-v1/moon_reaper_3.png
+    category: unit
+    origin: custom
+    source: docs/art-review/g3e/units/moon_reaper/poses-source.png
+    creator: Project owner (OpenAI imagegen via Codex; prompt in docs/art-review/g3e/units/moon_reaper/poses-prompt.md)
+    license: project-owned
+    attribution: false
+    redistribute: true
+    evidence: docs/art-review/g3e/units/moon_reaper/poses/
+    modified: true
+    nativeSize: 1536x1024
+    finalSize: 44x36
+    anchor: feet
+    notes: Moon moon_reaper pose 3 (walk 1); reduced and outlined by docs/art-review/g3e/units/make_poses.py --export (approved 2026-11-09 by Claude under the owner's delegation); drawn at scale 0.5 (src/render/imageArt.ts)
+  - id: world_ai_v1_moon_reaper_4
+    path: public/assets/art/ai-v1/moon_reaper_4.png
+    category: unit
+    origin: custom
+    source: docs/art-review/g3e/units/moon_reaper/poses-source.png
+    creator: Project owner (OpenAI imagegen via Codex; prompt in docs/art-review/g3e/units/moon_reaper/poses-prompt.md)
+    license: project-owned
+    attribution: false
+    redistribute: true
+    evidence: docs/art-review/g3e/units/moon_reaper/poses/
+    modified: true
+    nativeSize: 1536x1024
+    finalSize: 44x36
+    anchor: feet
+    notes: Moon moon_reaper pose 4 (attack 0); reduced and outlined by docs/art-review/g3e/units/make_poses.py --export (approved 2026-11-09 by Claude under the owner's delegation); drawn at scale 0.5 (src/render/imageArt.ts)
+  - id: world_ai_v1_moon_reaper_5
+    path: public/assets/art/ai-v1/moon_reaper_5.png
+    category: unit
+    origin: custom
+    source: docs/art-review/g3e/units/moon_reaper/poses-source.png
+    creator: Project owner (OpenAI imagegen via Codex; prompt in docs/art-review/g3e/units/moon_reaper/poses-prompt.md)
+    license: project-owned
+    attribution: false
+    redistribute: true
+    evidence: docs/art-review/g3e/units/moon_reaper/poses/
+    modified: true
+    nativeSize: 1536x1024
+    finalSize: 44x36
+    anchor: feet
+    notes: Moon moon_reaper pose 5 (attack 1); reduced and outlined by docs/art-review/g3e/units/make_poses.py --export (approved 2026-11-09 by Claude under the owner's delegation); drawn at scale 0.5 (src/render/imageArt.ts)
+  - id: world_ai_v1_moon_reaper_foe_0
+    path: public/assets/art/ai-v1/moon_reaper_foe_0.png
+    category: unit
+    origin: custom
+    source: docs/art-review/g3e/units/moon_reaper/poses-source.png
+    creator: Project owner (OpenAI imagegen via Codex; prompt in docs/art-review/g3e/units/moon_reaper/poses-prompt.md)
+    license: project-owned
+    attribution: false
+    redistribute: true
+    evidence: docs/art-review/g3e/units/moon_reaper/poses/
+    modified: true
+    nativeSize: 1536x1024
+    finalSize: 44x36
+    anchor: feet
+    notes: Moon moon_reaper foe recolour, pose 0 (idle 0); reduced and outlined by docs/art-review/g3e/units/make_poses.py --export (approved 2026-11-09 by Claude under the owner's delegation); drawn at scale 0.5 (src/render/imageArt.ts)
+  - id: world_ai_v1_moon_reaper_foe_1
+    path: public/assets/art/ai-v1/moon_reaper_foe_1.png
+    category: unit
+    origin: custom
+    source: docs/art-review/g3e/units/moon_reaper/poses-source.png
+    creator: Project owner (OpenAI imagegen via Codex; prompt in docs/art-review/g3e/units/moon_reaper/poses-prompt.md)
+    license: project-owned
+    attribution: false
+    redistribute: true
+    evidence: docs/art-review/g3e/units/moon_reaper/poses/
+    modified: true
+    nativeSize: 1536x1024
+    finalSize: 44x36
+    anchor: feet
+    notes: Moon moon_reaper foe recolour, pose 1 (idle 1); reduced and outlined by docs/art-review/g3e/units/make_poses.py --export (approved 2026-11-09 by Claude under the owner's delegation); drawn at scale 0.5 (src/render/imageArt.ts)
+  - id: world_ai_v1_moon_reaper_foe_2
+    path: public/assets/art/ai-v1/moon_reaper_foe_2.png
+    category: unit
+    origin: custom
+    source: docs/art-review/g3e/units/moon_reaper/poses-source.png
+    creator: Project owner (OpenAI imagegen via Codex; prompt in docs/art-review/g3e/units/moon_reaper/poses-prompt.md)
+    license: project-owned
+    attribution: false
+    redistribute: true
+    evidence: docs/art-review/g3e/units/moon_reaper/poses/
+    modified: true
+    nativeSize: 1536x1024
+    finalSize: 44x36
+    anchor: feet
+    notes: Moon moon_reaper foe recolour, pose 2 (walk 0); reduced and outlined by docs/art-review/g3e/units/make_poses.py --export (approved 2026-11-09 by Claude under the owner's delegation); drawn at scale 0.5 (src/render/imageArt.ts)
+  - id: world_ai_v1_moon_reaper_foe_3
+    path: public/assets/art/ai-v1/moon_reaper_foe_3.png
+    category: unit
+    origin: custom
+    source: docs/art-review/g3e/units/moon_reaper/poses-source.png
+    creator: Project owner (OpenAI imagegen via Codex; prompt in docs/art-review/g3e/units/moon_reaper/poses-prompt.md)
+    license: project-owned
+    attribution: false
+    redistribute: true
+    evidence: docs/art-review/g3e/units/moon_reaper/poses/
+    modified: true
+    nativeSize: 1536x1024
+    finalSize: 44x36
+    anchor: feet
+    notes: Moon moon_reaper foe recolour, pose 3 (walk 1); reduced and outlined by docs/art-review/g3e/units/make_poses.py --export (approved 2026-11-09 by Claude under the owner's delegation); drawn at scale 0.5 (src/render/imageArt.ts)
+  - id: world_ai_v1_moon_reaper_foe_4
+    path: public/assets/art/ai-v1/moon_reaper_foe_4.png
+    category: unit
+    origin: custom
+    source: docs/art-review/g3e/units/moon_reaper/poses-source.png
+    creator: Project owner (OpenAI imagegen via Codex; prompt in docs/art-review/g3e/units/moon_reaper/poses-prompt.md)
+    license: project-owned
+    attribution: false
+    redistribute: true
+    evidence: docs/art-review/g3e/units/moon_reaper/poses/
+    modified: true
+    nativeSize: 1536x1024
+    finalSize: 44x36
+    anchor: feet
+    notes: Moon moon_reaper foe recolour, pose 4 (attack 0); reduced and outlined by docs/art-review/g3e/units/make_poses.py --export (approved 2026-11-09 by Claude under the owner's delegation); drawn at scale 0.5 (src/render/imageArt.ts)
+  - id: world_ai_v1_moon_reaper_foe_5
+    path: public/assets/art/ai-v1/moon_reaper_foe_5.png
+    category: unit
+    origin: custom
+    source: docs/art-review/g3e/units/moon_reaper/poses-source.png
+    creator: Project owner (OpenAI imagegen via Codex; prompt in docs/art-review/g3e/units/moon_reaper/poses-prompt.md)
+    license: project-owned
+    attribution: false
+    redistribute: true
+    evidence: docs/art-review/g3e/units/moon_reaper/poses/
+    modified: true
+    nativeSize: 1536x1024
+    finalSize: 44x36
+    anchor: feet
+    notes: Moon moon_reaper foe recolour, pose 5 (attack 1); reduced and outlined by docs/art-review/g3e/units/make_poses.py --export (approved 2026-11-09 by Claude under the owner's delegation); drawn at scale 0.5 (src/render/imageArt.ts)
+  - id: world_ai_v1_rider_0
+    path: public/assets/art/ai-v1/rider_0.png
+    category: unit
+    origin: custom
+    source: docs/art-review/g3e/units/rider/poses-source.png
+    creator: Project owner (OpenAI imagegen via Codex; prompt in docs/art-review/g3e/units/rider/poses-prompt.md)
+    license: project-owned
+    attribution: false
+    redistribute: true
+    evidence: docs/art-review/g3e/units/rider/poses/
+    modified: true
+    nativeSize: 1536x1024
+    finalSize: 30x32
+    anchor: feet
+    notes: Nomad rider pose 0 (idle 0); reduced and outlined by docs/art-review/g3e/units/make_poses.py --export (approved 2026-11-09 by Claude under the owner's delegation); drawn at scale 0.5 (src/render/imageArt.ts)
+  - id: world_ai_v1_rider_1
+    path: public/assets/art/ai-v1/rider_1.png
+    category: unit
+    origin: custom
+    source: docs/art-review/g3e/units/rider/poses-source.png
+    creator: Project owner (OpenAI imagegen via Codex; prompt in docs/art-review/g3e/units/rider/poses-prompt.md)
+    license: project-owned
+    attribution: false
+    redistribute: true
+    evidence: docs/art-review/g3e/units/rider/poses/
+    modified: true
+    nativeSize: 1536x1024
+    finalSize: 30x32
+    anchor: feet
+    notes: Nomad rider pose 1 (idle 1); reduced and outlined by docs/art-review/g3e/units/make_poses.py --export (approved 2026-11-09 by Claude under the owner's delegation); drawn at scale 0.5 (src/render/imageArt.ts)
+  - id: world_ai_v1_rider_2
+    path: public/assets/art/ai-v1/rider_2.png
+    category: unit
+    origin: custom
+    source: docs/art-review/g3e/units/rider/poses-source.png
+    creator: Project owner (OpenAI imagegen via Codex; prompt in docs/art-review/g3e/units/rider/poses-prompt.md)
+    license: project-owned
+    attribution: false
+    redistribute: true
+    evidence: docs/art-review/g3e/units/rider/poses/
+    modified: true
+    nativeSize: 1536x1024
+    finalSize: 30x32
+    anchor: feet
+    notes: Nomad rider pose 2 (walk 0); reduced and outlined by docs/art-review/g3e/units/make_poses.py --export (approved 2026-11-09 by Claude under the owner's delegation); drawn at scale 0.5 (src/render/imageArt.ts)
+  - id: world_ai_v1_rider_3
+    path: public/assets/art/ai-v1/rider_3.png
+    category: unit
+    origin: custom
+    source: docs/art-review/g3e/units/rider/poses-source.png
+    creator: Project owner (OpenAI imagegen via Codex; prompt in docs/art-review/g3e/units/rider/poses-prompt.md)
+    license: project-owned
+    attribution: false
+    redistribute: true
+    evidence: docs/art-review/g3e/units/rider/poses/
+    modified: true
+    nativeSize: 1536x1024
+    finalSize: 30x32
+    anchor: feet
+    notes: Nomad rider pose 3 (walk 1); reduced and outlined by docs/art-review/g3e/units/make_poses.py --export (approved 2026-11-09 by Claude under the owner's delegation); drawn at scale 0.5 (src/render/imageArt.ts)
+  - id: world_ai_v1_rider_4
+    path: public/assets/art/ai-v1/rider_4.png
+    category: unit
+    origin: custom
+    source: docs/art-review/g3e/units/rider/poses-source.png
+    creator: Project owner (OpenAI imagegen via Codex; prompt in docs/art-review/g3e/units/rider/poses-prompt.md)
+    license: project-owned
+    attribution: false
+    redistribute: true
+    evidence: docs/art-review/g3e/units/rider/poses/
+    modified: true
+    nativeSize: 1536x1024
+    finalSize: 30x32
+    anchor: feet
+    notes: Nomad rider pose 4 (attack 0); reduced and outlined by docs/art-review/g3e/units/make_poses.py --export (approved 2026-11-09 by Claude under the owner's delegation); drawn at scale 0.5 (src/render/imageArt.ts)
+  - id: world_ai_v1_rider_5
+    path: public/assets/art/ai-v1/rider_5.png
+    category: unit
+    origin: custom
+    source: docs/art-review/g3e/units/rider/poses-source.png
+    creator: Project owner (OpenAI imagegen via Codex; prompt in docs/art-review/g3e/units/rider/poses-prompt.md)
+    license: project-owned
+    attribution: false
+    redistribute: true
+    evidence: docs/art-review/g3e/units/rider/poses/
+    modified: true
+    nativeSize: 1536x1024
+    finalSize: 30x32
+    anchor: feet
+    notes: Nomad rider pose 5 (attack 1); reduced and outlined by docs/art-review/g3e/units/make_poses.py --export (approved 2026-11-09 by Claude under the owner's delegation); drawn at scale 0.5 (src/render/imageArt.ts)
+  - id: world_ai_v1_rider_foe_0
+    path: public/assets/art/ai-v1/rider_foe_0.png
+    category: unit
+    origin: custom
+    source: docs/art-review/g3e/units/rider/poses-source.png
+    creator: Project owner (OpenAI imagegen via Codex; prompt in docs/art-review/g3e/units/rider/poses-prompt.md)
+    license: project-owned
+    attribution: false
+    redistribute: true
+    evidence: docs/art-review/g3e/units/rider/poses/
+    modified: true
+    nativeSize: 1536x1024
+    finalSize: 30x32
+    anchor: feet
+    notes: Nomad rider foe recolour, pose 0 (idle 0); reduced and outlined by docs/art-review/g3e/units/make_poses.py --export (approved 2026-11-09 by Claude under the owner's delegation); drawn at scale 0.5 (src/render/imageArt.ts)
+  - id: world_ai_v1_rider_foe_1
+    path: public/assets/art/ai-v1/rider_foe_1.png
+    category: unit
+    origin: custom
+    source: docs/art-review/g3e/units/rider/poses-source.png
+    creator: Project owner (OpenAI imagegen via Codex; prompt in docs/art-review/g3e/units/rider/poses-prompt.md)
+    license: project-owned
+    attribution: false
+    redistribute: true
+    evidence: docs/art-review/g3e/units/rider/poses/
+    modified: true
+    nativeSize: 1536x1024
+    finalSize: 30x32
+    anchor: feet
+    notes: Nomad rider foe recolour, pose 1 (idle 1); reduced and outlined by docs/art-review/g3e/units/make_poses.py --export (approved 2026-11-09 by Claude under the owner's delegation); drawn at scale 0.5 (src/render/imageArt.ts)
+  - id: world_ai_v1_rider_foe_2
+    path: public/assets/art/ai-v1/rider_foe_2.png
+    category: unit
+    origin: custom
+    source: docs/art-review/g3e/units/rider/poses-source.png
+    creator: Project owner (OpenAI imagegen via Codex; prompt in docs/art-review/g3e/units/rider/poses-prompt.md)
+    license: project-owned
+    attribution: false
+    redistribute: true
+    evidence: docs/art-review/g3e/units/rider/poses/
+    modified: true
+    nativeSize: 1536x1024
+    finalSize: 30x32
+    anchor: feet
+    notes: Nomad rider foe recolour, pose 2 (walk 0); reduced and outlined by docs/art-review/g3e/units/make_poses.py --export (approved 2026-11-09 by Claude under the owner's delegation); drawn at scale 0.5 (src/render/imageArt.ts)
+  - id: world_ai_v1_rider_foe_3
+    path: public/assets/art/ai-v1/rider_foe_3.png
+    category: unit
+    origin: custom
+    source: docs/art-review/g3e/units/rider/poses-source.png
+    creator: Project owner (OpenAI imagegen via Codex; prompt in docs/art-review/g3e/units/rider/poses-prompt.md)
+    license: project-owned
+    attribution: false
+    redistribute: true
+    evidence: docs/art-review/g3e/units/rider/poses/
+    modified: true
+    nativeSize: 1536x1024
+    finalSize: 30x32
+    anchor: feet
+    notes: Nomad rider foe recolour, pose 3 (walk 1); reduced and outlined by docs/art-review/g3e/units/make_poses.py --export (approved 2026-11-09 by Claude under the owner's delegation); drawn at scale 0.5 (src/render/imageArt.ts)
+  - id: world_ai_v1_rider_foe_4
+    path: public/assets/art/ai-v1/rider_foe_4.png
+    category: unit
+    origin: custom
+    source: docs/art-review/g3e/units/rider/poses-source.png
+    creator: Project owner (OpenAI imagegen via Codex; prompt in docs/art-review/g3e/units/rider/poses-prompt.md)
+    license: project-owned
+    attribution: false
+    redistribute: true
+    evidence: docs/art-review/g3e/units/rider/poses/
+    modified: true
+    nativeSize: 1536x1024
+    finalSize: 30x32
+    anchor: feet
+    notes: Nomad rider foe recolour, pose 4 (attack 0); reduced and outlined by docs/art-review/g3e/units/make_poses.py --export (approved 2026-11-09 by Claude under the owner's delegation); drawn at scale 0.5 (src/render/imageArt.ts)
+  - id: world_ai_v1_rider_foe_5
+    path: public/assets/art/ai-v1/rider_foe_5.png
+    category: unit
+    origin: custom
+    source: docs/art-review/g3e/units/rider/poses-source.png
+    creator: Project owner (OpenAI imagegen via Codex; prompt in docs/art-review/g3e/units/rider/poses-prompt.md)
+    license: project-owned
+    attribution: false
+    redistribute: true
+    evidence: docs/art-review/g3e/units/rider/poses/
+    modified: true
+    nativeSize: 1536x1024
+    finalSize: 30x32
+    anchor: feet
+    notes: Nomad rider foe recolour, pose 5 (attack 1); reduced and outlined by docs/art-review/g3e/units/make_poses.py --export (approved 2026-11-09 by Claude under the owner's delegation); drawn at scale 0.5 (src/render/imageArt.ts)
+  - id: world_ai_v1_horse_archer_0
+    path: public/assets/art/ai-v1/horse_archer_0.png
+    category: unit
+    origin: custom
+    source: docs/art-review/g3e/units/horse_archer/poses-source.png
+    creator: Project owner (OpenAI imagegen via Codex; prompt in docs/art-review/g3e/units/horse_archer/poses-prompt.md)
+    license: project-owned
+    attribution: false
+    redistribute: true
+    evidence: docs/art-review/g3e/units/horse_archer/poses/
+    modified: true
+    nativeSize: 1536x1024
+    finalSize: 22x32
+    anchor: feet
+    notes: Nomad horse_archer pose 0 (idle 0); reduced and outlined by docs/art-review/g3e/units/make_poses.py --export (approved 2026-11-09 by Claude under the owner's delegation); drawn at scale 0.5 (src/render/imageArt.ts)
+  - id: world_ai_v1_horse_archer_1
+    path: public/assets/art/ai-v1/horse_archer_1.png
+    category: unit
+    origin: custom
+    source: docs/art-review/g3e/units/horse_archer/poses-source.png
+    creator: Project owner (OpenAI imagegen via Codex; prompt in docs/art-review/g3e/units/horse_archer/poses-prompt.md)
+    license: project-owned
+    attribution: false
+    redistribute: true
+    evidence: docs/art-review/g3e/units/horse_archer/poses/
+    modified: true
+    nativeSize: 1536x1024
+    finalSize: 22x32
+    anchor: feet
+    notes: Nomad horse_archer pose 1 (idle 1); reduced and outlined by docs/art-review/g3e/units/make_poses.py --export (approved 2026-11-09 by Claude under the owner's delegation); drawn at scale 0.5 (src/render/imageArt.ts)
+  - id: world_ai_v1_horse_archer_2
+    path: public/assets/art/ai-v1/horse_archer_2.png
+    category: unit
+    origin: custom
+    source: docs/art-review/g3e/units/horse_archer/poses-source.png
+    creator: Project owner (OpenAI imagegen via Codex; prompt in docs/art-review/g3e/units/horse_archer/poses-prompt.md)
+    license: project-owned
+    attribution: false
+    redistribute: true
+    evidence: docs/art-review/g3e/units/horse_archer/poses/
+    modified: true
+    nativeSize: 1536x1024
+    finalSize: 22x32
+    anchor: feet
+    notes: Nomad horse_archer pose 2 (walk 0); reduced and outlined by docs/art-review/g3e/units/make_poses.py --export (approved 2026-11-09 by Claude under the owner's delegation); drawn at scale 0.5 (src/render/imageArt.ts)
+  - id: world_ai_v1_horse_archer_3
+    path: public/assets/art/ai-v1/horse_archer_3.png
+    category: unit
+    origin: custom
+    source: docs/art-review/g3e/units/horse_archer/poses-source.png
+    creator: Project owner (OpenAI imagegen via Codex; prompt in docs/art-review/g3e/units/horse_archer/poses-prompt.md)
+    license: project-owned
+    attribution: false
+    redistribute: true
+    evidence: docs/art-review/g3e/units/horse_archer/poses/
+    modified: true
+    nativeSize: 1536x1024
+    finalSize: 22x32
+    anchor: feet
+    notes: Nomad horse_archer pose 3 (walk 1); reduced and outlined by docs/art-review/g3e/units/make_poses.py --export (approved 2026-11-09 by Claude under the owner's delegation); drawn at scale 0.5 (src/render/imageArt.ts)
+  - id: world_ai_v1_horse_archer_4
+    path: public/assets/art/ai-v1/horse_archer_4.png
+    category: unit
+    origin: custom
+    source: docs/art-review/g3e/units/horse_archer/poses-source.png
+    creator: Project owner (OpenAI imagegen via Codex; prompt in docs/art-review/g3e/units/horse_archer/poses-prompt.md)
+    license: project-owned
+    attribution: false
+    redistribute: true
+    evidence: docs/art-review/g3e/units/horse_archer/poses/
+    modified: true
+    nativeSize: 1536x1024
+    finalSize: 22x32
+    anchor: feet
+    notes: Nomad horse_archer pose 4 (attack 0); reduced and outlined by docs/art-review/g3e/units/make_poses.py --export (approved 2026-11-09 by Claude under the owner's delegation); drawn at scale 0.5 (src/render/imageArt.ts)
+  - id: world_ai_v1_horse_archer_5
+    path: public/assets/art/ai-v1/horse_archer_5.png
+    category: unit
+    origin: custom
+    source: docs/art-review/g3e/units/horse_archer/poses-source.png
+    creator: Project owner (OpenAI imagegen via Codex; prompt in docs/art-review/g3e/units/horse_archer/poses-prompt.md)
+    license: project-owned
+    attribution: false
+    redistribute: true
+    evidence: docs/art-review/g3e/units/horse_archer/poses/
+    modified: true
+    nativeSize: 1536x1024
+    finalSize: 22x32
+    anchor: feet
+    notes: Nomad horse_archer pose 5 (attack 1); reduced and outlined by docs/art-review/g3e/units/make_poses.py --export (approved 2026-11-09 by Claude under the owner's delegation); drawn at scale 0.5 (src/render/imageArt.ts)
+  - id: world_ai_v1_horse_archer_foe_0
+    path: public/assets/art/ai-v1/horse_archer_foe_0.png
+    category: unit
+    origin: custom
+    source: docs/art-review/g3e/units/horse_archer/poses-source.png
+    creator: Project owner (OpenAI imagegen via Codex; prompt in docs/art-review/g3e/units/horse_archer/poses-prompt.md)
+    license: project-owned
+    attribution: false
+    redistribute: true
+    evidence: docs/art-review/g3e/units/horse_archer/poses/
+    modified: true
+    nativeSize: 1536x1024
+    finalSize: 22x32
+    anchor: feet
+    notes: Nomad horse_archer foe recolour, pose 0 (idle 0); reduced and outlined by docs/art-review/g3e/units/make_poses.py --export (approved 2026-11-09 by Claude under the owner's delegation); drawn at scale 0.5 (src/render/imageArt.ts)
+  - id: world_ai_v1_horse_archer_foe_1
+    path: public/assets/art/ai-v1/horse_archer_foe_1.png
+    category: unit
+    origin: custom
+    source: docs/art-review/g3e/units/horse_archer/poses-source.png
+    creator: Project owner (OpenAI imagegen via Codex; prompt in docs/art-review/g3e/units/horse_archer/poses-prompt.md)
+    license: project-owned
+    attribution: false
+    redistribute: true
+    evidence: docs/art-review/g3e/units/horse_archer/poses/
+    modified: true
+    nativeSize: 1536x1024
+    finalSize: 22x32
+    anchor: feet
+    notes: Nomad horse_archer foe recolour, pose 1 (idle 1); reduced and outlined by docs/art-review/g3e/units/make_poses.py --export (approved 2026-11-09 by Claude under the owner's delegation); drawn at scale 0.5 (src/render/imageArt.ts)
+  - id: world_ai_v1_horse_archer_foe_2
+    path: public/assets/art/ai-v1/horse_archer_foe_2.png
+    category: unit
+    origin: custom
+    source: docs/art-review/g3e/units/horse_archer/poses-source.png
+    creator: Project owner (OpenAI imagegen via Codex; prompt in docs/art-review/g3e/units/horse_archer/poses-prompt.md)
+    license: project-owned
+    attribution: false
+    redistribute: true
+    evidence: docs/art-review/g3e/units/horse_archer/poses/
+    modified: true
+    nativeSize: 1536x1024
+    finalSize: 22x32
+    anchor: feet
+    notes: Nomad horse_archer foe recolour, pose 2 (walk 0); reduced and outlined by docs/art-review/g3e/units/make_poses.py --export (approved 2026-11-09 by Claude under the owner's delegation); drawn at scale 0.5 (src/render/imageArt.ts)
+  - id: world_ai_v1_horse_archer_foe_3
+    path: public/assets/art/ai-v1/horse_archer_foe_3.png
+    category: unit
+    origin: custom
+    source: docs/art-review/g3e/units/horse_archer/poses-source.png
+    creator: Project owner (OpenAI imagegen via Codex; prompt in docs/art-review/g3e/units/horse_archer/poses-prompt.md)
+    license: project-owned
+    attribution: false
+    redistribute: true
+    evidence: docs/art-review/g3e/units/horse_archer/poses/
+    modified: true
+    nativeSize: 1536x1024
+    finalSize: 22x32
+    anchor: feet
+    notes: Nomad horse_archer foe recolour, pose 3 (walk 1); reduced and outlined by docs/art-review/g3e/units/make_poses.py --export (approved 2026-11-09 by Claude under the owner's delegation); drawn at scale 0.5 (src/render/imageArt.ts)
+  - id: world_ai_v1_horse_archer_foe_4
+    path: public/assets/art/ai-v1/horse_archer_foe_4.png
+    category: unit
+    origin: custom
+    source: docs/art-review/g3e/units/horse_archer/poses-source.png
+    creator: Project owner (OpenAI imagegen via Codex; prompt in docs/art-review/g3e/units/horse_archer/poses-prompt.md)
+    license: project-owned
+    attribution: false
+    redistribute: true
+    evidence: docs/art-review/g3e/units/horse_archer/poses/
+    modified: true
+    nativeSize: 1536x1024
+    finalSize: 22x32
+    anchor: feet
+    notes: Nomad horse_archer foe recolour, pose 4 (attack 0); reduced and outlined by docs/art-review/g3e/units/make_poses.py --export (approved 2026-11-09 by Claude under the owner's delegation); drawn at scale 0.5 (src/render/imageArt.ts)
+  - id: world_ai_v1_horse_archer_foe_5
+    path: public/assets/art/ai-v1/horse_archer_foe_5.png
+    category: unit
+    origin: custom
+    source: docs/art-review/g3e/units/horse_archer/poses-source.png
+    creator: Project owner (OpenAI imagegen via Codex; prompt in docs/art-review/g3e/units/horse_archer/poses-prompt.md)
+    license: project-owned
+    attribution: false
+    redistribute: true
+    evidence: docs/art-review/g3e/units/horse_archer/poses/
+    modified: true
+    nativeSize: 1536x1024
+    finalSize: 22x32
+    anchor: feet
+    notes: Nomad horse_archer foe recolour, pose 5 (attack 1); reduced and outlined by docs/art-review/g3e/units/make_poses.py --export (approved 2026-11-09 by Claude under the owner's delegation); drawn at scale 0.5 (src/render/imageArt.ts)
+  - id: world_ai_v1_khan_guard_0
+    path: public/assets/art/ai-v1/khan_guard_0.png
+    category: unit
+    origin: custom
+    source: docs/art-review/g3e/units/khan_guard/poses-source.png
+    creator: Project owner (OpenAI imagegen via Codex; prompt in docs/art-review/g3e/units/khan_guard/poses-prompt.md)
+    license: project-owned
+    attribution: false
+    redistribute: true
+    evidence: docs/art-review/g3e/units/khan_guard/poses/
+    modified: true
+    nativeSize: 1536x1024
+    finalSize: 46x33
+    anchor: feet
+    notes: Nomad khan_guard pose 0 (idle 0); reduced and outlined by docs/art-review/g3e/units/make_poses.py --export (approved 2026-11-09 by Claude under the owner's delegation); drawn at scale 0.5 (src/render/imageArt.ts)
+  - id: world_ai_v1_khan_guard_1
+    path: public/assets/art/ai-v1/khan_guard_1.png
+    category: unit
+    origin: custom
+    source: docs/art-review/g3e/units/khan_guard/poses-source.png
+    creator: Project owner (OpenAI imagegen via Codex; prompt in docs/art-review/g3e/units/khan_guard/poses-prompt.md)
+    license: project-owned
+    attribution: false
+    redistribute: true
+    evidence: docs/art-review/g3e/units/khan_guard/poses/
+    modified: true
+    nativeSize: 1536x1024
+    finalSize: 46x33
+    anchor: feet
+    notes: Nomad khan_guard pose 1 (idle 1); reduced and outlined by docs/art-review/g3e/units/make_poses.py --export (approved 2026-11-09 by Claude under the owner's delegation); drawn at scale 0.5 (src/render/imageArt.ts)
+  - id: world_ai_v1_khan_guard_2
+    path: public/assets/art/ai-v1/khan_guard_2.png
+    category: unit
+    origin: custom
+    source: docs/art-review/g3e/units/khan_guard/poses-source.png
+    creator: Project owner (OpenAI imagegen via Codex; prompt in docs/art-review/g3e/units/khan_guard/poses-prompt.md)
+    license: project-owned
+    attribution: false
+    redistribute: true
+    evidence: docs/art-review/g3e/units/khan_guard/poses/
+    modified: true
+    nativeSize: 1536x1024
+    finalSize: 46x33
+    anchor: feet
+    notes: Nomad khan_guard pose 2 (walk 0); reduced and outlined by docs/art-review/g3e/units/make_poses.py --export (approved 2026-11-09 by Claude under the owner's delegation); drawn at scale 0.5 (src/render/imageArt.ts)
+  - id: world_ai_v1_khan_guard_3
+    path: public/assets/art/ai-v1/khan_guard_3.png
+    category: unit
+    origin: custom
+    source: docs/art-review/g3e/units/khan_guard/poses-source.png
+    creator: Project owner (OpenAI imagegen via Codex; prompt in docs/art-review/g3e/units/khan_guard/poses-prompt.md)
+    license: project-owned
+    attribution: false
+    redistribute: true
+    evidence: docs/art-review/g3e/units/khan_guard/poses/
+    modified: true
+    nativeSize: 1536x1024
+    finalSize: 46x33
+    anchor: feet
+    notes: Nomad khan_guard pose 3 (walk 1); reduced and outlined by docs/art-review/g3e/units/make_poses.py --export (approved 2026-11-09 by Claude under the owner's delegation); drawn at scale 0.5 (src/render/imageArt.ts)
+  - id: world_ai_v1_khan_guard_4
+    path: public/assets/art/ai-v1/khan_guard_4.png
+    category: unit
+    origin: custom
+    source: docs/art-review/g3e/units/khan_guard/poses-source.png
+    creator: Project owner (OpenAI imagegen via Codex; prompt in docs/art-review/g3e/units/khan_guard/poses-prompt.md)
+    license: project-owned
+    attribution: false
+    redistribute: true
+    evidence: docs/art-review/g3e/units/khan_guard/poses/
+    modified: true
+    nativeSize: 1536x1024
+    finalSize: 46x33
+    anchor: feet
+    notes: Nomad khan_guard pose 4 (attack 0); reduced and outlined by docs/art-review/g3e/units/make_poses.py --export (approved 2026-11-09 by Claude under the owner's delegation); drawn at scale 0.5 (src/render/imageArt.ts)
+  - id: world_ai_v1_khan_guard_5
+    path: public/assets/art/ai-v1/khan_guard_5.png
+    category: unit
+    origin: custom
+    source: docs/art-review/g3e/units/khan_guard/poses-source.png
+    creator: Project owner (OpenAI imagegen via Codex; prompt in docs/art-review/g3e/units/khan_guard/poses-prompt.md)
+    license: project-owned
+    attribution: false
+    redistribute: true
+    evidence: docs/art-review/g3e/units/khan_guard/poses/
+    modified: true
+    nativeSize: 1536x1024
+    finalSize: 46x33
+    anchor: feet
+    notes: Nomad khan_guard pose 5 (attack 1); reduced and outlined by docs/art-review/g3e/units/make_poses.py --export (approved 2026-11-09 by Claude under the owner's delegation); drawn at scale 0.5 (src/render/imageArt.ts)
+  - id: world_ai_v1_khan_guard_foe_0
+    path: public/assets/art/ai-v1/khan_guard_foe_0.png
+    category: unit
+    origin: custom
+    source: docs/art-review/g3e/units/khan_guard/poses-source.png
+    creator: Project owner (OpenAI imagegen via Codex; prompt in docs/art-review/g3e/units/khan_guard/poses-prompt.md)
+    license: project-owned
+    attribution: false
+    redistribute: true
+    evidence: docs/art-review/g3e/units/khan_guard/poses/
+    modified: true
+    nativeSize: 1536x1024
+    finalSize: 46x33
+    anchor: feet
+    notes: Nomad khan_guard foe recolour, pose 0 (idle 0); reduced and outlined by docs/art-review/g3e/units/make_poses.py --export (approved 2026-11-09 by Claude under the owner's delegation); drawn at scale 0.5 (src/render/imageArt.ts)
+  - id: world_ai_v1_khan_guard_foe_1
+    path: public/assets/art/ai-v1/khan_guard_foe_1.png
+    category: unit
+    origin: custom
+    source: docs/art-review/g3e/units/khan_guard/poses-source.png
+    creator: Project owner (OpenAI imagegen via Codex; prompt in docs/art-review/g3e/units/khan_guard/poses-prompt.md)
+    license: project-owned
+    attribution: false
+    redistribute: true
+    evidence: docs/art-review/g3e/units/khan_guard/poses/
+    modified: true
+    nativeSize: 1536x1024
+    finalSize: 46x33
+    anchor: feet
+    notes: Nomad khan_guard foe recolour, pose 1 (idle 1); reduced and outlined by docs/art-review/g3e/units/make_poses.py --export (approved 2026-11-09 by Claude under the owner's delegation); drawn at scale 0.5 (src/render/imageArt.ts)
+  - id: world_ai_v1_khan_guard_foe_2
+    path: public/assets/art/ai-v1/khan_guard_foe_2.png
+    category: unit
+    origin: custom
+    source: docs/art-review/g3e/units/khan_guard/poses-source.png
+    creator: Project owner (OpenAI imagegen via Codex; prompt in docs/art-review/g3e/units/khan_guard/poses-prompt.md)
+    license: project-owned
+    attribution: false
+    redistribute: true
+    evidence: docs/art-review/g3e/units/khan_guard/poses/
+    modified: true
+    nativeSize: 1536x1024
+    finalSize: 46x33
+    anchor: feet
+    notes: Nomad khan_guard foe recolour, pose 2 (walk 0); reduced and outlined by docs/art-review/g3e/units/make_poses.py --export (approved 2026-11-09 by Claude under the owner's delegation); drawn at scale 0.5 (src/render/imageArt.ts)
+  - id: world_ai_v1_khan_guard_foe_3
+    path: public/assets/art/ai-v1/khan_guard_foe_3.png
+    category: unit
+    origin: custom
+    source: docs/art-review/g3e/units/khan_guard/poses-source.png
+    creator: Project owner (OpenAI imagegen via Codex; prompt in docs/art-review/g3e/units/khan_guard/poses-prompt.md)
+    license: project-owned
+    attribution: false
+    redistribute: true
+    evidence: docs/art-review/g3e/units/khan_guard/poses/
+    modified: true
+    nativeSize: 1536x1024
+    finalSize: 46x33
+    anchor: feet
+    notes: Nomad khan_guard foe recolour, pose 3 (walk 1); reduced and outlined by docs/art-review/g3e/units/make_poses.py --export (approved 2026-11-09 by Claude under the owner's delegation); drawn at scale 0.5 (src/render/imageArt.ts)
+  - id: world_ai_v1_khan_guard_foe_4
+    path: public/assets/art/ai-v1/khan_guard_foe_4.png
+    category: unit
+    origin: custom
+    source: docs/art-review/g3e/units/khan_guard/poses-source.png
+    creator: Project owner (OpenAI imagegen via Codex; prompt in docs/art-review/g3e/units/khan_guard/poses-prompt.md)
+    license: project-owned
+    attribution: false
+    redistribute: true
+    evidence: docs/art-review/g3e/units/khan_guard/poses/
+    modified: true
+    nativeSize: 1536x1024
+    finalSize: 46x33
+    anchor: feet
+    notes: Nomad khan_guard foe recolour, pose 4 (attack 0); reduced and outlined by docs/art-review/g3e/units/make_poses.py --export (approved 2026-11-09 by Claude under the owner's delegation); drawn at scale 0.5 (src/render/imageArt.ts)
+  - id: world_ai_v1_khan_guard_foe_5
+    path: public/assets/art/ai-v1/khan_guard_foe_5.png
+    category: unit
+    origin: custom
+    source: docs/art-review/g3e/units/khan_guard/poses-source.png
+    creator: Project owner (OpenAI imagegen via Codex; prompt in docs/art-review/g3e/units/khan_guard/poses-prompt.md)
+    license: project-owned
+    attribution: false
+    redistribute: true
+    evidence: docs/art-review/g3e/units/khan_guard/poses/
+    modified: true
+    nativeSize: 1536x1024
+    finalSize: 46x33
+    anchor: feet
+    notes: Nomad khan_guard foe recolour, pose 5 (attack 1); reduced and outlined by docs/art-review/g3e/units/make_poses.py --export (approved 2026-11-09 by Claude under the owner's delegation); drawn at scale 0.5 (src/render/imageArt.ts)
+  - id: world_ai_v1_mercenary_0
+    path: public/assets/art/ai-v1/mercenary_0.png
+    category: unit
+    origin: custom
+    source: docs/art-review/g3e/units/mercenary/poses-source.png
+    creator: Project owner (OpenAI imagegen via Codex; prompt in docs/art-review/g3e/units/mercenary/poses-prompt.md)
+    license: project-owned
+    attribution: false
+    redistribute: true
+    evidence: docs/art-review/g3e/units/mercenary/poses/
+    modified: true
+    nativeSize: 1536x1024
+    finalSize: 28x26
+    anchor: feet
+    notes: Neutral mercenary pose 0 (idle 0); reduced and outlined by docs/art-review/g3e/units/make_poses.py --export (approved 2026-11-09 by Claude under the owner's delegation); drawn at scale 0.5 (src/render/imageArt.ts)
+  - id: world_ai_v1_mercenary_1
+    path: public/assets/art/ai-v1/mercenary_1.png
+    category: unit
+    origin: custom
+    source: docs/art-review/g3e/units/mercenary/poses-source.png
+    creator: Project owner (OpenAI imagegen via Codex; prompt in docs/art-review/g3e/units/mercenary/poses-prompt.md)
+    license: project-owned
+    attribution: false
+    redistribute: true
+    evidence: docs/art-review/g3e/units/mercenary/poses/
+    modified: true
+    nativeSize: 1536x1024
+    finalSize: 28x26
+    anchor: feet
+    notes: Neutral mercenary pose 1 (idle 1); reduced and outlined by docs/art-review/g3e/units/make_poses.py --export (approved 2026-11-09 by Claude under the owner's delegation); drawn at scale 0.5 (src/render/imageArt.ts)
+  - id: world_ai_v1_mercenary_2
+    path: public/assets/art/ai-v1/mercenary_2.png
+    category: unit
+    origin: custom
+    source: docs/art-review/g3e/units/mercenary/poses-source.png
+    creator: Project owner (OpenAI imagegen via Codex; prompt in docs/art-review/g3e/units/mercenary/poses-prompt.md)
+    license: project-owned
+    attribution: false
+    redistribute: true
+    evidence: docs/art-review/g3e/units/mercenary/poses/
+    modified: true
+    nativeSize: 1536x1024
+    finalSize: 28x26
+    anchor: feet
+    notes: Neutral mercenary pose 2 (walk 0); reduced and outlined by docs/art-review/g3e/units/make_poses.py --export (approved 2026-11-09 by Claude under the owner's delegation); drawn at scale 0.5 (src/render/imageArt.ts)
+  - id: world_ai_v1_mercenary_3
+    path: public/assets/art/ai-v1/mercenary_3.png
+    category: unit
+    origin: custom
+    source: docs/art-review/g3e/units/mercenary/poses-source.png
+    creator: Project owner (OpenAI imagegen via Codex; prompt in docs/art-review/g3e/units/mercenary/poses-prompt.md)
+    license: project-owned
+    attribution: false
+    redistribute: true
+    evidence: docs/art-review/g3e/units/mercenary/poses/
+    modified: true
+    nativeSize: 1536x1024
+    finalSize: 28x26
+    anchor: feet
+    notes: Neutral mercenary pose 3 (walk 1); reduced and outlined by docs/art-review/g3e/units/make_poses.py --export (approved 2026-11-09 by Claude under the owner's delegation); drawn at scale 0.5 (src/render/imageArt.ts)
+  - id: world_ai_v1_mercenary_4
+    path: public/assets/art/ai-v1/mercenary_4.png
+    category: unit
+    origin: custom
+    source: docs/art-review/g3e/units/mercenary/poses-source.png
+    creator: Project owner (OpenAI imagegen via Codex; prompt in docs/art-review/g3e/units/mercenary/poses-prompt.md)
+    license: project-owned
+    attribution: false
+    redistribute: true
+    evidence: docs/art-review/g3e/units/mercenary/poses/
+    modified: true
+    nativeSize: 1536x1024
+    finalSize: 28x26
+    anchor: feet
+    notes: Neutral mercenary pose 4 (attack 0); reduced and outlined by docs/art-review/g3e/units/make_poses.py --export (approved 2026-11-09 by Claude under the owner's delegation); drawn at scale 0.5 (src/render/imageArt.ts)
+  - id: world_ai_v1_mercenary_5
+    path: public/assets/art/ai-v1/mercenary_5.png
+    category: unit
+    origin: custom
+    source: docs/art-review/g3e/units/mercenary/poses-source.png
+    creator: Project owner (OpenAI imagegen via Codex; prompt in docs/art-review/g3e/units/mercenary/poses-prompt.md)
+    license: project-owned
+    attribution: false
+    redistribute: true
+    evidence: docs/art-review/g3e/units/mercenary/poses/
+    modified: true
+    nativeSize: 1536x1024
+    finalSize: 28x26
+    anchor: feet
+    notes: Neutral mercenary pose 5 (attack 1); reduced and outlined by docs/art-review/g3e/units/make_poses.py --export (approved 2026-11-09 by Claude under the owner's delegation); drawn at scale 0.5 (src/render/imageArt.ts)
+  - id: world_ai_v1_mercenary_foe_0
+    path: public/assets/art/ai-v1/mercenary_foe_0.png
+    category: unit
+    origin: custom
+    source: docs/art-review/g3e/units/mercenary/poses-source.png
+    creator: Project owner (OpenAI imagegen via Codex; prompt in docs/art-review/g3e/units/mercenary/poses-prompt.md)
+    license: project-owned
+    attribution: false
+    redistribute: true
+    evidence: docs/art-review/g3e/units/mercenary/poses/
+    modified: true
+    nativeSize: 1536x1024
+    finalSize: 28x26
+    anchor: feet
+    notes: Neutral mercenary foe recolour, pose 0 (idle 0); reduced and outlined by docs/art-review/g3e/units/make_poses.py --export (approved 2026-11-09 by Claude under the owner's delegation); drawn at scale 0.5 (src/render/imageArt.ts)
+  - id: world_ai_v1_mercenary_foe_1
+    path: public/assets/art/ai-v1/mercenary_foe_1.png
+    category: unit
+    origin: custom
+    source: docs/art-review/g3e/units/mercenary/poses-source.png
+    creator: Project owner (OpenAI imagegen via Codex; prompt in docs/art-review/g3e/units/mercenary/poses-prompt.md)
+    license: project-owned
+    attribution: false
+    redistribute: true
+    evidence: docs/art-review/g3e/units/mercenary/poses/
+    modified: true
+    nativeSize: 1536x1024
+    finalSize: 28x26
+    anchor: feet
+    notes: Neutral mercenary foe recolour, pose 1 (idle 1); reduced and outlined by docs/art-review/g3e/units/make_poses.py --export (approved 2026-11-09 by Claude under the owner's delegation); drawn at scale 0.5 (src/render/imageArt.ts)
+  - id: world_ai_v1_mercenary_foe_2
+    path: public/assets/art/ai-v1/mercenary_foe_2.png
+    category: unit
+    origin: custom
+    source: docs/art-review/g3e/units/mercenary/poses-source.png
+    creator: Project owner (OpenAI imagegen via Codex; prompt in docs/art-review/g3e/units/mercenary/poses-prompt.md)
+    license: project-owned
+    attribution: false
+    redistribute: true
+    evidence: docs/art-review/g3e/units/mercenary/poses/
+    modified: true
+    nativeSize: 1536x1024
+    finalSize: 28x26
+    anchor: feet
+    notes: Neutral mercenary foe recolour, pose 2 (walk 0); reduced and outlined by docs/art-review/g3e/units/make_poses.py --export (approved 2026-11-09 by Claude under the owner's delegation); drawn at scale 0.5 (src/render/imageArt.ts)
+  - id: world_ai_v1_mercenary_foe_3
+    path: public/assets/art/ai-v1/mercenary_foe_3.png
+    category: unit
+    origin: custom
+    source: docs/art-review/g3e/units/mercenary/poses-source.png
+    creator: Project owner (OpenAI imagegen via Codex; prompt in docs/art-review/g3e/units/mercenary/poses-prompt.md)
+    license: project-owned
+    attribution: false
+    redistribute: true
+    evidence: docs/art-review/g3e/units/mercenary/poses/
+    modified: true
+    nativeSize: 1536x1024
+    finalSize: 28x26
+    anchor: feet
+    notes: Neutral mercenary foe recolour, pose 3 (walk 1); reduced and outlined by docs/art-review/g3e/units/make_poses.py --export (approved 2026-11-09 by Claude under the owner's delegation); drawn at scale 0.5 (src/render/imageArt.ts)
+  - id: world_ai_v1_mercenary_foe_4
+    path: public/assets/art/ai-v1/mercenary_foe_4.png
+    category: unit
+    origin: custom
+    source: docs/art-review/g3e/units/mercenary/poses-source.png
+    creator: Project owner (OpenAI imagegen via Codex; prompt in docs/art-review/g3e/units/mercenary/poses-prompt.md)
+    license: project-owned
+    attribution: false
+    redistribute: true
+    evidence: docs/art-review/g3e/units/mercenary/poses/
+    modified: true
+    nativeSize: 1536x1024
+    finalSize: 28x26
+    anchor: feet
+    notes: Neutral mercenary foe recolour, pose 4 (attack 0); reduced and outlined by docs/art-review/g3e/units/make_poses.py --export (approved 2026-11-09 by Claude under the owner's delegation); drawn at scale 0.5 (src/render/imageArt.ts)
+  - id: world_ai_v1_mercenary_foe_5
+    path: public/assets/art/ai-v1/mercenary_foe_5.png
+    category: unit
+    origin: custom
+    source: docs/art-review/g3e/units/mercenary/poses-source.png
+    creator: Project owner (OpenAI imagegen via Codex; prompt in docs/art-review/g3e/units/mercenary/poses-prompt.md)
+    license: project-owned
+    attribution: false
+    redistribute: true
+    evidence: docs/art-review/g3e/units/mercenary/poses/
+    modified: true
+    nativeSize: 1536x1024
+    finalSize: 28x26
+    anchor: feet
+    notes: Neutral mercenary foe recolour, pose 5 (attack 1); reduced and outlined by docs/art-review/g3e/units/make_poses.py --export (approved 2026-11-09 by Claude under the owner's delegation); drawn at scale 0.5 (src/render/imageArt.ts)

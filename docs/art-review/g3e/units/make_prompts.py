@@ -59,12 +59,24 @@ UNITS = {
     'bombardier': ('Lính Ném Lửa (Lò Rèn)', 'a ranged fire-pot thrower of the Forge kingdom.', 'a soot-stained soldier in a leather apron over an iron cuirass, a BLUE scarf, goggles on the helmet, holding a small clay fire-pot with a lit fuse.', 64, 64),
     'shieldbearer': ('Lính Khiên (Lò Rèn)', 'a tanky shield carrier of the Forge kingdom that shields allies.', 'a broad soldier carrying a huge riveted iron tower shield with a BLUE anvil emblem, dark iron armour, a short mace on the belt.', 64, 64),
     'iron_drake': ('Rồng Sắt (Lò Rèn)', 'a heavy iron drake of the Forge kingdom that breathes fire.', 'a chibi drake covered in dark riveted iron plates, glowing ember eyes and a glowing ember belly, small wings, a BLUE banner strap around the neck, smoke from the nostrils.', 96, 128),
+    'tin_soldier': ('Lính Lên Dây (Đồng Hồ)', 'a basic wind-up tin soldier of the Clock kingdom.', 'a chibi wind-up toy soldier of polished tin and brass, a big brass key turning in its back, a tall shako hat, a BLUE coat with brass buttons, holding a small bayonet rifle; stiff cheerful face.', 64, 64),
+    'spider': ('Nhện Máy (Đồng Hồ)', 'a fast little clockwork spider of the Clock kingdom.', 'a small round clockwork spider with a brass body, eight thin copper legs, a glowing amber eye lens, a BLUE painted stripe on the back, tiny gears showing.', 64, 64),
+    'gear_gunner': ('Xạ Thủ Bánh Răng (Đồng Hồ)', 'a ranged gear-gun shooter of the Clock kingdom.', 'a young engineer in a brass-buckled leather coat with BLUE trim and goggles, holding a chunky gear-driven repeating gun with a crank.', 64, 64),
+    'colossus': ('Người Khổng Lồ Máy (Đồng Hồ)', 'a huge slow clockwork colossus of the Clock kingdom.', 'a chibi giant automaton of riveted brass plates, a round glass head with a glowing core, pipes venting a little steam, big piston arms, a BLUE banner sash across the chest.', 96, 128),
+    'skeleton': ('Bộ Xương (Ánh Trăng)', 'a weak summoned skeleton warrior of the Moon kingdom.', 'a cute chibi skeleton (not scary) with a cracked round shield and a short rusty sword, a torn BLUE cloth sash, faint violet glow in the eye sockets.', 64, 64),
+    'wraith': ('Bóng Ma (Ánh Trăng)', 'a floating wraith of the Moon kingdom.', 'a cute floating ghost in a tattered pale violet hooded cloak with a BLUE clasp, glowing violet eyes in a dark hood, wispy tail instead of feet (it hovers just above the ground).', 64, 64),
+    'vampire': ('Ma Cà Rồng (Ánh Trăng)', 'a vampire noble of the Moon kingdom that heals from its hits.', 'a chibi vampire noble in a dark violet high-collared cape with a BLUE inner lining, pale face, slicked dark hair, small fangs, a thin rapier; charming not scary.', 64, 96),
+    'moon_reaper': ('Thần Chết Trăng (Ánh Trăng)', 'a tall reaper of the Moon kingdom.', 'a tall hooded figure in a deep violet robe with BLUE trim, a pale moon mask, holding a big crescent-moon scythe; mysterious but cute.', 96, 128),
+    'rider': ('Kỵ Binh (Du Mục)', 'a fast melee horse rider of the Nomad kingdom.', 'a chibi steppe warrior on a small sturdy brown horse, the rider in red-and-gold felt armour with a BLUE sash and a fur hat, holding a curved sabre; the horse has a BLUE saddle blanket.', 96, 96),
+    'horse_archer': ('Cung Kỵ (Du Mục)', 'a ranged horse archer of the Nomad kingdom.', 'a chibi steppe archer on a small tan horse, a red felt coat with a BLUE sash, a fur hat, a short recurve bow and a quiver; the horse has a BLUE saddle blanket.', 96, 96),
+    'khan_guard': ('Cận Vệ Khả Hãn (Du Mục)', 'an elite heavy guard of the Nomad king.', 'a broad chibi guard in lamellar armour of red and gold plates, a BLUE sash, a spiked helmet with a horse-tail plume, holding a long glaive.', 64, 96),
+    'mercenary': ('Lính Đánh Thuê (trung lập)', 'a hired neutral mercenary soldier.', 'a rough chibi sellsword in a patched brown leather jerkin with a BLUE armband, a scarred cheerful face, holding a short sword and a small buckler.', 64, 64),
 }
 
 # In-game height in art pixels (4 art px per world unit) of units added after the Wheat set, chosen against the
 # approved militia (51 px tall). The standing sample is reduced to this height (make_poses.py --sample) and the pose
 # sheet is drawn at a block size that makes this height fit a 512 px cell.
-HEIGHT = {'golem': 76, 'miner': 58, 'rubble': 34, 'slinger': 50, 'apprentice': 50, 'frost_mage': 52, 'archmage': 60, 'construct': 70, 'wolf': 40, 'bear': 66, 'treant': 80, 'stag': 58, 'dryad': 52, 'pirate': 50, 'hookman': 58, 'musketeer': 58, 'swordsman': 52, 'bombardier': 50, 'shieldbearer': 54, 'iron_drake': 76}
+HEIGHT = {'golem': 76, 'miner': 58, 'rubble': 34, 'slinger': 50, 'apprentice': 50, 'frost_mage': 52, 'archmage': 60, 'construct': 70, 'wolf': 40, 'bear': 66, 'treant': 80, 'stag': 58, 'dryad': 52, 'pirate': 50, 'hookman': 58, 'musketeer': 58, 'swordsman': 52, 'bombardier': 50, 'shieldbearer': 54, 'iron_drake': 76, 'tin_soldier': 50, 'spider': 34, 'gear_gunner': 50, 'colossus': 80, 'skeleton': 48, 'wraith': 48, 'vampire': 56, 'moon_reaper': 70, 'rider': 62, 'horse_archer': 62, 'khan_guard': 58, 'mercenary': 50}
 MILITIA_HEIGHT = 51
 # approved unit of the same kind, attached to every new unit's standing sample (ART_STYLE: "ảnh đã duyệt cùng loại")
 UNIT_REFERENCE = 'docs/art-review/g3e/units/militia/source.png'
@@ -104,6 +116,18 @@ POSES = [
 
 # unit id -> (wind-up, strike); the strike text is also what the gate test looks for
 ATTACK = {
+    'tin_soldier': 'the bayonet drawn back to the hip, the wind-up key spinning.',
+    'spider': 'the front legs raised high, body leaning back.',
+    'gear_gunner': 'the gun raised and aimed to the right, cranking the handle.',
+    'colossus': 'both piston fists raised high, steam venting, leaning back.',
+    'skeleton': 'the sword raised behind the head, shield forward.',
+    'wraith': 'the cloak arms raised wide, the glow brighter, leaning back.',
+    'vampire': 'the rapier drawn back, the cape swirling.',
+    'moon_reaper': 'the crescent scythe raised high behind the head with both hands.',
+    'rider': 'the rider raising the sabre high, the horse rearing a little.',
+    'horse_archer': 'the bow drawn fully, aiming to the right.',
+    'khan_guard': 'the glaive raised high behind the shoulder with both hands.',
+    'mercenary': 'the sword raised back over the shoulder, buckler forward.',
     'wolf': 'the wolf crouched low on its front legs, ears back, ready to pounce.',
     'bear': 'both big paws raised high, standing tall, mouth open in a roar.',
     'treant': 'both branch arms raised high, leaves shaking, leaning back.',
@@ -129,6 +153,18 @@ ATTACK = {
     'slinger': 'the sling whirled above the head in one hand, the stone in the pouch, the other arm pointing right.',
 }
 STRIKE = {
+    'tin_soldier': 'a stiff thrust of the bayonet forward to the right, one leg kicked forward.',
+    'spider': 'a lunge forward to the right with the front legs stabbing down.',
+    'gear_gunner': 'the gun firing to the right, a small muzzle flash and spinning gears (bullets drawn by the game).',
+    'colossus': 'both fists slammed down forward to the right at ground level, a puff of steam.',
+    'skeleton': 'a slash forward to the right at chest height, leaning in.',
+    'wraith': 'a swoop forward to the right with ghostly claws reaching out.',
+    'vampire': 'a quick lunge with the rapier forward to the right, cape trailing.',
+    'moon_reaper': 'a wide sweep of the scythe forward to the right at knee height.',
+    'rider': 'the horse charging to the right, the sabre slashing forward.',
+    'horse_archer': 'the arrow just released to the right, the bowstring snapping (the arrow is drawn by the game).',
+    'khan_guard': 'a heavy sweep of the glaive forward to the right at chest height.',
+    'mercenary': 'a slash forward to the right at chest height, front foot forward.',
     'wolf': 'a leap forward to the right with jaws open, front paws reaching out.',
     'bear': 'a heavy swipe down and forward to the right with one paw, body leaning forward.',
     'treant': 'both branch arms slammed down forward to the right at ground level, roots lifting.',
