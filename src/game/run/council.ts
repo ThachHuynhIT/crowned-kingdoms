@@ -8,7 +8,7 @@ import { DECREES, DECREE_RULES } from '../../data/decrees';
 import { RUN } from '../../data/run';
 import type { CardId } from '../../data/types';
 import type { Content } from '../cards/registry';
-import { THRONE_PLOT, adjacentToUnlocked, attachEnchant, unlockPlot } from './board';
+import { adjacentToUnlocked, attachEnchant, raiseThrone, unlockPlot } from './board';
 import { decree } from './decrees';
 import { maxEnchantStacks } from './perks';
 import { closeOffer, enqueueOffers } from './flow';
@@ -159,8 +159,7 @@ function apply(s: RunState, action: string, sel: CouncilSelection, content: Cont
   };
   switch (action) {
     case 'crown': {
-      s.throneLevel = Math.min(RUN.maxLevel, s.throneLevel + 1) as RunState['throneLevel'];
-      s.plots[THRONE_PLOT]!.building!.level = s.throneLevel;
+      Object.assign(s, raiseThrone(s));
       break;
     }
     case 'treasury':

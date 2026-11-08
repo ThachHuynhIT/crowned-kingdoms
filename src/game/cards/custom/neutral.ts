@@ -1,6 +1,7 @@
 /** Hiệu ứng `custom` của thẻ trung lập (spec §6.1). */
-import { THRONE_PLOT, clonePlots, duplicateIllegal, levelUpBuilding, throneCanLevel } from '../../run/board';
-import type { IncomeHandler, TomeHandler } from './types';
+import { RUN } from '../../../data/run';
+import { clonePlots, duplicateIllegal, raiseThrone } from '../../run/board';
+import type { IncomeHandler, TomeGuard, TomeHandler } from './types';
 
 /** Trại Đánh Thuê: phí duy trì `params.gold` (mặc định 1) vàng mỗi đầu năm — trả về số âm. */
 export const mercenaryUpkeep: IncomeHandler = (_ctx, params) => {
@@ -29,8 +30,8 @@ export const duplicateBuilding: TomeHandler = (state, _content, _params, target)
   return { ...state, plots, nextUid: state.nextUid + 1 };
 };
 
-/** Ấn Triện: Ngai +1 cấp (kẹp `RUN.maxLevel`; đã tối đa thì bất hợp lệ). */
-export const royalSeal: TomeHandler = (state) => {
-  if (!throneCanLevel(state.plots)) return 'maxLevel';
-  return { ...state, plots: levelUpBuilding(state.plots, THRONE_PLOT, 1) };
-};
+/** Ấn Triện bất hợp lệ khi Ngai (`throneLevel`) đã đạt `RUN.maxLevel`. */
+export const royalSealGuard: TomeGuard = (state) => (state.throneLevel >= RUN.maxLevel ? 'maxLevel' : null);
+
+/** Ấn Triện: Ngai +1 cấp — `throneLevel` và công trình Ngai cùng lên (đã tối đa thì bất hợp lệ). */
+export const royalSeal: TomeHandler = (state, _content, params) => royalSealGuard(state, params) ?? raiseThrone(state);

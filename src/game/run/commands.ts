@@ -6,7 +6,6 @@ import { CUSTOM_TOME_HANDLERS, runAfterMove, runAfterPlay, runBattleEnd } from '
 import { freeMoveIllegal } from '../cards/custom/nomad';
 import type { Content } from '../cards/registry';
 import {
-  THRONE_PLOT,
   adjacentToUnlocked,
   attachEnchant,
   checkPlay,
@@ -15,6 +14,7 @@ import {
   placeBuilding,
   plotCol,
   plotRow,
+  raiseThrone,
   sacrificeBuilding,
   unlockPlot,
 } from './board';
@@ -23,7 +23,7 @@ import { handLimit, rerollPrice, rewardCount } from './decrees';
 import { refillHand } from './deck';
 import { cardOffer, enqueueOffers } from './flow';
 import { maxEnchantStacks, perkLossGold, placedAgeBonus } from './perks';
-import { hasPlayableCard } from './playable';
+import { hasPlayableCard, stateRefusal } from './playable';
 import { answerQuest, recordQuestCommand, settleQuests } from './quests';
 import { neutralRewardPool, rollConquestCards, rollOffers } from './rewards';
 import type { IllegalReason, RunCommand, RunState } from './state';
@@ -67,6 +67,8 @@ function applyBase(input: RunState, cmd: RunCommand, content: Content): CommandR
       const cardId = state.hand[cmd.handIndex];
       if (!Number.isInteger(cmd.handIndex) || cardId === undefined) return fail('badTarget');
       const card = content.card(cardId);
+      const refused = stateRefusal(state, card);
+      if (refused !== null) return fail(refused);
       const illegal = checkPlay(state.plots, card, cmd.target, content, maxEnchantStacks(state, content));
       if (illegal !== null) return fail(illegal);
 
@@ -271,8 +273,7 @@ function applyBase(input: RunState, cmd: RunCommand, content: Content): CommandR
       // §4.2, §5.5 bước 9 (sau khi kiểm nhiệm vụ): thắng boss 1 hoặc boss 2 thì Ngai +1 cấp (tối đa 5).
       const ordinal = state.army?.bossOrdinal;
       if (result.won && (ordinal === 1 || ordinal === 2)) {
-        s.throneLevel = Math.min(RUN.maxLevel, s.throneLevel + 1) as RunState['throneLevel'];
-        s.plots[THRONE_PLOT]!.building!.level = s.throneLevel;
+        s = raiseThrone(s);
       }
       const finalYear = s.year >= s.rules.years;
       if (s.lives <= 0 || (finalYear && !full)) {

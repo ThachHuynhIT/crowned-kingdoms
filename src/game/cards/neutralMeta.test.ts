@@ -3,6 +3,7 @@ import type { CardId } from '../../data/types';
 import { THRONE_PLOT } from '../run/board';
 import { applyCommand } from '../run/commands';
 import type { PlayTarget, RunState } from '../run/state';
+import { decodeRun, encodeRun } from '../save/codec';
 import { runState, withBuilding } from '../testing/fixtures';
 import { CONTENT } from './registry';
 
@@ -16,6 +17,7 @@ const play = (s: RunState, card: string, target: PlayTarget): RunState => {
 };
 const withThrone = (s: RunState, level: 1 | 2 | 3 | 4 | 5): RunState => ({
   ...s,
+  throneLevel: level,
   plots: s.plots.map((p, i) => (i === THRONE_PLOT ? { ...p, building: { ...p.building!, level } } : p)),
 });
 
@@ -76,7 +78,18 @@ describe('neutral meta cards (spec 6.1)', () => {
   describe('neutral_royal_seal', () => {
     it('raises the throne by one level', () => {
       const next = play(runState(), 'neutral_royal_seal', { kind: 'none' });
+      expect(next.throneLevel).toBe(2);
       expect(next.plots[THRONE_PLOT]!.building!.level).toBe(2);
+    });
+
+    it('keeps the save loadable after the play (throne level and building level agree)', () => {
+      const base = runState();
+      const s: RunState = { ...base, deck: [...base.deck, 'neutral_royal_seal' as CardId], hand: ['neutral_royal_seal' as CardId, ...base.hand] };
+      const roundTrip = (x: RunState) => decodeRun(JSON.parse(JSON.stringify(encodeRun(x, CONTENT))), CONTENT).kind;
+      expect(roundTrip(s)).toBe('ok');
+      const r = applyCommand(s, { type: 'play', handIndex: 0, target: { kind: 'none' } }, CONTENT);
+      if ('error' in r) throw new Error(r.error);
+      expect(roundTrip(r.state)).toBe('ok');
     });
 
     it('is illegal at throne level 5 with maxLevel', () => {

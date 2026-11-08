@@ -114,7 +114,7 @@ export const randomBot: Bot = (state, content, rng) => {
         return { type: 'discard', handIndex: rng.int(0, state.hand.length - 1) };
       }
       if (options.length > 0) return rng.pick(options);
-      // Không lá nào chơi được: ra trận nếu luật cho (hasPlayableCard chỉ xét bàn cờ), không thì bỏ lá đầu tay.
+      // Không lá nào chơi được: ra trận nếu luật cho (startBattle tự hỏi hasPlayableCard), không thì bỏ lá đầu tay.
       const start: RunCommand = { type: 'startBattle' };
       return 'error' in applyCommand(state, start, content) ? { type: 'discard', handIndex: 0 } : start;
     }

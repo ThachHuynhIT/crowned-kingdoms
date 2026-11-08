@@ -19,5 +19,7 @@ export const STORAGE_WARNING_TEXT = 'Trình duyệt này không lưu được ti
 export const META_READ_ONLY_TEXT = 'Hồ sơ được lưu bởi phiên bản mới hơn của trò chơi: tiến trình lần này không được lưu.';
 /** Ghi hồ sơ meta thất bại khi kết thúc ván: ván đang lưu được giữ lại để chấm điểm lần sau. */
 export const META_SAVE_FAILED_TEXT = 'Không lưu được hồ sơ: điểm của ván này chưa được cộng.';
+/** Ghi hồ sơ meta thất bại khi mở khoá (vua, thẻ): chưa mở gì, điểm còn nguyên. */
+export const UNLOCK_SAVE_FAILED_TEXT = 'Chưa lưu được lần mở khoá, hãy thử lại.';
 /** Mở khoá khi hồ sơ chưa đủ điều kiện (điểm, chiến thắng) hoặc đã mở rồi. */
 export const UNLOCK_REFUSED_TEXT = 'Chưa đủ điều kiện để mở khoá.';

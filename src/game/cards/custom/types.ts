@@ -26,6 +26,12 @@ export type StatHandler = (ctx: StatCtx, params: Params) => Modifier[];
 /** Vàng đầu năm của một công trình (âm = phí duy trì). */
 export type IncomeHandler = (ctx: StatCtx, params: Params) => number;
 
+/**
+ * Điều kiện theo run state (ngoài bàn cờ) của một sách phép `custom`: trả lý do từ chối hoặc null. Dùng chung
+ * cho `applyCommand` và `hasPlayableCard` (qua `stateRefusal` trong `run/playable.ts`).
+ */
+export type TomeGuard = (state: RunState, params: Params) => IllegalReason | null;
+
 /** Hành động của một sách phép `custom`: trả state mới hoặc lý do bất hợp pháp. */
 export type TomeHandler = (
   state: RunState,

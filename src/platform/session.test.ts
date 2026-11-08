@@ -1,6 +1,12 @@
 import { IDBFactory } from 'fake-indexeddb';
 import { describe, expect, it } from 'vitest';
-import { INCOMPATIBLE_RUN_TEXT, META_READ_ONLY_TEXT, STORAGE_WARNING_TEXT } from '../data/save';
+import {
+  INCOMPATIBLE_RUN_TEXT,
+  META_READ_ONLY_TEXT,
+  META_SAVE_FAILED_TEXT,
+  STORAGE_WARNING_TEXT,
+  UNLOCK_SAVE_FAILED_TEXT,
+} from '../data/save';
 import type { BattleResult } from '../game/battle/types';
 import { CONTENT } from '../game/cards/registry';
 import { createGameBus } from '../game/events';
@@ -52,6 +58,7 @@ describe('createSession', () => {
 class LoggingStore extends MemorySaveStore {
   log: string[] = [];
   failClear = false;
+  failMeta = false;
   override saveRun(save: Parameters<MemorySaveStore['saveRun']>[0]): Promise<void> {
     this.log.push('saveRun');
     return super.saveRun(save);
@@ -63,6 +70,7 @@ class LoggingStore extends MemorySaveStore {
   }
   override saveMeta(profile: unknown): Promise<void> {
     this.log.push('saveMeta');
+    if (this.failMeta) return Promise.reject(new Error('disk full'));
     return super.saveMeta(profile);
   }
 }
@@ -192,5 +200,26 @@ describe('session meta profile (G4)', () => {
     await s.settleRun(fakeRun({ years: 5, conquered: 0, bosses: 0, won: false }));
     expect(s.meta().crownPoints).toBe(5);
     expect(warnings).toEqual([STORAGE_WARNING_TEXT]);
+  });
+
+  it('a failed unlock save says the unlock was not saved (not the run-score text) and keeps the profile', async () => {
+    const store = new LoggingStore();
+    const s = await openSession(store, CONTENT);
+    await s.settleRun(fakeRun({ years: 30, conquered: 0, bosses: 0, won: false }));
+    store.failMeta = true;
+    const r = await s.unlockKing('grove');
+    expect(r).toEqual({ ok: false, reason: 'saveFailed', message: UNLOCK_SAVE_FAILED_TEXT });
+    expect(UNLOCK_SAVE_FAILED_TEXT).not.toBe(META_SAVE_FAILED_TEXT);
+    expect(s.meta().unlockedKings).not.toContain('grove');
+    expect(s.meta().crownPoints).toBe(30);
+  });
+
+  it('meta() hands out a copy: changing it does not change the session profile', async () => {
+    const s = await openSession(new MemorySaveStore(), CONTENT);
+    const copy = s.meta();
+    copy.crownPoints = 999;
+    copy.unlockedKings.push('grove');
+    expect(s.meta().crownPoints).toBe(0);
+    expect(s.meta().unlockedKings).not.toContain('grove');
   });
 });

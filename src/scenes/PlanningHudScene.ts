@@ -8,7 +8,8 @@ import { CONTENT } from '../game/cards/registry';
 import { maxEnchantStacks } from '../game/run/perks';
 import type { GameEvents } from '../game/events';
 import type { RunController } from '../game/run/RunController';
-import { hasAnyTarget, targetCount } from '../game/run/board';
+import { targetCount } from '../game/run/board';
+import { canPlayCard } from '../game/run/playable';
 import { rerollPrice } from '../game/run/decrees';
 import { cardOffer } from '../game/run/flow';
 import type { IllegalReason, RunState } from '../game/run/state';
@@ -361,7 +362,7 @@ export class PlanningHudScene extends Phaser.Scene {
     const choosing = planning && !state.played;
     this.hand.setHand(
       choosing ? state.hand : [],
-      state.hand.map((id) => !hasAnyTarget(state.plots, CONTENT.card(id), CONTENT, maxEnchantStacks(state, CONTENT))),
+      state.hand.map((id) => !canPlayCard(state, CONTENT, id)),
       state.hand.map((id) => {
         const card = CONTENT.card(id);
         return cardBadge(card, willLevelUpTo(state.plots, card));

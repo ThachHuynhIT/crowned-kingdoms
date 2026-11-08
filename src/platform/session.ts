@@ -1,5 +1,5 @@
 /** Phiên chơi của trình duyệt: kho lưu + cầu checkpoint + đọc ván + hồ sơ meta (G4). `src/game` không import file này. */
-import { META_READ_ONLY_TEXT, META_SAVE_FAILED_TEXT, UNLOCK_REFUSED_TEXT } from '../data/save';
+import { META_READ_ONLY_TEXT, UNLOCK_REFUSED_TEXT, UNLOCK_SAVE_FAILED_TEXT } from '../data/save';
 import type { CardId, KingId } from '../data/types';
 import type { Content } from '../game/cards/registry';
 import { decodeMeta, type MetaProfile, settleRun, unlockCard, unlockKing } from '../game/meta';
@@ -20,7 +20,7 @@ export interface GameSession {
   persistence: SessionPersistence;
   /** Đọc và kiểm ván đã lưu; ván không dùng được bị xoá (không đụng meta) trước khi trả kết quả. */
   load(): Promise<LoadRunResult>;
-  /** Hồ sơ meta hiện tại (đọc một lần khi mở phiên, cập nhật sau mỗi lần ghi thành công). */
+  /** Bản sao hồ sơ meta hiện tại (đọc một lần khi mở phiên, cập nhật sau mỗi lần ghi thành công); sửa bản sao không đổi phiên. */
   meta(): MetaProfile;
   /** Hồ sơ do bản mới hơn ghi: không bao giờ ghi đè, mọi thay đổi bị từ chối. */
   readonly metaReadOnly: boolean;
@@ -70,9 +70,9 @@ export async function openSession(store: SaveStore, content: Content): Promise<G
       try {
         await commit(next);
       } catch {
-        return { ok: false, reason: 'saveFailed', message: META_SAVE_FAILED_TEXT };
+        return { ok: false, reason: 'saveFailed', message: UNLOCK_SAVE_FAILED_TEXT };
       }
-      return { ok: true, profile };
+      return { ok: true, profile: structuredClone(profile) };
     });
 
   return {
@@ -87,7 +87,7 @@ export async function openSession(store: SaveStore, content: Content): Promise<G
       if (result.kind === 'incompatible') await store.clearRun();
       return result;
     },
-    meta: () => profile,
+    meta: () => structuredClone(profile),
     metaReadOnly: readOnly,
     settleRun: settle,
     unlockKing: (king) => unlock((p) => unlockKing(p, king)),

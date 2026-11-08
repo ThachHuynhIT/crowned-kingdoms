@@ -2,7 +2,7 @@
 import { RUN } from '../../data/run';
 import type { BuildingKind, CardDef, CardId, Level, TomeCardDef } from '../../data/types';
 import { CONTENT, type Content } from '../cards/registry';
-import type { BuildingState, IllegalReason, PlayTarget, PlotState } from './state';
+import type { BuildingState, IllegalReason, PlayTarget, PlotState, RunState } from './state';
 
 const SIZE = 5;
 const COUNT = SIZE * SIZE;
@@ -59,11 +59,16 @@ export const targetCount = (card: CardDef): 0 | 1 | 2 => {
 const hasCustom = (card: TomeCardDef, id: string): boolean =>
   card.actions.some((a) => a.type === 'custom' && a.id === id);
 
-/** Ấn Triện còn nâng được Ngai không (Ngai chưa đạt `RUN.maxLevel`). */
-export const throneCanLevel = (plots: readonly PlotState[]): boolean => {
-  const t = plots[THRONE_PLOT]?.building;
-  return t !== null && t !== undefined && t.level < RUN.maxLevel;
-};
+/**
+ * Ngai +1 cấp (kẹp `RUN.maxLevel`): nâng `throneLevel` và công trình Ngai cùng một giá trị (bộ giải mã lưu
+ * đòi hai số bằng nhau). Cách duy nhất để lên cấp Ngai: thắng boss, sắc lệnh Đăng Quang, Ấn Triện.
+ */
+export function raiseThrone(state: RunState): RunState {
+  const throneLevel = Math.min(RUN.maxLevel, state.throneLevel + 1) as RunState['throneLevel'];
+  const plots = clonePlots(state.plots);
+  plots[THRONE_PLOT]!.building!.level = throneLevel;
+  return { ...state, throneLevel, plots };
+}
 
 /** Nhân Bản: `first` là công trình (không phải Ngai), `second` là ô trống đã mở (không phải Ngai). */
 export const duplicateIllegal = (plots: readonly PlotState[], first: number, second: number): IllegalReason | null => {
@@ -152,7 +157,6 @@ export function checkPlay(
     if (target.kind !== 'plot') return 'badTarget';
     if (!validPlot(target.plot)) return 'badTarget';
   }
-  if (card.kind === 'tome' && hasCustom(card, 'royal_seal') && !throneCanLevel(plots)) return 'maxLevel';
   if (!hasAnyTarget(plots, card, content, maxStacks)) return 'noTarget';
 
   if (target.kind === 'plot') {
