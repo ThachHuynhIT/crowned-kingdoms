@@ -141,6 +141,26 @@ export const CLOCK: KingDef = {
   name: 'Clock King',
   color: 'gold',
   blurbVi: 'Máy móc lên dây: quân và tháp đánh nhanh dần trong trận.',
+  perks: [
+    {
+      id: 'clock_p1',
+      nameVi: 'Dây Cót Căng',
+      textVi: 'Mọi tăng tiến được lên dây trước 5 giây.',
+      effects: [{ type: 'stat', stat: 'prewind', mode: 'flat', value: 5 }],
+    },
+    {
+      id: 'clock_p2',
+      nameVi: 'Bánh Răng Dự Phòng',
+      textVi: 'Bắt đầu ván với một Tháp Bánh Răng cấp 1 ngay trước Ngai.',
+      effects: [{ type: 'startBuilding', card: 'clock_gear_tower', plot: 7 }], // ô (2,1) = plot 7
+    },
+    {
+      id: 'clock_p3',
+      nameVi: 'Giờ Vàng',
+      textVi: 'Cuồng Nộ và giờ hết trận đến muộn hơn 15 giây.',
+      effects: [{ type: 'battleTicks', ticks: 150 }],
+    },
+  ],
   throne: {
     id: 'clock_throne',
     owner: 'clock',

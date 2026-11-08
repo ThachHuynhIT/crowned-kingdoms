@@ -8,6 +8,26 @@ export const STONE: KingDef = {
   nameVi: 'Vua Đá Núi',
   name: 'Stone King',
   blurbVi: 'Tháp đá bền chắc và người đá chậm mà dai; bóp nghẹt kẻ địch bằng pháo.',
+  perks: [
+    {
+      id: 'stone_p1',
+      nameVi: 'Nền Móng Vững',
+      textVi: 'Ngai +200 máu.',
+      effects: [{ type: 'stat', filter: { kinds: ['throne'] }, stat: 'structureHp', mode: 'flat', value: 200 }],
+    },
+    {
+      id: 'stone_p2',
+      nameVi: 'Đá Gọi Đá',
+      textVi: 'Bắt đầu ván với một Tháp Ném Đá cấp 1 ngay trước Ngai.',
+      effects: [{ type: 'startBuilding', card: 'stone_catapult', plot: 7 }], // ô (2,1) = plot 7
+    },
+    {
+      id: 'stone_p3',
+      nameVi: 'Tường Không Đổ',
+      textVi: 'Mọi công trình +30% máu.',
+      effects: [{ type: 'stat', stat: 'structureHp', mode: 'pct', value: 30 }],
+    },
+  ],
   color: 'stone',
   throne: {
     id: 'stone_throne',

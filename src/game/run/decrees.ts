@@ -48,11 +48,13 @@ export interface InterventionStats {
 /** Số của Can Thiệp chốt khi vào trận: sắc lệnh cộng với phần thưởng nhiệm vụ vĩnh viễn. */
 export const interventionStats = (
   state: Pick<RunState, 'decrees' | 'interventionDmgPct'>,
+  extraCooldownPct = 0,
 ): InterventionStats => ({
   dmgPct:
     state.interventionDmgPct + (hasDecree(state, 'decree_bigger_boulder') ? DECREE_RULES.boulderDmgPct : 0),
   radius: INTERVENTION.radius + (hasDecree(state, 'decree_bigger_boulder') ? DECREE_RULES.boulderRadius : 0),
-  cooldownTicks: cooldownAfter(hasDecree(state, 'decree_quick_reflex') ? DECREE_RULES.cooldownPct : 0),
+  // Perk (Ma Lực Dồi Dào) cộng vào % giảm của sắc lệnh, chung trần (§7.4).
+  cooldownTicks: cooldownAfter((hasDecree(state, 'decree_quick_reflex') ? DECREE_RULES.cooldownPct : 0) + extraCooldownPct),
 });
 
 /** Hệ số tốc độ của địch: Hào Nước −10%. */

@@ -1,7 +1,7 @@
 /** Hiệu ứng `custom` của Vua Phép Thuật (spec §6.5). */
-import { RUN } from '../../../data/run';
 import type { BuildingKind, CardId, Level, Scalar } from '../../../data/types';
 import { copyEnchants, neighbours } from '../../run/board';
+import { maxEnchantStacks } from '../../run/perks';
 import type { BuildingState } from '../../run/state';
 import type { Modifier, StatHandler, TomeHandler } from './types';
 
@@ -65,6 +65,6 @@ export const mirrorEnchants: TomeHandler = (state, content, _params, target) => 
   };
   return {
     ...state,
-    plots: copyEnchants(state.plots, target.first, target.second, RUN.maxEnchantStacks, accepts),
+    plots: copyEnchants(state.plots, target.first, target.second, maxEnchantStacks(state, content), accepts),
   };
 };

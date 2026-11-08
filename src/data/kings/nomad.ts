@@ -125,6 +125,30 @@ export const NOMAD: KingDef = {
   name: 'Nomad King',
   color: 'sand',
   blurbVi: 'Dời công trình mỗi năm, kỵ binh xung phong.',
+  perks: [
+    {
+      id: 'nomad_p1',
+      nameVi: 'Vó Ngựa',
+      textVi: 'Kỵ binh +10% tốc độ và +10% sát thương.',
+      effects: [
+        { type: 'stat', filter: { unitTags: ['cavalry'] }, stat: 'speed', mode: 'pct', value: 10 },
+        { type: 'stat', filter: { unitTags: ['cavalry'] }, stat: 'dmg', mode: 'pct', value: 10 },
+      ],
+    },
+    {
+      id: 'nomad_p2',
+      nameVi: 'Thảo Nguyên Rộng',
+      textVi: 'Bắt đầu ván với hai ô giữa mép tây và mép đông đã mở.',
+      // Spec ghi (2,0) và (2,4), nhưng (2,0) giờ là ô Ngai: chọn hai ô giữa mép tây/đông (plot 10, 14).
+      effects: [{ type: 'startUnlocked', plots: [10, 14] }],
+    },
+    {
+      id: 'nomad_p3',
+      nameVi: 'Nhổ Trại Nhanh',
+      textVi: 'Lều Di Động thêm 1 lượt dời miễn phí mỗi năm.',
+      effects: [{ type: 'freeMoves', add: 1 }],
+    },
+  ],
   throne: {
     id: 'nomad_throne',
     owner: 'nomad',

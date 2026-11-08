@@ -1,4 +1,5 @@
 import { cells } from '../boardGeometry';
+import { RUN } from '../run';
 import type { CardDef, EnemyKingDef, KingDef } from '../types';
 import { enemyFromKing } from './enemy';
 
@@ -124,6 +125,29 @@ export const MOON: KingDef = {
   name: 'Moon King',
   color: 'plum',
   blurbVi: 'Hiến tế và triệu hồi: gom Hồn, đổi lấy bóng ma. Rủi ro cao.',
+  perks: [
+    {
+      id: 'moon_p1',
+      nameVi: 'Hồn Đói',
+      textVi: 'Thu Hồn cần ít hơn 2 Hồn.',
+      effects: [{ type: 'soulCost', add: -2 }],
+    },
+    {
+      id: 'moon_p2',
+      nameVi: 'Trăng Non',
+      textVi: 'Bộ bài khởi đầu có thêm 1 Khế Ước Máu.',
+      effects: [{ type: 'startDeckCard', card: 'moon_blood_pact' }],
+    },
+    {
+      id: 'moon_p3',
+      nameVi: 'Mạng Thứ Tư',
+      textVi: 'Bắt đầu ván với 4 mạng, nhưng Ngai −20% máu.',
+      effects: [
+        { type: 'startLives', lives: RUN.maxLives },
+        { type: 'stat', filter: { kinds: ['throne'] }, stat: 'structureHp', mode: 'pct', value: -20 },
+      ],
+    },
+  ],
   throne: {
     id: 'moon_throne',
     owner: 'moon',

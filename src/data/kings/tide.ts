@@ -149,6 +149,26 @@ export const TIDE: KingDef = {
   name: 'Tide King',
   color: 'water',
   blurbVi: 'Cướp biển và pháo nổ: đẩy lùi địch, gom chiến lợi phẩm.',
+  perks: [
+    {
+      id: 'tide_p1',
+      nameVi: 'Túi Đầy',
+      textVi: '+5 vàng khởi đầu.',
+      effects: [{ type: 'startGold', amount: 5 }],
+    },
+    {
+      id: 'tide_p2',
+      nameVi: 'Gió Thuận',
+      textVi: 'Mọi đẩy lùi của phe mình +50%.',
+      effects: [{ type: 'stat', stat: 'knockback', mode: 'pct', value: 50 }],
+    },
+    {
+      id: 'tide_p3',
+      nameVi: 'Chuộc Tù',
+      textVi: 'Thua trận vẫn nhận một nửa vàng thắng trận (làm tròn xuống).',
+      effects: [{ type: 'lossGold', pct: 50 }],
+    },
+  ],
   throne: {
     id: 'tide_throne',
     owner: 'tide',

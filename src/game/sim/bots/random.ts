@@ -7,6 +7,7 @@ import type { CardDef } from '../../../data/types';
 import type { Content } from '../../cards/registry';
 import { adjacentToUnlocked, checkPlay, targetCount, unlockPlot } from '../../run/board';
 import { rerollPrice } from '../../run/decrees';
+import { maxEnchantStacks } from '../../run/perks';
 import { cardOffer } from '../../run/flow';
 import type { CouncilSelection, PlayTarget, RunCommand, RunState } from '../../run/state';
 
@@ -40,7 +41,7 @@ const playOptions = (state: RunState, content: Content): RunCommand[] => {
   state.hand.forEach((cardId, handIndex) => {
     const card = content.card(cardId);
     for (const target of candidateTargets(card)) {
-      if (checkPlay(state.plots, card, target, content) === null) {
+      if (checkPlay(state.plots, card, target, content, maxEnchantStacks(state, content)) === null) {
         options.push({ type: 'play', handIndex, target });
       }
     }

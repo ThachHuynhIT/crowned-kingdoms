@@ -1,6 +1,7 @@
 /** Hiệu ứng riêng của thẻ chinh phục Vua Du Mục (spec §6.11). */
 import type { BuildingKind } from '../../../data/types';
 import { THRONE_PLOT, neighbours } from '../../run/board';
+import { perkFreeMoves } from '../../run/perks';
 import type { IllegalReason, RunState } from '../../run/state';
 import type { Content } from '../registry';
 import type { FullRunCardHooks } from './fullRunTypes';
@@ -39,7 +40,8 @@ export function freeMovesAllowed(state: RunState, content: Content): number {
     if (e.type !== 'custom' || e.id !== 'nomad_mobile_camp') continue;
     const moves = e.params?.moves;
     if (moves === undefined) return 0;
-    return typeof moves === 'number' ? moves : (moves[state.throneLevel - 1] ?? 0);
+    const base = typeof moves === 'number' ? moves : (moves[state.throneLevel - 1] ?? 0);
+    return base + perkFreeMoves(state, content); // perk Nhổ Trại Nhanh
   }
   return 0;
 }

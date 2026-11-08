@@ -153,6 +153,10 @@ export interface Filter {
   readonly tags?: readonly CardTag[];
   readonly unitTags?: readonly UnitTag[];
   readonly cardIds?: readonly CardId[];
+  /** Chỉ lính có id trong danh sách (perk Toàn Dân Cầm Giáo). */
+  readonly unitIds?: readonly UnitId[];
+  /** Chỉ lính (không áp cho chính công trình / Ngai). */
+  readonly unitsOnly?: boolean;
   /** Chỉ công trình có cấp ≥ `minLevel` (Ngai: cấp Ngai). */
   readonly minLevel?: Level;
 }
@@ -398,6 +402,60 @@ export interface KingDef {
   readonly enemyRoster: readonly { readonly unit: UnitId; readonly weight: number }[];
   /** Cờ hiệu khi làm địch. */
   readonly banner: BannerDef;
+  /** Ba perk của vua (`<vua>_p1..p3`, spec §6.3–6.11); một ván mang tối đa một perk. */
+  readonly perks: readonly [PerkDef, PerkDef, PerkDef];
+}
+
+/**
+ * Hiệu ứng perk (spec §5.1): danh sách đóng, mỗi perk chỉ là dữ liệu. Code đọc theo `type`, không theo id
+ * perk. `start*` áp một lần lúc tạo ván; `stat` là nguồn (f) của bộ gộp chỉ số §5.3 (sau sắc lệnh, trước
+ * `permanent`); các loại còn lại là móc luật ván (đổi bài, thua trận, Bùa, dời nhà) hoặc mod trận.
+ */
+export type PerkEffect =
+  /** Chỉ số cho mọi công trình / lính phe mình khớp `filter` (scope luôn là cả bàn cờ). */
+  | {
+      readonly type: 'stat';
+      readonly filter?: Filter;
+      readonly stat: StatKey;
+      readonly mode: StatMode;
+      readonly value: number;
+    }
+  /** Vàng khởi đầu cộng thêm. */
+  | { readonly type: 'startGold'; readonly amount: number }
+  /** Bắt đầu với công trình `card` cấp 1 ở ô `plot` (ô đã mở, đặt năm 1). */
+  | { readonly type: 'startBuilding'; readonly card: CardId; readonly plot: number }
+  /** Bắt đầu với các ô này đã mở (không tính vào số ô đã mua). */
+  | { readonly type: 'startUnlocked'; readonly plots: readonly number[] }
+  /** Số mạng khởi đầu. */
+  | { readonly type: 'startLives'; readonly lives: number }
+  /** Thêm một bản `card` vào bộ bài khởi đầu. */
+  | { readonly type: 'startDeckCard'; readonly card: CardId }
+  /** Ngai bắt đầu với `stacks` stack Bùa `card`. */
+  | { readonly type: 'startThroneEnchant'; readonly card: CardId; readonly stacks: number }
+  /** Thêm `count` lần đổi bài miễn phí mỗi năm (cộng với sắc lệnh). */
+  | { readonly type: 'freeRerolls'; readonly count: number }
+  /** Thua trận vẫn nhận `floor(battleGold(year) × pct / 100)` vàng. */
+  | { readonly type: 'lossGold'; readonly pct: number }
+  /** Giới hạn tổng stack Bùa trên một công trình. */
+  | { readonly type: 'maxEnchantStacks'; readonly value: number }
+  /** Giảm hồi chiêu Can Thiệp `pct`% (cộng với sắc lệnh, chung trần giảm). */
+  | { readonly type: 'interventionCooldownPct'; readonly pct: number }
+  /** Công trình mang thẻ `tag` khi được đặt mới có `ageBonus = years`. */
+  | { readonly type: 'placedAgeBonus'; readonly tag: CardTag; readonly years: number }
+  /** Cộng `add` vào số Hồn cần cho Thu Hồn (không dưới 1). */
+  | { readonly type: 'soulCost'; readonly add: number }
+  /** Cộng `add` lượt dời miễn phí mỗi năm (chỉ khi Ngai có Lều Di Động). */
+  | { readonly type: 'freeMoves'; readonly add: number }
+  /** Trong trận Ngai hồi `pct`% HP tối đa mỗi giây. */
+  | { readonly type: 'throneRegenPct'; readonly pct: number }
+  /** Cuồng Nộ và giới hạn thời gian trận đến muộn hơn `ticks` tick. */
+  | { readonly type: 'battleTicks'; readonly ticks: number };
+
+export interface PerkDef {
+  readonly id: PerkId;
+  readonly nameVi: string;
+  readonly textVi: string;
+  readonly effects: readonly PerkEffect[];
 }
 
 /** Sắc lệnh hội đồng (spec §7.1) — danh sách đóng 18 id. */

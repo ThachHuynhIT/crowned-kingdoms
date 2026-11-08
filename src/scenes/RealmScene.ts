@@ -4,6 +4,7 @@ import { PALETTE } from '../data/palette';
 import type { Edge } from '../game/battle/types';
 import { drainEvents, structureFoot } from '../game/battle/world';
 import { CONTENT } from '../game/cards/registry';
+import { maxEnchantStacks } from '../game/run/perks';
 import { createGameBus, type GameEvents } from '../game/events';
 import { RunController } from '../game/run/RunController';
 import { checkTargetStep, targetCount } from '../game/run/board';
@@ -365,7 +366,7 @@ export class RealmScene extends Phaser.Scene {
       board.setHighlights(this.pendingBuy === null ? new Map() : new Map([[this.pendingBuy, 'selected']]));
       return;
     }
-    board.setHighlights(plotHighlights(state.plots, CONTENT.card(cardId), p.targets));
+    board.setHighlights(plotHighlights(state.plots, CONTENT.card(cardId), p.targets, maxEnchantStacks(state, CONTENT)));
   }
 
   /** A click on `plot` while aiming: add it as the next target (replacing the last if full). */
@@ -376,7 +377,8 @@ export class RealmScene extends Phaser.Scene {
     const card = CONTENT.card(cardId);
     const need = targetCount(card);
     const chosen = p.targets.slice(0, need - 1);
-    if (checkTargetStep(this.controller.state.plots, card, chosen, plot) !== null) return;
+    const state = this.controller.state;
+    if (checkTargetStep(state.plots, card, chosen, plot, CONTENT, maxEnchantStacks(state, CONTENT)) !== null) return;
     this.setPending({ handIndex: p.handIndex, targets: [...chosen, plot] });
   }
 
@@ -515,7 +517,7 @@ export class RealmScene extends Phaser.Scene {
     if (plot !== null && state.plots[plot]?.unlocked === false) {
       if (aiming !== null) {
         // A tap has no hover or long-press: say why the aimed card cannot go on this plot.
-        const reason = plotIllegalReason(state.plots, aiming, this.pending?.targets ?? [], plot);
+        const reason = plotIllegalReason(state.plots, aiming, this.pending?.targets ?? [], plot, maxEnchantStacks(state, CONTENT));
         if (reason !== null) {
           this.bus.emit('run:illegal', { reason });
           return;

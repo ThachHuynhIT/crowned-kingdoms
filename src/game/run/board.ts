@@ -60,6 +60,7 @@ export function hasAnyTarget(
   plots: readonly PlotState[],
   card: CardDef,
   content: Content = CONTENT,
+  maxStacks: number = RUN.maxEnchantStacks,
 ): boolean {
   switch (card.kind) {
     case 'throne':
@@ -80,7 +81,7 @@ export function hasAnyTarget(
           p.unlocked &&
           p.building !== null &&
           card.targets.includes(kindOf(p.building, content)) &&
-          stacksOf(p.building) < RUN.maxEnchantStacks,
+          stacksOf(p.building) < maxStacks,
       );
     case 'tome':
       switch (card.target) {
@@ -114,6 +115,7 @@ export function checkPlay(
   card: CardDef,
   target: PlayTarget,
   content: Content = CONTENT,
+  maxStacks: number = RUN.maxEnchantStacks,
 ): IllegalReason | null {
   if (card.kind === 'throne') return 'badTarget';
   const count = targetCount(card);
@@ -126,7 +128,7 @@ export function checkPlay(
     if (target.kind !== 'plot') return 'badTarget';
     if (!validPlot(target.plot)) return 'badTarget';
   }
-  if (!hasAnyTarget(plots, card, content)) return 'noTarget';
+  if (!hasAnyTarget(plots, card, content, maxStacks)) return 'noTarget';
 
   if (target.kind === 'plot') {
     const plot = target.plot;
@@ -150,7 +152,7 @@ export function checkPlay(
       if (!card.targets.includes(kindOf(p.building, content))) {
         return plot === THRONE_PLOT ? 'throne' : 'wrongKind';
       }
-      return stacksOf(p.building) >= RUN.maxEnchantStacks ? 'stacksFull' : null;
+      return stacksOf(p.building) >= maxStacks ? 'stacksFull' : null;
     }
     if (plot === THRONE_PLOT) return 'throne';
     if (p.building === null) return null;
@@ -186,19 +188,20 @@ export function checkTargetStep(
   chosen: readonly number[],
   plot: number,
   content: Content = CONTENT,
+  maxStacks: number = RUN.maxEnchantStacks,
 ): IllegalReason | null {
   const count = targetCount(card);
-  if (count === 0) return checkPlay(plots, card, { kind: 'none' }, content);
-  if (count === 1) return checkPlay(plots, card, { kind: 'plot', plot }, content);
+  if (count === 0) return checkPlay(plots, card, { kind: 'none' }, content, maxStacks);
+  if (count === 1) return checkPlay(plots, card, { kind: 'plot', plot }, content, maxStacks);
   const first = chosen[0];
-  if (first !== undefined) return checkPlay(plots, card, { kind: 'two', first, second: plot }, content);
+  if (first !== undefined) return checkPlay(plots, card, { kind: 'two', first, second: plot }, content, maxStacks);
   for (let second = 0; second < COUNT; second++) {
     if (second === plot) continue;
-    if (checkPlay(plots, card, { kind: 'two', first: plot, second }, content) === null) return null;
+    if (checkPlay(plots, card, { kind: 'two', first: plot, second }, content, maxStacks) === null) return null;
   }
   // No second plot works: report why `plot` fails as a first pick ('badTarget' if it is
   // a fine first pick with nowhere to go).
-  return checkPlay(plots, card, { kind: 'two', first: plot, second: plot }, content);
+  return checkPlay(plots, card, { kind: 'two', first: plot, second: plot }, content, maxStacks);
 }
 
 const cloneBuilding = (b: BuildingState | null): BuildingState | null =>

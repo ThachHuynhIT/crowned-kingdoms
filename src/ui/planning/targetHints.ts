@@ -13,13 +13,14 @@ export const plotHighlights = (
   plots: readonly PlotState[],
   card: CardDef,
   targets: readonly number[],
+  maxStacks?: number,
 ): Map<number, PlotHighlight> => {
   const chosen = targets.slice(0, Math.max(0, targetCount(card) - 1));
   const map = new Map<number, PlotHighlight>();
   const building =
     card.kind === 'troop' || card.kind === 'tower' || card.kind === 'economy' || card.kind === 'support';
   for (let plot = 0; plot < plots.length; plot++) {
-    if (checkTargetStep(plots, card, chosen, plot) !== null) map.set(plot, 'bad');
+    if (checkTargetStep(plots, card, chosen, plot, undefined, maxStacks) !== null) map.set(plot, 'bad');
     else map.set(plot, building && plots[plot]!.building?.cardId === card.id ? 'levelUp' : 'good');
   }
   for (const t of targets) map.set(t, 'selected');
@@ -32,10 +33,11 @@ export const plotIllegalReason = (
   card: CardDef,
   targets: readonly number[],
   plot: number,
+  maxStacks?: number,
 ): IllegalReason | null => {
   if (targets.includes(plot)) return null;
   const chosen = targets.slice(0, Math.max(0, targetCount(card) - 1));
-  return checkTargetStep(plots, card, chosen, plot);
+  return checkTargetStep(plots, card, chosen, plot, undefined, maxStacks);
 };
 
 export type DropOutcome =
@@ -47,10 +49,15 @@ export type DropOutcome =
  * What dropping `card` on `plot` does: play it at once (one target, or none anywhere on the
  * board), start aiming a two-target card with this plot as its first pick, or reject it.
  */
-export const dropOutcome = (plots: readonly PlotState[], card: CardDef, plot: number): DropOutcome => {
+export const dropOutcome = (
+  plots: readonly PlotState[],
+  card: CardDef,
+  plot: number,
+  maxStacks?: number,
+): DropOutcome => {
   const count = targetCount(card);
   if (count === 0) return { action: 'play' };
-  const reason = checkTargetStep(plots, card, [], plot);
+  const reason = checkTargetStep(plots, card, [], plot, undefined, maxStacks);
   if (reason !== null) return { action: 'reject', reason };
   return { action: count === 1 ? 'play' : 'aim' };
 };

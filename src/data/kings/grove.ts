@@ -121,6 +121,26 @@ export const GROVE: KingDef = {
   name: 'Grove King',
   color: 'leaf',
   blurbVi: 'Mạnh dần theo năm: thú rừng và cây hồi máu.',
+  perks: [
+    {
+      id: 'grove_p1',
+      nameVi: 'Rễ Từ Trước',
+      textVi: 'Công trình Rừng mới đặt đã có sẵn 2 năm tuổi.',
+      effects: [{ type: 'placedAgeBonus', tag: 'grove', years: 2 }],
+    },
+    {
+      id: 'grove_p2',
+      nameVi: 'Sói Đầu Đàn',
+      textVi: 'Hang Sói sinh thêm 1 sói ở mọi cấp.',
+      effects: [{ type: 'stat', filter: { cardIds: ['grove_wolf_den'] }, stat: 'unitCount', mode: 'flat', value: 1 }],
+    },
+    {
+      id: 'grove_p3',
+      nameVi: 'Đất Lành',
+      textVi: 'Trong trận, Ngai hồi 1% máu tối đa mỗi giây.',
+      effects: [{ type: 'throneRegenPct', pct: 1 }],
+    },
+  ],
   throne: {
     id: 'grove_throne',
     owner: 'grove',

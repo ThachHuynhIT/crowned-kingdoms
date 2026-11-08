@@ -5,6 +5,7 @@ import { RUN } from '../data/run';
 import { UI_PALETTE } from '../data/uiPalette';
 import { describeCard } from '../game/cards/describe';
 import { CONTENT } from '../game/cards/registry';
+import { maxEnchantStacks } from '../game/run/perks';
 import type { GameEvents } from '../game/events';
 import type { RunController } from '../game/run/RunController';
 import { hasAnyTarget, targetCount } from '../game/run/board';
@@ -333,7 +334,7 @@ export class PlanningHudScene extends Phaser.Scene {
     const choosing = planning && !state.played;
     this.hand.setHand(
       choosing ? state.hand : [],
-      state.hand.map((id) => !hasAnyTarget(state.plots, CONTENT.card(id))),
+      state.hand.map((id) => !hasAnyTarget(state.plots, CONTENT.card(id), CONTENT, maxEnchantStacks(state, CONTENT))),
       state.hand.map((id) => {
         const card = CONTENT.card(id);
         return cardBadge(card, willLevelUpTo(state.plots, card));
@@ -528,7 +529,7 @@ export class PlanningHudScene extends Phaser.Scene {
     if (this.modalOpen()) return;
     const plot = this.plotAt({ x, y });
     if (plot === null) return; // released off the board: the card just returns to the hand
-    const out = dropOutcome(state.plots, CONTENT.card(cardId), plot);
+    const out = dropOutcome(state.plots, CONTENT.card(cardId), plot, maxEnchantStacks(state, CONTENT));
     if (out.action === 'reject') {
       if (this.pending.handIndex !== index) this.bus.emit('ui:select-card', { handIndex: index });
       this.flashIllegal(out.reason);
@@ -637,7 +638,7 @@ export class PlanningHudScene extends Phaser.Scene {
     if (cardId === undefined) return null;
     const plot = this.plotAt({ x, y });
     if (plot === null) return null;
-    const reason = plotIllegalReason(state.plots, CONTENT.card(cardId), p.targets, plot);
+    const reason = plotIllegalReason(state.plots, CONTENT.card(cardId), p.targets, plot, maxEnchantStacks(state, CONTENT));
     return reason === null ? null : { plot, reason };
   }
 

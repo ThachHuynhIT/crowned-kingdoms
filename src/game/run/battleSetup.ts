@@ -30,6 +30,7 @@ import type {
 import { THRONE_PLOT } from './board';
 import { foeSpeedMult, interventionStats } from './decrees';
 import { collectStatSheet, finalStat, type StatSheet } from './modifiers';
+import { perkBattleMods, perkCooldownPct, perkSoulCost } from './perks';
 import type { RunState } from './state';
 
 const clamp = (value: number, min: number, max: number): number => Math.min(Math.max(value, min), max);
@@ -45,10 +46,10 @@ export const attackStats = (a: AttackSpec, dmgMult = 1, rangeBonus = 0, sheet?: 
   const listed = (a.onHit ?? []).filter(
     (h) => h.type !== 'slow' && h.type !== 'stun' && h.type !== 'rampSameTarget',
   );
-  // Bùa Sóng Ngầm (`knockback` flat): mỗi đòn đẩy lùi thêm, kể cả đòn vốn không đẩy.
-  const kbBonus = sheet ? sheet.knockback.flat : 0;
+  // Bùa Sóng Ngầm (`knockback` flat): mỗi đòn đẩy lùi thêm, kể cả đòn vốn không đẩy; perk Gió Thuận: +%.
   const kbBase = listed.find((h) => h.type === 'knockback');
-  const kbPx = (kbBase && kbBase.type === 'knockback' ? kbBase.px : 0) + kbBonus;
+  const kbRaw = kbBase && kbBase.type === 'knockback' ? kbBase.px : 0;
+  const kbPx = sheet ? finalStat(kbRaw, sheet.knockback) : kbRaw;
   // Bỏng (§8.6): bỏng gốc cộng Bùa Than Hồng (flat), rồi nhân phần trăm của Lò Cao.
   const burnBase = listed.find((h) => h.type === 'burn');
   const burnDps = sheet
@@ -129,6 +130,15 @@ const unitStats = (
   };
 };
 
+/** Xung phong (`charge`) đẩy lùi thêm `pct`% (perk Gió Thuận); không đổi gì khi pct = 0. */
+const withKnockbackPct = (
+  behaviours: UnitDef['behaviours'],
+  pct: number,
+): UnitDef['behaviours'] =>
+  pct === 0 || behaviours === undefined
+    ? behaviours
+    : behaviours.map((b) => (b.type === 'charge' ? { ...b, knockback: (b.knockback * (100 + pct)) / 100 } : b));
+
 /** Lính của công trình lính ở cấp `level`: HP/DMG theo TROOP_STD rồi modifier, kèm các giới hạn §5.3. */
 const spawnedStats = (
   u: UnitDef,
@@ -151,10 +161,12 @@ const spawnedStats = (
     shield: 0,
     deathSpawn: null,
     tags: u.tags,
-    behaviours:
+    behaviours: withKnockbackPct(
       sheet.rampAs.flat > 0
         ? [...(u.behaviours ?? []), { type: 'rampAttackSpeed' as const, pctPerSecond: sheet.rampAs.flat, cap: sheet.rampAsCap.flat }]
         : u.behaviours,
+      sheet.knockback.pct,
+    ),
     defIndex: defIndexOf(content, u.id),
     ...(sheet.prewind.flat > 0 ? { prewind: sheet.prewind.flat } : {}),
   };
@@ -225,9 +237,11 @@ const soulSummonOf = (
   const fx = passive.find((e) => e.type === 'custom' && e.id === 'moon_soul_harvest');
   if (!fx || fx.type !== 'custom') return {};
   const level = state.throneLevel;
-  const every = scalarAt(fx.params?.souls ?? 0, level);
+  const souls = scalarAt(fx.params?.souls ?? 0, level);
   const max = scalarAt(fx.params?.max ?? 0, level);
-  if (every <= 0 || max <= 0) return {};
+  if (souls <= 0 || max <= 0) return {};
+  // Perk Hồn Đói: giá Hồn giảm, không dưới 1.
+  const every = Math.max(1, souls + perkSoulCost(state, content));
   return { soulSummon: { every, max, stats: summonStats(state, content, THRONE_PLOT, SOUL_HARVEST_UNIT, level) } };
 };
 
@@ -302,7 +316,7 @@ export const structureFor = (state: RunState, plot: number, content: Content): S
           dmgType: pulseFx.attack.type,
           stunTicks:
             pulseFx.attack.onHit?.reduce((m, h) => (h.type === 'stun' ? Math.max(m, h.ticks) : m), 0) ?? 0,
-          ...(pulseKnock > 0 ? { knockback: pulseKnock } : {}),
+          ...(pulseKnock > 0 ? { knockback: (pulseKnock * (100 + sheet.knockback.pct)) / 100 } : {}),
         }
       : null;
   const killSummonFx = card.effects.find((e) => e.type === 'summonOnKill');
@@ -458,6 +472,8 @@ export function buildBattleSetup(state: RunState, content: Content): BattleSetup
   }));
 
   const boss = bossSetup(state, army, content, structures, speedScale);
+  const cooldownPct = perkCooldownPct(state, content);
+  const perk = perkBattleMods(state, content);
 
   return {
     year: state.year,
@@ -467,9 +483,10 @@ export function buildBattleSetup(state: RunState, content: Content): BattleSetup
     autoFire: state.autoFire,
     ...(bannerDef ? { banner: bannerDef } : {}),
     ...(boss ? { boss } : {}),
-    // Vắng khi không có sắc lệnh/nhiệm vụ: trận giữ số gốc §7.4 (G1/G2).
-    ...(state.decrees.length > 0 || state.interventionDmgPct > 0
-      ? { intervention: interventionStats(state) }
+    // Vắng khi không có sắc lệnh/nhiệm vụ/perk: trận giữ số gốc §7.4 (G1/G2).
+    ...(state.decrees.length > 0 || state.interventionDmgPct > 0 || cooldownPct > 0
+      ? { intervention: interventionStats(state, cooldownPct) }
       : {}),
+    ...(Object.keys(perk).length > 0 ? { perk } : {}),
   };
 }

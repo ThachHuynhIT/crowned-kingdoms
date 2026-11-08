@@ -132,6 +132,26 @@ export const FORGE: KingDef = {
   name: 'Forge King',
   color: 'orange',
   blurbVi: 'Rèn đúc và lửa: bỏng thiêu đốt, công trình cấp cao mạnh hẳn.',
+  perks: [
+    {
+      id: 'forge_p1',
+      nameVi: 'Than Hồng',
+      textVi: 'Mọi sát thương bỏng +30%.',
+      effects: [{ type: 'stat', stat: 'burnDps', mode: 'pct', value: 30 }],
+    },
+    {
+      id: 'forge_p2',
+      nameVi: 'Học Việc',
+      textVi: 'Bắt đầu ván với một Lò Rèn cấp 1 ngay trước Ngai.',
+      effects: [{ type: 'startBuilding', card: 'forge_smithy', plot: 7 }], // ô (2,1) = plot 7
+    },
+    {
+      id: 'forge_p3',
+      nameVi: 'Thép Tốt',
+      textVi: 'Mọi lính phe mình +0.1 giáp.',
+      effects: [{ type: 'stat', filter: { unitsOnly: true }, stat: 'armor', mode: 'flat', value: 0.1 }],
+    },
+  ],
   throne: {
     id: 'forge_throne',
     owner: 'forge',

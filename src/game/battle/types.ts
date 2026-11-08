@@ -218,6 +218,18 @@ export interface BattleSetup {
   autoFire?: boolean;
   /** Can Thiệp đã chốt cho trận (sắc lệnh + nhiệm vụ); vắng = số gốc §7.4. */
   intervention?: { dmgPct: number; radius: number; cooldownTicks: number };
+  /** Mod trận của perk (dữ liệu thuần, không tham chiếu RunState); vắng khi perk không đổi gì trong trận. */
+  perk?: PerkBattleMods;
+}
+
+/** Phần perk mà trận đọc (spec §6.6, §6.9): giá trị hiệu lực, trường vắng = số gốc. */
+export interface PerkBattleMods {
+  /** Ngai hồi `throneRegenPct`% HP tối đa mỗi giây (Đất Lành). */
+  throneRegenPct?: number;
+  /** Tick bắt đầu Cuồng Nộ thay cho `BATTLE.rageTick` (Giờ Vàng). */
+  rageTick?: number;
+  /** Tick hết trận thay cho `BATTLE.hardLimitTick` (Giờ Vàng). */
+  hardLimitTick?: number;
 }
 
 /** Sự kiện cho render, rút ra bằng drainEvents. */

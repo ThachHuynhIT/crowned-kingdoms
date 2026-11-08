@@ -7,6 +7,29 @@ export const WHEAT: KingDef = {
   nameVi: 'Vua Lúa Mì',
   name: 'Wheat King',
   blurbVi: 'Đông đảo lính nông dân, vàng chảy về từ ruộng đồng.',
+  perks: [
+    {
+      id: 'wheat_p1',
+      nameVi: 'Hạt Giống Tốt',
+      textVi: 'Bắt đầu ván với một Ruộng Lúa cấp 1 ngay trước Ngai.',
+      effects: [{ type: 'startBuilding', card: 'wheat_field', plot: 7 }], // ô (2,1) = plot 7
+    },
+    {
+      id: 'wheat_p2',
+      nameVi: 'Thuế Nhẹ',
+      textVi: 'Lần đổi bài đầu tiên mỗi năm miễn phí.',
+      effects: [{ type: 'freeRerolls', count: 1 }],
+    },
+    {
+      id: 'wheat_p3',
+      nameVi: 'Toàn Dân Cầm Giáo',
+      textVi: 'Dân Quân và Nông Binh +10 máu, +1 sát thương.',
+      effects: [
+        { type: 'stat', filter: { unitIds: ['militia', 'peasant'] }, stat: 'hp', mode: 'flat', value: 10 },
+        { type: 'stat', filter: { unitIds: ['militia', 'peasant'] }, stat: 'dmg', mode: 'flat', value: 1 },
+      ],
+    },
+  ],
   color: 'wheat',
   throne: {
     id: 'wheat_throne',

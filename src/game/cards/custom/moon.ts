@@ -1,7 +1,7 @@
 /** Hiệu ứng riêng của thẻ chinh phục Vua Ánh Trăng (spec §6.10). */
-import { RUN } from '../../../data/run';
 import type { BuildingKind } from '../../../data/types';
 import { THRONE_PLOT, attachEnchant, levelUpBuilding, sacrificeBuilding } from '../../run/board';
+import { maxEnchantStacks } from '../../run/perks';
 import type { BuildingState } from '../../run/state';
 import type { FullRunCardHooks } from './fullRunTypes';
 import type { TomeHandler } from './types';
@@ -19,12 +19,13 @@ export const bloodPact: TomeHandler = (state, content, params, target) => {
   const per = typeof params.goldPerLevel === 'number' ? params.goldPerLevel : 0;
   const gold = per * b.level;
   let plots = state.plots;
+  const cap = maxEnchantStacks(state, content);
   for (const e of b.enchants) {
     const card = content.card(e.cardId);
     if (card.kind !== 'enchantment' || !card.targets.includes('throne' as BuildingKind)) continue;
     for (let k = 0; k < e.stacks; k++) {
-      if (stacksOf(plots[THRONE_PLOT]!.building!) >= RUN.maxEnchantStacks) break;
-      plots = attachEnchant(plots, THRONE_PLOT, e.cardId, RUN.maxEnchantStacks);
+      if (stacksOf(plots[THRONE_PLOT]!.building!) >= cap) break;
+      plots = attachEnchant(plots, THRONE_PLOT, e.cardId, cap);
     }
   }
   plots = sacrificeBuilding(plots, target.plot);

@@ -10,6 +10,7 @@ import type { Content } from '../cards/registry';
 import type { BattleResult } from '../battle/types';
 import { THRONE_PLOT, attachEnchant, levelUpBuilding } from './board';
 import { enqueueOffers, finishYearStart } from './flow';
+import { maxEnchantStacks } from './perks';
 import { rollRareOffers } from './rewards';
 import type { IllegalReason, PlotState, QuestState, RunCommand, RunState } from './state';
 
@@ -197,8 +198,9 @@ export function settleQuests(
         if (plot >= 0) {
           done();
           const b = s.plots[plot]!.building!;
-          if (stacksOf(b) >= RUN.maxEnchantStacks) earn(QUEST_RULES.doubleRuneFullGold);
-          else s.plots = attachEnchant(s.plots, plot, b.enchants[0]!.cardId, RUN.maxEnchantStacks);
+          const cap = maxEnchantStacks(s, content);
+          if (stacksOf(b) >= cap) earn(QUEST_RULES.doubleRuneFullGold);
+          else s.plots = attachEnchant(s.plots, plot, b.enchants[0]!.cardId, cap);
         }
         break;
       }

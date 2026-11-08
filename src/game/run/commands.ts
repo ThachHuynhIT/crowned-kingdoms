@@ -22,6 +22,7 @@ import { enactDecree, rollCouncil, selectDecree, setCouncilSelection } from './c
 import { handLimit, rerollPrice, rewardCount } from './decrees';
 import { refillHand } from './deck';
 import { cardOffer, enqueueOffers } from './flow';
+import { maxEnchantStacks, perkLossGold, placedAgeBonus } from './perks';
 import { hasPlayableCard } from './playable';
 import { answerQuest, recordQuestCommand, settleQuests } from './quests';
 import { rollConquestCards, rollOffers } from './rewards';
@@ -66,7 +67,7 @@ function applyBase(input: RunState, cmd: RunCommand, content: Content): CommandR
       const cardId = state.hand[cmd.handIndex];
       if (!Number.isInteger(cmd.handIndex) || cardId === undefined) return fail('badTarget');
       const card = content.card(cardId);
-      const illegal = checkPlay(state.plots, card, cmd.target, content);
+      const illegal = checkPlay(state.plots, card, cmd.target, content, maxEnchantStacks(state, content));
       if (illegal !== null) return fail(illegal);
 
       const target = cmd.target;
@@ -117,7 +118,7 @@ function applyBase(input: RunState, cmd: RunCommand, content: Content): CommandR
       } else if (target.kind !== 'plot') {
         return fail('badTarget');
       } else if (card.kind === 'enchantment') {
-        state.plots = attachEnchant(state.plots, target.plot, card.id, RUN.maxEnchantStacks);
+        state.plots = attachEnchant(state.plots, target.plot, card.id, maxEnchantStacks(state, content));
       } else {
         const here = state.plots[target.plot]!.building;
         if (here === null) {
@@ -127,7 +128,7 @@ function applyBase(input: RunState, cmd: RunCommand, content: Content): CommandR
             level: 1,
             enchants: [],
             placedYear: state.year,
-            ageBonus: 0,
+            ageBonus: placedAgeBonus(state, content, card), // perk Rễ Từ Trước
             counters: {},
             movedYear: null,
             permanent: {},
@@ -233,6 +234,10 @@ function applyBase(input: RunState, cmd: RunCommand, content: Content): CommandR
       } else {
         state.stats.battlesLost += 1;
         state.lives -= 1;
+        // Perk Chuộc Tù: thua vẫn nhận một phần vàng trận (không nhân hệ số năm boss).
+        const ransom = perkLossGold(state, content, battleGold(state.year));
+        state.gold += ransom;
+        state.stats.goldEarned += ransom;
       }
 
       // Chinh phục (spec §3.7): lần tấn công thứ 3 của một vua — thắng thì bị chinh phục, thua thì rút lui.

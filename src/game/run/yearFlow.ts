@@ -10,6 +10,7 @@ import { pickEnemyKings, pickEnemyKingsWithState, startDeck } from './calendar';
 import { buildYearArmy } from './enemyArmy';
 import { runYearGrowth } from '../cards/custom';
 import { freeRerollsPerYear } from './decrees';
+import { applyStartPerk, findPerk, perkFreeRerolls } from './perks';
 import { finishYearStart } from './flow';
 import { offerQuest } from './quests';
 import { RUN_SAVE_VERSION } from './state';
@@ -35,7 +36,7 @@ export function startYear(input: RunState, content: Content): RunState {
     rerollsThisYear: 0,
     freeMovesUsed: 0,
     paidRerollsThisYear: 0,
-    freeRerollsLeft: freeRerollsPerYear(state),
+    freeRerollsLeft: freeRerollsPerYear(state) + perkFreeRerolls(state, content),
     idleUids: income.idleUids,
     gold: state.gold + RUN.taxPerYear + income.delta,
     stats: { ...state.stats, goldEarned: state.stats.goldEarned + gained },
@@ -63,7 +64,7 @@ export function newRun(
   options: NewRunOptions = {},
 ): RunState {
   const perk = options.perk ?? null;
-  if (perk !== null && !perk.startsWith(`${kingId}_p`)) throw new Error(`perk ${perk} does not belong to king ${kingId}`);
+  if (perk !== null && findPerk(content, kingId, perk) === undefined) throw new Error(`perk ${perk} does not belong to king ${kingId}`);
   const difficulty = Math.min(RUN.difficultyLevels, Math.max(0, Math.floor(options.difficulty ?? 0)));
   const unlockedCards = [...(options.unlockedCards ?? [])].sort();
   const plots = initialPlots();
@@ -144,5 +145,6 @@ export function newRun(
     nextUid: 1,
     won: null,
   };
-  return startYear(base, content);
+  // Perk áp trước năm 1: công trình/ô/bài/vàng khởi đầu được tính như có sẵn từ đầu (thu nhập, rút bài).
+  return startYear(applyStartPerk(base, content), content);
 }

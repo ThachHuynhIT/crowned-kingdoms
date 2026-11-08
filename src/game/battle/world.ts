@@ -309,6 +309,13 @@ export class BattleWorld {
   soulDone = 0;
   soulStats: UnitStats | null = null;
 
+  // ---- perk (suy ra từ setup.perk) ----
+  /** Tick bắt đầu Cuồng Nộ và tick hết trận (§8.8), có thể bị perk Giờ Vàng đẩy lùi. */
+  rageTick: number = BATTLE.rageTick;
+  hardLimitTick: number = BATTLE.hardLimitTick;
+  /** Đất Lành: % HP tối đa Ngai hồi mỗi giây. */
+  throneRegenPct = 0;
+
   // ---- cờ hiệu của vua địch cần logic trong trận (§6.6–6.11) ----
   /** Tái Sinh: % HP tối đa địch hồi mỗi giây. */
   regenPct = 0;
@@ -373,6 +380,11 @@ export class BattleWorld {
       this.boulderDmgPct = setup.intervention.dmgPct;
       this.boulderRadius = setup.intervention.radius;
       this.cooldownTicks = setup.intervention.cooldownTicks;
+    }
+    if (setup.perk) {
+      this.rageTick = setup.perk.rageTick ?? BATTLE.rageTick;
+      this.hardLimitTick = setup.perk.hardLimitTick ?? BATTLE.hardLimitTick;
+      this.throneRegenPct = setup.perk.throneRegenPct ?? 0;
     }
     const soul = setup.throne.soulSummon;
     if (soul) {

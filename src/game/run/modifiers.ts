@@ -20,6 +20,7 @@ import type { StatCtx, StatHandler } from '../cards/custom/types';
 import type { Content } from '../cards/registry';
 import { THRONE_PLOT, neighbours } from './board';
 import { decree } from './decrees';
+import { perkEffects } from './perks';
 import type { BuildingState, RunState } from './state';
 
 export interface StatCell {
@@ -73,6 +74,8 @@ const matches = (filter: Filter | undefined, card: CardDef, unit: UnitDef | unde
   if (filter.cardIds && !filter.cardIds.includes(card.id)) return false;
   if (filter.tags && !filter.tags.some((t) => card.tags.includes(t))) return false;
   if (filter.unitTags && (!unit || !filter.unitTags.some((t) => unit.tags.includes(t)))) return false;
+  if (filter.unitIds && (!unit || !filter.unitIds.includes(unit.id))) return false;
+  if (filter.unitsOnly && !unit) return false;
   return true;
 };
 
@@ -166,6 +169,10 @@ export function collectStatSheet(
         add(sheet, e.stat, e.mode, resolve(e.value, 1));
       }
     }
+  }
+  for (const e of perkEffects(state, content)) {
+    // (f) perk: sau sắc lệnh, trước `permanent` (§5.3); luôn áp cho cả bàn cờ.
+    if (e.type === 'stat' && matches(e.filter, targetCard, unit, targetLevel)) add(sheet, e.stat, e.mode, e.value);
   }
   for (const [stat, value] of Object.entries(target.permanent) as [StatKey, number][]) {
     add(sheet, stat, 'pct', value); // (g)

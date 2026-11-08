@@ -10,6 +10,7 @@ import type { CardDef } from '../../../data/types';
 import type { Content } from '../../cards/registry';
 import { adjacentToUnlocked, checkPlay, targetCount, unlockPlot } from '../../run/board';
 import { decree } from '../../run/decrees';
+import { maxEnchantStacks } from '../../run/perks';
 import { cardOffer } from '../../run/flow';
 import type { CouncilSelection, PlayTarget, RunCommand, RunState } from '../../run/state';
 import type { Bot } from './random';
@@ -23,18 +24,18 @@ const priority = (card: CardDef): 0 | 1 | 2 =>
 /** Đích hợp lệ đầu tiên (ô tăng dần; thẻ hai ô theo cặp tăng dần), hoặc null. */
 const firstTarget = (state: RunState, card: CardDef, content: Content): PlayTarget | null => {
   const count = targetCount(card);
-  if (count === 0) return checkPlay(state.plots, card, { kind: 'none' }, content) === null ? { kind: 'none' } : null;
+  if (count === 0) return checkPlay(state.plots, card, { kind: 'none' }, content, maxEnchantStacks(state, content)) === null ? { kind: 'none' } : null;
   if (count === 1) {
     for (let plot = 0; plot < PLOTS; plot++) {
       const target: PlayTarget = { kind: 'plot', plot };
-      if (checkPlay(state.plots, card, target, content) === null) return target;
+      if (checkPlay(state.plots, card, target, content, maxEnchantStacks(state, content)) === null) return target;
     }
     return null;
   }
   for (let first = 0; first < PLOTS; first++) {
     for (let second = 0; second < PLOTS; second++) {
       const target: PlayTarget = { kind: 'two', first, second };
-      if (checkPlay(state.plots, card, target, content) === null) return target;
+      if (checkPlay(state.plots, card, target, content, maxEnchantStacks(state, content)) === null) return target;
     }
   }
   return null;

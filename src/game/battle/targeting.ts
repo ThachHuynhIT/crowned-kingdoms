@@ -37,7 +37,7 @@ export const inRange = (world: BattleWorld, attacker: number, victim: number): b
 };
 
 /** Cuồng Nộ (§8.8): từ rageTick trở đi. */
-export const isRage = (world: BattleWorld): boolean => world.tick >= BATTLE.rageTick;
+export const isRage = (world: BattleWorld): boolean => world.tick >= world.rageTick;
 
 /** Lính phe mình: địch còn sống gần nhất (so bình phương khoảng cách tâm), −1 nếu không còn. */
 const nearestFoe = (w: BattleWorld, self: number): number => {
