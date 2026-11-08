@@ -2,7 +2,12 @@
  * Pure side of the balance tool (G5 spec §2.2): argument parsing, aggregation of `RunStats`, CSV. `tools/balance.ts`
  * only does the I/O (running, printing, writing files).
  */
-import { BALANCE_MAX_SPREAD, BALANCE_MAX_WIN, BALANCE_MIN_WIN, BALANCE_RUNS } from '../../data/balance';
+import {
+  BALANCE_MAX_SPREAD,
+  BALANCE_MAX_WIN,
+  BALANCE_MIN_WIN,
+  BALANCE_RUNS,
+} from '../../data/balance';
 import { ALL_KINGS } from '../../data/rules';
 import type { KingId } from '../../data/types';
 import { RUN } from '../../data/run';
@@ -20,7 +25,12 @@ export interface BalanceOptions {
 
 /** `--king <id|all> --runs N --bot greedy|random|scripted --difficulty d`; throws on anything invalid. */
 export function parseBalanceArgs(args: readonly string[]): BalanceOptions {
-  const opts: BalanceOptions = { kings: ALL_KINGS, runs: BALANCE_RUNS, bot: 'greedy', difficulty: 0 };
+  const opts: BalanceOptions = {
+    kings: ALL_KINGS,
+    runs: BALANCE_RUNS,
+    bot: 'greedy',
+    difficulty: 0,
+  };
   for (let i = 0; i < args.length; i++) {
     const flag = args[i]!;
     const value = args[i + 1];
@@ -32,14 +42,17 @@ export function parseBalanceArgs(args: readonly string[]): BalanceOptions {
       else throw new Error(`unknown king ${value}`);
     } else if (flag === '--runs') {
       const n = Number(value);
-      if (!Number.isInteger(n) || n < 1) throw new Error(`--runs must be a positive integer, got ${value}`);
+      if (!Number.isInteger(n) || n < 1)
+        throw new Error(`--runs must be a positive integer, got ${value}`);
       opts.runs = n;
     } else if (flag === '--bot') {
-      if (!(BALANCE_BOTS as readonly string[]).includes(value)) throw new Error(`unknown bot ${value}`);
+      if (!(BALANCE_BOTS as readonly string[]).includes(value))
+        throw new Error(`unknown bot ${value}`);
       opts.bot = value as BalanceBot;
     } else if (flag === '--difficulty') {
       const d = Number(value);
-      if (!Number.isInteger(d) || d < 0 || d > RUN.difficultyLevels) throw new Error(`--difficulty must be 0..${RUN.difficultyLevels}, got ${value}`);
+      if (!Number.isInteger(d) || d < 0 || d > RUN.difficultyLevels)
+        throw new Error(`--difficulty must be 0..${RUN.difficultyLevels}, got ${value}`);
       opts.difficulty = d;
     } else {
       throw new Error(`unknown flag ${flag}`);
@@ -86,7 +99,10 @@ const add = (into: Record<string, number>, from: Record<string | number, number>
 };
 
 /** Aggregate runs; `allCards` lists every card so unoffered ones still get a 0/0 row. Sorted, deterministic. */
-export function aggregateBalance(runs: readonly RunStats[], allCards: readonly string[] = []): BalanceTables {
+export function aggregateBalance(
+  runs: readonly RunStats[],
+  allCards: readonly string[] = [],
+): BalanceTables {
   const byKing = new Map<KingId, RunStats[]>();
   for (const r of runs) byKing.set(r.kingId, [...(byKing.get(r.kingId) ?? []), r]);
   const kings = ALL_KINGS.filter((k) => byKing.has(k)).map((kingId): KingSummary => {
@@ -110,7 +126,9 @@ export function aggregateBalance(runs: readonly RunStats[], allCards: readonly s
     add(reached, r.battlesReached);
     add(lost, r.battlesLost);
   }
-  const cardIds = [...new Set([...allCards, ...Object.keys(offered), ...Object.keys(picks)])].sort();
+  const cardIds = [
+    ...new Set([...allCards, ...Object.keys(offered), ...Object.keys(picks)]),
+  ].sort();
   const cards = cardIds.map((cardId): CardRow => {
     const o = offered[cardId] ?? 0;
     const p = picks[cardId] ?? 0;
@@ -127,7 +145,9 @@ export function aggregateBalance(runs: readonly RunStats[], allCards: readonly s
   const rates = kings.map((k) => k.winRate);
   const spread = rates.length === 0 ? 0 : Math.max(...rates) - Math.min(...rates);
   const onTarget =
-    kings.length > 0 && rates.every((w) => w >= BALANCE_MIN_WIN && w <= BALANCE_MAX_WIN) && spread <= BALANCE_MAX_SPREAD + 1e-9;
+    kings.length > 0 &&
+    rates.every((w) => w >= BALANCE_MIN_WIN && w <= BALANCE_MAX_WIN) &&
+    spread <= BALANCE_MAX_SPREAD + 1e-9;
   return { kings, cards, years, spread, onTarget };
 }
 

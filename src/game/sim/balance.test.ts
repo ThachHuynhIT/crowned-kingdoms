@@ -28,7 +28,9 @@ describe('parseBalanceArgs', () => {
   });
 
   it('reads every flag', () => {
-    expect(parseBalanceArgs(['--king', 'moon', '--runs', '20', '--bot', 'random', '--difficulty', '3'])).toEqual({
+    expect(
+      parseBalanceArgs(['--king', 'moon', '--runs', '20', '--bot', 'random', '--difficulty', '3']),
+    ).toEqual({
       kings: ['moon'],
       runs: 20,
       bot: 'random',
@@ -55,7 +57,14 @@ describe('aggregateBalance', () => {
   it('computes win rate, mean year, pick and loss rates with their numerators and denominators', () => {
     const t = aggregateBalance(
       [
-        stats({ won: true, yearReached: 30, picks: { a: 1 }, offered: { a: 2, b: 1 }, battlesReached: { 1: 1, 2: 1 }, battlesLost: { 2: 1 } }),
+        stats({
+          won: true,
+          yearReached: 30,
+          picks: { a: 1 },
+          offered: { a: 2, b: 1 },
+          battlesReached: { 1: 1, 2: 1 },
+          battlesLost: { 2: 1 },
+        }),
         stats({ seed: 2, yearReached: 10, offered: { a: 1 }, battlesReached: { 1: 1 } }),
         stats({ seed: 1, kingId: 'stone', won: true, yearReached: 30 }),
       ],
@@ -90,7 +99,9 @@ describe('aggregateBalance', () => {
 
 describe('csv', () => {
   it('escapes quotes, commas and newlines and leaves null cells empty', () => {
-    expect(csv([['a', 'b,c', 'say "hi"', 'x\ny', null, 3]])).toBe('a,"b,c","say ""hi""","x\ny",,3\n');
+    expect(csv([['a', 'b,c', 'say "hi"', 'x\ny', null, 3]])).toBe(
+      'a,"b,c","say ""hi""","x\ny",,3\n',
+    );
   });
 });
 
@@ -98,22 +109,38 @@ describe('createRunStats on a real run', () => {
   it('counts battles per year, offers and picks, identically for the same seed', () => {
     const collect = () => {
       const c = createRunStats(2, 'stone', 0);
-      const result = runHeadless({ seed: 2, kingId: 'stone', rules: RULES_FULL, bot: greedyBot, onCommand: c.observe });
+      const result = runHeadless({
+        seed: 2,
+        kingId: 'stone',
+        rules: RULES_FULL,
+        bot: greedyBot,
+        onCommand: c.observe,
+      });
       return { s: c.finish(result), result };
     };
     const { s, result } = collect();
     expect(s.completedYears).toBe(result.state.stats.battlesWon + result.state.stats.battlesLost);
-    expect(Object.values(s.battlesLost).reduce((a, b) => a + b, 0)).toBe(result.state.stats.battlesLost);
+    expect(Object.values(s.battlesLost).reduce((a, b) => a + b, 0)).toBe(
+      result.state.stats.battlesLost,
+    );
     expect(s.yearReached).toBe(result.state.year);
     expect(s.won).toBe(result.state.won === true);
     const picked = Object.values(s.picks).reduce((a, b) => a + b, 0);
     expect(picked).toBeGreaterThan(0);
-    for (const [id, n] of Object.entries(s.picks)) expect(n).toBeLessThanOrEqual(s.offered[id] ?? 0);
+    for (const [id, n] of Object.entries(s.picks))
+      expect(n).toBeLessThanOrEqual(s.offered[id] ?? 0);
     expect(JSON.stringify(collect().s)).toBe(JSON.stringify(s));
   }, 60_000);
 
   it('passes difficulty and perk to newRun', () => {
-    const r = runHeadless({ seed: 1, kingId: 'wheat', rules: RULES_FULL, bot: greedyBot, difficulty: 3, perk: 'wheat_p1' });
+    const r = runHeadless({
+      seed: 1,
+      kingId: 'wheat',
+      rules: RULES_FULL,
+      bot: greedyBot,
+      difficulty: 3,
+      perk: 'wheat_p1',
+    });
     expect(r.state.difficulty).toBe(3);
     expect(r.state.perk).toBe('wheat_p1');
   }, 60_000);

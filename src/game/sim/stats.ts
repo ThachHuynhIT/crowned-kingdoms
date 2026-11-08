@@ -36,9 +36,14 @@ const bump = <K extends string | number>(record: Record<K, number>, key: K): voi
   record[key] = (record[key] ?? 0) + 1;
 };
 
-const sameOffer = (a: RunState, b: RunState): boolean => JSON.stringify(cardOffer(a)) === JSON.stringify(cardOffer(b));
+const sameOffer = (a: RunState, b: RunState): boolean =>
+  JSON.stringify(cardOffer(a)) === JSON.stringify(cardOffer(b));
 
-export function createRunStats(seed: number, kingId: KingId, difficulty: number): RunStatsCollector {
+export function createRunStats(
+  seed: number,
+  kingId: KingId,
+  difficulty: number,
+): RunStatsCollector {
   const picks: Record<string, number> = {};
   const offered: Record<string, number> = {};
   const battlesReached: Record<number, number> = {};
@@ -54,7 +59,8 @@ export function createRunStats(seed: number, kingId: KingId, difficulty: number)
         if (!command.result.won) bump(battlesLost, before.year);
       }
       const now = cardOffer(after);
-      if (now !== null && !sameOffer(before, after)) for (const id of now.cardIds) bump(offered, id);
+      if (now !== null && !sameOffer(before, after))
+        for (const id of now.cardIds) bump(offered, id);
     },
     finish({ state, commands }) {
       return {
