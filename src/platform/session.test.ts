@@ -1,5 +1,5 @@
 import { IDBFactory } from 'fake-indexeddb';
-import { describe, expect, it } from 'vitest';
+import { describe, expect, it, vi } from 'vitest';
 import {
   INCOMPATIBLE_RUN_TEXT,
   META_READ_ONLY_TEXT,
@@ -54,10 +54,10 @@ describe('createSession', () => {
   });
 });
 
-/** A memory store that logs every write; `failClear` simulates the page closing before the run is cleared. */
+/** A memory store that logs every write; `failEnd` makes the end-of-run transaction fail (nothing changes). */
 class LoggingStore extends MemorySaveStore {
   log: string[] = [];
-  failClear = false;
+  failEnd = false;
   failMeta = false;
   override saveRun(save: Parameters<MemorySaveStore['saveRun']>[0]): Promise<void> {
     this.log.push('saveRun');
@@ -65,8 +65,12 @@ class LoggingStore extends MemorySaveStore {
   }
   override clearRun(): Promise<void> {
     this.log.push('clearRun');
-    if (this.failClear) return Promise.reject(new Error('page closed'));
     return super.clearRun();
+  }
+  override endRun(profile: unknown): Promise<void> {
+    this.log.push('endRun');
+    if (this.failEnd) return Promise.reject(new Error('page closed'));
+    return super.endRun(profile);
   }
   override saveMeta(profile: unknown): Promise<void> {
     this.log.push('saveMeta');
@@ -160,30 +164,37 @@ describe('session meta profile (G4)', () => {
     ]);
     expect(s.meta().crownPoints).toBe(500);
     expect(store.log).not.toContain('saveMeta');
+    expect(store.log).not.toContain('endRun');
+    expect(store.log.at(-1)).toBe('clearRun'); // the ended run is still dropped
     expect(await store.loadMeta()).toEqual(newer);
   });
 
-  it('writes the profile before the run save is cleared', async () => {
+  it('ends the run with ONE endRun (profile + run clear together): no separate saveMeta or clearRun', async () => {
     const store = new LoggingStore();
     const s = await openSession(store, CONTENT);
     const { controller, ended } = await playToEnd(s, lastLife());
     const writes = store.log.filter((w) => w !== 'saveRun');
-    expect(writes).toEqual(['saveMeta', 'clearRun']);
+    expect(writes).toEqual(['endRun']);
+    expect(ended[0]).toMatchObject({ credited: true });
     expect(ended[0]!.crownPoints).toBe(crownPoints(controller.state).total);
     expect(s.meta().crownPoints).toBe(crownPoints(controller.state).total);
     expect(await store.loadRun()).toBeNull();
   });
 
-  it('closing the page between the profile write and the run clear does not add the points twice', async () => {
+  it('no window between the profile write and the run clear: a failed endRun leaves both as they were', async () => {
     const store = new LoggingStore();
-    store.failClear = true;
+    store.failEnd = true; // the page closes (or the disk fails) during the single end-of-run transaction
     const first = await openSession(store, CONTENT);
+    const err = vi.spyOn(console, 'error').mockImplementation(() => undefined);
     const a = await playToEnd(first, lastLife());
-    const points = first.meta().crownPoints;
-    expect(points).toBe(crownPoints(a.controller.state).total);
-    expect(points).toBeGreaterThan(0);
+    err.mockRestore();
+    expect(a.ended[0]).toMatchObject({ credited: false, unlocks: [META_SAVE_FAILED_TEXT] });
+    expect(first.meta().crownPoints).toBe(0); // nothing credited, in memory or on disk
+    expect(await store.loadMeta()).toBeNull();
+    expect(store.log).not.toContain('saveMeta');
+    expect(store.log).not.toContain('clearRun');
 
-    store.failClear = false;
+    store.failEnd = false;
     const second = await openSession(store, CONTENT); // reload: the last battle entry is still saved
     const loaded = await second.load();
     expect(loaded.kind).toBe('ok');
@@ -191,7 +202,8 @@ describe('session meta profile (G4)', () => {
     expect(loaded.state.phase).toBe('battle');
     const b = await playToEnd(second, loaded.state);
     expect(b.controller.state).toEqual(a.controller.state);
-    expect(second.meta().crownPoints).toBe(points);
+    expect(b.ended[0]).toMatchObject({ credited: true });
+    expect(second.meta().crownPoints).toBe(crownPoints(b.controller.state).total);
     expect(second.meta().settledRuns).toHaveLength(1);
     expect(await store.loadRun()).toBeNull();
   });

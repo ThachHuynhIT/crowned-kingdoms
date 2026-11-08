@@ -38,3 +38,15 @@ describe('MemorySaveStore', () => {
     expect(await store.loadMeta()).toEqual({ a: [1] });
   });
 });
+
+describe('MemorySaveStore.endRun', () => {
+  it('stores a copy of the profile and clears the run', async () => {
+    const store = new MemorySaveStore();
+    await store.saveRun(encodeRun(runState(), CONTENT));
+    const profile = { crowns: 4 };
+    await store.endRun(profile);
+    profile.crowns = 99;
+    expect(await store.loadRun()).toBeNull();
+    expect(await store.loadMeta()).toEqual({ crowns: 4 });
+  });
+});

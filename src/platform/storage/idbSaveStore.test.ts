@@ -123,3 +123,60 @@ describe('idbSaveStore', () => {
     expect(await (await openIdbSaveStore(real)).loadRun()).toBeNull();
   });
 });
+
+describe('idbSaveStore.endRun (G4 atomic end of run)', () => {
+  /** Logs every transaction the store opens; with `abortOn` set, a matching request aborts its transaction. */
+  const watched = (real: IDBFactory) => {
+    const seen: { stores: string[]; mode: IDBTransactionMode | undefined }[] = [];
+    const abort = { on: false };
+    const factory = patched(real, (db) => {
+      const transaction = db.transaction.bind(db);
+      db.transaction = ((names: string | string[], mode?: IDBTransactionMode) => {
+        seen.push({ stores: [names].flat().sort(), mode });
+        const tx = transaction(names, mode);
+        const objectStore = tx.objectStore.bind(tx);
+        tx.objectStore = ((n: string) => {
+          const s = objectStore(n);
+          const del = s.delete.bind(s);
+          s.delete = ((key: IDBValidKey) => {
+            const r = del(key);
+            // the profile put and the run delete both succeed, then the transaction is aborted
+            if (abort.on) r.addEventListener('success', () => tx.abort());
+            return r;
+          }) as never;
+          return s;
+        }) as never;
+        return tx;
+      }) as never;
+    });
+    return { factory, seen, abort };
+  };
+
+  it('writes the profile and deletes the run in ONE readwrite transaction over both stores', async () => {
+    const real = new IDBFactory();
+    const { factory, seen } = watched(real);
+    const store = await openIdbSaveStore(factory);
+    await store.saveMeta({ crowns: 1 });
+    await store.saveRun(envelope());
+    seen.length = 0;
+    await store.endRun({ crowns: 9 });
+    expect(seen).toEqual([{ stores: ['meta', 'run'], mode: 'readwrite' }]);
+    const disk = await openIdbSaveStore(real);
+    expect(await disk.loadMeta()).toEqual({ crowns: 9 });
+    expect(await disk.loadRun()).toBeNull();
+  });
+
+  it('an aborted end-of-run transaction leaves both the profile and the run unchanged', async () => {
+    const real = new IDBFactory();
+    const { factory, abort } = watched(real);
+    const store = await openIdbSaveStore(factory);
+    const env = envelope();
+    await store.saveMeta({ crowns: 1 });
+    await store.saveRun(env);
+    abort.on = true;
+    await expect(store.endRun({ crowns: 9 })).rejects.toBeDefined();
+    const disk = await openIdbSaveStore(real);
+    expect(await disk.loadMeta()).toEqual({ crowns: 1 });
+    expect(await disk.loadRun()).toEqual(env);
+  });
+});

@@ -281,10 +281,11 @@ describe('RunController at the end of a run (G4 meta)', () => {
     return { controller, ended, order };
   };
 
-  it('settles the exact ended state before the save is cleared, then announces the real points', async () => {
+  it('settles the exact ended state (settle ends the run save itself: no extra clear), then announces the real points', async () => {
     const p = new SettlingPersistence();
     const { controller, ended, order } = await endRun(p);
-    expect(p.log.slice(-2)).toEqual(['settle', 'checkpoint:ended']);
+    expect(p.log.at(-1)).toBe('settle');
+    expect(p.log).not.toContain('checkpoint:ended');
     expect(p.settled).toHaveLength(1);
     expect(p.settled[0]).toBe(controller.state);
     const breakdown = crownPoints(controller.state);

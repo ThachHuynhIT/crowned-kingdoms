@@ -24,7 +24,11 @@ export interface GameSession {
   meta(): MetaProfile;
   /** Hồ sơ do bản mới hơn ghi: không bao giờ ghi đè, mọi thay đổi bị từ chối. */
   readonly metaReadOnly: boolean;
-  /** Chấm điểm một ván đã kết thúc và lưu hồ sơ; cùng ván chấm hai lần chỉ cộng một lần. Ghi hỏng → reject. */
+  /**
+   * Chấm điểm một ván đã kết thúc và kết thúc ván đang lưu: điểm mới → một `endRun` (hồ sơ + xoá ván, một giao
+   * dịch); ván đã chấm / hồ sơ chỉ đọc → chỉ xoá ván. Cùng ván chấm hai lần chỉ cộng một lần. Ghi hỏng → reject,
+   * ván đang lưu còn nguyên.
+   */
   settleRun(state: RunState): Promise<SettleOutcome>;
   /** Xong sau khi hồ sơ đã lưu. */
   unlockKing(king: KingId): Promise<UnlockResult>;
@@ -47,7 +51,7 @@ export async function openSession(store: SaveStore, content: Content): Promise<G
     tail = run.catch(() => undefined);
     return run;
   };
-  /** Saves `next`; the in-memory profile only changes once the write succeeded. */
+  /** Saves `next` (unlocks); the in-memory profile only changes once the write succeeded. */
   const commit = async (next: MetaProfile): Promise<void> => {
     await store.saveMeta(next);
     profile = next;
@@ -62,9 +66,16 @@ export async function openSession(store: SaveStore, content: Content): Promise<G
         unlocks,
         credited,
       });
-      if (readOnly) return outcome([META_READ_ONLY_TEXT], false);
-      if (r.profile === profile) return outcome(r.unlocks, false); // same run already settled: nothing to write
-      await commit(r.profile);
+      if (readOnly || r.profile === profile) {
+        // Nothing to credit (read-only profile, or this run is already in settledRuns): only drop the ended run.
+        // A failed clear keeps the run; ending it again dedupes, so it is not an error here.
+        await coordinator.clearRun().catch(() => undefined);
+        return outcome(readOnly ? [META_READ_ONLY_TEXT] : r.unlocks, false);
+      }
+      // One transaction writes the profile and clears the run, queued after every earlier checkpoint:
+      // closing the page can never leave the credited profile next to the old run save.
+      await coordinator.endRun(r.profile);
+      profile = r.profile;
       return outcome(r.unlocks, true);
     });
 

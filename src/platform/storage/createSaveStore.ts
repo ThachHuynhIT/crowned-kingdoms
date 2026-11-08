@@ -72,5 +72,9 @@ export async function createSaveStore(options: SaveStoreOptions): Promise<SaveSt
       await mirror.saveMeta(profile);
       await onDisk((s) => s.saveMeta(profile));
     },
+    async endRun(profile) {
+      await mirror.endRun(profile);
+      await onDisk((s) => s.endRun(profile));
+    },
   };
 }

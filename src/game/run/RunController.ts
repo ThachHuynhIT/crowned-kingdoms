@@ -146,15 +146,15 @@ export class RunController {
     const persistence = this.persistence!;
     const write = async (): Promise<void> => {
       if (ended && persistence.settle) {
-        // Settle the exact ended state BEFORE the checkpoint clears the run. If the profile cannot be written,
-        // keep the run save: the next load replays to the same end and settles again (settledRuns dedupes).
+        // settle() scores the exact ended state AND ends the run save (one atomic endRun), so no checkpoint
+        // follows. If it fails, the run save is kept: the next load replays to the same end and settles again.
         try {
           outcome = await persistence.settle(result.state);
         } catch (e) {
           console.error('RunController: settling the run failed', e);
           outcome = localOutcome(result.state, [META_SAVE_FAILED_TEXT]);
-          return;
         }
+        return;
       }
       await persistence.checkpoint(this.current).catch(() => undefined);
     };

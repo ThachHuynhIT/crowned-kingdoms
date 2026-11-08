@@ -29,4 +29,10 @@ export class MemorySaveStore implements SaveStore {
     this.meta = copy(profile);
     return Promise.resolve();
   }
+
+  endRun(profile: unknown): Promise<void> {
+    this.meta = copy(profile);
+    this.run = null;
+    return Promise.resolve();
+  }
 }
