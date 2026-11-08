@@ -52,10 +52,61 @@ export const G5_ART_APPROVED: Readonly<Record<string, readonly string[]>> = {
     'grove_treant',
     'grove_wolf_den',
   ],
+  tide: [
+    'tide_throne',
+    'tide_cannon',
+    'tide_harbor',
+    'tide_hookmen',
+    'tide_kraken',
+    'tide_pirates',
+    'tide_treasure',
+    'tide_wave_tower',
+  ],
+  forge: [
+    'forge_throne',
+    'forge_armory',
+    'forge_blast_furnace',
+    'forge_bombardiers',
+    'forge_flame_tower',
+    'forge_iron_drake',
+    'forge_smithy',
+    'forge_swordsmen',
+  ],
+  clock: [
+    'clock_throne',
+    'clock_bell_tower',
+    'clock_colossus',
+    'clock_gear_tower',
+    'clock_spiders',
+    'clock_spring_workshop',
+    'clock_steam_cannon',
+    'clock_windup_soldiers',
+  ],
+  moon: [
+    'moon_throne',
+    'moon_altar',
+    'moon_crypt',
+    'moon_reaper_shrine',
+    'moon_shadow_spire',
+    'moon_summoning_circle',
+    'moon_vampires',
+  ],
+  nomad: [
+    'nomad_throne',
+    'nomad_bazaar',
+    'nomad_caravan',
+    'nomad_horse_archers',
+    'nomad_khan_guard',
+    'nomad_riders',
+    'nomad_stables',
+    'nomad_watchtower',
+  ],
 };
 
 export const IMAGE_BUILDINGS: Readonly<Record<string, string>> = {
-  ...Object.fromEntries(Object.values(G5_ART_APPROVED).flatMap((cards) => cards.map((card) => [card, `iso/${card}`]))),
+  ...Object.fromEntries(
+    Object.values(G5_ART_APPROVED).flatMap((cards) => cards.map((card) => [card, `iso/${card}`])),
+  ),
   wheat_throne: 'iso/wheat_throne',
   wheat_field: 'iso/wheat_field',
   wheat_windmill: 'iso/wheat_windmill',
@@ -113,8 +164,14 @@ export const decorFile = (id: string): string => `iso/wilds/${id}`;
  * Seamless ground textures that colour the river and its sand banks (`docs/art-review/iso-board/terrain`,
  * 128 px, density 2). Only the terrains in `GROUND_TEXTURES_APPROVED` (owner approved both, 2026-11-06) are loaded.
  */
-export const GROUND_TEXTURE_FILES = { water: 'iso/terrain/water', sand: 'iso/terrain/sand' } as const;
-export const GROUND_TEXTURES_APPROVED: readonly (keyof typeof GROUND_TEXTURE_FILES)[] = ['water', 'sand'];
+export const GROUND_TEXTURE_FILES = {
+  water: 'iso/terrain/water',
+  sand: 'iso/terrain/sand',
+} as const;
+export const GROUND_TEXTURES_APPROVED: readonly (keyof typeof GROUND_TEXTURE_FILES)[] = [
+  'water',
+  'sand',
+];
 
 /**
  * The forest behind the mountain cliff (spec 2026-11-08 §6, Q5): drawn by `docs/art-review/iso-board/polish`, each kind
@@ -135,7 +192,12 @@ export const forestFile = (id: string): string => `iso/polish/${id}`;
  * is the centre of its base diamond (where `ENEMY_PORTAL` stands) in native px. Loaded and drawn only once the owner
  * approved it (`PORTAL_APPROVED`); until then the code-drawn portal stands there.
  */
-export const PORTAL_ART = { file: 'iso/polish/enemy_portal', width: 112, height: 99, foot: { x: 58, y: 71.5 } } as const;
+export const PORTAL_ART = {
+  file: 'iso/polish/enemy_portal',
+  width: 112,
+  height: 99,
+  foot: { x: 58, y: 71.5 },
+} as const;
 /** Approved by the owner 2026-11-08. */
 export const PORTAL_APPROVED = true;
 
@@ -163,5 +225,9 @@ export const POSES: Record<UnitAnim, readonly [number, number]> = {
 };
 
 /** File of pose `n` (0/1) of `anim` for image-art unit `unit`. */
-export const unitPoseFile = (unit: string, team: 'ally' | 'foe', anim: UnitAnim, n: number): string =>
-  `${IMAGE_UNITS[unit]}_${team === 'foe' ? 'foe_' : ''}${POSES[anim][n === 0 ? 0 : 1]}`;
+export const unitPoseFile = (
+  unit: string,
+  team: 'ally' | 'foe',
+  anim: UnitAnim,
+  n: number,
+): string => `${IMAGE_UNITS[unit]}_${team === 'foe' ? 'foe_' : ''}${POSES[anim][n === 0 ? 0 : 1]}`;

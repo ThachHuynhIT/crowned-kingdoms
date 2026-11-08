@@ -2,7 +2,13 @@ import { existsSync, readFileSync } from 'node:fs';
 import { describe, expect, it } from 'vitest';
 import { CONTENT } from '../game/cards/registry';
 import type { KingId } from '../data/types';
-import { G5_ART_APPROVED, IMAGE_ART_FILES, IMAGE_BUILDINGS, IMAGE_PLOTS, PLOT_STATES } from './imageArt';
+import {
+  G5_ART_APPROVED,
+  IMAGE_ART_FILES,
+  IMAGE_BUILDINGS,
+  IMAGE_PLOTS,
+  PLOT_STATES,
+} from './imageArt';
 
 const BUILDING_KINDS = new Set(['throne', 'troop', 'tower', 'economy', 'support']);
 const manifest = readFileSync('docs/assets.manifest.yml', 'utf-8');

@@ -3478,3 +3478,888 @@ assets:
     finalSize: 128x67
     anchor: centre
     notes: grove built plot, 2:1 isometric diamond (G5, approved 2026-11-09 by Claude under the owner's delegation); keyed, reduced to 128 px wide and centred on the widest row by docs/art-review/g5/make_assets.py; anchored at its centre (src/render/imageArt.ts IMAGE_PLOTS)
+  - id: building_tide_cannon_iso
+    path: public/assets/art/ai-v1/iso/tide_cannon.png
+    category: building
+    origin: custom
+    source: docs/art-review/g5/tide/tide_cannon/source.png
+    creator: Project owner (OpenAI imagegen via Codex; prompt in docs/art-review/g5/tide/tide_cannon/prompt.md)
+    license: project-owned
+    attribution: false
+    redistribute: true
+    evidence: docs/art-review/g5/
+    modified: true
+    nativeSize: 1024x1024
+    finalSize: 35x39
+    anchor: feet
+    notes: tide_cannon, isometric 2:1 (G5, approved 2026-11-09 by Claude under the owner's delegation); black keyed and box-reduced at the Wheat set scale (Reapers = 64 px wide) by docs/art-review/g5/make_assets.py; drawn at 0.5 x 2 (src/render/imageArt.ts IMAGE_BUILDINGS)
+  - id: building_tide_harbor_iso
+    path: public/assets/art/ai-v1/iso/tide_harbor.png
+    category: building
+    origin: custom
+    source: docs/art-review/g5/tide/tide_harbor/source.png
+    creator: Project owner (OpenAI imagegen via Codex; prompt in docs/art-review/g5/tide/tide_harbor/prompt.md)
+    license: project-owned
+    attribution: false
+    redistribute: true
+    evidence: docs/art-review/g5/
+    modified: true
+    nativeSize: 1024x1024
+    finalSize: 69x59
+    anchor: feet
+    notes: tide_harbor, isometric 2:1 (G5, approved 2026-11-09 by Claude under the owner's delegation); black keyed and box-reduced at the Wheat set scale (Reapers = 64 px wide) by docs/art-review/g5/make_assets.py; drawn at 0.5 x 2 (src/render/imageArt.ts IMAGE_BUILDINGS)
+  - id: building_tide_hookmen_iso
+    path: public/assets/art/ai-v1/iso/tide_hookmen.png
+    category: building
+    origin: custom
+    source: docs/art-review/g5/tide/tide_hookmen/source.png
+    creator: Project owner (OpenAI imagegen via Codex; prompt in docs/art-review/g5/tide/tide_hookmen/prompt.md)
+    license: project-owned
+    attribution: false
+    redistribute: true
+    evidence: docs/art-review/g5/
+    modified: true
+    nativeSize: 1024x1024
+    finalSize: 68x63
+    anchor: feet
+    notes: tide_hookmen, isometric 2:1 (G5, approved 2026-11-09 by Claude under the owner's delegation); black keyed and box-reduced at the Wheat set scale (Reapers = 64 px wide) by docs/art-review/g5/make_assets.py; drawn at 0.5 x 2 (src/render/imageArt.ts IMAGE_BUILDINGS)
+  - id: building_tide_kraken_iso
+    path: public/assets/art/ai-v1/iso/tide_kraken.png
+    category: building
+    origin: custom
+    source: docs/art-review/g5/tide/tide_kraken/source.png
+    creator: Project owner (OpenAI imagegen via Codex; prompt in docs/art-review/g5/tide/tide_kraken/prompt.md)
+    license: project-owned
+    attribution: false
+    redistribute: true
+    evidence: docs/art-review/g5/
+    modified: true
+    nativeSize: 1024x1024
+    finalSize: 68x54
+    anchor: feet
+    notes: tide_kraken, isometric 2:1 (G5, approved 2026-11-09 by Claude under the owner's delegation); black keyed and box-reduced at the Wheat set scale (Reapers = 64 px wide) by docs/art-review/g5/make_assets.py; drawn at 0.5 x 2 (src/render/imageArt.ts IMAGE_BUILDINGS)
+  - id: building_tide_pirates_iso
+    path: public/assets/art/ai-v1/iso/tide_pirates.png
+    category: building
+    origin: custom
+    source: docs/art-review/g5/tide/tide_pirates/source.png
+    creator: Project owner (OpenAI imagegen via Codex; prompt in docs/art-review/g5/tide/tide_pirates/prompt.md)
+    license: project-owned
+    attribution: false
+    redistribute: true
+    evidence: docs/art-review/g5/
+    modified: true
+    nativeSize: 1024x1024
+    finalSize: 55x64
+    anchor: feet
+    notes: tide_pirates, isometric 2:1 (G5, approved 2026-11-09 by Claude under the owner's delegation); black keyed and box-reduced at the Wheat set scale (Reapers = 64 px wide) by docs/art-review/g5/make_assets.py; drawn at 0.5 x 2 (src/render/imageArt.ts IMAGE_BUILDINGS)
+  - id: building_tide_throne_iso
+    path: public/assets/art/ai-v1/iso/tide_throne.png
+    category: building
+    origin: custom
+    source: docs/art-review/g5/tide/tide_throne/source.png
+    creator: Project owner (OpenAI imagegen via Codex; prompt in docs/art-review/g5/tide/tide_throne/prompt.md)
+    license: project-owned
+    attribution: false
+    redistribute: true
+    evidence: docs/art-review/g5/
+    modified: true
+    nativeSize: 1024x1024
+    finalSize: 45x70
+    anchor: feet
+    notes: tide_throne, isometric 2:1 (G5, approved 2026-11-09 by Claude under the owner's delegation); black keyed and box-reduced at the Wheat set scale (Reapers = 64 px wide) by docs/art-review/g5/make_assets.py; drawn at 0.5 x 2 (src/render/imageArt.ts IMAGE_BUILDINGS)
+  - id: building_tide_treasure_iso
+    path: public/assets/art/ai-v1/iso/tide_treasure.png
+    category: building
+    origin: custom
+    source: docs/art-review/g5/tide/tide_treasure/source.png
+    creator: Project owner (OpenAI imagegen via Codex; prompt in docs/art-review/g5/tide/tide_treasure/prompt.md)
+    license: project-owned
+    attribution: false
+    redistribute: true
+    evidence: docs/art-review/g5/
+    modified: true
+    nativeSize: 1024x1024
+    finalSize: 52x51
+    anchor: feet
+    notes: tide_treasure, isometric 2:1 (G5, approved 2026-11-09 by Claude under the owner's delegation); black keyed and box-reduced at the Wheat set scale (Reapers = 64 px wide) by docs/art-review/g5/make_assets.py; drawn at 0.5 x 2 (src/render/imageArt.ts IMAGE_BUILDINGS)
+  - id: building_tide_wave_tower_iso
+    path: public/assets/art/ai-v1/iso/tide_wave_tower.png
+    category: building
+    origin: custom
+    source: docs/art-review/g5/tide/tide_wave_tower/source.png
+    creator: Project owner (OpenAI imagegen via Codex; prompt in docs/art-review/g5/tide/tide_wave_tower/prompt.md)
+    license: project-owned
+    attribution: false
+    redistribute: true
+    evidence: docs/art-review/g5/
+    modified: true
+    nativeSize: 1024x1024
+    finalSize: 56x72
+    anchor: feet
+    notes: tide_wave_tower, isometric 2:1 (G5, approved 2026-11-09 by Claude under the owner's delegation); black keyed and box-reduced at the Wheat set scale (Reapers = 64 px wide) by docs/art-review/g5/make_assets.py; drawn at 0.5 x 2 (src/render/imageArt.ts IMAGE_BUILDINGS)
+  - id: plot_tide_open_iso
+    path: public/assets/art/ai-v1/iso/plots/tide_open.png
+    category: terrain
+    origin: custom
+    source: docs/art-review/g5/tide/plot_tide_open/source.png
+    creator: Project owner (OpenAI imagegen via Codex; prompt in docs/art-review/g5/tide/plot_tide_open/prompt.md)
+    license: project-owned
+    attribution: false
+    redistribute: true
+    evidence: docs/art-review/g5/
+    modified: true
+    nativeSize: 1024x1024
+    finalSize: 128x67
+    anchor: centre
+    notes: tide open plot, 2:1 isometric diamond (G5, approved 2026-11-09 by Claude under the owner's delegation); keyed, reduced to 128 px wide and centred on the widest row by docs/art-review/g5/make_assets.py; anchored at its centre (src/render/imageArt.ts IMAGE_PLOTS)
+  - id: plot_tide_locked_iso
+    path: public/assets/art/ai-v1/iso/plots/tide_locked.png
+    category: terrain
+    origin: custom
+    source: docs/art-review/g5/tide/plot_tide_locked/source.png
+    creator: Project owner (OpenAI imagegen via Codex; prompt in docs/art-review/g5/tide/plot_tide_locked/prompt.md)
+    license: project-owned
+    attribution: false
+    redistribute: true
+    evidence: docs/art-review/g5/
+    modified: true
+    nativeSize: 1024x1024
+    finalSize: 128x65
+    anchor: centre
+    notes: tide locked plot, 2:1 isometric diamond (G5, approved 2026-11-09 by Claude under the owner's delegation); keyed, reduced to 128 px wide and centred on the widest row by docs/art-review/g5/make_assets.py; anchored at its centre (src/render/imageArt.ts IMAGE_PLOTS)
+  - id: plot_tide_throne_iso
+    path: public/assets/art/ai-v1/iso/plots/tide_throne.png
+    category: terrain
+    origin: custom
+    source: docs/art-review/g5/tide/plot_tide_throne/source.png
+    creator: Project owner (OpenAI imagegen via Codex; prompt in docs/art-review/g5/tide/plot_tide_throne/prompt.md)
+    license: project-owned
+    attribution: false
+    redistribute: true
+    evidence: docs/art-review/g5/
+    modified: true
+    nativeSize: 1024x1024
+    finalSize: 128x69
+    anchor: centre
+    notes: tide throne plot, 2:1 isometric diamond (G5, approved 2026-11-09 by Claude under the owner's delegation); keyed, reduced to 128 px wide and centred on the widest row by docs/art-review/g5/make_assets.py; anchored at its centre (src/render/imageArt.ts IMAGE_PLOTS)
+  - id: plot_tide_built_iso
+    path: public/assets/art/ai-v1/iso/plots/tide_built.png
+    category: terrain
+    origin: custom
+    source: docs/art-review/g5/tide/plot_tide_built/source.png
+    creator: Project owner (OpenAI imagegen via Codex; prompt in docs/art-review/g5/tide/plot_tide_built/prompt.md)
+    license: project-owned
+    attribution: false
+    redistribute: true
+    evidence: docs/art-review/g5/
+    modified: true
+    nativeSize: 1024x1024
+    finalSize: 128x59
+    anchor: centre
+    notes: tide built plot, 2:1 isometric diamond (G5, approved 2026-11-09 by Claude under the owner's delegation); keyed, reduced to 128 px wide and centred on the widest row by docs/art-review/g5/make_assets.py; anchored at its centre (src/render/imageArt.ts IMAGE_PLOTS)
+  - id: building_forge_armory_iso
+    path: public/assets/art/ai-v1/iso/forge_armory.png
+    category: building
+    origin: custom
+    source: docs/art-review/g5/forge/forge_armory/source.png
+    creator: Project owner (OpenAI imagegen via Codex; prompt in docs/art-review/g5/forge/forge_armory/prompt.md)
+    license: project-owned
+    attribution: false
+    redistribute: true
+    evidence: docs/art-review/g5/
+    modified: true
+    nativeSize: 1024x1024
+    finalSize: 72x67
+    anchor: feet
+    notes: forge_armory, isometric 2:1 (G5, approved 2026-11-09 by Claude under the owner's delegation); black keyed and box-reduced at the Wheat set scale (Reapers = 64 px wide) by docs/art-review/g5/make_assets.py; drawn at 0.5 x 2 (src/render/imageArt.ts IMAGE_BUILDINGS)
+  - id: building_forge_blast_furnace_iso
+    path: public/assets/art/ai-v1/iso/forge_blast_furnace.png
+    category: building
+    origin: custom
+    source: docs/art-review/g5/forge/forge_blast_furnace/source.png
+    creator: Project owner (OpenAI imagegen via Codex; prompt in docs/art-review/g5/forge/forge_blast_furnace/prompt.md)
+    license: project-owned
+    attribution: false
+    redistribute: true
+    evidence: docs/art-review/g5/
+    modified: true
+    nativeSize: 1024x1024
+    finalSize: 52x70
+    anchor: feet
+    notes: forge_blast_furnace, isometric 2:1 (G5, approved 2026-11-09 by Claude under the owner's delegation); black keyed and box-reduced at the Wheat set scale (Reapers = 64 px wide) by docs/art-review/g5/make_assets.py; drawn at 0.5 x 2 (src/render/imageArt.ts IMAGE_BUILDINGS)
+  - id: building_forge_bombardiers_iso
+    path: public/assets/art/ai-v1/iso/forge_bombardiers.png
+    category: building
+    origin: custom
+    source: docs/art-review/g5/forge/forge_bombardiers/source.png
+    creator: Project owner (OpenAI imagegen via Codex; prompt in docs/art-review/g5/forge/forge_bombardiers/prompt.md)
+    license: project-owned
+    attribution: false
+    redistribute: true
+    evidence: docs/art-review/g5/
+    modified: true
+    nativeSize: 1024x1024
+    finalSize: 68x58
+    anchor: feet
+    notes: forge_bombardiers, isometric 2:1 (G5, approved 2026-11-09 by Claude under the owner's delegation); black keyed and box-reduced at the Wheat set scale (Reapers = 64 px wide) by docs/art-review/g5/make_assets.py; drawn at 0.5 x 2 (src/render/imageArt.ts IMAGE_BUILDINGS)
+  - id: building_forge_flame_tower_iso
+    path: public/assets/art/ai-v1/iso/forge_flame_tower.png
+    category: building
+    origin: custom
+    source: docs/art-review/g5/forge/forge_flame_tower/source.png
+    creator: Project owner (OpenAI imagegen via Codex; prompt in docs/art-review/g5/forge/forge_flame_tower/prompt.md)
+    license: project-owned
+    attribution: false
+    redistribute: true
+    evidence: docs/art-review/g5/
+    modified: true
+    nativeSize: 1024x1024
+    finalSize: 70x64
+    anchor: feet
+    notes: forge_flame_tower, isometric 2:1 (G5, approved 2026-11-09 by Claude under the owner's delegation); black keyed and box-reduced at the Wheat set scale (Reapers = 64 px wide) by docs/art-review/g5/make_assets.py; drawn at 0.5 x 2 (src/render/imageArt.ts IMAGE_BUILDINGS)
+  - id: building_forge_iron_drake_iso
+    path: public/assets/art/ai-v1/iso/forge_iron_drake.png
+    category: building
+    origin: custom
+    source: docs/art-review/g5/forge/forge_iron_drake/source.png
+    creator: Project owner (OpenAI imagegen via Codex; prompt in docs/art-review/g5/forge/forge_iron_drake/prompt.md)
+    license: project-owned
+    attribution: false
+    redistribute: true
+    evidence: docs/art-review/g5/
+    modified: true
+    nativeSize: 1024x1024
+    finalSize: 71x65
+    anchor: feet
+    notes: forge_iron_drake, isometric 2:1 (G5, approved 2026-11-09 by Claude under the owner's delegation); black keyed and box-reduced at the Wheat set scale (Reapers = 64 px wide) by docs/art-review/g5/make_assets.py; drawn at 0.5 x 2 (src/render/imageArt.ts IMAGE_BUILDINGS)
+  - id: building_forge_smithy_iso
+    path: public/assets/art/ai-v1/iso/forge_smithy.png
+    category: building
+    origin: custom
+    source: docs/art-review/g5/forge/forge_smithy/source.png
+    creator: Project owner (OpenAI imagegen via Codex; prompt in docs/art-review/g5/forge/forge_smithy/prompt.md)
+    license: project-owned
+    attribution: false
+    redistribute: true
+    evidence: docs/art-review/g5/
+    modified: true
+    nativeSize: 1024x1024
+    finalSize: 63x67
+    anchor: feet
+    notes: forge_smithy, isometric 2:1 (G5, approved 2026-11-09 by Claude under the owner's delegation); black keyed and box-reduced at the Wheat set scale (Reapers = 64 px wide) by docs/art-review/g5/make_assets.py; drawn at 0.5 x 2 (src/render/imageArt.ts IMAGE_BUILDINGS)
+  - id: building_forge_swordsmen_iso
+    path: public/assets/art/ai-v1/iso/forge_swordsmen.png
+    category: building
+    origin: custom
+    source: docs/art-review/g5/forge/forge_swordsmen/source.png
+    creator: Project owner (OpenAI imagegen via Codex; prompt in docs/art-review/g5/forge/forge_swordsmen/prompt.md)
+    license: project-owned
+    attribution: false
+    redistribute: true
+    evidence: docs/art-review/g5/
+    modified: true
+    nativeSize: 1024x1024
+    finalSize: 76x57
+    anchor: feet
+    notes: forge_swordsmen, isometric 2:1 (G5, approved 2026-11-09 by Claude under the owner's delegation); black keyed and box-reduced at the Wheat set scale (Reapers = 64 px wide) by docs/art-review/g5/make_assets.py; drawn at 0.5 x 2 (src/render/imageArt.ts IMAGE_BUILDINGS)
+  - id: building_forge_throne_iso
+    path: public/assets/art/ai-v1/iso/forge_throne.png
+    category: building
+    origin: custom
+    source: docs/art-review/g5/forge/forge_throne/source.png
+    creator: Project owner (OpenAI imagegen via Codex; prompt in docs/art-review/g5/forge/forge_throne/prompt.md)
+    license: project-owned
+    attribution: false
+    redistribute: true
+    evidence: docs/art-review/g5/
+    modified: true
+    nativeSize: 1024x1024
+    finalSize: 50x64
+    anchor: feet
+    notes: forge_throne, isometric 2:1 (G5, approved 2026-11-09 by Claude under the owner's delegation); black keyed and box-reduced at the Wheat set scale (Reapers = 64 px wide) by docs/art-review/g5/make_assets.py; drawn at 0.5 x 2 (src/render/imageArt.ts IMAGE_BUILDINGS)
+  - id: plot_forge_open_iso
+    path: public/assets/art/ai-v1/iso/plots/forge_open.png
+    category: terrain
+    origin: custom
+    source: docs/art-review/g5/forge/plot_forge_open/source.png
+    creator: Project owner (OpenAI imagegen via Codex; prompt in docs/art-review/g5/forge/plot_forge_open/prompt.md)
+    license: project-owned
+    attribution: false
+    redistribute: true
+    evidence: docs/art-review/g5/
+    modified: true
+    nativeSize: 1024x1024
+    finalSize: 128x65
+    anchor: centre
+    notes: forge open plot, 2:1 isometric diamond (G5, approved 2026-11-09 by Claude under the owner's delegation); keyed, reduced to 128 px wide and centred on the widest row by docs/art-review/g5/make_assets.py; anchored at its centre (src/render/imageArt.ts IMAGE_PLOTS)
+  - id: plot_forge_locked_iso
+    path: public/assets/art/ai-v1/iso/plots/forge_locked.png
+    category: terrain
+    origin: custom
+    source: docs/art-review/g5/forge/plot_forge_locked/source.png
+    creator: Project owner (OpenAI imagegen via Codex; prompt in docs/art-review/g5/forge/plot_forge_locked/prompt.md)
+    license: project-owned
+    attribution: false
+    redistribute: true
+    evidence: docs/art-review/g5/
+    modified: true
+    nativeSize: 1024x1024
+    finalSize: 128x65
+    anchor: centre
+    notes: forge locked plot, 2:1 isometric diamond (G5, approved 2026-11-09 by Claude under the owner's delegation); keyed, reduced to 128 px wide and centred on the widest row by docs/art-review/g5/make_assets.py; anchored at its centre (src/render/imageArt.ts IMAGE_PLOTS)
+  - id: plot_forge_throne_iso
+    path: public/assets/art/ai-v1/iso/plots/forge_throne.png
+    category: terrain
+    origin: custom
+    source: docs/art-review/g5/forge/plot_forge_throne/source.png
+    creator: Project owner (OpenAI imagegen via Codex; prompt in docs/art-review/g5/forge/plot_forge_throne/prompt.md)
+    license: project-owned
+    attribution: false
+    redistribute: true
+    evidence: docs/art-review/g5/
+    modified: true
+    nativeSize: 1024x1024
+    finalSize: 128x67
+    anchor: centre
+    notes: forge throne plot, 2:1 isometric diamond (G5, approved 2026-11-09 by Claude under the owner's delegation); keyed, reduced to 128 px wide and centred on the widest row by docs/art-review/g5/make_assets.py; anchored at its centre (src/render/imageArt.ts IMAGE_PLOTS)
+  - id: plot_forge_built_iso
+    path: public/assets/art/ai-v1/iso/plots/forge_built.png
+    category: terrain
+    origin: custom
+    source: docs/art-review/g5/forge/plot_forge_built/source.png
+    creator: Project owner (OpenAI imagegen via Codex; prompt in docs/art-review/g5/forge/plot_forge_built/prompt.md)
+    license: project-owned
+    attribution: false
+    redistribute: true
+    evidence: docs/art-review/g5/
+    modified: true
+    nativeSize: 1024x1024
+    finalSize: 128x65
+    anchor: centre
+    notes: forge built plot, 2:1 isometric diamond (G5, approved 2026-11-09 by Claude under the owner's delegation); keyed, reduced to 128 px wide and centred on the widest row by docs/art-review/g5/make_assets.py; anchored at its centre (src/render/imageArt.ts IMAGE_PLOTS)
+  - id: building_clock_bell_tower_iso
+    path: public/assets/art/ai-v1/iso/clock_bell_tower.png
+    category: building
+    origin: custom
+    source: docs/art-review/g5/clock/clock_bell_tower/source.png
+    creator: Project owner (OpenAI imagegen via Codex; prompt in docs/art-review/g5/clock/clock_bell_tower/prompt.md)
+    license: project-owned
+    attribution: false
+    redistribute: true
+    evidence: docs/art-review/g5/
+    modified: true
+    nativeSize: 1024x1024
+    finalSize: 48x78
+    anchor: feet
+    notes: clock_bell_tower, isometric 2:1 (G5, approved 2026-11-09 by Claude under the owner's delegation); black keyed and box-reduced at the Wheat set scale (Reapers = 64 px wide) by docs/art-review/g5/make_assets.py; drawn at 0.5 x 2 (src/render/imageArt.ts IMAGE_BUILDINGS)
+  - id: building_clock_colossus_iso
+    path: public/assets/art/ai-v1/iso/clock_colossus.png
+    category: building
+    origin: custom
+    source: docs/art-review/g5/clock/clock_colossus/source.png
+    creator: Project owner (OpenAI imagegen via Codex; prompt in docs/art-review/g5/clock/clock_colossus/prompt.md)
+    license: project-owned
+    attribution: false
+    redistribute: true
+    evidence: docs/art-review/g5/
+    modified: true
+    nativeSize: 1024x1024
+    finalSize: 67x65
+    anchor: feet
+    notes: clock_colossus, isometric 2:1 (G5, approved 2026-11-09 by Claude under the owner's delegation); black keyed and box-reduced at the Wheat set scale (Reapers = 64 px wide) by docs/art-review/g5/make_assets.py; drawn at 0.5 x 2 (src/render/imageArt.ts IMAGE_BUILDINGS)
+  - id: building_clock_gear_tower_iso
+    path: public/assets/art/ai-v1/iso/clock_gear_tower.png
+    category: building
+    origin: custom
+    source: docs/art-review/g5/clock/clock_gear_tower/source.png
+    creator: Project owner (OpenAI imagegen via Codex; prompt in docs/art-review/g5/clock/clock_gear_tower/prompt.md)
+    license: project-owned
+    attribution: false
+    redistribute: true
+    evidence: docs/art-review/g5/
+    modified: true
+    nativeSize: 1024x1024
+    finalSize: 51x64
+    anchor: feet
+    notes: clock_gear_tower, isometric 2:1 (G5, approved 2026-11-09 by Claude under the owner's delegation); black keyed and box-reduced at the Wheat set scale (Reapers = 64 px wide) by docs/art-review/g5/make_assets.py; drawn at 0.5 x 2 (src/render/imageArt.ts IMAGE_BUILDINGS)
+  - id: building_clock_spiders_iso
+    path: public/assets/art/ai-v1/iso/clock_spiders.png
+    category: building
+    origin: custom
+    source: docs/art-review/g5/clock/clock_spiders/source.png
+    creator: Project owner (OpenAI imagegen via Codex; prompt in docs/art-review/g5/clock/clock_spiders/prompt.md)
+    license: project-owned
+    attribution: false
+    redistribute: true
+    evidence: docs/art-review/g5/
+    modified: true
+    nativeSize: 1024x1024
+    finalSize: 65x58
+    anchor: feet
+    notes: clock_spiders, isometric 2:1 (G5, approved 2026-11-09 by Claude under the owner's delegation); black keyed and box-reduced at the Wheat set scale (Reapers = 64 px wide) by docs/art-review/g5/make_assets.py; drawn at 0.5 x 2 (src/render/imageArt.ts IMAGE_BUILDINGS)
+  - id: building_clock_spring_workshop_iso
+    path: public/assets/art/ai-v1/iso/clock_spring_workshop.png
+    category: building
+    origin: custom
+    source: docs/art-review/g5/clock/clock_spring_workshop/source.png
+    creator: Project owner (OpenAI imagegen via Codex; prompt in docs/art-review/g5/clock/clock_spring_workshop/prompt.md)
+    license: project-owned
+    attribution: false
+    redistribute: true
+    evidence: docs/art-review/g5/
+    modified: true
+    nativeSize: 1024x1024
+    finalSize: 67x71
+    anchor: feet
+    notes: clock_spring_workshop, isometric 2:1 (G5, approved 2026-11-09 by Claude under the owner's delegation); black keyed and box-reduced at the Wheat set scale (Reapers = 64 px wide) by docs/art-review/g5/make_assets.py; drawn at 0.5 x 2 (src/render/imageArt.ts IMAGE_BUILDINGS)
+  - id: building_clock_steam_cannon_iso
+    path: public/assets/art/ai-v1/iso/clock_steam_cannon.png
+    category: building
+    origin: custom
+    source: docs/art-review/g5/clock/clock_steam_cannon/source.png
+    creator: Project owner (OpenAI imagegen via Codex; prompt in docs/art-review/g5/clock/clock_steam_cannon/prompt.md)
+    license: project-owned
+    attribution: false
+    redistribute: true
+    evidence: docs/art-review/g5/
+    modified: true
+    nativeSize: 1024x1024
+    finalSize: 57x71
+    anchor: feet
+    notes: clock_steam_cannon, isometric 2:1 (G5, approved 2026-11-09 by Claude under the owner's delegation); black keyed and box-reduced at the Wheat set scale (Reapers = 64 px wide) by docs/art-review/g5/make_assets.py; drawn at 0.5 x 2 (src/render/imageArt.ts IMAGE_BUILDINGS)
+  - id: building_clock_throne_iso
+    path: public/assets/art/ai-v1/iso/clock_throne.png
+    category: building
+    origin: custom
+    source: docs/art-review/g5/clock/clock_throne/source.png
+    creator: Project owner (OpenAI imagegen via Codex; prompt in docs/art-review/g5/clock/clock_throne/prompt.md)
+    license: project-owned
+    attribution: false
+    redistribute: true
+    evidence: docs/art-review/g5/
+    modified: true
+    nativeSize: 1024x1024
+    finalSize: 49x63
+    anchor: feet
+    notes: clock_throne, isometric 2:1 (G5, approved 2026-11-09 by Claude under the owner's delegation); black keyed and box-reduced at the Wheat set scale (Reapers = 64 px wide) by docs/art-review/g5/make_assets.py; drawn at 0.5 x 2 (src/render/imageArt.ts IMAGE_BUILDINGS)
+  - id: building_clock_windup_soldiers_iso
+    path: public/assets/art/ai-v1/iso/clock_windup_soldiers.png
+    category: building
+    origin: custom
+    source: docs/art-review/g5/clock/clock_windup_soldiers/source.png
+    creator: Project owner (OpenAI imagegen via Codex; prompt in docs/art-review/g5/clock/clock_windup_soldiers/prompt.md)
+    license: project-owned
+    attribution: false
+    redistribute: true
+    evidence: docs/art-review/g5/
+    modified: true
+    nativeSize: 1024x1024
+    finalSize: 65x61
+    anchor: feet
+    notes: clock_windup_soldiers, isometric 2:1 (G5, approved 2026-11-09 by Claude under the owner's delegation); black keyed and box-reduced at the Wheat set scale (Reapers = 64 px wide) by docs/art-review/g5/make_assets.py; drawn at 0.5 x 2 (src/render/imageArt.ts IMAGE_BUILDINGS)
+  - id: plot_clock_open_iso
+    path: public/assets/art/ai-v1/iso/plots/clock_open.png
+    category: terrain
+    origin: custom
+    source: docs/art-review/g5/clock/plot_clock_open/source.png
+    creator: Project owner (OpenAI imagegen via Codex; prompt in docs/art-review/g5/clock/plot_clock_open/prompt.md)
+    license: project-owned
+    attribution: false
+    redistribute: true
+    evidence: docs/art-review/g5/
+    modified: true
+    nativeSize: 1024x1024
+    finalSize: 128x67
+    anchor: centre
+    notes: clock open plot, 2:1 isometric diamond (G5, approved 2026-11-09 by Claude under the owner's delegation); keyed, reduced to 128 px wide and centred on the widest row by docs/art-review/g5/make_assets.py; anchored at its centre (src/render/imageArt.ts IMAGE_PLOTS)
+  - id: plot_clock_locked_iso
+    path: public/assets/art/ai-v1/iso/plots/clock_locked.png
+    category: terrain
+    origin: custom
+    source: docs/art-review/g5/clock/plot_clock_locked/source.png
+    creator: Project owner (OpenAI imagegen via Codex; prompt in docs/art-review/g5/clock/plot_clock_locked/prompt.md)
+    license: project-owned
+    attribution: false
+    redistribute: true
+    evidence: docs/art-review/g5/
+    modified: true
+    nativeSize: 1024x1024
+    finalSize: 128x61
+    anchor: centre
+    notes: clock locked plot, 2:1 isometric diamond (G5, approved 2026-11-09 by Claude under the owner's delegation); keyed, reduced to 128 px wide and centred on the widest row by docs/art-review/g5/make_assets.py; anchored at its centre (src/render/imageArt.ts IMAGE_PLOTS)
+  - id: plot_clock_throne_iso
+    path: public/assets/art/ai-v1/iso/plots/clock_throne.png
+    category: terrain
+    origin: custom
+    source: docs/art-review/g5/clock/plot_clock_throne/source.png
+    creator: Project owner (OpenAI imagegen via Codex; prompt in docs/art-review/g5/clock/plot_clock_throne/prompt.md)
+    license: project-owned
+    attribution: false
+    redistribute: true
+    evidence: docs/art-review/g5/
+    modified: true
+    nativeSize: 1024x1024
+    finalSize: 128x65
+    anchor: centre
+    notes: clock throne plot, 2:1 isometric diamond (G5, approved 2026-11-09 by Claude under the owner's delegation); keyed, reduced to 128 px wide and centred on the widest row by docs/art-review/g5/make_assets.py; anchored at its centre (src/render/imageArt.ts IMAGE_PLOTS)
+  - id: plot_clock_built_iso
+    path: public/assets/art/ai-v1/iso/plots/clock_built.png
+    category: terrain
+    origin: custom
+    source: docs/art-review/g5/clock/plot_clock_built/source.png
+    creator: Project owner (OpenAI imagegen via Codex; prompt in docs/art-review/g5/clock/plot_clock_built/prompt.md)
+    license: project-owned
+    attribution: false
+    redistribute: true
+    evidence: docs/art-review/g5/
+    modified: true
+    nativeSize: 1024x1024
+    finalSize: 128x69
+    anchor: centre
+    notes: clock built plot, 2:1 isometric diamond (G5, approved 2026-11-09 by Claude under the owner's delegation); keyed, reduced to 128 px wide and centred on the widest row by docs/art-review/g5/make_assets.py; anchored at its centre (src/render/imageArt.ts IMAGE_PLOTS)
+  - id: building_moon_altar_iso
+    path: public/assets/art/ai-v1/iso/moon_altar.png
+    category: building
+    origin: custom
+    source: docs/art-review/g5/moon/moon_altar/source.png
+    creator: Project owner (OpenAI imagegen via Codex; prompt in docs/art-review/g5/moon/moon_altar/prompt.md)
+    license: project-owned
+    attribution: false
+    redistribute: true
+    evidence: docs/art-review/g5/
+    modified: true
+    nativeSize: 1024x1024
+    finalSize: 56x60
+    anchor: feet
+    notes: moon_altar, isometric 2:1 (G5, approved 2026-11-09 by Claude under the owner's delegation); black keyed and box-reduced at the Wheat set scale (Reapers = 64 px wide) by docs/art-review/g5/make_assets.py; drawn at 0.5 x 2 (src/render/imageArt.ts IMAGE_BUILDINGS)
+  - id: building_moon_crypt_iso
+    path: public/assets/art/ai-v1/iso/moon_crypt.png
+    category: building
+    origin: custom
+    source: docs/art-review/g5/moon/moon_crypt/source.png
+    creator: Project owner (OpenAI imagegen via Codex; prompt in docs/art-review/g5/moon/moon_crypt/prompt.md)
+    license: project-owned
+    attribution: false
+    redistribute: true
+    evidence: docs/art-review/g5/
+    modified: true
+    nativeSize: 1024x1024
+    finalSize: 37x41
+    anchor: feet
+    notes: moon_crypt, isometric 2:1 (G5, approved 2026-11-09 by Claude under the owner's delegation); black keyed and box-reduced at the Wheat set scale (Reapers = 64 px wide) by docs/art-review/g5/make_assets.py; drawn at 0.5 x 2 (src/render/imageArt.ts IMAGE_BUILDINGS)
+  - id: building_moon_reaper_shrine_iso
+    path: public/assets/art/ai-v1/iso/moon_reaper_shrine.png
+    category: building
+    origin: custom
+    source: docs/art-review/g5/moon/moon_reaper_shrine/source.png
+    creator: Project owner (OpenAI imagegen via Codex; prompt in docs/art-review/g5/moon/moon_reaper_shrine/prompt.md)
+    license: project-owned
+    attribution: false
+    redistribute: true
+    evidence: docs/art-review/g5/
+    modified: true
+    nativeSize: 1024x1024
+    finalSize: 60x61
+    anchor: feet
+    notes: moon_reaper_shrine, isometric 2:1 (G5, approved 2026-11-09 by Claude under the owner's delegation); black keyed and box-reduced at the Wheat set scale (Reapers = 64 px wide) by docs/art-review/g5/make_assets.py; drawn at 0.5 x 2 (src/render/imageArt.ts IMAGE_BUILDINGS)
+  - id: building_moon_shadow_spire_iso
+    path: public/assets/art/ai-v1/iso/moon_shadow_spire.png
+    category: building
+    origin: custom
+    source: docs/art-review/g5/moon/moon_shadow_spire/source.png
+    creator: Project owner (OpenAI imagegen via Codex; prompt in docs/art-review/g5/moon/moon_shadow_spire/prompt.md)
+    license: project-owned
+    attribution: false
+    redistribute: true
+    evidence: docs/art-review/g5/
+    modified: true
+    nativeSize: 1024x1024
+    finalSize: 40x75
+    anchor: feet
+    notes: moon_shadow_spire, isometric 2:1 (G5, approved 2026-11-09 by Claude under the owner's delegation); black keyed and box-reduced at the Wheat set scale (Reapers = 64 px wide) by docs/art-review/g5/make_assets.py; drawn at 0.5 x 2 (src/render/imageArt.ts IMAGE_BUILDINGS)
+  - id: building_moon_summoning_circle_iso
+    path: public/assets/art/ai-v1/iso/moon_summoning_circle.png
+    category: building
+    origin: custom
+    source: docs/art-review/g5/moon/moon_summoning_circle/source.png
+    creator: Project owner (OpenAI imagegen via Codex; prompt in docs/art-review/g5/moon/moon_summoning_circle/prompt.md)
+    license: project-owned
+    attribution: false
+    redistribute: true
+    evidence: docs/art-review/g5/
+    modified: true
+    nativeSize: 1024x1024
+    finalSize: 53x62
+    anchor: feet
+    notes: moon_summoning_circle, isometric 2:1 (G5, approved 2026-11-09 by Claude under the owner's delegation); black keyed and box-reduced at the Wheat set scale (Reapers = 64 px wide) by docs/art-review/g5/make_assets.py; drawn at 0.5 x 2 (src/render/imageArt.ts IMAGE_BUILDINGS)
+  - id: building_moon_throne_iso
+    path: public/assets/art/ai-v1/iso/moon_throne.png
+    category: building
+    origin: custom
+    source: docs/art-review/g5/moon/moon_throne/source.png
+    creator: Project owner (OpenAI imagegen via Codex; prompt in docs/art-review/g5/moon/moon_throne/prompt.md)
+    license: project-owned
+    attribution: false
+    redistribute: true
+    evidence: docs/art-review/g5/
+    modified: true
+    nativeSize: 1024x1024
+    finalSize: 40x69
+    anchor: feet
+    notes: moon_throne, isometric 2:1 (G5, approved 2026-11-09 by Claude under the owner's delegation); black keyed and box-reduced at the Wheat set scale (Reapers = 64 px wide) by docs/art-review/g5/make_assets.py; drawn at 0.5 x 2 (src/render/imageArt.ts IMAGE_BUILDINGS)
+  - id: building_moon_vampires_iso
+    path: public/assets/art/ai-v1/iso/moon_vampires.png
+    category: building
+    origin: custom
+    source: docs/art-review/g5/moon/moon_vampires/source.png
+    creator: Project owner (OpenAI imagegen via Codex; prompt in docs/art-review/g5/moon/moon_vampires/prompt.md)
+    license: project-owned
+    attribution: false
+    redistribute: true
+    evidence: docs/art-review/g5/
+    modified: true
+    nativeSize: 1024x1024
+    finalSize: 64x63
+    anchor: feet
+    notes: moon_vampires, isometric 2:1 (G5, approved 2026-11-09 by Claude under the owner's delegation); black keyed and box-reduced at the Wheat set scale (Reapers = 64 px wide) by docs/art-review/g5/make_assets.py; drawn at 0.5 x 2 (src/render/imageArt.ts IMAGE_BUILDINGS)
+  - id: plot_moon_open_iso
+    path: public/assets/art/ai-v1/iso/plots/moon_open.png
+    category: terrain
+    origin: custom
+    source: docs/art-review/g5/moon/plot_moon_open/source.png
+    creator: Project owner (OpenAI imagegen via Codex; prompt in docs/art-review/g5/moon/plot_moon_open/prompt.md)
+    license: project-owned
+    attribution: false
+    redistribute: true
+    evidence: docs/art-review/g5/
+    modified: true
+    nativeSize: 1024x1024
+    finalSize: 128x65
+    anchor: centre
+    notes: moon open plot, 2:1 isometric diamond (G5, approved 2026-11-09 by Claude under the owner's delegation); keyed, reduced to 128 px wide and centred on the widest row by docs/art-review/g5/make_assets.py; anchored at its centre (src/render/imageArt.ts IMAGE_PLOTS)
+  - id: plot_moon_locked_iso
+    path: public/assets/art/ai-v1/iso/plots/moon_locked.png
+    category: terrain
+    origin: custom
+    source: docs/art-review/g5/moon/plot_moon_locked/source.png
+    creator: Project owner (OpenAI imagegen via Codex; prompt in docs/art-review/g5/moon/plot_moon_locked/prompt.md)
+    license: project-owned
+    attribution: false
+    redistribute: true
+    evidence: docs/art-review/g5/
+    modified: true
+    nativeSize: 1024x1024
+    finalSize: 128x69
+    anchor: centre
+    notes: moon locked plot, 2:1 isometric diamond (G5, approved 2026-11-09 by Claude under the owner's delegation); keyed, reduced to 128 px wide and centred on the widest row by docs/art-review/g5/make_assets.py; anchored at its centre (src/render/imageArt.ts IMAGE_PLOTS)
+  - id: plot_moon_throne_iso
+    path: public/assets/art/ai-v1/iso/plots/moon_throne.png
+    category: terrain
+    origin: custom
+    source: docs/art-review/g5/moon/plot_moon_throne/source.png
+    creator: Project owner (OpenAI imagegen via Codex; prompt in docs/art-review/g5/moon/plot_moon_throne/prompt.md)
+    license: project-owned
+    attribution: false
+    redistribute: true
+    evidence: docs/art-review/g5/
+    modified: true
+    nativeSize: 1024x1024
+    finalSize: 128x67
+    anchor: centre
+    notes: moon throne plot, 2:1 isometric diamond (G5, approved 2026-11-09 by Claude under the owner's delegation); keyed, reduced to 128 px wide and centred on the widest row by docs/art-review/g5/make_assets.py; anchored at its centre (src/render/imageArt.ts IMAGE_PLOTS)
+  - id: plot_moon_built_iso
+    path: public/assets/art/ai-v1/iso/plots/moon_built.png
+    category: terrain
+    origin: custom
+    source: docs/art-review/g5/moon/plot_moon_built/source.png
+    creator: Project owner (OpenAI imagegen via Codex; prompt in docs/art-review/g5/moon/plot_moon_built/prompt.md)
+    license: project-owned
+    attribution: false
+    redistribute: true
+    evidence: docs/art-review/g5/
+    modified: true
+    nativeSize: 1024x1024
+    finalSize: 128x71
+    anchor: centre
+    notes: moon built plot, 2:1 isometric diamond (G5, approved 2026-11-09 by Claude under the owner's delegation); keyed, reduced to 128 px wide and centred on the widest row by docs/art-review/g5/make_assets.py; anchored at its centre (src/render/imageArt.ts IMAGE_PLOTS)
+  - id: building_nomad_bazaar_iso
+    path: public/assets/art/ai-v1/iso/nomad_bazaar.png
+    category: building
+    origin: custom
+    source: docs/art-review/g5/nomad/nomad_bazaar/source.png
+    creator: Project owner (OpenAI imagegen via Codex; prompt in docs/art-review/g5/nomad/nomad_bazaar/prompt.md)
+    license: project-owned
+    attribution: false
+    redistribute: true
+    evidence: docs/art-review/g5/
+    modified: true
+    nativeSize: 1024x1024
+    finalSize: 61x48
+    anchor: feet
+    notes: nomad_bazaar, isometric 2:1 (G5, approved 2026-11-09 by Claude under the owner's delegation); black keyed and box-reduced at the Wheat set scale (Reapers = 64 px wide) by docs/art-review/g5/make_assets.py; drawn at 0.5 x 2 (src/render/imageArt.ts IMAGE_BUILDINGS)
+  - id: building_nomad_caravan_iso
+    path: public/assets/art/ai-v1/iso/nomad_caravan.png
+    category: building
+    origin: custom
+    source: docs/art-review/g5/nomad/nomad_caravan/source.png
+    creator: Project owner (OpenAI imagegen via Codex; prompt in docs/art-review/g5/nomad/nomad_caravan/prompt.md)
+    license: project-owned
+    attribution: false
+    redistribute: true
+    evidence: docs/art-review/g5/
+    modified: true
+    nativeSize: 1024x1024
+    finalSize: 64x56
+    anchor: feet
+    notes: nomad_caravan, isometric 2:1 (G5, approved 2026-11-09 by Claude under the owner's delegation); black keyed and box-reduced at the Wheat set scale (Reapers = 64 px wide) by docs/art-review/g5/make_assets.py; drawn at 0.5 x 2 (src/render/imageArt.ts IMAGE_BUILDINGS)
+  - id: building_nomad_horse_archers_iso
+    path: public/assets/art/ai-v1/iso/nomad_horse_archers.png
+    category: building
+    origin: custom
+    source: docs/art-review/g5/nomad/nomad_horse_archers/source.png
+    creator: Project owner (OpenAI imagegen via Codex; prompt in docs/art-review/g5/nomad/nomad_horse_archers/prompt.md)
+    license: project-owned
+    attribution: false
+    redistribute: true
+    evidence: docs/art-review/g5/
+    modified: true
+    nativeSize: 1024x1024
+    finalSize: 63x58
+    anchor: feet
+    notes: nomad_horse_archers, isometric 2:1 (G5, approved 2026-11-09 by Claude under the owner's delegation); black keyed and box-reduced at the Wheat set scale (Reapers = 64 px wide) by docs/art-review/g5/make_assets.py; drawn at 0.5 x 2 (src/render/imageArt.ts IMAGE_BUILDINGS)
+  - id: building_nomad_khan_guard_iso
+    path: public/assets/art/ai-v1/iso/nomad_khan_guard.png
+    category: building
+    origin: custom
+    source: docs/art-review/g5/nomad/nomad_khan_guard/source.png
+    creator: Project owner (OpenAI imagegen via Codex; prompt in docs/art-review/g5/nomad/nomad_khan_guard/prompt.md)
+    license: project-owned
+    attribution: false
+    redistribute: true
+    evidence: docs/art-review/g5/
+    modified: true
+    nativeSize: 1024x1024
+    finalSize: 63x58
+    anchor: feet
+    notes: nomad_khan_guard, isometric 2:1 (G5, approved 2026-11-09 by Claude under the owner's delegation); black keyed and box-reduced at the Wheat set scale (Reapers = 64 px wide) by docs/art-review/g5/make_assets.py; drawn at 0.5 x 2 (src/render/imageArt.ts IMAGE_BUILDINGS)
+  - id: building_nomad_riders_iso
+    path: public/assets/art/ai-v1/iso/nomad_riders.png
+    category: building
+    origin: custom
+    source: docs/art-review/g5/nomad/nomad_riders/source.png
+    creator: Project owner (OpenAI imagegen via Codex; prompt in docs/art-review/g5/nomad/nomad_riders/prompt.md)
+    license: project-owned
+    attribution: false
+    redistribute: true
+    evidence: docs/art-review/g5/
+    modified: true
+    nativeSize: 1024x1024
+    finalSize: 77x60
+    anchor: feet
+    notes: nomad_riders, isometric 2:1 (G5, approved 2026-11-09 by Claude under the owner's delegation); black keyed and box-reduced at the Wheat set scale (Reapers = 64 px wide) by docs/art-review/g5/make_assets.py; drawn at 0.5 x 2 (src/render/imageArt.ts IMAGE_BUILDINGS)
+  - id: building_nomad_stables_iso
+    path: public/assets/art/ai-v1/iso/nomad_stables.png
+    category: building
+    origin: custom
+    source: docs/art-review/g5/nomad/nomad_stables/source.png
+    creator: Project owner (OpenAI imagegen via Codex; prompt in docs/art-review/g5/nomad/nomad_stables/prompt.md)
+    license: project-owned
+    attribution: false
+    redistribute: true
+    evidence: docs/art-review/g5/
+    modified: true
+    nativeSize: 1024x1024
+    finalSize: 71x64
+    anchor: feet
+    notes: nomad_stables, isometric 2:1 (G5, approved 2026-11-09 by Claude under the owner's delegation); black keyed and box-reduced at the Wheat set scale (Reapers = 64 px wide) by docs/art-review/g5/make_assets.py; drawn at 0.5 x 2 (src/render/imageArt.ts IMAGE_BUILDINGS)
+  - id: building_nomad_throne_iso
+    path: public/assets/art/ai-v1/iso/nomad_throne.png
+    category: building
+    origin: custom
+    source: docs/art-review/g5/nomad/nomad_throne/source.png
+    creator: Project owner (OpenAI imagegen via Codex; prompt in docs/art-review/g5/nomad/nomad_throne/prompt.md)
+    license: project-owned
+    attribution: false
+    redistribute: true
+    evidence: docs/art-review/g5/
+    modified: true
+    nativeSize: 1024x1024
+    finalSize: 56x61
+    anchor: feet
+    notes: nomad_throne, isometric 2:1 (G5, approved 2026-11-09 by Claude under the owner's delegation); black keyed and box-reduced at the Wheat set scale (Reapers = 64 px wide) by docs/art-review/g5/make_assets.py; drawn at 0.5 x 2 (src/render/imageArt.ts IMAGE_BUILDINGS)
+  - id: building_nomad_watchtower_iso
+    path: public/assets/art/ai-v1/iso/nomad_watchtower.png
+    category: building
+    origin: custom
+    source: docs/art-review/g5/nomad/nomad_watchtower/source.png
+    creator: Project owner (OpenAI imagegen via Codex; prompt in docs/art-review/g5/nomad/nomad_watchtower/prompt.md)
+    license: project-owned
+    attribution: false
+    redistribute: true
+    evidence: docs/art-review/g5/
+    modified: true
+    nativeSize: 1024x1024
+    finalSize: 47x77
+    anchor: feet
+    notes: nomad_watchtower, isometric 2:1 (G5, approved 2026-11-09 by Claude under the owner's delegation); black keyed and box-reduced at the Wheat set scale (Reapers = 64 px wide) by docs/art-review/g5/make_assets.py; drawn at 0.5 x 2 (src/render/imageArt.ts IMAGE_BUILDINGS)
+  - id: plot_nomad_open_iso
+    path: public/assets/art/ai-v1/iso/plots/nomad_open.png
+    category: terrain
+    origin: custom
+    source: docs/art-review/g5/nomad/plot_nomad_open/source.png
+    creator: Project owner (OpenAI imagegen via Codex; prompt in docs/art-review/g5/nomad/plot_nomad_open/prompt.md)
+    license: project-owned
+    attribution: false
+    redistribute: true
+    evidence: docs/art-review/g5/
+    modified: true
+    nativeSize: 1024x1024
+    finalSize: 128x67
+    anchor: centre
+    notes: nomad open plot, 2:1 isometric diamond (G5, approved 2026-11-09 by Claude under the owner's delegation); keyed, reduced to 128 px wide and centred on the widest row by docs/art-review/g5/make_assets.py; anchored at its centre (src/render/imageArt.ts IMAGE_PLOTS)
+  - id: plot_nomad_locked_iso
+    path: public/assets/art/ai-v1/iso/plots/nomad_locked.png
+    category: terrain
+    origin: custom
+    source: docs/art-review/g5/nomad/plot_nomad_locked/source.png
+    creator: Project owner (OpenAI imagegen via Codex; prompt in docs/art-review/g5/nomad/plot_nomad_locked/prompt.md)
+    license: project-owned
+    attribution: false
+    redistribute: true
+    evidence: docs/art-review/g5/
+    modified: true
+    nativeSize: 1024x1024
+    finalSize: 128x67
+    anchor: centre
+    notes: nomad locked plot, 2:1 isometric diamond (G5, approved 2026-11-09 by Claude under the owner's delegation); keyed, reduced to 128 px wide and centred on the widest row by docs/art-review/g5/make_assets.py; anchored at its centre (src/render/imageArt.ts IMAGE_PLOTS)
+  - id: plot_nomad_throne_iso
+    path: public/assets/art/ai-v1/iso/plots/nomad_throne.png
+    category: terrain
+    origin: custom
+    source: docs/art-review/g5/nomad/plot_nomad_throne/source.png
+    creator: Project owner (OpenAI imagegen via Codex; prompt in docs/art-review/g5/nomad/plot_nomad_throne/prompt.md)
+    license: project-owned
+    attribution: false
+    redistribute: true
+    evidence: docs/art-review/g5/
+    modified: true
+    nativeSize: 1024x1024
+    finalSize: 128x67
+    anchor: centre
+    notes: nomad throne plot, 2:1 isometric diamond (G5, approved 2026-11-09 by Claude under the owner's delegation); keyed, reduced to 128 px wide and centred on the widest row by docs/art-review/g5/make_assets.py; anchored at its centre (src/render/imageArt.ts IMAGE_PLOTS)
+  - id: plot_nomad_built_iso
+    path: public/assets/art/ai-v1/iso/plots/nomad_built.png
+    category: terrain
+    origin: custom
+    source: docs/art-review/g5/nomad/plot_nomad_built/source.png
+    creator: Project owner (OpenAI imagegen via Codex; prompt in docs/art-review/g5/nomad/plot_nomad_built/prompt.md)
+    license: project-owned
+    attribution: false
+    redistribute: true
+    evidence: docs/art-review/g5/
+    modified: true
+    nativeSize: 1024x1024
+    finalSize: 128x65
+    anchor: centre
+    notes: nomad built plot, 2:1 isometric diamond (G5, approved 2026-11-09 by Claude under the owner's delegation); keyed, reduced to 128 px wide and centred on the widest row by docs/art-review/g5/make_assets.py; anchored at its centre (src/render/imageArt.ts IMAGE_PLOTS)
