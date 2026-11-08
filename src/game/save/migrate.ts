@@ -1,5 +1,5 @@
 /**
- * Nâng cấp RunState đã lưu lên phiên bản hiện tại (thuần, không sửa đầu vào): state 3 → 4 → 5.
+ * Nâng cấp RunState đã lưu lên phiên bản hiện tại (thuần, không sửa đầu vào): state 3 → 4 → 5 → 6.
  * State 1 và 2 chưa từng có định dạng trên đĩa; phiên bản khác được trả nguyên để `decodeRun` từ chối.
  */
 import { hashSeed } from '../../core/random';
@@ -76,10 +76,14 @@ const v4to5 = (raw: Loose): Loose => {
   return out;
 };
 
+/** State 5 → 6 (G4): chưa có perk, thẻ meta nào, và chưa dùng lượt dời miễn phí. */
+const v5to6 = (raw: Loose): Loose => ({ ...raw, version: 6, perk: null, unlockedCards: [], freeMovesUsed: 0 });
+
 export function migrateRunState(raw: unknown): unknown {
   if (!isObject(raw)) return raw;
   let out = raw;
   if (out.version === 3) out = v3to4(out);
   if (out.version === 4) out = v4to5(out);
+  if (out.version === 5) out = v5to6(out);
   return out;
 }

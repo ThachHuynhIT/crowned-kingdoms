@@ -1,9 +1,9 @@
 /** Trạng thái ván G1 (spec §5.1) — JSON thuần, không hàm, không Map/Set. */
 import type { Rules } from '../../data/rules';
-import type { BossId, CardId, DecreeId, KingId, Level, QuestId, StatKey } from '../../data/types';
+import type { BossId, CardId, DecreeId, KingId, Level, PerkId, QuestId, StatKey } from '../../data/types';
 import type { ArmyPlan, BattleResult } from '../battle/types';
 
-export const RUN_SAVE_VERSION = 5;
+export const RUN_SAVE_VERSION = 6;
 
 export interface BuildingState {
   uid: number;
@@ -132,6 +132,12 @@ export interface RunState {
   interventionDmgPct: number;
   /** Độ khó Gai 0–5; G3 luôn 0. */
   difficulty: number;
+  /** Perk đã chọn lúc bắt đầu ván (thuộc vua của ván), hoặc không có. */
+  perk: PerkId | null;
+  /** Thẻ meta đã mở lúc bắt đầu ván, theo id; vào kho thẻ thưởng của ván. */
+  unlockedCards: CardId[];
+  /** Số lượt dời công trình miễn phí đã dùng trong năm (vua Du Mục); về 0 mỗi đầu năm. */
+  freeMovesUsed: number;
   /** Đầu năm đã chuẩn bị nhưng chưa rút bài (đợi bước nhiệm vụ). */
   yearStartPendingDraw: boolean;
   rng: Record<RngStream, number>;

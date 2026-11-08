@@ -1,6 +1,8 @@
 import { describe, expect, it } from 'vitest';
 import { SLOT_MULT } from '../../data/battle';
-import { RULES_G1, RULES_G2 } from '../../data/rules';
+import { RULES_FULL, RULES_G1, RULES_G2 } from '../../data/rules';
+import { RUN } from '../../data/run';
+import type { CardId } from '../../data/types';
 import { armyBudget } from '../battle/compose';
 import { CONTENT } from '../cards/registry';
 import { contentWith, fakeKing } from '../testing/fixtures';
@@ -17,6 +19,36 @@ const before = (year: number, c = content) => ({
 
 const unitIds = (state: ReturnType<typeof before>): string[] =>
   startYear(state, content).army!.waves.flatMap((w) => w.units.map((u) => u.unit));
+
+describe('newRun options (G4)', () => {
+  it('defaults to no perk, difficulty 0, no meta cards, no free moves used', () => {
+    const s = newRun(1, 'wheat', CONTENT, RULES_FULL);
+    expect(s).toMatchObject({ perk: null, difficulty: 0, unlockedCards: [], freeMovesUsed: 0 });
+  });
+
+  it('stores the difficulty clamped to 0..difficultyLevels', () => {
+    expect(newRun(1, 'wheat', CONTENT, RULES_FULL, { difficulty: 3 }).difficulty).toBe(3);
+    expect(newRun(1, 'wheat', CONTENT, RULES_FULL, { difficulty: 99 }).difficulty).toBe(RUN.difficultyLevels);
+    expect(newRun(1, 'wheat', CONTENT, RULES_FULL, { difficulty: -2 }).difficulty).toBe(0);
+  });
+
+  it('stores a sorted copy of the unlocked cards', () => {
+    const given = ['neutral_sharpen', 'neutral_move'] as CardId[];
+    const s = newRun(1, 'wheat', CONTENT, RULES_FULL, { unlockedCards: given });
+    expect(s.unlockedCards).toEqual(['neutral_move', 'neutral_sharpen']);
+    expect(given[0]).toBe('neutral_sharpen');
+  });
+
+  it("accepts a perk of the chosen king and throws for another king's perk", () => {
+    expect(newRun(1, 'wheat', CONTENT, RULES_FULL, { perk: 'wheat_p1' }).perk).toBe('wheat_p1');
+    expect(() => newRun(1, 'wheat', CONTENT, RULES_FULL, { perk: 'stone_p1' })).toThrow();
+  });
+
+  it('resets the free moves used at the start of each year', () => {
+    const s = { ...newRun(7, 'wheat', CONTENT, RULES_FULL), freeMovesUsed: 2, year: 1 };
+    expect(startYear(s, CONTENT).freeMovesUsed).toBe(0);
+  });
+});
 
 describe('slotMultFor', () => {
   it('maps raiders and king attacks to the spec multipliers', () => {

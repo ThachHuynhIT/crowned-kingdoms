@@ -17,6 +17,7 @@ export const RUN = {
   bossYears: [10, 20, 30],
   maxActiveQuests: 2,
   bossGoldMult: 2, // vàng thắng trận boss nhân đôi
+  difficultyLevels: 5, // Gai 0–5
   difficultyBudgetStep: 0.1, // ngân sách/HP boss × (1 + step × gai)
 } as const;
 

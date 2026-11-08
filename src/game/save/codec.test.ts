@@ -95,7 +95,7 @@ describe('roundtrip', () => {
     s.hand.push('neutral_move' as CardId);
     expect(e.state.gold).not.toBe(s.gold);
     expect(e.state.hand).not.toContain('neutral_move');
-    expect(e).toMatchObject({ formatVersion: SAVE_FORMAT_VERSION, version: 5 });
+    expect(e).toMatchObject({ formatVersion: SAVE_FORMAT_VERSION, version: 6 });
   });
 
   it('decoding copies: changes to the result do not reach the raw data', () => {
@@ -119,13 +119,13 @@ describe('empty and unusable data', () => {
     },
   );
 
-  it('unknown_versions: state 1, 2, a future 6, an unknown format and a version that disagrees', () => {
+  it('unknown_versions: state 1, 2, a future 7, an unknown format and a version that disagrees', () => {
     const e = env(runState());
-    for (const version of [1, 2, 6, 99]) {
+    for (const version of [1, 2, 7, 99]) {
       expect(incompatible({ ...e, version, state: { ...e.state, version } }), `state ${version}`).toBe(true);
     }
     expect(incompatible({ ...e, formatVersion: 2 })).toBe(true);
-    expect(incompatible({ ...e, version: 3 })).toBe(true); // envelope says 3 but the state is 5
+    expect(incompatible({ ...e, version: 3 })).toBe(true); // envelope says 3 but the state is 6
   });
 });
 
@@ -215,6 +215,14 @@ describe('structure checks', () => {
     ['year past the rules', (s: RunState) => void (s.year = s.rules.years + 1)],
     ['an unknown phase', (s: RunState) => void (s.phase = 'weird' as never)],
     ['5 lives', (s: RunState) => void (s.lives = 5)],
+    ['a perk that does not exist', (s: RunState) => void (s.perk = 'wheat_p9' as never)],
+    ["another king's perk", (s: RunState) => void (s.perk = 'stone_p1')],
+    ['a perk that is not a string', (s: RunState) => void (s.perk = 3 as never)],
+    ['an unknown meta card', (s: RunState) => void (s.unlockedCards = ['nope_card' as CardId])],
+    ['unlockedCards that is not a list', (s: RunState) => void (s.unlockedCards = 'x' as never)],
+    ['difficulty 7', (s: RunState) => void (s.difficulty = 7)],
+    ['a negative free moves count', (s: RunState) => void (s.freeMovesUsed = -1)],
+    ['fractional free moves', (s: RunState) => void (s.freeMovesUsed = 0.5)],
     ['a card missing from the piles', (s: RunState) => void s.hand.pop()],
     ['a card in the piles that is not in the deck', (s: RunState) => void s.deck.pop()],
     ['an rng outside uint32', (s: RunState) => void (s.rng.draw = -1)],
@@ -228,6 +236,11 @@ describe('structure checks', () => {
     ['an edge that does not exist', (s: RunState) => void (s.army!.waves[0]!.units as { unit: string; edge: string }[]).push({ unit: 'bandit', edge: 'X' })],
   ])('rejects %s', (_name, mutate) => {
     expect(bad(mutate)).toBe(true);
+  });
+
+  it('accepts a perk of the run king, meta cards and difficulty 5', () => {
+    const s = newRun(4, 'stone', CONTENT, RULES_FULL, { perk: 'stone_p2', difficulty: 5, unlockedCards: ['neutral_move' as CardId] });
+    expect(ok(wire(s))).toEqual(s);
   });
 
   it('a fresh state of each shipped rule set is accepted', () => {

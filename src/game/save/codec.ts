@@ -95,9 +95,15 @@ function validate(raw: unknown, content: Content): asserts raw is RunState {
   ensure(inRange(s.lives, 0, RUN.maxLives), 'lives');
   ensure(inRange(s.throneLevel, 1, RUN.maxLevel), 'throne level');
   ensure(isInt(s.gold) && (s.gold as number) >= 0, 'gold');
-  for (const key of ['rerollsThisYear', 'paidRerollsThisYear', 'purchasedPlots', 'freeRerollsLeft', 'difficulty', 'nextUid', 'interventionDmgPct'] as const) {
+  for (const key of ['rerollsThisYear', 'paidRerollsThisYear', 'purchasedPlots', 'freeRerollsLeft', 'freeMovesUsed', 'difficulty', 'nextUid', 'interventionDmgPct'] as const) {
     ensure(isInt(s[key]) && (s[key] as number) >= 0, key);
   }
+  ensure((s.difficulty as number) <= RUN.difficultyLevels, 'difficulty');
+  ensure(
+    s.perk === null || (typeof s.perk === 'string' && /^[a-z]+_p[123]$/.test(s.perk) && s.perk.startsWith(`${s.kingId as string}_p`)),
+    'perk',
+  );
+  cardList(s.unlockedCards, 'unlockedCards');
   ensure(typeof s.autoFire === 'boolean' && typeof s.played === 'boolean' && typeof s.yearStartPendingDraw === 'boolean', 'flags');
   ensure(s.won === null || typeof s.won === 'boolean', 'won');
 

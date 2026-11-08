@@ -17,6 +17,8 @@ export type KingId =
   | 'clock'
   | 'moon'
   | 'nomad';
+/** Perk của vua: `<vua>_p1..p3` (định nghĩa ở G4 Task 5). */
+export type PerkId = `${KingId}_p${1 | 2 | 3}`;
 export type CardOwner = KingId | 'neutral';
 export type CardId = `${CardOwner}_${string}`;
 export type UnitId = string;
