@@ -13,4 +13,4 @@ loại (`iso/wheat_throne.png`, `iso/plots/wheat_open.png`). Ảnh do Codex (ima
 So sánh với Lúa Mì: `sample-sheet.png` (ảnh Lúa Mì là bản đã thu nhỏ trong game, ảnh Rừng Xanh còn là bản nguồn 1024 px; khi
 publish sẽ thu về cùng mật độ pixel).
 
-**Trạng thái:** chờ chủ dự án duyệt. Chưa vẽ phần còn lại của nhóm, chưa publish, chưa nối vào game.
+**Trạng thái:** ĐÃ DUYỆT 09/11/2026 — Claude duyệt theo uỷ quyền của chủ dự án ("toàn bộ hình ảnh từ giờ bạn được toàn quyền tự quyết và duyệt, cho tới khi tôi bảo cần tôi review", 09/11/2026). Nhóm còn lại của Rừng Xanh được vẽ với hai mẫu này đính kèm.

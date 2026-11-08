@@ -7,6 +7,8 @@ The style rules are NOT written here: the prompt is built from the "Prompt mẫu
 (single source of truth) and the approved reference image is always attached. Generation refuses to run when either is
 missing (see tools/test_art_prompts.py). Prompts land in <group>/<id>/prompt.md (provenance); the AI source goes next to
 it as source.png. Groups are one king each (plan: playable kings first)."""
+import importlib.util
+import json
 import re
 import sys
 from pathlib import Path
@@ -566,6 +568,114 @@ def main_g5_sample(only=None):
     print(path)
 
 
+# ---- G5 Task 12: the rest of a king's set, after its two samples were approved --------------------------------
+
+G5_KINGS = ['grove', 'tide', 'forge', 'clock', 'moon', 'nomad']
+G5_BUILDING_KINDS = ('troop', 'tower', 'economy', 'support')
+G5_CARDS = ROOT / 'docs/art-review/g3e/cards/cards.json'
+G5_KIND = {
+    'troop': 'a building that trains soldiers of this kingdom (barracks, den, hall, workshop); no soldiers drawn',
+    'tower': 'a defensive tower or turret that shoots at enemies; its top and its weapon are clearly seen from above',
+    'economy': 'a productive building or resource site that earns gold',
+    'support': 'a supporting building that buffs, heals or summons; a clear magical or practical sign of its aura',
+}
+G5_THEME = {
+    'grove': 'forest kingdom, living wood, moss, leaf greens, bark browns, a little gold',
+    'tide': 'pirate sea kingdom, coral pinks, sea teal, weathered wood, brass',
+    'forge': 'smithing kingdom, dark stone, iron, ember orange glow, soot',
+    'clock': 'clockwork kingdom, brass, copper, slate stone, steel blue',
+    'moon': 'moon kingdom, pale moonstone, deep violet, silver, candle gold; mysterious but cute, never gory',
+    'nomad': 'steppe nomad kingdom, golden felt, red cloth, warm wood, leather',
+}
+G5_PLOTS = {
+    'locked': ('one locked (unclaimed) plot of the {king} king, a single flat 2:1 isometric ground tile',
+               'wild unclaimed land in this kingdom\'s own wild ground (thicker, darker, overgrown), a small bush or a few '
+               'wild plants, no path, no building, no sign, no text.'),
+    'throne': ("the {king} king's throne plot, a single flat 2:1 isometric ground tile",
+               'a royal dais: large cut slabs in this kingdom\'s own stone laid along the two diagonal axes, a thin inlaid '
+               'border in the kingdom\'s colours with a little blue just inside the grass rim, and a small emblem of the '
+               'kingdom carved in the centre. Flat ground only, no building.'),
+    'built': ('one built plot of the {king} king (the ground under a building), a single flat 2:1 isometric ground tile',
+              'a courtyard PAVED WITH this kingdom\'s own stone or planks across the whole inside, small gravel in the '
+              'joints, a little moss. Flat ground only: no building, no props.'),
+}
+G5_PLOT_WHEAT = {s: f'public/assets/art/ai-v1/iso/plots/wheat_{s}.png' for s in G5_PLOTS}
+_FRONT_WORDS = re.compile(r'45-degree|45 degrees|front[- ]facing|front view|frontal', re.I)
+
+
+def _iso_hint(hint):
+    """The card-art hint without its sentences about the old front view (the iso rules come from _B)."""
+    clauses = re.split(r'(?<=[.;])\s+', hint or '')
+    return ' '.join(c for c in clauses if c and not _FRONT_WORDS.search(c)).strip()
+
+
+def g5_set(king):
+    """(ident, kind, name, desc, wheat_ref) for every building card and the three other plot skins of `king`."""
+    cards = json.loads(G5_CARDS.read_text(encoding='utf-8'))
+    spec = importlib.util.spec_from_file_location('card_prompts', ROOT / 'docs/art-review/g3e/cards/make_prompts.py')
+    cp = importlib.util.module_from_spec(spec)
+    spec.loader.exec_module(cp)
+    theme = G5_THEME[king]
+    items = []
+    for c in sorted((c for c in cards if c['owner'] == king and c['kind'] in G5_BUILDING_KINDS), key=lambda c: c['id']):
+        english = c['id'].split('_', 1)[1].replace('_', ' ')
+        hint = _iso_hint(cp.VISUAL.get(c['id'], ''))
+        if hint:
+            hint = ('Card description (written for the card picture; draw ONLY the building or site as a world sprite: '
+                    'no soldiers, animals or people standing in front of it, a creature only if it IS the building, e.g. '
+                    f'carved or grown into it): {hint} ')
+        desc = hint + f'It is "{c["nameVi"]}" ({english}), {G5_KIND[c["kind"]]}. What it does in the game: {c["summary"]}'
+        rules = _B.replace('Theme: farm kingdom, warm bright wood, golden straw, clay tiles, gold and earth tones.', f'Theme: {theme}.')
+        items.append((c['id'], 'building', f'{c["nameVi"]} ({english}, {c["kind"]} building of the {king} king), 2:1 isometric',
+                      desc + rules, G5_WHEAT_REF['building']))
+    for state, (name, desc) in G5_PLOTS.items():
+        items.append((f'plot_{king}_{state}', 'plot', name.format(king=king.capitalize()),
+                      'The SAME diamond tile as the attached approved open plot of this king (same size, same rim, the same '
+                      'four TINY, LOW corner stakes, the same few pixels of earth thickness), but the inside is ' + desc +
+                      f' Theme: {theme}.', G5_PLOT_WHEAT[state]))
+    return items
+
+
+def g5_approved_samples(king):
+    """The two approved samples of `king`; refuses unless its sample-review.md says ĐÃ DUYỆT."""
+    review = ROOT / G5_DIR / king / 'sample-review.md'
+    if not review.exists() or 'ĐÃ DUYỆT' not in review.read_text(encoding='utf-8'):
+        raise SystemExit(f'{king}: the samples are not approved ({review.relative_to(ROOT).as_posix()})')
+    refs = [f'{G5_DIR}/{king}/{king}_throne/source.png', f'{G5_DIR}/{king}/plot_{king}_open/source.png']
+    for r in refs:
+        if not (ROOT / r).exists():
+            raise SystemExit(f'{r} is missing')
+    return refs
+
+
+def main_g5_set(only=None):
+    """`g5-iso-set <king> [<id> ...]`: the rest of one king's set with its approved samples attached."""
+    if not only or only[0] not in G5_KINGS:
+        raise SystemExit(f'g5-iso-set needs a king of {G5_KINGS}')
+    king, ids = only[0], set(only[1:])
+    samples = g5_approved_samples(king)
+    template = iso_template()
+    runner = ['#!/bin/bash', f'cd "{ROOT.as_posix()}"']
+    for ident, kind, name, desc, wheat in g5_set(king):
+        if ids and ident not in ids:
+            continue
+        d = ROOT / G5_DIR / king / ident
+        d.mkdir(parents=True, exist_ok=True)
+        out = (d / 'source.png').relative_to(ROOT).as_posix()
+        extra = (f'\n\nẢNH WHEAT ĐÃ DUYỆT CÙNG LOẠI (đính kèm): `{wheat}`; HAI MẪU ĐÃ DUYỆT CỦA VUA NÀY (đính kèm): '
+                 f'{", ".join(f"`{s}`" for s in samples)} — giữ đúng góc nhìn isometric 2:1, cỡ, mật độ cụm pixel, viền, '
+                 'ánh sáng trên-trái, bảng màu và chất liệu của các mẫu này; mọi công trình của vua này phải trông cùng một bộ.\n')
+        (d / 'prompt.md').write_text(build_iso_set_prompt(out, kind, name, desc, template) + extra, encoding='utf-8')
+        prompt = (d / 'prompt.md').relative_to(ROOT).as_posix()
+        images = ' '.join(f'-i {r}' for r in [REFERENCE, *ISO_REFS[kind].split(), wheat, *samples])
+        runner.append(f'codex exec --sandbox workspace-write -C "$PWD" {images} - < {prompt} > .superpowers/codex-g5-{ident}.out 2>&1')
+        runner.append(f'if [ -s {out} ]; then echo "{ident} ok" >> .superpowers/b-g5-set.log; else echo "{ident} MISSING" >> .superpowers/b-g5-set.log; fi')
+    (ROOT / '.superpowers').mkdir(exist_ok=True)
+    path = ROOT / f'.superpowers/b-g5-set-{king}.sh'
+    path.write_text('\n'.join(runner) + '\n', encoding='utf-8', newline='\n')
+    print(path)
+
+
 def build_prompt(out, name, desc, theme, template=None):
     template = template or style_template()
     body = template.replace('[building and function]', f'{name}').replace(
@@ -591,6 +701,9 @@ def main(group, only=None):
         return
     if group == 'g5-iso-sample':
         main_g5_sample(only)
+        return
+    if group == 'g5-iso-set':
+        main_g5_set(only)
         return
     cfg = GROUPS[group]
     template = style_template()

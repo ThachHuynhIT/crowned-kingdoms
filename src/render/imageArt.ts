@@ -35,7 +35,27 @@ const POSE_INDEXES = [0, 1, 2, 3, 4, 5];
  * set (approved 2026-11-06) cut by `docs/art-review/iso-board/make_assets.py` into `iso/` at one shared scale (the
  * Reapers barn is 64 px wide); they replace the earlier 45-degree front-view set.
  */
+/**
+ * G5 isometric sets of the six new kings (`docs/art-review/g5`, cut by `docs/art-review/g5/make_assets.py`), one entry
+ * per king whose whole group was approved: its throne and building cards (`iso/<cardId>`) and four plot skins
+ * (`iso/plots/<king>_<state>`). Approved 2026-11-09 by Claude under the owner's delegation. Kings not listed keep the
+ * code-drawn art.
+ */
+export const G5_ART_APPROVED: Readonly<Record<string, readonly string[]>> = {
+  grove: [
+    'grove_throne',
+    'grove_bear_cave',
+    'grove_sapling',
+    'grove_spirit_stags',
+    'grove_spring',
+    'grove_thorn_tower',
+    'grove_treant',
+    'grove_wolf_den',
+  ],
+};
+
 export const IMAGE_BUILDINGS: Readonly<Record<string, string>> = {
+  ...Object.fromEntries(Object.values(G5_ART_APPROVED).flatMap((cards) => cards.map((card) => [card, `iso/${card}`]))),
   wheat_throne: 'iso/wheat_throne',
   wheat_field: 'iso/wheat_field',
   wheat_windmill: 'iso/wheat_windmill',
@@ -53,7 +73,10 @@ export const GRASS_FILES: readonly string[] = ['grass_0', 'grass_1', 'grass_2'];
  * isometric diamonds (approved 2026-11-06), 128 px wide with the diamond's centre on the middle row
  * (`docs/art-review/iso-board/make_assets.py`). Kings not listed keep the shared plots (resampled into diamonds).
  */
-export const IMAGE_PLOTS: Readonly<Record<string, string>> = { wheat: 'iso/plots/wheat' };
+export const IMAGE_PLOTS: Readonly<Record<string, string>> = {
+  wheat: 'iso/plots/wheat',
+  ...Object.fromEntries(Object.keys(G5_ART_APPROVED).map((king) => [king, `iso/plots/${king}`])),
+};
 export const PLOT_STATES = ['open', 'locked', 'throne', 'built'] as const;
 
 /** The isometric mountain cliff segment (approved 2026-11-06, foot sheared to 2:1), tiled along the north edge. */

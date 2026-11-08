@@ -267,6 +267,46 @@ class G5SamplePromptGateTest(unittest.TestCase):
                 self.assertEqual(runner.count(f'-i {r}'), 1, (ident, r))
 
 
+class G5SetPromptGateTest(unittest.TestCase):
+    """G5: a king's remaining set is drawn only after its samples are approved, with them attached."""
+
+    def test_set_covers_building_cards_and_three_plot_skins(self):
+        items = mp.g5_set('grove')
+        kinds = [k for _, k, _, _, _ in items]
+        self.assertEqual(kinds.count('plot'), 3)
+        self.assertGreaterEqual(kinds.count('building'), 6)
+        self.assertEqual(sorted(i for i, k, _, _, _ in items if k == 'plot'), ['plot_grove_built', 'plot_grove_locked', 'plot_grove_throne'])
+        for ident, kind, name, desc, wheat in items:
+            self.assertNotIn('farm kingdom', desc, ident)
+            self.assertNotRegex(desc, r'45-degree|front facing', ident)
+            self.assertTrue((ROOT / wheat).exists(), wheat)
+
+    def test_refused_until_the_samples_are_approved(self):
+        old_dir = mp.G5_DIR
+        try:
+            with tempfile.TemporaryDirectory(dir=ROOT / '.superpowers') as d:
+                mp.G5_DIR = Path(d).relative_to(ROOT).as_posix()
+                with self.assertRaises(SystemExit):
+                    mp.main('g5-iso-set', ['grove'])
+        finally:
+            mp.G5_DIR = old_dir
+        with self.assertRaises(SystemExit):
+            mp.main('g5-iso-set', ['wheat'])
+
+    def test_runner_attaches_style_iso_wheat_and_both_samples(self):
+        mp.main('g5-iso-set', ['grove'])
+        runner = (ROOT / '.superpowers/b-g5-set-grove.sh').read_text(encoding='utf-8')
+        n = len(mp.g5_set('grove'))
+        self.assertEqual(runner.count('codex exec'), n)
+        self.assertEqual(runner.count(f'-i {mp.REFERENCE}'), n)
+        self.assertEqual(runner.count('-i docs/art-review/g5/grove/grove_throne/source.png'), n)
+        self.assertEqual(runner.count('-i docs/art-review/g5/grove/plot_grove_open/source.png'), n)
+        p = (ROOT / 'docs/art-review/g5/grove/grove_bear_cave/prompt.md').read_text(encoding='utf-8')
+        self.assertIn('docs/ART_STYLE.md', p)
+        self.assertIn('ISOMETRIC view, classic 2:1 pixel-art isometric', p)
+        self.assertIn('#000000', p)
+
+
 pspec = importlib.util.spec_from_file_location('portrait_prompts', ROOT / 'docs/art-review/g3e/portraits/make_prompts.py')
 pp = importlib.util.module_from_spec(pspec)
 pspec.loader.exec_module(pp)
