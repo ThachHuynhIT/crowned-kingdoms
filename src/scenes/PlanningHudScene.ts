@@ -17,7 +17,7 @@ import { SPRITES_KEY, iconFrame } from '../render/atlas';
 import { ContentBox } from '../ui/ContentBox';
 import { ToastStack } from '../ui/ToastStack';
 import { Tooltip } from '../ui/Tooltip';
-import { LONG_PRESS_MS, textContent, type TooltipContent } from '../ui/hud/layout';
+import { LONG_PRESS_MS, MARGIN, textContent, type TooltipContent } from '../ui/hud/layout';
 import { CalendarModal } from '../ui/modals/CalendarModal';
 import { DeckModal } from '../ui/modals/DeckModal';
 import { CLOSE_BUTTON, centredPanel } from '../ui/modals/modalLayout';
@@ -35,6 +35,7 @@ import { QuestNoticeView } from '../ui/planning/QuestNoticeView';
 import { planningControls } from '../ui/info/inspectionReserved';
 import { resolveShortcut, shortcutFlags, shortcutLabel } from '../ui/input/shortcuts';
 import { openHelp } from './helpLauncher';
+import { openSettings } from './SettingsScene';
 import { cardBadge, willLevelUpTo } from '../ui/cards/cardText';
 import { CalendarStrip } from '../ui/planning/CalendarStrip';
 import { allyStatusText, foeStatusText } from '../ui/planning/statusText';
@@ -126,6 +127,7 @@ export class PlanningHudScene extends Phaser.Scene {
   private freeMove: FreeMovePick | null = null;
   private scoutBtn!: Button;
   private helpBtn!: Button;
+  private settingsBtn!: Button;
   private questNotice!: QuestNoticeView;
   private actionSize = { w: 0, h: 0 };
   private calendarModal: CalendarModal | null = null;
@@ -257,6 +259,13 @@ export class PlanningHudScene extends Phaser.Scene {
       fontSize: 22,
       onClick: () => this.bus.emit('ui:help', { open: true }),
       tooltip: tip([`Trợ giúp (${shortcutLabel('help')})`, 'Thẻ bài, cơ chế, phím tắt...']),
+    });
+    this.settingsBtn = createButton(this, 0, 0, '⚙', {
+      width: 48,
+      height: 48,
+      fontSize: 22,
+      onClick: () => openSettings(this, this.bus),
+      tooltip: tip(['Cài đặt']),
     });
     this.fight = createButton(this, 0, 0, 'Ra trận', {
       width: this.lay.fight.w,
@@ -935,6 +944,10 @@ export class PlanningHudScene extends Phaser.Scene {
     this.scout.setVisible(l.scout !== null);
     if (l.scout) this.scout.layout(l.scout, 'full');
     this.helpBtn.container.setPosition(l.help.x + l.help.w / 2, l.help.y + l.help.h / 2);
+    this.settingsBtn.container.setPosition(
+      l.desktop ? l.help.x + 24 : MARGIN + 24,
+      l.desktop ? l.help.y + l.help.h + 32 : l.calendar[0]!.y + l.calendar[0]!.h + 32,
+    );
     const noticeX = l.help.x + l.help.w + 8;
     const noticeW = Math.min(320, l.calendar[0]!.x - 8 - noticeX);
     this.questNotice.layout(l.desktop && noticeW >= 160 ? { x: noticeX, y: l.help.y, w: noticeW, h: l.help.h } : null);

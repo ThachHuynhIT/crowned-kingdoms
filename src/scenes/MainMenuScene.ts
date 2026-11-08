@@ -21,6 +21,8 @@ import { LoadGuard, resumeTarget } from '../ui/resumeModel';
 import { SCENES } from './keys';
 import type { RealmData } from './RealmScene';
 import { getSession, takeStorageWarning } from './sessionRegistry';
+import { getAudio } from './audioRegistry';
+import { openSettings } from './SettingsScene';
 
 const TITLE = 'Crowned Kingdoms';
 const SUBTITLE = 'Một vương quốc nhỏ, chín ngai vàng';
@@ -35,14 +37,14 @@ export const newRunSeed = (): number => (Date.now() ^ Math.floor(Math.random() *
 
 /**
  * What each §10.2 button does. The list and order live in `MENU_ITEMS` (hidden ones, e.g.
- * "Cài đặt" until G5, are not drawn). "Tiếp tục" starts disabled and is enabled once a valid
+ * unfinished features, are not drawn). "Tiếp tục" starts disabled and is enabled once a valid
  * saved run has loaded; "Ván mới" opens the king select; "Vương Miện" the Crowns screen.
  */
 const MENU_ACTIONS: Record<MenuItemId, (scene: MainMenuScene) => void> = {
   continue: (scene) => scene.resume(),
   newRun: (scene) => scene.scene.start(SCENES.kingSelect),
   crowns: (scene) => scene.scene.start(SCENES.crowns),
-  settings: () => undefined,
+  settings: (scene) => openSettings(scene),
   help: (scene) => openHelp(scene, null, null),
 };
 
@@ -98,7 +100,10 @@ export class MainMenuScene extends Phaser.Scene {
         width: MENU_BUTTON.w,
         height: MENU_BUTTON.h,
         fontSize: 18,
-        onClick: () => MENU_ACTIONS[item.id](this),
+        onClick: () => {
+          getAudio(this)?.play('ui_click');
+          MENU_ACTIONS[item.id](this);
+        },
       });
       button.setEnabled(item.id !== 'continue'); // enabled once a saved run loads
       return button;
@@ -112,15 +117,23 @@ export class MainMenuScene extends Phaser.Scene {
       .setAlign('center');
     this.saved = null;
     this.loadSaved(this.guard.begin());
+    this.events.on(Phaser.Scenes.Events.RESUME, this.onResume, this);
 
     this.layout();
     this.scale.on(Phaser.Scale.Events.RESIZE, this.layout, this);
     this.input.keyboard?.on(Phaser.Input.Keyboard.Events.ANY_KEY_DOWN, this.onKey, this);
     this.events.once(Phaser.Scenes.Events.SHUTDOWN, () => {
+      this.events.off(Phaser.Scenes.Events.RESUME, this.onResume, this);
       this.input.keyboard?.off(Phaser.Input.Keyboard.Events.ANY_KEY_DOWN, this.onKey, this);
       this.guard.invalidate();
       this.scale.off(Phaser.Scale.Events.RESIZE, this.layout, this);
     });
+  }
+
+  private onResume(): void {
+    this.saved = null;
+    this.buttons[0]?.setEnabled(false);
+    this.loadSaved(this.guard.begin());
   }
 
   private onKey(event: KeyboardEvent): void {

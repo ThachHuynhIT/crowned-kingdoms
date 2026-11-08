@@ -24,6 +24,7 @@ import { buildingInfoModel, plotOfEntity, unitInfoModel } from '../ui/info/inspe
 import { battleControls } from '../ui/info/inspectionReserved';
 import { resolveShortcut, shortcutFlags, shortcutLabel } from '../ui/input/shortcuts';
 import { openHelp } from './helpLauncher';
+import { openSettings } from './SettingsScene';
 import { bossReadout, type BossReadout } from '../ui/battle/battleReadout';
 import { DRAG_SLOP, GAP, MARGIN, textContent, type Point, type Rect } from '../ui/hud/layout';
 import { ENEMY_ARMY_TOOLTIP, armyHealth, healthText, throneHealth } from '../ui/hud/armyHealth';
@@ -148,6 +149,7 @@ export class BattleHudScene extends Phaser.Scene {
   private autoBtn!: Button;
   private wavesBtn!: Button;
   private helpBtn!: Button;
+  private settingsBtn!: Button;
   private scoutModal: {
     root: Phaser.GameObjects.Container;
     overlay: Phaser.GameObjects.Rectangle;
@@ -310,6 +312,13 @@ export class BattleHudScene extends Phaser.Scene {
       fontSize: 22,
       onClick: () => this.bus.emit('ui:help', { open: true }),
       tooltip: tip([`Trợ giúp (${shortcutLabel('help')})`, 'Thẻ bài, cơ chế, phím tắt...']),
+    });
+    this.settingsBtn = createButton(this, 0, 0, '⚙', {
+      width: 48,
+      height: 48,
+      fontSize: 22,
+      onClick: () => openSettings(this, this.bus, this.controller.runner?.clock.speed),
+      tooltip: tip(['Cài đặt']),
     });
     this.cooldown = this.add.graphics();
     this.cooldownText = addUiText(this, 0, 0, '', 22, UI_PALETTE.creamLight)
@@ -895,6 +904,10 @@ export class BattleHudScene extends Phaser.Scene {
     const wv = l.waves;
     this.wavesBtn.container.setPosition(wv.x + wv.w / 2, wv.y + wv.h / 2);
     this.helpBtn.container.setPosition(l.help.x + l.help.w / 2, l.help.y + l.help.h / 2);
+    this.settingsBtn.container.setPosition(
+      l.help.x + 24,
+      desktop ? l.help.y + l.help.h + 32 : l.bossStatus.y + l.bossStatus.h + 32,
+    );
     this.layoutScout();
     this.info.layout(this.screen(), battleControls(l));
 

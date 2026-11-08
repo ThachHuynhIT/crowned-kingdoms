@@ -46,6 +46,7 @@ import {
 } from '../ui/realm/cameraModel';
 import { realmCamera, realmCameraMix, type RealmPhase } from '../ui/realm/realmLayout';
 import { SCENES } from './keys';
+import { getAudio } from './audioRegistry';
 import { STORAGE_WARNING_KEY, WARNING_EVENT, getSession } from './sessionRegistry';
 import type { RunEndData } from './RunEndScene';
 import type { RunEndTally } from '../ui/info/infoLines';
@@ -188,8 +189,18 @@ export class RealmScene extends Phaser.Scene {
     this.range = new RangeRenderer(this);
 
     const bus = this.bus;
+    const audio = getAudio(this);
+    audio?.setMusic(initial.phase === 'battle' ? 'battle' : 'planning');
+    bus.on('battle:ended', ({ result }) => {
+      audio?.play(result.won ? 'victory' : 'defeat');
+      audio?.setMusic('planning');
+    });
     bus.on('run:state', ({ state }) => this.onState(state));
-    bus.on('battle:started', () => this.onBattleStarted());
+    bus.on('battle:started', () => {
+      audio?.setMusic('battle');
+      audio?.play('battle_horn');
+      this.onBattleStarted();
+    });
     bus.on('run:ended', ({ crownPoints, breakdown, unlocks, credited }) => {
       this.endTally = { crownPoints, breakdown, unlocks, credited };
       if (this.awaitingEnd) this.continueFlow();
@@ -697,6 +708,7 @@ export class RealmScene extends Phaser.Scene {
   }
 
   private teardown(): void {
+    getAudio(this)?.setMusic(null);
     this.cameraEase?.stop();
     this.cameraEase = null;
     this.range?.destroy();

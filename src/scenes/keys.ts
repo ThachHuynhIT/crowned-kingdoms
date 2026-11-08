@@ -9,4 +9,5 @@ export const SCENES = {
   battleHud: 'BattleHud',
   runEnd: 'RunEnd',
   help: 'Help',
+  settings: 'Settings',
 } as const;

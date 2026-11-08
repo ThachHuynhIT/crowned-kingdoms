@@ -63,16 +63,22 @@ describe('layoutMenu', () => {
 });
 
 describe('menu items', () => {
-  it('lists Vương Miện between Ván mới and Cài đặt; Cài đặt stays hidden until G5', () => {
+  it('lists Vương Miện between Ván mới and the visible Cài đặt button', () => {
     const ids = MENU_ITEMS.map((m) => m.id);
     expect(ids.indexOf('crowns')).toBe(ids.indexOf('newRun') + 1);
     expect(ids.indexOf('settings')).toBe(ids.indexOf('crowns') + 1);
     expect(MENU_ITEMS.find((m) => m.id === 'crowns')).toMatchObject({ label: 'Vương Miện', visible: true });
-    expect(MENU_ITEMS.find((m) => m.id === 'settings')!.visible).toBe(false);
-    expect(visibleMenuItems().map((m) => m.label)).toEqual(['Tiếp tục', 'Ván mới', 'Vương Miện', 'Trợ giúp']);
+    expect(MENU_ITEMS.find((m) => m.id === 'settings')!.visible).toBe(true);
+    expect(visibleMenuItems().map((m) => m.label)).toEqual([
+      'Tiếp tục',
+      'Ván mới',
+      'Vương Miện',
+      'Cài đặt',
+      'Trợ giúp',
+    ]);
   });
 
-  it('the four visible buttons fit without overlapping on desktop and on a phone', () => {
+  it('the five visible buttons fit without overlapping on desktop and on a phone', () => {
     const n = visibleMenuItems().length;
     check({ w: 1280, h: 720 }, DESKTOP_LOGO, n);
     check({ w: 375, h: 812 }, PHONE_LOGO, n);

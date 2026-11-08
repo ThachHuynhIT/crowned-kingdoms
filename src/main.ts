@@ -11,6 +11,7 @@ import { PlanningHudScene } from './scenes/PlanningHudScene';
 import { PreloadScene } from './scenes/PreloadScene';
 import { RealmScene } from './scenes/RealmScene';
 import { RunEndScene } from './scenes/RunEndScene';
+import { SettingsScene } from './scenes/SettingsScene';
 
 const game = new Phaser.Game({
   type: Phaser.AUTO,
@@ -19,6 +20,8 @@ const game = new Phaser.Game({
   // Nearest-neighbour sampling + rounded positions: crisp pixel art (the realm camera zooms freely and snaps its
   // translation to whole pixels, spec 2026-11-08 §4).
   pixelArt: true,
+  // WebAudio belongs to our gesture-unlocked AudioManager.
+  audio: { noAudio: true },
   scale: {
     // Canvas fills the window 1:1; zoom is handled by the camera in whole steps.
     mode: Phaser.Scale.RESIZE,
@@ -40,6 +43,7 @@ const game = new Phaser.Game({
     BattleHudScene,
     RunEndScene,
     HelpScene,
+    SettingsScene,
   ],
 });
 
