@@ -1,14 +1,17 @@
 import { describe, expect, it, vi } from 'vitest';
 import { RULES_G1 } from '../../data/rules';
-import type { BattleSetup } from '../battle/types';
+import { META_SAVE_FAILED_TEXT } from '../../data/save';
+import type { BattleResult, BattleSetup } from '../battle/types';
 import { CONTENT } from '../cards/registry';
 import { createGameBus } from '../events';
+import { crownPoints, type CrownBreakdown } from '../meta';
 import { MemorySaveStore } from '../save/MemorySaveStore';
 import { SaveCoordinator } from '../save/SaveCoordinator';
-import type { SessionPersistence } from '../save/types';
+import type { SessionPersistence, SettleOutcome } from '../save/types';
 import { runState } from '../testing/fixtures';
 import { RunController } from './RunController';
 import type { RunState } from './state';
+import { startYear } from './yearFlow';
 
 /** Records every checkpoint; with `hold` each one stays pending until `release()`. */
 class FakePersistence implements SessionPersistence {
@@ -223,5 +226,89 @@ describe('a throwing listener', () => {
     expect(p.writes.at(-1)!.autoFire).toBe(true);
     expect(err).toHaveBeenCalled();
     err.mockRestore();
+  });
+});
+
+describe('RunController at the end of a run (G4 meta)', () => {
+  const loss: BattleResult = {
+    won: false,
+    ticks: 300,
+    throneHpLostPct: 100,
+    kills: 0,
+    killsBySource: {},
+    interventionsUsed: 0,
+    unitsLost: 0,
+    capped: 0,
+    inputs: [],
+  };
+  /** Year 5 with one life left: the next lost battle ends the run. */
+  const lastLife = (): RunState => startYear(runState({ lives: 1, year: 4 }), CONTENT);
+
+  /** Logs settle and checkpoint calls in order; `settle` can be made to fail. */
+  class SettlingPersistence implements SessionPersistence {
+    log: string[] = [];
+    settled: RunState[] = [];
+    constructor(private readonly fail = false) {}
+    checkpoint(state: RunState): Promise<void> {
+      this.log.push(`checkpoint:${state.phase}`);
+      return Promise.resolve();
+    }
+    flush(): Promise<void> {
+      return Promise.resolve();
+    }
+    settle(state: RunState): Promise<SettleOutcome> {
+      this.log.push('settle');
+      this.settled.push(state);
+      if (this.fail) return Promise.reject(new Error('disk full'));
+      const breakdown = crownPoints(state);
+      return Promise.resolve({ crownPoints: breakdown.total, breakdown, unlocks: ['Mở đặc quyền: X'] });
+    }
+  }
+
+  const endRun = async (p: SessionPersistence) => {
+    const { bus, controller, order } = setup(lastLife(), p);
+    const ended: { won: boolean; crownPoints: number; breakdown: CrownBreakdown; unlocks: string[] }[] = [];
+    bus.on('run:ended', (e) => {
+      order.push('ended');
+      ended.push(e);
+    });
+    cmd(bus, { type: 'discard', handIndex: 0 }); // G1 auto-start: the battle begins
+    await controller.whenIdle();
+    expect(controller.runner).not.toBeNull();
+    bus.emit('battle:ended', { result: loss });
+    await controller.whenIdle();
+    expect(controller.state.phase).toBe('ended');
+    return { controller, ended, order };
+  };
+
+  it('settles the exact ended state before the save is cleared, then announces the real points', async () => {
+    const p = new SettlingPersistence();
+    const { controller, ended, order } = await endRun(p);
+    expect(p.log.slice(-2)).toEqual(['settle', 'checkpoint:ended']);
+    expect(p.settled).toHaveLength(1);
+    expect(p.settled[0]).toBe(controller.state);
+    const breakdown = crownPoints(controller.state);
+    expect(ended).toEqual([{ won: false, crownPoints: breakdown.total, breakdown, unlocks: ['Mở đặc quyền: X'] }]);
+    expect(order.slice(-2)).toEqual(['state:ended', 'ended']);
+  });
+
+  it('a failed profile write keeps the run save (no clear) and still shows the score', async () => {
+    const p = new SettlingPersistence(true);
+    const err = vi.spyOn(console, 'error').mockImplementation(() => undefined);
+    const { controller, ended } = await endRun(p);
+    err.mockRestore();
+    expect(p.log.at(-1)).toBe('settle');
+    expect(p.log).not.toContain('checkpoint:ended');
+    const breakdown = crownPoints(controller.state);
+    expect(ended).toEqual([{ won: false, crownPoints: breakdown.total, breakdown, unlocks: [META_SAVE_FAILED_TEXT] }]);
+  });
+
+  it('a persistence without settle clears the run and reports the computed score', async () => {
+    const p = new FakePersistence();
+    const { controller, ended } = await endRun(p);
+    expect(p.writes.at(-1)!.phase).toBe('ended');
+    const breakdown = crownPoints(controller.state);
+    expect(breakdown.total).toBeGreaterThan(0);
+    expect(ended).toEqual([{ won: false, crownPoints: breakdown.total, breakdown, unlocks: [] }]);
   });
 });

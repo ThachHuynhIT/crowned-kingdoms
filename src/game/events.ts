@@ -3,6 +3,7 @@ import { EventBus } from '../core/events';
 import type { GameSpeed } from '../core/SimClock';
 import type { HelpTab } from '../data/help';
 import type { BattleResult, BattleSetup } from './battle/types';
+import type { CrownBreakdown } from './meta/crowns';
 import type { IllegalReason, RunCommand, RunState } from './run/state';
 
 export interface GameEvents {
@@ -11,7 +12,8 @@ export interface GameEvents {
   log: { text: string };
   'run:state': { state: RunState };
   'run:illegal': { reason: IllegalReason };
-  'run:ended': { won: boolean; crownPoints: number; unlocks: string[] };
+  /** `crownPoints` = `breakdown.total`; `unlocks` lists what the run opened, or why progress was not saved. */
+  'run:ended': { won: boolean; crownPoints: number; breakdown: CrownBreakdown; unlocks: string[] };
   'battle:started': { setup: BattleSetup };
   'battle:tick': { tick: number };
   'battle:ended': { result: BattleResult };

@@ -1,10 +1,18 @@
 import { IDBFactory } from 'fake-indexeddb';
 import { describe, expect, it } from 'vitest';
-import { INCOMPATIBLE_RUN_TEXT, STORAGE_WARNING_TEXT } from '../data/save';
+import { INCOMPATIBLE_RUN_TEXT, META_READ_ONLY_TEXT, STORAGE_WARNING_TEXT } from '../data/save';
+import type { BattleResult } from '../game/battle/types';
 import { CONTENT } from '../game/cards/registry';
+import { createGameBus } from '../game/events';
+import { crownPoints, defaultProfile, type MetaProfile } from '../game/meta';
+import { fakeRun } from '../game/meta/testRun';
+import { RunController } from '../game/run/RunController';
+import type { RunState } from '../game/run/state';
+import { startYear } from '../game/run/yearFlow';
 import { encodeRun } from '../game/save/codec';
+import { MemorySaveStore } from '../game/save/MemorySaveStore';
 import { runState } from '../game/testing/fixtures';
-import { createSession } from './session';
+import { createSession, type GameSession, openSession } from './session';
 
 describe('createSession', () => {
   it('loads nothing from a fresh browser', async () => {
@@ -36,6 +44,153 @@ describe('createSession', () => {
     const s = await createSession(null, (t) => warnings.push(t), CONTENT);
     await s.persistence.checkpoint(runState());
     expect((await s.load()).kind).toBe('ok');
+    expect(warnings).toEqual([STORAGE_WARNING_TEXT]);
+  });
+});
+
+/** A memory store that logs every write; `failClear` simulates the page closing before the run is cleared. */
+class LoggingStore extends MemorySaveStore {
+  log: string[] = [];
+  failClear = false;
+  override saveRun(save: Parameters<MemorySaveStore['saveRun']>[0]): Promise<void> {
+    this.log.push('saveRun');
+    return super.saveRun(save);
+  }
+  override clearRun(): Promise<void> {
+    this.log.push('clearRun');
+    if (this.failClear) return Promise.reject(new Error('page closed'));
+    return super.clearRun();
+  }
+  override saveMeta(profile: unknown): Promise<void> {
+    this.log.push('saveMeta');
+    return super.saveMeta(profile);
+  }
+}
+
+const loss: BattleResult = {
+  won: false,
+  ticks: 300,
+  throneHpLostPct: 100,
+  kills: 0,
+  killsBySource: {},
+  interventionsUsed: 0,
+  unitsLost: 0,
+  capped: 0,
+  inputs: [],
+};
+
+/** Drives `state` (planning with one life, or a loaded battle) to the end of the run through `session`. */
+const playToEnd = async (session: GameSession, state: RunState) => {
+  const bus = createGameBus();
+  const controller = new RunController(bus, CONTENT, state, session.persistence);
+  const ended: { crownPoints: number; unlocks: string[] }[] = [];
+  bus.on('run:ended', (e) => ended.push(e));
+  if (state.phase === 'battle') controller.kickoff();
+  else bus.emit('ui:command', { command: { type: 'discard', handIndex: 0 } });
+  await controller.whenIdle();
+  bus.emit('battle:ended', { result: loss });
+  await controller.whenIdle();
+  expect(controller.state.phase).toBe('ended');
+  return { controller, ended };
+};
+const lastLife = (): RunState => startYear(runState({ lives: 1, year: 4 }), CONTENT);
+
+describe('session meta profile (G4)', () => {
+  it('loads the profile once at boot and never writes it just for opening', async () => {
+    const store = new LoggingStore();
+    const s = await openSession(store, CONTENT);
+    expect(s.meta()).toEqual(defaultProfile());
+    expect(s.metaReadOnly).toBe(false);
+    expect(store.log).toEqual([]);
+  });
+
+  it('settles a run once, keeps the profile across reloads, and does not add the same run twice', async () => {
+    const disk = new IDBFactory();
+    const run = fakeRun({ years: 10, conquered: 2, bosses: 1, won: false });
+    const first = await createSession(disk, () => undefined, CONTENT);
+    const out = await first.settleRun(run);
+    expect(out.breakdown).toEqual(crownPoints(run));
+    expect(out.crownPoints).toBe(21);
+    expect(first.meta().crownPoints).toBe(21);
+    const second = await createSession(disk, () => undefined, CONTENT);
+    expect(second.meta().crownPoints).toBe(21);
+    expect(second.meta().mastery.wheat).toBe(21);
+    await second.settleRun(run);
+    expect(second.meta().crownPoints).toBe(21);
+  });
+
+  it('unlocks resolve after the profile is saved and refuse what the profile cannot pay for', async () => {
+    const disk = new IDBFactory();
+    const s = await createSession(disk, () => undefined, CONTENT);
+    expect(await s.unlockKing('grove')).toMatchObject({ ok: false, reason: 'notAllowed' });
+    await s.settleRun(fakeRun({ years: 30, conquered: 0, bosses: 0, won: false }));
+    const r = await s.unlockKing('grove');
+    expect(r.ok).toBe(true);
+    if (r.ok) expect(r.profile.unlockedKings).toContain('grove');
+    expect(s.meta().crownPoints).toBe(5);
+    expect(await s.unlockCard('neutral_duplicate')).toMatchObject({ ok: false, reason: 'notAllowed' });
+    const reloaded = await createSession(disk, () => undefined, CONTENT);
+    expect(reloaded.meta().unlockedKings).toContain('grove');
+    expect(reloaded.meta().crownPoints).toBe(5);
+  });
+
+  it('a profile from a newer game is read-only: no saveMeta ever, unlocks refused, the score still shown', async () => {
+    const store = new LoggingStore();
+    const newer: MetaProfile = { ...defaultProfile(), version: 99, crownPoints: 500 };
+    await store.saveMeta(newer);
+    store.log.length = 0;
+    const s = await openSession(store, CONTENT);
+    expect(s.metaReadOnly).toBe(true);
+    expect(s.meta().crownPoints).toBe(500);
+    expect(await s.unlockKing('grove')).toEqual({ ok: false, reason: 'readOnly', message: META_READ_ONLY_TEXT });
+    expect(await s.unlockCard('neutral_duplicate')).toEqual({ ok: false, reason: 'readOnly', message: META_READ_ONLY_TEXT });
+    const { controller, ended } = await playToEnd(s, lastLife());
+    expect(ended).toEqual([
+      expect.objectContaining({ crownPoints: crownPoints(controller.state).total, unlocks: [META_READ_ONLY_TEXT] }),
+    ]);
+    expect(s.meta().crownPoints).toBe(500);
+    expect(store.log).not.toContain('saveMeta');
+    expect(await store.loadMeta()).toEqual(newer);
+  });
+
+  it('writes the profile before the run save is cleared', async () => {
+    const store = new LoggingStore();
+    const s = await openSession(store, CONTENT);
+    const { controller, ended } = await playToEnd(s, lastLife());
+    const writes = store.log.filter((w) => w !== 'saveRun');
+    expect(writes).toEqual(['saveMeta', 'clearRun']);
+    expect(ended[0]!.crownPoints).toBe(crownPoints(controller.state).total);
+    expect(s.meta().crownPoints).toBe(crownPoints(controller.state).total);
+    expect(await store.loadRun()).toBeNull();
+  });
+
+  it('closing the page between the profile write and the run clear does not add the points twice', async () => {
+    const store = new LoggingStore();
+    store.failClear = true;
+    const first = await openSession(store, CONTENT);
+    const a = await playToEnd(first, lastLife());
+    const points = first.meta().crownPoints;
+    expect(points).toBe(crownPoints(a.controller.state).total);
+    expect(points).toBeGreaterThan(0);
+
+    store.failClear = false;
+    const second = await openSession(store, CONTENT); // reload: the last battle entry is still saved
+    const loaded = await second.load();
+    expect(loaded.kind).toBe('ok');
+    if (loaded.kind !== 'ok') return;
+    expect(loaded.state.phase).toBe('battle');
+    const b = await playToEnd(second, loaded.state);
+    expect(b.controller.state).toEqual(a.controller.state);
+    expect(second.meta().crownPoints).toBe(points);
+    expect(second.meta().settledRuns).toHaveLength(1);
+    expect(await store.loadRun()).toBeNull();
+  });
+
+  it('without IndexedDB the profile still works for the session, with one warning', async () => {
+    const warnings: string[] = [];
+    const s = await createSession(null, (t) => warnings.push(t), CONTENT);
+    await s.settleRun(fakeRun({ years: 5, conquered: 0, bosses: 0, won: false }));
+    expect(s.meta().crownPoints).toBe(5);
     expect(warnings).toEqual([STORAGE_WARNING_TEXT]);
   });
 });

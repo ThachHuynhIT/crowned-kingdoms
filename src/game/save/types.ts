@@ -1,4 +1,5 @@
 /** Kiểu của lớp lưu ván (spec §9.3). Thuần: không DOM, không Phaser; kho thật nằm ở `src/platform`. */
+import type { CrownBreakdown } from '../meta/crowns';
 import type { RunState } from '../run/state';
 
 /** Phong bì một ván đang chơi. `version` là phiên bản RunState; `contentHash` băm các id thẻ / đơn vị. */
@@ -33,4 +34,17 @@ export interface SessionPersistence {
   checkpoint(state: RunState): Promise<void>;
   /** Chờ mọi ghi đang xếp hàng xong. */
   flush(): Promise<void>;
+  /**
+   * Chấm điểm ván vừa kết thúc vào hồ sơ meta và lưu hồ sơ (G4). RunController gọi hàm này với đúng
+   * đối tượng state đã kết thúc, TRƯỚC checkpoint xoá ván; bị từ chối (ghi hỏng) thì ván không bị xoá.
+   */
+  settle?(state: RunState): Promise<SettleOutcome>;
+}
+
+/** Kết quả chấm điểm cuối ván: `crownPoints` = `breakdown.total`. */
+export interface SettleOutcome {
+  crownPoints: number;
+  breakdown: CrownBreakdown;
+  /** Những gì vừa mở (tiếng Việt), hoặc lời báo tiến trình không lưu được. */
+  unlocks: string[];
 }
