@@ -4750,3 +4750,723 @@ assets:
     finalSize: 128x67
     anchor: centre
     notes: arcane built plot, 2:1 isometric diamond (G5, approved 2026-11-09 by Claude under the owner's delegation); keyed, reduced to 128 px wide and centred on the widest row by docs/art-review/g5/make_assets.py; anchored at its centre (src/render/imageArt.ts IMAGE_PLOTS)
+  - id: world_ai_v1_apprentice_0
+    path: public/assets/art/ai-v1/apprentice_0.png
+    category: unit
+    origin: custom
+    source: docs/art-review/g3e/units/apprentice/poses-source.png
+    creator: Project owner (OpenAI imagegen via Codex; prompt in docs/art-review/g3e/units/apprentice/poses-prompt.md)
+    license: project-owned
+    attribution: false
+    redistribute: true
+    evidence: docs/art-review/g3e/units/apprentice/poses/
+    modified: true
+    nativeSize: 1536x1024
+    finalSize: 34x26
+    anchor: feet
+    notes: Arcane apprentice (Pháp Sư Tập Sự) pose 0 (idle 0); reduced and outlined by docs/art-review/g3e/units/make_poses.py --export (approved 2026-11-09 by Claude under the owner's delegation); drawn at scale 0.5 (src/render/imageArt.ts)
+  - id: world_ai_v1_apprentice_1
+    path: public/assets/art/ai-v1/apprentice_1.png
+    category: unit
+    origin: custom
+    source: docs/art-review/g3e/units/apprentice/poses-source.png
+    creator: Project owner (OpenAI imagegen via Codex; prompt in docs/art-review/g3e/units/apprentice/poses-prompt.md)
+    license: project-owned
+    attribution: false
+    redistribute: true
+    evidence: docs/art-review/g3e/units/apprentice/poses/
+    modified: true
+    nativeSize: 1536x1024
+    finalSize: 34x26
+    anchor: feet
+    notes: Arcane apprentice (Pháp Sư Tập Sự) pose 1 (idle 1); reduced and outlined by docs/art-review/g3e/units/make_poses.py --export (approved 2026-11-09 by Claude under the owner's delegation); drawn at scale 0.5 (src/render/imageArt.ts)
+  - id: world_ai_v1_apprentice_2
+    path: public/assets/art/ai-v1/apprentice_2.png
+    category: unit
+    origin: custom
+    source: docs/art-review/g3e/units/apprentice/poses-source.png
+    creator: Project owner (OpenAI imagegen via Codex; prompt in docs/art-review/g3e/units/apprentice/poses-prompt.md)
+    license: project-owned
+    attribution: false
+    redistribute: true
+    evidence: docs/art-review/g3e/units/apprentice/poses/
+    modified: true
+    nativeSize: 1536x1024
+    finalSize: 34x26
+    anchor: feet
+    notes: Arcane apprentice (Pháp Sư Tập Sự) pose 2 (walk 0); reduced and outlined by docs/art-review/g3e/units/make_poses.py --export (approved 2026-11-09 by Claude under the owner's delegation); drawn at scale 0.5 (src/render/imageArt.ts)
+  - id: world_ai_v1_apprentice_3
+    path: public/assets/art/ai-v1/apprentice_3.png
+    category: unit
+    origin: custom
+    source: docs/art-review/g3e/units/apprentice/poses-source.png
+    creator: Project owner (OpenAI imagegen via Codex; prompt in docs/art-review/g3e/units/apprentice/poses-prompt.md)
+    license: project-owned
+    attribution: false
+    redistribute: true
+    evidence: docs/art-review/g3e/units/apprentice/poses/
+    modified: true
+    nativeSize: 1536x1024
+    finalSize: 34x26
+    anchor: feet
+    notes: Arcane apprentice (Pháp Sư Tập Sự) pose 3 (walk 1); reduced and outlined by docs/art-review/g3e/units/make_poses.py --export (approved 2026-11-09 by Claude under the owner's delegation); drawn at scale 0.5 (src/render/imageArt.ts)
+  - id: world_ai_v1_apprentice_4
+    path: public/assets/art/ai-v1/apprentice_4.png
+    category: unit
+    origin: custom
+    source: docs/art-review/g3e/units/apprentice/poses-source.png
+    creator: Project owner (OpenAI imagegen via Codex; prompt in docs/art-review/g3e/units/apprentice/poses-prompt.md)
+    license: project-owned
+    attribution: false
+    redistribute: true
+    evidence: docs/art-review/g3e/units/apprentice/poses/
+    modified: true
+    nativeSize: 1536x1024
+    finalSize: 34x26
+    anchor: feet
+    notes: Arcane apprentice (Pháp Sư Tập Sự) pose 4 (attack 0); reduced and outlined by docs/art-review/g3e/units/make_poses.py --export (approved 2026-11-09 by Claude under the owner's delegation); drawn at scale 0.5 (src/render/imageArt.ts)
+  - id: world_ai_v1_apprentice_5
+    path: public/assets/art/ai-v1/apprentice_5.png
+    category: unit
+    origin: custom
+    source: docs/art-review/g3e/units/apprentice/poses-source.png
+    creator: Project owner (OpenAI imagegen via Codex; prompt in docs/art-review/g3e/units/apprentice/poses-prompt.md)
+    license: project-owned
+    attribution: false
+    redistribute: true
+    evidence: docs/art-review/g3e/units/apprentice/poses/
+    modified: true
+    nativeSize: 1536x1024
+    finalSize: 34x26
+    anchor: feet
+    notes: Arcane apprentice (Pháp Sư Tập Sự) pose 5 (attack 1); reduced and outlined by docs/art-review/g3e/units/make_poses.py --export (approved 2026-11-09 by Claude under the owner's delegation); drawn at scale 0.5 (src/render/imageArt.ts)
+  - id: world_ai_v1_apprentice_foe_0
+    path: public/assets/art/ai-v1/apprentice_foe_0.png
+    category: unit
+    origin: custom
+    source: docs/art-review/g3e/units/apprentice/poses-source.png
+    creator: Project owner (OpenAI imagegen via Codex; prompt in docs/art-review/g3e/units/apprentice/poses-prompt.md)
+    license: project-owned
+    attribution: false
+    redistribute: true
+    evidence: docs/art-review/g3e/units/apprentice/poses/
+    modified: true
+    nativeSize: 1536x1024
+    finalSize: 34x26
+    anchor: feet
+    notes: Arcane apprentice (Pháp Sư Tập Sự) foe recolour, pose 0 (idle 0); reduced and outlined by docs/art-review/g3e/units/make_poses.py --export (approved 2026-11-09 by Claude under the owner's delegation); drawn at scale 0.5 (src/render/imageArt.ts)
+  - id: world_ai_v1_apprentice_foe_1
+    path: public/assets/art/ai-v1/apprentice_foe_1.png
+    category: unit
+    origin: custom
+    source: docs/art-review/g3e/units/apprentice/poses-source.png
+    creator: Project owner (OpenAI imagegen via Codex; prompt in docs/art-review/g3e/units/apprentice/poses-prompt.md)
+    license: project-owned
+    attribution: false
+    redistribute: true
+    evidence: docs/art-review/g3e/units/apprentice/poses/
+    modified: true
+    nativeSize: 1536x1024
+    finalSize: 34x26
+    anchor: feet
+    notes: Arcane apprentice (Pháp Sư Tập Sự) foe recolour, pose 1 (idle 1); reduced and outlined by docs/art-review/g3e/units/make_poses.py --export (approved 2026-11-09 by Claude under the owner's delegation); drawn at scale 0.5 (src/render/imageArt.ts)
+  - id: world_ai_v1_apprentice_foe_2
+    path: public/assets/art/ai-v1/apprentice_foe_2.png
+    category: unit
+    origin: custom
+    source: docs/art-review/g3e/units/apprentice/poses-source.png
+    creator: Project owner (OpenAI imagegen via Codex; prompt in docs/art-review/g3e/units/apprentice/poses-prompt.md)
+    license: project-owned
+    attribution: false
+    redistribute: true
+    evidence: docs/art-review/g3e/units/apprentice/poses/
+    modified: true
+    nativeSize: 1536x1024
+    finalSize: 34x26
+    anchor: feet
+    notes: Arcane apprentice (Pháp Sư Tập Sự) foe recolour, pose 2 (walk 0); reduced and outlined by docs/art-review/g3e/units/make_poses.py --export (approved 2026-11-09 by Claude under the owner's delegation); drawn at scale 0.5 (src/render/imageArt.ts)
+  - id: world_ai_v1_apprentice_foe_3
+    path: public/assets/art/ai-v1/apprentice_foe_3.png
+    category: unit
+    origin: custom
+    source: docs/art-review/g3e/units/apprentice/poses-source.png
+    creator: Project owner (OpenAI imagegen via Codex; prompt in docs/art-review/g3e/units/apprentice/poses-prompt.md)
+    license: project-owned
+    attribution: false
+    redistribute: true
+    evidence: docs/art-review/g3e/units/apprentice/poses/
+    modified: true
+    nativeSize: 1536x1024
+    finalSize: 34x26
+    anchor: feet
+    notes: Arcane apprentice (Pháp Sư Tập Sự) foe recolour, pose 3 (walk 1); reduced and outlined by docs/art-review/g3e/units/make_poses.py --export (approved 2026-11-09 by Claude under the owner's delegation); drawn at scale 0.5 (src/render/imageArt.ts)
+  - id: world_ai_v1_apprentice_foe_4
+    path: public/assets/art/ai-v1/apprentice_foe_4.png
+    category: unit
+    origin: custom
+    source: docs/art-review/g3e/units/apprentice/poses-source.png
+    creator: Project owner (OpenAI imagegen via Codex; prompt in docs/art-review/g3e/units/apprentice/poses-prompt.md)
+    license: project-owned
+    attribution: false
+    redistribute: true
+    evidence: docs/art-review/g3e/units/apprentice/poses/
+    modified: true
+    nativeSize: 1536x1024
+    finalSize: 34x26
+    anchor: feet
+    notes: Arcane apprentice (Pháp Sư Tập Sự) foe recolour, pose 4 (attack 0); reduced and outlined by docs/art-review/g3e/units/make_poses.py --export (approved 2026-11-09 by Claude under the owner's delegation); drawn at scale 0.5 (src/render/imageArt.ts)
+  - id: world_ai_v1_apprentice_foe_5
+    path: public/assets/art/ai-v1/apprentice_foe_5.png
+    category: unit
+    origin: custom
+    source: docs/art-review/g3e/units/apprentice/poses-source.png
+    creator: Project owner (OpenAI imagegen via Codex; prompt in docs/art-review/g3e/units/apprentice/poses-prompt.md)
+    license: project-owned
+    attribution: false
+    redistribute: true
+    evidence: docs/art-review/g3e/units/apprentice/poses/
+    modified: true
+    nativeSize: 1536x1024
+    finalSize: 34x26
+    anchor: feet
+    notes: Arcane apprentice (Pháp Sư Tập Sự) foe recolour, pose 5 (attack 1); reduced and outlined by docs/art-review/g3e/units/make_poses.py --export (approved 2026-11-09 by Claude under the owner's delegation); drawn at scale 0.5 (src/render/imageArt.ts)
+  - id: world_ai_v1_frost_mage_0
+    path: public/assets/art/ai-v1/frost_mage_0.png
+    category: unit
+    origin: custom
+    source: docs/art-review/g3e/units/frost_mage/poses-source.png
+    creator: Project owner (OpenAI imagegen via Codex; prompt in docs/art-review/g3e/units/frost_mage/poses-prompt.md)
+    license: project-owned
+    attribution: false
+    redistribute: true
+    evidence: docs/art-review/g3e/units/frost_mage/poses/
+    modified: true
+    nativeSize: 1536x1024
+    finalSize: 36x27
+    anchor: feet
+    notes: Arcane frost_mage (Pháp Sư Băng) pose 0 (idle 0); reduced and outlined by docs/art-review/g3e/units/make_poses.py --export (approved 2026-11-09 by Claude under the owner's delegation); drawn at scale 0.5 (src/render/imageArt.ts)
+  - id: world_ai_v1_frost_mage_1
+    path: public/assets/art/ai-v1/frost_mage_1.png
+    category: unit
+    origin: custom
+    source: docs/art-review/g3e/units/frost_mage/poses-source.png
+    creator: Project owner (OpenAI imagegen via Codex; prompt in docs/art-review/g3e/units/frost_mage/poses-prompt.md)
+    license: project-owned
+    attribution: false
+    redistribute: true
+    evidence: docs/art-review/g3e/units/frost_mage/poses/
+    modified: true
+    nativeSize: 1536x1024
+    finalSize: 36x27
+    anchor: feet
+    notes: Arcane frost_mage (Pháp Sư Băng) pose 1 (idle 1); reduced and outlined by docs/art-review/g3e/units/make_poses.py --export (approved 2026-11-09 by Claude under the owner's delegation); drawn at scale 0.5 (src/render/imageArt.ts)
+  - id: world_ai_v1_frost_mage_2
+    path: public/assets/art/ai-v1/frost_mage_2.png
+    category: unit
+    origin: custom
+    source: docs/art-review/g3e/units/frost_mage/poses-source.png
+    creator: Project owner (OpenAI imagegen via Codex; prompt in docs/art-review/g3e/units/frost_mage/poses-prompt.md)
+    license: project-owned
+    attribution: false
+    redistribute: true
+    evidence: docs/art-review/g3e/units/frost_mage/poses/
+    modified: true
+    nativeSize: 1536x1024
+    finalSize: 36x27
+    anchor: feet
+    notes: Arcane frost_mage (Pháp Sư Băng) pose 2 (walk 0); reduced and outlined by docs/art-review/g3e/units/make_poses.py --export (approved 2026-11-09 by Claude under the owner's delegation); drawn at scale 0.5 (src/render/imageArt.ts)
+  - id: world_ai_v1_frost_mage_3
+    path: public/assets/art/ai-v1/frost_mage_3.png
+    category: unit
+    origin: custom
+    source: docs/art-review/g3e/units/frost_mage/poses-source.png
+    creator: Project owner (OpenAI imagegen via Codex; prompt in docs/art-review/g3e/units/frost_mage/poses-prompt.md)
+    license: project-owned
+    attribution: false
+    redistribute: true
+    evidence: docs/art-review/g3e/units/frost_mage/poses/
+    modified: true
+    nativeSize: 1536x1024
+    finalSize: 36x27
+    anchor: feet
+    notes: Arcane frost_mage (Pháp Sư Băng) pose 3 (walk 1); reduced and outlined by docs/art-review/g3e/units/make_poses.py --export (approved 2026-11-09 by Claude under the owner's delegation); drawn at scale 0.5 (src/render/imageArt.ts)
+  - id: world_ai_v1_frost_mage_4
+    path: public/assets/art/ai-v1/frost_mage_4.png
+    category: unit
+    origin: custom
+    source: docs/art-review/g3e/units/frost_mage/poses-source.png
+    creator: Project owner (OpenAI imagegen via Codex; prompt in docs/art-review/g3e/units/frost_mage/poses-prompt.md)
+    license: project-owned
+    attribution: false
+    redistribute: true
+    evidence: docs/art-review/g3e/units/frost_mage/poses/
+    modified: true
+    nativeSize: 1536x1024
+    finalSize: 36x27
+    anchor: feet
+    notes: Arcane frost_mage (Pháp Sư Băng) pose 4 (attack 0); reduced and outlined by docs/art-review/g3e/units/make_poses.py --export (approved 2026-11-09 by Claude under the owner's delegation); drawn at scale 0.5 (src/render/imageArt.ts)
+  - id: world_ai_v1_frost_mage_5
+    path: public/assets/art/ai-v1/frost_mage_5.png
+    category: unit
+    origin: custom
+    source: docs/art-review/g3e/units/frost_mage/poses-source.png
+    creator: Project owner (OpenAI imagegen via Codex; prompt in docs/art-review/g3e/units/frost_mage/poses-prompt.md)
+    license: project-owned
+    attribution: false
+    redistribute: true
+    evidence: docs/art-review/g3e/units/frost_mage/poses/
+    modified: true
+    nativeSize: 1536x1024
+    finalSize: 36x27
+    anchor: feet
+    notes: Arcane frost_mage (Pháp Sư Băng) pose 5 (attack 1); reduced and outlined by docs/art-review/g3e/units/make_poses.py --export (approved 2026-11-09 by Claude under the owner's delegation); drawn at scale 0.5 (src/render/imageArt.ts)
+  - id: world_ai_v1_frost_mage_foe_0
+    path: public/assets/art/ai-v1/frost_mage_foe_0.png
+    category: unit
+    origin: custom
+    source: docs/art-review/g3e/units/frost_mage/poses-source.png
+    creator: Project owner (OpenAI imagegen via Codex; prompt in docs/art-review/g3e/units/frost_mage/poses-prompt.md)
+    license: project-owned
+    attribution: false
+    redistribute: true
+    evidence: docs/art-review/g3e/units/frost_mage/poses/
+    modified: true
+    nativeSize: 1536x1024
+    finalSize: 36x27
+    anchor: feet
+    notes: Arcane frost_mage (Pháp Sư Băng) foe recolour, pose 0 (idle 0); reduced and outlined by docs/art-review/g3e/units/make_poses.py --export (approved 2026-11-09 by Claude under the owner's delegation); drawn at scale 0.5 (src/render/imageArt.ts)
+  - id: world_ai_v1_frost_mage_foe_1
+    path: public/assets/art/ai-v1/frost_mage_foe_1.png
+    category: unit
+    origin: custom
+    source: docs/art-review/g3e/units/frost_mage/poses-source.png
+    creator: Project owner (OpenAI imagegen via Codex; prompt in docs/art-review/g3e/units/frost_mage/poses-prompt.md)
+    license: project-owned
+    attribution: false
+    redistribute: true
+    evidence: docs/art-review/g3e/units/frost_mage/poses/
+    modified: true
+    nativeSize: 1536x1024
+    finalSize: 36x27
+    anchor: feet
+    notes: Arcane frost_mage (Pháp Sư Băng) foe recolour, pose 1 (idle 1); reduced and outlined by docs/art-review/g3e/units/make_poses.py --export (approved 2026-11-09 by Claude under the owner's delegation); drawn at scale 0.5 (src/render/imageArt.ts)
+  - id: world_ai_v1_frost_mage_foe_2
+    path: public/assets/art/ai-v1/frost_mage_foe_2.png
+    category: unit
+    origin: custom
+    source: docs/art-review/g3e/units/frost_mage/poses-source.png
+    creator: Project owner (OpenAI imagegen via Codex; prompt in docs/art-review/g3e/units/frost_mage/poses-prompt.md)
+    license: project-owned
+    attribution: false
+    redistribute: true
+    evidence: docs/art-review/g3e/units/frost_mage/poses/
+    modified: true
+    nativeSize: 1536x1024
+    finalSize: 36x27
+    anchor: feet
+    notes: Arcane frost_mage (Pháp Sư Băng) foe recolour, pose 2 (walk 0); reduced and outlined by docs/art-review/g3e/units/make_poses.py --export (approved 2026-11-09 by Claude under the owner's delegation); drawn at scale 0.5 (src/render/imageArt.ts)
+  - id: world_ai_v1_frost_mage_foe_3
+    path: public/assets/art/ai-v1/frost_mage_foe_3.png
+    category: unit
+    origin: custom
+    source: docs/art-review/g3e/units/frost_mage/poses-source.png
+    creator: Project owner (OpenAI imagegen via Codex; prompt in docs/art-review/g3e/units/frost_mage/poses-prompt.md)
+    license: project-owned
+    attribution: false
+    redistribute: true
+    evidence: docs/art-review/g3e/units/frost_mage/poses/
+    modified: true
+    nativeSize: 1536x1024
+    finalSize: 36x27
+    anchor: feet
+    notes: Arcane frost_mage (Pháp Sư Băng) foe recolour, pose 3 (walk 1); reduced and outlined by docs/art-review/g3e/units/make_poses.py --export (approved 2026-11-09 by Claude under the owner's delegation); drawn at scale 0.5 (src/render/imageArt.ts)
+  - id: world_ai_v1_frost_mage_foe_4
+    path: public/assets/art/ai-v1/frost_mage_foe_4.png
+    category: unit
+    origin: custom
+    source: docs/art-review/g3e/units/frost_mage/poses-source.png
+    creator: Project owner (OpenAI imagegen via Codex; prompt in docs/art-review/g3e/units/frost_mage/poses-prompt.md)
+    license: project-owned
+    attribution: false
+    redistribute: true
+    evidence: docs/art-review/g3e/units/frost_mage/poses/
+    modified: true
+    nativeSize: 1536x1024
+    finalSize: 36x27
+    anchor: feet
+    notes: Arcane frost_mage (Pháp Sư Băng) foe recolour, pose 4 (attack 0); reduced and outlined by docs/art-review/g3e/units/make_poses.py --export (approved 2026-11-09 by Claude under the owner's delegation); drawn at scale 0.5 (src/render/imageArt.ts)
+  - id: world_ai_v1_frost_mage_foe_5
+    path: public/assets/art/ai-v1/frost_mage_foe_5.png
+    category: unit
+    origin: custom
+    source: docs/art-review/g3e/units/frost_mage/poses-source.png
+    creator: Project owner (OpenAI imagegen via Codex; prompt in docs/art-review/g3e/units/frost_mage/poses-prompt.md)
+    license: project-owned
+    attribution: false
+    redistribute: true
+    evidence: docs/art-review/g3e/units/frost_mage/poses/
+    modified: true
+    nativeSize: 1536x1024
+    finalSize: 36x27
+    anchor: feet
+    notes: Arcane frost_mage (Pháp Sư Băng) foe recolour, pose 5 (attack 1); reduced and outlined by docs/art-review/g3e/units/make_poses.py --export (approved 2026-11-09 by Claude under the owner's delegation); drawn at scale 0.5 (src/render/imageArt.ts)
+  - id: world_ai_v1_archmage_0
+    path: public/assets/art/ai-v1/archmage_0.png
+    category: unit
+    origin: custom
+    source: docs/art-review/g3e/units/archmage/poses-source.png
+    creator: Project owner (OpenAI imagegen via Codex; prompt in docs/art-review/g3e/units/archmage/poses-prompt.md)
+    license: project-owned
+    attribution: false
+    redistribute: true
+    evidence: docs/art-review/g3e/units/archmage/poses/
+    modified: true
+    nativeSize: 1536x1024
+    finalSize: 38x31
+    anchor: feet
+    notes: Arcane archmage (Đại Pháp Sư) pose 0 (idle 0); reduced and outlined by docs/art-review/g3e/units/make_poses.py --export (approved 2026-11-09 by Claude under the owner's delegation); drawn at scale 0.5 (src/render/imageArt.ts)
+  - id: world_ai_v1_archmage_1
+    path: public/assets/art/ai-v1/archmage_1.png
+    category: unit
+    origin: custom
+    source: docs/art-review/g3e/units/archmage/poses-source.png
+    creator: Project owner (OpenAI imagegen via Codex; prompt in docs/art-review/g3e/units/archmage/poses-prompt.md)
+    license: project-owned
+    attribution: false
+    redistribute: true
+    evidence: docs/art-review/g3e/units/archmage/poses/
+    modified: true
+    nativeSize: 1536x1024
+    finalSize: 38x31
+    anchor: feet
+    notes: Arcane archmage (Đại Pháp Sư) pose 1 (idle 1); reduced and outlined by docs/art-review/g3e/units/make_poses.py --export (approved 2026-11-09 by Claude under the owner's delegation); drawn at scale 0.5 (src/render/imageArt.ts)
+  - id: world_ai_v1_archmage_2
+    path: public/assets/art/ai-v1/archmage_2.png
+    category: unit
+    origin: custom
+    source: docs/art-review/g3e/units/archmage/poses-source.png
+    creator: Project owner (OpenAI imagegen via Codex; prompt in docs/art-review/g3e/units/archmage/poses-prompt.md)
+    license: project-owned
+    attribution: false
+    redistribute: true
+    evidence: docs/art-review/g3e/units/archmage/poses/
+    modified: true
+    nativeSize: 1536x1024
+    finalSize: 38x31
+    anchor: feet
+    notes: Arcane archmage (Đại Pháp Sư) pose 2 (walk 0); reduced and outlined by docs/art-review/g3e/units/make_poses.py --export (approved 2026-11-09 by Claude under the owner's delegation); drawn at scale 0.5 (src/render/imageArt.ts)
+  - id: world_ai_v1_archmage_3
+    path: public/assets/art/ai-v1/archmage_3.png
+    category: unit
+    origin: custom
+    source: docs/art-review/g3e/units/archmage/poses-source.png
+    creator: Project owner (OpenAI imagegen via Codex; prompt in docs/art-review/g3e/units/archmage/poses-prompt.md)
+    license: project-owned
+    attribution: false
+    redistribute: true
+    evidence: docs/art-review/g3e/units/archmage/poses/
+    modified: true
+    nativeSize: 1536x1024
+    finalSize: 38x31
+    anchor: feet
+    notes: Arcane archmage (Đại Pháp Sư) pose 3 (walk 1); reduced and outlined by docs/art-review/g3e/units/make_poses.py --export (approved 2026-11-09 by Claude under the owner's delegation); drawn at scale 0.5 (src/render/imageArt.ts)
+  - id: world_ai_v1_archmage_4
+    path: public/assets/art/ai-v1/archmage_4.png
+    category: unit
+    origin: custom
+    source: docs/art-review/g3e/units/archmage/poses-source.png
+    creator: Project owner (OpenAI imagegen via Codex; prompt in docs/art-review/g3e/units/archmage/poses-prompt.md)
+    license: project-owned
+    attribution: false
+    redistribute: true
+    evidence: docs/art-review/g3e/units/archmage/poses/
+    modified: true
+    nativeSize: 1536x1024
+    finalSize: 38x31
+    anchor: feet
+    notes: Arcane archmage (Đại Pháp Sư) pose 4 (attack 0); reduced and outlined by docs/art-review/g3e/units/make_poses.py --export (approved 2026-11-09 by Claude under the owner's delegation); drawn at scale 0.5 (src/render/imageArt.ts)
+  - id: world_ai_v1_archmage_5
+    path: public/assets/art/ai-v1/archmage_5.png
+    category: unit
+    origin: custom
+    source: docs/art-review/g3e/units/archmage/poses-source.png
+    creator: Project owner (OpenAI imagegen via Codex; prompt in docs/art-review/g3e/units/archmage/poses-prompt.md)
+    license: project-owned
+    attribution: false
+    redistribute: true
+    evidence: docs/art-review/g3e/units/archmage/poses/
+    modified: true
+    nativeSize: 1536x1024
+    finalSize: 38x31
+    anchor: feet
+    notes: Arcane archmage (Đại Pháp Sư) pose 5 (attack 1); reduced and outlined by docs/art-review/g3e/units/make_poses.py --export (approved 2026-11-09 by Claude under the owner's delegation); drawn at scale 0.5 (src/render/imageArt.ts)
+  - id: world_ai_v1_archmage_foe_0
+    path: public/assets/art/ai-v1/archmage_foe_0.png
+    category: unit
+    origin: custom
+    source: docs/art-review/g3e/units/archmage/poses-source.png
+    creator: Project owner (OpenAI imagegen via Codex; prompt in docs/art-review/g3e/units/archmage/poses-prompt.md)
+    license: project-owned
+    attribution: false
+    redistribute: true
+    evidence: docs/art-review/g3e/units/archmage/poses/
+    modified: true
+    nativeSize: 1536x1024
+    finalSize: 38x31
+    anchor: feet
+    notes: Arcane archmage (Đại Pháp Sư) foe recolour, pose 0 (idle 0); reduced and outlined by docs/art-review/g3e/units/make_poses.py --export (approved 2026-11-09 by Claude under the owner's delegation); drawn at scale 0.5 (src/render/imageArt.ts)
+  - id: world_ai_v1_archmage_foe_1
+    path: public/assets/art/ai-v1/archmage_foe_1.png
+    category: unit
+    origin: custom
+    source: docs/art-review/g3e/units/archmage/poses-source.png
+    creator: Project owner (OpenAI imagegen via Codex; prompt in docs/art-review/g3e/units/archmage/poses-prompt.md)
+    license: project-owned
+    attribution: false
+    redistribute: true
+    evidence: docs/art-review/g3e/units/archmage/poses/
+    modified: true
+    nativeSize: 1536x1024
+    finalSize: 38x31
+    anchor: feet
+    notes: Arcane archmage (Đại Pháp Sư) foe recolour, pose 1 (idle 1); reduced and outlined by docs/art-review/g3e/units/make_poses.py --export (approved 2026-11-09 by Claude under the owner's delegation); drawn at scale 0.5 (src/render/imageArt.ts)
+  - id: world_ai_v1_archmage_foe_2
+    path: public/assets/art/ai-v1/archmage_foe_2.png
+    category: unit
+    origin: custom
+    source: docs/art-review/g3e/units/archmage/poses-source.png
+    creator: Project owner (OpenAI imagegen via Codex; prompt in docs/art-review/g3e/units/archmage/poses-prompt.md)
+    license: project-owned
+    attribution: false
+    redistribute: true
+    evidence: docs/art-review/g3e/units/archmage/poses/
+    modified: true
+    nativeSize: 1536x1024
+    finalSize: 38x31
+    anchor: feet
+    notes: Arcane archmage (Đại Pháp Sư) foe recolour, pose 2 (walk 0); reduced and outlined by docs/art-review/g3e/units/make_poses.py --export (approved 2026-11-09 by Claude under the owner's delegation); drawn at scale 0.5 (src/render/imageArt.ts)
+  - id: world_ai_v1_archmage_foe_3
+    path: public/assets/art/ai-v1/archmage_foe_3.png
+    category: unit
+    origin: custom
+    source: docs/art-review/g3e/units/archmage/poses-source.png
+    creator: Project owner (OpenAI imagegen via Codex; prompt in docs/art-review/g3e/units/archmage/poses-prompt.md)
+    license: project-owned
+    attribution: false
+    redistribute: true
+    evidence: docs/art-review/g3e/units/archmage/poses/
+    modified: true
+    nativeSize: 1536x1024
+    finalSize: 38x31
+    anchor: feet
+    notes: Arcane archmage (Đại Pháp Sư) foe recolour, pose 3 (walk 1); reduced and outlined by docs/art-review/g3e/units/make_poses.py --export (approved 2026-11-09 by Claude under the owner's delegation); drawn at scale 0.5 (src/render/imageArt.ts)
+  - id: world_ai_v1_archmage_foe_4
+    path: public/assets/art/ai-v1/archmage_foe_4.png
+    category: unit
+    origin: custom
+    source: docs/art-review/g3e/units/archmage/poses-source.png
+    creator: Project owner (OpenAI imagegen via Codex; prompt in docs/art-review/g3e/units/archmage/poses-prompt.md)
+    license: project-owned
+    attribution: false
+    redistribute: true
+    evidence: docs/art-review/g3e/units/archmage/poses/
+    modified: true
+    nativeSize: 1536x1024
+    finalSize: 38x31
+    anchor: feet
+    notes: Arcane archmage (Đại Pháp Sư) foe recolour, pose 4 (attack 0); reduced and outlined by docs/art-review/g3e/units/make_poses.py --export (approved 2026-11-09 by Claude under the owner's delegation); drawn at scale 0.5 (src/render/imageArt.ts)
+  - id: world_ai_v1_archmage_foe_5
+    path: public/assets/art/ai-v1/archmage_foe_5.png
+    category: unit
+    origin: custom
+    source: docs/art-review/g3e/units/archmage/poses-source.png
+    creator: Project owner (OpenAI imagegen via Codex; prompt in docs/art-review/g3e/units/archmage/poses-prompt.md)
+    license: project-owned
+    attribution: false
+    redistribute: true
+    evidence: docs/art-review/g3e/units/archmage/poses/
+    modified: true
+    nativeSize: 1536x1024
+    finalSize: 38x31
+    anchor: feet
+    notes: Arcane archmage (Đại Pháp Sư) foe recolour, pose 5 (attack 1); reduced and outlined by docs/art-review/g3e/units/make_poses.py --export (approved 2026-11-09 by Claude under the owner's delegation); drawn at scale 0.5 (src/render/imageArt.ts)
+  - id: world_ai_v1_construct_0
+    path: public/assets/art/ai-v1/construct_0.png
+    category: unit
+    origin: custom
+    source: docs/art-review/g3e/units/construct/poses-source.png
+    creator: Project owner (OpenAI imagegen via Codex; prompt in docs/art-review/g3e/units/construct/poses-prompt.md)
+    license: project-owned
+    attribution: false
+    redistribute: true
+    evidence: docs/art-review/g3e/units/construct/poses/
+    modified: true
+    nativeSize: 1536x1024
+    finalSize: 44x38
+    anchor: feet
+    notes: Arcane construct (Người Máy Phép) pose 0 (idle 0); reduced and outlined by docs/art-review/g3e/units/make_poses.py --export (approved 2026-11-09 by Claude under the owner's delegation); drawn at scale 0.5 (src/render/imageArt.ts)
+  - id: world_ai_v1_construct_1
+    path: public/assets/art/ai-v1/construct_1.png
+    category: unit
+    origin: custom
+    source: docs/art-review/g3e/units/construct/poses-source.png
+    creator: Project owner (OpenAI imagegen via Codex; prompt in docs/art-review/g3e/units/construct/poses-prompt.md)
+    license: project-owned
+    attribution: false
+    redistribute: true
+    evidence: docs/art-review/g3e/units/construct/poses/
+    modified: true
+    nativeSize: 1536x1024
+    finalSize: 44x38
+    anchor: feet
+    notes: Arcane construct (Người Máy Phép) pose 1 (idle 1); reduced and outlined by docs/art-review/g3e/units/make_poses.py --export (approved 2026-11-09 by Claude under the owner's delegation); drawn at scale 0.5 (src/render/imageArt.ts)
+  - id: world_ai_v1_construct_2
+    path: public/assets/art/ai-v1/construct_2.png
+    category: unit
+    origin: custom
+    source: docs/art-review/g3e/units/construct/poses-source.png
+    creator: Project owner (OpenAI imagegen via Codex; prompt in docs/art-review/g3e/units/construct/poses-prompt.md)
+    license: project-owned
+    attribution: false
+    redistribute: true
+    evidence: docs/art-review/g3e/units/construct/poses/
+    modified: true
+    nativeSize: 1536x1024
+    finalSize: 44x38
+    anchor: feet
+    notes: Arcane construct (Người Máy Phép) pose 2 (walk 0); reduced and outlined by docs/art-review/g3e/units/make_poses.py --export (approved 2026-11-09 by Claude under the owner's delegation); drawn at scale 0.5 (src/render/imageArt.ts)
+  - id: world_ai_v1_construct_3
+    path: public/assets/art/ai-v1/construct_3.png
+    category: unit
+    origin: custom
+    source: docs/art-review/g3e/units/construct/poses-source.png
+    creator: Project owner (OpenAI imagegen via Codex; prompt in docs/art-review/g3e/units/construct/poses-prompt.md)
+    license: project-owned
+    attribution: false
+    redistribute: true
+    evidence: docs/art-review/g3e/units/construct/poses/
+    modified: true
+    nativeSize: 1536x1024
+    finalSize: 44x38
+    anchor: feet
+    notes: Arcane construct (Người Máy Phép) pose 3 (walk 1); reduced and outlined by docs/art-review/g3e/units/make_poses.py --export (approved 2026-11-09 by Claude under the owner's delegation); drawn at scale 0.5 (src/render/imageArt.ts)
+  - id: world_ai_v1_construct_4
+    path: public/assets/art/ai-v1/construct_4.png
+    category: unit
+    origin: custom
+    source: docs/art-review/g3e/units/construct/poses-source.png
+    creator: Project owner (OpenAI imagegen via Codex; prompt in docs/art-review/g3e/units/construct/poses-prompt.md)
+    license: project-owned
+    attribution: false
+    redistribute: true
+    evidence: docs/art-review/g3e/units/construct/poses/
+    modified: true
+    nativeSize: 1536x1024
+    finalSize: 44x38
+    anchor: feet
+    notes: Arcane construct (Người Máy Phép) pose 4 (attack 0); reduced and outlined by docs/art-review/g3e/units/make_poses.py --export (approved 2026-11-09 by Claude under the owner's delegation); drawn at scale 0.5 (src/render/imageArt.ts)
+  - id: world_ai_v1_construct_5
+    path: public/assets/art/ai-v1/construct_5.png
+    category: unit
+    origin: custom
+    source: docs/art-review/g3e/units/construct/poses-source.png
+    creator: Project owner (OpenAI imagegen via Codex; prompt in docs/art-review/g3e/units/construct/poses-prompt.md)
+    license: project-owned
+    attribution: false
+    redistribute: true
+    evidence: docs/art-review/g3e/units/construct/poses/
+    modified: true
+    nativeSize: 1536x1024
+    finalSize: 44x38
+    anchor: feet
+    notes: Arcane construct (Người Máy Phép) pose 5 (attack 1); reduced and outlined by docs/art-review/g3e/units/make_poses.py --export (approved 2026-11-09 by Claude under the owner's delegation); drawn at scale 0.5 (src/render/imageArt.ts)
+  - id: world_ai_v1_construct_foe_0
+    path: public/assets/art/ai-v1/construct_foe_0.png
+    category: unit
+    origin: custom
+    source: docs/art-review/g3e/units/construct/poses-source.png
+    creator: Project owner (OpenAI imagegen via Codex; prompt in docs/art-review/g3e/units/construct/poses-prompt.md)
+    license: project-owned
+    attribution: false
+    redistribute: true
+    evidence: docs/art-review/g3e/units/construct/poses/
+    modified: true
+    nativeSize: 1536x1024
+    finalSize: 44x38
+    anchor: feet
+    notes: Arcane construct (Người Máy Phép) foe recolour, pose 0 (idle 0); reduced and outlined by docs/art-review/g3e/units/make_poses.py --export (approved 2026-11-09 by Claude under the owner's delegation); drawn at scale 0.5 (src/render/imageArt.ts)
+  - id: world_ai_v1_construct_foe_1
+    path: public/assets/art/ai-v1/construct_foe_1.png
+    category: unit
+    origin: custom
+    source: docs/art-review/g3e/units/construct/poses-source.png
+    creator: Project owner (OpenAI imagegen via Codex; prompt in docs/art-review/g3e/units/construct/poses-prompt.md)
+    license: project-owned
+    attribution: false
+    redistribute: true
+    evidence: docs/art-review/g3e/units/construct/poses/
+    modified: true
+    nativeSize: 1536x1024
+    finalSize: 44x38
+    anchor: feet
+    notes: Arcane construct (Người Máy Phép) foe recolour, pose 1 (idle 1); reduced and outlined by docs/art-review/g3e/units/make_poses.py --export (approved 2026-11-09 by Claude under the owner's delegation); drawn at scale 0.5 (src/render/imageArt.ts)
+  - id: world_ai_v1_construct_foe_2
+    path: public/assets/art/ai-v1/construct_foe_2.png
+    category: unit
+    origin: custom
+    source: docs/art-review/g3e/units/construct/poses-source.png
+    creator: Project owner (OpenAI imagegen via Codex; prompt in docs/art-review/g3e/units/construct/poses-prompt.md)
+    license: project-owned
+    attribution: false
+    redistribute: true
+    evidence: docs/art-review/g3e/units/construct/poses/
+    modified: true
+    nativeSize: 1536x1024
+    finalSize: 44x38
+    anchor: feet
+    notes: Arcane construct (Người Máy Phép) foe recolour, pose 2 (walk 0); reduced and outlined by docs/art-review/g3e/units/make_poses.py --export (approved 2026-11-09 by Claude under the owner's delegation); drawn at scale 0.5 (src/render/imageArt.ts)
+  - id: world_ai_v1_construct_foe_3
+    path: public/assets/art/ai-v1/construct_foe_3.png
+    category: unit
+    origin: custom
+    source: docs/art-review/g3e/units/construct/poses-source.png
+    creator: Project owner (OpenAI imagegen via Codex; prompt in docs/art-review/g3e/units/construct/poses-prompt.md)
+    license: project-owned
+    attribution: false
+    redistribute: true
+    evidence: docs/art-review/g3e/units/construct/poses/
+    modified: true
+    nativeSize: 1536x1024
+    finalSize: 44x38
+    anchor: feet
+    notes: Arcane construct (Người Máy Phép) foe recolour, pose 3 (walk 1); reduced and outlined by docs/art-review/g3e/units/make_poses.py --export (approved 2026-11-09 by Claude under the owner's delegation); drawn at scale 0.5 (src/render/imageArt.ts)
+  - id: world_ai_v1_construct_foe_4
+    path: public/assets/art/ai-v1/construct_foe_4.png
+    category: unit
+    origin: custom
+    source: docs/art-review/g3e/units/construct/poses-source.png
+    creator: Project owner (OpenAI imagegen via Codex; prompt in docs/art-review/g3e/units/construct/poses-prompt.md)
+    license: project-owned
+    attribution: false
+    redistribute: true
+    evidence: docs/art-review/g3e/units/construct/poses/
+    modified: true
+    nativeSize: 1536x1024
+    finalSize: 44x38
+    anchor: feet
+    notes: Arcane construct (Người Máy Phép) foe recolour, pose 4 (attack 0); reduced and outlined by docs/art-review/g3e/units/make_poses.py --export (approved 2026-11-09 by Claude under the owner's delegation); drawn at scale 0.5 (src/render/imageArt.ts)
+  - id: world_ai_v1_construct_foe_5
+    path: public/assets/art/ai-v1/construct_foe_5.png
+    category: unit
+    origin: custom
+    source: docs/art-review/g3e/units/construct/poses-source.png
+    creator: Project owner (OpenAI imagegen via Codex; prompt in docs/art-review/g3e/units/construct/poses-prompt.md)
+    license: project-owned
+    attribution: false
+    redistribute: true
+    evidence: docs/art-review/g3e/units/construct/poses/
+    modified: true
+    nativeSize: 1536x1024
+    finalSize: 44x38
+    anchor: feet
+    notes: Arcane construct (Người Máy Phép) foe recolour, pose 5 (attack 1); reduced and outlined by docs/art-review/g3e/units/make_poses.py --export (approved 2026-11-09 by Claude under the owner's delegation); drawn at scale 0.5 (src/render/imageArt.ts)

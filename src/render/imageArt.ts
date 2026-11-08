@@ -26,6 +26,11 @@ export const IMAGE_UNITS: Readonly<Record<string, string>> = {
   rubble: 'rubble',
   slinger: 'slinger',
   footman: 'footman',
+  // Arcane (2026-11-09, missing-art plan Task 2; approved by Claude under the owner's delegation)
+  apprentice: 'apprentice',
+  frost_mage: 'frost_mage',
+  archmage: 'archmage',
+  construct: 'construct',
 };
 
 const POSE_INDEXES = [0, 1, 2, 3, 4, 5];
