@@ -18,10 +18,10 @@ export interface YearIncome {
   idleUids: number[];
 }
 
-/** Ngai trước, rồi plot 0..24 (bỏ Ngai), theo spec §5.5. */
-const plotOrder = (): number[] => {
+/** Ngai trước, rồi các ô theo id tăng dần (bỏ Ngai), theo spec §5.5. */
+const plotOrder = (count: number): number[] => {
   const order = [THRONE_PLOT];
-  for (let plot = 0; plot < 25; plot++) if (plot !== THRONE_PLOT) order.push(plot);
+  for (let plot = 0; plot < count; plot++) if (plot !== THRONE_PLOT) order.push(plot);
   return order;
 };
 
@@ -41,7 +41,7 @@ export function yearIncome(
   let delta = 0;
   const idleUids: number[] = [];
 
-  for (const plot of plotOrder()) {
+  for (const plot of plotOrder(state.plots.length)) {
     const building = state.plots[plot]!.building;
     if (building === null) continue;
     const card = content.card(building.cardId);
@@ -71,7 +71,7 @@ export function yearIncome(
     for (const e of effects) {
       if (e.type === 'gold') gained += resolve(e.amount, level);
       else if (e.type === 'goldPerNeighbour') {
-        const count = neighbours(plot).filter(
+        const count = neighbours(plot, state.mode).filter(
           (n) => state.plots[n]!.building?.cardId === e.cardId,
         ).length;
         gained += resolve(e.amount, level) * count;

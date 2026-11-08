@@ -16,7 +16,6 @@ import type { CouncilSelection, IllegalReason, OfferState, PlotState, RunState }
 
 type CouncilOffer = Extract<OfferState, { kind: 'council' }>;
 
-const PLOTS = 25;
 const PICKS = DECREE_RULES.choices;
 const MAX_EXPAND = DECREE_RULES.expand;
 /** Giữ tên cũ cho các nơi đã import. */
@@ -86,7 +85,7 @@ function validate(
     if (!only('plots') || sel.plots.length > expandTarget(state)) return null;
     let plots: readonly PlotState[] = state.plots;
     for (const plot of sel.plots) {
-      if (!Number.isInteger(plot) || plot < 0 || plot >= PLOTS) return null;
+      if (!Number.isInteger(plot) || plot < 0 || plot >= state.plots.length) return null;
       if (plots[plot]!.unlocked || !adjacentToUnlocked(plots, plot)) return null;
       plots = unlockPlot(plots, plot);
       out.plots.push(plot);

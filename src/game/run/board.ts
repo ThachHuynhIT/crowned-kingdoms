@@ -1,36 +1,53 @@
 /** Luật bàn cờ 5×5 (spec §4.1, §4.4). Hàm thuần, trả mảng mới, không sửa đầu vào. */
+import { THRONE_PLOT } from '../../data/boardGeometry';
+import type { RunMode } from '../../data/rules';
 import { RUN } from '../../data/run';
 import type { BuildingKind, CardDef, CardId, Level, TomeCardDef } from '../../data/types';
 import { CONTENT, type Content } from '../cards/registry';
+import { geometryFor, isPlotId, modeForPlotCount, plotAtCell, plotCoords } from './boardGeometry';
 import type { BuildingState, IllegalReason, PlayTarget, PlotState, RunState } from './state';
 
-const SIZE = 5;
-const COUNT = SIZE * SIZE;
 /** Ngai đứng ở ô giữa hàng sau cùng (hàng 0, cột 2), sau khu 3×3 xây nhà (spec 06/11/2026). */
-export const THRONE_PLOT = 2;
+export { THRONE_PLOT } from '../../data/boardGeometry';
 
-export const plotCol = (plot: number): number => plot - Math.floor(plot / SIZE) * SIZE;
-export const plotRow = (plot: number): number => Math.floor(plot / SIZE);
+/** Cột / hàng của ô trên hệ bàn trong (vòng ngoài Vô tận có -1 và 5). */
+export const plotCol = (plot: number, mode: RunMode = 'normal'): number => plotCoords(plot, mode).col;
+export const plotRow = (plot: number, mode: RunMode = 'normal'): number => plotCoords(plot, mode).row;
 
-const validPlot = (plot: number): boolean => Number.isInteger(plot) && plot >= 0 && plot < COUNT;
+/**
+ * Chế độ của một mảng ô (adapter cho các hàm chỉ nhận `plots`): 25 → thường, 49 → Vô tận; độ dài khác
+ * là dữ liệu hỏng.
+ */
+const modeOfPlots = (plots: readonly PlotState[]): RunMode => {
+  const mode = modeForPlotCount(plots.length);
+  if (mode === null) throw new Error(`board: unexpected plot count ${plots.length}`);
+  return mode;
+};
+
+const validPlotOn = (plots: readonly PlotState[], plot: number): boolean => isPlotId(plot, modeOfPlots(plots));
 
 /** Bắc, Đông, Nam, Tây; bỏ ô ngoài bàn. */
-export function neighbours(plot: number): number[] {
-  const c = plotCol(plot);
-  const r = plotRow(plot);
+export function neighbours(plot: number, mode: RunMode = 'normal'): number[] {
+  const { row, col } = plotCoords(plot, mode);
   const out: number[] = [];
-  if (r > 0) out.push(plot - SIZE);
-  if (c < SIZE - 1) out.push(plot + 1);
-  if (r < SIZE - 1) out.push(plot + SIZE);
-  if (c > 0) out.push(plot - 1);
+  for (const [dr, dc] of [
+    [-1, 0],
+    [0, 1],
+    [1, 0],
+    [0, -1],
+  ] as const) {
+    const n = plotAtCell(row + dr, col + dc, mode);
+    if (n !== null) out.push(n);
+  }
   return out;
 }
 
-export function initialPlots(): PlotState[] {
+/** Bàn mới: Ngai và chín ô giữa mở; vòng ngoài của Vô tận khoá hết (spec 2026-11-09 §4). */
+export function initialPlots(mode: RunMode = 'normal'): PlotState[] {
   const plots: PlotState[] = [];
-  for (let i = 0; i < COUNT; i++) {
-    const c = plotCol(i);
-    const r = plotRow(i);
+  const count = geometryFor(mode).plotCount;
+  for (let i = 0; i < count; i++) {
+    const { row: r, col: c } = plotCoords(i, mode);
     plots.push({ unlocked: i === THRONE_PLOT || (c >= 1 && c <= 3 && r >= 1 && r <= 3), building: null });
   }
   return plots;
@@ -38,7 +55,7 @@ export function initialPlots(): PlotState[] {
 
 /** Ô khoá kề (Bắc/Đông/Nam/Tây) một ô đã mở — luật mua ô bằng vàng (spec §3.11), không áp cho Khai Hoang. */
 export const adjacentToUnlocked = (plots: readonly PlotState[], plot: number): boolean =>
-  neighbours(plot).some((n) => plots[n]!.unlocked);
+  neighbours(plot, modeOfPlots(plots)).some((n) => plots[n]!.unlocked);
 
 const stacksOf = (b: BuildingState): number => b.enchants.reduce((n, e) => n + e.stacks, 0);
 
@@ -152,10 +169,10 @@ export function checkPlay(
     if (target.kind !== 'none') return 'badTarget';
   } else if (count === 2) {
     if (target.kind !== 'two') return 'badTarget';
-    if (!validPlot(target.first) || !validPlot(target.second)) return 'badTarget';
+    if (!validPlotOn(plots, target.first) || !validPlotOn(plots, target.second)) return 'badTarget';
   } else {
     if (target.kind !== 'plot') return 'badTarget';
-    if (!validPlot(target.plot)) return 'badTarget';
+    if (!validPlotOn(plots, target.plot)) return 'badTarget';
   }
   if (!hasAnyTarget(plots, card, content, maxStacks)) return 'noTarget';
 
@@ -225,7 +242,7 @@ export function checkTargetStep(
   if (count === 1) return checkPlay(plots, card, { kind: 'plot', plot }, content, maxStacks);
   const first = chosen[0];
   if (first !== undefined) return checkPlay(plots, card, { kind: 'two', first, second: plot }, content, maxStacks);
-  for (let second = 0; second < COUNT; second++) {
+  for (let second = 0; second < plots.length; second++) {
     if (second === plot) continue;
     if (checkPlay(plots, card, { kind: 'two', first: plot, second }, content, maxStacks) === null) return null;
   }

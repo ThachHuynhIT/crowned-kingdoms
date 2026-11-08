@@ -1,5 +1,6 @@
 import { describe, expect, it } from 'vitest';
-import { RULES_G2 } from '../../data/rules';
+import { hashSeed } from '../../core/random';
+import { RULES_ENDLESS, RULES_FULL, RULES_G2 } from '../../data/rules';
 import type { RunState } from '../run/state';
 import { THRONE_PLOT } from '../run/board';
 import { newRun } from '../run/yearFlow';
@@ -56,7 +57,7 @@ describe('migrate_v5_to6', () => {
   it('adds perk null, no meta cards and no free moves used, keeping everything else', () => {
     const original = base();
     const migrated = migrateRunState(asV5(original)) as RunState;
-    expect(migrated.version).toBe(6);
+    expect(migrated.version).toBe(7);
     expect(migrated).toEqual(original);
     expect(migrated).toMatchObject({ perk: null, unlockedCards: [], freeMovesUsed: 0 });
   });
@@ -71,7 +72,7 @@ describe('migrate_v5_to6', () => {
 
   it('migrates all the way from version 3 and decodeRun accepts a version 5 envelope', () => {
     const original = base();
-    expect((migrateRunState(asV3(original)) as RunState).version).toBe(6);
+    expect((migrateRunState(asV3(original)) as RunState).version).toBe(7);
     const r = decodeRun({ formatVersion: 1, version: 5, contentHash: 1, state: asV5(original) }, CONTENT);
     expect(r.kind).toBe('ok');
     if (r.kind === 'ok') expect(r.state).toEqual(original);
@@ -87,7 +88,7 @@ describe('migrate_v3_to4', () => {
   it('turns a version 3 state into version 6 (through 4 and 5) keeping the run and adding neutral defaults', () => {
     const original = base();
     const migrated = migrateRunState(asV3(original)) as RunState;
-    expect(migrated.version).toBe(6);
+    expect(migrated.version).toBe(7);
     expect(migrated).toMatchObject({
       seed: original.seed,
       year: original.year,
@@ -154,7 +155,7 @@ describe('migrate_v3_to4', () => {
     const v3 = asV3(original);
     const inEnvelope = decodeRun({ formatVersion: 1, version: 3, contentHash: 1, state: v3 }, CONTENT);
     expect(inEnvelope.kind).toBe('ok');
-    if (inEnvelope.kind === 'ok') expect(inEnvelope.state.version).toBe(6);
+    if (inEnvelope.kind === 'ok') expect(inEnvelope.state.version).toBe(7);
     expect(decodeRun(v3, CONTENT).kind).toBe('ok');
   });
 
@@ -221,5 +222,54 @@ describe('migrate_v4_to5', () => {
     const v4 = asV4(newRun(5, 'wheat', CONTENT, RULES_G2));
     (v4.plots as LoosePlot[])[12]!.building = null;
     expect(decodeRun({ formatVersion: 1, version: 4, contentHash: 1, state: v4 }, CONTENT).kind).toBe('incompatible');
+  });
+});
+
+/** Một state v6 thật: bỏ đúng các trường v7 (spec 2026-11-09 §8). */
+const asV6 = (s: RunState): Loose => {
+  const v6 = structuredClone(s) as unknown as Loose;
+  v6.version = 6;
+  delete v6.mode;
+  delete v6.endless;
+  delete (v6.rng as Loose).blessing;
+  return v6;
+};
+
+describe('migrate_v6_to7 (Endless)', () => {
+  const base = (): RunState => {
+    const s = newRun(9, 'arcane', CONTENT, RULES_FULL);
+    return { ...s, gold: 23, stats: { ...s.stats, battlesWon: 4, kills: 12 } };
+  };
+
+  it('marks the run normal, adds a null endless state and a neutral blessing stream, keeping everything else', () => {
+    const original = base();
+    const v6 = asV6(original);
+    const copy = structuredClone(v6);
+    const migrated = migrateRunState(v6) as RunState;
+    expect(v6).toEqual(copy);
+    expect(migrated.version).toBe(7);
+    expect(migrated.mode).toBe('normal');
+    expect(migrated.endless).toBeNull();
+    expect(migrated.rng.blessing).toBe(hashSeed('9:blessing'));
+    expect(migrated).toEqual(original);
+  });
+
+  it('decodeRun accepts a version 6 envelope; a version 7 state is not migrated again', () => {
+    const original = base();
+    const r = decodeRun({ formatVersion: 1, version: 6, contentHash: 1, state: asV6(original) }, CONTENT);
+    expect(r.kind).toBe('ok');
+    if (r.kind === 'ok') expect(r.state).toEqual(original);
+    const v7 = structuredClone(original);
+    expect(migrateRunState(v7)).toBe(v7);
+  });
+
+  it('decodeRun rejects a mode that disagrees with the rules and a board of the wrong size', () => {
+    const normal = base();
+    expect(decodeRun({ formatVersion: 1, version: 7, contentHash: 1, state: { ...normal, mode: 'endless' } }, CONTENT).kind).toBe('incompatible');
+    const endless = newRun(9, 'arcane', CONTENT, RULES_ENDLESS);
+    expect(decodeRun({ formatVersion: 1, version: 7, contentHash: 1, state: endless }, CONTENT).kind).toBe('ok');
+    expect(decodeRun({ formatVersion: 1, version: 7, contentHash: 1, state: { ...endless, plots: normal.plots } }, CONTENT).kind).toBe('incompatible');
+    expect(decodeRun({ formatVersion: 1, version: 7, contentHash: 1, state: { ...endless, endless: null } }, CONTENT).kind).toBe('incompatible');
+    expect(decodeRun({ formatVersion: 1, version: 7, contentHash: 1, state: { ...normal, plots: endless.plots } }, CONTENT).kind).toBe('incompatible');
   });
 });

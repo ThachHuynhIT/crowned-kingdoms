@@ -1,6 +1,7 @@
 /** Lệnh người chơi lên RunState (spec §5.1, §5.5). Thuần: làm việc trên bản sao, không sửa đầu vào. */
 import { Rng } from '../../core/random';
 import { RUN, START_DECK_G1, battleGold, unlockCost } from '../../data/run';
+import { hasFullCalendar, type RunMode } from '../../data/rules';
 import type { CardDef, CardId, KingId } from '../../data/types';
 import { CUSTOM_TOME_HANDLERS, runAfterMove, runAfterPlay, runBattleEnd } from '../cards/custom';
 import { freeMoveIllegal } from '../cards/custom/nomad';
@@ -39,8 +40,8 @@ export type CommandResult = { state: RunState; events: RunEvent[] } | { error: I
 
 const fail = (error: IllegalReason): CommandResult => ({ error });
 
-const manhattan = (a: number, b: number): number =>
-  Math.abs(plotCol(a) - plotCol(b)) + Math.abs(plotRow(a) - plotRow(b));
+const manhattan = (a: number, b: number, mode: RunMode): number =>
+  Math.abs(plotCol(a, mode) - plotCol(b, mode)) + Math.abs(plotRow(a, mode) - plotRow(b, mode));
 
 /** Ghi sự kiện năm mới / hết ván do bước vừa rồi gây ra; trả lại `next`. */
 function settledEvents(before: RunState, next: RunState, events: RunEvent[]): RunState {
@@ -92,7 +93,7 @@ function applyBase(input: RunState, cmd: RunCommand, content: Content): CommandR
                 if (moved !== null) moved.movedYear = state.year; // dời xong thì công trình "vừa dời" năm nay
               }
               Object.assign(state, runAfterMove(state, target.first, target.second, content));
-              const far = manhattan(target.first, target.second) >= 2;
+              const far = manhattan(target.first, target.second, state.mode) >= 2;
               if (far && action.levelIfFar > 0) {
                 state.plots = levelUpBuilding(state.plots, target.second, action.levelIfFar);
               }
@@ -221,7 +222,7 @@ function applyBase(input: RunState, cmd: RunCommand, content: Content): CommandR
     case 'battleResult': {
       if (state.phase !== 'battle') return fail('wrongPhase');
       const { result } = cmd;
-      const full = state.rules.calendar === 'full';
+      const full = hasFullCalendar(state.rules);
       state.stats.kills += result.kills;
       state.stats.completedYears += 1;
       events.push({ type: 'battleEnded', won: result.won });

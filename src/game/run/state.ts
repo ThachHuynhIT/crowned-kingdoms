@@ -1,9 +1,10 @@
 /** Trạng thái ván G1 (spec §5.1) — JSON thuần, không hàm, không Map/Set. */
-import type { Rules } from '../../data/rules';
+import type { EndlessBlessingId, EndlessModifierId } from '../../data/endless';
+import type { RunMode, Rules } from '../../data/rules';
 import type { BossId, CardId, DecreeId, KingId, Level, PerkId, QuestId, StatKey } from '../../data/types';
 import type { ArmyPlan, BattleResult } from '../battle/types';
 
-export const RUN_SAVE_VERSION = 6;
+export const RUN_SAVE_VERSION = 7;
 
 export interface BuildingState {
   uid: number;
@@ -36,7 +37,17 @@ export type RunPhase =
   | 'quest'
   | 'yearEnd'
   | 'ended';
-export type RngStream = 'draw' | 'reward' | 'calendar' | 'council' | 'quest';
+export type RngStream = 'draw' | 'reward' | 'calendar' | 'council' | 'quest' | 'blessing';
+
+/** Trạng thái riêng của Vô tận (spec 2026-11-09 §5, §6); ván thường giữ `null`. */
+export interface EndlessState {
+  /** Số stack mỗi phúc lành đã nhận (chỉ có khoá khi > 0). */
+  blessingStacks: Partial<Record<EndlessBlessingId, number>>;
+  /** Mốc năm gần nhất đã TẠO offer phúc lành (0 = chưa có); chống enqueue lặp khi tải lại. */
+  lastBlessingYear: number;
+  modifierId: EndlessModifierId | null;
+  modifierStartYear: number;
+}
 
 /** Số lần một vua địch đã tấn công và kết cục (spec §3.7). */
 export interface EnemyKingState {
@@ -91,6 +102,10 @@ export interface RunStats {
 export interface RunState {
   version: number;
   rules: Rules;
+  /** Chế độ chơi, suy từ `rules` lúc tạo ván (spec 2026-11-09 §3); quyết định bàn 25 hay 49 ô. */
+  mode: RunMode;
+  /** Trạng thái Vô tận; `null` ở ván thường. */
+  endless: EndlessState | null;
   seed: number;
   kingId: KingId;
   year: number;

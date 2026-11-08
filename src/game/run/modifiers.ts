@@ -89,10 +89,10 @@ const effectsOf = (card: CardDef): readonly EffectDef[] => {
 const levelOf = (state: RunState, plot: number, b: BuildingState): Level =>
   plot === THRONE_PLOT ? state.throneLevel : b.level;
 
-/** Ngai trước, rồi plot 0..24 (bỏ Ngai). */
-const sourcePlots = (): number[] => {
+/** Ngai trước, rồi các ô theo id tăng dần (bỏ Ngai). */
+const sourcePlots = (count: number): number[] => {
   const out = [THRONE_PLOT];
-  for (let plot = 0; plot < 25; plot++) if (plot !== THRONE_PLOT) out.push(plot);
+  for (let plot = 0; plot < count; plot++) if (plot !== THRONE_PLOT) out.push(plot);
   return out;
 };
 
@@ -124,7 +124,7 @@ export function collectStatSheet(
           e.scope === 'self'
             ? srcPlot === plot
             : e.scope === 'neighbours'
-              ? neighbours(srcPlot).includes(plot)
+              ? neighbours(srcPlot, state.mode).includes(plot)
               : true;
         if (related && matches(e.filter, targetCard, unit, targetLevel)) {
           add(sheet, e.stat, e.mode, resolve(e.value, level));
@@ -156,7 +156,7 @@ export function collectStatSheet(
       }
     }
   }
-  for (const srcPlot of sourcePlots()) {
+  for (const srcPlot of sourcePlots(state.plots.length)) {
     // (c)(d)
     const src = state.plots[srcPlot]!.building;
     if (src === null || srcPlot === plot) continue;

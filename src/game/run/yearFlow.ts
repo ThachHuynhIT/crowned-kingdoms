@@ -1,6 +1,6 @@
 /** Khởi tạo ván và bước sang năm mới (spec §3.2, §5.5 bước 1, 6). Thuần, không sửa đầu vào. */
 import { hashSeed } from '../../core/random';
-import { ALL_KINGS, RULES_G1, PLAYABLE_KINGS_G2, type Rules } from '../../data/rules';
+import { ALL_KINGS, RULES_G1, PLAYABLE_KINGS_G2, hasFullCalendar, modeForRules, type Rules } from '../../data/rules';
 import { RUN, START_DECK_G1 } from '../../data/run';
 import { yearIncome } from './income';
 import type { CardId, KingId, PerkId } from '../../data/types';
@@ -43,7 +43,7 @@ export function startYear(input: RunState, content: Content): RunState {
     yearStartPendingDraw: true,
   };
   // Bước nhiệm vụ (chỉ ván đầy đủ) chen giữa thu nhập và rút bài (§5.5 bước 5).
-  const offered = state.rules.calendar === 'full' ? offerQuest(prepared) : prepared;
+  const offered = hasFullCalendar(state.rules) ? offerQuest(prepared) : prepared;
   return offered.phase === 'quest' ? offered : finishYearStart(offered, content);
 }
 
@@ -67,7 +67,8 @@ export function newRun(
   if (perk !== null && findPerk(content, kingId, perk) === undefined) throw new Error(`perk ${perk} does not belong to king ${kingId}`);
   const difficulty = Math.min(RUN.difficultyLevels, Math.max(0, Math.floor(options.difficulty ?? 0)));
   const unlockedCards = [...(options.unlockedCards ?? [])].sort();
-  const plots = initialPlots();
+  const mode = modeForRules(rules);
+  const plots = initialPlots(mode);
   plots[THRONE_PLOT]!.building = {
     uid: 0,
     cardId: content.king(kingId).throne.id,
@@ -80,7 +81,7 @@ export function newRun(
     movedYear: null,
   };
   const deck = rules.calendar === 'raiders' ? [...START_DECK_G1] : startDeck(content.king(kingId));
-  const full = rules.calendar === 'full';
+  const full = hasFullCalendar(rules);
   const picked = full ? pickEnemyKingsWithState(seed, kingId, ALL_KINGS, 6) : null;
   const enemyKings =
     picked !== null
@@ -91,6 +92,8 @@ export function newRun(
   const base: RunState = {
     version: RUN_SAVE_VERSION,
     rules,
+    mode,
+    endless: mode === 'endless' ? { blessingStacks: {}, lastBlessingYear: 0, modifierId: null, modifierStartYear: 0 } : null,
     seed,
     kingId,
     year: 0,
@@ -131,6 +134,7 @@ export function newRun(
       calendar: picked?.rngState ?? hashSeed(`${seed}:calendar`),
       council: hashSeed(`${seed}:council`),
       quest: hashSeed(`${seed}:quest`),
+      blessing: hashSeed(`${seed}:blessing`),
     },
     stats: {
       kills: 0,

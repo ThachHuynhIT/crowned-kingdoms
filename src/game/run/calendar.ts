@@ -47,7 +47,7 @@ export function slotMultFor(slot: CalendarSlot): number {
 /** Kẻ tấn công từng năm 1..`rules.years`. */
 export function calendarFor(rules: Rules): readonly CalendarSlot[] {
   if (rules.calendar === 'short') return SHORT.slice(0, rules.years);
-  if (rules.calendar === 'full') return FULL_CALENDAR.slice(0, rules.years);
+  if (rules.calendar === 'full' || rules.calendar === 'endless') return FULL_CALENDAR.slice(0, rules.years);
   return Array.from({ length: rules.years }, () => N);
 }
 
