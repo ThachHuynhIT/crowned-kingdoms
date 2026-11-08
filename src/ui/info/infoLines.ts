@@ -3,7 +3,7 @@ import { TICKS_PER_SECOND } from '../../core/SimClock';
 import type { BattleWorld } from '../../game/battle/world';
 import type { RunState } from '../../game/run/state';
 import { UI_PALETTE } from '../../data/uiPalette';
-import { META_READ_ONLY_TEXT, META_SAVE_FAILED_TEXT, RUN_ALREADY_SCORED_TEXT } from '../../data/save';
+import { META_MEMORY_ONLY_TEXT, META_READ_ONLY_TEXT, META_SAVE_FAILED_TEXT, RUN_ALREADY_SCORED_TEXT } from '../../data/save';
 import type { CrownBreakdown } from '../../game/meta';
 import { decimalVi } from '../crowns/crownsModel';
 import type { Point, Size, TooltipContent } from '../hud/layout';
@@ -123,8 +123,8 @@ export interface TallyLine {
   tone: TallyTone;
 }
 
-/** Notices that say the points were NOT kept (shown as warnings). */
-const WARNINGS: readonly string[] = [META_SAVE_FAILED_TEXT, META_READ_ONLY_TEXT];
+/** Notices that say the points were NOT kept (or only until the tab closes); shown as warnings. */
+const WARNINGS: readonly string[] = [META_SAVE_FAILED_TEXT, META_READ_ONLY_TEXT, META_MEMORY_ONLY_TEXT];
 
 /**
  * Bảng cộng Điểm Vương Miện cuối ván (spec §9.1, §10.8): từng số hạng lấy từ `breakdown` (UI không tự tính lại),

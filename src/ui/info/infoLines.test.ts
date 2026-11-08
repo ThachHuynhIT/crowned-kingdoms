@@ -11,7 +11,7 @@ import { runState, withBuilding } from '../../game/testing/fixtures';
 import { buildingInfoModel, unitInfoModel } from './inspectionModel';
 import { buildingModelLines, unitModelLines, crownTally, entityAt, infoContent, placeInfoBox, runSummary, statusLines } from './infoLines';
 import { crownPoints } from '../../game/meta';
-import { META_READ_ONLY_TEXT, META_SAVE_FAILED_TEXT, RUN_ALREADY_SCORED_TEXT } from '../../data/save';
+import { META_MEMORY_ONLY_TEXT, META_READ_ONLY_TEXT, META_SAVE_FAILED_TEXT, RUN_ALREADY_SCORED_TEXT } from '../../data/save';
 
 describe('infoContent', () => {
   it('titles the first line and tints level, HP and spawned-unit lines from UI_PALETTE', () => {
@@ -253,6 +253,14 @@ describe('crownTally', () => {
     const state = ended({ won: false });
     const lines = crownTally(state, tallyOf(state, [META_SAVE_FAILED_TEXT, META_READ_ONLY_TEXT]));
     expect(lines.slice(-2).map((l) => l.tone)).toEqual(['warning', 'warning']);
+  });
+
+  it('styles the memory-only notice as a warning and does not add the already-scored line', () => {
+    const state = ended({ won: false });
+    const lines = crownTally(state, tallyOf(state, [META_MEMORY_ONLY_TEXT], true));
+    expect(lines.at(-1)).toEqual({ text: META_MEMORY_ONLY_TEXT, tone: 'warning' });
+    expect(lines.map((l) => l.text)).not.toContain(RUN_ALREADY_SCORED_TEXT);
+    expect(crownTally(state, tallyOf(state, [META_MEMORY_ONLY_TEXT], false)).map((l) => l.text)).not.toContain(RUN_ALREADY_SCORED_TEXT);
   });
 
   it('says the run was already scored only when a profile deduped it', () => {

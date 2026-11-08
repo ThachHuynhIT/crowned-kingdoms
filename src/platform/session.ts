@@ -1,5 +1,5 @@
 /** Phiên chơi của trình duyệt: kho lưu + cầu checkpoint + đọc ván + hồ sơ meta (G4). `src/game` không import file này. */
-import { META_READ_ONLY_TEXT, UNLOCK_REFUSED_TEXT, UNLOCK_SAVE_FAILED_TEXT } from '../data/save';
+import { META_MEMORY_ONLY_TEXT, META_READ_ONLY_TEXT, UNLOCK_REFUSED_TEXT, UNLOCK_SAVE_FAILED_TEXT } from '../data/save';
 import type { CardId, KingId } from '../data/types';
 import type { Content } from '../game/cards/registry';
 import { decodeMeta, type MetaProfile, settleRun, unlockCard, unlockKing } from '../game/meta';
@@ -36,7 +36,7 @@ export interface GameSession {
 }
 
 /** Dựng phiên trên một kho có sẵn: đọc hồ sơ meta đúng một lần, không ghi gì khi mở. */
-export async function openSession(store: SaveStore, content: Content): Promise<GameSession> {
+export async function openSession(store: SaveStore & { isPersistent?: () => boolean }, content: Content): Promise<GameSession> {
   const raw = await store.loadMeta();
   // A store with no profile answers null (IndexedDB, memory): that is a first launch, not a broken profile.
   const decoded = decodeMeta(raw === null ? undefined : raw);
@@ -76,7 +76,9 @@ export async function openSession(store: SaveStore, content: Content): Promise<G
       // closing the page can never leave the credited profile next to the old run save.
       await coordinator.endRun(r.profile);
       profile = r.profile;
-      return outcome(r.unlocks, true);
+      // Credited, but only into RAM when the browser store has fallen back: say so (a store without the probe make no claim).
+      const memoryOnly = store.isPersistent?.() === false;
+      return outcome(memoryOnly ? [...r.unlocks, META_MEMORY_ONLY_TEXT] : r.unlocks, true);
     });
 
   const unlock = (apply: (p: MetaProfile) => MetaProfile): Promise<UnlockResult> =>

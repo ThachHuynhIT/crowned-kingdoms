@@ -25,3 +25,5 @@ export const RUN_ALREADY_SCORED_TEXT = 'Ván này đã được tính điểm tr
 export const UNLOCK_SAVE_FAILED_TEXT = 'Chưa lưu được lần mở khoá, hãy thử lại.';
 /** Mở khoá khi hồ sơ chưa đủ điều kiện (điểm, chiến thắng) hoặc đã mở rồi. */
 export const UNLOCK_REFUSED_TEXT = 'Chưa đủ điều kiện để mở khoá.';
+/** Điểm đã cộng nhưng kho lưu chỉ còn trong RAM (IndexedDB không dùng được): mất khi đóng trang. */
+export const META_MEMORY_ONLY_TEXT = 'Điểm Vương Miện chỉ được giữ tới khi đóng trang: trình duyệt này không lưu được tiến trình.';

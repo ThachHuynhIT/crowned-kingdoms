@@ -3,6 +3,7 @@ import { describe, expect, it, vi } from 'vitest';
 import {
   INCOMPATIBLE_RUN_TEXT,
   META_READ_ONLY_TEXT,
+  META_MEMORY_ONLY_TEXT,
   META_SAVE_FAILED_TEXT,
   STORAGE_WARNING_TEXT,
   UNLOCK_SAVE_FAILED_TEXT,
@@ -235,5 +236,21 @@ describe('session meta profile (G4)', () => {
     copy.unlockedKings.push('grove');
     expect(s.meta().crownPoints).toBe(0);
     expect(s.meta().unlockedKings).not.toContain('grove');
+  });
+});
+
+describe('session settle on a store that is not persistent', () => {
+  it('credits the points but adds the memory-only notice', async () => {
+    const s = await createSession(null, () => undefined, CONTENT);
+    const out = await s.settleRun(fakeRun({ years: 10, conquered: 2, bosses: 1, won: false }));
+    expect(out.credited).toBe(true);
+    expect(out.unlocks).toContain(META_MEMORY_ONLY_TEXT);
+  });
+
+  it('has no notice on a persistent store', async () => {
+    const s = await createSession(new IDBFactory(), () => undefined, CONTENT);
+    const out = await s.settleRun(fakeRun({ years: 10, conquered: 2, bosses: 1, won: false }));
+    expect(out.credited).toBe(true);
+    expect(out.unlocks).not.toContain(META_MEMORY_ONLY_TEXT);
   });
 });

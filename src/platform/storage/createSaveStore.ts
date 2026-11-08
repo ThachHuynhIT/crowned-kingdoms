@@ -13,7 +13,13 @@ export interface SaveStoreOptions {
   onWarning: (text: string) => void;
 }
 
-export async function createSaveStore(options: SaveStoreOptions): Promise<SaveStore> {
+/** The browser store: a `SaveStore` that also says whether writes still reach the disk. */
+export interface PersistenceAwareStore extends SaveStore {
+  /** False when IndexedDB never opened or the store has fallen back to memory (data lives until the tab closes). */
+  isPersistent(): boolean;
+}
+
+export async function createSaveStore(options: SaveStoreOptions): Promise<PersistenceAwareStore> {
   const mirror = new MemorySaveStore();
   let disk: SaveStore | null = null;
   let warned = false;
@@ -47,6 +53,7 @@ export async function createSaveStore(options: SaveStoreOptions): Promise<SaveSt
   };
 
   return {
+    isPersistent: () => disk !== null,
     async loadRun() {
       const r = await onDisk((s) => s.loadRun());
       if (!r) return mirror.loadRun();

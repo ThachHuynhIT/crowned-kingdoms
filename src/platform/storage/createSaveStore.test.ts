@@ -134,4 +134,15 @@ describe('createSaveStore', () => {
     expect(await disk.loadMeta()).toEqual({ crowns: 1 });
     expect(await disk.loadRun()).toEqual(envelope(2));
   });
+
+  it('reports whether it is persistent: true on a working disk, false with no factory, false after a write failure', async () => {
+    expect((await setup(new IDBFactory()).make()).isPersistent()).toBe(true);
+    expect((await setup(null).make()).isPersistent()).toBe(false);
+    const { factory, failing } = breakable(new IDBFactory());
+    const store = await setup(factory).make();
+    expect(store.isPersistent()).toBe(true);
+    failing.on = true;
+    await store.saveRun(envelope(2));
+    expect(store.isPersistent()).toBe(false);
+  });
 });
