@@ -23,10 +23,10 @@ const game = new Phaser.Game({
   // WebAudio belongs to our gesture-unlocked AudioManager.
   audio: { noAudio: true },
   scale: {
-    // Canvas fills the window 1:1; zoom is handled by the camera in whole steps.
+    // Canvas fills the #game box 1:1 (the window minus the safe-area insets, G5); the realm camera zooms.
     mode: Phaser.Scale.RESIZE,
-    width: window.innerWidth,
-    height: window.innerHeight,
+    width: document.getElementById('game')?.clientWidth || window.innerWidth,
+    height: document.getElementById('game')?.clientHeight || window.innerHeight,
   },
   input: {
     // Mouse + up to two simultaneous touches (pinch).

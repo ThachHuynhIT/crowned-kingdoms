@@ -39,7 +39,11 @@
       }
       #game {
         position: fixed;
-        inset: 0;
+        /* G5: keep the game out of the notch and the home indicator (0 on screens without them). */
+        top: env(safe-area-inset-top, 0px);
+        right: env(safe-area-inset-right, 0px);
+        bottom: env(safe-area-inset-bottom, 0px);
+        left: env(safe-area-inset-left, 0px);
       }
       #game canvas {
         display: block;
