@@ -21,7 +21,7 @@ export type ShortcutAction =
   | 'newRun'
   | 'back';
 
-export type ShortcutContext = 'menu' | 'kingSelect' | 'planning' | 'battle' | 'runEnd' | 'help';
+export type ShortcutContext = 'menu' | 'kingSelect' | 'crowns' | 'planning' | 'battle' | 'runEnd' | 'help';
 
 export interface ShortcutDef {
   readonly id: string;
@@ -36,7 +36,7 @@ export interface ShortcutDef {
   readonly when?: 'free' | 'summary' | 'any';
 }
 
-const ALL = ['menu', 'kingSelect', 'planning', 'battle', 'runEnd', 'help'] as const;
+const ALL = ['menu', 'kingSelect', 'crowns', 'planning', 'battle', 'runEnd', 'help'] as const;
 
 export const SHORTCUTS: readonly ShortcutDef[] = [
   { id: 'help', contexts: ALL, keys: ['F1', 'h'], labelVi: 'Mở / đóng Trợ giúp', action: 'help.toggle', priority: 100, when: 'any' },
@@ -49,6 +49,8 @@ export const SHORTCUTS: readonly ShortcutDef[] = [
   { id: 'king.next', contexts: ['kingSelect'], keys: ['ArrowRight'], labelVi: 'Vua sau', action: 'king.next', priority: 10 },
   { id: 'king.start', contexts: ['kingSelect'], keys: ['Enter'], labelVi: 'Mở chi tiết vua / Chơi', action: 'confirm', priority: 10 },
   { id: 'king.back', contexts: ['kingSelect'], keys: ['Escape'], labelVi: 'Quay lại (chi tiết → danh sách → menu)', action: 'back', priority: 10 },
+
+  { id: 'crowns.back', contexts: ['crowns'], keys: ['Escape'], labelVi: 'Đóng Vương Miện, về menu', action: 'back', priority: 10 },
 
   { id: 'plan.1', contexts: ['planning'], keys: ['1'], labelVi: 'Chọn thẻ 1', action: 'select.1', priority: 10 },
   { id: 'plan.2', contexts: ['planning'], keys: ['2'], labelVi: 'Chọn thẻ 2', action: 'select.2', priority: 10 },

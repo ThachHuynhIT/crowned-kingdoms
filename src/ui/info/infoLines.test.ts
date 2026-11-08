@@ -9,7 +9,9 @@ import { bossWorld } from '../../game/battle/bossKit';
 import { addDot } from '../../game/battle/statuses';
 import { runState, withBuilding } from '../../game/testing/fixtures';
 import { buildingInfoModel, unitInfoModel } from './inspectionModel';
-import { buildingModelLines, unitModelLines, entityAt, infoContent, placeInfoBox, runSummary, statusLines } from './infoLines';
+import { buildingModelLines, unitModelLines, crownTally, entityAt, infoContent, placeInfoBox, runSummary, statusLines } from './infoLines';
+import { crownPoints } from '../../game/meta';
+import { META_READ_ONLY_TEXT, META_SAVE_FAILED_TEXT } from '../../data/save';
 
 describe('infoContent', () => {
   it('titles the first line and tints level, HP and spawned-unit lines from UI_PALETTE', () => {
@@ -205,6 +207,52 @@ describe('runSummary', () => {
 
   it('has no boss line in the short rules', () => {
     expect(runSummary(runState()).join('|')).not.toContain('Boss đã hạ');
+  });
+});
+
+describe('crownTally', () => {
+  const ended = (over: Partial<RunState> = {}, stats: Partial<RunState['stats']> = {}): RunState => {
+    const s = runState({ rules: RULES_FULL, phase: 'ended', ...over });
+    return { ...s, stats: { ...s.stats, completedYears: 30, conquered: 4, bossesWon: 3, ...stats } };
+  };
+  const tallyOf = (state: RunState, unlocks: string[] = []) => {
+    const breakdown = crownPoints(state);
+    return { crownPoints: breakdown.total, breakdown, unlocks };
+  };
+
+  it('a won run at Gai 2: each term, the thorn multiplier with a comma decimal, then the total that was credited', () => {
+    const state = ended({ won: true, difficulty: 2 });
+    const lines = crownTally(state, tallyOf(state, ['Mở đặc quyền: Mùa Bội Thu']));
+    expect(lines.map((l) => l.text)).toEqual([
+      'Năm hoàn thành × 1: +30',
+      'Chinh phục × 3: +12',
+      'Boss × 5: +15',
+      'Thắng ván: +20',
+      'Gai 2: ×1,4',
+      `Tổng: ${crownPoints(state).total} điểm Vương Miện`,
+      'Mở đặc quyền: Mùa Bội Thu',
+    ]);
+    expect(crownPoints(state).total).toBe(Math.round(77 * 1.4));
+    expect(lines.find((l) => l.text.startsWith('Tổng'))!.tone).toBe('total');
+    expect(lines.at(-1)!.tone).toBe('unlock');
+  });
+
+  it('a lost run at Gai 0 has no victory and no thorn line', () => {
+    const state = ended({ won: false, difficulty: 0 }, { completedYears: 7, conquered: 1, bossesWon: 0 });
+    const texts = crownTally(state, tallyOf(state)).map((l) => l.text);
+    expect(texts).toEqual(['Năm hoàn thành × 1: +7', 'Chinh phục × 3: +3', 'Boss × 5: +0', 'Tổng: 10 điểm Vương Miện']);
+  });
+
+  it('shows the credited total from the tally, not a number recomputed in the UI', () => {
+    const state = ended({ won: false });
+    const tally = { ...tallyOf(state), breakdown: { ...crownPoints(state), total: 999 } };
+    expect(crownTally(state, tally).map((l) => l.text)).toContain('Tổng: 999 điểm Vương Miện');
+  });
+
+  it('marks the "progress not saved" notices as warnings', () => {
+    const state = ended({ won: false });
+    const lines = crownTally(state, tallyOf(state, [META_SAVE_FAILED_TEXT, META_READ_ONLY_TEXT]));
+    expect(lines.slice(-2).map((l) => l.tone)).toEqual(['warning', 'warning']);
   });
 });
 

@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest';
-import { MENU_BUTTON, MENU_FOOTER_H, layoutMenu } from './menuLayout';
+import { MENU_BUTTON, MENU_FOOTER_H, MENU_ITEMS, layoutMenu, visibleMenuItems } from './menuLayout';
 
 /** Logo board size measured in the browser: 2× borders on desktop, 1× on phones. */
 const DESKTOP_LOGO = { w: 520, h: 150 };
@@ -59,5 +59,22 @@ describe('layoutMenu', () => {
 
   it('returns no buttons when none are visible', () => {
     expect(layoutMenu({ w: 375, h: 812 }, PHONE_LOGO, 0).buttons).toEqual([]);
+  });
+});
+
+describe('menu items', () => {
+  it('lists Vương Miện between Ván mới and Cài đặt; Cài đặt stays hidden until G5', () => {
+    const ids = MENU_ITEMS.map((m) => m.id);
+    expect(ids.indexOf('crowns')).toBe(ids.indexOf('newRun') + 1);
+    expect(ids.indexOf('settings')).toBe(ids.indexOf('crowns') + 1);
+    expect(MENU_ITEMS.find((m) => m.id === 'crowns')).toMatchObject({ label: 'Vương Miện', visible: true });
+    expect(MENU_ITEMS.find((m) => m.id === 'settings')!.visible).toBe(false);
+    expect(visibleMenuItems().map((m) => m.label)).toEqual(['Tiếp tục', 'Ván mới', 'Vương Miện', 'Trợ giúp']);
+  });
+
+  it('the four visible buttons fit without overlapping on desktop and on a phone', () => {
+    const n = visibleMenuItems().length;
+    check({ w: 1280, h: 720 }, DESKTOP_LOGO, n);
+    check({ w: 375, h: 812 }, PHONE_LOGO, n);
   });
 });

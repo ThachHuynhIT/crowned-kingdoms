@@ -48,6 +48,7 @@ import { realmCamera, realmCameraMix, type RealmPhase } from '../ui/realm/realmL
 import { SCENES } from './keys';
 import { STORAGE_WARNING_KEY, WARNING_EVENT, getSession } from './sessionRegistry';
 import type { RunEndData } from './RunEndScene';
+import type { RunEndTally } from '../ui/info/infoLines';
 
 /**
  * Launch data of the realm: a new run (seed, chosen king, perk and thorn level, from the
@@ -104,6 +105,9 @@ export class RealmScene extends Phaser.Scene {
   private resumedAtYearEnd = false;
   /** "advance" was sent and its answer (the next year's first step) is still to come. */
   private awaitingAdvance = false;
+  /** The `run:ended` payload, kept for the end screen; `awaitingEnd`: the run ended before it arrived. */
+  private endTally: RunEndTally | null = null;
+  private awaitingEnd = false;
   /** The battle HUD (and its summary with Tiếp tục) is the screen in charge until the planning HUD comes back. */
   private battleHudUp = false;
   private readonly onResize = (): void => this.resizeCamera();
@@ -140,6 +144,8 @@ export class RealmScene extends Phaser.Scene {
     this.kicked = false;
     this.resumedAtYearEnd = false;
     this.awaitingAdvance = false;
+    this.endTally = null;
+    this.awaitingEnd = false;
     this.battleHudUp = false;
     this.cameraEase = null;
     this.range = null;
@@ -184,6 +190,10 @@ export class RealmScene extends Phaser.Scene {
     const bus = this.bus;
     bus.on('run:state', ({ state }) => this.onState(state));
     bus.on('battle:started', () => this.onBattleStarted());
+    bus.on('run:ended', ({ crownPoints, breakdown, unlocks }) => {
+      this.endTally = { crownPoints, breakdown, unlocks };
+      if (this.awaitingEnd) this.continueFlow();
+    });
     bus.on('ui:select-card', ({ handIndex }) => this.select(handIndex));
     bus.on('ui:cancel-play', () => {
       this.setPendingBuy(null);
@@ -338,7 +348,13 @@ export class RealmScene extends Phaser.Scene {
       this.awaitingAdvance = true;
       this.bus.emit('ui:command', { command: { type: 'advance' } });
     } else if (state.phase === 'ended') {
-      const data: RunEndData = { state };
+      // `run:state` arrives just before `run:ended`: wait for the tally, then show the end screen with it.
+      if (this.endTally === null) {
+        this.awaitingEnd = true;
+        return;
+      }
+      this.awaitingEnd = false;
+      const data: RunEndData = { state, tally: this.endTally };
       this.scene.start(SCENES.runEnd, data);
     } else if (state.phase !== 'battle') {
       this.relaunchPlanningHud(); // reward, conquest, council, quest or planning: the planning HUD shows it
