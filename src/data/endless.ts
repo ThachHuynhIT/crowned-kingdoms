@@ -108,3 +108,33 @@ export const ENDLESS_INTEREST_CAP_PER_STACK = 10;
 export const ENDLESS_LIVES_CAP = 6;
 /** Giá ô vòng ngoài trước giảm: `base + step × purchasedPlots`. */
 export const ENDLESS_OUTER_PLOT_PRICE = { base: 20, step: 2 } as const;
+
+/** Một biến thể thập niên (spec §6); mọi giá trị là %, áp một lần khi dựng trận / đầu năm. */
+export interface EndlessModifierDef {
+  readonly id: EndlessModifierId;
+  readonly name: string;
+  /** Địch (gồm boss, summon, mirror): +% HP, +% sát thương. */
+  readonly foeHpPct: number;
+  readonly foeDmgPct: number;
+  /** Lính và tháp của mình: +% sát thương. */
+  readonly allyDmgPct: number;
+  /** Thuế đầu năm cộng thêm (âm = giảm, thuế không dưới 0). */
+  readonly taxFlat: number;
+  /** Vàng thưởng thắng trận cộng thêm, sau hệ số vàng boss. */
+  readonly battleGoldFlat: number;
+  /** Hệ số ngân sách EP (%, 100 = giữ nguyên), áp trước trần cuối. */
+  readonly budgetPct: number;
+  /** Công trình mình (gồm Ngai): +% HP. */
+  readonly structureHpPct: number;
+}
+
+/** Bốn biến thể theo thứ tự id cố định (spec §6). */
+export const ENDLESS_MODIFIERS: readonly EndlessModifierDef[] = [
+  { id: 'elite', name: 'Tinh nhuệ', foeHpPct: 25, foeDmgPct: 10, allyDmgPct: 0, taxFlat: 0, battleGoldFlat: 0, budgetPct: 100, structureHpPct: 0 },
+  { id: 'double_edge', name: 'Hai lưỡi', foeHpPct: 0, foeDmgPct: 25, allyDmgPct: 25, taxFlat: 0, battleGoldFlat: 0, budgetPct: 100, structureHpPct: 0 },
+  { id: 'famine', name: 'Khó mùa', foeHpPct: 0, foeDmgPct: 0, allyDmgPct: 0, taxFlat: -2, battleGoldFlat: 3, budgetPct: 100, structureHpPct: 0 },
+  { id: 'siege', name: 'Công thành', foeHpPct: 0, foeDmgPct: 0, allyDmgPct: 0, taxFlat: 0, battleGoldFlat: 0, budgetPct: 120, structureHpPct: 20 },
+];
+/** Năm đầu có biến thể và độ dài một thập niên. */
+export const ENDLESS_MODIFIER_FIRST_YEAR = 31;
+export const ENDLESS_MODIFIER_SPAN = 10;

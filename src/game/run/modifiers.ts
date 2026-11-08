@@ -18,6 +18,7 @@ import type {
 import { CUSTOM_STAT_HANDLERS } from '../cards/custom';
 import type { StatCtx, StatHandler } from '../cards/custom/types';
 import type { Content } from '../cards/registry';
+import { endlessStatBonuses } from './endlessModifiers';
 import { THRONE_PLOT, neighbours } from './board';
 import { decree } from './decrees';
 import { perkEffects } from './perks';
@@ -176,6 +177,17 @@ export function collectStatSheet(
   }
   for (const [stat, value] of Object.entries(target.permanent) as [StatKey, number][]) {
     add(sheet, stat, 'pct', value); // (g)
+  }
+  // Vô tận (spec 2026-11-09 §5, §6): phúc lành và biến thể cộng % vào sheet trước `finalStat`.
+  if (state.endless !== null) {
+    const groups: ('unit' | 'tower' | 'structure')[] = ['structure'];
+    if (targetCard.kind === 'troop') groups.push('unit');
+    else if (targetCard.kind === 'tower') groups.push('tower');
+    for (const group of groups) {
+      for (const [stat, value] of Object.entries(endlessStatBonuses(state, group)) as [StatKey, number][]) {
+        add(sheet, stat, 'pct', value);
+      }
+    }
   }
   // Tua Ngược: số giây lên dây trước vĩnh viễn nằm trong `counters.prewind` của công trình.
   if ((target.counters.prewind ?? 0) > 0) add(sheet, 'prewind', 'flat', target.counters.prewind!);

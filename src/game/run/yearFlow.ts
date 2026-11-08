@@ -13,6 +13,7 @@ import { freeRerollsPerYear } from './decrees';
 import { applyStartPerk, findPerk, perkFreeRerolls } from './perks';
 import { finishYearStart } from './flow';
 import { blessingTotal, endlessInterest } from './endlessBlessings';
+import { activeModifier, withYearModifier } from './endlessModifiers';
 import { offerQuest } from './quests';
 import { RUN_SAVE_VERSION } from './state';
 import type { RunState } from './state';
@@ -20,14 +21,15 @@ import type { RunState } from './state';
 /** Sang năm kế: bốc đạo quân và rút tay mới, về pha lập kế hoạch. */
 export function startYear(input: RunState, content: Content): RunState {
   // Bước 3 §5.5: tăng trưởng của thẻ (Cây Mầm, Bùa Rễ Sâu…) sau khi sang năm, trước thu nhập.
-  const state = runYearGrowth({ ...input, year: input.year + 1 }, content);
+  // Vô tận: biến thể của năm mới ghi trước đạo quân và thu nhập (spec 2026-11-09 §6).
+  const state = runYearGrowth(withYearModifier({ ...input, year: input.year + 1 }), content);
   const year = state.year;
   const army = buildYearArmy(state, content);
   // Thứ tự §5.5: phí duy trì (kiểm với vàng đang có) → thuế → thu nhập công trình.
   const income = yearIncomeDetail(state, content, state.gold);
   // Vô tận: lãi trên số dư sau phí duy trì (trước thuế), rồi thuế cộng Mùa màng (spec 2026-11-09 §5).
   const interest = endlessInterest(state, income.afterUpkeep);
-  const tax = RUN.taxPerYear + blessingTotal(state, 'taxFlat');
+  const tax = Math.max(0, RUN.taxPerYear + blessingTotal(state, 'taxFlat') + (activeModifier(state)?.taxFlat ?? 0));
   const gained = interest + tax + Math.max(0, income.delta);
   // Rút bài tách khỏi chuẩn bị năm để bước nhiệm vụ (G3) chen vào giữa (§5.5 bước 5).
   const prepared: RunState = {

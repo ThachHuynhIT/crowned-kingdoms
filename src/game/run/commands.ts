@@ -20,6 +20,7 @@ import {
   unlockPlot,
 } from './board';
 import { blessingTotal, pickBlessing, plotPurchasePrice, rollBlessingOffer } from './endlessBlessings';
+import { activeModifier } from './endlessModifiers';
 import { isCouncilYear, isFinalYear } from './endlessRules';
 import { enactDecree, rollCouncil, selectDecree, setCouncilSelection } from './council';
 import { handLimit, rerollPrice, rewardCount } from './decrees';
@@ -236,7 +237,8 @@ function applyBase(input: RunState, cmd: RunCommand, content: Content): CommandR
         // Kho bạc (Vô tận) cộng sau hệ số vàng boss.
         const prize =
           battleGold(state.year) * (state.army?.boss !== undefined ? RUN.bossGoldMult : 1) +
-          blessingTotal(state, 'battleGoldFlat');
+          blessingTotal(state, 'battleGoldFlat') +
+          (activeModifier(state)?.battleGoldFlat ?? 0);
         state.gold += prize;
         state.stats.goldEarned += prize;
       } else {
