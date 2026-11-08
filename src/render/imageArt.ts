@@ -31,6 +31,19 @@ export const IMAGE_UNITS: Readonly<Record<string, string>> = {
   frost_mage: 'frost_mage',
   archmage: 'archmage',
   construct: 'construct',
+  // Grove, Tide, Forge (2026-11-09, same pipeline and approval)
+  wolf: 'wolf',
+  bear: 'bear',
+  treant: 'treant',
+  stag: 'stag',
+  dryad: 'dryad',
+  pirate: 'pirate',
+  hookman: 'hookman',
+  musketeer: 'musketeer',
+  swordsman: 'swordsman',
+  bombardier: 'bombardier',
+  shieldbearer: 'shieldbearer',
+  iron_drake: 'iron_drake',
 };
 
 const POSE_INDEXES = [0, 1, 2, 3, 4, 5];

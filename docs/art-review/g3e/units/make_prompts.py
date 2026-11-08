@@ -47,12 +47,24 @@ UNITS = {
     'frost_mage': ('Pháp Sư Băng (Phép Thuật)', 'a ranged frost mage of the Arcane kingdom whose bolts slow enemies.', 'a calm mage in a pale lavender robe with BLUE trim and a white fur collar, a pointed hat with frost on the brim, holding a staff topped with a pale ice crystal, tiny snowflakes around the crystal.', 64, 64),
     'archmage': ('Đại Pháp Sư (Phép Thuật)', 'a tall powerful archmage of the Arcane kingdom whose magic hits several enemies.', 'a tall old archmage with a long white beard, a deep violet star-patterned robe with gold and BLUE trim, a tall pointed hat, holding a tall staff crowned with a glowing purple crystal, a floating open spellbook beside the shoulder.', 64, 96),
     'construct': ('Người Máy Phép (Phép Thuật)', 'a sturdy arcane construct of the Arcane kingdom, a slow tanky melee unit.', 'a chunky chibi construct of pale carved stone plates bound with gold bands, a glowing violet crystal core in the chest, small glowing violet eyes, a BLUE cloth sash across the chest, big blocky fists; friendly heavy look.', 96, 96),
+    'wolf': ('Sói (Rừng Xanh)', 'a fast forest wolf of the Grove kingdom.', 'a lean grey-brown forest wolf on all fours, bushy tail, alert ears, a BLUE woven collar with a small leaf charm; fierce but cute chibi proportions (big head).', 64, 64),
+    'bear': ('Gấu Rừng (Rừng Xanh)', 'a big tanky forest bear of the Grove kingdom that grows angry when hurt.', 'a big round brown bear standing on its hind legs, mossy patches and a small flower on the shoulder, a BLUE leather harness across the chest; heavy friendly look.', 96, 96),
+    'treant': ('Thụ Nhân (Rừng Xanh)', 'a huge slow walking tree of the Grove kingdom.', 'a chibi walking tree with a thick bark body, a kind bark face with glowing amber eyes, branch arms, a leafy crown, root feet, a BLUE cloth band tied around the trunk.', 96, 128),
+    'stag': ('Hươu Thần (Rừng Xanh)', 'a spirit stag of the Grove kingdom whose hits heal nearby allies.', 'a graceful white spirit stag standing, large pale glowing antlers with tiny leaves, a BLUE ribbon around the neck, soft green glow at the hooves.', 96, 96),
+    'dryad': ('Tiên Rừng (Rừng Xanh)', 'a forest dryad of the Grove kingdom.', 'a small forest spirit girl with leafy green hair and a flower crown, a bark-and-leaf dress with a BLUE sash, bare root-like feet, holding a sprouting wooden staff.', 64, 96),
+    'pirate': ('Cướp Biển (Thuỷ Triều)', 'a basic pirate brawler of the Tide kingdom.', 'a scrappy young pirate in a striped shirt, a BLUE bandana and blue sash, baggy trousers, boots, holding a short cutlass; cheeky grin.', 64, 64),
+    'hookman': ('Lính Móc Câu (Thuỷ Triều)', 'a pirate of the Tide kingdom with a long boat hook that pulls enemies.', 'a tall lanky sailor in a weathered coat with a BLUE neckerchief, a knit cap, holding a long boat hook with both hands.', 64, 96),
+    'musketeer': ('Lính Súng Hoả Mai (Thuỷ Triều)', 'a ranged musketeer of the Tide kingdom.', 'a sailor-marine in a long coat with BLUE cuffs and a tricorn hat, a powder horn on the belt, holding a long flintlock musket.', 64, 96),
+    'swordsman': ('Kiếm Sĩ (Lò Rèn)', 'a sturdy melee swordsman of the Forge kingdom.', 'a stocky soldier in dark iron plate armour with a BLUE tabard, an open helmet, holding a broad steel sword and a small round iron shield.', 64, 64),
+    'bombardier': ('Lính Ném Lửa (Lò Rèn)', 'a ranged fire-pot thrower of the Forge kingdom.', 'a soot-stained soldier in a leather apron over an iron cuirass, a BLUE scarf, goggles on the helmet, holding a small clay fire-pot with a lit fuse.', 64, 64),
+    'shieldbearer': ('Lính Khiên (Lò Rèn)', 'a tanky shield carrier of the Forge kingdom that shields allies.', 'a broad soldier carrying a huge riveted iron tower shield with a BLUE anvil emblem, dark iron armour, a short mace on the belt.', 64, 64),
+    'iron_drake': ('Rồng Sắt (Lò Rèn)', 'a heavy iron drake of the Forge kingdom that breathes fire.', 'a chibi drake covered in dark riveted iron plates, glowing ember eyes and a glowing ember belly, small wings, a BLUE banner strap around the neck, smoke from the nostrils.', 96, 128),
 }
 
 # In-game height in art pixels (4 art px per world unit) of units added after the Wheat set, chosen against the
 # approved militia (51 px tall). The standing sample is reduced to this height (make_poses.py --sample) and the pose
 # sheet is drawn at a block size that makes this height fit a 512 px cell.
-HEIGHT = {'golem': 76, 'miner': 58, 'rubble': 34, 'slinger': 50, 'apprentice': 50, 'frost_mage': 52, 'archmage': 60, 'construct': 70}
+HEIGHT = {'golem': 76, 'miner': 58, 'rubble': 34, 'slinger': 50, 'apprentice': 50, 'frost_mage': 52, 'archmage': 60, 'construct': 70, 'wolf': 40, 'bear': 66, 'treant': 80, 'stag': 58, 'dryad': 52, 'pirate': 50, 'hookman': 58, 'musketeer': 58, 'swordsman': 52, 'bombardier': 50, 'shieldbearer': 54, 'iron_drake': 76}
 MILITIA_HEIGHT = 51
 # approved unit of the same kind, attached to every new unit's standing sample (ART_STYLE: "ảnh đã duyệt cùng loại")
 UNIT_REFERENCE = 'docs/art-review/g3e/units/militia/source.png'
@@ -92,6 +104,18 @@ POSES = [
 
 # unit id -> (wind-up, strike); the strike text is also what the gate test looks for
 ATTACK = {
+    'wolf': 'the wolf crouched low on its front legs, ears back, ready to pounce.',
+    'bear': 'both big paws raised high, standing tall, mouth open in a roar.',
+    'treant': 'both branch arms raised high, leaves shaking, leaning back.',
+    'stag': 'the head lowered, antlers forward, a front hoof raised.',
+    'dryad': 'the staff drawn back over the shoulder, a green glow gathering at its tip.',
+    'pirate': 'the cutlass raised back over the shoulder, weight on the back foot.',
+    'hookman': 'the boat hook drawn far back with both hands, leaning back.',
+    'musketeer': 'the musket raised to the shoulder, aiming to the right.',
+    'swordsman': 'the sword raised high behind the head, shield forward.',
+    'bombardier': 'the fire-pot drawn back over the shoulder, the fuse sparking.',
+    'shieldbearer': 'the tower shield braced forward with both arms, knees bent.',
+    'iron_drake': 'the head pulled back, chest glowing brighter, wings raised.',
     'apprentice': 'the wand drawn back over the shoulder, a small violet spark gathering at its tip, weight on the back foot.',
     'frost_mage': 'the ice staff raised high in both hands, the crystal glowing brighter, frost swirling around it.',
     'archmage': 'the crystal staff raised overhead, the spellbook open and glowing, the free hand drawn back gathering violet light.',
@@ -105,6 +129,18 @@ ATTACK = {
     'slinger': 'the sling whirled above the head in one hand, the stone in the pouch, the other arm pointing right.',
 }
 STRIKE = {
+    'wolf': 'a leap forward to the right with jaws open, front paws reaching out.',
+    'bear': 'a heavy swipe down and forward to the right with one paw, body leaning forward.',
+    'treant': 'both branch arms slammed down forward to the right at ground level, roots lifting.',
+    'stag': 'a charge to the right with the antlers forward, a small green sparkle at the tips.',
+    'dryad': 'the staff thrust forward to the right, a small burst of green leaves at the tip (the bolt itself is drawn by the game).',
+    'pirate': 'a slash forward to the right at chest height, front foot forward.',
+    'hookman': 'the boat hook thrust far forward to the right at chest height, both arms extended.',
+    'musketeer': 'the musket fired to the right, a small puff of smoke at the muzzle (the bullet is drawn by the game), recoil leaning back.',
+    'swordsman': 'a strong downward slash forward to the right, body leaning in.',
+    'bombardier': 'the throwing arm swung fully forward to the right, the hand empty (the pot is drawn by the game).',
+    'shieldbearer': 'a shield bash forward to the right, the whole body pushing in behind it.',
+    'iron_drake': 'the head thrust forward to the right breathing a short burst of flame at the mouth (the long flame is drawn by the game).',
     'apprentice': 'the wand thrust forward to the right at arm length, a small violet spark leaving its tip (the bolt itself is drawn by the game), front foot forward.',
     'frost_mage': 'the ice staff swung forward to the right and pointed at chest height, a puff of frost at the crystal (the bolt itself is drawn by the game).',
     'archmage': 'the staff thrust forward to the right, a burst of violet light at the crystal (the bolt itself is drawn by the game), robe swirling.',
