@@ -4,6 +4,7 @@ import { CUSTOM_INCOME_HANDLERS, CUSTOM_STAT_HANDLERS, CUSTOM_TOME_HANDLERS } fr
 import { CONTENT } from './registry';
 import { startDeck } from '../run/calendar';
 import { KINGS_G2 } from '../../data/kings';
+import { ALL_KINGS } from '../../data/rules';
 import { PALETTE } from '../../data/palette';
 import type { CardDef, EffectDef, PerLevel, Scalar } from '../../data/types';
 
@@ -137,6 +138,6 @@ describe('G2 content integrity', () => {
     // Conquest-only cards of the other kings are in the content too (spec 3.7).
     const owners = new Set<string>(['neutral', ...CONTENT.enemyKings().map((k) => k.id)]);
     for (const c of cards) expect(owners.has(c.owner), c.id).toBe(true);
-    expect(CONTENT.kings()).toHaveLength(9);
+    expect(CONTENT.kings().map((k) => k.id)).toEqual([...ALL_KINGS]);
   });
 });

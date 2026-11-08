@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest';
-import { Rng, hashSeed } from '../../core/random';
+import { Rng } from '../../core/random';
 import { INCOMPATIBLE_RUN_TEXT, SAVE_FORMAT_VERSION } from '../../data/save';
 import { RULES_FULL } from '../../data/rules';
 import type { CardId, KingId } from '../../data/types';
@@ -9,7 +9,7 @@ import { applyCommand } from '../run/commands';
 import type { RunCommand, RunState } from '../run/state';
 import { newRun } from '../run/yearFlow';
 import { simulateBattle } from '../battle/step';
-import { CONTENT } from '../cards/registry';
+import { CONTENT, type Content } from '../cards/registry';
 import { randomBot } from '../sim/bots/random';
 import { contentWith, fakeKing, runState, unitStats } from '../testing/fixtures';
 import { contentHash, decodeRun, encodeRun } from './codec';
@@ -142,8 +142,9 @@ describe('content hash', () => {
   });
 
   it('a v5 save written before the six new thrones joined the content still loads', () => {
-    const oldCards = CONTENT.allCards().map((c) => c.id).filter((id) => !id.endsWith('_throne') || ['wheat_throne', 'stone_throne', 'arcane_throne'].includes(id));
-    const oldHash = hashSeed(JSON.stringify({ cards: oldCards.sort(), units: CONTENT.allUnits().map((u) => u.id).sort() }));
+    const NEW_THRONES = ['grove_throne', 'tide_throne', 'forge_throne', 'clock_throne', 'moon_throne', 'nomad_throne'];
+    const before: Content = { ...CONTENT, allCards: () => CONTENT.allCards().filter((c) => !NEW_THRONES.includes(c.id)) };
+    const oldHash = contentHash(before);
     expect(oldHash).not.toBe(contentHash(CONTENT));
     const e = env(runState());
     expect(ok({ ...e, contentHash: oldHash })).toEqual(e.state);
