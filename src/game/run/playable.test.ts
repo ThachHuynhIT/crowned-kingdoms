@@ -2,6 +2,7 @@ import { describe, expect, it } from 'vitest';
 import { CONTENT } from '../cards/registry';
 import { runState } from '../testing/fixtures';
 import { hasPlayableCard } from './playable';
+import { THRONE_PLOT } from './board';
 
 describe('hasPlayableCard', () => {
   it('is true when some card in hand has a legal target', () => {
@@ -23,7 +24,7 @@ describe('hasPlayableCard', () => {
     const full = {
       ...s,
       plots: s.plots.map((p, i) =>
-        p.unlocked && i !== 12
+        p.unlocked && i !== THRONE_PLOT
           ? { ...p, building: { uid: i + 10, cardId: 'wheat_scarecrow' as const, level: 1 as const, enchants: [], placedYear: 1, permanent: {}, ageBonus: 0, counters: {}, movedYear: null } }
           : p,
       ),

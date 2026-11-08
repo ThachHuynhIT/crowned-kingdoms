@@ -1,4 +1,5 @@
 import { describe, expect, it } from 'vitest';
+import { SPEC_MOVE_SCALE } from '../../data/boardGeometry';
 import type { BossSetup } from './types';
 import { bossWorld, realBoss } from './bossKit';
 import { bossPhase, tickBosses } from './bosses';
@@ -147,15 +148,15 @@ describe('Khiên Ngai Vỡ', () => {
 });
 
 describe('Cuồng Vương', () => {
-  it('is +50% speed (0.6 -> 0.9) and +50% attack speed (18 -> 12) below 33%, and does not stack on repeat', () => {
+  it('is +50% speed (0.6 -> 0.9, ×SPEC_MOVE_SCALE) and +50% attack speed (18 -> 12) below 33%, and does not stack on repeat', () => {
     const w = bossWorld(3);
     at(w, 200);
-    expect([w.speed[w.bossId], w.interval[w.bossId]]).toEqual([0.6, 18]);
+    expect([w.speed[w.bossId], w.interval[w.bossId]]).toEqual([0.6 * SPEC_MOVE_SCALE, 18]);
     hpAt(w, 9000);
     at(w, 201);
     at(w, 202);
     at(w, 203);
-    expect(w.speed[w.bossId]).toBeCloseTo(0.9);
+    expect(w.speed[w.bossId]).toBeCloseTo(0.9 * SPEC_MOVE_SCALE);
     expect(w.interval[w.bossId]).toBeCloseTo(12);
   });
 });

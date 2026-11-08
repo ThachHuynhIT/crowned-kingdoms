@@ -190,7 +190,7 @@ describe('progress_events', () => {
     expect(progress(s, 'quest_land_grab').opened).toBe(1);
     const clear = 'neutral_clear_land' as CardId;
     s = { ...s, hand: [clear, ...s.hand.slice(1)] };
-    s = run(s, { type: 'play', handIndex: 0, target: { kind: 'plot', plot: 2 } });
+    s = run(s, { type: 'play', handIndex: 0, target: { kind: 'plot', plot: 3 } });
     expect(progress(s, 'quest_land_grab').opened).toBe(2);
     // anything that opens plots counts (e.g. a decree) — measured from the board, not the command
     const after = { ...s, plots: s.plots.map((p, i) => (i === 0 ? { ...p, unlocked: true } : p)) };

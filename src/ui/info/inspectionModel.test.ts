@@ -7,6 +7,7 @@ import { buildBattleSetup } from '../../game/run/battleSetup';
 import type { RunState } from '../../game/run/state';
 import { runState, withBuilding } from '../../game/testing/fixtures';
 import { buildingInfoModel, levelStars, unitInfoModel, unitPreviewModel } from './inspectionModel';
+import { THRONE_PLOT } from '../../game/run/board';
 
 const militia = (level: Level = 3, over: Partial<RunState> = {}): RunState =>
   withBuilding({ ...runState(), ...over }, 6, 'wheat_militia', level);
@@ -45,11 +46,11 @@ describe('buildingInfoModel', () => {
 
   it('reads the throne level for the throne', () => {
     const base = runState();
-    const l1 = buildingInfoModel(base, 12, CONTENT)!;
-    const l3 = buildingInfoModel({ ...base, throneLevel: 3 }, 12, CONTENT)!;
+    const l1 = buildingInfoModel(base, THRONE_PLOT, CONTENT)!;
+    const l3 = buildingInfoModel({ ...base, throneLevel: 3 }, THRONE_PLOT, CONTENT)!;
     expect(l3.stars.filled).toBe(3);
     expect(l3.hp).toBeGreaterThan(l1.hp);
-    expect(buildingInfoModel({ ...base, throneLevel: 5 }, 12, CONTENT)!.next).toBeNull();
+    expect(buildingInfoModel({ ...base, throneLevel: 5 }, THRONE_PLOT, CONTENT)!.next).toBeNull();
   });
 
   it('gives every building kind an effective HP, not only troops and towers', () => {

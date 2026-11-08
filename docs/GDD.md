@@ -18,11 +18,11 @@ Bạn là vua của một vương quốc nhỏ trên bàn cờ 5×5. Mỗi năm 
 | Hệ thống                 | Tóm tắt                                                                                                                        | Spec      |
 | ------------------------ | ------------------------------------------------------------------------------------------------------------------------------ | --------- |
 | Ván                      | 30 năm, 3 mạng, vàng (thuế, thắng trận, chinh phục, bỏ lượt); boss năm 10/20/30                                                | §3        |
-| Bàn cờ                   | 5×5, mở sẵn 3×3 giữa, Ngai ở tâm; mở thêm ô bằng vàng/sách phép/sắc lệnh; lân cận trực giao                                    | §4        |
+| Bàn cờ                   | 5×5, mở sẵn 3×3 giữa, Ngai ở ô 2 (hàng sau, giữa, tựa núi); mở thêm ô bằng vàng/sách phép/sắc lệnh; lân cận trực giao                                    | §4        |
 | Thẻ                      | Ngai · Lính · Tháp · Kinh tế/Hỗ trợ · Bùa (cộng dồn) · Sách phép; chơi trùng = lên cấp (tối đa 5); hiệu ứng mô tả bằng dữ liệu | §4–§5     |
 | Vua                      | 9 vua: Lúa Mì, Đá Núi, Phép Thuật, Rừng Xanh, Thuỷ Triều, Lò Rèn, Đồng Hồ, Ánh Trăng, Du Mục — mỗi vua 1 Ngai + 9 thẻ + 3 perk | §6        |
 | Kẻ địch                  | 6 vua địch mỗi ván theo lịch cố định, Thổ Phỉ, Liên Quân; ngân sách quân tăng 15%/năm; xem trước chính xác từng đợt            | §3.5–§3.6 |
-| Trận                     | Mô phỏng deterministic 10 tick/s trên cánh đồng 384 px; lính sinh từ ô, tháp bắn, địch vào từ mép; một kỹ năng can thiệp       | §8        |
+| Trận                     | Mô phỏng deterministic 10 tick/s trên cánh đồng 768 px (ô 64 px, nhìn isometric 2:1, địch vào từ bên phải màn hình); lính sinh từ ô, tháp bắn, địch vào từ mép; một kỹ năng can thiệp       | §8        |
 | Sắc lệnh, nhiệm vụ, boss | 18 sắc lệnh, 13 nhiệm vụ, 3 boss                                                                                               | §7        |
 | Meta                     | Điểm Vương Miện cuối ván mở vua, perk, thẻ và độ khó Gai 0–5                                                                   | §9.1–§9.2 |
 | Lưu                      | IndexedDB: ván giữa các năm + meta                                                                                             | §9.3      |

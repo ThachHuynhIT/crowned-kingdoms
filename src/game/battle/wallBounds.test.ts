@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest';
-import { BATTLE } from '../../data/battle';
+import { BATTLE, ENEMY_PORTAL } from '../../data/battle';
 import { battleSetup, structure, unitStats } from '../testing/fixtures';
 import { hashWorld } from './hash';
 import { pickAutoTarget, tryIntervene } from './intervention';
@@ -14,8 +14,8 @@ const make = (over: Partial<BattleSetup> = {}): BattleWorld =>
   createBattle(battleSetup({ structures: [structure(12)], ...over }));
 
 describe('north mountain wall', () => {
-  it('wallY is 88', () => {
-    expect(BATTLE.wallY).toBe(88);
+  it('wallY is 176 (88 × 2 on the 64 px board, spec 06/11/2026)', () => {
+    expect(BATTLE.wallY).toBe(176);
   });
 
   it('addUnit clamps position, prev and home to the wall', () => {
@@ -140,10 +140,11 @@ describe('north mountain wall', () => {
     expect(hashWorld(a)).not.toBe(hashWorld(b));
   });
 
-  it('maxY covers the deepest southern spawn row', () => {
+  it('maxY covers the enemy portal, where every southern foe comes out (spec 2026-11-08 §3)', () => {
     const spawn = () => ({ edge: 'S' as const, stats: unitStats() });
     const wave = { spawnTick: 0, spawns: Array.from({ length: 120 }, () => spawn()) };
     const w = make({ waves: [wave] });
-    expect(w.maxY).toBeGreaterThanOrEqual(BATTLE.field + BATTLE.spawnOutside + 4 * BATTLE.spawnRowGap);
+    expect(w.maxY).toBeGreaterThanOrEqual(ENEMY_PORTAL.y);
+    expect(w.maxY).toBe(BATTLE.field + BATTLE.fieldClampMargin);
   });
 });

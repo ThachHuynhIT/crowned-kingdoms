@@ -1,8 +1,9 @@
 import type Phaser from 'phaser';
-import { BATTLE } from '../data/battle';
 import { UI_PALETTE } from '../data/uiPalette';
 import type { CardId } from '../data/types';
 import { KIND_UNIT, TEAM_ALLY, type BattleWorld } from '../game/battle/world';
+import { BUILDING_FOOT_DY } from './BoardRenderer';
+import { ISO_SPRITE_SCALE, iso } from './isoView';
 import { SPRITES_KEY, buildingFrame, fxFrame, imageFrameScale, unitFrame } from './atlas';
 import type { UnitAnim } from './unitArt';
 
@@ -66,9 +67,11 @@ export class UnitRenderer {
       const x = world.prevX[id]! + (world.x[id]! - world.prevX[id]!) * a;
       const y = world.prevY[id]! + (world.y[id]! - world.prevY[id]!) * a;
       const isUnit = world.kind[id] === KIND_UNIT;
-      const foot = isUnit ? y + world.radius[id]! : y + BATTLE.plot / 2;
+      // Isometric (spec 2026-11-06): stand on the projected point; depth = projected foot y.
+      const p = iso({ x, y });
+      const foot = isUnit ? p.y + world.radius[id]! : p.y + BUILDING_FOOT_DY;
       const sprite = slot.sprite;
-      sprite.setPosition(Math.round(x), Math.round(foot)).setDepth(foot);
+      sprite.setPosition(Math.round(p.x), Math.round(foot)).setDepth(foot);
       if (isUnit) this.animate(world, id, slot, now);
       this.drawBar(world, id, sprite, isUnit);
       if (isUnit && world.stunTicks[id]! > 0) this.showStun(sprite);
@@ -94,8 +97,9 @@ export class UnitRenderer {
       this.slots[id] = null;
       return null;
     }
-    const sprite = this.scene.add.image(world.x[id]!, world.y[id]!, SPRITES_KEY, frame);
-    sprite.setOrigin(0.5, 1).setScale(imageFrameScale(frame));
+    const at = iso({ x: world.x[id]!, y: world.y[id]! });
+    const sprite = this.scene.add.image(at.x, at.y, SPRITES_KEY, frame);
+    sprite.setOrigin(0.5, 1).setScale(imageFrameScale(frame) * ISO_SPRITE_SCALE);
     const slot: Slot = { sprite, frame, facingLeft: world.team[id] !== TEAM_ALLY, dead: false };
     sprite.setFlipX(slot.facingLeft);
     this.slots[id] = slot;
@@ -112,13 +116,13 @@ export class UnitRenderer {
     const team = world.team[id] === TEAM_ALLY ? 'ally' : 'foe';
     const frame = unitFrame(world.label[id]!, team, anim, n);
     if (frame !== slot.frame && this.hasFrame(frame)) {
-      slot.sprite.setFrame(frame).setScale(imageFrameScale(frame));
+      slot.sprite.setFrame(frame).setScale(imageFrameScale(frame) * ISO_SPRITE_SCALE);
       slot.frame = frame;
     }
-    // Face the way we move; standing still, face the target.
-    let face = dx;
+    // Face the way we move on screen (projected x = y − x); standing still, face the target.
+    let face = dy - dx;
     const t = world.target[id]!;
-    if (face === 0 && t >= 0 && world.alive[t] === 1) face = world.x[t]! - world.x[id]!;
+    if (face === 0 && t >= 0 && world.alive[t] === 1) face = world.y[t]! - world.x[t]! - (world.y[id]! - world.x[id]!);
     if (face !== 0 && face < 0 !== slot.facingLeft) {
       slot.facingLeft = face < 0;
       slot.sprite.setFlipX(slot.facingLeft);
@@ -135,9 +139,9 @@ export class UnitRenderer {
     const max = world.maxHp[id]!;
     const shield = world.shield[id]!;
     if (max <= 0 || (isUnit && hp >= max && shield <= 0)) return;
-    const w = isUnit ? Math.max(8, sprite.width - 4) : 24;
+    const w = isUnit ? Math.max(8, sprite.displayWidth - 4) : 24 * ISO_SPRITE_SCALE;
     const x = Math.round(sprite.x - w / 2);
-    const y = Math.round(sprite.y - sprite.height - BAR_H - 2);
+    const y = Math.round(sprite.y - sprite.displayHeight - BAR_H - 2);
     const fill = Math.max(0, Math.min(1, hp / max));
     const g = this.bars;
     g.fillStyle(UI_PALETTE.outline, 1);
@@ -161,7 +165,7 @@ export class UnitRenderer {
       star = this.scene.add.image(0, 0, SPRITES_KEY, fxFrame('stun')).setOrigin(0.5, 1).setDepth(BAR_DEPTH);
       this.stars.push(star);
     }
-    star.setPosition(sprite.x, Math.round(sprite.y - sprite.height - 2)).setVisible(true);
+    star.setPosition(sprite.x, Math.round(sprite.y - sprite.displayHeight - 2)).setVisible(true);
     this.starsUsed += 1;
   }
 

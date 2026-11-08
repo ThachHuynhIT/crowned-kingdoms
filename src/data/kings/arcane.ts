@@ -1,4 +1,5 @@
 /** Vua Phép Thuật (spec §6.5): bùa và pháp sư. */
+import { cells } from '../boardGeometry';
 import type { KingDef } from '../types';
 
 export const ARCANE: KingDef = {
@@ -18,7 +19,7 @@ export const ARCANE: KingDef = {
     textVi: 'Ngai của Vua Phép Thuật: bắn phép vào kẻ địch. Hòa Âm: công trình có từ 2 stack Bùa trở lên nhận +{pct}% máu và sát thương.',
     hp: 280,
     armor: 0,
-    attack: { dmg: 10, type: 'magic', range: 80, interval: 12, projectileSpeed: 8 },
+    attack: { dmg: 10, type: 'magic', range: cells(1.875), interval: 12, projectileSpeed: 16 },
     passive: [{ type: 'custom', id: 'arcane_harmony', params: { pct: [10, 12, 15, 18, 20] } }],
   },
   cards: [
@@ -30,17 +31,17 @@ export const ARCANE: KingDef = {
       kind: 'tower',
       rarity: 'common',
       tags: ['mage'],
-      textVi: 'Bắn {dmg} sát thương phép, tầm {range}; nảy sang 1 địch khác trong 32 px với 60% sát thương.',
+      textVi: 'Bắn {dmg} sát thương phép, tầm {range}; nảy sang 1 địch khác trong 64 px với 60% sát thương.',
       effects: [
         {
           type: 'tower',
           attack: {
             dmg: 9,
             type: 'magic',
-            range: 80,
+            range: cells(1.875),
             interval: 14,
-            projectileSpeed: 8,
-            chain: { count: 1, radius: 32, falloff: 0.6 },
+            projectileSpeed: 16,
+            chain: { count: 1, radius: cells(1), falloff: 0.6 },
           },
           targeting: 'closestToThrone',
         },
@@ -128,7 +129,7 @@ export const ARCANE: KingDef = {
       rarity: 'rare',
       tags: [],
       textVi: 'Mỗi 50 tick, lính mình trong {radius} px nhận {amount} khiên (tối đa gấp đôi).',
-      effects: [{ type: 'shieldPulse', radius: 64, amount: [20, 25, 30, 35, 40], everyTicks: 50 }],
+      effects: [{ type: 'shieldPulse', radius: cells(2), amount: [20, 25, 30, 35, 40], everyTicks: 50 }],
     },
     {
       id: 'arcane_archmage',
@@ -151,8 +152,8 @@ export const ARCANE: KingDef = {
       id: 'apprentice',
       nameVi: 'Học Đồ',
       hp: 24,
-      attack: { dmg: 7, type: 'magic', range: 56, interval: 14, projectileSpeed: 7 },
-      speed: 0.9,
+      attack: { dmg: 7, type: 'magic', range: 56, interval: 14, projectileSpeed: 14 },
+      speed: 1.8,
       radius: 4,
       armor: 0,
       tags: ['ranged', 'mage'],
@@ -168,10 +169,10 @@ export const ARCANE: KingDef = {
         type: 'magic',
         range: 64,
         interval: 14,
-        projectileSpeed: 7,
+        projectileSpeed: 14,
         onHit: [{ type: 'slow', pct: 30, ticks: 20 }],
       },
-      speed: 0.8,
+      speed: 1.6,
       radius: 4,
       armor: 0,
       tags: ['ranged', 'mage'],
@@ -182,8 +183,8 @@ export const ARCANE: KingDef = {
       id: 'archmage',
       nameVi: 'Đại Pháp Sư',
       hp: 90,
-      attack: { dmg: 22, type: 'magic', range: 88, interval: 20, projectileSpeed: 6, splash: 20 },
-      speed: 0.7,
+      attack: { dmg: 22, type: 'magic', range: 88, interval: 20, projectileSpeed: 12, splash: 20 },
+      speed: 1.4,
       radius: 5,
       armor: 0,
       tags: ['ranged', 'mage'],
@@ -195,7 +196,7 @@ export const ARCANE: KingDef = {
       nameVi: 'Hộ Vệ Phù Chú',
       hp: 90,
       attack: { dmg: 8, type: 'magic', range: 2, interval: 12 },
-      speed: 0.8,
+      speed: 1.6,
       radius: 6,
       armor: 0.1,
       tags: ['melee', 'construct'],

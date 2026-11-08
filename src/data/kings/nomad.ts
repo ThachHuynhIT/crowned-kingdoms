@@ -1,3 +1,4 @@
+import { cells } from '../boardGeometry';
 import type { CardDef, EnemyKingDef } from '../types';
 
 const horse = { owner: 'nomad' as const, tags: ['cavalry'] as const };
@@ -88,7 +89,7 @@ export const NOMAD_CARDS: readonly CardDef[] = [
     effects: [
       {
         type: 'tower',
-        attack: { dmg: 7, type: 'physical', range: 96, interval: 12, projectileSpeed: 9 },
+        attack: { dmg: 7, type: 'physical', range: cells(2.25), interval: 12, projectileSpeed: 18 },
         targeting: 'closestToThrone',
       },
       { type: 'custom', id: 'watchtower_open', params: { pct: 20 } },
@@ -128,11 +129,11 @@ export const NOMAD_ENEMY: EnemyKingDef = {
       nameVi: 'Kỵ Binh',
       hp: 50,
       attack: { dmg: 9, type: 'physical', range: 2, interval: 10 },
-      speed: 2.0,
+      speed: 4,
       radius: 5,
       armor: 0.05,
       tags: ['melee', 'cavalry'],
-      behaviours: [{ type: 'charge', dmgMult: 2, knockback: 8, stunTicks: 0 }],
+      behaviours: [{ type: 'charge', dmgMult: 2, knockback: 16, stunTicks: 0 }],
       enemyCost: 2.0,
       sprite: { w: 24, h: 24 },
     },
@@ -140,8 +141,8 @@ export const NOMAD_ENEMY: EnemyKingDef = {
       id: 'horse_archer',
       nameVi: 'Cung Kỵ',
       hp: 34,
-      attack: { dmg: 6, type: 'physical', range: 56, interval: 12, projectileSpeed: 8 },
-      speed: 1.8,
+      attack: { dmg: 6, type: 'physical', range: 56, interval: 12, projectileSpeed: 16 },
+      speed: 3.6,
       radius: 5,
       armor: 0,
       tags: ['ranged', 'cavalry'],
@@ -154,7 +155,7 @@ export const NOMAD_ENEMY: EnemyKingDef = {
       nameVi: 'Thiết Kỵ',
       hp: 110,
       attack: { dmg: 14, type: 'physical', range: 2, interval: 12 },
-      speed: 1.6,
+      speed: 3.2,
       radius: 6,
       armor: 0.2,
       tags: ['melee', 'cavalry'],

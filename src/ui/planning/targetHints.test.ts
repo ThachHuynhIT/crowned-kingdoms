@@ -15,7 +15,7 @@ const bld = (uid: number, cardId: BuildingState['cardId'] = 'wheat_scarecrow'): 
   enchants: [], placedYear: 1, permanent: {}, ageBonus: 0, counters: {}, movedYear: null
 });
 
-/** Throne on 12 and a barracks on 7 (both in the opening 3×3). */
+/** Throne on THRONE_PLOT (2, back row) and a barracks on 7 (opening 3×3). */
 const board = (): PlotState[] =>
   placeBuilding(
     placeBuilding(initialPlots(), THRONE_PLOT, bld(0, CONTENT.king('wheat').throne.id)),
@@ -133,8 +133,8 @@ describe('lockedPlotTap', () => {
   const state = (purchasedPlots = 0) => ({ plots: board(), purchasedPlots });
 
   it('offers to buy a locked plot next to an open one when no card is aimed', () => {
-    expect(lockedPlotTap(state(), 2, null)).toEqual({ kind: 'buy', price: 4 }); // above the open 3×3
-    expect(lockedPlotTap(state(3), 2, null)).toEqual({ kind: 'buy', price: 10 });
+    expect(lockedPlotTap(state(), 3, null)).toEqual({ kind: 'buy', price: 4 }); // above the open 3×3
+    expect(lockedPlotTap(state(3), 3, null)).toEqual({ kind: 'buy', price: 10 });
   });
 
   it('ignores open plots and locked plots that touch no open plot', () => {
@@ -143,12 +143,12 @@ describe('lockedPlotTap', () => {
   });
 
   it('ignores a locked plot while another kind of card is aimed', () => {
-    expect(lockedPlotTap(state(), 2, troop)).toEqual({ kind: 'ignore' });
-    expect(lockedPlotTap(state(), 2, move)).toEqual({ kind: 'ignore' });
+    expect(lockedPlotTap(state(), 3, troop)).toEqual({ kind: 'ignore' });
+    expect(lockedPlotTap(state(), 3, move)).toEqual({ kind: 'ignore' });
   });
 
   it('lets a Khai Hoang tome target any locked plot instead of buying it', () => {
-    expect(lockedPlotTap(state(), 2, clearLand)).toEqual({ kind: 'target' });
+    expect(lockedPlotTap(state(), 3, clearLand)).toEqual({ kind: 'target' });
     expect(lockedPlotTap(state(), 0, clearLand)).toEqual({ kind: 'target' });
     expect(lockedPlotTap(state(), 6, clearLand)).toEqual({ kind: 'ignore' }); // open plot is not a target
   });

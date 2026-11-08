@@ -82,13 +82,42 @@ const tauntingStructure = (w: BattleWorld, self: number): number => {
 };
 
 /**
- * Địch (không Cuồng Nộ): thực thể phe mình còn sống gần nhất có khoảng cách mép ≤ enemyAggro
- * (siege: chỉ công trình/Ngai, trong siegeAggro), so theo khoảng cách mép vì bán kính công
- * trình khác lính; không có → Ngai (−1 nếu Ngai đã chết).
+ * Lính phe mình còn sống mà địch `self` đánh được (`canHit`), ở bất kỳ đâu trên sân, gần nhất theo
+ * khoảng cách mép (hoà → id nhỏ); −1 nếu không có (spec 2026-11-08 §2: đánh hết lính rồi mới đánh nhà).
+ */
+export const nearestHittableAllyUnit = (w: BattleWorld, self: number): number => {
+  let best = -1;
+  let bestD = 0;
+  for (let j = 0; j < w.count; j++) {
+    if (w.alive[j] === 0 || w.team[j] !== TEAM_ALLY || w.kind[j] !== KIND_UNIT || !canHit(w, self, j)) continue;
+    const d = edgeDistance(w, self, j);
+    if (best < 0 || d < bestD) {
+      best = j;
+      bestD = d;
+    }
+  }
+  return best;
+};
+
+/**
+ * Địch `self` được chọn công trình/Ngai làm nạn nhân mới chỉ khi: Cuồng Nộ, đang trong bán kính một
+ * công trình Khiêu khích, hoặc không còn lính phe mình nào nó đánh được (spec 2026-11-08 §2). Dùng cho
+ * mục tiêu chính, bước nhảy chain và Ném Bùn; sát thương vùng (splash/cleave/cone) không qua đây.
+ */
+export const allowsFoeStructureTarget = (w: BattleWorld, self: number): boolean =>
+  isRage(w) || tauntingStructure(w, self) >= 0 || nearestHittableAllyUnit(w, self) < 0;
+
+/**
+ * Địch (không Cuồng Nộ, spec 2026-11-08 §2): công trình Khiêu khích nếu đang trong bán kính; không thì lính
+ * phe mình đánh được gần nhất trên cả sân (siege và boss cũng vậy); hết lính thì thực thể phe mình còn sống
+ * gần nhất có khoảng cách mép ≤ enemyAggro (siege: siegeAggro) — tức công trình/Ngai; không có → Ngai
+ * (−1 nếu Ngai đã chết).
  */
 const foeTarget = (w: BattleWorld, self: number): number => {
   const taunter = tauntingStructure(w, self);
   if (taunter >= 0) return taunter;
+  const unit = nearestHittableAllyUnit(w, self);
+  if (unit >= 0) return unit;
   const siege = w.siege[self] === 1;
   const limit = siege ? BATTLE.siegeAggro : BATTLE.enemyAggro;
   const sx = w.x[self]!;
@@ -97,8 +126,7 @@ const foeTarget = (w: BattleWorld, self: number): number => {
   let best = -1;
   let bestD = 0;
   for (let j = 0; j < w.count; j++) {
-    if (w.alive[j] === 0 || w.team[j] !== TEAM_ALLY) continue;
-    if (siege && w.kind[j] === KIND_UNIT) continue;
+    if (w.alive[j] === 0 || w.team[j] !== TEAM_ALLY || w.kind[j] === KIND_UNIT) continue;
     const dx = w.x[j]! - sx;
     const dy = w.y[j]! - sy;
     const reach = limit + sr + w.radius[j]!;
@@ -116,7 +144,8 @@ const foeTarget = (w: BattleWorld, self: number): number => {
 
 /**
  * §8.4 cho mọi lính còn sống theo id tăng dần. Chọn lại khi `tick % retargetTicks = 0`, khi
- * chưa có mục tiêu hoặc mục tiêu đã chết. Địch khi Cuồng Nộ luôn nhắm Ngai.
+ * chưa có mục tiêu, mục tiêu đã chết hoặc (địch) không còn đánh được lính đang nhắm. Địch khi Cuồng Nộ
+ * luôn nhắm Ngai.
  */
 export const retarget = (world: BattleWorld): void => {
   const rage = isRage(world);
@@ -129,7 +158,9 @@ export const retarget = (world: BattleWorld): void => {
       continue;
     }
     const t = world.target[i]!;
-    if (!periodic && t >= 0 && world.alive[t] === 1) continue;
+    // Mục tiêu đã chết, hoặc lính phe mình mà địch này không còn đánh được (vừa cất cánh): chọn lại ngay.
+    const valid = t >= 0 && world.alive[t] === 1 && (!foe || world.kind[t] !== KIND_UNIT || canHit(world, i, t));
+    if (!periodic && valid) continue;
     world.target[i] = foe ? foeTarget(world, i) : nearestFoe(world, i);
   }
 };

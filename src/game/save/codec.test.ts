@@ -4,6 +4,7 @@ import { INCOMPATIBLE_RUN_TEXT, SAVE_FORMAT_VERSION } from '../../data/save';
 import { RULES_FULL } from '../../data/rules';
 import type { CardId, KingId } from '../../data/types';
 import { buildBattleSetup } from '../run/battleSetup';
+import { THRONE_PLOT } from '../run/board';
 import { applyCommand } from '../run/commands';
 import type { RunCommand, RunState } from '../run/state';
 import { newRun } from '../run/yearFlow';
@@ -94,7 +95,7 @@ describe('roundtrip', () => {
     s.hand.push('neutral_move' as CardId);
     expect(e.state.gold).not.toBe(s.gold);
     expect(e.state.hand).not.toContain('neutral_move');
-    expect(e).toMatchObject({ formatVersion: SAVE_FORMAT_VERSION, version: 4 });
+    expect(e).toMatchObject({ formatVersion: SAVE_FORMAT_VERSION, version: 5 });
   });
 
   it('decoding copies: changes to the result do not reach the raw data', () => {
@@ -118,13 +119,13 @@ describe('empty and unusable data', () => {
     },
   );
 
-  it('unknown_versions: state 1, 2, a future 5, an unknown format and a version that disagrees', () => {
+  it('unknown_versions: state 1, 2, a future 6, an unknown format and a version that disagrees', () => {
     const e = env(runState());
-    for (const version of [1, 2, 5, 99]) {
+    for (const version of [1, 2, 6, 99]) {
       expect(incompatible({ ...e, version, state: { ...e.state, version } }), `state ${version}`).toBe(true);
     }
     expect(incompatible({ ...e, formatVersion: 2 })).toBe(true);
-    expect(incompatible({ ...e, version: 3 })).toBe(true); // envelope says 3 but the state is 4
+    expect(incompatible({ ...e, version: 3 })).toBe(true); // envelope says 3 but the state is 5
   });
 });
 
@@ -161,8 +162,8 @@ describe('references to ids that no longer exist', () => {
     ['hand', (s: RunState) => void (s.hand[0] = GHOST)],
     ['draw pile', (s: RunState) => void s.drawPile.push(GHOST)],
     ['discard pile', (s: RunState) => void s.discardPile.push(GHOST)],
-    ['a building', (s: RunState) => void (s.plots[12]!.building!.cardId = GHOST)],
-    ['an enchantment', (s: RunState) => void s.plots[12]!.building!.enchants.push({ cardId: GHOST, stacks: 1 })],
+    ['a building', (s: RunState) => void (s.plots[THRONE_PLOT]!.building!.cardId = GHOST)],
+    ['an enchantment', (s: RunState) => void s.plots[THRONE_PLOT]!.building!.enchants.push({ cardId: GHOST, stacks: 1 })],
     ['an offer', (s: RunState) => void (s.offers = { kind: 'reward', cardIds: [GHOST] }, s.phase = 'reward')],
     ['the queue', (s: RunState) => void s.pendingOffers.push({ kind: 'reward', cardIds: [GHOST] })],
     ['a council decree', (s: RunState) => void (s.offers = { kind: 'council', decreeIds: ['decree_ghost' as never], selected: null, selection: { plots: [], cardId: null, deckIndices: [] } }, s.phase = 'council')],
@@ -190,14 +191,14 @@ describe('structure checks', () => {
 
   it.each([
     ['24 plots', (s: RunState) => void s.plots.pop()],
-    ['an empty throne plot', (s: RunState) => void (s.plots[12]!.building = null)],
-    ['a duplicate uid', (s: RunState) => void (s.plots[6] = { unlocked: true, building: { ...structuredClone(s.plots[12]!.building!), level: 1 } })],
+    ['an empty throne plot', (s: RunState) => void (s.plots[THRONE_PLOT]!.building = null)],
+    ['a duplicate uid', (s: RunState) => void (s.plots[6] = { unlocked: true, building: { ...structuredClone(s.plots[THRONE_PLOT]!.building!), level: 1 } })],
     ['nextUid not above the uids', (s: RunState) => void (s.nextUid = 0)],
-    ['level 0', (s: RunState) => void (s.plots[12]!.building!.level = 0 as never)],
-    ['level 6', (s: RunState) => void (s.plots[12]!.building!.level = 6 as never)],
+    ['level 0', (s: RunState) => void (s.plots[THRONE_PLOT]!.building!.level = 0 as never)],
+    ['level 6', (s: RunState) => void (s.plots[THRONE_PLOT]!.building!.level = 6 as never)],
     ['a throne level that disagrees with its building', (s: RunState) => void (s.throneLevel = 3)],
-    ['0 stacks', (s: RunState) => void s.plots[12]!.building!.enchants.push({ cardId: 'neutral_sharpen' as CardId, stacks: 0 })],
-    ['5 stacks', (s: RunState) => void s.plots[12]!.building!.enchants.push({ cardId: 'neutral_sharpen' as CardId, stacks: 5 })],
+    ['0 stacks', (s: RunState) => void s.plots[THRONE_PLOT]!.building!.enchants.push({ cardId: 'neutral_sharpen' as CardId, stacks: 0 })],
+    ['5 stacks', (s: RunState) => void s.plots[THRONE_PLOT]!.building!.enchants.push({ cardId: 'neutral_sharpen' as CardId, stacks: 5 })],
     ['negative gold', (s: RunState) => void (s.gold = -1)],
     ['fractional gold', (s: RunState) => void (s.gold = 1.5)],
     ['NaN gold', (s: RunState) => void (s.gold = Number.NaN)],

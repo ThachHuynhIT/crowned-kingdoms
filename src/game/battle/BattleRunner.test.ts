@@ -112,13 +112,14 @@ describe('BattleRunner', () => {
       for (let i = 0; i < 40; i++) runner.update(100);
       expect(runner.world.tick).toBe(40);
       bus.emit('ui:toggle-pause', {});
-      if (viaBus) bus.emit('ui:intervene', { x: 100, y: 100 });
-      else runner.intervene(100, 100);
+      // a point south of the north wall, so the recorded input is not clamped
+      if (viaBus) bus.emit('ui:intervene', { x: 100, y: 300 });
+      else runner.intervene(100, 300);
       runner.update(1000);
       expect(runner.world.tick).toBe(40);
       bus.emit('ui:toggle-pause', {});
       runner.update(100);
-      expect(runner.world.inputs[0]).toEqual({ tick: 40, x: 100, y: 100 });
+      expect(runner.world.inputs[0]).toEqual({ tick: 40, x: 100, y: 300 });
     }
   });
 

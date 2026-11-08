@@ -1,4 +1,5 @@
 import { CONE } from '../battle';
+import { cells } from '../boardGeometry';
 import type { CardDef, EnemyKingDef } from '../types';
 
 const fire = { owner: 'forge' as const, tags: ['fire'] as const };
@@ -30,9 +31,9 @@ export const FORGE_CARDS: readonly CardDef[] = [
         attack: {
           dmg: 4,
           type: 'fire',
-          range: 40,
+          range: cells(0.9375),
           interval: 4,
-          cone: { range: 40, halfAngleCos: CONE.cos45 },
+          cone: { range: cells(0.9375), halfAngleCos: CONE.cos45 },
           onHit: [{ type: 'burn', dps: 1, ticks: 20 }],
         },
         targeting: 'closestToThrone',
@@ -135,7 +136,7 @@ export const FORGE_ENEMY: EnemyKingDef = {
       nameVi: 'Kiếm Sĩ Thép',
       hp: 55,
       attack: { dmg: 9, type: 'physical', range: 2, interval: 10 },
-      speed: 0.9,
+      speed: 1.8,
       radius: 4,
       armor: 0.15,
       tags: ['melee', 'human'],
@@ -151,11 +152,11 @@ export const FORGE_ENEMY: EnemyKingDef = {
         type: 'fire',
         range: 64,
         interval: 18,
-        projectileSpeed: 5,
+        projectileSpeed: 10,
         splash: 14,
         onHit: [{ type: 'burn', dps: 2, ticks: 30 }],
       },
-      speed: 0.8,
+      speed: 1.6,
       radius: 4,
       armor: 0,
       tags: ['ranged', 'human'],
@@ -174,7 +175,7 @@ export const FORGE_ENEMY: EnemyKingDef = {
         cone: { range: 32, halfAngleCos: CONE.cos45 },
         onHit: [{ type: 'burn', dps: 4, ticks: 30 }],
       },
-      speed: 1.2,
+      speed: 2.4,
       radius: 7,
       armor: 0.2,
       tags: ['ranged', 'flying'],
@@ -186,7 +187,7 @@ export const FORGE_ENEMY: EnemyKingDef = {
       nameVi: 'Lính Khiên',
       hp: 90,
       attack: { dmg: 5, type: 'physical', range: 2, interval: 12 },
-      speed: 0.7,
+      speed: 1.4,
       radius: 5,
       armor: 0.35,
       tags: ['melee', 'human'],

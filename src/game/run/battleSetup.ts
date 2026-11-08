@@ -6,6 +6,7 @@ import { BOSS_SUMMON_UNITS } from '../../data/raiders';
 import { RUN } from '../../data/run';
 import {
   MAX_UNITS_PER_BUILDING,
+  PULSE_RADIUS_BONUS,
   STRUCT_HP,
   STRUCT_STD,
   THRONE_STD,
@@ -264,7 +265,7 @@ export const structureFor = (state: RunState, plot: number, content: Content): S
     pulseFx && pulseFx.type === 'pulse'
       ? {
           everyTicks: pulseFx.everyTicks,
-          radius: scalarAt(pulseFx.radius, level) + TOWER_RANGE[level - 1]!,
+          radius: scalarAt(pulseFx.radius, level) + PULSE_RADIUS_BONUS[level - 1]!,
           dmg: finalStat(pulseFx.attack.dmg * levelMult(TOWER_STD, level), sheet.dmg),
           dmgType: pulseFx.attack.type,
           stunTicks:

@@ -6,11 +6,13 @@ import type { BossId } from '../../data/types';
 import { bossWorld, realBoss } from '../battle/bossKit';
 import { battleResult, stepBattle } from '../battle/step';
 import type { BattleResult } from '../battle/types';
+import { structureFoot } from '../battle/world';
 import { CONTENT } from '../cards/registry';
 import { attackStats, throneSetup } from '../testing/fixtures';
 import { applyCommand } from './commands';
 import type { RunState } from './state';
 import { newRun } from './yearFlow';
+import { THRONE_PLOT } from './board';
 
 const FULL: Rules = { years: 30, calendar: 'full', autoStart: false };
 const BOSSES: [1 | 2 | 3, BossId][] = [
@@ -86,10 +88,10 @@ describe('throne_promotion', () => {
     [2, 5, 5],
   ] as const)('winning boss %i with the Ngai at level %i leaves it at %i, also on the board', (ordinal, from, to) => {
     const s = bossFight(ordinal, { throneLevel: from });
-    s.plots[12]!.building!.level = from;
+    s.plots[THRONE_PLOT]!.building!.level = from;
     const next = run(s, result(true));
     expect(next.throneLevel).toBe(to);
-    expect(next.plots[12]!.building!.level).toBe(to);
+    expect(next.plots[THRONE_PLOT]!.building!.level).toBe(to);
   });
 
   it('a lost battle, boss 3 and an ordinary year give no level', () => {
@@ -177,7 +179,7 @@ describe('timeout_vs_kill (battle level)', () => {
 
   it('killing the boss reports bossDefeated', () => {
     const weak = { ...quietBoss(), stats: { ...quietBoss().stats, hp: 1 } };
-    const w = bossWorld(1, [], { x: 150, y: 192 }, weak, { throne: throneSetup({ attack: attackStats({ dmg: 50, range: 72, interval: 5 }) }) });
+    const w = bossWorld(1, [], { x: structureFoot(12).x - 40, y: structureFoot(12).y }, weak, { throne: throneSetup({ attack: attackStats({ dmg: 50, range: 72, interval: 5 }) }) });
     for (let i = 0; i < 300 && !w.ended; i++) stepBattle(w, []);
     const r = battleResult(w)!;
     expect(r).toMatchObject({ won: true, bossDefeated: 'boss_bog_ogre' });

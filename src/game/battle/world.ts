@@ -4,8 +4,10 @@
  * theo thứ tự tạo, không tái dùng. Không dùng Rng; mọi thứ tự theo plot / thứ tự setup.
  */
 import { BATTLE, INTERVENTION, SPAWN_OFFSETS } from '../../data/battle';
+import { BUILDING_FOOT_OFFSET } from '../../data/boardGeometry';
 import { clampNorthY, spawnMaxY } from './bounds';
-import { edgePositions } from './spawnLayout';
+import { deploymentPosition } from './deployment';
+import { edgePositions, portalPositions } from './spawnLayout';
 import type { DamageType, TargetMode } from '../../data/types';
 import type {
   AttackStats,
@@ -421,6 +423,15 @@ export const plotCenter = (plot: number): { x: number; y: number } => {
   };
 };
 
+/**
+ * Chân (vị trí) của công trình hay Ngai đứng trên ô `plot`: tâm ô lệch `BUILDING_FOOT_OFFSET` về phía
+ * (hiện là 0: nhà đứng giữa ô, chủ dự án chốt 06/11/2026). Renderer neo sprite đúng điểm này.
+ */
+export const structureFoot = (plot: number): { x: number; y: number } => {
+  const c = plotCenter(plot);
+  return { x: c.x + BUILDING_FOOT_OFFSET.x, y: c.y + BUILDING_FOOT_OFFSET.y };
+};
+
 const setAttack = (w: BattleWorld, id: number, a: AttackStats | null): void => {
   if (a === null) return; // mảng mới tạo đã là 0
   w.baseDmg[id] = a.dmg;
@@ -486,7 +497,7 @@ const place = (w: BattleWorld, id: number, x: number, y: number): void => {
 const addStructure = (w: BattleWorld, s: StructureSetup, isThrone: boolean): number => {
   const id = w.addEntity();
   if (id < 0) return id;
-  const c = plotCenter(s.plot);
+  const c = structureFoot(s.plot);
   place(w, id, c.x, c.y);
   w.homeX[id] = c.x;
   w.homeY[id] = c.y;
@@ -665,7 +676,7 @@ export const spawnOffset = (k: number): { dx: number; dy: number } => {
   return { dx: Math.round(ox * 1.5), dy: Math.round(oy * 1.5) };
 };
 
-/** Dựng trận ở tick 0 (§8.7): Ngai → công trình theo plot → lính của từng Trại theo plot. Chưa xuất đợt địch nào. */
+/** Dựng trận ở tick 0 (§8.7): Ngai → công trình theo plot → lính của từng Trại theo plot, đứng trong khu tập kết của ô. Chưa xuất đợt địch nào. */
 export const createBattle = (setup: BattleSetup): BattleWorld => {
   const w = new BattleWorld(setup);
   addStructure(w, setup.throne, true);
@@ -674,14 +685,13 @@ export const createBattle = (setup: BattleSetup): BattleWorld => {
   for (const s of sorted) addStructure(w, s, false);
   for (const s of sorted) {
     if (s.kind !== 'troop' || s.spawn === null) continue;
-    const c = plotCenter(s.plot);
     for (let k = 0; k < s.spawn.count; k++) {
       if (w.playerUnits >= BATTLE.playerUnitCap) {
         w.capped += 1;
         continue;
       }
-      const o = spawnOffset(k);
-      const id = addUnit(w, s.spawn.stats, TEAM_ALLY, c.x + o.dx, c.y + o.dy, c.x, c.y, s.uid);
+      const p = deploymentPosition(s.plot, k, s.spawn.count, s.spawn.stats.radius);
+      const id = addUnit(w, s.spawn.stats, TEAM_ALLY, p.x, p.y, p.x, p.y, s.uid);
       if (id < 0) w.capped += 1;
       else w.playerUnits += 1;
     }
@@ -690,14 +700,13 @@ export const createBattle = (setup: BattleSetup): BattleWorld => {
   for (const s of sorted) {
     const start = s.startSummon;
     if (!start) continue;
-    const c = plotCenter(s.plot);
     for (let k = 0; k < start.count; k++) {
       if (w.playerUnits >= BATTLE.playerUnitCap) {
         w.capped += 1;
         continue;
       }
-      const o = spawnOffset(k);
-      const id = addUnit(w, start.stats, TEAM_ALLY, c.x + o.dx, c.y + o.dy, c.x, c.y, s.uid);
+      const p = deploymentPosition(s.plot, k, start.count, start.stats.radius);
+      const id = addUnit(w, start.stats, TEAM_ALLY, p.x, p.y, p.x, p.y, s.uid);
       if (id < 0) w.capped += 1;
       else w.playerUnits += 1;
     }
@@ -705,14 +714,13 @@ export const createBattle = (setup: BattleSetup): BattleWorld => {
   // Triệu hồi đầu trận tại Ngai (§8.7): lính đánh thuê của Hợp Đồng.
   const at = setup.throne.spawnAtThrone;
   if (at) {
-    const c = plotCenter(setup.throne.plot);
     for (let k = 0; k < at.count; k++) {
       if (w.playerUnits >= BATTLE.playerUnitCap) {
         w.capped += 1;
         continue;
       }
-      const o = spawnOffset(k);
-      const id = addUnit(w, at.stats, TEAM_ALLY, c.x + o.dx, c.y + o.dy, c.x, c.y, setup.throne.uid);
+      const p = deploymentPosition(setup.throne.plot, k, at.count, at.stats.radius);
+      const id = addUnit(w, at.stats, TEAM_ALLY, p.x, p.y, p.x, p.y, setup.throne.uid);
       if (id < 0) w.capped += 1;
       else w.playerUnits += 1;
     }
@@ -721,8 +729,9 @@ export const createBattle = (setup: BattleSetup): BattleWorld => {
 };
 
 /**
- * Xuất đợt địch `index` (§8.7): lính theo thứ tự `spawns`, mỗi mép lấy edgePositions(mép, số
- * lính của mép) theo thứ tự xuất hiện. Hết entityCap thì phần thiếu bị bỏ.
+ * Xuất đợt địch `index` (§8.7): lính theo thứ tự `spawns`, mỗi mép lấy vị trí theo thứ tự xuất hiện —
+ * mép nam qua cổng (`portalPositions`, spec 2026-11-08 §3, không theo `formationRows`), các mép khác
+ * edgePositions(mép, số lính của mép). Hết entityCap thì phần thiếu bị bỏ.
  */
 export const spawnWave = (world: BattleWorld, index: number): void => {
   const wave = world.setup.waves[index];
@@ -736,7 +745,7 @@ export const spawnWave = (world: BattleWorld, index: number): void => {
   const slots: Record<Edge, { x: number; y: number }[]> = {
     N: edgePositions('N', perEdge.N, wave.formationRows),
     E: edgePositions('E', perEdge.E, wave.formationRows),
-    S: edgePositions('S', perEdge.S, wave.formationRows),
+    S: portalPositions(perEdge.S),
     W: edgePositions('W', perEdge.W, wave.formationRows),
   };
   const used: Record<Edge, number> = { N: 0, E: 0, S: 0, W: 0 };

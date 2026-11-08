@@ -8,6 +8,7 @@ import { applyCommand } from './commands';
 import { enactDecree, rollCouncil, selectDecree, setCouncilSelection } from './council';
 import type { CouncilSelection, OfferState, RunCommand, RunState } from './state';
 import { newRun } from './yearFlow';
+import { THRONE_PLOT } from './board';
 
 const EMPTY: CouncilSelection = { plots: [], cardId: null, deckIndices: [] };
 const ALL = DECREES.map((d) => d.id);
@@ -119,10 +120,10 @@ describe('immediate_decrees', () => {
     [5, 5],
   ])('recast crown: throne level %i -> %i, building stays in sync', (from, to) => {
     const s = council(['decree_recast_crown', 'decree_moat', 'decree_trade'], { throneLevel: from as 4 | 5 });
-    s.plots[12]!.building!.level = from as 4 | 5;
+    s.plots[THRONE_PLOT]!.building!.level = from as 4 | 5;
     const next = enact(s);
     expect(next.throneLevel).toBe(to);
-    expect(next.plots[12]!.building!.level).toBe(to);
+    expect(next.plots[THRONE_PLOT]!.building!.level).toBe(to);
     expect(next.decrees).toEqual(['decree_recast_crown']);
   });
 

@@ -1,4 +1,6 @@
 import { describe, expect, it } from 'vitest';
+import { unproject } from '../../core/iso';
+import { BATTLE } from '../../data/battle';
 import { cardLayout, fitArt } from '../cards/cardLayout';
 import { CARD_LIFT, type Rect, type Size } from '../hud/layout';
 import {
@@ -13,6 +15,7 @@ import {
   isDesktop,
   planningLayout,
   plotAtScreen,
+  overviewZoom,
   planningZoom,
   plotScreenRect,
   realmCamera,
@@ -29,13 +32,26 @@ const inside = (r: Rect, s: Size): boolean =>
 const overlaps = (a: Rect, b: Rect): boolean =>
   a.x < b.x + b.w && b.x < a.x + a.w && a.y < b.y + b.h && b.y < a.y + a.h;
 
+/**
+ * The board is an isometric diamond inside its box (spec 2026-11-06): a rect overlaps it when the
+ * point of the rect nearest the diamond centre lies strictly inside the diamond.
+ */
+const overlapsDiamond = (r: Rect, box: Rect): boolean => {
+  const cx = box.x + box.w / 2;
+  const cy = box.y + box.h / 2;
+  const nx = Math.min(r.x + r.w, Math.max(r.x, cx));
+  const ny = Math.min(r.y + r.h, Math.max(r.y, cy));
+  return Math.abs(nx - cx) / (box.w / 2) + Math.abs(ny - cy) / (box.h / 2) < 1;
+};
+
 const expectSeparate = (named: Record<string, Rect>): void => {
   const entries = Object.entries(named);
   for (let i = 0; i < entries.length; i++)
     for (let j = i + 1; j < entries.length; j++) {
       const [na, a] = entries[i]!;
       const [nb, b] = entries[j]!;
-      expect(overlaps(a, b), `${na} overlaps ${nb}`).toBe(false);
+      const hit = na === 'board' ? overlapsDiamond(b, a) : nb === 'board' ? overlapsDiamond(a, b) : overlaps(a, b);
+      expect(hit, `${na} overlaps ${nb}`).toBe(false);
     }
 };
 
@@ -54,10 +70,12 @@ describe('planningLayout', () => {
     expect(l.desktop).toBe(true);
     expect(l.lives).toEqual({ x: 10, y: 10, w: 120, h: 52 });
     expect(l.year).toEqual({ x: 560, y: 66, w: 160, h: 26 });
-    expect(l.board).toEqual({ x: 480, y: 200, w: 320, h: 320 });
-    expect(l.zoom).toBe(2);
-    expect(l.scout).toMatchObject({ x: 1010, w: 260, y: 92, h: 426 });
-    expect(l.scoutButton).toBeNull();
+    // the board is 65% of the width, as tall as the band between the top HUD and the hand (spec 2026-11-08 §4)
+    expect(l.board).toEqual({ x: 226, y: 104, w: 828, h: 414 });
+    expect(l.zoom).toBeCloseTo(1.29375, 12);
+    // the side panels would overlap the bigger board at 1280 px: buttons instead
+    expect(l.scout).toBeNull();
+    expect(l.scoutButton).not.toBeNull();
     expect(l.gold).toEqual({ x: 134, y: 10, w: 120, h: 52 });
     expect(l.calendar[0]).toEqual({ x: 502, y: 10, w: 52, h: 52 });
     expect(l.sell).toEqual({ x: 296, y: 658, w: 140, h: 52 });
@@ -78,8 +96,8 @@ describe('planningLayout', () => {
     expect(l.help).toEqual({ x: 210, y: 10, w: 52, h: 48 });
     expect(l.year.x).toBe(266);
     expect(l.year.x + l.year.w).toBe(365);
-    expect(l.board).toEqual({ x: 28, y: 180, w: 320, h: 320 });
-    expect(l.zoom).toBe(2);
+    expect(l.board).toEqual({ x: -142, y: 180, w: 660, h: 330 }); // wider than a phone: the map pans
+    expect(l.zoom).toBe(33 / 32);
     expect(l.hand).toHaveLength(3);
     expect(l.hand[0]).toEqual({ x: 18, y: 640, w: 108, h: 162 });
     expect(l.hand[1]!.x).toBe(134);
@@ -135,7 +153,11 @@ describe('planningLayout', () => {
       };
       if (l.scout) named.scout = l.scout;
       if (l.scoutButton) named.scoutButton = l.scoutButton;
-      for (const [n, r] of Object.entries(named)) expect(inside(r, screen), `${n} ${JSON.stringify(r)}`).toBe(true);
+      for (const [n, r] of Object.entries(named)) {
+        // The board is world, not HUD: on a phone its 640 px diamond runs past both sides.
+        if (n === 'board' && !l.desktop) continue;
+        expect(inside(r, screen), `${n} ${JSON.stringify(r)}`).toBe(true);
+      }
       expect(inside(l.fight, screen)).toBe(true);
       expect(l.calendar).toHaveLength(5);
       for (const c of l.calendar) {
@@ -150,7 +172,8 @@ describe('planningLayout', () => {
       expectSeparate(named);
       // Exactly one of the scout panel (desktop) and the scout button (mobile).
       expect((l.scout === null) !== (l.scoutButton === null)).toBe(true);
-      expect(l.desktop ? l.scout !== null : l.scoutButton !== null).toBe(true);
+      // The scout panel only stands where it clears the board (spec 2026-11-08 §4); else it is a button.
+      expect(l.scout === null || !overlaps(l.scout, l.board)).toBe(true);
       // ✓/✕ and the hint never sit on the calendar or the buttons.
       for (const r of [l.confirm, l.cancel, l.hint])
         for (const other of [...l.calendar, l.reroll, l.sell, l.deck])
@@ -208,9 +231,9 @@ describe('planning header and status zones', () => {
     expect(l.year.x + l.year.w / 2).toBeCloseTo(DESKTOP.w / 2, 0);
   });
 
-  it('phone_board_is_320_square: the board keeps its size under the new header', () => {
+  it('phone_board_is_the_660x330_diamond at zoom 33/32, under the header', () => {
     const l = planningLayout(MOBILE);
-    expect([l.board.w, l.board.h]).toEqual([320, 320]);
+    expect([l.board.w, l.board.h]).toEqual([660, 330]);
     for (const r of [...l.calendar, l.year, l.help]) expect(r.y + r.h).toBeLessThanOrEqual(l.board.y);
   });
 
@@ -236,12 +259,23 @@ describe('planning header and status zones', () => {
 });
 
 describe('plotScreenRect', () => {
-  it('maps plots to 64 px screen cells of the board', () => {
+  it('maps plots to the 128×64 diamonds of the isometric board (boxes)', () => {
     const l = planningLayout(DESKTOP);
-    expect(PLANNING_ZOOM).toBe(2);
-    expect(plotScreenRect(l, 12)).toEqual({ x: 608, y: 328, w: 64, h: 64 });
-    expect(plotScreenRect(l, 0)).toEqual({ x: l.board.x, y: l.board.y, w: 64, h: 64 });
-    expect(plotScreenRect(l, 24)).toEqual({ x: 480 + 256, y: 200 + 256, w: 64, h: 64 });
+    const z = l.zoom; // a 64 px plot is a 128z × 64z diamond
+    const cw = 128 * z;
+    const ch = 64 * z;
+    const cx = l.board.x + l.board.w / 2 - cw / 2;
+    const near = (r: { x: number; y: number; w: number; h: number }, e: { x: number; y: number }) => {
+      expect(r.x).toBeCloseTo(e.x, 9);
+      expect(r.y).toBeCloseTo(e.y, 9);
+      expect(r.w).toBeCloseTo(cw, 9);
+      expect(r.h).toBeCloseTo(ch, 9);
+    };
+    near(plotScreenRect(l, 0), { x: cx, y: l.board.y }); // the top corner
+    near(plotScreenRect(l, 12), { x: cx, y: l.board.y + 2 * ch });
+    near(plotScreenRect(l, 4), { x: cx - 2 * cw, y: l.board.y + 2 * ch }); // the left corner (world north-east)
+    near(plotScreenRect(l, 20), { x: cx + 2 * cw, y: l.board.y + 2 * ch }); // the right corner (world south-west)
+    near(plotScreenRect(l, 24), { x: cx, y: l.board.y + 4 * ch }); // the bottom corner
   });
 });
 
@@ -279,41 +313,47 @@ describe('centerHand', () => {
 });
 
 describe('planningZoom / realmCamera', () => {
-  it('uses the battle zoom on desktop and zoom 2 on mobile', () => {
-    expect(planningZoom(DESKTOP)).toBe(2);
-    expect(planningZoom({ w: 1920, h: 1080 })).toBe(3);
+  it('uses the overview zooms: planning fits above the hand, battle above the bottom bars, PLANNING_ZOOM on mobile', () => {
+    expect(planningZoom(DESKTOP)).toBeCloseTo(1.29375, 12);
+    expect(planningZoom({ w: 1920, h: 1080 })).toBeCloseTo(1.95, 12);
     expect(planningZoom(MOBILE)).toBe(PLANNING_ZOOM);
   });
 
   for (const screen of [DESKTOP, { w: 1920, h: 1080 }, { w: 1024, h: 768 }]) {
-    it(`gives planning and battle the same camera on desktop ${screen.w}×${screen.h}`, () => {
+    it(`keeps the board centre on the same screen column in both phases on desktop ${screen.w}×${screen.h}`, () => {
       const planning = realmCamera(screen, 'planning');
       const battle = realmCamera(screen, 'battle');
-      expect(planning.zoom).toBe(battle.zoom);
-      expect(planning.scroll.x).toBeCloseTo(battle.scroll.x, 9);
-      expect(planning.scroll.y).toBeCloseTo(battle.scroll.y, 9);
+      expect(battle.zoom).toBeGreaterThanOrEqual(planning.zoom);
+      const centre = (cam: { zoom: number; scroll: { x: number; y: number } }) =>
+        unproject(screenToWorld({ x: screen.w / 2, y: 0 }, cam.scroll, screen, cam.zoom));
+      // the screen's middle column passes through the board centre column (world x = y) in both phases
+      for (const cam of [planning, battle]) {
+        const c = centre(cam);
+        expect(Math.abs(c.x - c.y)).toBeLessThan(1); // the board box is rounded to whole pixels
+      }
     });
 
-    it(`centres the board on the screen and clear of the hand on ${screen.w}×${screen.h}`, () => {
+    it(`centres the board across the screen, inside the band above the hand, on ${screen.w}×${screen.h}`, () => {
       const l = planningLayout(screen);
-      expect(l.board.x + l.board.w / 2).toBeCloseTo(screen.w / 2, 9);
-      expect(l.board.y + l.board.h / 2).toBeCloseTo(screen.h / 2, 9);
-      expect(l.board.y + l.board.h).toBeLessThanOrEqual(l.hand[0]!.y);
+      expect(l.board.x + l.board.w / 2).toBeCloseTo(screen.w / 2, 0);
+      expect(l.board.y).toBeGreaterThanOrEqual(104);
+      expect(l.board.y + l.board.h).toBeLessThanOrEqual(l.hand[0]!.y - 16);
     });
   }
 
-  it('keeps zoom 2 for planning and zoom 1 for the battle on mobile', () => {
-    expect(realmCamera(MOBILE, 'planning').zoom).toBe(2);
-    expect(realmCamera(MOBILE, 'battle').zoom).toBe(1);
+  it('uses zoom 33/32 for planning and for the battle on mobile', () => {
+    expect(realmCamera(MOBILE, 'planning').zoom).toBe(33 / 32);
+    expect(realmCamera(MOBILE, 'battle').zoom).toBe(33 / 32);
   });
 
-  it('puts the board centre (throne) where planningLayout drew the board', () => {
+  it('puts the board centre where planningLayout drew the board', () => {
     for (const screen of [DESKTOP, MOBILE, { w: 1920, h: 1080 }]) {
       const l = planningLayout(screen);
       const cam = realmCamera(screen, 'planning');
-      const p = screenToWorld({ x: l.board.x, y: l.board.y }, cam.scroll, screen, cam.zoom);
-      expect(p.x).toBeCloseTo(112, 6); // BATTLE.boardOrigin: the board's top-left corner
-      expect(p.y).toBeCloseTo(112, 6);
+      // The top corner of the diamond is the board's world north-west corner.
+      const p = unproject(screenToWorld({ x: l.board.x + l.board.w / 2, y: l.board.y }, cam.scroll, screen, cam.zoom));
+      expect(p.x).toBeCloseTo(BATTLE.boardOrigin, 6);
+      expect(p.y).toBeCloseTo(BATTLE.boardOrigin, 6);
     }
   });
 });
@@ -334,19 +374,18 @@ describe('realmCameraMix', () => {
     }
   });
 
-  it('eases the zoom between 2 and 1 on mobile and keeps the throne on screen', () => {
+  it('keeps the phone zoom: both phases are at 33/32', () => {
     const mid = realmCameraMix(MOBILE, 'planning', 'battle', 0.5);
-    expect(mid.zoom).toBeCloseTo(1.5, 9);
-    const throne = screenToWorld({ x: MOBILE.w / 2, y: MOBILE.h / 2 }, mid.scroll, MOBILE, mid.zoom);
-    expect(Math.abs(throne.x - 192)).toBeLessThan(200);
+    expect(mid.zoom).toBe(33 / 32);
+    const centre = unproject(screenToWorld({ x: MOBILE.w / 2, y: MOBILE.h / 2 }, mid.scroll, MOBILE, mid.zoom));
+    expect(Math.abs(centre.x - BATTLE.field / 2)).toBeLessThan(200);
   });
 
-  it('is constant on desktop where both phases share the camera', () => {
+  it('moves the zoom linearly between the two desktop overviews', () => {
     const a = realmCameraMix(DESKTOP, 'planning', 'battle', 0.3);
-    const b = realmCamera(DESKTOP, 'battle');
-    expect(a.zoom).toBe(b.zoom);
-    expect(a.scroll.x).toBeCloseTo(b.scroll.x, 6);
-    expect(a.scroll.y).toBeCloseTo(b.scroll.y, 6);
+    const p = realmCamera(DESKTOP, 'planning').zoom;
+    const b = realmCamera(DESKTOP, 'battle').zoom;
+    expect(a.zoom).toBeCloseTo(p + (b - p) * 0.3, 12);
   });
 });
 
@@ -368,11 +407,15 @@ describe('plotAtScreen', () => {
       const l = planningLayout(screen);
       for (const plot of [0, 7, 12, 24]) {
         const r = plotScreenRect(l, plot);
-        expect(plotAtScreen(l, { x: r.x, y: r.y })).toBe(plot);
-        expect(plotAtScreen(l, { x: r.x + r.w - 0.5, y: r.y + r.h - 0.5 })).toBe(plot);
+        const c = { x: r.x + r.w / 2, y: r.y + r.h / 2 };
+        expect(plotAtScreen(l, c)).toBe(plot);
+        // just inside each of the diamond's four corners
+        for (const p of [{ x: c.x, y: r.y + 1 }, { x: r.x + 2, y: c.y }, { x: r.x + r.w - 2, y: c.y }, { x: c.x, y: r.y + r.h - 1 }])
+          expect(plotAtScreen(l, p), JSON.stringify(p)).toBe(plot);
       }
-      expect(plotAtScreen(l, { x: l.board.x - 1, y: l.board.y })).toBeNull();
-      expect(plotAtScreen(l, { x: l.board.x, y: l.board.y + l.board.h })).toBeNull();
+      // the box corners are outside the diamond
+      expect(plotAtScreen(l, { x: l.board.x + 1, y: l.board.y + 1 })).toBeNull();
+      expect(plotAtScreen(l, { x: l.board.x + l.board.w - 1, y: l.board.y + l.board.h - 1 })).toBeNull();
     }
   });
 });
@@ -392,10 +435,19 @@ describe('hint rect', () => {
         lives: l.lives,
         gold: l.gold,
         year: l.year,
-        board: l.board,
+        ...(l.desktop ? {} : { board: l.board }),
         ...(l.scout ? { scout: l.scout } : {}),
         ...(l.desktop ? {} : { confirm: l.confirm, cancel: l.cancel }),
       });
+      // desktop: the hint sits in the empty corner of the board box, off every plot diamond (spec 2026-11-08 §4)
+      if (l.desktop)
+        for (const c of [
+          { x: l.hint.x, y: l.hint.y },
+          { x: l.hint.x + l.hint.w, y: l.hint.y },
+          { x: l.hint.x, y: l.hint.y + l.hint.h },
+          { x: l.hint.x + l.hint.w, y: l.hint.y + l.hint.h },
+        ])
+          expect(plotAtScreen(l, c)).toBeNull();
     });
   }
 });
@@ -439,12 +491,13 @@ describe('confirmFor', () => {
 });
 
 describe('battleZoom', () => {
-  it('follows §10.7: max(1, floor(min(w, h + 96) / field))', () => {
-    expect(battleZoom(1280, 720)).toBe(2);
-    expect(battleZoom(375, 812)).toBe(1);
-    // min(1920, 1176) / 384 = 3.06 → 3 (the brief listed 2; the spec formula gives 3).
-    expect(battleZoom(1920, 1080)).toBe(3);
-    expect(battleZoom(100, 100)).toBe(1);
+  it('is the battle overview: min(0.65·w / 640, (h − 176) / 320, 3) on desktop, 33/32 on phones (spec 2026-11-08 §4)', () => {
+    expect(battleZoom(1280, 720)).toBeCloseTo(1.3, 12);
+    expect(battleZoom(375, 812)).toBe(33 / 32);
+    expect(battleZoom(1920, 1080)).toBeCloseTo(1.95, 12);
+    expect(battleZoom(2560, 1600)).toBeCloseTo(2.6, 12);
+    expect(battleZoom(4000, 2000)).toBe(3);
+    expect(battleZoom(100, 100)).toBe(33 / 32);
   });
 });
 
@@ -587,25 +640,28 @@ describe('cameraScroll / screenToWorld', () => {
 });
 
 describe('battleCamera / battleWorldAt', () => {
-  it('centres the throne (plot 12, world 192,192) on screen', () => {
+  it('centres the board (world 384,384), not the back-row throne, on screen', () => {
     for (const screen of [DESKTOP, MOBILE]) {
       const mid = { x: screen.w / 2, y: screen.h / 2 };
       const p = battleWorldAt(mid, screen)!;
-      expect(p.x).toBeCloseTo(192, 9);
-      expect(p.y).toBeCloseTo(192, 9);
+      expect(p.x).toBeCloseTo(384, 9);
+      expect(p.y).toBeCloseTo(384, 9);
     }
-    expect(battleCamera(DESKTOP).zoom).toBe(2);
-    expect(battleCamera(MOBILE).zoom).toBe(1);
+    expect(battleCamera(DESKTOP).zoom).toBeCloseTo(1.3, 12);
+    expect(battleCamera(MOBILE).zoom).toBe(33 / 32);
   });
 
   it('maps screen offsets by 1 / zoom and returns null off the field', () => {
-    const p = battleWorldAt({ x: 640 + 100, y: 360 - 50 }, DESKTOP)!;
-    expect(p.x).toBeCloseTo(242, 9);
-    expect(p.y).toBeCloseTo(167, 9);
-    // Desktop shows world x 192 ± 320: the screen's left edge is off the field.
-    expect(battleWorldAt({ x: 0, y: 360 }, DESKTOP)).toBeNull();
-    expect(battleWorldAt({ x: 187.5 - 192, y: 406 }, MOBILE)!.x).toBeCloseTo(0, 9);
-    expect(battleWorldAt({ x: 187.5 - 193, y: 406 }, MOBILE)).toBeNull();
+    // Screen (+130, −65) from the centre at zoom 1.3 is projected (100, 334): world (334 − 50, 334 + 50).
+    const p = battleWorldAt({ x: 640 + 130, y: 360 - 65 }, DESKTOP)!;
+    expect(p.x).toBeCloseTo(284, 9);
+    expect(p.y).toBeCloseTo(384, 9);
+    // The screen's top-left corner is off the field (west of it).
+    expect(battleWorldAt({ x: 0, y: 0 }, DESKTOP)).toBeNull();
+    // On the board-centre row, the field's west edge (world x 0) is 768 projected px right of the centre.
+    const z = 33 / 32;
+    expect(battleWorldAt({ x: 187.5 + 768 * z, y: 406 }, MOBILE)!.x).toBeCloseTo(0, 9);
+    expect(battleWorldAt({ x: 187.5 + 770 * z, y: 406 }, MOBILE)).toBeNull();
   });
 });
 
@@ -665,13 +721,14 @@ describe('hand of four (Bàn Tay Thứ Tư)', () => {
 
 describe('decree and quest panel', () => {
   it('wide desktop docks a 260 px column on the left, clear of the board, scout and top bar', () => {
-    const l = planningLayout(DESKTOP);
+    const screen = { w: 2000, h: 994 };
+    const l = planningLayout(screen);
     expect(l.decreeButton).toBeNull();
     const p = l.decreePanel!;
     expect(p.w).toBe(260);
     expect(p.y).toBeGreaterThanOrEqual(72);
     expect(p.y + p.h).toBeLessThanOrEqual(520);
-    expect(inside(p, DESKTOP)).toBe(true);
+    expect(inside(p, screen)).toBe(true);
     for (const other of [l.board, l.scout!, l.lives, l.gold, l.year, l.reroll, l.sell, ...l.hand]) {
       expect(overlaps(p, other), JSON.stringify(other)).toBe(false);
     }
@@ -685,10 +742,59 @@ describe('decree and quest panel', () => {
       expect(b.w).toBeGreaterThanOrEqual(44);
       expect(b.h).toBeGreaterThanOrEqual(44);
       expect(inside(b, screen)).toBe(true);
-      const others: Rect[] = [l.board, l.lives, l.gold, l.year, l.reroll, l.sell, l.deck, ...l.calendar, ...l.hand];
+      const others: Rect[] = [l.lives, l.gold, l.year, l.reroll, l.sell, l.deck, ...l.calendar, ...l.hand];
       if (l.scoutButton) others.push(l.scoutButton);
       if (l.scout) others.push(l.scout);
       for (const other of others) expect(overlaps(b, other), JSON.stringify(other)).toBe(false);
+      expect(overlapsDiamond(b, l.board), 'board').toBe(false);
     }
+  });
+});
+
+describe('overviewZoom: the farthest zoom-out, like the owner reference picture (spec 2026-11-08 §4)', () => {
+  it('overview_65_percent_clamps_to_hud_height', () => {
+    expect(overviewZoom(DESKTOP, 'planning')).toBeCloseTo(1.29375, 12);
+    expect(overviewZoom(DESKTOP, 'battle')).toBeCloseTo(1.3, 12);
+    for (const phase of ['planning', 'battle'] as const) {
+      expect(overviewZoom({ w: 2000, h: 994 }, phase)).toBeCloseTo(2.03125, 12);
+      expect(overviewZoom({ w: 1920, h: 1080 }, phase)).toBeCloseTo(1.95, 12);
+      expect(overviewZoom(MOBILE, phase)).toBe(33 / 32);
+    }
+    expect(planningZoom(DESKTOP)).toBe(overviewZoom(DESKTOP, 'planning'));
+    expect(battleZoom(1280, 720)).toBe(overviewZoom(DESKTOP, 'battle'));
+    const lay = planningLayout({ w: 2000, h: 994 });
+    expect(lay.board.w / 2000).toBeCloseTo(0.65, 12);
+  });
+
+  it('mobile_diamond_contains_44_square: a plot diamond holds a 44 × 44 touch square at the phone overview', () => {
+    const z = overviewZoom(MOBILE, 'planning');
+    expect((128 * z) / 3).toBeGreaterThanOrEqual(44);
+    expect(PLANNING_ZOOM).toBe(z);
+  });
+
+  it('four_cards_recompute_vertical_fit: the zoom follows the real hand height', () => {
+    const short = { w: 1280, h: 600 };
+    const top = planningLayout(short, 4).hand[0]!.y;
+    expect(overviewZoom(short, 'planning', 4)).toBeCloseTo(Math.min((0.65 * 1280) / 640, (top - 16 - 104) / 320), 12);
+  });
+
+  it('side_panels_collapse_when_board_overlaps, and stand beside a board they clear', () => {
+    const narrow = planningLayout(DESKTOP);
+    expect(narrow.scout).toBeNull();
+    expect(narrow.decreePanel).toBeNull();
+    expect(narrow.scoutButton).not.toBeNull();
+    const wide = planningLayout({ w: 2000, h: 994 });
+    expect(wide.scout).not.toBeNull();
+    expect(wide.decreePanel).not.toBeNull();
+    expect(wide.decreePanel!.x + wide.decreePanel!.w + 16).toBeLessThanOrEqual(wide.board.x);
+    expect(wide.board.x + wide.board.w + 16).toBeLessThanOrEqual(wide.scout!.x);
+  });
+
+  it('mobile_buttons_clear_board_and_hand', () => {
+    const lay = planningLayout(MOBILE);
+    expect([lay.board.y, lay.board.y + lay.board.h]).toEqual([180, 180 + 330]);
+    expect([lay.deck.y, lay.deck.y + lay.deck.h]).toEqual([530, 578]);
+    expect(lay.hand[0]!.y).toBe(640);
+    expect(lay.allyStatus.y + lay.allyStatus.h).toBeLessThanOrEqual(lay.hand[0]!.y);
   });
 });

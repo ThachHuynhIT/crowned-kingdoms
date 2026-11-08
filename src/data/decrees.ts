@@ -20,7 +20,7 @@ export const DECREE_RULES = {
   freeReroll: 1, // Phường Hội Thương Nhân: lần đổi bài miễn phí mỗi năm
   reward: 4, // Giao Thương: số thẻ thưởng
   boulderDmgPct: 50, // Đá Tảng Lớn: +% sát thương
-  boulderRadius: 8, // Đá Tảng Lớn: +px bán kính
+  boulderRadius: 16, // Đá Tảng Lớn: +px bán kính
   cooldownPct: 30, // Phản Xạ Nhanh: −% hồi chiêu
   moatPct: 10, // Hào Nước: −% tốc địch
   cooldownCapPct: 60, // trần tổng giảm hồi chiêu Can Thiệp (§7.4)
@@ -29,7 +29,7 @@ export const DECREE_RULES = {
   mobilize: 1, // Tổng Động Viên: lính thêm mỗi công trình lính
   armoryPct: 10, // Kho Vũ Khí Hoàng Gia: +% sát thương lính
   armorPct: 15, // Áo Giáp Mới: +% máu lính
-  archersRange: 12, // Cung Thủ Hoàng Gia: +tầm tháp và Ngai
+  archersRange: 18, // Cung Thủ Hoàng Gia: +tầm tháp và Ngai
   choices: 3, // số sắc lệnh hội đồng đưa ra
   purge: 2, // Thanh Lọc: số bản tối đa được loại
   treasuryGold: 15, // Ngân Khố

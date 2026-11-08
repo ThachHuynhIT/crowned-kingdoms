@@ -1,3 +1,4 @@
+import { cells } from '../boardGeometry';
 import type { CardDef, EnemyKingDef } from '../types';
 
 const gear = { owner: 'clock' as const, tags: ['clockwork'] as const };
@@ -26,7 +27,7 @@ export const CLOCK_CARDS: readonly CardDef[] = [
     effects: [
       {
         type: 'tower',
-        attack: { dmg: 5, type: 'physical', range: 72, interval: 10, projectileSpeed: 8 },
+        attack: { dmg: 5, type: 'physical', range: cells(1.6875), interval: 10, projectileSpeed: 16 },
         targeting: 'closestToThrone',
       },
       { type: 'rampAttackSpeed', pctPerSecond: 2, cap: 100 },
@@ -66,12 +67,12 @@ export const CLOCK_CARDS: readonly CardDef[] = [
     name: 'Bell Tower',
     kind: 'support',
     rarity: 'uncommon',
-    textVi: 'Mỗi 100 tick: lính mình trong 80 px đánh nhanh thêm 25/30/35/40/45% trong 30 tick; từ cấp 3 địch trong 80 px bị choáng 5 tick.',
+    textVi: 'Mỗi 100 tick: lính mình trong 160 px đánh nhanh thêm 25/30/35/40/45% trong 30 tick; từ cấp 3 địch trong 160 px bị choáng 5 tick.',
     effects: [
       {
         type: 'bellPulse',
         everyTicks: 100,
-        radius: 80,
+        radius: cells(2.5),
         attackSpeedPct: [25, 30, 35, 40, 45],
         buffTicks: 30,
         stunFromLevel: 3,
@@ -114,7 +115,7 @@ export const CLOCK_CARDS: readonly CardDef[] = [
     effects: [
       {
         type: 'tower',
-        attack: { dmg: 30, type: 'physical', range: 104, interval: 40, projectileSpeed: 5, splash: 18 },
+        attack: { dmg: 30, type: 'physical', range: cells(2.4375), interval: 40, projectileSpeed: 10, splash: cells(0.5625) },
         targeting: 'closestToThrone',
       },
       { type: 'rampAttackSpeed', pctPerSecond: 1.5, cap: 90 },
@@ -144,7 +145,7 @@ export const CLOCK_ENEMY: EnemyKingDef = {
       nameVi: 'Lính Thiếc',
       hp: 34,
       attack: { dmg: 5, type: 'physical', range: 2, interval: 10 },
-      speed: 0.9,
+      speed: 1.8,
       radius: 4,
       armor: 0.1,
       tags: ['melee', 'clockwork'],
@@ -157,7 +158,7 @@ export const CLOCK_ENEMY: EnemyKingDef = {
       nameVi: 'Nhện Cơ Khí',
       hp: 28,
       attack: { dmg: 6, type: 'physical', range: 2, interval: 8 },
-      speed: 1.5,
+      speed: 3,
       radius: 4,
       armor: 0.1,
       tags: ['melee', 'clockwork'],
@@ -169,7 +170,7 @@ export const CLOCK_ENEMY: EnemyKingDef = {
       nameVi: 'Khổng Lồ Đồng',
       hp: 300,
       attack: { dmg: 10, type: 'physical', range: 4, interval: 14 },
-      speed: 0.5,
+      speed: 1,
       radius: 9,
       armor: 0.3,
       tags: ['melee', 'clockwork'],
@@ -181,8 +182,8 @@ export const CLOCK_ENEMY: EnemyKingDef = {
       id: 'gear_gunner',
       nameVi: 'Xạ Thủ Bánh Răng',
       hp: 30,
-      attack: { dmg: 6, type: 'physical', range: 64, interval: 12, projectileSpeed: 8 },
-      speed: 0.8,
+      attack: { dmg: 6, type: 'physical', range: 64, interval: 12, projectileSpeed: 16 },
+      speed: 1.6,
       radius: 4,
       armor: 0.1,
       tags: ['ranged', 'clockwork'],

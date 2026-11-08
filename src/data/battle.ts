@@ -1,4 +1,5 @@
-/** Hằng số trận (spec §3.6, §7.4, §8.2), chép nguyên văn. */
+/** Hằng số trận (spec §3.6, §7.4, §8.2); hình học ô 64 theo spec 06/11/2026. */
+import { BOARD_ORIGIN, FIELD, PLOT, WALL_Y, cells } from './boardGeometry';
 
 /** Ngân sách gốc năm 1..30 = round(12 × 1.15^(y−1)), lưu sẵn để không phụ thuộc Math.pow. */
 export const ENEMY_BUDGET = [
@@ -34,23 +35,24 @@ export const STATUS = { everyTicks: 10, minIntervalFactor: 0.5 } as const;
 export const INTERVENTION = {
   dmgBase: 40,
   dmgPerYear: 10, // sát thương = dmgBase + dmgPerYear × (year − 1), loại phép (bỏ qua giáp)
-  radius: 24,
+  radius: cells(0.75),
   delayTicks: 6,
-  knockback: 12,
+  knockback: 24, // px, ×2 cùng sân (giữ số ô dịch mỗi tick)
   cooldownTicks: 150,
   firstReadyTick: 30,
 } as const;
 
 export const BATTLE = {
-  field: 384,
-  plot: 32,
-  boardOrigin: 112,
+  field: FIELD,
+  plot: PLOT,
+  boardOrigin: BOARD_ORIGIN,
   structureRadius: 12,
   throneRadius: 14,
   retargetTicks: 5,
-  enemyAggro: 48,
-  siegeAggro: 96,
-  tauntRadiusDefault: 40,
+  // Tầm phát hiện công trình/Ngai của địch, chỉ dùng khi không còn lính phe mình nó đánh được (spec 2026-11-08 §2).
+  enemyAggro: cells(1.5),
+  siegeAggro: cells(3),
+  tauntRadiusDefault: cells(1.25),
   flyingHitMinRange: 24, // đòn có tầm ≥ 24 (và tháp, pulse, can thiệp) mới đánh được đơn vị bay
   rageTick: 600,
   hardLimitTick: 900,
@@ -60,24 +62,38 @@ export const BATTLE = {
   entityCap: 512,
   projectileCap: 400,
   edgeSpan: 0.6,
-  spawnSpacing: 10,
-  spawnOutside: 12,
-  spawnRowGap: 10,
-  fieldClampMargin: 32, // đơn vị bị kẹp trong [−32, field + 32] (phía bắc thay bằng wallY, phía nam mở rộng theo hàng xuất quân)
+  spawnSpacing: 20,
+  spawnOutside: 24,
+  spawnRowGap: 20,
+  fieldClampMargin: 64, // đơn vị bị kẹp trong [−64, field + 64] (phía bắc thay bằng wallY, phía nam mở rộng theo hàng xuất quân)
   /** Chân tường núi phía bắc (spec 26/10/2026): không ai đi lên bắc của y = wallY + bán kính. */
-  wallY: 88,
+  wallY: WALL_Y,
   /** Hàng xuất quân phía nam: từ năm formationDualYear có thêm một nhóm; mỗi nhóm (cờ extraEdge hoặc nhóm năm muộn) thêm một hàng; tối đa formationMaxRows nhóm. */
   formationDualYear: 10,
   formationBaseRows: 1,
   formationLateRows: 2,
   formationMaxRows: 4,
-  separationPushMax: 1,
+  separationPushMax: 2,
   /** Trần đẩy giữa hai đơn vị khác phe: địch chen vào chỉ nhích lính ra, không hất văng. */
-  separationPushCross: 0.2,
+  separationPushCross: 0.4,
   knockbackTicks: 3,
   maxSlowPct: 60,
   bossStunFactor: 0.5,
-  spatialCell: 32,
+  spatialCell: PLOT,
+} as const;
+
+/**
+ * Cổng dịch chuyển của địch (spec 2026-11-08 §3, Q2): ở cuối con đường phía nam, đúng chỗ hàng xuất quân nam cũ.
+ * Mọi quân địch xuất từ mép nam (các đợt, raiders, boss) ra ở đây: một đội hình 5×5 trước miệng cổng, quân thứ
+ * k ở ô k mod 25 (cột trái → phải, hàng từ chân cổng lên bắc), boss ở tâm. Chỉ là vị trí xuất quân, không va chạm.
+ */
+export const ENEMY_PORTAL = {
+  x: FIELD / 2,
+  y: FIELD + BATTLE.spawnOutside,
+  columns: 5,
+  rows: 5,
+  spacingX: 12,
+  spacingY: 6,
 } as const;
 
 /** 16 vị trí xuất quân quanh tâm ô (px, số nguyên). Lính thứ k dùng SPAWN_OFFSETS[k % 16]; vòng thứ hai trở đi nhân 1.5 rồi làm tròn. */

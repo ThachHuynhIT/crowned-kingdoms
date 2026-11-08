@@ -1,6 +1,7 @@
 /** Deterministic (spec §13.2): băm từng tick, đổi lệnh can thiệp, đổi thứ tự công trình. */
 import { describe, expect, it } from 'vitest';
 import { BATTLE } from '../../data/battle';
+import { SPEC_MOVE_SCALE } from '../../data/boardGeometry';
 import { RULES_FULL } from '../../data/rules';
 import { CONTENT } from '../cards/registry';
 import { buildBattleSetup } from '../run/battleSetup';
@@ -19,10 +20,11 @@ import type {
 } from './types';
 import { createBattle, drainEvents, type BattleWorld } from './world';
 
-const militia = unitStats({ unit: 'militia', hp: 32, dmg: 5, speed: 1 });
-const bandit = unitStats({ unit: 'bandit', hp: 30, dmg: 5, speed: 0.9 });
-/** Kỵ nhanh để đợt đầu (xuất từ phía nam, y ≈ 396) đã tới vùng tảng đá (192, 290) ở tick 36. */
-const boar = unitStats({ unit: 'boar_rider', hp: 50, dmg: 8, speed: 3, radius: 5, armor: 0.1 });
+/** Tốc độ theo bảng spec gốc (ô 32 px) nhân SPEC_MOVE_SCALE, như dữ liệu thật trên ô 64 px. */
+const militia = unitStats({ unit: 'militia', hp: 32, dmg: 5, speed: 1 * SPEC_MOVE_SCALE });
+const bandit = unitStats({ unit: 'bandit', hp: 30, dmg: 5, speed: 0.9 * SPEC_MOVE_SCALE });
+/** Kỵ nhanh để đợt đầu (xuất từ phía nam, y ≈ field + spawnOutside) đã tới vùng tảng đá `INPUTS[0]` ở tick 36. */
+const boar = unitStats({ unit: 'boar_rider', hp: 50, dmg: 8, speed: 3 * SPEC_MOVE_SCALE, radius: 5, armor: 0.1 });
 
 const troop = (plot: number): StructureSetup =>
   structure(plot, { cardId: 'wheat_militia', spawn: { stats: militia, count: 5 } });
@@ -30,7 +32,7 @@ const tower = (plot: number): StructureSetup =>
   structure(plot, {
     cardId: 'neutral_archer_tower',
     kind: 'tower',
-    attack: attackStats({ dmg: 7, range: 88, interval: 12, projectileSpeed: 8 }),
+    attack: attackStats({ dmg: 7, range: 88, interval: 12, projectileSpeed: 8 * SPEC_MOVE_SCALE }),
     targeting: 'closestToThrone',
   });
 
@@ -61,7 +63,8 @@ const SETUP: BattleSetup = battleSetup({
   waves: [wave(0, 'S', 'S'), wave(120, 'S', 'S')],
 });
 
-const INPUTS: readonly BattleInput[] = [{ tick: 30, x: 192, y: 290 }];
+/** Giữa sân, cách mép nam ≈ 212 px: đúng chỗ kỵ lợn (6 px/tick) đi tới quanh tick 36 (bản ô 32: (192, 290)). */
+const INPUTS: readonly BattleInput[] = [{ tick: 30, x: BATTLE.field / 2, y: 290 * SPEC_MOVE_SCALE }];
 
 const step = (w: BattleWorld, inputs: readonly BattleCommand[]): void => {
   const tick = w.tick;

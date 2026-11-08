@@ -1,6 +1,8 @@
 import { describe, expect, it } from 'vitest';
-import { BATTLE, INTERVENTION, SPAWN_OFFSETS } from '../../data/battle';
+import { BATTLE, ENEMY_PORTAL, INTERVENTION, SPAWN_OFFSETS } from '../../data/battle';
+import { BOARD_ORIGIN, PLOT } from '../../data/boardGeometry';
 import { attackStats, battleSetup, structure, unitStats } from '../testing/fixtures';
+import { deploymentPosition } from './deployment';
 import { hashWorld } from './hash';
 import type { Edge, WaveSetup } from './types';
 import {
@@ -13,7 +15,9 @@ import {
   drainEvents,
   edgePositions,
   plotCenter,
+  spawnOffset,
   spawnWave,
+  structureFoot,
 } from './world';
 
 const barracks = (plot: number, count: number) =>
@@ -26,9 +30,10 @@ const wave = (n: number, edge: Edge = 'N', spawnTick = 0): WaveSetup => ({
 
 describe('plotCenter', () => {
   it('maps plots to board cell centres', () => {
-    expect(plotCenter(12)).toEqual({ x: 192, y: 192 });
-    expect(plotCenter(7)).toEqual({ x: 192, y: 160 });
-    expect(plotCenter(0)).toEqual({ x: 128, y: 128 });
+    const half = PLOT / 2;
+    expect(plotCenter(12)).toEqual({ x: BATTLE.field / 2, y: BATTLE.field / 2 }); // the board centre is the field centre
+    expect(plotCenter(7)).toEqual({ x: BOARD_ORIGIN + 2 * PLOT + half, y: BOARD_ORIGIN + PLOT + half });
+    expect(plotCenter(0)).toEqual({ x: BOARD_ORIGIN + half, y: BOARD_ORIGIN + half });
   });
 });
 
@@ -39,14 +44,14 @@ describe('createBattle', () => {
     );
     expect(w.throneId).toBe(0);
     expect(w.kind[0]).toBe(KIND_THRONE);
-    expect([w.x[0], w.y[0]]).toEqual([192, 192]);
+    expect([w.x[0], w.y[0]]).toEqual([structureFoot(12).x, structureFoot(12).y]);
     expect(w.team[0]).toBe(TEAM_ALLY);
     expect(w.radius[0]).toBe(BATTLE.throneRadius);
     // plot 3 before plot 7 regardless of setup order
     expect(w.kind[1]).toBe(KIND_STRUCTURE);
     expect(w.label[1]).toBe('neutral_barracks');
     expect(w.sourceUid[1]).toBe(9);
-    expect([w.x[1], w.y[1]]).toEqual([plotCenter(3).x, plotCenter(3).y]);
+    expect([w.x[1], w.y[1]]).toEqual([structureFoot(3).x, structureFoot(3).y]);
     expect(w.sourceUid[2]).toBe(107);
     expect(w.radius[2]).toBe(BATTLE.structureRadius);
     expect(w.speed[2]).toBe(0);
@@ -60,16 +65,17 @@ describe('createBattle', () => {
       expect(w.label[id]).toBe('militia');
       expect(w.hp[id]).toBe(40);
       expect(w.maxHp[id]).toBe(40);
-      expect(w.homeX[id]).toBe(192);
-      expect(w.homeY[id]).toBe(160);
+      // troops stand in the deploy box of their plot; home = their own slot
+      const slot = deploymentPosition(7, id - 3, 3, w.radius[id]!);
+      expect(w.homeX[id]).toBe(slot.x);
+      expect(w.homeY[id]).toBe(slot.y);
       expect(w.sourceUid[id]).toBe(107);
       pos.push([w.x[id]!, w.y[id]!]);
     }
-    expect(pos).toEqual([
-      [192, 152],
-      [200, 160],
-      [192, 168],
-    ]);
+    expect(pos).toEqual([0, 1, 2].map((k) => {
+      const p = deploymentPosition(7, k, 3, 4);
+      return [p.x, p.y];
+    }));
     expect(w.count).toBe(6);
     expect(w.tick).toBe(0);
     expect(w.readyTick).toBe(INTERVENTION.firstReadyTick);
@@ -123,30 +129,31 @@ describe('createBattle', () => {
     expect([w.prevX[u], w.prevY[u]]).toEqual([w.x[u], w.y[u]]);
   });
 
+  // Troops now deploy into the plot box; spawnOffset still places kill/death/boss summons.
   it('second ring of spawn offsets is scaled by 1.5 and rounded', () => {
-    const w = createBattle(battleSetup({ structures: [barracks(7, 20)] }));
-    const first = 2; // throne, barracks
-    const k = 16;
-    expect(w.x[first + k]! - 192).toBe(0);
-    expect(w.y[first + k]! - 160).toBe(-12);
+    expect(spawnOffset(16)).toEqual({ dx: 0, dy: -12 });
     const [ox, oy] = SPAWN_OFFSETS[19 % 16]!;
-    expect(w.x[first + 19]! - 192).toBe(Math.round(ox * 1.5));
-    expect(w.y[first + 19]! - 160).toBe(Math.round(oy * 1.5));
+    expect(spawnOffset(19)).toEqual({ dx: Math.round(ox * 1.5), dy: Math.round(oy * 1.5) });
   });
 
   it('every offset of the second ring and beyond uses the 1.5× multiplier', () => {
-    const w = createBattle(battleSetup({ structures: [barracks(7, 33)] }));
-    const first = 2;
     for (let k = 0; k < 33; k++) {
       const [ox, oy] = SPAWN_OFFSETS[k % 16]!;
       const m = k < 16 ? 1 : 1.5;
-      expect([w.x[first + k]! - 192, w.y[first + k]! - 160]).toEqual([
-        Math.round(ox * m),
-        Math.round(oy * m),
-      ]);
+      const o = spawnOffset(k);
+      expect([o.dx, o.dy]).toEqual([Math.round(ox * m), Math.round(oy * m)]);
     }
     // k = 32 reuses the 1.5× ring (not 2.25×)
-    expect([w.x[first + 32]! - 192, w.y[first + 32]! - 160]).toEqual([0, -12]);
+    expect(spawnOffset(32)).toEqual({ dx: 0, dy: -12 });
+  });
+
+  it('deploys a big squad inside its own plot box', () => {
+    const w = createBattle(battleSetup({ structures: [barracks(7, 33)] }));
+    const first = 2; // throne, barracks
+    for (let k = 0; k < 33; k++) {
+      const p = deploymentPosition(7, k, 33, 4);
+      expect([w.x[first + k], w.y[first + k]]).toEqual([p.x, p.y]);
+    }
   });
 
   it('does not depend on the order of structures', () => {
@@ -193,23 +200,29 @@ describe('createBattle', () => {
 
 describe('edgePositions', () => {
   it('lays units out centred on the edge midpoint, outside the field', () => {
+    const mid = BATTLE.field / 2;
+    const out = BATTLE.spawnOutside;
+    const gap = BATTLE.spawnSpacing;
     expect(edgePositions('N', 3)).toEqual([
-      { x: 182, y: -12 },
-      { x: 192, y: -12 },
-      { x: 202, y: -12 },
+      { x: mid - gap, y: -out },
+      { x: mid, y: -out },
+      { x: mid + gap, y: -out },
     ]);
-    expect(edgePositions('S', 1)).toEqual([{ x: 192, y: 396 }]);
+    expect(edgePositions('S', 1)).toEqual([{ x: mid, y: BATTLE.field + out }]);
     const e = edgePositions('E', 2);
-    expect(e.map((p) => p.x)).toEqual([396, 396]);
-    expect(e.map((p) => p.y)).toEqual([187, 197]);
-    expect(edgePositions('W', 1)[0]!.x).toBe(-12);
+    expect(e.map((p) => p.x)).toEqual([BATTLE.field + out, BATTLE.field + out]);
+    expect(e.map((p) => p.y)).toEqual([mid - gap / 2, mid + gap / 2]);
+    expect(edgePositions('W', 1)[0]!.x).toBe(-out);
   });
 
   it('starts a new row further out when a row is full', () => {
+    const mid = BATTLE.field / 2;
+    const row1 = BATTLE.spawnOutside;
+    const row2 = BATTLE.spawnOutside + BATTLE.spawnRowGap;
     const p = edgePositions('N', 25);
-    expect(p.filter((q) => q.y === -12)).toHaveLength(24);
-    expect(p.filter((q) => q.y === -22)).toEqual([{ x: 192, y: -22 }]);
-    expect(edgePositions('W', 25)[24]).toEqual({ x: -22, y: 192 });
+    expect(p.filter((q) => q.y === -row1)).toHaveLength(24);
+    expect(p.filter((q) => q.y === -row2)).toEqual([{ x: mid, y: -row2 }]);
+    expect(edgePositions('W', 25)[24]).toEqual({ x: -row2, y: mid });
   });
 });
 
@@ -239,9 +252,11 @@ describe('spawnWave', () => {
       expect(w.sourceUid[id]).toBe(-1);
       expect(w.alive[id]).toBe(1);
     }
-    expect([w.x[1], w.y[1]]).toEqual([187, 396]);
-    expect([w.x[2], w.y[2]]).toEqual([192, BATTLE.wallY + w.radius[2]!]); // raw N slot (−12) is clamped to the wall
-    expect([w.x[3], w.y[3]]).toEqual([197, 396]);
+    const mid = BATTLE.field / 2;
+    // south foes come out of the portal (spec 2026-11-08 §3): slots 0 and 1 of its 5×5 mouth
+    expect([w.x[1], w.y[1]]).toEqual([ENEMY_PORTAL.x - 2 * ENEMY_PORTAL.spacingX, ENEMY_PORTAL.y]);
+    expect([w.x[2], w.y[2]]).toEqual([mid, BATTLE.wallY + w.radius[2]!]); // raw N slot (−spawnOutside) is clamped to the wall
+    expect([w.x[3], w.y[3]]).toEqual([ENEMY_PORTAL.x - ENEMY_PORTAL.spacingX, ENEMY_PORTAL.y]);
     expect(w.label[2]).toBe('ogre');
     expect(w.hp[2]).toBe(90);
     const events = drainEvents(w);

@@ -3,6 +3,7 @@ import { INTERVENTION } from '../data/battle';
 import { PALETTE } from '../data/palette';
 import type { BattleEvent } from '../game/battle/types';
 import type { BattleWorld } from '../game/battle/world';
+import { ISO_SPRITE_SCALE, iso } from './isoView';
 import { SPRITES_KEY, fxFrame } from './atlas';
 import { arrowDir } from './fxArt';
 
@@ -97,10 +98,10 @@ export class FxRenderer {
       const travelled = Math.sqrt(sx * sx + sy * sy);
       const backDist = Math.min(p.speed[k]! * (1 - a), travelled);
       const back = d > 0 ? backDist / d : 0;
-      const x = p.px[k]! - dx * back;
-      const y = p.py[k]! - dy * back;
-      const img = this.image(this.projectiles, used, fxFrame(`arrow_${arrowDir(dx, dy)}`));
-      img.setPosition(Math.round(x), Math.round(y - FLIGHT_H)).setDepth(y);
+      const at = iso({ x: p.px[k]! - dx * back, y: p.py[k]! - dy * back });
+      // The arrow frame follows the flight on screen (projected direction), never a rotated sprite.
+      const img = this.image(this.projectiles, used, fxFrame(`arrow_${arrowDir(dy - dx, (dx + dy) / 2)}`));
+      img.setPosition(Math.round(at.x), Math.round(at.y - FLIGHT_H)).setDepth(at.y);
       used += 1;
     }
     for (let i = used; i < this.projectiles.length; i++) this.projectiles[i]!.setVisible(false);
@@ -113,14 +114,18 @@ export class FxRenderer {
       const b = list[i]!;
       const span = Math.max(1, b.impactTick - b.dropTick);
       const t = Math.min(1, Math.max(0, (world.tick + a - b.dropTick) / span));
+      const at = iso(b);
       const shadow = this.image(this.shadows, i, fxFrame('boulder_shadow'));
       shadow
-        .setPosition(b.x, b.y)
+        .setPosition(at.x, at.y)
         .setDepth(SHADOW_DEPTH)
-        .setScale(0.5 + t * 0.5);
+        .setScale((0.5 + t * 0.5) * ISO_SPRITE_SCALE);
       const rock = this.image(this.boulders, i, fxFrame('boulder'));
-      // Accelerating fall: height × (1 − t²).
-      rock.setPosition(b.x, Math.round(b.y + 4 - BOULDER_DROP_H * (1 - t * t))).setDepth(b.y + 4);
+      // Accelerating fall: height × (1 − t²), straight down on screen.
+      rock
+        .setScale(ISO_SPRITE_SCALE)
+        .setPosition(at.x, Math.round(at.y + 4 - BOULDER_DROP_H * (1 - t * t)))
+        .setDepth(at.y + 4);
     }
     for (let i = list.length; i < this.boulders.length; i++) {
       this.boulders[i]!.setVisible(false);
@@ -141,8 +146,7 @@ export class FxRenderer {
       this.sparks.push(img);
     }
     const r = world.radius[id]!;
-    const x = world.x[id]!;
-    const y = world.y[id]!;
+    const { x, y } = iso({ x: world.x[id]!, y: world.y[id]! });
     const s = img;
     this.scene.tweens.killTweensOf(s);
     s.setPosition(Math.round(x), Math.round(y - r))
@@ -161,8 +165,7 @@ export class FxRenderer {
   /** A structure's pulse: a gold burst on it and a ring growing to the pulse radius. */
   private pulse(world: BattleWorld, id: number, now: number): void {
     if (id < 0 || id >= world.count) return;
-    const x = world.x[id]!;
-    const y = world.y[id]!;
+    const { x, y } = iso({ x: world.x[id]!, y: world.y[id]! });
     this.rings.push({ x, y, start: now, radius: world.pulseRadius[id]!, color: PALETTE.gold });
     this.burst('pulse', x, y - 8, y + 20, 1, 260);
   }
@@ -171,7 +174,8 @@ export class FxRenderer {
   private bubble(world: BattleWorld, id: number): void {
     if (id < 0 || id >= world.count) return;
     const r = world.radius[id]!;
-    this.burst('shield', world.x[id]!, world.y[id]! - r, world.y[id]! + r + 1, 0.9, BUBBLE_MS);
+    const at = iso({ x: world.x[id]!, y: world.y[id]! });
+    this.burst('shield', at.x, at.y - r, at.y + r + 1, 0.9, BUBBLE_MS);
   }
 
   /** Fade-out of one pooled fx frame at (x, y) with the given depth. */
@@ -198,7 +202,9 @@ export class FxRenderer {
         continue;
       }
       g.lineStyle(2, ring.color, 1 - t);
-      g.strokeCircle(ring.x, ring.y, 4 + (ring.radius - 4) * t);
+      // A world circle on the isometric ground: an ellipse r·√2 wide, r/√2 tall (radius in world px).
+      const r = 4 + (ring.radius - 4) * t;
+      g.strokeEllipse(ring.x, ring.y, 2 * r * Math.SQRT2, (2 * r) / Math.SQRT2);
     }
   }
 

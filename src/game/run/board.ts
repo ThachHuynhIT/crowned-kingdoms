@@ -6,7 +6,8 @@ import type { BuildingState, IllegalReason, PlayTarget, PlotState } from './stat
 
 const SIZE = 5;
 const COUNT = SIZE * SIZE;
-export const THRONE_PLOT = 12;
+/** Ngai đứng ở ô giữa hàng sau cùng (hàng 0, cột 2), sau khu 3×3 xây nhà (spec 06/11/2026). */
+export const THRONE_PLOT = 2;
 
 export const plotCol = (plot: number): number => plot - Math.floor(plot / SIZE) * SIZE;
 export const plotRow = (plot: number): number => Math.floor(plot / SIZE);
@@ -30,7 +31,7 @@ export function initialPlots(): PlotState[] {
   for (let i = 0; i < COUNT; i++) {
     const c = plotCol(i);
     const r = plotRow(i);
-    plots.push({ unlocked: c >= 1 && c <= 3 && r >= 1 && r <= 3, building: null });
+    plots.push({ unlocked: i === THRONE_PLOT || (c >= 1 && c <= 3 && r >= 1 && r <= 3), building: null });
   }
   return plots;
 }

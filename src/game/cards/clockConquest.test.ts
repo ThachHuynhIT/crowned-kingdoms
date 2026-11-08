@@ -1,9 +1,10 @@
+import { SPEC_MOVE_SCALE } from '../../data/boardGeometry';
 import { describe, expect, it } from 'vitest';
 import { TOWER_RANGE, TOWER_STD } from '../../data/scaling';
 import type { CardId, Level } from '../../data/types';
 import { tickBehaviours } from '../battle/behaviours';
 import { stepBattle } from '../battle/step';
-import { TEAM_ALLY, TEAM_FOE, addUnit, createBattle, type BattleWorld } from '../battle/world';
+import { TEAM_ALLY, TEAM_FOE, addUnit, createBattle, structureFoot, type BattleWorld } from '../battle/world';
 import { buildBattleSetup } from '../run/battleSetup';
 import { applyCommand } from '../run/commands';
 import { yearIncome } from '../run/income';
@@ -73,14 +74,14 @@ describe('the nine Clock King cards (spec 6.9)', () => {
       for (const level of [1, 5] as Level[]) {
         const s = at(withBuilding(runState(), 6, 'clock_gear_tower', level), 6);
         expect(s.attack!.dmg).toBeCloseTo(5 * TOWER_STD[level - 1]!);
-        expect([s.attack!.range, s.attack!.interval, s.attack!.projectileSpeed]).toEqual([72 + TOWER_RANGE[level - 1]!, 10, 8]);
+        expect([s.attack!.range, s.attack!.interval, s.attack!.projectileSpeed]).toEqual([108 + TOWER_RANGE[level - 1]!, 10, 8 * SPEC_MOVE_SCALE]);
         expect(s.rampAs).toEqual({ pps: 2, cap: 100 });
       }
     });
 
     it('steam cannon: 30 physical, splash 18, range 104, every 40, +1.5%/s up to +90%', () => {
       const s = at(withBuilding(runState(), 6, 'clock_steam_cannon', 1), 6);
-      expect(s.attack).toMatchObject({ dmg: 30, splash: 18, range: 104, interval: 40, projectileSpeed: 5 });
+      expect(s.attack).toMatchObject({ dmg: 30, splash: 36, range: 156, interval: 40, projectileSpeed: 5 * SPEC_MOVE_SCALE });
       expect(s.rampAs).toEqual({ pps: 1.5, cap: 90 });
     });
 
@@ -140,7 +141,7 @@ describe('the nine Clock King cards (spec 6.9)', () => {
       for (const [level, pct, stun] of [[1, 25, 0], [2, 30, 0], [3, 35, 5], [5, 45, 5]] as const) {
         expect(at(withBuilding(runState(), 6, 'clock_bell_tower', level), 6).bell).toEqual({
           everyTicks: 100,
-          radius: 80,
+          radius: 160,
           pct,
           ticks: 30,
           stun,
@@ -151,9 +152,10 @@ describe('the nine Clock King cards (spec 6.9)', () => {
     it('speeds our units up for 30 ticks only, and stuns foes in range from level 3', () => {
       const setup = (level: Level) => setupOf(withBuilding(runState(), 6, 'clock_bell_tower', level));
       const w = createBattle(setup(3));
-      const ally = addUnit(w, unitStats({ hp: 100, dmg: 5, interval: 10, speed: 0 }), TEAM_ALLY, 170, 160, 170, 160, 9);
-      const foe = addUnit(w, unitStats({ hp: 1000, dmg: 0, interval: 0, speed: 0 }), TEAM_FOE, 150, 170, 150, 170, -1);
-      const far = addUnit(w, unitStats({ hp: 1000, dmg: 0, interval: 0, speed: 0 }), TEAM_FOE, 380, 380, 380, 380, -1);
+      const t = structureFoot(6);
+      const ally = addUnit(w, unitStats({ hp: 100, dmg: 5, interval: 10, speed: 0 }), TEAM_ALLY, t.x + 24, t.y, t.x + 24, t.y, 9);
+      const foe = addUnit(w, unitStats({ hp: 1000, dmg: 0, interval: 0, speed: 0 }), TEAM_FOE, t.x - 20, t.y + 10, t.x - 20, t.y + 10, -1);
+      const far = addUnit(w, unitStats({ hp: 1000, dmg: 0, interval: 0, speed: 0 }), TEAM_FOE, 740, 740, 740, 740, -1);
       while (w.tick < 100) stepBattle(w, []);
       expect(w.interval[ally]).toBe(10);
       stepBattle(w, []); // tick 100: the bell rings
@@ -163,7 +165,7 @@ describe('the nine Clock King cards (spec 6.9)', () => {
       while (w.tick < 131) stepBattle(w, []);
       expect(w.interval[ally]).toBe(10);
       const calm = createBattle(setup(1));
-      const foe1 = addUnit(calm, unitStats({ hp: 1000, dmg: 0, interval: 0, speed: 0 }), TEAM_FOE, 150, 170, 150, 170, -1);
+      const foe1 = addUnit(calm, unitStats({ hp: 1000, dmg: 0, interval: 0, speed: 0 }), TEAM_FOE, t.x - 20, t.y + 10, t.x - 20, t.y + 10, -1);
       while (calm.tick <= 100) stepBattle(calm, []);
       expect(calm.stunTicks[foe1]).toBe(0);
     });

@@ -74,10 +74,10 @@ describe('extra_edge_becomes_rows', () => {
     expect(formationRowsFor(10, 1, 120)).toBe(7);
   });
 
-  it('edgePositions with 1 row is unchanged; 2 rows split 4/4 at depths 12 and 22', () => {
-    expect(edgePositions('N', 25).map((p) => p.y).slice(23)).toEqual([-12, -22]);
+  it('edgePositions with 1 row is unchanged; 2 rows split 4/4 at depths 24 and 44', () => {
+    expect(edgePositions('N', 25).map((p) => p.y).slice(23)).toEqual([-24, -44]);
     const two = edgePositions('S', 8, 2);
-    expect(two.map((p) => p.y)).toEqual([396, 396, 396, 396, 406, 406, 406, 406]);
+    expect(two.map((p) => p.y)).toEqual([792, 792, 792, 792, 812, 812, 812, 812]);
     expect(edgePositions('S', 0, 3)).toEqual([]);
     expect(edgePositions('S', 1, 4)).toHaveLength(1);
     expect(edgePositions('S', 2, 4)).toHaveLength(2);
@@ -91,36 +91,32 @@ describe('extra_edge_becomes_rows', () => {
   });
 });
 
-describe('south_spawn_progress', () => {
+describe('south_spawn_progress (through the enemy portal, spec 2026-11-08 §3)', () => {
   const spawn = () => ({ edge: 'S' as const, stats: unitStats({ speed: 1 }) });
 
-  it('a 120-unit south wave keeps every row (no collapse into one y) and advances', () => {
+  it('a 120-unit south wave comes out of the portal mouth in five ranks and advances', () => {
     const wave = { spawnTick: 0, spawns: Array.from({ length: 120 }, spawn), formationRows: 6 };
     const w = createBattle(battleSetup({ waves: [wave] }));
     spawnWave(w, 0);
     const ys = new Set<number>();
     for (let i = 0; i < w.count; i++) if (w.team[i] === 1) ys.add(w.y[i]!);
-    expect(ys.size).toBe(6);
+    expect([...ys].sort((a, b) => a - b)).toEqual([768, 774, 780, 786, 792]);
     expect(Math.max(...ys)).toBeLessThanOrEqual(w.maxY);
     const y0 = Math.min(...ys);
     for (let t = 0; t < 30; t++) stepBattle(w, []);
     let front = Infinity;
-    let back = -Infinity;
-    for (let i = 0; i < w.count; i++) {
-      if (w.team[i] !== 1) continue;
-      front = Math.min(front, w.y[i]!);
-      back = Math.max(back, w.y[i]!);
-    }
-    expect(front).toBeLessThan(y0); // they advance instead of piling against the clamp
-    expect(back - front).toBeGreaterThan(30); // the ranks are still spread out after walking (they started 50 apart)
+    for (let i = 0; i < w.count; i++) if (w.team[i] === 1) front = Math.min(front, w.y[i]!);
+    expect(front).toBeLessThan(y0); // they walk out instead of piling up at the portal
   });
 
-  it('spawnWave honours formationRows', () => {
-    const wave = { spawnTick: 0, spawns: Array.from({ length: 8 }, spawn), formationRows: 2 };
-    const w = createBattle(battleSetup({ waves: [wave] }));
-    spawnWave(w, 0);
-    const ys = new Set<number>();
-    for (let i = 0; i < w.count; i++) if (w.team[i] === 1) ys.add(w.y[i]!);
-    expect([...ys].sort((a, b) => a - b)).toEqual([396, 406]);
+  it('the portal replaces the rows: formationRows no longer moves south foes', () => {
+    const at = (formationRows?: number) => {
+      const wave = { spawnTick: 0, spawns: Array.from({ length: 8 }, spawn), ...(formationRows ? { formationRows } : {}) };
+      const w = createBattle(battleSetup({ waves: [wave] }));
+      spawnWave(w, 0);
+      return [...Array(w.count).keys()].filter((i) => w.team[i] === 1).map((i) => [w.x[i], w.y[i]]);
+    };
+    expect(at(2)).toEqual(at());
+    expect(at(4)).toEqual(at());
   });
 });

@@ -80,7 +80,7 @@ describe('decree catalog', () => {
       freeReroll: 1,
       reward: 4,
       boulderDmgPct: 50,
-      boulderRadius: 8,
+      boulderRadius: 16,
       cooldownPct: 30,
       moatPct: 10,
     });
@@ -111,10 +111,10 @@ describe('decree_stat_matrix', () => {
   it('royal archers: tower range 88 -> 100 and throne 72 -> 84', () => {
     const before = withBoard();
     const after = withBoard(['decree_royal_archers']);
-    expect(structure(before, 8).attack!.range).toBeCloseTo(88);
-    expect(structure(after, 8).attack!.range).toBeCloseTo(100);
-    expect(structure(before, 12).attack!.range).toBeCloseTo(72);
-    expect(structure(after, 12).attack!.range).toBeCloseTo(84);
+    expect(structure(before, 8).attack!.range).toBeCloseTo(132);
+    expect(structure(after, 8).attack!.range).toBeCloseTo(150);
+    expect(structure(before, 12).attack!.range).toBeCloseTo(108);
+    expect(structure(after, 12).attack!.range).toBeCloseTo(126);
     // troop buildings are not towers
     expect(collectStatSheet(after, CONTENT, 6).range.flat).toBe(0);
   });
@@ -223,10 +223,10 @@ describe('boulder_modifiers', () => {
     });
   });
 
-  it('bigger boulder + quick reflex: +50% damage, 24 -> 32 radius, cooldown 150 -> 105', () => {
+  it('bigger boulder + quick reflex: +50% damage, 48 -> 64 radius, cooldown 150 -> 105', () => {
     expect(interventionStats(withBoard(['decree_bigger_boulder', 'decree_quick_reflex']))).toEqual({
       dmgPct: 50,
-      radius: 32,
+      radius: 64,
       cooldownTicks: 105,
     });
   });
@@ -239,9 +239,9 @@ describe('boulder_modifiers', () => {
   it('reaches the battle: setup carries it, the world starts with it', () => {
     const s = withBoard(['decree_bigger_boulder', 'decree_quick_reflex']);
     const setup = buildBattleSetup(s, CONTENT);
-    expect(setup.intervention).toEqual({ dmgPct: 50, radius: 32, cooldownTicks: 105 });
+    expect(setup.intervention).toEqual({ dmgPct: 50, radius: 64, cooldownTicks: 105 });
     const world = createBattle(setup);
-    expect(world.boulderRadius).toBe(32);
+    expect(world.boulderRadius).toBe(64);
     expect(world.cooldownTicks).toBe(105);
     expect(world.boulderDmgPct).toBe(50);
     expect(buildBattleSetup(withBoard(), CONTENT).intervention).toBeUndefined();

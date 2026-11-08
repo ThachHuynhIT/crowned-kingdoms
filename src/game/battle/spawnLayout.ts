@@ -1,6 +1,24 @@
 /** Vị trí xuất quân trên mép (spec §8.2). Chỉ phụ thuộc dữ liệu và kiểu, để bounds.ts dùng được mà không vòng import. */
-import { BATTLE } from '../../data/battle';
+import { BATTLE, ENEMY_PORTAL } from '../../data/battle';
 import type { Edge } from './types';
+
+/**
+ * Vị trí xuất hiện của `count` lính địch qua cổng (spec 2026-11-08 §3): lính thứ k ở ô `k mod (cột × hàng)`,
+ * cột `s mod cột` từ trái sang, hàng `floor(s / cột)` từ chân cổng lùi lên bắc. Vòng sau dùng lại ô; tách
+ * thân để separation lo.
+ */
+export const portalPositions = (count: number): { x: number; y: number }[] => {
+  const p = ENEMY_PORTAL;
+  const slots = p.columns * p.rows;
+  const out: { x: number; y: number }[] = [];
+  for (let k = 0; k < count; k++) {
+    const s = k % slots;
+    const col = s % p.columns;
+    const row = Math.floor(s / p.columns);
+    out.push({ x: p.x + (col - (p.columns - 1) / 2) * p.spacingX, y: p.y - row * p.spacingY });
+  }
+  return out;
+};
 
 /** Số lính tối đa trên một hàng xuất quân. */
 export const rowCapacity = (): number => Math.floor((BATTLE.edgeSpan * BATTLE.field) / BATTLE.spawnSpacing) + 1;
