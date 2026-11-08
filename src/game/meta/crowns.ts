@@ -1,3 +1,4 @@
+import { hashSeed } from '../../core/random';
 import { RUN } from '../../data/run';
 import { SETTLED_RUNS_KEPT } from '../../data/meta';
 import { CONTENT } from '../cards/registry';
@@ -25,8 +26,8 @@ export const crownPoints = (state: RunState): CrownBreakdown => {
   return { years, conquests, bosses, victory, multiplier, total };
 };
 
-export const runKey = (state: RunState): string =>
-  `${state.seed}:${state.kingId}:${state.difficulty}:${state.perk ?? '-'}`;
+/** Identifies one ENDED run (not a configuration): a hash of the whole final state, so replaying the same seed scores again. */
+export const runKey = (state: RunState): string => String(hashSeed(JSON.stringify(state)));
 
 /** Chấm điểm một ván đã kết thúc; cùng ván chấm hai lần chỉ cộng một lần. */
 export const settleRun = (

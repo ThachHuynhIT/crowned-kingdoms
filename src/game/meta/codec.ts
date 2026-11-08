@@ -77,6 +77,7 @@ export const decodeMeta = (raw: unknown): DecodeMetaResult => {
     settings: { master: volume(set.master), music: volume(set.music), sfx: volume(set.sfx) },
     settledRuns: runs.slice(-SETTLED_RUNS_KEPT),
   };
+  // Callers must never write a 'newer' profile back: it would downgrade the version and drop unknown fields.
   if (newer) return { kind: 'newer', profile };
   return { kind: repaired ? 'repaired' : 'ok', profile };
 };

@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest';
-import { settleRun } from './crowns';
+import { runKey, settleRun } from './crowns';
 import { fakeRun } from './testRun';
 import { defaultProfile } from './profile';
 import {
@@ -74,6 +74,12 @@ describe('unlocks', () => {
       p = settleRun(p, fakeRun({ years: 1, conquered: 0, bosses: 0, won: false, seed: s })).profile;
     }
     expect(p.settledRuns).toHaveLength(20);
-    expect(p.settledRuns[19]).toBe('24:wheat:0:-');
+    expect(p.settledRuns[19]).toBe(runKey(fakeRun({ years: 1, conquered: 0, bosses: 0, won: false, seed: 24 })));
+  });
+  it('replaying the same seed with a different outcome settles again', () => {
+    const a = fakeRun({ years: 5, conquered: 0, bosses: 0, won: false, seed: 3 });
+    const b = fakeRun({ years: 9, conquered: 1, bosses: 0, won: false, seed: 3 });
+    const p = settleRun(settleRun(defaultProfile(), a).profile, b).profile;
+    expect(p.crownPoints).toBe(5 + 12);
   });
 });
