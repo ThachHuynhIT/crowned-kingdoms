@@ -3,6 +3,7 @@ import type { KingId } from '../data/types';
 import { project } from '../core/iso';
 import { DecorationRenderer } from './DecorationRenderer';
 import { EnemyPortalRenderer } from './EnemyPortalRenderer';
+import { ForestRenderer } from './ForestRenderer';
 import { IsoWallRenderer } from './IsoWallRenderer';
 import { ensureFieldTexture, ensureGroundTexture, ensureRoadTailTexture, fieldTextureScale, groundTextureScale } from './atlas';
 import { ROAD_TAIL } from './fieldArt';
@@ -25,6 +26,7 @@ export class FieldRenderer {
   private wall: IsoWallRenderer | null;
   private decor: DecorationRenderer | null;
   private portal: EnemyPortalRenderer | null;
+  private forest: ForestRenderer | null;
 
   constructor(scene: Phaser.Scene, seed: number, kingId?: KingId) {
     this.textures = scene.textures;
@@ -61,6 +63,7 @@ export class FieldRenderer {
     this.wall = new IsoWallRenderer(scene, seed);
     this.decor = new DecorationRenderer(scene, seed);
     this.portal = new EnemyPortalRenderer(scene);
+    this.forest = new ForestRenderer(scene, seed, this.wall.lift);
   }
 
   /** Destroys the images, then removes the `field-<seed>` texture (nothing else uses it). */
@@ -72,6 +75,8 @@ export class FieldRenderer {
     this.decor = null;
     this.portal?.destroy();
     this.portal = null;
+    this.forest?.destroy();
+    this.forest = null;
     this.ground?.destroy();
     this.ground = null;
     this.roadTail?.destroy();

@@ -172,6 +172,38 @@ class GroundTexturePromptGateTest(unittest.TestCase):
             self.assertEqual(runner.count(f'-i {r}'), 2)
 
 
+class PolishSamplePromptGateTest(unittest.TestCase):
+    """Iso board polish (2026-11-08): the portal and forest samples come from the iso block, one kind at a time."""
+
+    def test_polish_sample_is_exactly_one_kind(self):
+        with self.assertRaises(SystemExit):
+            mp.main('polish-samples')
+        with self.assertRaises(SystemExit):
+            mp.main('polish-samples', ['enemy_portal', 'forest_pine_a'])
+        with self.assertRaises(SystemExit):
+            mp.main('polish-samples', ['forest_rock'])
+        self.assertEqual([i for i, _, _ in mp.POLISH_SAMPLES], ['enemy_portal', 'forest_pine_a'])
+
+    def test_polish_prompt_uses_exact_iso_block_and_read_doc_instruction(self):
+        t = mp.iso_template()
+        for ident, name, desc in mp.POLISH_SAMPLES:
+            p = mp.build_polish_prompt(f'x/{ident}/source.png', name, desc)
+            self.assertIn('docs/ART_STYLE.md', p, ident)
+            self.assertIn('BẮT BUỘC TRƯỚC KHI VẼ', p, ident)
+            self.assertIn('ISOMETRIC view, classic 2:1 pixel-art isometric', p, ident)
+            self.assertIn(t.split('\n')[1], p, ident)
+            self.assertNotIn('[subject]', p, ident)
+            self.assertIn('#000000', p, ident)
+
+    def test_polish_runner_attaches_style_and_iso_refs(self):
+        for ident, _, _ in mp.POLISH_SAMPLES:
+            mp.main('polish-samples', [ident])
+            runner = (ROOT / f'.superpowers/b-polish-{ident}.sh').read_text(encoding='utf-8')
+            self.assertEqual(runner.count('codex exec'), 1)
+            for r in [mp.REFERENCE, *mp.POLISH_REFS]:
+                self.assertEqual(runner.count(f'-i {r}'), 1, (ident, r))
+
+
 pspec = importlib.util.spec_from_file_location('portrait_prompts', ROOT / 'docs/art-review/g3e/portraits/make_prompts.py')
 pp = importlib.util.module_from_spec(pspec)
 pspec.loader.exec_module(pp)

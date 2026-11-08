@@ -32,6 +32,8 @@ export class IsoWallRenderer {
   private g: Phaser.GameObjects.Graphics | null;
 
   private images: Phaser.GameObjects.Image[] = [];
+  /** How far the cliff top stands above its foot on screen (zoom 1): where the plateau behind it begins. */
+  private top = ISO_WALL_HEIGHT;
 
   constructor(scene: Phaser.Scene, seed: number) {
     const g = scene.add.graphics().setDepth(DEPTH);
@@ -80,6 +82,7 @@ export class IsoWallRenderer {
     // The art's foot runs down to the right; with the wall line running down to the left (the enemy comes
     // from the right, src/core/iso.ts) the segments are mirrored (a horizontal flip, never a rotation).
     const flip = slope < 0;
+    this.top = frame.height - w / 2; // face height above the foot at its higher end
     for (let sx = Math.min(a.x, b.x); sx < Math.max(a.x, b.x); sx += w) {
       // bottom row = the lower end of this segment's foot
       const bottom = Math.max(lineY(sx), lineY(sx + w));
@@ -87,6 +90,11 @@ export class IsoWallRenderer {
         scene.add.image(sx + w / 2, bottom, key).setOrigin(0.5, 1).setFlipX(flip).setDepth(DEPTH + 0.01),
       );
     }
+  }
+
+  /** Height of the cliff face above the wall line on screen (zoom 1): the forest stands this much higher. */
+  get lift(): number {
+    return this.top;
   }
 
   /** Safe to call twice. */

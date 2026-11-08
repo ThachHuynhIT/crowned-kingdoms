@@ -17,6 +17,12 @@ export const FIELD_DECOR = {
   combatClear: { x0: 256, x1: 512, y0: 544, y1: 832 },
   /** Around the enemy portal (`ENEMY_PORTAL`, 384 × 792) and where its foes fan out: kept empty too. */
   portalClear: { x0: 328, x1: 440, y0: 736, y1: 848 },
+  /**
+   * The forest behind the mountain cliff (spec 2026-11-08 §6): one candidate per `grid` cell of world
+   * [x0, x1) × [y0, y1), kept with probability `occupancy`, a pine `pineShare` of the time, jittered by ±`jitter`;
+   * footprints end at y1, 24 px north of the wall foot. The window covers what any view of the map can show.
+   */
+  forest: { salt: 6811, grid: 64, jitter: 16, occupancy: 0.72, pineShare: 0.9, x0: -1024, x1: 1792, y0: -1152, y1: 152 },
   /** Never north of this (the mountain wall's foot is at 176). */
   northLimit: 200,
 } as const;

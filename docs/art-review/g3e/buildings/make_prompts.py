@@ -337,6 +337,72 @@ def main_textures(only=None):
     print(path)
 
 
+# ---- Iso board polish (owner 2026-11-08): the enemy portal and the forest behind the cliff -------------------
+
+POLISH_DIR = 'docs/art-review/iso-board/polish'
+POLISH_REFS = [
+    'docs/art-review/style-references/iso-building-approved.png',
+    'docs/art-review/style-references/iso-plot-open-approved.png',
+]
+
+# One sample of each new kind, approved by the owner (each kind on its own) before anything else of it is drawn.
+POLISH_SAMPLES = [
+    ('enemy_portal', 'the enemy teleport portal at the end of the road, where the enemy army steps out, 2:1 isometric',
+     'A magical gate: two weathered dark-grey stone pillars joined by a carved stone lintel, standing on a small round '
+     'stone base whose footprint is one small diamond. Between the pillars a swirling violet-and-purple magic surface '
+     'with a few pale glints, faint glowing violet runes carved on the pillars. The gate stands in a vertical plane '
+     'along the diagonal axis that runs from the LOWER-LEFT to the UPPER-RIGHT of the image, so its glowing opening is '
+     'seen at the 2:1 angle; a short worn dirt path leads into it from the upper-left side. Menacing but in the same '
+     'cozy warm style as the approved buildings: no skulls, no gore. About 420 px wide and at most 560 px tall.'),
+    ('forest_pine_a', 'one tall pine tree of the dense forest that grows behind the mountain cliff, 2:1 isometric',
+     'A single tall evergreen pine: layered conical tiers of dark and mid green needles with lighter tips on the '
+     'upper-left (lit) side, a short brown trunk, a small diamond-shaped patch of moss and fallen needles at its foot. '
+     'The camera is the same high 2:1 isometric viewpoint as the approved buildings: the tiers are seen slightly from '
+     'above. About 260 px wide and at most 600 px tall, trunk foot at about y = 900. It must read clearly as one tree '
+     'when many of them stand close together in a forest.'),
+]
+
+POLISH_FOOTER = """
+YÊU CẦU SẢN XUẤT (ghi đè phần "transparent background" ở trên): ảnh 1024×1024, nền ĐEN PHẲNG #000000 hoàn toàn (không quầng sáng, không bóng đổ lên nền, không nền đất/cỏ ngoài chính vật thể và mảng chân nhỏ của nó; trong vật thể không có điểm đen thuần). MỘT vật thể duy nhất ở giữa ảnh theo chiều ngang, chân vật thể (đáy hình thoi chân) ở khoảng y = 900. "Pixel" lớn khoảng 7×7 điểm ảnh, cạnh thoi là bậc pixel 2 ngang – 1 dọc.
+Khi xong, in đường dẫn file đã lưu và kích thước ảnh.
+"""
+
+
+def build_polish_prompt(out, name, desc, template=None):
+    for r in POLISH_REFS:
+        if not (ROOT / r).exists():
+            raise SystemExit(f'{r} is missing: refusing to draw without the approved isometric reference')
+    note = (f'\n\nẢNH THAM CHIẾU GÓC NHÌN ISOMETRIC ĐÃ DUYỆT (đính kèm): {", ".join(f"`{r}`" for r in POLISH_REFS)} — lấy đúng '
+            'GÓC NHÌN, tỉ lệ thoi 2:1, cỡ cụm pixel và độ hoàn thiện từ các ảnh này.\n\n')
+    p = build_iso_prompt(out, name, desc, template)
+    head, sep, rest = p.partition('\n\n')
+    return (head + note + rest).replace(ISO_FOOTER, POLISH_FOOTER)
+
+
+def main_polish_samples(only=None):
+    """`polish-samples <id>`: exactly ONE sample per call (spec 2026-11-08 §6), never the whole set."""
+    ids = [i for i, _, _ in POLISH_SAMPLES]
+    if not only or len(only) != 1 or only[0] not in ids:
+        raise SystemExit(f'polish-samples needs exactly one id of {ids}')
+    template = iso_template()
+    runner = ['#!/bin/bash', f'cd "{ROOT.as_posix()}"']
+    for ident, name, desc in POLISH_SAMPLES:
+        if ident != only[0]:
+            continue
+        d = ROOT / POLISH_DIR / ident
+        d.mkdir(parents=True, exist_ok=True)
+        out = (d / 'source.png').relative_to(ROOT).as_posix()
+        (d / 'prompt.md').write_text(build_polish_prompt(out, name, desc, template), encoding='utf-8')
+        prompt = (d / 'prompt.md').relative_to(ROOT).as_posix()
+        images = ' '.join(f'-i {r}' for r in [REFERENCE, *POLISH_REFS])
+        runner.append(f'codex exec --sandbox workspace-write -C "$PWD" {images} - < {prompt} > .superpowers/codex-polish-{ident}.out 2>&1')
+        runner.append(f'if [ -s {out} ]; then echo "{ident} ok" >> .superpowers/b-polish.log; else echo "{ident} MISSING" >> .superpowers/b-polish.log; fi')
+    (ROOT / '.superpowers').mkdir(exist_ok=True)
+    path = ROOT / f'.superpowers/b-polish-{only[0]}.sh'
+    path.write_text('\n'.join(runner) + '\n', encoding='utf-8', newline='\n')
+    print(path)
+
+
 def build_prompt(out, name, desc, theme, template=None):
     template = template or style_template()
     body = template.replace('[building and function]', f'{name}').replace(
@@ -353,6 +419,9 @@ def main(group, only=None):
         return
     if group == 'terrain-textures':
         main_textures(only)
+        return
+    if group == 'polish-samples':
+        main_polish_samples(only)
         return
     cfg = GROUPS[group]
     template = style_template()

@@ -93,6 +93,20 @@ export const decorFile = (id: string): string => `iso/wilds/${id}`;
 export const GROUND_TEXTURE_FILES = { water: 'iso/terrain/water', sand: 'iso/terrain/sand' } as const;
 export const GROUND_TEXTURES_APPROVED: readonly (keyof typeof GROUND_TEXTURE_FILES)[] = ['water', 'sand'];
 
+/**
+ * The forest behind the mountain cliff (spec 2026-11-08 §6, Q5): drawn by `docs/art-review/iso-board/polish`, each kind
+ * approved by the owner from one sample first. Only the ids in `FOREST_APPROVED` are loaded and drawn.
+ */
+export const FOREST_CATALOG: readonly { id: string; tall: boolean; radius: number }[] = [
+  { id: 'forest_pine_a', tall: true, radius: 20 },
+  { id: 'forest_pine_b', tall: true, radius: 18 },
+  { id: 'forest_rock', tall: true, radius: 24 },
+];
+/** Owner-approved forest objects (none yet: waiting for the pine sample's approval). */
+export const FOREST_APPROVED: readonly string[] = [];
+/** File of an approved forest object. */
+export const forestFile = (id: string): string => `iso/polish/${id}`;
+
 /** Every PNG of the set (file name without `.png`). */
 export const IMAGE_ART_FILES: readonly string[] = [
   ...Object.values(IMAGE_UNITS).flatMap((prefix) => [
@@ -104,6 +118,7 @@ export const IMAGE_ART_FILES: readonly string[] = [
   ...GRASS_FILES,
   WALL_FILE,
   ...DECOR_APPROVED.map(decorFile),
+  ...FOREST_APPROVED.map(forestFile),
   ...GROUND_TEXTURES_APPROVED.map((t) => GROUND_TEXTURE_FILES[t]),
 ];
 
