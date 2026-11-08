@@ -1,4 +1,5 @@
 import { MARGIN, type Rect, type Size } from '../hud/layout';
+import { CLOSE_BUTTON, centredPanel } from '../modals/modalLayout';
 import { isDesktop } from '../realm/realmLayout';
 
 /**
@@ -17,6 +18,8 @@ export interface KingDetailLayout {
   /** The king card (66×96 art px at scale 4 on desktop, 2 on phones). */
   portrait: Rect;
   perks: Rect;
+  /** Name of the chosen perk: just above the perks button on desktop, beside the king card on phones. */
+  perkName: Rect;
   /** The label between the two difficulty arrows. */
   difficulty: Rect;
   previous: Rect;
@@ -65,6 +68,7 @@ export const detailLayout = (screen: Size, inset: number): KingDetailLayout => {
       cards: gridCards(x0, top, CARD_DESKTOP),
       portrait: { x: x0 + gridW + 48, y: top + Math.round((gridH - portraitH) / 2), w: portraitW, h: portraitH },
       perks: { x: x0, y: footerY, w: 140, h: 56 },
+      perkName: { x: x0, y: footerY - 22, w: 388, h: 20 },
       previous: { x: x0 + 148, y: footerY, w: 44, h: 56 },
       difficulty: { x: x0 + 192, y: footerY, w: 152, h: 56 },
       next: { x: x0 + 344, y: footerY, w: 44, h: 56 },
@@ -93,6 +97,12 @@ export const detailLayout = (screen: Size, inset: number): KingDetailLayout => {
     cards: gridCards(Math.round((w - gridW) / 2), gridY, CARD_PHONE),
     portrait: { x: Math.round((w - portraitW) / 2), y: portraitY, w: portraitW, h: portraitH },
     perks: { x: margin, y: rowY, w: 100, h: 48 },
+    perkName: {
+      x: Math.round((w - portraitW) / 2) + portraitW + 8,
+      y: portraitY + portraitH - 44,
+      w: w - margin - (Math.round((w - portraitW) / 2) + portraitW + 8),
+      h: 44,
+    },
     previous: { x: margin + 108, y: rowY, w: 44, h: 48 },
     difficulty: { x: margin + 152, y: rowY, w: nextX - (margin + 152), h: 48 },
     next: { x: nextX, y: rowY, w: 44, h: 48 },
@@ -100,4 +110,31 @@ export const detailLayout = (screen: Size, inset: number): KingDetailLayout => {
     seed: { x: margin, y: seedY, w: rowW - 8 - 120, h: 44 },
     reroll: { x: margin + rowW - 120, y: seedY, w: 120, h: 44 },
   };
+};
+
+/** The perk dialog: a centred panel, its title, the ✕ button (48×48) and one row per perk. */
+export interface PerkDialogLayout {
+  panel: Rect;
+  title: Rect;
+  close: Rect;
+  rows: readonly Rect[];
+}
+
+const PERK_ROWS = 3;
+const ROW_GAP = 8;
+
+/** `inset` is the panel border plus padding (screen px). Phones get taller rows for wrapped text. */
+export const perkDialogLayout = (screen: Size, inset: number): PerkDialogLayout => {
+  const desktop = isDesktop(screen.w);
+  const rowH = desktop ? 80 : 100;
+  const width = desktop ? 560 : screen.w - 2 * MARGIN;
+  const height = 2 * inset + CLOSE_BUTTON + ROW_GAP + PERK_ROWS * rowH + (PERK_ROWS - 1) * ROW_GAP;
+  const panel = centredPanel(screen, width, height);
+  const innerX = panel.x + inset;
+  const innerW = panel.w - 2 * inset;
+  const close = { x: innerX + innerW - CLOSE_BUTTON, y: panel.y + inset, w: CLOSE_BUTTON, h: CLOSE_BUTTON };
+  const title = { x: innerX, y: panel.y + inset, w: Math.max(0, innerW - CLOSE_BUTTON - ROW_GAP), h: CLOSE_BUTTON };
+  const top = close.y + CLOSE_BUTTON + ROW_GAP;
+  const rows = Array.from({ length: PERK_ROWS }, (_, i) => ({ x: innerX, y: top + i * (rowH + ROW_GAP), w: innerW, h: rowH }));
+  return { panel, title, close, rows };
 };

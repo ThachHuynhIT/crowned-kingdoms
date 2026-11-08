@@ -11,7 +11,7 @@ import { checkTargetStep, targetCount } from '../game/run/board';
 import type { SessionPersistence } from '../game/save/types';
 import type { PlayTarget, RunState } from '../game/run/state';
 import { RULES_FULL } from '../data/rules';
-import type { KingId } from '../data/types';
+import type { KingId, PerkId } from '../data/types';
 import { newRun } from '../game/run/yearFlow';
 import { BoardRenderer } from '../render/BoardRenderer';
 import { FieldRenderer } from '../render/FieldRenderer';
@@ -41,13 +41,14 @@ import { STORAGE_WARNING_KEY, WARNING_EVENT, getSession } from './sessionRegistr
 import type { RunEndData } from './RunEndScene';
 
 /**
- * Launch data of the realm: a new run (seed + chosen king, from the king-select scene) or a
- * saved run to resume exactly as written (`resume`, from the menu's "Tiếp tục").
+ * Launch data of the realm: a new run (seed, chosen king, perk and thorn level, from the
+ * king-select scene) or a saved run to resume exactly as written (`resume`, from the menu's
+ * "Tiếp tục").
  */
 type RangeTarget = GameEvents['ui:range-selection']['target'];
 
 export type RealmData =
-  | { seed: number; kingId: KingId }
+  | { seed: number; kingId: KingId; perk: PerkId | null; difficulty: number }
   | { resume: RunState }
   /** DEV sample run (`src/dev`): its own state and in-memory persistence; ignored in production builds. */
   | { preview: { state: RunState; persistence: SessionPersistence } };
@@ -140,8 +141,16 @@ export class RealmScene extends Phaser.Scene {
     this.panning = false;
     const preview = import.meta.env.DEV && data !== undefined && 'preview' in data ? data.preview : null;
     const resume = data !== undefined && 'resume' in data ? data.resume : null;
-    const fresh = data !== undefined && 'seed' in data ? data : { seed: 1, kingId: 'wheat' as KingId };
-    const initial = preview?.state ?? resume ?? newRun(fresh.seed, fresh.kingId, CONTENT, RULES_FULL);
+    const fresh = data !== undefined && 'seed' in data ? data : { seed: 1, kingId: 'wheat' as KingId, perk: null, difficulty: 0 };
+    const session = getSession(this);
+    const initial =
+      preview?.state ??
+      resume ??
+      newRun(fresh.seed, fresh.kingId, CONTENT, RULES_FULL, {
+        perk: fresh.perk,
+        difficulty: fresh.difficulty,
+        unlockedCards: session ? session.meta().unlockedCards : [],
+      });
     const seed = initial.seed;
     this.resumedAtYearEnd = resume?.phase === 'yearEnd';
 
@@ -151,7 +160,7 @@ export class RealmScene extends Phaser.Scene {
       this.bus,
       CONTENT,
       initial,
-      preview ? preview.persistence : getSession(this)?.persistence,
+      preview ? preview.persistence : session?.persistence,
     );
     this.cameras.main.setBackgroundColor(PALETTE.grass);
     this.field = new FieldRenderer(this, seed, initial.kingId);
