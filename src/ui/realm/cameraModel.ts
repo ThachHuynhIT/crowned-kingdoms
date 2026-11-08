@@ -122,10 +122,14 @@ export const resizeView = (view: CameraView, from: Size, to: Size, phase: RealmP
   return clampView({ zoom: view.zoom, scroll: cameraScroll(centre, { x: to.w / 2, y: to.h / 2 }, to, view.zoom) }, to);
 };
 
-/** World point under screen point `p` (camera, then the inverse isometric projection), null outside the field. */
+/**
+ * World point under screen point `p` (camera, then the inverse isometric projection) for battle aim: the field, plus
+ * the strip south of it down to the clamp line, so the enemy portal (spec 2026-11-08 §3) can be aimed at; null
+ * elsewhere. Card placement does not use this: it goes through `plotAtView` (25 plots only).
+ */
 export const worldAtView = (view: CameraView, screen: Size, p: Point): Point | null => {
   const w = unproject(screenToWorld(p, view.scroll, screen, view.zoom));
-  if (w.x < 0 || w.x > BATTLE.field || w.y < 0 || w.y > BATTLE.field) return null;
+  if (w.x < 0 || w.x > BATTLE.field || w.y < 0 || w.y > BATTLE.field + BATTLE.fieldClampMargin) return null;
   return w;
 };
 

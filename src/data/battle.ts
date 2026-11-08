@@ -82,6 +82,20 @@ export const BATTLE = {
   spatialCell: PLOT,
 } as const;
 
+/**
+ * Cổng dịch chuyển của địch (spec 2026-11-08 §3, Q2): ở cuối con đường phía nam, đúng chỗ hàng xuất quân nam cũ.
+ * Mọi quân địch xuất từ mép nam (các đợt, raiders, boss) ra ở đây: một đội hình 5×5 trước miệng cổng, quân thứ
+ * k ở ô k mod 25 (cột trái → phải, hàng từ chân cổng lên bắc), boss ở tâm. Chỉ là vị trí xuất quân, không va chạm.
+ */
+export const ENEMY_PORTAL = {
+  x: FIELD / 2,
+  y: FIELD + BATTLE.spawnOutside,
+  columns: 5,
+  rows: 5,
+  spacingX: 12,
+  spacingY: 6,
+} as const;
+
 /** 16 vị trí xuất quân quanh tâm ô (px, số nguyên). Lính thứ k dùng SPAWN_OFFSETS[k % 16]; vòng thứ hai trở đi nhân 1.5 rồi làm tròn. */
 export const SPAWN_OFFSETS = [
   [0, -8], [8, 0], [0, 8], [-8, 0], [6, -6], [6, 6], [-6, 6], [-6, -6],

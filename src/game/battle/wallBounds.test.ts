@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest';
-import { BATTLE } from '../../data/battle';
+import { BATTLE, ENEMY_PORTAL } from '../../data/battle';
 import { battleSetup, structure, unitStats } from '../testing/fixtures';
 import { hashWorld } from './hash';
 import { pickAutoTarget, tryIntervene } from './intervention';
@@ -140,10 +140,11 @@ describe('north mountain wall', () => {
     expect(hashWorld(a)).not.toBe(hashWorld(b));
   });
 
-  it('maxY covers the deepest southern spawn row', () => {
+  it('maxY covers the enemy portal, where every southern foe comes out (spec 2026-11-08 §3)', () => {
     const spawn = () => ({ edge: 'S' as const, stats: unitStats() });
     const wave = { spawnTick: 0, spawns: Array.from({ length: 120 }, () => spawn()) };
     const w = make({ waves: [wave] });
-    expect(w.maxY).toBeGreaterThanOrEqual(BATTLE.field + BATTLE.spawnOutside + 4 * BATTLE.spawnRowGap);
+    expect(w.maxY).toBeGreaterThanOrEqual(ENEMY_PORTAL.y);
+    expect(w.maxY).toBe(BATTLE.field + BATTLE.fieldClampMargin);
   });
 });

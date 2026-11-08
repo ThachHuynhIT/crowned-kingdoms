@@ -15,7 +15,9 @@ Nhánh `iso-board-redesign`, PR #13 vào `develop` (chưa merge). Spec `docs/sup
 
 ## Đợt hoàn thiện 08/11 (plan `docs/superpowers/plans/2026-11-08-iso-board-polish.md`)
 - **Q1 xong phần code (08/11):** địch (cả boss, quân công thành) đánh hết lính phe mình nó đánh được rồi mới nhắm công trình/Ngai; giữ Khiêu khích và Cuồng Nộ. Chain của địch và Ném Bùn theo cùng luật; splash/cleave/cone vẫn trúng nhà như cũ. Số đo trước–sau: `docs/art-review/iso-board/polish/logic-report.md`.
-- **Còn của Q1:** kiểm trên trình duyệt (trận thường và trận boss) chưa làm; Q2–Q5 chưa bắt đầu.
+- **Q1 kiểm trình duyệt (09/11):** trận thường seed 4: còn lính thì mọi địch nhắm lính, lính chết hết (tick 341) mới chuyển sang nhà; không lỗi console. Trận boss chỉ kiểm bằng test (`bogOgre.test.ts`, `targeting.test.ts`).
+- **Q2 xong (09/11):** cổng dịch chuyển `ENEMY_PORTAL` (384, 792) ở cuối con đường; mọi quân địch mép nam (đợt, raiders, boss) ra từ đội hình 5×5 trước miệng cổng (`portalPositions`), boss ở tâm cổng; triệu hồi giữ chỗ sinh cũ. Cổng vẽ tạm bằng code (`portalArt.ts`, `EnemyPortalRenderer`) cho tới khi art được duyệt (Q5). Ngắm Can Thiệp được tới cổng (y ≤ 832). Đường vẽ dừng ở mép sân 768; cổng che đoạn tới 792 (Q4 nối tiếp). Trên điện thoại cổng nằm ngoài khung ở zoom hiện tại, phải kéo bản đồ (Q3 làm lại camera). Số đo: `logic-report.md`.
+- **Còn lại:** Q3–Q5 chưa bắt đầu.
 - **Lỗi bot có sẵn:** bot random/scripted có thể chơi Giao Ước Nguyệt Thực khi còn 1 mạng (lệnh bị từ chối `lastLife`); bộ đo ghi các ván đó là crashed.
 
 ## Còn lại / ghi nhận

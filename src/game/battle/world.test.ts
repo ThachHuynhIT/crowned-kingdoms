@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest';
-import { BATTLE, INTERVENTION, SPAWN_OFFSETS } from '../../data/battle';
+import { BATTLE, ENEMY_PORTAL, INTERVENTION, SPAWN_OFFSETS } from '../../data/battle';
 import { BOARD_ORIGIN, PLOT } from '../../data/boardGeometry';
 import { attackStats, battleSetup, structure, unitStats } from '../testing/fixtures';
 import { deploymentPosition } from './deployment';
@@ -253,10 +253,10 @@ describe('spawnWave', () => {
       expect(w.alive[id]).toBe(1);
     }
     const mid = BATTLE.field / 2;
-    const southY = BATTLE.field + BATTLE.spawnOutside;
-    expect([w.x[1], w.y[1]]).toEqual([mid - BATTLE.spawnSpacing / 2, southY]);
+    // south foes come out of the portal (spec 2026-11-08 §3): slots 0 and 1 of its 5×5 mouth
+    expect([w.x[1], w.y[1]]).toEqual([ENEMY_PORTAL.x - 2 * ENEMY_PORTAL.spacingX, ENEMY_PORTAL.y]);
     expect([w.x[2], w.y[2]]).toEqual([mid, BATTLE.wallY + w.radius[2]!]); // raw N slot (−spawnOutside) is clamped to the wall
-    expect([w.x[3], w.y[3]]).toEqual([mid + BATTLE.spawnSpacing / 2, southY]);
+    expect([w.x[3], w.y[3]]).toEqual([ENEMY_PORTAL.x - ENEMY_PORTAL.spacingX, ENEMY_PORTAL.y]);
     expect(w.label[2]).toBe('ogre');
     expect(w.hp[2]).toBe(90);
     const events = drainEvents(w);

@@ -7,7 +7,7 @@ import { BATTLE, INTERVENTION, SPAWN_OFFSETS } from '../../data/battle';
 import { BUILDING_FOOT_OFFSET } from '../../data/boardGeometry';
 import { clampNorthY, spawnMaxY } from './bounds';
 import { deploymentPosition } from './deployment';
-import { edgePositions } from './spawnLayout';
+import { edgePositions, portalPositions } from './spawnLayout';
 import type { DamageType, TargetMode } from '../../data/types';
 import type {
   AttackStats,
@@ -729,8 +729,9 @@ export const createBattle = (setup: BattleSetup): BattleWorld => {
 };
 
 /**
- * Xuất đợt địch `index` (§8.7): lính theo thứ tự `spawns`, mỗi mép lấy edgePositions(mép, số
- * lính của mép) theo thứ tự xuất hiện. Hết entityCap thì phần thiếu bị bỏ.
+ * Xuất đợt địch `index` (§8.7): lính theo thứ tự `spawns`, mỗi mép lấy vị trí theo thứ tự xuất hiện —
+ * mép nam qua cổng (`portalPositions`, spec 2026-11-08 §3, không theo `formationRows`), các mép khác
+ * edgePositions(mép, số lính của mép). Hết entityCap thì phần thiếu bị bỏ.
  */
 export const spawnWave = (world: BattleWorld, index: number): void => {
   const wave = world.setup.waves[index];
@@ -744,7 +745,7 @@ export const spawnWave = (world: BattleWorld, index: number): void => {
   const slots: Record<Edge, { x: number; y: number }[]> = {
     N: edgePositions('N', perEdge.N, wave.formationRows),
     E: edgePositions('E', perEdge.E, wave.formationRows),
-    S: edgePositions('S', perEdge.S, wave.formationRows),
+    S: portalPositions(perEdge.S),
     W: edgePositions('W', perEdge.W, wave.formationRows),
   };
   const used: Record<Edge, number> = { N: 0, E: 0, S: 0, W: 0 };

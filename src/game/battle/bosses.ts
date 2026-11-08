@@ -3,7 +3,7 @@
  * địch (cờ `boss` miễn đẩy/kéo, không tính vào trần địch). Kỹ năng chạy theo TUỔI boss `tick − bossSpawnTick`
  * (nên Ném Bùn đầu tiên ở tick 200, Đàn Ong ở 170…), nguồn theo id tăng dần, không dùng Rng.
  */
-import { BATTLE, STATUS } from '../../data/battle';
+import { BATTLE, ENEMY_PORTAL, STATUS } from '../../data/battle';
 import { BOSS_RULES } from '../../data/bosses';
 import {
   DMG_PHYSICAL,
@@ -17,11 +17,14 @@ import {
 import { allowsFoeStructureTarget } from './targeting';
 import type { UnitStats } from './types';
 
-/** Bước 1: nếu đến `spawnTick` và boss chưa xuất hiện thì đặt boss ở mép đã chọn (đúng một lần). */
+/**
+ * Bước 1: nếu đến `spawnTick` và boss chưa xuất hiện thì đặt boss ở mép đã chọn (đúng một lần); mép nam là
+ * tâm cổng dịch chuyển (spec 2026-11-08 §3).
+ */
 export function spawnBossDue(world: BattleWorld): void {
   const boss = world.setup.boss;
   if (boss === undefined || world.bossSpawned || world.tick < boss.spawnTick) return;
-  const p = edgePositions(boss.edge, 1)[0]!;
+  const p = boss.edge === 'S' ? { x: ENEMY_PORTAL.x, y: ENEMY_PORTAL.y } : edgePositions(boss.edge, 1)[0]!;
   const id = addUnit(world, boss.stats, TEAM_FOE, p.x, p.y, p.x, p.y, -1);
   world.bossSpawned = true;
   world.bossSpawnTick = world.tick;

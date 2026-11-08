@@ -3,6 +3,7 @@ import { BATTLE } from '../data/battle';
 import type { KingId } from '../data/types';
 import { project } from '../core/iso';
 import { DecorationRenderer } from './DecorationRenderer';
+import { EnemyPortalRenderer } from './EnemyPortalRenderer';
 import { IsoWallRenderer } from './IsoWallRenderer';
 import { ensureFieldTexture, ensureGroundTexture, fieldTextureScale, groundTextureScale } from './atlas';
 
@@ -20,6 +21,7 @@ export class FieldRenderer {
   private ground: Phaser.GameObjects.TileSprite | null;
   private wall: IsoWallRenderer | null;
   private decor: DecorationRenderer | null;
+  private portal: EnemyPortalRenderer | null;
 
   constructor(scene: Phaser.Scene, seed: number, kingId?: KingId) {
     this.textures = scene.textures;
@@ -39,6 +41,7 @@ export class FieldRenderer {
     void kingId;
     this.wall = new IsoWallRenderer(scene, seed);
     this.decor = new DecorationRenderer(scene, seed);
+    this.portal = new EnemyPortalRenderer(scene);
   }
 
   /** Destroys the images, then removes the `field-<seed>` texture (nothing else uses it). */
@@ -48,6 +51,8 @@ export class FieldRenderer {
     this.wall = null;
     this.decor?.destroy();
     this.decor = null;
+    this.portal?.destroy();
+    this.portal = null;
     this.ground?.destroy();
     this.ground = null;
     this.image.destroy();

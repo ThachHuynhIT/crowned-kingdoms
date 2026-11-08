@@ -6,6 +6,7 @@ import type { Content } from '../game/cards/registry';
 import { paintBuilding, paintThrone } from './buildingArt';
 import { paintCardArt } from './cardArt';
 import { paintField, paintGroundTile, type GroundTextures } from './fieldArt';
+import { paintPortal } from './portalArt';
 import {
   ARROW_DIRS,
   paintArrow,
@@ -289,6 +290,15 @@ export const buildSpritesTexture = (
   const texture = textures.addCanvas(SPRITES_KEY, toCanvas(sheet));
   if (!texture) throw new Error('Failed to create sprites texture');
   for (const p of placed) texture.add(p.name, 0, p.x, p.y, p.art.width, p.art.height);
+};
+
+/** Texture key of the code-drawn enemy portal (spec 2026-11-08 §3). */
+export const PORTAL_KEY = 'enemy-portal';
+
+/** The enemy portal texture (painted once, never removed); the approved art replaces it in Q5. */
+export const ensurePortalTexture = (textures: Phaser.Textures.TextureManager): string => {
+  if (!textures.exists(PORTAL_KEY)) addPixelTexture(textures, PORTAL_KEY, paintPortal());
+  return PORTAL_KEY;
 };
 
 export const GROUND_KEY = 'field-ground';

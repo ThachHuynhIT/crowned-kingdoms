@@ -1,6 +1,6 @@
 import { describe, expect, it } from 'vitest';
 import { ISO, unproject } from '../../core/iso';
-import { BATTLE } from '../../data/battle';
+import { BATTLE, ENEMY_PORTAL } from '../../data/battle';
 import type { Size } from '../hud/layout';
 import {
   MAP_BOUNDS,
@@ -127,6 +127,17 @@ describe('camera model (spec 06/11/2026, P2 zoom)', () => {
     // a point west of the field (and one north of it) is off the field
     expect(worldAtView(z, DESKTOP, worldToScreen(z, DESKTOP, { x: -40, y: 400 }))).toBeNull();
     expect(worldAtView(z, DESKTOP, worldToScreen(z, DESKTOP, { x: 400, y: -20 }))).toBeNull();
+  });
+
+  it('battle_aim_accepts_portal_but_plot_hit_does_not (spec 2026-11-08 §3)', () => {
+    const z = zoomAt(overviewView(DESKTOP, 'battle'), { x: 640, y: 360 }, 2, DESKTOP, 'battle');
+    const portal = worldToScreen(z, DESKTOP, { x: ENEMY_PORTAL.x, y: ENEMY_PORTAL.y });
+    const w = worldAtView(z, DESKTOP, portal)!;
+    expect(w.x).toBeCloseTo(ENEMY_PORTAL.x, 6);
+    expect(w.y).toBeCloseTo(ENEMY_PORTAL.y, 6);
+    expect(plotAtView(z, DESKTOP, portal)).toBeNull();
+    // past the clamp line it is off the field again
+    expect(worldAtView(z, DESKTOP, worldToScreen(z, DESKTOP, { x: 384, y: BATTLE.field + BATTLE.fieldClampMargin + 8 }))).toBeNull();
   });
 
   it('pinch steps one zoom once the finger spread grows by 25% or shrinks by 20%', () => {

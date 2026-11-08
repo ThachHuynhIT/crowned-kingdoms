@@ -27,3 +27,22 @@ Nhận xét (chỉ ghi nhận, chưa chỉnh số theo quyết định của ch�
 - Số boss bị hạ giảm (Đá Núi scripted 0,22 → 0,05): boss đuổi lính khắp sân nên ít đứng trong tầm tháp.
 - Bot `random` gần như không đổi.
 - Benchmark sau Q1: 0,375 ms/tick (chuẩn), 0,418 ms/tick (G2), dưới ngưỡng 2 ms.
+
+## Q2 — địch xuất từ cổng dịch chuyển (so với Q1)
+
+| Vua | Bot | Ván (crash) | Thắng % | Năm TB | Boss bị hạ TB | HP Ngai còn % TB | Tick/trận TB |
+|---|---|---|---|---|---|---|---|
+| wheat | random | 100 (0) → 100 (0) | 0 → 0 | 7.58 → 7.82 | 0 → 0 | 37.22 → 37.51 | 770.55 → 772.33 |
+| wheat | scripted | 100 (0) → 100 (0) | 70 → 92 | 29.62 → 29.99 | 0 → 0 | 88.59 → 92.2 | 508.03 → 444.73 |
+| stone | random | 99 (1) → 99 (1) | 2.02 → 2.02 | 18.35 → 18.42 | 0 → 0.01 | 68.15 → 68.37 | 699.92 → 690.25 |
+| stone | scripted | 100 (0) → 100 (0) | 100 → 100 | 30 → 30 | 0.05 → 0.02 | 93.63 → 94.73 | 487.63 → 436.38 |
+| arcane | random | 100 (0) → 98 (2) | 0 → 0 | 11.73 → 11.84 | 0 → 0 | 59.9 → 59.55 | 653.12 → 644.38 |
+| arcane | scripted | 100 (0) → 100 (0) | 77 → 86 | 29.76 → 30 | 0.07 → 0.12 | 90.96 → 92.35 | 455.11 → 411.18 |
+
+Nhận xét (chỉ ghi nhận, chưa chỉnh số):
+
+- Quân địch giờ ra từ một cổng (đội hình 5×5 trước miệng cổng) thay cho hàng dài 24 quân/hàng, nên tụ lại một chỗ và tới bàn theo một luồng: bot `scripted` thắng nhiều hơn nữa (Lúa Mì 70 → 92%, Phép Thuật 77 → 86%), trận ngắn hơn.
+- Boss bị hạ vẫn ít (Đá Núi scripted 0,05 → 0,02).
+- Cờ Đột Kích và hàng quân năm muộn (`formationRows`) không còn trải rộng quân ở mép nam: đây là hệ quả chủ đích của cổng.
+- Bot `random` gần như không đổi.
+- Benchmark sau Q2: 0,277 ms/tick (chuẩn), 0,267 ms/tick (G2).
