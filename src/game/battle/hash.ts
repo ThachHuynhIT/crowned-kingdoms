@@ -175,7 +175,7 @@ export const hashWorld = (world: BattleWorld): number => {
   }
   h = mixU8(h, world.dmgType, n);
   h = mixU8(h, world.pulseDmgType, n);
-  for (const a of [world.flying, world.boss, world.chargeReady, world.reviveReady, world.revived, world.tuned, world.isTower, world.isBossSummon]) h = mixU8(h, a, n);
+  for (const a of [world.flying, world.boss, world.chargeReady, world.reviveReady, world.revived, world.tuned, world.isTower, world.isBossSummon, world.killGoldAll]) h = mixU8(h, a, n);
   h = mixNum(h, world.goldDelta);
   h = mixWord(h, world.battleGoldSettled ? 1 : 0);
   h = mixWord(h, world.bossSpawned ? 1 : 0);
@@ -195,6 +195,7 @@ export const hashWorld = (world: BattleWorld): number => {
   h = mixNum(h, world.throneMinHp);
   h = mixNum(h, world.souls[0]);
   h = mixNum(h, world.souls[1]);
+  h = mixNum(h, world.soulDone);
   h = mixWord(h, world.dots.length);
   for (const d of world.dots) {
     h = mixWord(h, d.victim);

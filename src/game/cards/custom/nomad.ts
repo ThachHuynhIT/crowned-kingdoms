@@ -33,9 +33,6 @@ export const watchtowerOpen: StatHandler = (ctx, params) => {
   return open > 0 ? [{ stat: 'dmg', mode: 'pct', value: pct * open }] : [];
 };
 
-/** Lều Di Động (Ngai Du Mục): chỉ là cờ dữ liệu, số lượt dời nằm ở `params.moves`; không đóng góp vàng. */
-export const mobileCamp: IncomeHandler = () => 0;
-
 /** Số lượt dời miễn phí mỗi năm theo cấp Ngai (0 nếu Ngai không có Lều Di Động). */
 export function freeMovesAllowed(state: RunState, content: Content): number {
   for (const e of content.king(state.kingId).throne.passive) {

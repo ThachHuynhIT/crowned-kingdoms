@@ -134,7 +134,8 @@ export const GROVE: KingDef = {
     hp: 320,
     armor: 0,
     attack: { dmg: 8, type: 'physical', range: cells(1.5), interval: 10, projectileSpeed: 14, onHit: [{ type: 'poison', dps: 1, ticks: 30, maxStacks: 1 }] },
-    passive: [],
+    // Sinh Trưởng: +pct% HP và DMG mỗi năm tuổi cho công trình tag `grove`, tối đa +cap%.
+    passive: [{ type: 'custom', id: 'grove_growth', params: { pct: [2, 2, 3, 3, 4], cap: 60 } }],
   },
   units: [
     {

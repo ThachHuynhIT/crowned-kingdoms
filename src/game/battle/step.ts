@@ -10,7 +10,7 @@ import { applyDamagePhase, attackPhase, deathPhase, projectilePhase, statusPhase
 import { autoFirePhase, boulderPhase, setAutoFire, tryIntervene } from './intervention';
 import { moveEntities } from './movement';
 import { tickStatuses } from './statuses';
-import { bellPhase, pulsePhase, respawnPhase, shieldPulsePhase, summonPhase } from './structures';
+import { bellPhase, pulsePhase, respawnPhase, shieldPulsePhase, soulHarvestPhase, summonPhase } from './structures';
 import { retarget } from './targeting';
 import type { BattleCommand, BattleResult, BattleSetup } from './types';
 import { TEAM_FOE, createBattle, spawnWave, type BattleWorld } from './world';
@@ -77,6 +77,7 @@ export const stepBattle = (world: BattleWorld, inputs: readonly BattleCommand[])
   statusPhase(world); // (9)
   tickStatuses(world); // bỏng, độc, hồi máu theo giây
   deathPhase(world); // (10)
+  soulHarvestPhase(world); // Thu Hồn của Ngai theo Hồn vừa có
   bannerPhase(world); // cờ hiệu theo dõi HP Ngai
   checkEnd(world); // (11)
   if (world.ended) settleBattleGold(world);

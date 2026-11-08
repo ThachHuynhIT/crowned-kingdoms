@@ -153,6 +153,8 @@ export interface Filter {
   readonly tags?: readonly CardTag[];
   readonly unitTags?: readonly UnitTag[];
   readonly cardIds?: readonly CardId[];
+  /** Chỉ công trình có cấp ≥ `minLevel` (Ngai: cấp Ngai). */
+  readonly minLevel?: Level;
 }
 export type StatKey =
   | 'hp'
@@ -195,7 +197,9 @@ export type CustomEffectId =
   | 'eclipse_pact'
   | 'bazaar_kinds'
   | 'watchtower_open'
-  | 'nomad_mobile_camp';
+  | 'nomad_mobile_camp'
+  | 'grove_growth'
+  | 'moon_soul_harvest';
 
 export type EffectDef =
   | { readonly type: 'spawn'; readonly unit: UnitId; readonly count: PerLevel }
@@ -249,8 +253,17 @@ export type EffectDef =
   | { readonly type: 'altarSummon'; readonly unit: UnitId; readonly perOffering: Scalar; readonly cap: Scalar }
   /** Tháp đánh `count` mục tiêu khác nhau (gần nhất trước) mỗi nhịp. */
   | { readonly type: 'multiAttack'; readonly count: number }
-  /** Mỗi `every` địch do lính của công trình này hạ: +`gold` vàng, tối đa `max` mỗi trận. */
-  | { readonly type: 'killGold'; readonly every: number; readonly gold: number; readonly max: number }
+  /**
+   * Mỗi `every` địch do lính của công trình này hạ (`counts: 'all'`: mọi địch bị hạ trong trận, dùng
+   * cho bị động Ngai): +`gold` vàng, tối đa `max` (theo cấp) mỗi trận.
+   */
+  | {
+      readonly type: 'killGold';
+      readonly every: number;
+      readonly gold: number;
+      readonly max: Scalar;
+      readonly counts?: 'own' | 'all';
+    }
   | {
       readonly type: 'shieldPulse';
       readonly radius: number;

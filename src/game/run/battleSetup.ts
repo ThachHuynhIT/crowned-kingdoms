@@ -2,6 +2,7 @@
 import { formationRowsFor } from '../battle/bounds';
 import { EMBER_TICKS, ENEMY_LEVEL_STAT, WAVES } from '../../data/battle';
 import { BOSSES } from '../../data/bosses';
+import { SOUL_HARVEST_UNIT } from '../../data/kings/moon';
 import { BOSS_SUMMON_UNITS } from '../../data/raiders';
 import { RUN } from '../../data/run';
 import {
@@ -15,7 +16,7 @@ import {
   TROOP_STD,
   levelMult,
 } from '../../data/scaling';
-import type { AttackSpec, BannerEffect, Level, Scalar, UnitDef } from '../../data/types';
+import type { AttackSpec, BannerEffect, EffectDef, Level, Scalar, UnitDef } from '../../data/types';
 import type { Content } from '../cards/registry';
 import type {
   AttackStats,
@@ -201,6 +202,35 @@ const throneMercenaries = (
   return { spawnAtThrone: { stats: spawnedStats(unit, state.throneLevel, sheet, content), count } };
 };
 
+/** Vàng theo số địch bị hạ (`killGold`) của công trình hoặc bị động Ngai ở cấp `level`. */
+const killGoldOf = (effects: readonly EffectDef[], level: Level): Pick<StructureSetup, 'killGold'> => {
+  const fx = effects.find((e) => e.type === 'killGold');
+  if (!fx || fx.type !== 'killGold') return {};
+  return {
+    killGold: {
+      every: fx.every,
+      gold: fx.gold,
+      max: scalarAt(fx.max, level),
+      ...(fx.counts === 'all' ? { all: true } : {}),
+    },
+  };
+};
+
+/** Thu Hồn (§6.10): cứ `souls` Hồn triệu hồi 1 lính tại Ngai, tối đa `max`; đọc thẳng từ bị động Ngai. */
+const soulSummonOf = (
+  state: RunState,
+  content: Content,
+  passive: readonly EffectDef[],
+): Pick<StructureSetup, 'soulSummon'> => {
+  const fx = passive.find((e) => e.type === 'custom' && e.id === 'moon_soul_harvest');
+  if (!fx || fx.type !== 'custom') return {};
+  const level = state.throneLevel;
+  const every = scalarAt(fx.params?.souls ?? 0, level);
+  const max = scalarAt(fx.params?.max ?? 0, level);
+  if (every <= 0 || max <= 0) return {};
+  return { soulSummon: { every, max, stats: summonStats(state, content, THRONE_PLOT, SOUL_HARVEST_UNIT, level) } };
+};
+
 /** Công trình/Ngai ở `plot` đúng như vào trận (range/radius theo px thế giới, interval theo tick); UI dùng lại, không tính lại. */
 export const structureFor = (state: RunState, plot: number, content: Content): StructureSetup => {
   const b = state.plots[plot]!.building!;
@@ -222,6 +252,8 @@ export const structureFor = (state: RunState, plot: number, content: Content): S
       shieldPulse: null,
       ...throneMercenaries(state, content, b.counters.privateers ?? 0),
       ...timingExtras(sheet, []),
+      ...killGoldOf(card.passive, state.throneLevel),
+      ...soulSummonOf(state, content, card.passive),
     };
   }
   if (card.kind === 'tome' || card.kind === 'enchantment') {
@@ -280,7 +312,6 @@ export const structureFor = (state: RunState, plot: number, content: Content): S
   const bellFx = card.effects.find((e) => e.type === 'bellPulse');
   const respawnFx = card.effects.find((e) => e.type === 'respawnLost');
   const multiFx = card.effects.find((e) => e.type === 'multiAttack');
-  const goldFx = card.effects.find((e) => e.type === 'killGold');
   return {
     ...base,
     kind: card.kind as StructureSetup['kind'],
@@ -346,9 +377,7 @@ export const structureFor = (state: RunState, plot: number, content: Content): S
     ...(respawnFx && respawnFx.type === 'respawnLost' && spawn && spawn.count > 0
       ? { respawn: { everyTicks: respawnFx.everyTicks, stats: spawn.stats, count: spawn.count } }
       : {}),
-    ...(goldFx && goldFx.type === 'killGold'
-      ? { killGold: { every: goldFx.every, gold: goldFx.gold, max: goldFx.max } }
-      : {}),
+    ...killGoldOf(card.effects, level),
   };
 };
 

@@ -116,14 +116,15 @@ export function deathBehaviours(w: BattleWorld, id: number): boolean {
 
 /**
  * Cuối trận: vàng từ `killGold` (Thuyền Cướp Biển): mỗi `every` địch do lính của công trình hạ được
- * `gold`, tối đa `max`. Gom vào `goldDelta`, chỉ một lần mỗi trận.
+ * `gold`, tối đa `max`; `killGoldAll` (Chiến Lợi Phẩm của Ngai) đếm mọi địch bị hạ trong trận. Gom vào
+ * `goldDelta`, chỉ một lần mỗi trận.
  */
 export function settleBattleGold(w: BattleWorld): void {
   if (w.battleGoldSettled) return;
   w.battleGoldSettled = true;
   for (let i = 0; i < w.count; i++) {
     if (w.killGoldEvery[i]! <= 0) continue;
-    const kills = w.killsBySource[w.sourceUid[i]!] ?? 0;
+    const kills = w.killGoldAll[i] === 1 ? w.kills : (w.killsBySource[w.sourceUid[i]!] ?? 0);
     w.goldDelta += Math.min(Math.floor(kills / w.killGoldEvery[i]!), w.killGoldMax[i]!) * w.killGoldAmount[i]!;
   }
 }

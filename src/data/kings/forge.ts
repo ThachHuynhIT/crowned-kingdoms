@@ -145,7 +145,8 @@ export const FORGE: KingDef = {
     hp: 340,
     armor: 0.1,
     attack: { dmg: 9, type: 'fire', range: cells(1.5), interval: 12, projectileSpeed: 14, onHit: [{ type: 'burn', dps: 2, ticks: 30 }] },
-    passive: [],
+    // Lửa Tôi: công trình cấp ≥ 3 +DMG theo cấp Ngai.
+    passive: [{ type: 'stat', scope: 'board', filter: { minLevel: 3 }, stat: 'dmg', mode: 'pct', value: [10, 10, 15, 15, 20] }],
   },
   units: [
     {

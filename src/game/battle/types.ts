@@ -170,8 +170,10 @@ export interface StructureSetup {
   respawn?: { everyTicks: number; stats: UnitStats; count: number } | null;
   /** đánh `count` mục tiêu khác nhau mỗi nhịp (Vực Kraken) */
   multiAttack?: number;
-  /** mỗi `every` địch do lính của công trình này hạ: +`gold` vàng, tối đa `max` mỗi trận */
-  killGold?: { every: number; gold: number; max: number } | null;
+  /** mỗi `every` địch do lính của công trình này hạ (`all`: mọi địch bị hạ trong trận): +`gold` vàng, tối đa `max` mỗi trận */
+  killGold?: { every: number; gold: number; max: number; all?: boolean } | null;
+  /** Thu Hồn (chỉ Ngai): cứ `every` Hồn phe mình triệu hồi 1 `stats` tại Ngai, tối đa `max` mỗi trận */
+  soulSummon?: { every: number; max: number; stats: UnitStats } | null;
   /** lính triệu hồi thêm tại Ngai đầu trận (Hợp Đồng Lính Đánh Thuê) */
   spawnAtThrone?: { stats: UnitStats; count: number } | null;
   /** bán kính khiêu khích: địch trong vòng này phải đánh công trình này trước; 0 = không */

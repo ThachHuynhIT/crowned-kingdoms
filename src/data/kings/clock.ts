@@ -154,7 +154,11 @@ export const CLOCK: KingDef = {
     hp: 300,
     armor: 0.1,
     attack: { dmg: 8, type: 'physical', range: cells(1.6875), interval: 12, projectileSpeed: 16 },
-    passive: [],
+    // Lên Dây: mọi lính và tháp +% tốc đánh mỗi giây (theo cấp Ngai), tối đa +40%.
+    passive: [
+      { type: 'stat', scope: 'board', filter: { kinds: ['troop', 'tower'] }, stat: 'rampAs', mode: 'flat', value: [0.5, 0.6, 0.7, 0.8, 1.0] },
+      { type: 'stat', scope: 'board', filter: { kinds: ['troop', 'tower'] }, stat: 'rampAsCap', mode: 'flat', value: 40 },
+    ],
   },
   units: [
     {

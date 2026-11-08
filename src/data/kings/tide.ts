@@ -162,7 +162,8 @@ export const TIDE: KingDef = {
     hp: 300,
     armor: 0,
     attack: { dmg: 12, type: 'physical', range: cells(1.6875), interval: 16, projectileSpeed: 12, splash: cells(0.3125), onHit: [{ type: 'knockback', px: 16 }] },
-    passive: [],
+    // Chiến Lợi Phẩm: mỗi 10 địch bị hạ trong trận (bởi bất kỳ ai) +1 vàng, tối đa theo cấp Ngai.
+    passive: [{ type: 'killGold', every: 10, gold: 1, max: [3, 3, 4, 4, 5], counts: 'all' }],
   },
   units: [
     {

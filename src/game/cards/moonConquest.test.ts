@@ -222,8 +222,10 @@ describe('the nine Moon King cards (spec 6.10)', () => {
     });
   });
 
-  it('the Moon throne carries no passive yet (G4 task 2/3): only its nine cards act', () => {
-    expect(CONTENT.king('moon').throne.passive).toEqual([]);
+  it('the Moon throne carries Thu Hồn (G4 task 2), read by battle setup, not a stat modifier', () => {
+    expect(CONTENT.king('moon').throne.passive).toEqual([
+      { type: 'custom', id: 'moon_soul_harvest', params: { souls: [6, 6, 5, 5, 4], max: 20 } },
+    ]);
     expect(collectStatSheet(withBuilding(runState(), 6, 'moon_crypt', 1), CONTENT, 6).hp.pct).toBe(0);
   });
 });

@@ -5,6 +5,9 @@ import { enemyFromKing } from './enemy';
 const dead = { owner: 'moon' as const, tags: ['undead'] as const };
 const plain = { owner: 'moon' as const, tags: [] as const };
 
+/** Đơn vị Thu Hồn (bị động Ngai Nguyệt Thực) triệu hồi tại Ngai. */
+export const SOUL_HARVEST_UNIT = 'wraith';
+
 /** Chín thẻ của Vua Ánh Trăng (spec §6.10), không gồm Ngai; chỉ có được nhờ chinh phục ở G3. */
 export const MOON_CARDS: readonly CardDef[] = [
   {
@@ -134,7 +137,8 @@ export const MOON: KingDef = {
     hp: 240,
     armor: 0,
     attack: { dmg: 10, type: 'magic', range: cells(1.6875), interval: 12, projectileSpeed: 16 },
-    passive: [],
+    // Thu Hồn: cứ `souls` Hồn (theo cấp Ngai) triệu hồi 1 `SOUL_HARVEST_UNIT` tại Ngai, tối đa `max` mỗi trận.
+    passive: [{ type: 'custom', id: 'moon_soul_harvest', params: { souls: [6, 6, 5, 5, 4], max: 20 } }],
   },
   units: [
     {
