@@ -31,7 +31,7 @@ describe('EnemyPortalRenderer', () => {
   it('portal_fallback_uses_data_and_destroy_is_idempotent: upright on the projected portal point', () => {
     const images: FakeImage[] = [];
     const scene = {
-      textures: {},
+      textures: { exists: () => true },
       add: { image: (x: number, y: number, key: string) => (images.push(new FakeImage(x, y, key)), images.at(-1)!) },
     } as unknown as Phaser.Scene;
     const r = new EnemyPortalRenderer(scene);

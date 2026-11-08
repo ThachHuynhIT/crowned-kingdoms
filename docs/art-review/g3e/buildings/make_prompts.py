@@ -355,8 +355,11 @@ POLISH_SAMPLES = [
      'seen at the 2:1 angle; a short worn dirt path leads into it from the upper-left side. Menacing but in the same '
      'cozy warm style as the approved buildings: no skulls, no gore. About 420 px wide and at most 560 px tall.'),
     ('forest_pine_a', 'one tall pine tree of the dense forest that grows behind the mountain cliff, 2:1 isometric',
-     'A single tall evergreen pine: layered conical tiers of dark and mid green needles with lighter tips on the '
-     'upper-left (lit) side, a short brown trunk, a small diamond-shaped patch of moss and fallen needles at its foot. '
+     # v2 (review 2026-11-08): v1 stood on a raised earth tile (a mosaic once many trees stand together) and was lime green.
+     'A single tall evergreen pine: layered conical tiers of DEEP, DARK forest greens (blue-green shadows, a few mid '
+     'greens, only small lighter tips on the upper-left lit side; NOT lime or yellow-green), a short dark-brown trunk. '
+     'The trunk stands DIRECTLY on the ground: NO tile, NO platform, NO earth block or raised diamond under it, no '
+     'visible ground thickness; at most a few scattered fallen needles touching the trunk foot. '
      'The camera is the same high 2:1 isometric viewpoint as the approved buildings: the tiers are seen slightly from '
      'above. About 260 px wide and at most 600 px tall, trunk foot at about y = 900. It must read clearly as one tree '
      'when many of them stand close together in a forest.'),

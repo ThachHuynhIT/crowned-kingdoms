@@ -28,10 +28,23 @@ describe('layoutForest (spec 2026-11-08 §6)', () => {
         expect(p.x).toBeGreaterThanOrEqual(F.x0 - F.jitter);
         expect(p.x).toBeLessThanOrEqual(F.x1 + F.jitter);
       }
-    const n = layoutForest(1, ASSETS).length;
-    const cells = Math.floor((F.x1 - F.x0) / F.grid) * Math.floor((F.y1 - F.y0) / F.grid);
-    expect(n).toBeGreaterThan(cells * 0.6); // dense: about 72% of the cells
-    expect(n).toBeLessThan(cells * 0.8);
+    const list = layoutForest(1, ASSETS);
+    // only where a view can reach, and dense there: about 72% of those cells
+    let cells = 0;
+    for (let j = 0; j < Math.floor((F.y1 - F.y0) / F.grid); j++)
+      for (let i = 0; i < Math.floor((F.x1 - F.x0) / F.grid); i++) {
+        const x = F.x0 + (i + 0.5) * F.grid;
+        const y = F.y0 + (j + 0.5) * F.grid;
+        if (y - x >= F.view.x0 && y - x <= F.view.x1 && (x + y) / 2 >= F.view.y0 && y + 20 <= F.y1) cells++;
+      }
+    expect(list.length).toBeGreaterThan(cells * 0.6);
+    expect(list.length).toBeLessThan(cells * 0.85);
+    expect(list.length).toBeLessThan(1200); // a static layer of at most a thousand-odd sprites
+    for (const p of list) {
+      expect(p.y - p.x).toBeGreaterThanOrEqual(F.view.x0);
+      expect(p.y - p.x).toBeLessThanOrEqual(F.view.x1);
+      expect((p.x + p.y) / 2).toBeGreaterThanOrEqual(F.view.y0);
+    }
   });
 
   it('is mostly pines, some rocks; only pines when no rock is approved', () => {
@@ -43,6 +56,6 @@ describe('layoutForest (spec 2026-11-08 §6)', () => {
   });
 
   it('forest_config_values_are_pinned', () => {
-    expect(F).toMatchObject({ salt: 6811, grid: 64, jitter: 16, occupancy: 0.72, pineShare: 0.9, y1: 152 });
+    expect(F).toMatchObject({ salt: 6811, grid: 40, jitter: 12, occupancy: 0.72, pineShare: 0.9, y1: 152 });
   });
 });

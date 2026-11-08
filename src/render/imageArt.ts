@@ -107,6 +107,14 @@ export const FOREST_APPROVED: readonly string[] = [];
 /** File of an approved forest object. */
 export const forestFile = (id: string): string => `iso/polish/${id}`;
 
+/**
+ * The enemy portal art (spec 2026-11-08 §3/§6), cut by `docs/art-review/iso-board/polish/make_polish_assets.py`; `foot`
+ * is the centre of its base diamond (where `ENEMY_PORTAL` stands) in native px. Loaded and drawn only once the owner
+ * approved it (`PORTAL_APPROVED`); until then the code-drawn portal stands there.
+ */
+export const PORTAL_ART = { file: 'iso/polish/enemy_portal', width: 112, height: 99, foot: { x: 58, y: 71.5 } } as const;
+export const PORTAL_APPROVED = false;
+
 /** Every PNG of the set (file name without `.png`). */
 export const IMAGE_ART_FILES: readonly string[] = [
   ...Object.values(IMAGE_UNITS).flatMap((prefix) => [
@@ -119,6 +127,7 @@ export const IMAGE_ART_FILES: readonly string[] = [
   WALL_FILE,
   ...DECOR_APPROVED.map(decorFile),
   ...FOREST_APPROVED.map(forestFile),
+  ...(PORTAL_APPROVED ? [PORTAL_ART.file] : []),
   ...GROUND_TEXTURES_APPROVED.map((t) => GROUND_TEXTURE_FILES[t]),
 ];
 

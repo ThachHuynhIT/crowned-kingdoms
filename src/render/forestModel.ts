@@ -33,6 +33,7 @@ export const layoutForest = (seed: number, assets: readonly DecorAsset[]): reado
       const x = Math.round(f.x0 + (i + 0.5) * f.grid + (h(3) - 0.5) * 2 * f.jitter);
       const y = Math.round(f.y0 + (j + 0.5) * f.grid + (h(4) - 0.5) * 2 * f.jitter);
       if (y + a.radius > f.y1) continue;
+      if (y - x < f.view.x0 || y - x > f.view.x1 || (x + y) / 2 < f.view.y0) continue;
       out.push({ assetId: a.id, x, y });
     }
   return out;
