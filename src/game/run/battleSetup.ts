@@ -1,7 +1,7 @@
 /** Dựng BattleSetup từ RunState (spec §5.3: G1 = cấp 1; §3.6: cấp địch). Thuần, không sửa đầu vào. */
 import { formationRowsFor } from '../battle/bounds';
 import { EMBER_TICKS, ENEMY_LEVEL_STAT, WAVES } from '../../data/battle';
-import { BOSSES } from '../../data/bosses';
+import { BOSSES, BOSS_RULES } from '../../data/bosses';
 import { SOUL_HARVEST_UNIT } from '../../data/kings/moon';
 import { BOSS_SUMMON_UNITS } from '../../data/raiders';
 import { RUN } from '../../data/run';
@@ -462,6 +462,7 @@ const scaleBoss = (boss: BossSetup, scale: number, hpMult: number, dmgMult: numb
     stats: scaleFoe(boss.stats, scale * hpMult, scale * dmgMult),
     summons,
     mirror: boss.mirror ? { ...boss.mirror, stats: scaleFoe(boss.mirror.stats, scale * hpMult, scale * dmgMult) } : null,
+    specialDamage: { mud: BOSS_RULES.bog.mudDmg * scale * dmgMult },
   };
 };
 

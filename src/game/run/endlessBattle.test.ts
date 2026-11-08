@@ -11,6 +11,7 @@ import { collectStatSheet } from './modifiers';
 import { calendarSlotAt, slotMultFor } from './calendar';
 import { buildYearArmy } from './enemyArmy';
 import { endlessArmyBudget } from './endlessRules';
+import { BOSS_RULES } from '../../data/bosses';
 import { buildBattleSetup } from './battleSetup';
 import type { EndlessModifierId } from '../../data/endless';
 import type { RunState } from './state';
@@ -149,5 +150,18 @@ describe('enemy scaling in the battle setup', () => {
     const unitHp = CONTENT.allUnits().map((u) => u.hp);
     expect(JSON.stringify(buildBattleSetup(s, CONTENT))).toBe(JSON.stringify(buildBattleSetup(s, CONTENT)));
     expect(CONTENT.allUnits().map((u) => u.hp)).toEqual(unitHp);
+  });
+});
+
+describe('boss special damage (mud throw)', () => {
+  it('endless resolves the mud damage once: base x boss scale x modifier damage; normal has no field', () => {
+    const s40 = { ...newRun(11, 'stone', CONTENT, RULES_ENDLESS), year: 40 };
+    s40.army = buildYearArmy(s40, CONTENT);
+    expect(buildBattleSetup(s40, CONTENT).boss!.specialDamage).toEqual({ mud: BOSS_RULES.bog.mudDmg * 1.25 });
+    const edge = { ...s40, endless: { ...s40.endless!, modifierId: 'double_edge' as const, modifierStartYear: 31 } };
+    expect(buildBattleSetup(edge, CONTENT).boss!.specialDamage).toEqual({ mud: BOSS_RULES.bog.mudDmg * 1.25 * 1.25 });
+    const n10 = { ...newRun(11, 'stone', CONTENT, RULES_FULL), year: 10 };
+    n10.army = buildYearArmy(n10, CONTENT);
+    expect('specialDamage' in buildBattleSetup(n10, CONTENT).boss!).toBe(false);
   });
 });

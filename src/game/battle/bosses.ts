@@ -80,7 +80,7 @@ function mudThrow(world: BattleWorld, boss: number): void {
   if (best < 0) return;
   world.damageQueue.push({
     victim: best,
-    raw: rules.mudDmg,
+    raw: world.setup.boss?.specialDamage?.mud ?? rules.mudDmg,
     type: DMG_PHYSICAL,
     sourceUid: -1,
     slowPct: 0,

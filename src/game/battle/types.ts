@@ -195,6 +195,11 @@ export interface BossSetup {
   summons: Readonly<Record<string, UnitStats>>;
   /** Lính của Bóng Gương: loại của công trình lính cấp cao nhất; null nếu không có công trình lính. */
   mirror: { stats: UnitStats; count: number } | null;
+  /**
+   * Sát thương kỹ năng riêng đã giải sẵn (Vô tận: gốc × hệ số boss × biến thể, spec 2026-11-09 §3).
+   * Vắng ở ván thường: trận dùng số gốc của `BOSS_RULES`.
+   */
+  specialDamage?: { mud: number };
 }
 
 export interface WaveSetup {
