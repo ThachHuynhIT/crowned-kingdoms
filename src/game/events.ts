@@ -12,8 +12,12 @@ export interface GameEvents {
   log: { text: string };
   'run:state': { state: RunState };
   'run:illegal': { reason: IllegalReason };
-  /** `crownPoints` = `breakdown.total`; `unlocks` lists what the run opened, or why progress was not saved. */
-  'run:ended': { won: boolean; crownPoints: number; breakdown: CrownBreakdown; unlocks: string[] };
+  /**
+   * `crownPoints` = `breakdown.total`; `unlocks` lists what the run opened, or why progress was not saved.
+   * `credited`: the points were added to the saved profile (true), were not (false: already scored, read-only
+   * profile, save failed), or there is no profile at all (null: no session, nothing to report).
+   */
+  'run:ended': { won: boolean; crownPoints: number; breakdown: CrownBreakdown; unlocks: string[]; credited: boolean | null };
   'battle:started': { setup: BattleSetup };
   'battle:tick': { tick: number };
   'battle:ended': { result: BattleResult };

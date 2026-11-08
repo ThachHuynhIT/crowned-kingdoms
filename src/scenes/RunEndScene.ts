@@ -154,5 +154,5 @@ export class RunEndScene extends Phaser.Scene {
 /** No tally in the launch data (e.g. started by hand): the run's own score, nothing unlocked. */
 const fallbackTally = (state: RunState): RunEndTally => {
   const breakdown = crownPoints(state);
-  return { crownPoints: breakdown.total, breakdown, unlocks: [] };
+  return { crownPoints: breakdown.total, breakdown, unlocks: [], credited: null };
 };

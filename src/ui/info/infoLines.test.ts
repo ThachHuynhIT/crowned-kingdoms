@@ -11,7 +11,7 @@ import { runState, withBuilding } from '../../game/testing/fixtures';
 import { buildingInfoModel, unitInfoModel } from './inspectionModel';
 import { buildingModelLines, unitModelLines, crownTally, entityAt, infoContent, placeInfoBox, runSummary, statusLines } from './infoLines';
 import { crownPoints } from '../../game/meta';
-import { META_READ_ONLY_TEXT, META_SAVE_FAILED_TEXT } from '../../data/save';
+import { META_READ_ONLY_TEXT, META_SAVE_FAILED_TEXT, RUN_ALREADY_SCORED_TEXT } from '../../data/save';
 
 describe('infoContent', () => {
   it('titles the first line and tints level, HP and spawned-unit lines from UI_PALETTE', () => {
@@ -215,9 +215,9 @@ describe('crownTally', () => {
     const s = runState({ rules: RULES_FULL, phase: 'ended', ...over });
     return { ...s, stats: { ...s.stats, completedYears: 30, conquered: 4, bossesWon: 3, ...stats } };
   };
-  const tallyOf = (state: RunState, unlocks: string[] = []) => {
+  const tallyOf = (state: RunState, unlocks: string[] = [], credited: boolean | null = true) => {
     const breakdown = crownPoints(state);
-    return { crownPoints: breakdown.total, breakdown, unlocks };
+    return { crownPoints: breakdown.total, breakdown, unlocks, credited };
   };
 
   it('a won run at Gai 2: each term, the thorn multiplier with a comma decimal, then the total that was credited', () => {
@@ -253,6 +253,18 @@ describe('crownTally', () => {
     const state = ended({ won: false });
     const lines = crownTally(state, tallyOf(state, [META_SAVE_FAILED_TEXT, META_READ_ONLY_TEXT]));
     expect(lines.slice(-2).map((l) => l.tone)).toEqual(['warning', 'warning']);
+  });
+
+  it('says the run was already scored only when a profile deduped it', () => {
+    const state = ended({ won: false });
+    const texts = (unlocks: string[], credited: boolean | null) => crownTally(state, tallyOf(state, unlocks, credited)).map((l) => l.text);
+    const dedupe = crownTally(state, tallyOf(state, [], false));
+    expect(dedupe.at(-1)).toEqual({ text: RUN_ALREADY_SCORED_TEXT, tone: 'warning' });
+    expect(RUN_ALREADY_SCORED_TEXT).toBe('Ván này đã được tính điểm trước đó.');
+    expect(texts([], true)).not.toContain(RUN_ALREADY_SCORED_TEXT); // credited
+    expect(texts([], null)).not.toContain(RUN_ALREADY_SCORED_TEXT); // no session: nothing to say
+    expect(texts([META_READ_ONLY_TEXT], false)).toEqual([...texts([], true), META_READ_ONLY_TEXT]);
+    expect(texts([META_SAVE_FAILED_TEXT], false)).toEqual([...texts([], true), META_SAVE_FAILED_TEXT]);
   });
 });
 

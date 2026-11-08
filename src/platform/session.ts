@@ -56,10 +56,16 @@ export async function openSession(store: SaveStore, content: Content): Promise<G
   const settle = (state: RunState): Promise<SettleOutcome> =>
     queued(async () => {
       const r = settleRun(profile, state);
-      const outcome = (unlocks: string[]): SettleOutcome => ({ crownPoints: r.breakdown.total, breakdown: r.breakdown, unlocks });
-      if (readOnly) return outcome([META_READ_ONLY_TEXT]);
-      if (r.profile !== profile) await commit(r.profile); // same run already settled: nothing to write
-      return outcome(r.unlocks);
+      const outcome = (unlocks: string[], credited: boolean): SettleOutcome => ({
+        crownPoints: r.breakdown.total,
+        breakdown: r.breakdown,
+        unlocks,
+        credited,
+      });
+      if (readOnly) return outcome([META_READ_ONLY_TEXT], false);
+      if (r.profile === profile) return outcome(r.unlocks, false); // same run already settled: nothing to write
+      await commit(r.profile);
+      return outcome(r.unlocks, true);
     });
 
   const unlock = (apply: (p: MetaProfile) => MetaProfile): Promise<UnlockResult> =>

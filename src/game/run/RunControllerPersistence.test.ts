@@ -261,13 +261,13 @@ describe('RunController at the end of a run (G4 meta)', () => {
       this.settled.push(state);
       if (this.fail) return Promise.reject(new Error('disk full'));
       const breakdown = crownPoints(state);
-      return Promise.resolve({ crownPoints: breakdown.total, breakdown, unlocks: ['Mở đặc quyền: X'] });
+      return Promise.resolve({ crownPoints: breakdown.total, breakdown, unlocks: ['Mở đặc quyền: X'], credited: true });
     }
   }
 
   const endRun = async (p: SessionPersistence) => {
     const { bus, controller, order } = setup(lastLife(), p);
-    const ended: { won: boolean; crownPoints: number; breakdown: CrownBreakdown; unlocks: string[] }[] = [];
+    const ended: { won: boolean; crownPoints: number; breakdown: CrownBreakdown; unlocks: string[]; credited: boolean | null }[] = [];
     bus.on('run:ended', (e) => {
       order.push('ended');
       ended.push(e);
@@ -288,7 +288,7 @@ describe('RunController at the end of a run (G4 meta)', () => {
     expect(p.settled).toHaveLength(1);
     expect(p.settled[0]).toBe(controller.state);
     const breakdown = crownPoints(controller.state);
-    expect(ended).toEqual([{ won: false, crownPoints: breakdown.total, breakdown, unlocks: ['Mở đặc quyền: X'] }]);
+    expect(ended).toEqual([{ won: false, crownPoints: breakdown.total, breakdown, unlocks: ['Mở đặc quyền: X'], credited: true }]);
     expect(order.slice(-2)).toEqual(['state:ended', 'ended']);
   });
 
@@ -300,7 +300,7 @@ describe('RunController at the end of a run (G4 meta)', () => {
     expect(p.log.at(-1)).toBe('settle');
     expect(p.log).not.toContain('checkpoint:ended');
     const breakdown = crownPoints(controller.state);
-    expect(ended).toEqual([{ won: false, crownPoints: breakdown.total, breakdown, unlocks: [META_SAVE_FAILED_TEXT] }]);
+    expect(ended).toEqual([{ won: false, crownPoints: breakdown.total, breakdown, unlocks: [META_SAVE_FAILED_TEXT], credited: false }]);
   });
 
   it('a persistence without settle clears the run and reports the computed score', async () => {
@@ -309,6 +309,6 @@ describe('RunController at the end of a run (G4 meta)', () => {
     expect(p.writes.at(-1)!.phase).toBe('ended');
     const breakdown = crownPoints(controller.state);
     expect(breakdown.total).toBeGreaterThan(0);
-    expect(ended).toEqual([{ won: false, crownPoints: breakdown.total, breakdown, unlocks: [] }]);
+    expect(ended).toEqual([{ won: false, crownPoints: breakdown.total, breakdown, unlocks: [], credited: null }]);
   });
 });

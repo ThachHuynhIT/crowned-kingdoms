@@ -151,7 +151,7 @@ describe('RunController', () => {
     expect(controller.state.phase).toBe('ended');
     expect(order.slice(-2)).toEqual(['state', 'ended']);
     const breakdown = crownPoints(controller.state);
-    expect(ended).toEqual([{ won: false, crownPoints: breakdown.total, breakdown, unlocks: [] }]);
+    expect(ended).toEqual([{ won: false, crownPoints: breakdown.total, breakdown, unlocks: [], credited: null }]);
   });
 
   it('dispose stops handling ui:command', () => {

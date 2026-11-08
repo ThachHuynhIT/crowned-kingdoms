@@ -12,10 +12,10 @@ import { applyCommand } from './commands';
 import { hasPlayableCard } from './playable';
 import type { RunCommand, RunState } from './state';
 
-/** Điểm tính tại chỗ khi không có hồ sơ để chấm (hoặc chấm hỏng). */
+/** Điểm tính tại chỗ khi không có hồ sơ để chấm (hoặc chấm hỏng: không được cộng). */
 const localOutcome = (state: RunState, unlocks: string[]): SettleOutcome => {
   const breakdown = crownPoints(state);
-  return { crownPoints: breakdown.total, breakdown, unlocks };
+  return { crownPoints: breakdown.total, breakdown, unlocks, credited: false };
 };
 
 /**
@@ -127,8 +127,10 @@ export class RunController {
       this.bus.emit('run:state', { state: this.current });
       for (const event of result.events) {
         if (event.type === 'runEnded') {
+          // No outcome: no profile was consulted (no session), so there is nothing to say about crediting.
           const o = outcome ?? localOutcome(result.state, []);
-          this.bus.emit('run:ended', { won: event.won, crownPoints: o.crownPoints, breakdown: o.breakdown, unlocks: o.unlocks });
+          const credited = outcome === null ? null : outcome.credited;
+          this.bus.emit('run:ended', { won: event.won, crownPoints: o.crownPoints, breakdown: o.breakdown, unlocks: o.unlocks, credited });
         }
       }
       if (command.type === 'setAutoFire') this.active?.setAutoFire(command.on);

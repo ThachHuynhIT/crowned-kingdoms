@@ -47,4 +47,6 @@ export interface SettleOutcome {
   breakdown: CrownBreakdown;
   /** Những gì vừa mở (tiếng Việt), hoặc lời báo tiến trình không lưu được. */
   unlocks: string[];
+  /** true chỉ khi điểm thật sự được cộng vào hồ sơ đã lưu; false khi ván đã chấm rồi, hồ sơ chỉ đọc, hoặc ghi hỏng. */
+  credited: boolean;
 }

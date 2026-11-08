@@ -117,13 +117,15 @@ describe('session meta profile (G4)', () => {
     const run = fakeRun({ years: 10, conquered: 2, bosses: 1, won: false });
     const first = await createSession(disk, () => undefined, CONTENT);
     const out = await first.settleRun(run);
+    expect(out.credited).toBe(true);
     expect(out.breakdown).toEqual(crownPoints(run));
     expect(out.crownPoints).toBe(21);
     expect(first.meta().crownPoints).toBe(21);
     const second = await createSession(disk, () => undefined, CONTENT);
     expect(second.meta().crownPoints).toBe(21);
     expect(second.meta().mastery.wheat).toBe(21);
-    await second.settleRun(run);
+    const again = await second.settleRun(run);
+    expect(again).toMatchObject({ credited: false, crownPoints: 21, unlocks: [] });
     expect(second.meta().crownPoints).toBe(21);
   });
 
@@ -154,7 +156,7 @@ describe('session meta profile (G4)', () => {
     expect(await s.unlockCard('neutral_duplicate')).toEqual({ ok: false, reason: 'readOnly', message: META_READ_ONLY_TEXT });
     const { controller, ended } = await playToEnd(s, lastLife());
     expect(ended).toEqual([
-      expect.objectContaining({ crownPoints: crownPoints(controller.state).total, unlocks: [META_READ_ONLY_TEXT] }),
+      expect.objectContaining({ crownPoints: crownPoints(controller.state).total, unlocks: [META_READ_ONLY_TEXT], credited: false }),
     ]);
     expect(s.meta().crownPoints).toBe(500);
     expect(store.log).not.toContain('saveMeta');

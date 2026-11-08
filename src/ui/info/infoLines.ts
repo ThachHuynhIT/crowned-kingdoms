@@ -3,7 +3,7 @@ import { TICKS_PER_SECOND } from '../../core/SimClock';
 import type { BattleWorld } from '../../game/battle/world';
 import type { RunState } from '../../game/run/state';
 import { UI_PALETTE } from '../../data/uiPalette';
-import { META_READ_ONLY_TEXT, META_SAVE_FAILED_TEXT } from '../../data/save';
+import { META_READ_ONLY_TEXT, META_SAVE_FAILED_TEXT, RUN_ALREADY_SCORED_TEXT } from '../../data/save';
 import type { CrownBreakdown } from '../../game/meta';
 import { decimalVi } from '../crowns/crownsModel';
 import type { Point, Size, TooltipContent } from '../hud/layout';
@@ -112,6 +112,8 @@ export interface RunEndTally {
   crownPoints: number;
   breakdown: CrownBreakdown;
   unlocks: readonly string[];
+  /** Added to the saved profile (true), not added (false), or no profile in play (null / missing). */
+  credited?: boolean | null;
 }
 
 export type TallyTone = 'plain' | 'total' | 'unlock' | 'warning';
@@ -140,6 +142,10 @@ export const crownTally = (state: RunState, tally: RunEndTally): TallyLine[] => 
   if (state.difficulty > 0) lines.push(plain(`Gai ${state.difficulty}: ×${decimalVi(b.multiplier)}`));
   lines.push({ text: `Tổng: ${b.total} điểm Vương Miện`, tone: 'total' });
   for (const text of tally.unlocks) lines.push({ text, tone: WARNINGS.includes(text) ? 'warning' : 'unlock' });
+  // Not credited and no notice explaining why: the profile already held this run (dedupe).
+  if (tally.credited === false && !tally.unlocks.some((t) => WARNINGS.includes(t))) {
+    lines.push({ text: RUN_ALREADY_SCORED_TEXT, tone: 'warning' });
+  }
   return lines;
 };
 

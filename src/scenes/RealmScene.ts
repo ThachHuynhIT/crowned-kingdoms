@@ -190,8 +190,8 @@ export class RealmScene extends Phaser.Scene {
     const bus = this.bus;
     bus.on('run:state', ({ state }) => this.onState(state));
     bus.on('battle:started', () => this.onBattleStarted());
-    bus.on('run:ended', ({ crownPoints, breakdown, unlocks }) => {
-      this.endTally = { crownPoints, breakdown, unlocks };
+    bus.on('run:ended', ({ crownPoints, breakdown, unlocks, credited }) => {
+      this.endTally = { crownPoints, breakdown, unlocks, credited };
       if (this.awaitingEnd) this.continueFlow();
     });
     bus.on('ui:select-card', ({ handIndex }) => this.select(handIndex));
