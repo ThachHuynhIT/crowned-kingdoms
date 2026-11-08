@@ -1,13 +1,16 @@
 import { describe, expect, it } from 'vitest';
 import { Rng } from '../../../core/random';
 import { RULES_FULL } from '../../../data/rules';
-import type { KingId } from '../../../data/types';
+import type { CardId, KingId } from '../../../data/types';
 import { simulateBattle } from '../../battle/step';
 import { CONTENT } from '../../cards/registry';
 import { buildBattleSetup } from '../../run/battleSetup';
 import { applyCommand } from '../../run/commands';
 import type { RunCommand, RunState } from '../../run/state';
+import { THRONE_PLOT } from '../../run/board';
 import { newRun } from '../../run/yearFlow';
+import { runState, withBuilding } from '../../testing/fixtures';
+import { runHeadless } from '../headless';
 import { scriptedBot } from './scripted';
 
 interface Trace {
@@ -76,5 +79,46 @@ describe('scripted bot on stone, seed 1 (diagnostic for the year-10 boss)', () =
     );
     expect(state.year).toBeGreaterThanOrEqual(1);
     expect(state.year).toBeLessThanOrEqual(30);
+  }, 120_000);
+});
+
+describe('scripted bot and run-state refusals (G4 meta cards)', () => {
+  const META_CARDS = ['neutral_royal_seal', 'moon_eclipse_pact'] as CardId[];
+
+  /** Throne level 5 (Royal Seal → maxLevel) and one life (Eclipse Pact → lastLife), both in hand. */
+  const refusedHand = (): RunState => {
+    const base = withBuilding(runState({ lives: 1 }), 6, 'wheat_militia', 1);
+    return {
+      ...base,
+      throneLevel: 5,
+      plots: base.plots.map((p, i) => (i === THRONE_PLOT ? { ...p, building: { ...p.building!, level: 5 } } : p)),
+      unlockedCards: ['neutral_royal_seal' as CardId],
+      deck: [...base.deck, ...META_CARDS],
+      hand: [...META_CARDS],
+    };
+  };
+
+  it('never plays a card that the run state refuses: every command it returns is accepted', () => {
+    let state = refusedHand();
+    const rng = new Rng(1);
+    for (let step = 0; step < 8 && state.phase === 'planning'; step++) {
+      const cmd = scriptedBot(state, CONTENT, rng);
+      if (cmd.type === 'play') expect(META_CARDS).not.toContain(state.hand[cmd.handIndex]);
+      const r = applyCommand(state, cmd, CONTENT);
+      if ('error' in r) throw new Error(`illegal ${JSON.stringify(cmd)}: ${r.error}`);
+      state = r.state;
+    }
+  });
+
+  it('a headless run with both meta cards unlocked completes', () => {
+    const out = runHeadless({
+      seed: 3,
+      kingId: 'wheat',
+      rules: RULES_FULL,
+      bot: scriptedBot,
+      unlockedCards: ['neutral_duplicate', 'neutral_royal_seal'] as CardId[],
+    });
+    expect(out.state.phase).toBe('ended');
+    expect(out.state.unlockedCards).toEqual(['neutral_duplicate', 'neutral_royal_seal']);
   }, 120_000);
 });
