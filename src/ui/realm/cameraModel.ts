@@ -1,23 +1,21 @@
 import { project, unproject } from '../../core/iso';
 import { BATTLE } from '../../data/battle';
 import type { Point, Rect, Size } from '../hud/layout';
-import { cameraScroll, realmCamera, screenToWorld, type RealmPhase } from './realmLayout';
+import { ZOOM_MAX, cameraScroll, overviewZoom, realmCamera, screenToWorld, type RealmPhase } from './realmLayout';
 
 /**
  * The realm camera with zoom and pan (spec 06/11/2026, P2). Pure maths: RealmScene owns the
  * Phaser camera and applies these views; the HUD scenes get the live view on the bus
- * (`realm:view`) and map screen points through it. Zoom is always a whole number (pixel art):
- * the overview step is the phase camera of `realmCamera`, the steps above it go up to `ZOOM_MAX`.
- * At the overview step the view is exactly `realmCamera` and does not pan; above it the view
- * pans and stays inside `MAP_BOUNDS`.
+ * (`realm:view`) and map screen points through it. Zoom is free (spec 2026-11-08 §4): from the phase's
+ * overview zoom (`overviewZoom`, the camera of `realmCamera`) up to `ZOOM_MAX`; the view pans at any zoom and stays
+ * inside the map (`clampView`). `snapView` gives the pixel-snapped view that is actually drawn.
  */
 export interface CameraView {
   readonly zoom: number;
   readonly scroll: Point;
 }
 
-/** Highest zoom step. */
-export const ZOOM_MAX = 3;
+export { ZOOM_MAX };
 
 /** The world area the camera may show: the field with the spawn rows south and a margin east/west. */
 const WORLD_BOUNDS = {
@@ -35,18 +33,39 @@ export const MAP_BOUNDS = {
   y1: (WORLD_BOUNDS.x1 + WORLD_BOUNDS.y1) / 2,
 } as const;
 
-/** Pinch: one step in once the finger spread grows by 25%, one step out once it shrinks by 20%. */
-const PINCH_IN = 1.25;
-const PINCH_OUT = 0.8;
+/** Wheel: the zoom changes by `WHEEL_RATE` of the wheel delta, at most `WHEEL_MAX` per event (spec 2026-11-08 §4). */
+const WHEEL_RATE = 0.001;
+const WHEEL_MAX = 100;
 
 export const overviewView = (screen: Size, phase: RealmPhase): CameraView => realmCamera(screen, phase);
 
-/** Whole zoom steps from the overview to `ZOOM_MAX` (just the overview if it is already higher). */
-export const zoomSteps = (screen: Size, phase: RealmPhase): number[] => {
-  const base = overviewView(screen, phase).zoom;
-  const out: number[] = [];
-  for (let z = base; z <= Math.max(base, ZOOM_MAX); z++) out.push(z);
-  return out;
+/** The free zoom range of a phase: from its overview zoom to `ZOOM_MAX` (spec 2026-11-08 §4). */
+export const zoomLimits = (screen: Size, phase: RealmPhase): { min: number; max: number } => {
+  const min = overviewZoom(screen, phase);
+  return { min, max: Math.max(min, ZOOM_MAX) };
+};
+
+/** Zoom after one wheel event of delta `dy` (up = negative = in): a ratio, at most ±10% per event. */
+export const wheelZoom = (zoom: number, dy: number): number =>
+  zoom * (1 - Math.max(-WHEEL_MAX, Math.min(WHEEL_MAX, dy)) * WHEEL_RATE);
+
+/** Pinch zoom: the zoom at the gesture's start times the ratio of the finger spreads (squared distances given). */
+export const pinchZoom = (startZoom: number, startSq: number, nowSq: number): number =>
+  startSq > 0 && nowSq > 0 && Number.isFinite(nowSq) ? startZoom * Math.sqrt(nowSq / startSq) : startZoom;
+
+/**
+ * The view as drawn (spec 2026-11-08 §4): Phaser draws world point p at `(1 − z)·mid − z·scroll + z·p`, so the
+ * camera translation `(1 − z)·mid − z·scroll` is rounded to whole screen pixels and the scroll solved back. Nothing
+ * shimmers at a fractional zoom; the view moves at most half a screen pixel. Only for drawing and the HUDs: pan and
+ * zoom keep accumulating on the unsnapped view.
+ */
+export const snapView = (view: CameraView, screen: Size): CameraView => {
+  const z = view.zoom;
+  const axis = (scroll: number, half: number): number => {
+    const t = (1 - z) * half - z * scroll;
+    return ((1 - z) * half - Math.round(t)) / z;
+  };
+  return { zoom: z, scroll: { x: axis(view.scroll.x, screen.w / 2), y: axis(view.scroll.y, screen.h / 2) } };
 };
 
 /**
@@ -94,13 +113,54 @@ const clampRect = (view: CameraView, screen: Size): CameraView => {
   };
 };
 
-/** Zoom to the whole step nearest below `next` (clamped to the steps), keeping the world point under `p` still. */
+/**
+ * Zoom to `next`, clamped to the phase's free range (spec 2026-11-08 §4), keeping the world point under `p` still
+ * unless the map edge clamp wins. Reaching the overview zoom does not snap the view back to the overview centre.
+ */
 export const zoomAt = (view: CameraView, p: Point, next: number, screen: Size, phase: RealmPhase): CameraView => {
-  const steps = zoomSteps(screen, phase);
-  const zoom = Math.min(steps[steps.length - 1]!, Math.max(steps[0]!, Math.floor(next)));
-  if (zoom === steps[0]) return overviewView(screen, phase);
+  const { min, max } = zoomLimits(screen, phase);
+  const zoom = Math.min(max, Math.max(min, Number.isFinite(next) ? next : view.zoom));
   const world = screenToWorld(p, view.scroll, screen, view.zoom);
   return clampView({ zoom, scroll: cameraScroll(world, p, screen, zoom) }, screen);
+};
+
+/**
+ * Pinch (spec 2026-11-08 §4): the zoom follows the finger spread from the gesture's start view, and the world point
+ * that was under the starting midpoint stays under the current midpoint (so two fingers also pan), within the zoom
+ * range and the map.
+ */
+export const pinchView = (
+  start: CameraView,
+  startMid: Point,
+  nowMid: Point,
+  startSq: number,
+  nowSq: number,
+  screen: Size,
+  phase: RealmPhase,
+): CameraView => {
+  const { min, max } = zoomLimits(screen, phase);
+  const zoom = Math.min(max, Math.max(min, pinchZoom(start.zoom, startSq, nowSq)));
+  const anchor = screenToWorld(startMid, start.scroll, screen, start.zoom);
+  return clampView({ zoom, scroll: cameraScroll(anchor, nowMid, screen, zoom) }, screen);
+};
+
+/** True when `view` is the phase's overview camera (the player has not zoomed or panned it). */
+export const isOverview = (view: CameraView, screen: Size, phase: RealmPhase): boolean => {
+  const o = overviewView(screen, phase);
+  const near = (a: number, b: number): boolean => Math.abs(a - b) < 1e-6;
+  return near(view.zoom, o.zoom) && near(view.scroll.x, o.scroll.x) && near(view.scroll.y, o.scroll.y);
+};
+
+/**
+ * A hand-set view carried into another phase (spec 2026-11-08 §4): same screen-centre world point, the zoom raised
+ * to the new phase's overview zoom if it was below it, kept inside the map.
+ */
+export const keepView = (view: CameraView, screen: Size, phase: RealmPhase): CameraView => {
+  const { min, max } = zoomLimits(screen, phase);
+  const zoom = Math.min(max, Math.max(min, view.zoom));
+  const mid = { x: screen.w / 2, y: screen.h / 2 };
+  const centre = screenToWorld(mid, view.scroll, screen, view.zoom);
+  return clampView({ zoom, scroll: cameraScroll(centre, mid, screen, zoom) }, screen);
 };
 
 /**
@@ -171,10 +231,3 @@ export const plotRectAtView = (view: CameraView, screen: Size, plot: number): Re
   return { x, y, w: Math.max(...xs) - x, h: Math.max(...ys) - y };
 };
 
-/** −1, 0 or +1 zoom step for a pinch whose squared finger spread went from `startSq` to `nowSq`. */
-export const pinchStep = (startSq: number, nowSq: number): -1 | 0 | 1 => {
-  if (!(startSq > 0)) return 0;
-  if (nowSq >= startSq * PINCH_IN * PINCH_IN) return 1;
-  if (nowSq <= startSq * PINCH_OUT * PINCH_OUT) return -1;
-  return 0;
-};

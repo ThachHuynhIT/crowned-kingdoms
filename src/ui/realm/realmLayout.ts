@@ -14,8 +14,20 @@ import { calendarStripLayout } from '../planning/calendarStripLayout';
 /** §10.1: from 768 px wide the desktop layout is used. */
 export const isDesktop = (width: number): boolean => width >= 768;
 
-/** Planning zoom on mobile: one 64 px plot = 64 screen px (touch targets stay ≥ 44 px; spec 06/11/2026). */
-export const PLANNING_ZOOM = 1;
+/**
+ * Farthest zoom-out on a phone (spec 2026-11-08 §4): a plot diamond 128z × 64z holds an axis-aligned square of side
+ * 128z/3, so z = 33/32 is the smallest zoom that keeps a 44 × 44 touch square inside every plot.
+ */
+export const PLANNING_ZOOM = 33 / 32;
+/** Highest camera zoom (spec 2026-11-08 §4: free zoom up to 3×). */
+export const ZOOM_MAX = 3;
+/** Desktop overview: the board fills this share of the screen width (owner 08/11/2026, from the reference picture). */
+export const OVERVIEW_BOARD_SHARE = 0.65;
+/** Desktop: the board stays below the top HUD rows (lives, strip, year label) … */
+const DESK_TOP_HUD = 104;
+/** … and above the hand (planning, with a 16 px gap) or the bottom bars (battle). */
+const DESK_HAND_GAP = 16;
+const DESK_BATTLE_BOTTOM = 72;
 /** The board is 5×5 plots (spec §4.1, `src/game/run/board.ts`). */
 const BOARD_SIDE = 5;
 /**
@@ -25,16 +37,25 @@ const BOARD_SIDE = 5;
 const ISO_BOARD_W = 2 * BOARD_SIDE * BATTLE.plot;
 const ISO_BOARD_H = BOARD_SIDE * BATTLE.plot;
 
-/** §10.7: the field may be cropped up to 48 px top and bottom. */
-export const battleZoom = (width: number, height: number): number =>
-  Math.max(1, Math.floor(Math.min(width / 2, height + 96) / BATTLE.field));
-
 /**
- * Planning camera zoom (§10.4): on desktop the battle zoom, so both phases share one camera;
- * on mobile `PLANNING_ZOOM`, and the camera eases to the battle zoom when the battle starts.
+ * The overview (farthest) zoom of a phase (spec 2026-11-08 §4), a free (fractional) zoom. Desktop: the board is
+ * `OVERVIEW_BOARD_SHARE` of the screen width, but no taller than the room between the top HUD and the hand
+ * (planning) or the bottom bars (battle), and never past `ZOOM_MAX`. Phone: `PLANNING_ZOOM` in both phases
+ * (touch targets first; the player drags to the side plots).
  */
-export const planningZoom = (screen: Size): number =>
-  isDesktop(screen.w) ? battleZoom(screen.w, screen.h) : PLANNING_ZOOM;
+export const overviewZoom = (screen: Size, phase: RealmPhase, handSize = 3): number => {
+  if (!isDesktop(screen.w)) return PLANNING_ZOOM;
+  const bottom =
+    phase === 'planning' ? handRow(screen, DESK.card, handSize)[0]!.y - DESK_HAND_GAP : screen.h - DESK_BATTLE_BOTTOM;
+  const room = Math.max(1, bottom - DESK_TOP_HUD);
+  return Math.max(0.25, Math.min((OVERVIEW_BOARD_SHARE * screen.w) / ISO_BOARD_W, room / ISO_BOARD_H, ZOOM_MAX));
+};
+
+/** Battle overview zoom (§10.7, spec 2026-11-08 §4). */
+export const battleZoom = (width: number, height: number): number => overviewZoom({ w: width, h: height }, 'battle');
+
+/** Planning overview zoom (§10.4, spec 2026-11-08 §4); the camera eases to the battle one when a battle starts. */
+export const planningZoom = (screen: Size, handSize = 3): number => overviewZoom(screen, 'planning', handSize);
 
 const BUTTON = 48;
 const BUTTON_GAP = 8;
@@ -57,7 +78,7 @@ const PHONE = {
   /** Below the calendar row and the ✓/✕ row above the board. */
   boardY: 180,
   /** Deck / reroll / sell, one row under the board; ends well above the hand (y 650). */
-  buttons: { w: 84, h: 48, y: 508 },
+  buttons: { w: 84, h: 48, y: 530 },
   card: { w: 108, h: 162, gap: 8 },
 } as const;
 
@@ -67,6 +88,8 @@ const YEAR_LABEL_H = 26;
 const STATUS_H = 44;
 const STATUS_H_PHONE = 40;
 const STATUS_W = 240;
+/** Height of the desktop play-hint box (one or two lines of 13 px text in a tooltip frame). */
+const HINT_H = 48;
 const HAND_BOTTOM = 10;
 
 export interface PlanningLayout {
@@ -182,10 +205,12 @@ const besidePlot = (cell: Rect, screen: Size): { confirm: Rect; cancel: Rect } =
 };
 
 /**
- * From this width the decree / quest column (left) and the scout panel (right) fit beside the
- * 640 px isometric board; narrower desktops get a button for each, like the phone.
+ * From this width the decree / quest column (left) and the scout panel (right) may stand beside the
+ * isometric board, and only where they clear its box by `PANEL_CLEAR`; otherwise each becomes a button,
+ * like the phone (spec 2026-11-08 §4).
  */
 const WIDE_DESKTOP = 1200;
+const PANEL_CLEAR = 16;
 const DECREE_PANEL_W = 260;
 
 /** Help button next to the gold box (same height); 52 wide, so it is a comfortable touch target too. */
@@ -193,12 +218,13 @@ const helpRect = (gold: Rect): Rect => ({ x: gold.x + gold.w + GAP, y: gold.y, w
 
 const desktopLayout = (screen: Size, handSize: number): PlanningLayout => {
   const { w, h } = screen;
-  const zoom = planningZoom(screen);
+  const zoom = planningZoom(screen, handSize);
   const boardW = ISO_BOARD_W * zoom;
   const boardH = ISO_BOARD_H * zoom;
   const lives = { x: MARGIN, y: MARGIN, w: DESK.top.lives, h: DESK.top.h };
   const gold = { x: lives.x + lives.w + GAP, y: MARGIN, w: DESK.top.gold, h: DESK.top.h };
-  const wide = w >= WIDE_DESKTOP;
+  const wide =
+    w >= WIDE_DESKTOP && (w - boardW) / 2 >= MARGIN + Math.max(DECREE_PANEL_W, DESK.scout.w) + PANEL_CLEAR;
   // The year strip sits in the middle of the top edge (right of the help button on a narrow window),
   // with the year label right under it.
   const stripW = CALENDAR_CELLS * CELL + (CALENDAR_CELLS - 1) * GAP;
@@ -216,10 +242,11 @@ const desktopLayout = (screen: Size, handSize: number): PlanningLayout => {
   const year = inline
     ? { x: stripX + stripW + GAP, y: Math.round(MARGIN + (CELL - YEAR_LABEL_H) / 2), w: DESK.top.year, h: YEAR_LABEL_H }
     : { x: Math.round(stripX + stripW / 2 - DESK.top.year / 2), y: underY, w: DESK.top.year, h: YEAR_LABEL_H };
-  // Centred like the battle camera's board centre, lowered no further than the hand allows,
-  // and never up into the top row.
-  const topLimit = year.y + year.h + GAP + boardH / 2;
-  const centreY = Math.max(topLimit, Math.min(h / 2, first.y - GAP - boardH / 2));
+  // Centred in the band between the top HUD and the hand (spec 2026-11-08 §4: the overview zoom is chosen so the
+  // board fits it), so a lifted selected card stays clear of the board; never up into the year label.
+  const bandTop = Math.max(DESK_TOP_HUD, year.y + year.h + GAP / 2);
+  const bandBottom = first.y - DESK_HAND_GAP;
+  const centreY = Math.max(bandTop + boardH / 2, (bandTop + bandBottom) / 2);
   const board = {
     x: Math.round(w / 2 - boardW / 2),
     y: Math.round(centreY - boardH / 2),
@@ -268,11 +295,14 @@ const desktopLayout = (screen: Size, handSize: number): PlanningLayout => {
     deck,
     fight: fightOver(screen, hand),
     ...besidePlot(centre, screen),
+    // The play hint sits in the empty top-left corner of the board box, beside the diamond's top corner: the diamond is
+    // 2·d wide on each side at depth d, so a box HINT_H tall clears it by GAP (spec 2026-11-08 §4: the board now fills
+    // the band, there is no row above it).
     hint: {
       x: board.x,
-      y: Math.max(year.y + year.h, MARGIN + CELL) + MARGIN,
-      w: board.w,
-      h: Math.max(0, board.y - GAP - (Math.max(year.y + year.h, MARGIN + CELL) + MARGIN)),
+      y: board.y,
+      w: Math.max(0, Math.round(board.w / 2 - (board.w / board.h) * HINT_H - GAP)),
+      h: HINT_H,
     },
   };
 };

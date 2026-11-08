@@ -205,7 +205,7 @@ Phong cách **đã được chủ dự án duyệt trong chat (29/10/2026)** qua
 
 ## Hiển thị
 
-- Game chạy `pixelArt: true` (nearest-neighbour) và **zoom số nguyên**: bậc tổng quan `max(1, floor(min(width, height + 96) / 768))` (thường là 1), người chơi zoom thêm 2×/3× bằng lăn chuột hoặc chụm hai ngón (06/11/2026). Không bao giờ scale lẻ; sprite/scroll hiển thị snap pixel, không sửa float của world để snap render. Chữ `FONT_UI` vẽ ở kích thước hiển thị gốc, không scale texture text theo tỷ lệ lẻ; kiểm độ rõ/glyph tiếng Việt bằng browser.
+- Game chạy `pixelArt: true` (nearest-neighbour). **Camera thế giới zoom tự do** (chủ dự án chốt 08/11/2026, spec `2026-11-08-iso-board-polish-design.md` §4): từ mức tổng quan (bàn chiếm 65% chiều ngang màn desktop, 33/32 trên điện thoại để ô vẫn chứa vùng chạm 44×44) tới 3×, lăn chuột đổi tối đa ±10% mỗi nấc, chụm hai ngón theo tỉ lệ khoảng cách ngón. Ở zoom lẻ, pixel nguồn hiện rộng/hẹp không đều một chút — đánh đổi đã chấp nhận; vẫn nearest, không blur/AA, phép dịch camera làm tròn về pixel màn hình (`snapView`) để không rung khi đứng yên. Sprite vẫn scale nguyên lần (`ISO_SPRITE_SCALE`, mật độ art 2), HUD không zoom; không sửa float của world để snap render. Chữ `FONT_UI` vẽ ở kích thước hiển thị gốc, không scale texture text theo tỷ lệ lẻ; kiểm độ rõ/glyph tiếng Việt bằng browser.
 
 ## Pipeline art sinh bằng code
 

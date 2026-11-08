@@ -23,7 +23,17 @@ import { lockedPlotTap, plotHighlights, plotIllegalReason } from '../ui/planning
 import { lockedPlotPrice } from '../ui/realm/calendarModel';
 import { buildingRanges, entityRanges } from '../ui/info/rangeModel';
 import { unproject } from '../core/iso';
-import { panBy, pinchStep, resizeView, zoomAt, type CameraView } from '../ui/realm/cameraModel';
+import {
+  isOverview,
+  keepView,
+  panBy,
+  pinchView,
+  resizeView,
+  snapView,
+  wheelZoom,
+  zoomAt,
+  type CameraView,
+} from '../ui/realm/cameraModel';
 import { realmCamera, realmCameraMix, type RealmPhase } from '../ui/realm/realmLayout';
 import { SCENES } from './keys';
 import { STORAGE_WARNING_KEY, WARNING_EVENT, getSession } from './sessionRegistry';
@@ -84,15 +94,15 @@ export class RealmScene extends Phaser.Scene {
   /** The battle HUD (and its summary with Tiếp tục) is the screen in charge until the planning HUD comes back. */
   private battleHudUp = false;
   private readonly onResize = (): void => this.resizeCamera();
-  /** The live camera (zoom step and scroll) and the screen size it was set for. */
+  /** The live camera (free zoom and scroll, before pixel snapping) and the screen size it was set for. */
   private view: CameraView | null = null;
   private viewScreen: Size = { w: 0, h: 0 };
   /** A modal or the help view is open: the map takes no wheel, pan or pinch. */
   private mapBlocked = false;
   /** Pointers pressed on the map (id -> last screen point). */
   private readonly pointers = new Map<number, { x: number; y: number }>();
-  /** Squared finger spread when the pinch (or its last zoom step) started; null = no pinch. */
-  private pinchSq: number | null = null;
+  /** The pinch in progress: the view, finger midpoint and squared spread when it started; null = no pinch. */
+  private pinch: { view: CameraView; mid: { x: number; y: number }; sq: number } | null = null;
   /** The press became a map drag: its release is not a click. */
   private panning = false;
   /** The running planning ↔ battle camera ease, if any. */
@@ -125,7 +135,7 @@ export class RealmScene extends Phaser.Scene {
     this.view = null;
     this.mapBlocked = false;
     this.pointers.clear();
-    this.pinchSq = null;
+    this.pinch = null;
     this.panning = false;
     const preview = import.meta.env.DEV && data !== undefined && 'preview' in data ? data.preview : null;
     const resume = data !== undefined && 'resume' in data ? data.resume : null;
@@ -421,7 +431,7 @@ export class RealmScene extends Phaser.Scene {
     this.pointers.set(pointer.id, { x: pointer.x, y: pointer.y });
     if (this.pointers.size === 2 && !this.mapBlocked) {
       // A second finger on the map: a pinch, never a click or a pan.
-      this.pinchSq = this.spreadSq();
+      this.pinch = this.view ? { view: this.view, mid: this.midpoint(), sq: this.spreadSq() } : null;
       this.down = null;
       this.panning = false;
       return;
@@ -436,15 +446,10 @@ export class RealmScene extends Phaser.Scene {
     if (!last || !pointer.isDown) return;
     this.pointers.set(pointer.id, { x: pointer.x, y: pointer.y });
     if (this.mapBlocked || !this.view) return;
-    if (this.pinchSq !== null) {
-      const now = this.spreadSq();
-      const step = pinchStep(this.pinchSq, now);
-      if (step !== 0) {
-        const [a, b] = [...this.pointers.values()];
-        const mid = { x: (a!.x + b!.x) / 2, y: (a!.y + b!.y) / 2 };
-        this.applyView(zoomAt(this.view, mid, this.view.zoom + step, this.screen(), this.phase()));
-        this.pinchSq = now;
-      }
+    if (this.pinch !== null) {
+      // Free zoom (spec 2026-11-08 §4): the zoom follows the finger spread, the map follows the midpoint.
+      const p = this.pinch;
+      this.applyView(pinchView(p.view, p.mid, this.midpoint(), p.sq, this.spreadSq(), this.screen(), this.phase()));
       return;
     }
     const down = this.down;
@@ -460,11 +465,18 @@ export class RealmScene extends Phaser.Scene {
     this.applyView(panBy(this.view, { x: pointer.x - last.x, y: pointer.y - last.y }, this.screen(), this.phase()));
   }
 
-  /** Mouse wheel: one zoom step in (up) or out (down), keeping the world point under the cursor. */
+  /** Mouse wheel: a smooth zoom in (up) or out (down), keeping the world point under the cursor (spec 2026-11-08 §4). */
   private onWheel(pointer: Phaser.Input.Pointer, _over: unknown, _dx: number, dy: number): void {
     if (this.mapBlocked || !this.view || dy === 0) return;
-    const next = this.view.zoom + (dy < 0 ? 1 : -1);
+    const next = wheelZoom(this.view.zoom, dy);
     this.applyView(zoomAt(this.view, { x: pointer.x, y: pointer.y }, next, this.screen(), this.phase()));
+  }
+
+  /** Midpoint of the two pointers on the map. */
+  private midpoint(): { x: number; y: number } {
+    const [a, b] = [...this.pointers.values()];
+    if (!a || !b) return { x: 0, y: 0 };
+    return { x: (a.x + b.x) / 2, y: (a.y + b.y) / 2 };
   }
 
   /** Squared distance between the two pointers on the map. */
@@ -476,9 +488,9 @@ export class RealmScene extends Phaser.Scene {
 
   private onPointerUp(pointer: Phaser.Input.Pointer): void {
     this.pointers.delete(pointer.id);
-    if (this.pinchSq !== null) {
+    if (this.pinch !== null) {
       // Lifting a finger ends the pinch; the other finger's release is not a click either.
-      if (this.pointers.size < 2) this.pinchSq = null;
+      if (this.pointers.size < 2) this.pinch = null;
       this.down = null;
       return;
     }
@@ -534,15 +546,22 @@ export class RealmScene extends Phaser.Scene {
   // ---- camera ----------------------------------------------------------------------------
 
   /**
-   * One camera for both phases (§10.4, §10.7). `ease` slides from the planning to the battle
-   * camera when their zooms differ (mobile); a resize or any other call sets it at once.
+   * One camera for both phases (§10.4, §10.7). A view the player zoomed or panned is kept across a phase change
+   * (only clamped to the new phase, spec 2026-11-08 §4); an overview moves to the new phase's overview, sliding
+   * there when `ease` is set (every frame goes through `applyView`, so the HUDs follow). A first call or a resize
+   * mid-slide sets the overview at once.
    */
   private placeCamera(ease = false): void {
     const screen: Size = { w: this.scale.width, h: this.scale.height };
-    const cam = this.cameras.main;
     this.cameraEase?.stop();
+    const easing = this.cameraEase !== null;
     this.cameraEase = null;
     const phase = this.phase();
+    const other: RealmPhase = phase === 'battle' ? 'planning' : 'battle';
+    if (this.view && !easing && !isOverview(this.view, screen, other) && !isOverview(this.view, screen, phase)) {
+      this.applyView(keepView(this.view, screen, phase));
+      return;
+    }
     const target = realmCamera(screen, phase);
     if (!ease || realmCamera(screen, 'planning').zoom === target.zoom) {
       this.applyView(target);
@@ -554,8 +573,7 @@ export class RealmScene extends Phaser.Scene {
       duration: CAMERA_EASE_MS,
       ease: 'Sine.easeInOut',
       onUpdate: (tween) => {
-        const now = realmCameraMix(screen, 'planning', 'battle', tween.getValue() ?? 1);
-        cam.setZoom(now.zoom).setScroll(now.scroll.x, now.scroll.y);
+        this.applyView(realmCameraMix(screen, 'planning', 'battle', tween.getValue() ?? 1));
       },
       onComplete: () => {
         this.applyView(target);
@@ -572,12 +590,16 @@ export class RealmScene extends Phaser.Scene {
     return this.inBattle ? 'battle' : 'planning';
   }
 
-  /** Set the main camera to `view` (a whole zoom) and tell the HUDs (`realm:view`). */
+  /**
+   * Keep `view` as the live camera, draw it pixel-snapped (`snapView`: whole-pixel camera translation at any free
+   * zoom) and tell the HUDs the view as drawn (`realm:view`). Pan and zoom go on from the unsnapped view.
+   */
   private applyView(view: CameraView): void {
     this.view = view;
     this.viewScreen = this.screen();
-    this.cameras.main.setZoom(view.zoom).setScroll(view.scroll.x, view.scroll.y);
-    this.bus.emit('realm:view', { zoom: view.zoom, scroll: { x: view.scroll.x, y: view.scroll.y } });
+    const shown = snapView(view, this.viewScreen);
+    this.cameras.main.setZoom(shown.zoom).setScroll(shown.scroll.x, shown.scroll.y);
+    this.bus.emit('realm:view', { zoom: shown.zoom, scroll: { x: shown.scroll.x, y: shown.scroll.y } });
   }
 
   /** A resize keeps a zoomed view's centre; the overview stays the overview. */
