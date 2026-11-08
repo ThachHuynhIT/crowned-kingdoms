@@ -220,6 +220,53 @@ class PolishSamplePromptGateTest(unittest.TestCase):
             self.assertIn('#000000', p, ident)
 
 
+class G5SamplePromptGateTest(unittest.TestCase):
+    """G5 (plan 2026-11-09): one isometric sample per new king and kind, each its own owner gate."""
+
+    def test_six_kings_two_kinds_one_sample_each(self):
+        kings = ['grove', 'tide', 'forge', 'clock', 'moon', 'nomad']
+        self.assertEqual(sorted({k for k, _, _, _, _ in mp.G5_SAMPLES}), sorted(kings))
+        for king in kings:
+            kinds = sorted(kind for k, _, kind, _, _ in mp.G5_SAMPLES if k == king)
+            self.assertEqual(kinds, ['building', 'plot'], king)
+
+    def test_exactly_one_id_per_call(self):
+        with self.assertRaises(SystemExit):
+            mp.main('g5-iso-sample')
+        with self.assertRaises(SystemExit):
+            mp.main('g5-iso-sample', ['grove_throne', 'plot_grove_open'])
+        with self.assertRaises(SystemExit):
+            mp.main('g5-iso-sample', ['wheat_throne'])
+
+    def test_prompt_reads_the_doc_and_names_every_reference(self):
+        t = mp.iso_template()
+        for king, ident, kind, name, desc in mp.G5_SAMPLES:
+            p = mp.build_g5_prompt(f'x/{ident}/source.png', kind, name, desc, t)
+            self.assertIn('docs/ART_STYLE.md', p, ident)
+            self.assertIn('BẮT BUỘC TRƯỚC KHI VẼ', p, ident)
+            self.assertIn('ISOMETRIC view, classic 2:1 pixel-art isometric', p, ident)
+            self.assertIn(mp.REFERENCE, p, ident)
+            for r in mp.ISO_REFS[kind].split():
+                self.assertIn(r, p, ident)
+            self.assertIn(mp.G5_WHEAT_REF[kind], p, ident)
+            self.assertIn('#000000', p, ident)
+            self.assertNotIn('[subject]', p, ident)
+            self.assertNotIn('farm kingdom', p, ident)
+            if kind == 'building':
+                self.assertIn('RIGHT', p, ident)
+            else:
+                self.assertIn('NO furrows', p, ident)
+
+    def test_runner_attaches_style_iso_and_wheat_refs_once(self):
+        for ident in ['grove_throne', 'plot_grove_open']:
+            mp.main('g5-iso-sample', [ident])
+            runner = (ROOT / f'.superpowers/b-g5-{ident}.sh').read_text(encoding='utf-8')
+            self.assertEqual(runner.count('codex exec'), 1)
+            kind = 'building' if ident.endswith('throne') else 'plot'
+            for r in [mp.REFERENCE, *mp.ISO_REFS[kind].split(), mp.G5_WHEAT_REF[kind]]:
+                self.assertEqual(runner.count(f'-i {r}'), 1, (ident, r))
+
+
 pspec = importlib.util.spec_from_file_location('portrait_prompts', ROOT / 'docs/art-review/g3e/portraits/make_prompts.py')
 pp = importlib.util.module_from_spec(pspec)
 pspec.loader.exec_module(pp)
