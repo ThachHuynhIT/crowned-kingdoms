@@ -70,3 +70,28 @@ describe('layoutDecorations (P4, spec 2026-11-06 §5)', () => {
     expect(low.every((d) => !d.tall)).toBe(true);
   });
 });
+
+describe('a clear battlefield (spec 2026-11-08 §5)', () => {
+  const hits = (p: { x: number; y: number }, r: number, z: { x0: number; x1: number; y0: number; y1: number }) => {
+    const dx = Math.max(z.x0 - p.x, 0, p.x - z.x1);
+    const dy = Math.max(z.y0 - p.y, 0, p.y - z.y1);
+    return dx * dx + dy * dy < r * r;
+  };
+
+  it('no_footprint_intersects_combat_or_portal_zone, tall or low, over 100 seeds', () => {
+    for (let seed = 1; seed <= 100; seed++)
+      for (const p of layoutDecorations(seed, ASSETS)) {
+        const r = ASSETS.find((x) => x.id === p.assetId)!.radius;
+        expect(hits(p, r, FIELD_DECOR.combatClear), `${seed} ${p.assetId} ${p.x},${p.y}`).toBe(false);
+        expect(hits(p, r, FIELD_DECOR.portalClear), `${seed} ${p.assetId} ${p.x},${p.y}`).toBe(false);
+      }
+  });
+
+  it('low_decor_only_at_edges_and_at_most_twelve', () => {
+    for (let seed = 1; seed <= 100; seed++) {
+      const low = layoutDecorations(seed, ASSETS).filter((d) => !d.tall);
+      expect(low.length).toBeLessThanOrEqual(12);
+      for (const p of low) expect(p.x <= FIELD_DECOR.low.edge.west || p.x >= FIELD_DECOR.low.edge.east, `${seed} ${p.x}`).toBe(true);
+    }
+  });
+});

@@ -211,6 +211,22 @@ export const paintField = (
   return out;
 };
 
+/**
+ * The road's last stretch south of the field (spec 2026-11-08 §3/§5): the field texture stops at y = 768, the enemy
+ * portal stands at y = 792. World x [368, 400) is the road's two middle columns; the square runs to y 800, under the
+ * portal. Path tiles at density `k`, drawn square (laid onto the iso ground with `squareToIso`).
+ */
+export const ROAD_TAIL = { x: ROAD_COLS[0] * TILE, y: FIELD, size: 2 * TILE } as const;
+export const paintRoadTail = (k: 1 | 2): PixelCanvas => {
+  const c = new PixelCanvas(ROAD_TAIL.size * k, ROAD_TAIL.size * k);
+  for (let j = 0; j < 2; j++)
+    for (let i = 0; i < 2; i++) {
+      const t = paintFieldTile(PATH, 15, 9100 + i * 7 + j * 13);
+      c.blit(k === 2 ? upscale(t, 2) : t, i * TILE * k, j * TILE * k);
+    }
+  return c;
+};
+
 /** A plain, fully painted grass tile; tiled under the field so the ground fills the whole screen. */
 export const paintGroundTile = (): PixelCanvas => paintFieldTile(0, 15, 0);
 

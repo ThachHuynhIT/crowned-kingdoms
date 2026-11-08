@@ -46,9 +46,6 @@ export class IsoWallRenderer {
       return;
     }
     const h = ISO_WALL_HEIGHT;
-    // Mountain top behind the cliff: everything above the cliff's top edge.
-    g.fillStyle(PALETTE.grassDark, 1);
-    fillPoly(g, [{ x: a.x, y: a.y - h }, { x: b.x, y: b.y - h }, { x: b.x, y: b.y - h - 4000 }, { x: a.x, y: a.y - h - 4000 }]);
     // The cliff face.
     g.fillStyle(PALETTE.stone, 1);
     fillPoly(g, [a, b, { x: b.x, y: b.y - h }, { x: a.x, y: a.y - h }]);
@@ -73,7 +70,7 @@ export class IsoWallRenderer {
   /**
    * The approved cliff segments end to end along the projected wall line: each segment's foot runs at 2:1 and its
    * right foot is its bottom row, so a segment placed at screen x `sx` stands with its bottom-left corner on the line
-   * below x `sx + width`. Behind them the mountain top is filled in, as in the code cliff.
+   * below x `sx + width`. Behind them the ground grass shows (spec 2026-11-08 §5; the forest art comes in Q5).
    */
   private tileArt(scene: Phaser.Scene, key: string, a: { x: number; y: number }, b: { x: number; y: number }): void {
     const frame = scene.textures.get(key).get();
@@ -83,10 +80,6 @@ export class IsoWallRenderer {
     // The art's foot runs down to the right; with the wall line running down to the left (the enemy comes
     // from the right, src/core/iso.ts) the segments are mirrored (a horizontal flip, never a rotation).
     const flip = slope < 0;
-    const g = this.g!;
-    const top = frame.height - w / 2; // face height above the foot at its higher end
-    g.fillStyle(PALETTE.grassDark, 1);
-    fillPoly(g, [{ x: a.x, y: a.y - top + 4 }, { x: b.x, y: b.y - top + 4 }, { x: b.x, y: b.y - top - 4000 }, { x: a.x, y: a.y - top - 4000 }]);
     for (let sx = Math.min(a.x, b.x); sx < Math.max(a.x, b.x); sx += w) {
       // bottom row = the lower end of this segment's foot
       const bottom = Math.max(lineY(sx), lineY(sx + w));

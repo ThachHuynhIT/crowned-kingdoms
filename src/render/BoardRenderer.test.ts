@@ -2,13 +2,11 @@ import type Phaser from 'phaser';
 import { describe, expect, it } from 'vitest';
 import { BATTLE } from '../data/battle';
 import { CONTENT } from '../game/cards/registry';
-import { DEPLOY_BOX } from '../data/boardGeometry';
-import { plotCenter, structureFoot } from '../game/battle/world';
+import { structureFoot } from '../game/battle/world';
 import { THRONE_PLOT } from '../game/run/board';
 import { runState, withBuilding } from '../game/testing/fixtures';
 import { ISO, project, unproject } from '../core/iso';
 import { BUILDING_FOOT_DY, BoardRenderer } from './BoardRenderer';
-import { isoQuad } from './isoView';
 
 /** Just enough Graphics/Image to build the renderer and see which arrows it draws. */
 class FakeGraphics {
@@ -96,7 +94,9 @@ class FakeImage {
   }
   /** Plot frames in the atlas are diamonds; the fake one is the 64×32 diamond of 32 px plot art. */
   frame = { width: 64, height: 32 };
-  setFrame(): this {
+  frameName = '';
+  setFrame(name?: string): this {
+    if (name !== undefined) this.frameName = name;
     return this;
   }
   setVisible(): this {
@@ -154,8 +154,8 @@ const make = () => {
     },
   } as unknown as Phaser.Scene;
   const board = new BoardRenderer(scene, CONTENT);
-  // graphics created in order: highlights, arrows, marks, deploy boxes
-  return { board, arrows: graphics[1]!, boxes: graphics[3]!, images };
+  // graphics created in order: highlights, arrows, marks (no deploy-box layer since 2026-11-08)
+  return { board, arrows: graphics[1]!, graphics, images };
 };
 
 describe('southern edge arrow', () => {
@@ -201,13 +201,12 @@ describe('64 px plots (spec 06/11/2026)', () => {
     expect(throne, 'throne sprite on the back row').toBeDefined();
   });
 
-  it('draws a dirt deploy box only on plots whose building raises troops', () => {
-    const { board, boxes } = make();
+  it('troop_and_other_built_plots_have_same_paving_without_dirt (owner 08/11/2026)', () => {
+    const { board, graphics, images } = make();
     board.render(withBuilding(withBuilding(runState(), 7, 'wheat_militia', 1), 8, 'wheat_scarecrow', 1));
-    const c = plotCenter(7);
-    const box = isoQuad(c.x + DEPLOY_BOX.x0, c.y + DEPLOY_BOX.y0, DEPLOY_BOX.x1 - DEPLOY_BOX.x0, DEPLOY_BOX.y1 - DEPLOY_BOX.y0);
-    expect(boxes.polys).toEqual([box]); // only the militia's strip, as a projected quad
-    const c8 = plotCenter(8);
-    expect(boxes.polys.some((q) => q[0]!.x === project({ x: c8.x + DEPLOY_BOX.x0, y: c8.y + DEPLOY_BOX.y0 }).x)).toBe(false);
+    expect(graphics).toHaveLength(3); // no deploy-box layer at all
+    const plots = images.slice(0, 25) as unknown as { frameName: string }[];
+    expect(plots[7]!.frameName).toBe(plots[8]!.frameName); // the barracks plot is paved like any built plot
+    expect(plots[7]!.frameName).toContain('built');
   });
 });

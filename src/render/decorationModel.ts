@@ -42,6 +42,14 @@ export const layoutDecorations = (seed: number, assets: readonly DecorAsset[]): 
     });
   const h = (i: number, k: number): number => pixelHash(i, k + FIELD_DECOR.salt, seed);
   const F = BATTLE.field;
+  // The whole footprint (a circle of `r`) stays out of the battlefield and the portal (spec 2026-11-08 §5).
+  const touches = (x: number, y: number, r: number, z: { x0: number; x1: number; y0: number; y1: number }): boolean => {
+    const dx = Math.max(z.x0 - x, 0, x - z.x1);
+    const dy = Math.max(z.y0 - y, 0, y - z.y1);
+    return dx * dx + dy * dy < r * r;
+  };
+  const clear = (x: number, y: number, r: number): boolean =>
+    !touches(x, y, r, FIELD_DECOR.combatClear) && !touches(x, y, r, FIELD_DECOR.portalClear);
 
   // Tall: a ring outside the field (west, east and south; north is the mountain), never on the road's line.
   const ring = FIELD_DECOR.tall.ring;
@@ -53,12 +61,12 @@ export const layoutDecorations = (seed: number, assets: readonly DecorAsset[]): 
     const x = side === 0 ? -depth : side === 1 ? F + depth : -ring.outer + along * (F + 2 * ring.outer);
     const y = side === 2 ? F + depth : FIELD_DECOR.northLimit + along * (F + ring.outer - FIELD_DECOR.northLimit);
     if (side === 2 && Math.abs(x - F / 2) < FIELD_DECOR.low.roadHalf + a.radius) continue;
-    if (!free(x, y, a.radius)) continue;
+    if (!clear(x, y, a.radius) || !free(x, y, a.radius)) continue;
     out.push({ assetId: a.id, tall: true, x: Math.round(x), y: Math.round(y) });
     placed++;
   }
 
-  // Low: inside the field, off the board (with a pad), the road and the water.
+  // Low: inside the field, in the two side bands only, off the board (with a pad), the road and the water.
   const field = generateField(seed);
   const cfg = FIELD_DECOR.low;
   const lo = BATTLE.boardOrigin - cfg.boardPad;
@@ -69,6 +77,8 @@ export const layoutDecorations = (seed: number, assets: readonly DecorAsset[]): 
     const x = Math.round(cfg.margin + h(i, 12) * (F - 2 * cfg.margin));
     const y = Math.round(FIELD_DECOR.northLimit + h(i, 13) * (F - cfg.margin - FIELD_DECOR.northLimit));
     if (x + r > lo && x - r < hi && y + r > lo && y - r < hi) continue;
+    if (x > cfg.edge.west && x < cfg.edge.east) continue; // the middle of the field is the battlefield
+    if (!clear(x, y, r)) continue;
     let blocked = false;
     for (const [dx, dy] of [[r, 0], [-r, 0], [0, r], [0, -r], [0, 0]] as const) {
       const t = fieldTerrainAt(field, x + dx, y + dy);

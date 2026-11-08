@@ -1,7 +1,6 @@
 import type Phaser from 'phaser';
 import { BATTLE } from '../data/battle';
-import { DEPLOY_BOX } from '../data/boardGeometry';
-import { PALETTE, toCss } from '../data/palette';
+import { toCss } from '../data/palette';
 import { UI_PALETTE } from '../data/uiPalette';
 import type { CardId } from '../data/types';
 import type { Edge } from '../game/battle/types';
@@ -13,7 +12,7 @@ import type { RunState } from '../game/run/state';
 import { FONT_UI } from '../ui/theme';
 import { ISO } from '../core/iso';
 import { SPRITES_KEY, buildingFrame, imageFrameScale, kingPlotFrame, plotFrame } from './atlas';
-import { ISO_SPRITE_SCALE, fillPoly, insetPoly, iso, isoQuad, strokePoly } from './isoView';
+import { ISO_SPRITE_SCALE, insetPoly, iso, isoQuad, strokePoly } from './isoView';
 
 const SIZE = 5;
 const PLOTS = SIZE * SIZE;
@@ -46,8 +45,6 @@ const HIGHLIGHT_COLOR: Readonly<Record<PlotHighlight, number>> = {
  * below it, so the sprite stands on the body that collides in battle.
  */
 export const BUILDING_FOOT_DY = 16;
-/** Ground layer just above the plots: the dirt deploy boxes. */
-const BOX_DEPTH = 1.5;
 
 /** Where a building on `plot` is drawn (camera space): its projected structure foot, lowered by `BUILDING_FOOT_DY`. */
 export const buildingFoot = (plot: number): { x: number; y: number } => {
@@ -83,8 +80,6 @@ export class BoardRenderer {
   private readonly marks: Phaser.GameObjects.Graphics;
   /** "4"-style gold price on every locked plot next to an open one. */
   private readonly prices: Phaser.GameObjects.Text[] = [];
-  /** Dirt deploy boxes on the plots whose building raises troops (spec 06/11/2026, C). */
-  private readonly boxes: Phaser.GameObjects.Graphics;
   private buildingsVisible = true;
 
   constructor(scene: Phaser.Scene, content: Content) {
@@ -101,7 +96,6 @@ export class BoardRenderer {
     this.highlights = scene.add.graphics().setDepth(HIGHLIGHT_DEPTH);
     this.arrows = scene.add.graphics().setDepth(ARROW_DEPTH);
     this.marks = scene.add.graphics().setDepth(MARK_DEPTH);
-    this.boxes = scene.add.graphics().setDepth(BOX_DEPTH);
   }
 
   /** Redraw plots and buildings from the run state. */
@@ -120,7 +114,6 @@ export class BoardRenderer {
     }
     this.drawMarks(state);
     this.drawPrices(state);
-    this.drawBoxes(state);
   }
 
   /** Hide buildings while the battle renders them as structures (UnitRenderer). */
@@ -195,7 +188,6 @@ export class BoardRenderer {
     this.highlights.destroy();
     this.arrows.destroy();
     this.marks.destroy();
-    this.boxes.destroy();
     for (const t of this.prices) t.destroy();
     this.prices.length = 0;
   }
@@ -220,24 +212,6 @@ export class BoardRenderer {
       };
       if (level > 1) for (let i = 0; i < level; i++) pip(i, c.y + ISO.plotH / 4 - 2, UI_PALETTE.gold);
       for (let i = 0; i < stacks; i++) pip(i, c.y - ISO.plotH / 4 - 2, UI_PALETTE.select);
-    }
-  }
-
-  /** A low dirt patch in the deploy box of every plot whose building raises troops. */
-  private drawBoxes(state: RunState): void {
-    const g = this.boxes;
-    g.clear();
-    const w = DEPLOY_BOX.x1 - DEPLOY_BOX.x0;
-    const h = DEPLOY_BOX.y1 - DEPLOY_BOX.y0;
-    for (let p = 0; p < PLOTS; p++) {
-      const b = state.plots[p]?.building;
-      if (!b || p === THRONE_PLOT || this.content.card(b.cardId).kind !== 'troop') continue;
-      const c = plotCenter(p);
-      const box = isoQuad(c.x + DEPLOY_BOX.x0, c.y + DEPLOY_BOX.y0, w, h);
-      g.fillStyle(PALETTE.soil, 1);
-      fillPoly(g, box);
-      g.lineStyle(1, PALETTE.path, 1);
-      strokePoly(g, box);
     }
   }
 

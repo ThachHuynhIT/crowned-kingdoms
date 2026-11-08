@@ -5,7 +5,8 @@ import type { CardDef, CardId, UnitId } from '../data/types';
 import type { Content } from '../game/cards/registry';
 import { paintBuilding, paintThrone } from './buildingArt';
 import { paintCardArt } from './cardArt';
-import { paintField, paintGroundTile, type GroundTextures } from './fieldArt';
+import { paintField, paintGroundTile, paintRoadTail, type GroundTextures } from './fieldArt';
+import { groundPatch, isoGroundTile } from './groundArt';
 import { paintPortal } from './portalArt';
 import {
   ARROW_DIRS,
@@ -303,10 +304,23 @@ export const ensurePortalTexture = (textures: Phaser.Textures.TextureManager): s
 
 export const GROUND_KEY = 'field-ground';
 
-/** The tiling grass ground texture under every field (painted once, never removed). */
+/**
+ * The tiling grass ground under and around every field (painted once, never removed): one screen period of the
+ * projected periodic grass patch (`groundArt.ts`), from the same grass tiles as the field (the grass art, else the
+ * generated tile), so the ground beyond the field matches it (spec 2026-11-08 §5).
+ */
 export const ensureGroundTexture = (textures: Phaser.Textures.TextureManager): string => {
-  if (!textures.exists(GROUND_KEY)) addPixelTexture(textures, GROUND_KEY, grassArt(textures)?.[0] ?? paintGroundTile());
+  if (!textures.exists(GROUND_KEY))
+    addPixelTexture(textures, GROUND_KEY, isoGroundTile(groundPatch(grassArt(textures) ?? [paintGroundTile()])));
   return GROUND_KEY;
+};
+
+export const ROAD_TAIL_KEY = 'field-road-tail';
+
+/** The road's last stretch to the portal, laid onto the iso ground (painted once, never removed). */
+export const ensureRoadTailTexture = (textures: Phaser.Textures.TextureManager): string => {
+  if (!textures.exists(ROAD_TAIL_KEY)) addPixelTexture(textures, ROAD_TAIL_KEY, squareToIso(paintRoadTail(grassArt(textures) ? 2 : 1)));
+  return ROAD_TAIL_KEY;
 };
 
 /**

@@ -8,8 +8,15 @@ export const FIELD_DECOR = {
   salt: 6011,
   /** Tall objects (trees, crags) stand OUTSIDE the field so they never hide a unit. */
   tall: { count: 18, attempts: 600, ring: { inner: 24, outer: 260 } },
-  /** Low objects (bushes, rocks, stumps) stand inside the field, off the board, the road and the water. */
-  low: { count: 26, attempts: 600, margin: 32, boardPad: 24, roadHalf: 44 },
+  /**
+   * Low objects (bushes, rocks, stumps) stand inside the field, off the board, the road and the water, and only in
+   * the two side bands (x ≤ west or x ≥ east), so the middle of the field stays clear for the fight (spec 2026-11-08).
+   */
+  low: { count: 12, attempts: 600, margin: 32, boardPad: 24, roadHalf: 44, edge: { west: 192, east: 576 } },
+  /** The main battlefield, from the board's south edge to past the portal: no decoration footprint touches it. */
+  combatClear: { x0: 256, x1: 512, y0: 544, y1: 832 },
+  /** Around the enemy portal (`ENEMY_PORTAL`, 384 × 792) and where its foes fan out: kept empty too. */
+  portalClear: { x0: 328, x1: 440, y0: 736, y1: 848 },
   /** Never north of this (the mountain wall's foot is at 176). */
   northLimit: 200,
 } as const;
