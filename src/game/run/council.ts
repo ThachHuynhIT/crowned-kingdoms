@@ -34,6 +34,8 @@ const withOffer = (state: RunState, offer: CouncilOffer): RunState => ({ ...stat
 /** Xếp bước hội đồng với 3 sắc lệnh chưa có, bốc bằng `Rng(stream 'council')` (Fisher–Yates). */
 export function rollCouncil(state: RunState): RunState {
   const pool = DECREES.map((d) => d.id).filter((id) => !state.decrees.includes(id));
+  // Đã có mọi sắc lệnh (chỉ xảy ra ở Vô tận): không mở hội đồng (spec 2026-11-09 §3).
+  if (pool.length === 0) return state;
   const rng = new Rng(state.rng.council);
   for (let i = pool.length - 1; i > 0; i--) {
     const j = rng.int(0, i);

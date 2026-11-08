@@ -19,6 +19,7 @@ import {
   sacrificeBuilding,
   unlockPlot,
 } from './board';
+import { isCouncilYear, isFinalYear } from './endlessRules';
 import { enactDecree, rollCouncil, selectDecree, setCouncilSelection } from './council';
 import { handLimit, rerollPrice, rewardCount } from './decrees';
 import { refillHand } from './deck';
@@ -250,7 +251,8 @@ function applyBase(input: RunState, cmd: RunCommand, content: Content): CommandR
       const attacker = raw && raw !== 'raiders' && raw !== 'coalition' && raw !== 'boss' ? raw : undefined;
       const enemy = attacker ? state.enemies[attacker] : undefined;
       if (attacker && enemy) {
-        enemy.attacks += 1;
+        // Vô tận: vua đã chinh phục / rút lui vẫn xuất quân theo lịch, bộ đếm kẹp ở 3 (spec 2026-11-09 §3).
+        enemy.attacks = Math.min(3, enemy.attacks + 1);
         if (enemy.attacks >= 3 && enemy.status === 'pending') {
           if (result.won) {
             enemy.status = 'conquered';
@@ -276,7 +278,7 @@ function applyBase(input: RunState, cmd: RunCommand, content: Content): CommandR
       if (result.won && (ordinal === 1 || ordinal === 2)) {
         s = raiseThrone(s);
       }
-      const finalYear = s.year >= s.rules.years;
+      const finalYear = isFinalYear(s);
       if (s.lives <= 0 || (finalYear && !full)) {
         // §3.10: hết mạng thì thua ngay; sau trận năm cuối còn mạng thì thắng ván (luật G1/G2: không thưởng).
         s.lives = Math.max(s.lives, 0);
@@ -300,7 +302,7 @@ function applyBase(input: RunState, cmd: RunCommand, content: Content): CommandR
         s = enqueueOffers({ ...s, pendingConquest: conquered }, [{ kind: 'reward', cardIds }]);
       }
       // Hội đồng sau thắng hay thua (chỉ ván đầy đủ, còn mạng, không phải năm cuối).
-      if (full && !finalYear && (RUN.councilYears as readonly number[]).includes(s.year)) s = rollCouncil(s);
+      if (isCouncilYear(s)) s = rollCouncil(s);
       if (s.offers === null) {
         // Không còn bước nào: năm cuối kết thúc ván ngay, còn lại nghỉ ở yearEnd chờ `advance`.
         s = finalYear ? finishYear(s, content) : { ...s, phase: 'yearEnd' };

@@ -52,6 +52,15 @@ export function calendarFor(rules: Rules): readonly CalendarSlot[] {
 }
 
 /**
+ * Kẻ tấn công năm `year` (spec 2026-11-09 §3): Vô tận lặp mẫu 30 năm `FULL_CALENDAR[(year−1) % 30]`
+ * mà không cấp phát theo số năm; các lịch khác như `calendarFor`, ngoài lịch là Thổ Phỉ.
+ */
+export function calendarSlotAt(rules: Rules, year: number): CalendarSlot {
+  if (rules.calendar === 'endless') return FULL_CALENDAR[(Math.max(1, Math.floor(year)) - 1) % FULL_CALENDAR.length]!;
+  return calendarFor(rules)[year - 1] ?? N;
+}
+
+/**
  * Hai vua địch: các vua trong `pool` trừ vua người chơi, xáo bằng `Rng(stream 'calendar')`
  * (Fisher–Yates), lấy tối đa 2. Pool nhỏ hơn thì trả ít hơn, không lỗi.
  */

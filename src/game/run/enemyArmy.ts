@@ -7,7 +7,8 @@ import type { KingId, UnitDef } from '../../data/types';
 import { armyBudget, composeArmy, type ComposeEntry } from '../battle/compose';
 import type { ArmyPlan } from '../battle/types';
 import type { Content } from '../cards/registry';
-import { calendarFor, slotMultFor } from './calendar';
+import { calendarSlotAt, slotMultFor } from './calendar';
+import { endlessArmyBudget } from './endlessRules';
 import type { RunState } from './state';
 
 /** Gộp nhiều roster: cùng `UnitId` thì cộng trọng số. */
@@ -44,8 +45,10 @@ const entries = (
 /** Đạo quân của `state.year` theo lịch của `state.rules`. */
 export function buildYearArmy(state: RunState, content: Content): ArmyPlan {
   const year = state.year;
-  const slot = calendarFor(state.rules)[year - 1] ?? { kind: 'raiders' as const };
-  const budget = (mult: number): number => armyBudget(year, mult, state.difficulty);
+  const slot = calendarSlotAt(state.rules, year);
+  // Vô tận dùng bảng ngân sách bão hoà (spec 2026-11-09 §3); ván thường giữ `armyBudget`.
+  const budget = (mult: number): number =>
+    state.mode === 'endless' ? endlessArmyBudget(year, mult, state.difficulty, 1) : armyBudget(year, mult, state.difficulty);
   const kingAt = (n: number): KingId => state.enemyKings[n - 1]!;
 
   switch (slot.kind) {
