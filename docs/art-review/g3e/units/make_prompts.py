@@ -42,12 +42,17 @@ UNITS = {
     'miner': ('Thợ Mỏ (Đá)', 'a tough melee miner of the Stone kingdom.', 'a stocky bearded mountain miner in a brown leather apron over a grey wool shirt, a BLUE scarf and blue cuffs, a battered brass mining helmet with a small lantern, holding a big iron pickaxe across the body with both hands; gruff grin.', 64, 96),
     'rubble': ('Đá Vụn (Đá)', 'a small rock creature summoned by the Stone kingdom, weak and expendable.', 'a small living heap of WARM grey-brown rocks (not blue-grey) with two tiny stubby rock legs, two small glowing BLUE eyes and a small blue rune mark on the front; cute and clumsy.', 64, 64),
     'slinger': ('Lính Ném Đá (Đá)', 'a ranged sling thrower of the Stone kingdom.', 'a young mountain villager in a grey-brown wool tunic with a BLUE sash and a blue headscarf, a leather pouch of round stones on the belt, holding a leather sling ready in one hand and a stone in the other; alert eager face.', 64, 64),
+    # Arcane kingdom (2026-11-09, missing-art plan Task 2). Robes deep violet; the team colour stays BLUE trim only.
+    'apprentice': ('Pháp Sư Tập Sự (Phép Thuật)', 'a weak ranged apprentice mage of the Arcane kingdom.', 'a young apprentice in a deep violet hooded robe with BLUE trim and a blue sash, a satchel of books, holding a short wooden wand with a small glowing violet spark at the tip; eager nervous face.', 64, 64),
+    'frost_mage': ('Pháp Sư Băng (Phép Thuật)', 'a ranged frost mage of the Arcane kingdom whose bolts slow enemies.', 'a calm mage in a pale lavender robe with BLUE trim and a white fur collar, a pointed hat with frost on the brim, holding a staff topped with a pale ice crystal, tiny snowflakes around the crystal.', 64, 64),
+    'archmage': ('Đại Pháp Sư (Phép Thuật)', 'a tall powerful archmage of the Arcane kingdom whose magic hits several enemies.', 'a tall old archmage with a long white beard, a deep violet star-patterned robe with gold and BLUE trim, a tall pointed hat, holding a tall staff crowned with a glowing purple crystal, a floating open spellbook beside the shoulder.', 64, 96),
+    'construct': ('Người Máy Phép (Phép Thuật)', 'a sturdy arcane construct of the Arcane kingdom, a slow tanky melee unit.', 'a chunky chibi construct of pale carved stone plates bound with gold bands, a glowing violet crystal core in the chest, small glowing violet eyes, a BLUE cloth sash across the chest, big blocky fists; friendly heavy look.', 96, 96),
 }
 
 # In-game height in art pixels (4 art px per world unit) of units added after the Wheat set, chosen against the
 # approved militia (51 px tall). The standing sample is reduced to this height (make_poses.py --sample) and the pose
 # sheet is drawn at a block size that makes this height fit a 512 px cell.
-HEIGHT = {'golem': 76, 'miner': 58, 'rubble': 34, 'slinger': 50}
+HEIGHT = {'golem': 76, 'miner': 58, 'rubble': 34, 'slinger': 50, 'apprentice': 50, 'frost_mage': 52, 'archmage': 60, 'construct': 70}
 MILITIA_HEIGHT = 51
 # approved unit of the same kind, attached to every new unit's standing sample (ART_STYLE: "ảnh đã duyệt cùng loại")
 UNIT_REFERENCE = 'docs/art-review/g3e/units/militia/source.png'
@@ -87,6 +92,10 @@ POSES = [
 
 # unit id -> (wind-up, strike); the strike text is also what the gate test looks for
 ATTACK = {
+    'apprentice': 'the wand drawn back over the shoulder, a small violet spark gathering at its tip, weight on the back foot.',
+    'frost_mage': 'the ice staff raised high in both hands, the crystal glowing brighter, frost swirling around it.',
+    'archmage': 'the crystal staff raised overhead, the spellbook open and glowing, the free hand drawn back gathering violet light.',
+    'construct': 'both blocky stone fists raised high, the body leaning back, the violet core glowing brighter.',
     'militia': 'the spear pulled back to the hip, front knee bent, shield raised in front of the chest.',
     'reaper': 'the sickle-scythe raised high above and behind the head with both hands, weight on the back foot.',
     'peasant': 'the pitchfork pulled back at waist height with both hands, leaning back.',
@@ -96,6 +105,10 @@ ATTACK = {
     'slinger': 'the sling whirled above the head in one hand, the stone in the pouch, the other arm pointing right.',
 }
 STRIKE = {
+    'apprentice': 'the wand thrust forward to the right at arm length, a small violet spark leaving its tip (the bolt itself is drawn by the game), front foot forward.',
+    'frost_mage': 'the ice staff swung forward to the right and pointed at chest height, a puff of frost at the crystal (the bolt itself is drawn by the game).',
+    'archmage': 'the staff thrust forward to the right, a burst of violet light at the crystal (the bolt itself is drawn by the game), robe swirling.',
+    'construct': 'both fists slammed down together in front of it to the right at ground level, the body bent forward, small stone chips at the fists.',
     'militia': 'a long lunge to the right, the spear thrust straight out to the right at chest height with the arm fully extended, the shield stays on the body.',
     'reaper': 'a wide low swing: the blade sweeps down and forward to the right at knee height, body leaning forward.',
     'peasant': 'a hard jab: the pitchfork thrust forward to the right at chest height, both arms extended, front foot forward.',
