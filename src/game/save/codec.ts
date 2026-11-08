@@ -7,7 +7,13 @@
 import { hashSeed } from '../../core/random';
 import { BOSSES } from '../../data/bosses';
 import { DECREES } from '../../data/decrees';
-import { ENDLESS_BLESSING_IDS, ENDLESS_MODIFIER_IDS } from '../../data/endless';
+import {
+  ENDLESS_BLESSING_EVERY,
+  ENDLESS_BLESSING_FIRST_YEAR,
+  ENDLESS_BLESSING_IDS,
+  ENDLESS_BLESSING_PICKS,
+  ENDLESS_MODIFIER_IDS,
+} from '../../data/endless';
 import { QUESTS } from '../../data/quests';
 import { modeForRules, type RunMode, type Rules } from '../../data/rules';
 import { RUN } from '../../data/run';
@@ -52,9 +58,9 @@ const arr = (v: unknown, what: string): unknown[] => {
   return v as unknown[];
 };
 
-const PHASES: readonly RunPhase[] = ['planning', 'battle', 'reward', 'conquest', 'council', 'quest', 'yearEnd', 'ended'];
+const PHASES: readonly RunPhase[] = ['planning', 'battle', 'reward', 'conquest', 'council', 'quest', 'yearEnd', 'blessing', 'ended'];
 const CALENDARS = ['raiders', 'short', 'full', 'endless'];
-const OFFER_PHASE: Record<string, RunPhase> = { reward: 'reward', questReward: 'reward', conquest: 'conquest', council: 'council', quest: 'quest' };
+const OFFER_PHASE: Record<string, RunPhase> = { reward: 'reward', questReward: 'reward', conquest: 'conquest', council: 'council', quest: 'quest', blessing: 'blessing' };
 const EDGES = ['N', 'E', 'S', 'W'];
 
 /** Mọi số trong cây phải hữu hạn (JSON không giữ NaN / Infinity, nhưng dữ liệu hỏng có thể có). */
@@ -216,6 +222,23 @@ function validate(raw: unknown, content: Content): asserts raw is RunState {
       ensure((sel as Loose).cardId === null || (typeof (sel as Loose).cardId === 'string' && cards.has((sel as Loose).cardId as string)), 'selection card');
     } else if (offer.kind === 'quest') {
       ensure(typeof offer.questId === 'string' && quests.has(offer.questId), 'unknown quest');
+    } else if (offer.kind === 'blessing') {
+      // Vô tận: đúng 3 id phúc lành khác nhau, mốc năm là bội 5 từ 30, không vượt năm hiện tại.
+      ensure(mode === 'endless', 'blessing offer in normal run');
+      const ids = arr(offer.blessingIds, 'blessingIds');
+      ensure(
+        ids.length === ENDLESS_BLESSING_PICKS &&
+          new Set(ids).size === ids.length &&
+          ids.every((id) => (ENDLESS_BLESSING_IDS as readonly unknown[]).includes(id)),
+        'blessing ids',
+      );
+      ensure(
+        isInt(offer.year) &&
+          (offer.year as number) >= ENDLESS_BLESSING_FIRST_YEAR &&
+          (offer.year as number) % ENDLESS_BLESSING_EVERY === 0 &&
+          (offer.year as number) <= (s.year as number),
+        'blessing year',
+      );
     } else {
       cardList(offer.cardIds, 'offer');
       if (offer.king !== undefined) ensure(typeof offer.king === 'string' && kings.has(offer.king), 'offer king');
@@ -250,7 +273,7 @@ function validate(raw: unknown, content: Content): asserts raw is RunState {
   // Pha khớp với dữ liệu đi kèm.
   const phase = s.phase as RunPhase;
   if (phase === 'battle') ensure(s.army !== null, 'battle without an army');
-  if (phase in { reward: 1, conquest: 1, council: 1, quest: 1 }) {
+  if (phase in { reward: 1, conquest: 1, council: 1, quest: 1, blessing: 1 }) {
     ensure(current !== null && OFFER_PHASE[current.kind as string] === phase, 'phase does not match the open offer');
   } else {
     ensure(s.offers === null, 'offer outside an offer phase');

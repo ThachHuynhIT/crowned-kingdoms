@@ -112,10 +112,12 @@ describe('endless continues past year 30', () => {
   });
 
   it('no council modal once every decree is owned', () => {
-    const base = fight(RULES_ENDLESS, 35, { decrees: DECREES.map((d) => d.id) });
+    const base = fight(RULES_ENDLESS, 25, { decrees: DECREES.map((d) => d.id) });
     const s = run(base, { type: 'battleResult', result: result(false) });
     expect(s.offers).toBeNull();
     expect(s.pendingOffers).toEqual([]);
     expect(s.phase).toBe('yearEnd');
+    const later = run(fight(RULES_ENDLESS, 35, { decrees: DECREES.map((d) => d.id) }), { type: 'battleResult', result: result(false) });
+    expect([later.offers?.kind, ...later.pendingOffers.map((o) => o.kind)]).toEqual(['blessing']);
   });
 });

@@ -273,3 +273,26 @@ describe('migrate_v6_to7 (Endless)', () => {
     expect(decodeRun({ formatVersion: 1, version: 7, contentHash: 1, state: { ...normal, plots: endless.plots } }, CONTENT).kind).toBe('incompatible');
   });
 });
+
+describe('endless blessing offers survive a save', () => {
+  it('roundtrips an endless run waiting on a blessing, and rejects a broken offer', () => {
+    const s = newRun(9, 'arcane', CONTENT, RULES_ENDLESS);
+    const waiting: RunState = {
+      ...s,
+      year: 35,
+      phase: 'blessing',
+      endless: { ...s.endless!, lastBlessingYear: 35, blessingStacks: { harvest: 2 } },
+      offers: { kind: 'blessing', blessingIds: ['harvest', 'might', 'survey'], year: 35 },
+    };
+    const env = (state: unknown) => ({ formatVersion: 1, version: 7, contentHash: 1, state });
+    const r = decodeRun(env(waiting), CONTENT);
+    expect(r.kind).toBe('ok');
+    if (r.kind === 'ok') expect(r.state).toEqual(waiting);
+    const dup = { ...waiting, offers: { kind: 'blessing', blessingIds: ['harvest', 'harvest', 'survey'], year: 35 } };
+    expect(decodeRun(env(dup), CONTENT).kind).toBe('incompatible');
+    const badYear = { ...waiting, offers: { kind: 'blessing', blessingIds: ['harvest', 'might', 'survey'], year: 33 } };
+    expect(decodeRun(env(badYear), CONTENT).kind).toBe('incompatible');
+    const unknown = { ...waiting, endless: { ...waiting.endless!, blessingStacks: { gold_rain: 1 } } };
+    expect(decodeRun(env(unknown), CONTENT).kind).toBe('incompatible');
+  });
+});

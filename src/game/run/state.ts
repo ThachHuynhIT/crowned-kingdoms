@@ -36,6 +36,7 @@ export type RunPhase =
   | 'council'
   | 'quest'
   | 'yearEnd'
+  | 'blessing'
   | 'ended';
 export type RngStream = 'draw' | 'reward' | 'calendar' | 'council' | 'quest' | 'blessing';
 
@@ -76,7 +77,9 @@ export interface CouncilSelection {
 export type OfferState =
   | CardOfferState
   | { kind: 'council'; decreeIds: DecreeId[]; selected: DecreeId | null; selection: CouncilSelection }
-  | { kind: 'quest'; questId: QuestId };
+  | { kind: 'quest'; questId: QuestId }
+  /** Phúc lành Vô tận (spec 2026-11-09 §5): ba id khác nhau, mốc năm đã tạo offer. */
+  | { kind: 'blessing'; blessingIds: EndlessBlessingId[]; year: number };
 
 export interface QuestState {
   id: QuestId;
@@ -203,4 +206,6 @@ export type RunCommand =
   | { type: 'setCouncilSelection'; selection: CouncilSelection }
   | { type: 'enactDecree' }
   | { type: 'answerQuest'; accept: boolean }
+  /** Chọn phúc lành `index` (0..2) của offer đang mở (Vô tận). */
+  | { type: 'pickBlessing'; index: number }
   | { type: 'advance' };

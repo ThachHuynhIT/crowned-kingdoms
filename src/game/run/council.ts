@@ -8,6 +8,7 @@ import { DECREES, DECREE_RULES } from '../../data/decrees';
 import { RUN } from '../../data/run';
 import type { CardId } from '../../data/types';
 import type { Content } from '../cards/registry';
+import { maxLivesForRun } from './endlessBlessings';
 import { adjacentToUnlocked, attachEnchant, raiseThrone, unlockPlot } from './board';
 import { decree } from './decrees';
 import { maxEnchantStacks } from './perks';
@@ -167,7 +168,7 @@ function apply(s: RunState, action: string, sel: CouncilSelection, content: Cont
       earn(TREASURY_GOLD);
       break;
     case 'amnesty':
-      if (s.lives < RUN.maxLives) s.lives += 1;
+      if (s.lives < maxLivesForRun(s)) s.lives += 1;
       else earn(AMNESTY_GOLD);
       break;
     case 'runeFestival': {

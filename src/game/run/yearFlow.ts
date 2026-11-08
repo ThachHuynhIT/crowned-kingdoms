@@ -2,7 +2,7 @@
 import { hashSeed } from '../../core/random';
 import { ALL_KINGS, RULES_G1, PLAYABLE_KINGS_G2, hasFullCalendar, modeForRules, type Rules } from '../../data/rules';
 import { RUN, START_DECK_G1 } from '../../data/run';
-import { yearIncome } from './income';
+import { yearIncomeDetail } from './income';
 import type { CardId, KingId, PerkId } from '../../data/types';
 import type { Content } from '../cards/registry';
 import { THRONE_PLOT, initialPlots } from './board';
@@ -12,6 +12,7 @@ import { runYearGrowth } from '../cards/custom';
 import { freeRerollsPerYear } from './decrees';
 import { applyStartPerk, findPerk, perkFreeRerolls } from './perks';
 import { finishYearStart } from './flow';
+import { blessingTotal, endlessInterest } from './endlessBlessings';
 import { offerQuest } from './quests';
 import { RUN_SAVE_VERSION } from './state';
 import type { RunState } from './state';
@@ -23,8 +24,11 @@ export function startYear(input: RunState, content: Content): RunState {
   const year = state.year;
   const army = buildYearArmy(state, content);
   // Thứ tự §5.5: phí duy trì (kiểm với vàng đang có) → thuế → thu nhập công trình.
-  const income = yearIncome(state, content, state.gold);
-  const gained = RUN.taxPerYear + Math.max(0, income.delta);
+  const income = yearIncomeDetail(state, content, state.gold);
+  // Vô tận: lãi trên số dư sau phí duy trì (trước thuế), rồi thuế cộng Mùa màng (spec 2026-11-09 §5).
+  const interest = endlessInterest(state, income.afterUpkeep);
+  const tax = RUN.taxPerYear + blessingTotal(state, 'taxFlat');
+  const gained = interest + tax + Math.max(0, income.delta);
   // Rút bài tách khỏi chuẩn bị năm để bước nhiệm vụ (G3) chen vào giữa (§5.5 bước 5).
   const prepared: RunState = {
     ...state,
@@ -36,9 +40,9 @@ export function startYear(input: RunState, content: Content): RunState {
     rerollsThisYear: 0,
     freeMovesUsed: 0,
     paidRerollsThisYear: 0,
-    freeRerollsLeft: freeRerollsPerYear(state) + perkFreeRerolls(state, content),
+    freeRerollsLeft: freeRerollsPerYear(state) + perkFreeRerolls(state, content) + blessingTotal(state, 'freeRerolls'),
     idleUids: income.idleUids,
-    gold: state.gold + RUN.taxPerYear + income.delta,
+    gold: state.gold + interest + tax + income.delta,
     stats: { ...state.stats, goldEarned: state.stats.goldEarned + gained },
     yearStartPendingDraw: true,
   };

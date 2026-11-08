@@ -56,3 +56,55 @@ export const ENDLESS_BOSS_SCALE_CAP_BP = 100_000;
 export const ENDLESS_CALENDAR_PERIOD = 30;
 /** Hội đồng Vô tận: mọi bội số của 5 (5..25 như thường, rồi 30, 35, …). */
 export const ENDLESS_COUNCIL_EVERY = 5;
+
+/** Loại hiệu ứng của một phúc lành; `amount` là giá trị MỖI stack (spec §5). */
+export type EndlessBlessingEffect =
+  | 'taxFlat' // +vàng thuế đầu năm
+  | 'battleGoldFlat' // +vàng thưởng thắng trận, sau hệ số vàng boss
+  | 'unitHpPct'
+  | 'unitDmgPct'
+  | 'unitSpeedPct'
+  | 'towerDmgPct'
+  | 'towerAttackSpeedPct'
+  | 'structureHpPct' // mọi công trình, gồm Ngai
+  | 'maxLives' // +1 trần mạng và hồi ngay 1 mạng
+  | 'interestPct' // % lãi trên số dư sau phí duy trì, tối đa `interestCapPerStack` mỗi stack
+  | 'freeRerolls' // +lần đổi bài miễn phí mỗi đầu năm
+  | 'plotDiscountPct'; // −% giá mua ô
+
+export interface EndlessBlessingDef {
+  readonly id: EndlessBlessingId;
+  readonly name: string;
+  readonly effect: EndlessBlessingEffect;
+  readonly amount: number;
+  readonly maxStacks: number;
+}
+
+/** Bảng phúc lành (spec §5), cùng thứ tự với `ENDLESS_BLESSING_IDS`. */
+export const ENDLESS_BLESSINGS: readonly EndlessBlessingDef[] = [
+  { id: 'harvest', name: 'Mùa màng', effect: 'taxFlat', amount: 2, maxStacks: 10 },
+  { id: 'treasury', name: 'Kho bạc', effect: 'battleGoldFlat', amount: 2, maxStacks: 10 },
+  { id: 'vigor', name: 'Sinh lực', effect: 'unitHpPct', amount: 10, maxStacks: 20 },
+  { id: 'might', name: 'Sức mạnh', effect: 'unitDmgPct', amount: 10, maxStacks: 20 },
+  { id: 'haste', name: 'Nhanh nhẹn', effect: 'unitSpeedPct', amount: 5, maxStacks: 10 },
+  { id: 'tower_might', name: 'Hoả lực', effect: 'towerDmgPct', amount: 10, maxStacks: 20 },
+  { id: 'tower_haste', name: 'Nhịp tháp', effect: 'towerAttackSpeedPct', amount: 5, maxStacks: 10 },
+  { id: 'masonry', name: 'Thành vững', effect: 'structureHpPct', amount: 10, maxStacks: 20 },
+  { id: 'vitality', name: 'Phúc thọ', effect: 'maxLives', amount: 1, maxStacks: 2 },
+  { id: 'interest', name: 'Sinh lời', effect: 'interestPct', amount: 2, maxStacks: 5 },
+  { id: 'reroll', name: 'Cơ hội', effect: 'freeRerolls', amount: 1, maxStacks: 3 },
+  { id: 'survey', name: 'Khẩn đất', effect: 'plotDiscountPct', amount: 10, maxStacks: 5 },
+];
+
+/** Số phúc lành mỗi lần chọn, năm đầu có phúc lành và chu kỳ (30, 35, 40, …). */
+export const ENDLESS_BLESSING_PICKS = 3;
+export const ENDLESS_BLESSING_FIRST_YEAR = 30;
+export const ENDLESS_BLESSING_EVERY = 5;
+/** Chọn phúc lành đã đủ stack: nhận vàng thay vì stack. */
+export const ENDLESS_MAXED_BLESSING_GOLD = 25;
+/** Lãi tối đa mỗi stack mỗi năm (vàng). */
+export const ENDLESS_INTEREST_CAP_PER_STACK = 10;
+/** Trần mạng tuyệt đối của Vô tận (RUN.maxLives + vitality). */
+export const ENDLESS_LIVES_CAP = 6;
+/** Giá ô vòng ngoài trước giảm: `base + step × purchasedPlots`. */
+export const ENDLESS_OUTER_PLOT_PRICE = { base: 20, step: 2 } as const;

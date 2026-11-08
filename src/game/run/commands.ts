@@ -1,6 +1,6 @@
 /** Lệnh người chơi lên RunState (spec §5.1, §5.5). Thuần: làm việc trên bản sao, không sửa đầu vào. */
 import { Rng } from '../../core/random';
-import { RUN, START_DECK_G1, battleGold, unlockCost } from '../../data/run';
+import { RUN, START_DECK_G1, battleGold } from '../../data/run';
 import { hasFullCalendar, type RunMode } from '../../data/rules';
 import type { CardDef, CardId, KingId } from '../../data/types';
 import { CUSTOM_TOME_HANDLERS, runAfterMove, runAfterPlay, runBattleEnd } from '../cards/custom';
@@ -19,6 +19,7 @@ import {
   sacrificeBuilding,
   unlockPlot,
 } from './board';
+import { blessingTotal, pickBlessing, plotPurchasePrice, rollBlessingOffer } from './endlessBlessings';
 import { isCouncilYear, isFinalYear } from './endlessRules';
 import { enactDecree, rollCouncil, selectDecree, setCouncilSelection } from './council';
 import { handLimit, rerollPrice, rewardCount } from './decrees';
@@ -188,7 +189,7 @@ function applyBase(input: RunState, cmd: RunCommand, content: Content): CommandR
       if (!Number.isInteger(plot) || plot < 0 || plot >= state.plots.length) return fail('badTarget');
       if (state.plots[plot]!.unlocked) return fail('badTarget');
       if (!adjacentToUnlocked(state.plots, plot)) return fail('notAdjacent');
-      const cost = unlockCost(state.purchasedPlots);
+      const cost = plotPurchasePrice(state, plot);
       if (state.gold < cost) return fail('notEnoughGold');
       state.plots = unlockPlot(state.plots, plot);
       state.gold -= cost;
@@ -232,7 +233,10 @@ function applyBase(input: RunState, cmd: RunCommand, content: Content): CommandR
       if (result.won) {
         state.stats.battlesWon += 1;
         // Năm boss: vàng thắng trận nhân đôi (§3.3).
-        const prize = battleGold(state.year) * (state.army?.boss !== undefined ? RUN.bossGoldMult : 1);
+        // Kho bạc (Vô tận) cộng sau hệ số vàng boss.
+        const prize =
+          battleGold(state.year) * (state.army?.boss !== undefined ? RUN.bossGoldMult : 1) +
+          blessingTotal(state, 'battleGoldFlat');
         state.gold += prize;
         state.stats.goldEarned += prize;
       } else {
@@ -303,6 +307,8 @@ function applyBase(input: RunState, cmd: RunCommand, content: Content): CommandR
       }
       // Hội đồng sau thắng hay thua (chỉ ván đầy đủ, còn mạng, không phải năm cuối).
       if (isCouncilYear(s)) s = rollCouncil(s);
+      // Phúc lành Vô tận sau hội đồng, cả khi thua còn mạng (spec 2026-11-09 §5).
+      s = rollBlessingOffer(s);
       if (s.offers === null) {
         // Không còn bước nào: năm cuối kết thúc ván ngay, còn lại nghỉ ở yearEnd chờ `advance`.
         s = finalYear ? finishYear(s, content) : { ...s, phase: 'yearEnd' };
@@ -370,6 +376,12 @@ function applyBase(input: RunState, cmd: RunCommand, content: Content): CommandR
     case 'answerQuest': {
       const r = answerQuest(state, cmd.accept, content);
       return typeof r === 'string' ? fail(r) : { state: r, events };
+    }
+
+    case 'pickBlessing': {
+      const next = pickBlessing(state, cmd.index);
+      if (typeof next === 'string') return fail(next);
+      return { state: settledEvents(input, next, events), events };
     }
 
     case 'advance':

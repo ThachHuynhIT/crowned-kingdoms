@@ -9,7 +9,7 @@ import type { CardOfferState, OfferState, RunPhase, RunState } from './state';
 /** Bước đang mở nếu là chọn thẻ (thưởng, chinh phục, thưởng nhiệm vụ); ngược lại `null`. */
 export const cardOffer = (state: Pick<RunState, 'offers'>): CardOfferState | null => {
   const offer = state.offers;
-  return offer === null || offer.kind === 'council' || offer.kind === 'quest' ? null : offer;
+  return offer === null || offer.kind === 'council' || offer.kind === 'quest' || offer.kind === 'blessing' ? null : offer;
 };
 
 /** Pha tương ứng với bước đang mở; thưởng nhiệm vụ dùng chung pha chọn thẻ `reward`. */
@@ -24,6 +24,8 @@ const phaseOf = (offer: OfferState): RunPhase => {
       return 'council';
     case 'quest':
       return 'quest';
+    case 'blessing':
+      return 'blessing';
   }
 };
 

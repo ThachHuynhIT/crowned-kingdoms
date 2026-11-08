@@ -30,12 +30,16 @@ const plotOrder = (count: number): number[] => {
  * khi vàng đang có (`goldBefore` trừ các phí đã trả, chưa tính thuế/thu nhập) đủ; không đủ thì vào
  * `idleUids` và bị bỏ qua cả năm. Hiệu ứng `gold` và `goldPerNeighbour` cộng theo cấp.
  */
-export function yearIncome(
+/**
+ * `yearIncome` kèm `afterUpkeep`: vàng còn lại sau mọi phí duy trì đã trả, trước thuế và thu nhập
+ * (gốc tính lãi Vô tận, spec 2026-11-09 §5).
+ */
+export function yearIncomeDetail(
   state: RunState,
   content: Content,
   goldBefore: number,
   handlers: Partial<Record<CustomEffectId, IncomeHandler>> = CUSTOM_INCOME_HANDLERS,
-): YearIncome {
+): YearIncome & { afterUpkeep: number } {
   // Phí duy trì được kiểm với vàng có trước thuế và thu nhập (spec §5.5: bước 2 trước bước 4).
   let spendable = goldBefore;
   let delta = 0;
@@ -85,5 +89,16 @@ export function yearIncome(
   for (const id of state.decrees) {
     for (const e of decree(id).effects) if (e.type === 'gold') delta += resolve(e.amount, 1);
   }
+  return { delta, idleUids, afterUpkeep: spendable };
+}
+
+/** Như `yearIncome` nhưng chỉ trả `delta` và `idleUids` (hợp đồng cũ). */
+export function yearIncome(
+  state: RunState,
+  content: Content,
+  goldBefore: number,
+  handlers: Partial<Record<CustomEffectId, IncomeHandler>> = CUSTOM_INCOME_HANDLERS,
+): YearIncome {
+  const { delta, idleUids } = yearIncomeDetail(state, content, goldBefore, handlers);
   return { delta, idleUids };
 }
