@@ -4363,3 +4363,45 @@ assets:
     finalSize: 128x65
     anchor: centre
     notes: nomad built plot, 2:1 isometric diamond (G5, approved 2026-11-09 by Claude under the owner's delegation); keyed, reduced to 128 px wide and centred on the widest row by docs/art-review/g5/make_assets.py; anchored at its centre (src/render/imageArt.ts IMAGE_PLOTS)
+  - id: pwa_icon_crown_192
+    path: public/icons/crown-192.png
+    category: ui
+    origin: custom
+    source: tools/pwa.ts
+    creator: Generated in code (tools/icons.ts, the 8x8 crown of the favicon)
+    license: project-owned
+    attribution: false
+    redistribute: true
+    evidence: tools/pwa.test.ts
+    modified: false
+    nativeSize: 192x192
+    finalSize: 192x192
+    notes: PWA install icon (G5 P5); regenerate with npm run icons
+  - id: pwa_icon_crown_512
+    path: public/icons/crown-512.png
+    category: ui
+    origin: custom
+    source: tools/pwa.ts
+    creator: Generated in code (tools/icons.ts, the 8x8 crown of the favicon)
+    license: project-owned
+    attribution: false
+    redistribute: true
+    evidence: tools/pwa.test.ts
+    modified: false
+    nativeSize: 512x512
+    finalSize: 512x512
+    notes: PWA install icon (G5 P5); regenerate with npm run icons
+  - id: pwa_icon_crown_maskable_512
+    path: public/icons/crown-maskable-512.png
+    category: ui
+    origin: custom
+    source: tools/pwa.ts
+    creator: Generated in code (tools/icons.ts, the 8x8 crown of the favicon)
+    license: project-owned
+    attribution: false
+    redistribute: true
+    evidence: tools/pwa.test.ts
+    modified: false
+    nativeSize: 512x512
+    finalSize: 512x512
+    notes: PWA install icon (G5 P5), maskable: crown inside the 80% safe circle; regenerate with npm run icons

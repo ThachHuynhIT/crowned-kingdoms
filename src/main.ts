@@ -1,5 +1,6 @@
 import Phaser from 'phaser';
 import { PALETTE, toCss } from './data/palette';
+import { registerPwa } from './platform/pwa';
 import { BattleHudScene } from './scenes/BattleHudScene';
 import { BootScene } from './scenes/BootScene';
 import { CrownsScene } from './scenes/CrownsScene';
@@ -46,3 +47,5 @@ if (import.meta.env.DEV) {
   (window as unknown as { game: Phaser.Game }).game = game;
   void import('./dev/registerPreview').then((m) => m.registerPreview(game));
 }
+
+void registerPwa();

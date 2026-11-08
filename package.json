@@ -11,6 +11,7 @@
     "preview": "vite preview",
     "typecheck": "tsc --noEmit && tsc --noEmit -p tools/asset-admin/tsconfig.json && tsc --noEmit -p tools/tsconfig.json",
     "balance": "tsx tools/balance.ts",
+    "icons": "tsx tools/icons.ts",
     "lint": "eslint .",
     "format": "prettier --write .",
     "test": "vitest run",
