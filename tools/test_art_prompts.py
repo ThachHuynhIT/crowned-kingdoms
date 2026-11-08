@@ -224,7 +224,7 @@ class G5SamplePromptGateTest(unittest.TestCase):
     """G5 (plan 2026-11-09): one isometric sample per new king and kind, each its own owner gate."""
 
     def test_six_kings_two_kinds_one_sample_each(self):
-        kings = ['grove', 'tide', 'forge', 'clock', 'moon', 'nomad']
+        kings = ['grove', 'tide', 'forge', 'clock', 'moon', 'nomad', 'stone', 'arcane']
         self.assertEqual(sorted({k for k, _, _, _, _ in mp.G5_SAMPLES}), sorted(kings))
         for king in kings:
             kinds = sorted(kind for k, _, kind, _, _ in mp.G5_SAMPLES if k == king)

@@ -16,7 +16,7 @@ ROOT = Path(__file__).resolve().parents[3]
 G5 = ROOT / 'docs/art-review/g5'
 OUT = ROOT / 'public/assets/art/ai-v1/iso'
 MANIFEST = ROOT / 'docs/assets.manifest.yml'
-KINGS = ['grove', 'tide', 'forge', 'clock', 'moon', 'nomad']
+KINGS = ['grove', 'tide', 'forge', 'clock', 'moon', 'nomad', 'stone', 'arcane']
 PLOT_STATES = ['open', 'locked', 'throne', 'built']
 
 _spec = importlib.util.spec_from_file_location('iso_assets', ROOT / 'docs/art-review/iso-board/make_assets.py')

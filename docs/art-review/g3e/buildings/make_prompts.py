@@ -532,6 +532,30 @@ G5_SAMPLES = [
 ]
 
 
+# Stone and Arcane (missing-art plan Task 4, 2026-11-09): same pipeline, their own sample gate.
+G5_SAMPLES += [
+    ('stone', 'stone_throne', 'building', "Ngai Đá Phiến (the Stone king's slate throne keep, the TALLEST building of the kingdom, up to 520 px tall, it hurls rocks), 2:1 isometric",
+     'A massive round keep built of cool blue-grey slate blocks with carved glowing rune lines, its flat crenellated top seen '
+     'from above with a big boulder held in a stone cradle like a crown; slate-blue banners with a blue trim, a heavy '
+     'arched stone door on the right (south-east) side, cut stone blocks and a pickaxe at the base, a few blue crystals.' + _B.replace(
+         'Theme: farm kingdom, warm bright wood, golden straw, clay tiles, gold and earth tones.',
+         'Theme: mountain kingdom, cool slate blue-grey stone, glowing blue runes, crystals.')),
+    ('stone', 'plot_stone_open', 'plot', 'one open (empty) building plot of the Stone king, a single flat 2:1 isometric ground tile',
+     _PLOT + 'packed grey mountain gravel with a few slate chips and small pebbles, a tuft of hardy grass; the corner '
+             'stakes are tiny slate pegs. Theme: mountain kingdom, slate grey, cool stone.'),
+    ('arcane', 'arcane_throne', 'building', "Ngai Phép Thuật (the Arcane king's mage-tower throne, the TALLEST building of the kingdom, up to 520 px tall, it casts magic bolts), 2:1 isometric",
+     'A slender round mage tower of pale stone with deep indigo-violet tiles and gold trim, its top seen from above as an open '
+     'observatory platform with a large floating purple crystal ringed by a slowly turning golden rune circle; indigo '
+     'banners with a blue trim and star emblems, a wide arched door on the right (south-east) side, stacked books and a '
+     'scroll rack at the base.' + _B.replace(
+         'Theme: farm kingdom, warm bright wood, golden straw, clay tiles, gold and earth tones.',
+         'Theme: arcane kingdom, deep indigo and violet, pale stone, gold trim, glowing purple crystals.')),
+    ('arcane', 'plot_arcane_open', 'plot', 'one open (empty) building plot of the Arcane king, a single flat 2:1 isometric ground tile',
+     _PLOT + 'dark blue-grey earth with faint glowing violet rune specks, a few small purple crystal shards and short grass; '
+             'the corner stakes are tiny pale stone pegs with a violet gem. Theme: arcane kingdom, indigo, violet, pale stone.'),
+]
+
+
 def build_g5_prompt(out, kind, name, desc, template=None):
     wheat = G5_WHEAT_REF[kind]
     if not (ROOT / wheat).exists():
@@ -570,7 +594,7 @@ def main_g5_sample(only=None):
 
 # ---- G5 Task 12: the rest of a king's set, after its two samples were approved --------------------------------
 
-G5_KINGS = ['grove', 'tide', 'forge', 'clock', 'moon', 'nomad']
+G5_KINGS = ['grove', 'tide', 'forge', 'clock', 'moon', 'nomad', 'stone', 'arcane']
 G5_BUILDING_KINDS = ('troop', 'tower', 'economy', 'support')
 G5_CARDS = ROOT / 'docs/art-review/g3e/cards/cards.json'
 G5_KIND = {
@@ -586,6 +610,8 @@ G5_THEME = {
     'clock': 'clockwork kingdom, brass, copper, slate stone, steel blue',
     'moon': 'moon kingdom, pale moonstone, deep violet, silver, candle gold; mysterious but cute, never gory',
     'nomad': 'steppe nomad kingdom, golden felt, red cloth, warm wood, leather',
+    'stone': 'mountain kingdom, cool slate blue-grey stone, glowing blue runes, crystals',
+    'arcane': 'arcane kingdom, deep indigo and violet, pale stone, gold trim, glowing purple crystals',
 }
 G5_PLOTS = {
     'locked': ('one locked (unclaimed) plot of the {king} king, a single flat 2:1 isometric ground tile',

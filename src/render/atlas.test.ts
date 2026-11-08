@@ -48,12 +48,13 @@ describe('spriteList for the content', () => {
           expect(names.has(unitFrame(unit.id, team, anim, 0)), `${unit.id} ${team} ${anim}`).toBe(true);
   });
 
-  it('the Wheat king has its own plot skin; other kings keep the shared plots', () => {
-    for (const state of ['open', 'locked', 'throne'] as const) {
-      expect(kingPlotFrame('wheat', state)).toBe(`plot_wheat_${state}`);
-      expect(names.has(kingPlotFrame('wheat', state)), state).toBe(true);
-      expect(kingPlotFrame('stone', state)).toBe(plotFrame(state));
-    }
+  it('every king has its own plot skin (Wheat since G3e, the other eight since G5, 2026-11-09)', () => {
+    for (const king of ['wheat', 'stone', 'arcane', 'grove', 'tide', 'forge', 'clock', 'moon', 'nomad'] as const)
+      for (const state of ['open', 'locked', 'throne'] as const) {
+        expect(kingPlotFrame(king, state)).toBe(`plot_${king}_${state}`);
+        expect(names.has(kingPlotFrame(king, state)), `${king} ${state}`).toBe(true);
+      }
+    expect(plotFrame('open')).not.toBe(kingPlotFrame('stone', 'open')); // the shared plot stays as the fallback
   });
 
   it('has the pulse, shield and stun effect frames', () => {

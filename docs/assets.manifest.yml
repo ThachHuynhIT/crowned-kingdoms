@@ -4405,3 +4405,348 @@ assets:
     nativeSize: 512x512
     finalSize: 512x512
     notes: PWA install icon (G5 P5), maskable: crown inside the 80% safe circle; regenerate with npm run icons
+  - id: building_stone_catapult_iso
+    path: public/assets/art/ai-v1/iso/stone_catapult.png
+    category: building
+    origin: custom
+    source: docs/art-review/g5/stone/stone_catapult/source.png
+    creator: Project owner (OpenAI imagegen via Codex; prompt in docs/art-review/g5/stone/stone_catapult/prompt.md)
+    license: project-owned
+    attribution: false
+    redistribute: true
+    evidence: docs/art-review/g5/
+    modified: true
+    nativeSize: 1024x1024
+    finalSize: 58x67
+    anchor: feet
+    notes: stone_catapult, isometric 2:1 (G5, approved 2026-11-09 by Claude under the owner's delegation); black keyed and box-reduced at the Wheat set scale (Reapers = 64 px wide) by docs/art-review/g5/make_assets.py; drawn at 0.5 x 2 (src/render/imageArt.ts IMAGE_BUILDINGS)
+  - id: building_stone_crystal_iso
+    path: public/assets/art/ai-v1/iso/stone_crystal.png
+    category: building
+    origin: custom
+    source: docs/art-review/g5/stone/stone_crystal/source.png
+    creator: Project owner (OpenAI imagegen via Codex; prompt in docs/art-review/g5/stone/stone_crystal/prompt.md)
+    license: project-owned
+    attribution: false
+    redistribute: true
+    evidence: docs/art-review/g5/
+    modified: true
+    nativeSize: 1024x1024
+    finalSize: 37x68
+    anchor: feet
+    notes: stone_crystal, isometric 2:1 (G5, approved 2026-11-09 by Claude under the owner's delegation); black keyed and box-reduced at the Wheat set scale (Reapers = 64 px wide) by docs/art-review/g5/make_assets.py; drawn at 0.5 x 2 (src/render/imageArt.ts IMAGE_BUILDINGS)
+  - id: building_stone_golem_forge_iso
+    path: public/assets/art/ai-v1/iso/stone_golem_forge.png
+    category: building
+    origin: custom
+    source: docs/art-review/g5/stone/stone_golem_forge/source.png
+    creator: Project owner (OpenAI imagegen via Codex; prompt in docs/art-review/g5/stone/stone_golem_forge/prompt.md)
+    license: project-owned
+    attribution: false
+    redistribute: true
+    evidence: docs/art-review/g5/
+    modified: true
+    nativeSize: 1024x1024
+    finalSize: 67x66
+    anchor: feet
+    notes: stone_golem_forge, isometric 2:1 (G5, approved 2026-11-09 by Claude under the owner's delegation); black keyed and box-reduced at the Wheat set scale (Reapers = 64 px wide) by docs/art-review/g5/make_assets.py; drawn at 0.5 x 2 (src/render/imageArt.ts IMAGE_BUILDINGS)
+  - id: building_stone_miners_iso
+    path: public/assets/art/ai-v1/iso/stone_miners.png
+    category: building
+    origin: custom
+    source: docs/art-review/g5/stone/stone_miners/source.png
+    creator: Project owner (OpenAI imagegen via Codex; prompt in docs/art-review/g5/stone/stone_miners/prompt.md)
+    license: project-owned
+    attribution: false
+    redistribute: true
+    evidence: docs/art-review/g5/
+    modified: true
+    nativeSize: 1024x1024
+    finalSize: 75x61
+    anchor: feet
+    notes: stone_miners, isometric 2:1 (G5, approved 2026-11-09 by Claude under the owner's delegation); black keyed and box-reduced at the Wheat set scale (Reapers = 64 px wide) by docs/art-review/g5/make_assets.py; drawn at 0.5 x 2 (src/render/imageArt.ts IMAGE_BUILDINGS)
+  - id: building_stone_mountain_heart_iso
+    path: public/assets/art/ai-v1/iso/stone_mountain_heart.png
+    category: building
+    origin: custom
+    source: docs/art-review/g5/stone/stone_mountain_heart/source.png
+    creator: Project owner (OpenAI imagegen via Codex; prompt in docs/art-review/g5/stone/stone_mountain_heart/prompt.md)
+    license: project-owned
+    attribution: false
+    redistribute: true
+    evidence: docs/art-review/g5/
+    modified: true
+    nativeSize: 1024x1024
+    finalSize: 54x68
+    anchor: feet
+    notes: stone_mountain_heart, isometric 2:1 (G5, approved 2026-11-09 by Claude under the owner's delegation); black keyed and box-reduced at the Wheat set scale (Reapers = 64 px wide) by docs/art-review/g5/make_assets.py; drawn at 0.5 x 2 (src/render/imageArt.ts IMAGE_BUILDINGS)
+  - id: building_stone_quarry_iso
+    path: public/assets/art/ai-v1/iso/stone_quarry.png
+    category: building
+    origin: custom
+    source: docs/art-review/g5/stone/stone_quarry/source.png
+    creator: Project owner (OpenAI imagegen via Codex; prompt in docs/art-review/g5/stone/stone_quarry/prompt.md)
+    license: project-owned
+    attribution: false
+    redistribute: true
+    evidence: docs/art-review/g5/
+    modified: true
+    nativeSize: 1024x1024
+    finalSize: 75x57
+    anchor: feet
+    notes: stone_quarry, isometric 2:1 (G5, approved 2026-11-09 by Claude under the owner's delegation); black keyed and box-reduced at the Wheat set scale (Reapers = 64 px wide) by docs/art-review/g5/make_assets.py; drawn at 0.5 x 2 (src/render/imageArt.ts IMAGE_BUILDINGS)
+  - id: building_stone_throne_iso
+    path: public/assets/art/ai-v1/iso/stone_throne.png
+    category: building
+    origin: custom
+    source: docs/art-review/g5/stone/stone_throne/source.png
+    creator: Project owner (OpenAI imagegen via Codex; prompt in docs/art-review/g5/stone/stone_throne/prompt.md)
+    license: project-owned
+    attribution: false
+    redistribute: true
+    evidence: docs/art-review/g5/
+    modified: true
+    nativeSize: 1024x1024
+    finalSize: 51x60
+    anchor: feet
+    notes: stone_throne, isometric 2:1 (G5, approved 2026-11-09 by Claude under the owner's delegation); black keyed and box-reduced at the Wheat set scale (Reapers = 64 px wide) by docs/art-review/g5/make_assets.py; drawn at 0.5 x 2 (src/render/imageArt.ts IMAGE_BUILDINGS)
+  - id: building_stone_wall_iso
+    path: public/assets/art/ai-v1/iso/stone_wall.png
+    category: building
+    origin: custom
+    source: docs/art-review/g5/stone/stone_wall/source.png
+    creator: Project owner (OpenAI imagegen via Codex; prompt in docs/art-review/g5/stone/stone_wall/prompt.md)
+    license: project-owned
+    attribution: false
+    redistribute: true
+    evidence: docs/art-review/g5/
+    modified: true
+    nativeSize: 1024x1024
+    finalSize: 68x51
+    anchor: feet
+    notes: stone_wall, isometric 2:1 (G5, approved 2026-11-09 by Claude under the owner's delegation); black keyed and box-reduced at the Wheat set scale (Reapers = 64 px wide) by docs/art-review/g5/make_assets.py; drawn at 0.5 x 2 (src/render/imageArt.ts IMAGE_BUILDINGS)
+  - id: plot_stone_open_iso
+    path: public/assets/art/ai-v1/iso/plots/stone_open.png
+    category: terrain
+    origin: custom
+    source: docs/art-review/g5/stone/plot_stone_open/source.png
+    creator: Project owner (OpenAI imagegen via Codex; prompt in docs/art-review/g5/stone/plot_stone_open/prompt.md)
+    license: project-owned
+    attribution: false
+    redistribute: true
+    evidence: docs/art-review/g5/
+    modified: true
+    nativeSize: 1024x1024
+    finalSize: 128x61
+    anchor: centre
+    notes: stone open plot, 2:1 isometric diamond (G5, approved 2026-11-09 by Claude under the owner's delegation); keyed, reduced to 128 px wide and centred on the widest row by docs/art-review/g5/make_assets.py; anchored at its centre (src/render/imageArt.ts IMAGE_PLOTS)
+  - id: plot_stone_locked_iso
+    path: public/assets/art/ai-v1/iso/plots/stone_locked.png
+    category: terrain
+    origin: custom
+    source: docs/art-review/g5/stone/plot_stone_locked/source.png
+    creator: Project owner (OpenAI imagegen via Codex; prompt in docs/art-review/g5/stone/plot_stone_locked/prompt.md)
+    license: project-owned
+    attribution: false
+    redistribute: true
+    evidence: docs/art-review/g5/
+    modified: true
+    nativeSize: 1024x1024
+    finalSize: 128x67
+    anchor: centre
+    notes: stone locked plot, 2:1 isometric diamond (G5, approved 2026-11-09 by Claude under the owner's delegation); keyed, reduced to 128 px wide and centred on the widest row by docs/art-review/g5/make_assets.py; anchored at its centre (src/render/imageArt.ts IMAGE_PLOTS)
+  - id: plot_stone_throne_iso
+    path: public/assets/art/ai-v1/iso/plots/stone_throne.png
+    category: terrain
+    origin: custom
+    source: docs/art-review/g5/stone/plot_stone_throne/source.png
+    creator: Project owner (OpenAI imagegen via Codex; prompt in docs/art-review/g5/stone/plot_stone_throne/prompt.md)
+    license: project-owned
+    attribution: false
+    redistribute: true
+    evidence: docs/art-review/g5/
+    modified: true
+    nativeSize: 1024x1024
+    finalSize: 128x71
+    anchor: centre
+    notes: stone throne plot, 2:1 isometric diamond (G5, approved 2026-11-09 by Claude under the owner's delegation); keyed, reduced to 128 px wide and centred on the widest row by docs/art-review/g5/make_assets.py; anchored at its centre (src/render/imageArt.ts IMAGE_PLOTS)
+  - id: plot_stone_built_iso
+    path: public/assets/art/ai-v1/iso/plots/stone_built.png
+    category: terrain
+    origin: custom
+    source: docs/art-review/g5/stone/plot_stone_built/source.png
+    creator: Project owner (OpenAI imagegen via Codex; prompt in docs/art-review/g5/stone/plot_stone_built/prompt.md)
+    license: project-owned
+    attribution: false
+    redistribute: true
+    evidence: docs/art-review/g5/
+    modified: true
+    nativeSize: 1024x1024
+    finalSize: 128x69
+    anchor: centre
+    notes: stone built plot, 2:1 isometric diamond (G5, approved 2026-11-09 by Claude under the owner's delegation); keyed, reduced to 128 px wide and centred on the widest row by docs/art-review/g5/make_assets.py; anchored at its centre (src/render/imageArt.ts IMAGE_PLOTS)
+  - id: building_arcane_apprentices_iso
+    path: public/assets/art/ai-v1/iso/arcane_apprentices.png
+    category: building
+    origin: custom
+    source: docs/art-review/g5/arcane/arcane_apprentices/source.png
+    creator: Project owner (OpenAI imagegen via Codex; prompt in docs/art-review/g5/arcane/arcane_apprentices/prompt.md)
+    license: project-owned
+    attribution: false
+    redistribute: true
+    evidence: docs/art-review/g5/
+    modified: true
+    nativeSize: 1024x1024
+    finalSize: 69x67
+    anchor: feet
+    notes: arcane_apprentices, isometric 2:1 (G5, approved 2026-11-09 by Claude under the owner's delegation); black keyed and box-reduced at the Wheat set scale (Reapers = 64 px wide) by docs/art-review/g5/make_assets.py; drawn at 0.5 x 2 (src/render/imageArt.ts IMAGE_BUILDINGS)
+  - id: building_arcane_archmage_iso
+    path: public/assets/art/ai-v1/iso/arcane_archmage.png
+    category: building
+    origin: custom
+    source: docs/art-review/g5/arcane/arcane_archmage/source.png
+    creator: Project owner (OpenAI imagegen via Codex; prompt in docs/art-review/g5/arcane/arcane_archmage/prompt.md)
+    license: project-owned
+    attribution: false
+    redistribute: true
+    evidence: docs/art-review/g5/
+    modified: true
+    nativeSize: 1024x1024
+    finalSize: 34x75
+    anchor: feet
+    notes: arcane_archmage, isometric 2:1 (G5, approved 2026-11-09 by Claude under the owner's delegation); black keyed and box-reduced at the Wheat set scale (Reapers = 64 px wide) by docs/art-review/g5/make_assets.py; drawn at 0.5 x 2 (src/render/imageArt.ts IMAGE_BUILDINGS)
+  - id: building_arcane_frost_mages_iso
+    path: public/assets/art/ai-v1/iso/arcane_frost_mages.png
+    category: building
+    origin: custom
+    source: docs/art-review/g5/arcane/arcane_frost_mages/source.png
+    creator: Project owner (OpenAI imagegen via Codex; prompt in docs/art-review/g5/arcane/arcane_frost_mages/prompt.md)
+    license: project-owned
+    attribution: false
+    redistribute: true
+    evidence: docs/art-review/g5/
+    modified: true
+    nativeSize: 1024x1024
+    finalSize: 55x76
+    anchor: feet
+    notes: arcane_frost_mages, isometric 2:1 (G5, approved 2026-11-09 by Claude under the owner's delegation); black keyed and box-reduced at the Wheat set scale (Reapers = 64 px wide) by docs/art-review/g5/make_assets.py; drawn at 0.5 x 2 (src/render/imageArt.ts IMAGE_BUILDINGS)
+  - id: building_arcane_library_iso
+    path: public/assets/art/ai-v1/iso/arcane_library.png
+    category: building
+    origin: custom
+    source: docs/art-review/g5/arcane/arcane_library/source.png
+    creator: Project owner (OpenAI imagegen via Codex; prompt in docs/art-review/g5/arcane/arcane_library/prompt.md)
+    license: project-owned
+    attribution: false
+    redistribute: true
+    evidence: docs/art-review/g5/
+    modified: true
+    nativeSize: 1024x1024
+    finalSize: 71x68
+    anchor: feet
+    notes: arcane_library, isometric 2:1 (G5, approved 2026-11-09 by Claude under the owner's delegation); black keyed and box-reduced at the Wheat set scale (Reapers = 64 px wide) by docs/art-review/g5/make_assets.py; drawn at 0.5 x 2 (src/render/imageArt.ts IMAGE_BUILDINGS)
+  - id: building_arcane_mage_tower_iso
+    path: public/assets/art/ai-v1/iso/arcane_mage_tower.png
+    category: building
+    origin: custom
+    source: docs/art-review/g5/arcane/arcane_mage_tower/source.png
+    creator: Project owner (OpenAI imagegen via Codex; prompt in docs/art-review/g5/arcane/arcane_mage_tower/prompt.md)
+    license: project-owned
+    attribution: false
+    redistribute: true
+    evidence: docs/art-review/g5/
+    modified: true
+    nativeSize: 1024x1024
+    finalSize: 49x67
+    anchor: feet
+    notes: arcane_mage_tower, isometric 2:1 (G5, approved 2026-11-09 by Claude under the owner's delegation); black keyed and box-reduced at the Wheat set scale (Reapers = 64 px wide) by docs/art-review/g5/make_assets.py; drawn at 0.5 x 2 (src/render/imageArt.ts IMAGE_BUILDINGS)
+  - id: building_arcane_throne_iso
+    path: public/assets/art/ai-v1/iso/arcane_throne.png
+    category: building
+    origin: custom
+    source: docs/art-review/g5/arcane/arcane_throne/source.png
+    creator: Project owner (OpenAI imagegen via Codex; prompt in docs/art-review/g5/arcane/arcane_throne/prompt.md)
+    license: project-owned
+    attribution: false
+    redistribute: true
+    evidence: docs/art-review/g5/
+    modified: true
+    nativeSize: 1024x1024
+    finalSize: 34x76
+    anchor: feet
+    notes: arcane_throne, isometric 2:1 (G5, approved 2026-11-09 by Claude under the owner's delegation); black keyed and box-reduced at the Wheat set scale (Reapers = 64 px wide) by docs/art-review/g5/make_assets.py; drawn at 0.5 x 2 (src/render/imageArt.ts IMAGE_BUILDINGS)
+  - id: building_arcane_ward_iso
+    path: public/assets/art/ai-v1/iso/arcane_ward.png
+    category: building
+    origin: custom
+    source: docs/art-review/g5/arcane/arcane_ward/source.png
+    creator: Project owner (OpenAI imagegen via Codex; prompt in docs/art-review/g5/arcane/arcane_ward/prompt.md)
+    license: project-owned
+    attribution: false
+    redistribute: true
+    evidence: docs/art-review/g5/
+    modified: true
+    nativeSize: 1024x1024
+    finalSize: 56x47
+    anchor: feet
+    notes: arcane_ward, isometric 2:1 (G5, approved 2026-11-09 by Claude under the owner's delegation); black keyed and box-reduced at the Wheat set scale (Reapers = 64 px wide) by docs/art-review/g5/make_assets.py; drawn at 0.5 x 2 (src/render/imageArt.ts IMAGE_BUILDINGS)
+  - id: plot_arcane_open_iso
+    path: public/assets/art/ai-v1/iso/plots/arcane_open.png
+    category: terrain
+    origin: custom
+    source: docs/art-review/g5/arcane/plot_arcane_open/source.png
+    creator: Project owner (OpenAI imagegen via Codex; prompt in docs/art-review/g5/arcane/plot_arcane_open/prompt.md)
+    license: project-owned
+    attribution: false
+    redistribute: true
+    evidence: docs/art-review/g5/
+    modified: true
+    nativeSize: 1024x1024
+    finalSize: 128x69
+    anchor: centre
+    notes: arcane open plot, 2:1 isometric diamond (G5, approved 2026-11-09 by Claude under the owner's delegation); keyed, reduced to 128 px wide and centred on the widest row by docs/art-review/g5/make_assets.py; anchored at its centre (src/render/imageArt.ts IMAGE_PLOTS)
+  - id: plot_arcane_locked_iso
+    path: public/assets/art/ai-v1/iso/plots/arcane_locked.png
+    category: terrain
+    origin: custom
+    source: docs/art-review/g5/arcane/plot_arcane_locked/source.png
+    creator: Project owner (OpenAI imagegen via Codex; prompt in docs/art-review/g5/arcane/plot_arcane_locked/prompt.md)
+    license: project-owned
+    attribution: false
+    redistribute: true
+    evidence: docs/art-review/g5/
+    modified: true
+    nativeSize: 1024x1024
+    finalSize: 128x73
+    anchor: centre
+    notes: arcane locked plot, 2:1 isometric diamond (G5, approved 2026-11-09 by Claude under the owner's delegation); keyed, reduced to 128 px wide and centred on the widest row by docs/art-review/g5/make_assets.py; anchored at its centre (src/render/imageArt.ts IMAGE_PLOTS)
+  - id: plot_arcane_throne_iso
+    path: public/assets/art/ai-v1/iso/plots/arcane_throne.png
+    category: terrain
+    origin: custom
+    source: docs/art-review/g5/arcane/plot_arcane_throne/source.png
+    creator: Project owner (OpenAI imagegen via Codex; prompt in docs/art-review/g5/arcane/plot_arcane_throne/prompt.md)
+    license: project-owned
+    attribution: false
+    redistribute: true
+    evidence: docs/art-review/g5/
+    modified: true
+    nativeSize: 1024x1024
+    finalSize: 128x71
+    anchor: centre
+    notes: arcane throne plot, 2:1 isometric diamond (G5, approved 2026-11-09 by Claude under the owner's delegation); keyed, reduced to 128 px wide and centred on the widest row by docs/art-review/g5/make_assets.py; anchored at its centre (src/render/imageArt.ts IMAGE_PLOTS)
+  - id: plot_arcane_built_iso
+    path: public/assets/art/ai-v1/iso/plots/arcane_built.png
+    category: terrain
+    origin: custom
+    source: docs/art-review/g5/arcane/plot_arcane_built/source.png
+    creator: Project owner (OpenAI imagegen via Codex; prompt in docs/art-review/g5/arcane/plot_arcane_built/prompt.md)
+    license: project-owned
+    attribution: false
+    redistribute: true
+    evidence: docs/art-review/g5/
+    modified: true
+    nativeSize: 1024x1024
+    finalSize: 128x67
+    anchor: centre
+    notes: arcane built plot, 2:1 isometric diamond (G5, approved 2026-11-09 by Claude under the owner's delegation); keyed, reduced to 128 px wide and centred on the widest row by docs/art-review/g5/make_assets.py; anchored at its centre (src/render/imageArt.ts IMAGE_PLOTS)
