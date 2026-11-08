@@ -1,5 +1,6 @@
 import { DEFAULT_VOLUME, META_SAVE_VERSION, STARTING_KINGS } from '../../data/meta';
 import { ALL_KINGS } from '../../data/rules';
+import { type AudioSettings, DEFAULT_SCREEN_SHAKE } from '../../data/settings';
 import type { CardId, KingId } from '../../data/types';
 
 export interface MetaProfile {
@@ -15,7 +16,7 @@ export interface MetaProfile {
   wins: Record<KingId, number>;
   /** -1 = chưa thắng ván nào. */
   highestDifficultyWon: number;
-  settings: { master: number; music: number; sfx: number };
+  settings: AudioSettings;
   /** Khoá các ván đã chấm điểm, tối đa 20 mục gần nhất. */
   settledRuns: string[];
 }
@@ -34,6 +35,6 @@ export const defaultProfile = (): MetaProfile => ({
   unlockedCards: [],
   wins: perKing(0),
   highestDifficultyWon: -1,
-  settings: { master: DEFAULT_VOLUME, music: DEFAULT_VOLUME, sfx: DEFAULT_VOLUME },
+  settings: { master: DEFAULT_VOLUME, music: DEFAULT_VOLUME, sfx: DEFAULT_VOLUME, screenShake: DEFAULT_SCREEN_SHAKE },
   settledRuns: [],
 });

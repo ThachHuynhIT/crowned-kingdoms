@@ -200,6 +200,24 @@ describe('resume_matrix', () => {
     expect(await again.store.loadMeta()).toEqual({ crowns: 3 });
   });
 
+  it('discarding mid-run after the controller settles leaves no run and the same profile (G5 §4)', async () => {
+    const disk = new IDBFactory();
+    const session = await reload(disk);
+    await session.updateSettings({ music: 40, screenShake: false });
+    const profile = session.meta();
+    const sample = SAMPLES.find((s) => s.label === 'planning before play')!;
+    const controller = new RunController(createGameBus(), CONTENT, sample.state, session.persistence);
+    // Several checkpoints still queued when the player asks to discard.
+    void session.persistence.checkpoint(sample.state);
+    void session.persistence.checkpoint(sample.state);
+    await controller.whenIdle();
+    controller.dispose();
+    expect(await session.discardRun()).toEqual({ persistent: true });
+    const again = await reload(disk);
+    expect(await again.load()).toEqual({ kind: 'empty' });
+    expect(again.meta()).toEqual(profile);
+  });
+
   it('a content set with extra ids still loads; one missing a used card is refused and cleared', async () => {
     const sample = SAMPLES.find((s) => s.label === 'reward')!;
     const disk = new IDBFactory();

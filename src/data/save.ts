@@ -27,3 +27,9 @@ export const UNLOCK_SAVE_FAILED_TEXT = 'Chưa lưu được lần mở khoá, h�
 export const UNLOCK_REFUSED_TEXT = 'Chưa đủ điều kiện để mở khoá.';
 /** Điểm đã cộng nhưng kho lưu chỉ còn trong RAM (IndexedDB không dùng được): mất khi đóng trang. */
 export const META_MEMORY_ONLY_TEXT = 'Điểm Vương Miện chỉ được giữ tới khi đóng trang: trình duyệt này không lưu được tiến trình.';
+/** Ghi Settings hỏng: giữ giá trị cũ. */
+export const SETTINGS_SAVE_FAILED_TEXT = 'Chưa lưu được cài đặt, hãy thử lại.';
+/** Giá trị Settings không hợp lệ (không phải số 0–100 / bật-tắt). */
+export const SETTINGS_INVALID_TEXT = 'Giá trị cài đặt không hợp lệ.';
+/** Bỏ ván xong nhưng không xác nhận được đã xoá trên thiết bị (kho đã chuyển sang RAM). */
+export const DISCARD_MEMORY_ONLY_TEXT = 'Đã bỏ ván trong phiên này; chưa xác nhận xoá được bản lưu trên thiết bị.';
