@@ -138,3 +138,9 @@ export const ENDLESS_MODIFIERS: readonly EndlessModifierDef[] = [
 /** Năm đầu có biến thể và độ dài một thập niên. */
 export const ENDLESS_MODIFIER_FIRST_YEAR = 31;
 export const ENDLESS_MODIFIER_SPAN = 10;
+
+/** Điểm Vương Miện của Vô tận (spec §8): năm và boss tính điểm có trần; số liệu thật không bị cắt. */
+export const ENDLESS_SCORED_YEARS_CAP = 60;
+export const ENDLESS_SCORED_BOSSES_CAP = 3;
+/** Thông báo khi một ván thắng 30 năm mở Vô tận. */
+export const ENDLESS_UNLOCK_TEXT = 'Đã mở chế độ Vô tận';

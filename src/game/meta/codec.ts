@@ -76,6 +76,11 @@ export const decodeMeta = (raw: unknown): DecodeMetaResult => {
     highestDifficultyWon: highest,
     settings: { master: volume(set.master), music: volume(set.music), sfx: volume(set.sfx) },
     settledRuns: runs.slice(-SETTLED_RUNS_KEPT),
+    // Vô tận (spec 2026-11-09 §2): thiếu = chưa mở (không suy từ số lần thắng); sai kiểu thì sửa riêng về false.
+    endlessUnlocked:
+      src.endlessUnlocked === undefined
+        ? false
+        : fix(src.endlessUnlocked as boolean, typeof src.endlessUnlocked === 'boolean', false),
   };
   // Callers must never write a 'newer' profile back: it would downgrade the version and drop unknown fields.
   if (newer) return { kind: 'newer', profile };

@@ -1,6 +1,6 @@
 export { decodeMeta, type DecodeMetaResult } from './codec';
 export { crownPoints, runKey, settleRun, type CrownBreakdown } from './crowns';
-export { defaultProfile, type MetaProfile } from './profile';
+export { defaultProfile, isEndlessUnlocked, type MetaProfile } from './profile';
 export {
   availableDifficulties,
   canUnlockCard,
