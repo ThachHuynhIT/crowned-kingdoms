@@ -7,6 +7,7 @@ import { newRun } from '../run/yearFlow';
 import { CONTENT } from '../cards/registry';
 import { decodeRun } from './codec';
 import { migrateRunState } from './migrate';
+import { modifierAt } from '../run/endlessModifiers';
 
 type Loose = Record<string, unknown>;
 type LoosePlot = { unlocked: boolean; building: Loose | null };
@@ -281,7 +282,7 @@ describe('endless blessing offers survive a save', () => {
       ...s,
       year: 35,
       phase: 'blessing',
-      endless: { ...s.endless!, lastBlessingYear: 35, blessingStacks: { harvest: 2 } },
+      endless: { ...s.endless!, lastBlessingYear: 35, blessingStacks: { harvest: 2 }, modifierId: modifierAt(9, 35)!.id, modifierStartYear: 31 },
       offers: { kind: 'blessing', blessingIds: ['harvest', 'might', 'survey'], year: 35 },
     };
     const env = (state: unknown) => ({ formatVersion: 1, version: 7, contentHash: 1, state });

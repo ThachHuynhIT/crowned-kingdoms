@@ -10,9 +10,9 @@ import { DECREES } from '../../data/decrees';
 import {
   ENDLESS_BLESSING_EVERY,
   ENDLESS_BLESSING_FIRST_YEAR,
+  ENDLESS_BLESSINGS,
   ENDLESS_BLESSING_IDS,
   ENDLESS_BLESSING_PICKS,
-  ENDLESS_MODIFIER_IDS,
 } from '../../data/endless';
 import { QUESTS } from '../../data/quests';
 import { modeForRules, type RunMode, type Rules } from '../../data/rules';
@@ -21,6 +21,8 @@ import { INCOMPATIBLE_RUN_TEXT, SAVE_FORMAT_VERSION } from '../../data/save';
 import type { Content } from '../cards/registry';
 import { THRONE_PLOT } from '../run/board';
 import { geometryFor } from '../run/boardGeometry';
+import { maxLivesForRun } from '../run/endlessBlessings';
+import { modifierAt } from '../run/endlessModifiers';
 import { maxEnchantStacks } from '../run/perks';
 import type { RunPhase, RunState } from '../run/state';
 import { RUN_SAVE_VERSION } from '../run/state';
@@ -72,7 +74,7 @@ const allFinite = (v: unknown): boolean => {
 };
 
 /** Trạng thái Vô tận: `null` ở ván thường; ở Vô tận đúng id, số nguyên không âm (spec 2026-11-09 §8). */
-function validateEndless(v: unknown, mode: RunMode): void {
+function validateEndless(v: unknown, mode: RunMode, seed: number, year: number): void {
   if (mode === 'normal') {
     ensure(v === null, 'endless state in normal run');
     return;
@@ -81,11 +83,19 @@ function validateEndless(v: unknown, mode: RunMode): void {
   const e = v as Loose;
   ensure(isObject(e.blessingStacks), 'blessing stacks');
   for (const [id, n] of Object.entries(e.blessingStacks as Loose)) {
-    ensure((ENDLESS_BLESSING_IDS as readonly string[]).includes(id) && isInt(n) && (n as number) >= 1, 'blessing stack');
+    const def = ENDLESS_BLESSINGS.find((b) => b.id === id);
+    ensure(def !== undefined && isInt(n) && (n as number) >= 1 && (n as number) <= def.maxStacks, 'blessing stack');
   }
-  ensure(isInt(e.lastBlessingYear) && (e.lastBlessingYear as number) >= 0, 'lastBlessingYear');
-  ensure(e.modifierId === null || (ENDLESS_MODIFIER_IDS as readonly string[]).includes(e.modifierId as string), 'modifier');
-  ensure(isInt(e.modifierStartYear) && (e.modifierStartYear as number) >= 0, 'modifierStartYear');
+  // Mốc đã tạo offer: 0 hoặc 30, 35, … không vượt năm hiện tại.
+  const last = e.lastBlessingYear;
+  ensure(
+    last === 0 ||
+      (isInt(last) && last >= ENDLESS_BLESSING_FIRST_YEAR && last % ENDLESS_BLESSING_EVERY === 0 && last <= year),
+    'lastBlessingYear',
+  );
+  // Biến thể phải đúng khối thập niên của năm hiện tại (hàm thuần theo seed).
+  const m = modifierAt(seed, year);
+  ensure(e.modifierId === (m?.id ?? null) && e.modifierStartYear === (m?.startYear ?? 0), 'modifier block');
 }
 
 /** Kiểm cấu trúc và tham chiếu của một RunState phiên bản hiện tại; ném `Invalid` nếu có gì sai. */
@@ -121,9 +131,11 @@ function validate(raw: unknown, content: Content): asserts raw is RunState {
   ensure(s.mode === mode, 'mode');
   if (mode === 'endless') ensure(Number.isSafeInteger(s.year) && (s.year as number) >= 1, 'year out of range');
   else ensure(inRange(s.year, 1, rules.years as number), 'year out of range');
-  validateEndless(s.endless, mode);
+  ensure(typeof s.seed === 'number', 'seed');
+  validateEndless(s.endless, mode, s.seed as number, s.year as number);
   ensure(typeof s.phase === 'string' && PHASES.includes(s.phase as RunPhase), 'phase');
-  ensure(inRange(s.lives, 0, RUN.maxLives), 'lives');
+  // Trần mạng theo chế độ (Vô tận: + Phúc thọ, tối đa 6), kiểm sau khi stack đã hợp lệ.
+  ensure(inRange(s.lives, 0, maxLivesForRun(s as unknown as Pick<RunState, 'mode' | 'endless'>)), 'lives');
   ensure(inRange(s.throneLevel, 1, RUN.maxLevel), 'throne level');
   ensure(isInt(s.gold) && (s.gold as number) >= 0, 'gold');
   for (const key of ['rerollsThisYear', 'paidRerollsThisYear', 'purchasedPlots', 'freeRerollsLeft', 'freeMovesUsed', 'difficulty', 'nextUid', 'interventionDmgPct'] as const) {
