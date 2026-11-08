@@ -24,6 +24,10 @@ export interface GameEvents {
   'ui:drop-card': { handIndex: number; plot: number };
   /** A locked plot picked for purchase (null = none); ✓ buys it, ✕ drops it. */
   'ui:pending-buy': { plot: number | null; price: number };
+  /** The Nomad King's "Dời trại" button: start (true) or drop (false) picking a free relocation. */
+  'ui:free-move': { active: boolean };
+  /** The free relocation being picked on the board (RealmScene → HUD); `active` false = none. */
+  'ui:pending-free-move': { active: boolean; from: number | null; to: number | null };
   'ui:confirm-play': Record<string, never>;
   'ui:cancel-play': Record<string, never>;
   'ui:set-speed': { speed: GameSpeed };

@@ -81,6 +81,8 @@ describe('planningLayout', () => {
     expect(l.sell).toEqual({ x: 296, y: 658, w: 140, h: 52 });
     expect(l.reroll).toEqual({ x: 296, y: 598, w: 140, h: 52 });
     expect(l.deck).toEqual({ x: 844, y: 658, w: 140, h: 52 });
+    // Dời trại (Nomad King) stands over Bộ bài, mirroring Đổi bài over Bán bài
+    expect(l.freeMove).toEqual({ x: 844, y: 598, w: 140, h: 52 });
     expect(l.hand).toHaveLength(3);
     expect(l.hand[0]).toEqual({ x: 448, y: 534, w: 120, h: 176 });
     expect(l.hand[2]!.x).toBe(448 + 2 * 132);
@@ -104,6 +106,8 @@ describe('planningLayout', () => {
     expect(l.scout).toBeNull();
     expect(l.scoutButton).toEqual({ x: 313, y: 64, w: 52, h: 52 });
     expect(l.calendar).toHaveLength(5);
+    // Dời trại (Nomad King): right end of the ✓/✕ row above the board
+    expect(l.freeMove).toEqual({ x: 281, y: 128, w: 84, h: 48 });
   });
 
   for (const [name, screen] of [
@@ -114,7 +118,7 @@ describe('planningLayout', () => {
       const l = planningLayout(screen);
       for (const card of l.hand) {
         const lifted = { ...card, y: card.y - CARD_LIFT };
-        expectSeparate({ lifted, board: l.board, sell: l.sell, reroll: l.reroll, deck: l.deck });
+        expectSeparate({ lifted, board: l.board, sell: l.sell, reroll: l.reroll, deck: l.deck, freeMove: l.freeMove });
       }
     });
 
@@ -122,7 +126,7 @@ describe('planningLayout', () => {
       const l = planningLayout(screen, 4);
       for (const card of l.hand) {
         const lifted = { ...card, y: card.y - CARD_LIFT };
-        expectSeparate({ lifted, board: l.board, sell: l.sell, reroll: l.reroll, deck: l.deck });
+        expectSeparate({ lifted, board: l.board, sell: l.sell, reroll: l.reroll, deck: l.deck, freeMove: l.freeMove });
       }
     });
   }
@@ -146,6 +150,7 @@ describe('planningLayout', () => {
         sell: l.sell,
         reroll: l.reroll,
         deck: l.deck,
+        freeMove: l.freeMove,
         ...Object.fromEntries(l.calendar.map((r, i) => [`cal${i}`, r])),
         ...Object.fromEntries(l.calendarLinks.map((r, i) => [`link${i}`, r])),
         allyStatus: l.allyStatus,
@@ -164,7 +169,7 @@ describe('planningLayout', () => {
         expect(c.w).toBe(52);
         expect(c.h).toBe(52);
       }
-      for (const b of [l.sell, l.reroll, l.deck, l.fight, l.confirm, l.cancel, ...(l.scoutButton ? [l.scoutButton] : [])]) {
+      for (const b of [l.sell, l.reroll, l.deck, l.freeMove, l.fight, l.confirm, l.cancel, ...(l.scoutButton ? [l.scoutButton] : [])]) {
         expect(b.w).toBeGreaterThanOrEqual(44);
         expect(b.h).toBeGreaterThanOrEqual(44);
       }
@@ -176,7 +181,7 @@ describe('planningLayout', () => {
       expect(l.scout === null || !overlaps(l.scout, l.board)).toBe(true);
       // ✓/✕ and the hint never sit on the calendar or the buttons.
       for (const r of [l.confirm, l.cancel, l.hint])
-        for (const other of [...l.calendar, l.reroll, l.sell, l.deck])
+        for (const other of [...l.calendar, l.reroll, l.sell, l.deck, l.freeMove])
           expect(overlaps(r, other), JSON.stringify(r)).toBe(false);
     });
   }

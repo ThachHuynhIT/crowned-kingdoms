@@ -22,6 +22,15 @@ import { buildSpritesTexture } from '../render/atlas';
 import { DRAG_SLOP, type Size } from '../ui/hud/layout';
 import { lockedPlotTap, plotHighlights, plotIllegalReason } from '../ui/planning/targetHints';
 import { lockedPlotPrice } from '../ui/realm/calendarModel';
+import {
+  START_FREE_MOVE,
+  freeMoveCommand,
+  freeMoveHighlights,
+  freeMovesLeft,
+  showFreeMove,
+  tapFreeMove,
+  type FreeMovePick,
+} from '../ui/planning/freeMoveModel';
 import { buildingRanges, entityRanges } from '../ui/info/rangeModel';
 import { unproject } from '../core/iso';
 import {
@@ -86,6 +95,8 @@ export class RealmScene extends Phaser.Scene {
   private pending: PendingPlay | null = null;
   /** A locked plot waiting for ✓ to be bought. */
   private pendingBuy: number | null = null;
+  /** The Nomad King's free relocation being picked (null = none). */
+  private freeMove: FreeMovePick | null = null;
   private inBattle = false;
   /** The controller's auto-start check runs once, on the first frame after the HUD is up. */
   private kicked = false;
@@ -124,6 +135,7 @@ export class RealmScene extends Phaser.Scene {
     // Scene instances are reused: reset every per-run field first.
     this.pending = null;
     this.pendingBuy = null;
+    this.freeMove = null;
     this.inBattle = false;
     this.kicked = false;
     this.resumedAtYearEnd = false;
@@ -175,10 +187,12 @@ export class RealmScene extends Phaser.Scene {
     bus.on('ui:select-card', ({ handIndex }) => this.select(handIndex));
     bus.on('ui:cancel-play', () => {
       this.setPendingBuy(null);
+      this.setFreeMove(null);
       this.bus.emit('ui:select-card', { handIndex: null });
     });
     bus.on('ui:drop-card', ({ handIndex, plot }) => this.drop(handIndex, plot));
     bus.on('ui:confirm-play', () => this.confirm());
+    bus.on('ui:free-move', ({ active }) => this.startFreeMove(active));
     bus.on('ui:continue', () => this.onContinue());
     bus.on('ui:range-selection', ({ target, mode }) => {
       if (mode === 'hover') this.rangeHover = target;
@@ -291,6 +305,8 @@ export class RealmScene extends Phaser.Scene {
     const edges = new Set<Edge>();
     for (const wave of state.army?.waves ?? []) for (const u of wave.units) edges.add(u.edge);
     this.board?.setEdgeArrows([...edges].sort());
+    // A finished move (or a new year) may leave no free move: stop picking.
+    if (this.freeMove && (!showFreeMove(state) || freeMovesLeft(state, CONTENT) === 0)) this.setFreeMove(null);
     if (state.played) this.setPending(null);
     else this.refreshHighlights();
     if (reframe) this.placeCamera();
@@ -302,6 +318,7 @@ export class RealmScene extends Phaser.Scene {
     this.inBattle = true;
     this.setPending(null);
     this.setPendingBuy(null);
+    this.setFreeMove(null);
     this.board?.setEdgeArrows([]);
     this.board?.setBuildingsVisible(false);
     this.placeCamera(true);
@@ -338,7 +355,10 @@ export class RealmScene extends Phaser.Scene {
   // ---- pending play --------------------------------------------------------------------
 
   private select(handIndex: number | null): void {
-    if (handIndex !== null) this.setPendingBuy(null);
+    if (handIndex !== null) {
+      this.setPendingBuy(null);
+      this.setFreeMove(null); // a card and a free move are never aimed together
+    }
     const state = this.controller.state;
     const ok =
       handIndex !== null &&
@@ -370,6 +390,10 @@ export class RealmScene extends Phaser.Scene {
     if (!board) return;
     const p = this.pending;
     const state = this.controller.state;
+    if (this.freeMove) {
+      board.setHighlights(freeMoveHighlights(state, CONTENT, this.freeMove));
+      return;
+    }
     const cardId = p ? state.hand[p.handIndex] : undefined;
     if (!p || cardId === undefined) {
       board.setHighlights(this.pendingBuy === null ? new Map() : new Map([[this.pendingBuy, 'selected']]));
@@ -412,7 +436,33 @@ export class RealmScene extends Phaser.Scene {
     });
   }
 
+  /** The "Dời trại" button: start picking (dropping an aimed card or a purchase offer) or stop. */
+  private startFreeMove(active: boolean): void {
+    const state = this.controller.state;
+    if (!active || !showFreeMove(state) || freeMovesLeft(state, CONTENT) === 0) {
+      this.setFreeMove(null);
+      return;
+    }
+    this.setPendingBuy(null);
+    if (this.pending) this.bus.emit('ui:select-card', { handIndex: null });
+    this.setFreeMove(START_FREE_MOVE);
+  }
+
+  private setFreeMove(next: FreeMovePick | null): void {
+    if (next === null && this.freeMove === null) return;
+    this.freeMove = next;
+    this.refreshHighlights();
+    this.bus.emit('ui:pending-free-move', { active: next !== null, from: next?.from ?? null, to: next?.to ?? null });
+  }
+
   private confirm(): void {
+    if (this.freeMove) {
+      const command = freeMoveCommand(this.freeMove);
+      if (command === null) return;
+      this.setFreeMove(null);
+      this.bus.emit('ui:command', { command });
+      return;
+    }
     if (this.pendingBuy !== null) {
       const plot = this.pendingBuy;
       if (this.controller.state.gold < lockedPlotPrice(this.controller.state)) {
@@ -523,6 +573,14 @@ export class RealmScene extends Phaser.Scene {
     const state = this.controller.state;
     const aimedId = this.pending ? state.hand[this.pending.handIndex] : undefined;
     const aiming = aimedId === undefined ? null : CONTENT.card(aimedId);
+    if (this.freeMove) {
+      // Picking a free move: every tap is a pick (locked plots are refused, never offered for sale).
+      if (plot === null) return;
+      const tap = tapFreeMove(state, CONTENT, this.freeMove, plot);
+      if ('reject' in tap) this.bus.emit('run:illegal', { reason: tap.reject });
+      else this.setFreeMove(tap.next);
+      return;
+    }
     if (plot !== null && state.plots[plot]?.unlocked === false) {
       if (aiming !== null) {
         // A tap has no hover or long-press: say why the aimed card cannot go on this plot.
@@ -646,6 +704,7 @@ export class RealmScene extends Phaser.Scene {
     this.board = null;
     this.field = null;
     this.pending = null;
+    this.freeMove = null;
     this.bus.clear();
   }
 }
