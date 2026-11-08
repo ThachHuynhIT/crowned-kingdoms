@@ -137,3 +137,26 @@ export const summonPhase = (world: BattleWorld): void => {
     else world.playerUnits += 1;
   }
 };
+
+/**
+ * Thu Hồn (§6.10), ngay sau bước chết: Ngai còn sống triệu hồi 1 lính mỗi `soulEvery` Hồn phe mình
+ * (mọi lính mình đã chết, kể cả triệu hồi), tối đa `soulMax` mỗi trận. Hồn đã tiêu cho lần bị trần
+ * `playerUnitCap` chặn vẫn tính là đã dùng (đếm vào `capped`).
+ */
+export const soulHarvestPhase = (world: BattleWorld): void => {
+  const stats = world.soulStats;
+  if (stats === null || world.alive[world.throneId] === 0) return;
+  const due = Math.min(Math.floor(world.souls[TEAM_ALLY] / world.soulEvery), world.soulMax);
+  while (world.soulDone < due) {
+    const index = world.soulDone;
+    world.soulDone += 1;
+    if (world.playerUnits >= BATTLE.playerUnitCap) {
+      world.capped += 1;
+      continue;
+    }
+    const p = boxSlotOf(world, world.throneId, index, world.soulMax, stats.radius);
+    const id = addUnit(world, stats, TEAM_ALLY, p.x, p.y, p.x, p.y, world.sourceUid[world.throneId]!);
+    if (id < 0) world.capped += 1;
+    else world.playerUnits += 1;
+  }
+};

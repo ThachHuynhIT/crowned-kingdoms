@@ -72,6 +72,10 @@ export function tickStatuses(w: BattleWorld): void {
       heal(w, i, (w.maxHp[i]! * w.regenPct) / 100);
     }
   }
+  if (pulse && w.throneRegenPct > 0 && w.alive[w.throneId] === 1) {
+    // Đất Lành (perk): Ngai hồi một phần HP tối đa mỗi giây.
+    heal(w, w.throneId, (w.maxHp[w.throneId]! * w.throneRegenPct) / 100);
+  }
   const live: typeof w.dots = [];
   for (const d of w.dots) {
     if (w.alive[d.victim] === 0 || w.hp[d.victim]! <= 0) continue;

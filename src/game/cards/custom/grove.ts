@@ -5,7 +5,7 @@ import { levelUpBuilding } from '../../run/board';
 import type { BuildingState, RunState } from '../../run/state';
 import type { Content } from '../registry';
 import type { FullRunCardHooks } from './fullRunTypes';
-import type { TomeHandler } from './types';
+import type { StatHandler, TomeHandler } from './types';
 
 const SAPLING = 'grove_sapling';
 const ROOTS = 'grove_deep_roots';
@@ -15,6 +15,20 @@ const ROOTS_CAP = 90;
 
 /** Tuổi công trình (năm) = `year − placedYear + ageBonus` (spec §6.6). */
 export const ageOf = (b: BuildingState, year: number): number => year - b.placedYear + b.ageBonus;
+
+/**
+ * Sinh Trưởng (Ngai Cổ Thụ): công trình tag `grove` +`pct`% (theo cấp Ngai) HP và DMG mỗi năm tuổi,
+ * tối đa +`cap`%. Tính lại từ tuổi mỗi lần dựng trận nên tải lại giữa trận cho cùng chỉ số.
+ */
+export const groveGrowth: StatHandler = (ctx, params) => {
+  if (!ctx.content.card(ctx.target.building.cardId).tags.includes('grove')) return [];
+  const per = params.pct;
+  const pctPerYear = typeof per === 'number' ? per : (per?.[ctx.source.level - 1] ?? 0);
+  const cap = typeof params.cap === 'number' ? params.cap : 0;
+  const pct = Math.min(pctPerYear * ageOf(ctx.target.building, ctx.state.year), cap);
+  if (pct <= 0) return [];
+  return (['hp', 'structureHp', 'dmg'] as const).map((stat) => ({ stat, mode: 'pct' as const, value: pct }));
+};
 
 /** Mưa Xuân: mọi công trình `grove` +2 năm tuổi và mọi Cây Mầm +1 cấp. */
 export const springRain: TomeHandler = (state, content, params) => {

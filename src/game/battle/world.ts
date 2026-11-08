@@ -256,6 +256,8 @@ export class BattleWorld {
   readonly killGoldEvery = new Int32Array(BATTLE.entityCap);
   readonly killGoldAmount = new Float64Array(BATTLE.entityCap);
   readonly killGoldMax = new Int32Array(BATTLE.entityCap);
+  /** 1: `killGold` đếm mọi địch bị hạ trong trận, không chỉ địch do lính của công trình hạ. */
+  readonly killGoldAll = new Uint8Array(BATTLE.entityCap);
   /** Đẩy lùi của xung vòng tròn (px). */
   readonly pulseKnock = new Float64Array(BATTLE.entityCap);
   /** Vị trí đơn vị trong registry đã sắp (khoá bỏng/độc của địch); −1 nếu không có. */
@@ -301,6 +303,18 @@ export class BattleWorld {
   souls: [number, number] = [0, 0];
   /** Vàng thu/chi trong trận (cướp biển…); cộng vào kết quả trận. */
   goldDelta = 0;
+  /** Thu Hồn của Ngai (suy ra từ setup): cứ `soulEvery` Hồn phe mình triệu hồi 1 lính, tối đa `soulMax`; đã triệu hồi `soulDone`. */
+  soulEvery = 0;
+  soulMax = 0;
+  soulDone = 0;
+  soulStats: UnitStats | null = null;
+
+  // ---- perk (suy ra từ setup.perk) ----
+  /** Tick bắt đầu Cuồng Nộ và tick hết trận (§8.8), có thể bị perk Giờ Vàng đẩy lùi. */
+  rageTick: number = BATTLE.rageTick;
+  hardLimitTick: number = BATTLE.hardLimitTick;
+  /** Đất Lành: % HP tối đa Ngai hồi mỗi giây. */
+  throneRegenPct = 0;
 
   // ---- cờ hiệu của vua địch cần logic trong trận (§6.6–6.11) ----
   /** Tái Sinh: % HP tối đa địch hồi mỗi giây. */
@@ -366,6 +380,17 @@ export class BattleWorld {
       this.boulderDmgPct = setup.intervention.dmgPct;
       this.boulderRadius = setup.intervention.radius;
       this.cooldownTicks = setup.intervention.cooldownTicks;
+    }
+    if (setup.perk) {
+      this.rageTick = setup.perk.rageTick ?? BATTLE.rageTick;
+      this.hardLimitTick = setup.perk.hardLimitTick ?? BATTLE.hardLimitTick;
+      this.throneRegenPct = setup.perk.throneRegenPct ?? 0;
+    }
+    const soul = setup.throne.soulSummon;
+    if (soul) {
+      this.soulEvery = soul.every;
+      this.soulMax = soul.max;
+      this.soulStats = soul.stats;
     }
     for (const e of setup.banner?.effects ?? []) {
       if (e.type === 'enemyRegenPct') this.regenPct += e.pct;
@@ -561,6 +586,7 @@ const addStructure = (w: BattleWorld, s: StructureSetup, isThrone: boolean): num
     w.killGoldEvery[id] = s.killGold.every;
     w.killGoldAmount[id] = s.killGold.gold;
     w.killGoldMax[id] = s.killGold.max;
+    w.killGoldAll[id] = s.killGold.all ? 1 : 0;
   }
   if (s.shieldPulse) {
     w.shieldEvery[id] = s.shieldPulse.everyTicks;

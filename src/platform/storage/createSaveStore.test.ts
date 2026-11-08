@@ -105,4 +105,44 @@ describe('createSaveStore', () => {
     await store.clearRun();
     expect(await store.loadMeta()).toEqual({ crowns: 2 });
   });
+
+  it('endRun writes the profile and clears the run on disk and in the mirror', async () => {
+    const real = new IDBFactory();
+    const { warnings, make } = setup(real);
+    const store = await make();
+    await store.saveRun(envelope());
+    await store.endRun({ crowns: 7 });
+    expect(warnings).toEqual([]);
+    const disk = await openIdbSaveStore(real);
+    expect(await disk.loadMeta()).toEqual({ crowns: 7 });
+    expect(await disk.loadRun()).toBeNull();
+  });
+
+  it('a failed endRun on disk falls back to the mirror with one warning, like the other writes', async () => {
+    const real = new IDBFactory();
+    const { factory, failing } = breakable(real);
+    const { warnings, make } = setup(factory);
+    const store = await make();
+    await store.saveMeta({ crowns: 1 });
+    await store.saveRun(envelope(2));
+    failing.on = true;
+    await store.endRun({ crowns: 7 });
+    expect(warnings).toEqual([STORAGE_WARNING_TEXT]);
+    expect(await store.loadMeta()).toEqual({ crowns: 7 });
+    expect(await store.loadRun()).toBeNull();
+    const disk = await openIdbSaveStore(real); // the disk transaction never ran: both stores as before
+    expect(await disk.loadMeta()).toEqual({ crowns: 1 });
+    expect(await disk.loadRun()).toEqual(envelope(2));
+  });
+
+  it('reports whether it is persistent: true on a working disk, false with no factory, false after a write failure', async () => {
+    expect((await setup(new IDBFactory()).make()).isPersistent()).toBe(true);
+    expect((await setup(null).make()).isPersistent()).toBe(false);
+    const { factory, failing } = breakable(new IDBFactory());
+    const store = await setup(factory).make();
+    expect(store.isPersistent()).toBe(true);
+    failing.on = true;
+    await store.saveRun(envelope(2));
+    expect(store.isPersistent()).toBe(false);
+  });
 });

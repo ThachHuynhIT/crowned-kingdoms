@@ -3,9 +3,9 @@ import { Rng } from '../../core/random';
 import { RUN, START_DECK_G1, battleGold, unlockCost } from '../../data/run';
 import type { CardDef, CardId, KingId } from '../../data/types';
 import { CUSTOM_TOME_HANDLERS, runAfterMove, runAfterPlay, runBattleEnd } from '../cards/custom';
+import { freeMoveIllegal } from '../cards/custom/nomad';
 import type { Content } from '../cards/registry';
 import {
-  THRONE_PLOT,
   adjacentToUnlocked,
   attachEnchant,
   checkPlay,
@@ -14,6 +14,7 @@ import {
   placeBuilding,
   plotCol,
   plotRow,
+  raiseThrone,
   sacrificeBuilding,
   unlockPlot,
 } from './board';
@@ -21,9 +22,10 @@ import { enactDecree, rollCouncil, selectDecree, setCouncilSelection } from './c
 import { handLimit, rerollPrice, rewardCount } from './decrees';
 import { refillHand } from './deck';
 import { cardOffer, enqueueOffers } from './flow';
-import { hasPlayableCard } from './playable';
+import { maxEnchantStacks, perkLossGold, placedAgeBonus } from './perks';
+import { hasPlayableCard, stateRefusal } from './playable';
 import { answerQuest, recordQuestCommand, settleQuests } from './quests';
-import { rollConquestCards, rollOffers } from './rewards';
+import { neutralRewardPool, rollConquestCards, rollOffers } from './rewards';
 import type { IllegalReason, RunCommand, RunState } from './state';
 import { advanceAfterBattle, finishYear } from './yearEnd';
 
@@ -65,7 +67,9 @@ function applyBase(input: RunState, cmd: RunCommand, content: Content): CommandR
       const cardId = state.hand[cmd.handIndex];
       if (!Number.isInteger(cmd.handIndex) || cardId === undefined) return fail('badTarget');
       const card = content.card(cardId);
-      const illegal = checkPlay(state.plots, card, cmd.target, content);
+      const refused = stateRefusal(state, card);
+      if (refused !== null) return fail(refused);
+      const illegal = checkPlay(state.plots, card, cmd.target, content, maxEnchantStacks(state, content));
       if (illegal !== null) return fail(illegal);
 
       const target = cmd.target;
@@ -116,7 +120,7 @@ function applyBase(input: RunState, cmd: RunCommand, content: Content): CommandR
       } else if (target.kind !== 'plot') {
         return fail('badTarget');
       } else if (card.kind === 'enchantment') {
-        state.plots = attachEnchant(state.plots, target.plot, card.id, RUN.maxEnchantStacks);
+        state.plots = attachEnchant(state.plots, target.plot, card.id, maxEnchantStacks(state, content));
       } else {
         const here = state.plots[target.plot]!.building;
         if (here === null) {
@@ -126,7 +130,7 @@ function applyBase(input: RunState, cmd: RunCommand, content: Content): CommandR
             level: 1,
             enchants: [],
             placedYear: state.year,
-            ageBonus: 0,
+            ageBonus: placedAgeBonus(state, content, card), // perk Rễ Từ Trước
             counters: {},
             movedYear: null,
             permanent: {},
@@ -190,6 +194,19 @@ function applyBase(input: RunState, cmd: RunCommand, content: Content): CommandR
       return { state, events };
     }
 
+    case 'freeMove': {
+      const illegal = freeMoveIllegal(state, content, cmd.from, cmd.to);
+      if (illegal !== null) return fail(illegal);
+      state.plots = moveBuilding(state.plots, cmd.from, cmd.to);
+      for (const plot of [cmd.from, cmd.to]) {
+        const moved = state.plots[plot]!.building;
+        if (moved !== null) moved.movedYear = state.year;
+      }
+      state.freeMovesUsed += 1;
+      Object.assign(state, runAfterMove(state, cmd.from, cmd.to, content));
+      return { state, events };
+    }
+
     case 'setAutoFire':
       if (state.phase === 'ended') return fail('wrongPhase');
       state.autoFire = cmd.on;
@@ -219,6 +236,10 @@ function applyBase(input: RunState, cmd: RunCommand, content: Content): CommandR
       } else {
         state.stats.battlesLost += 1;
         state.lives -= 1;
+        // Perk Chuộc Tù: thua vẫn nhận một phần vàng trận (không nhân hệ số năm boss).
+        const ransom = perkLossGold(state, content, battleGold(state.year));
+        state.gold += ransom;
+        state.stats.goldEarned += ransom;
       }
 
       // Chinh phục (spec §3.7): lần tấn công thứ 3 của một vua — thắng thì bị chinh phục, thua thì rút lui.
@@ -252,8 +273,7 @@ function applyBase(input: RunState, cmd: RunCommand, content: Content): CommandR
       // §4.2, §5.5 bước 9 (sau khi kiểm nhiệm vụ): thắng boss 1 hoặc boss 2 thì Ngai +1 cấp (tối đa 5).
       const ordinal = state.army?.bossOrdinal;
       if (result.won && (ordinal === 1 || ordinal === 2)) {
-        s.throneLevel = Math.min(RUN.maxLevel, s.throneLevel + 1) as RunState['throneLevel'];
-        s.plots[THRONE_PLOT]!.building!.level = s.throneLevel;
+        s = raiseThrone(s);
       }
       const finalYear = s.year >= s.rules.years;
       if (s.lives <= 0 || (finalYear && !full)) {
@@ -272,7 +292,7 @@ function applyBase(input: RunState, cmd: RunCommand, content: Content): CommandR
         const cardIds = rollOffers(
           rng,
           s.year,
-          { king: only(content.king(s.kingId).cards), neutral: only(content.neutralPool()) },
+          { king: only(content.king(s.kingId).cards), neutral: only(neutralRewardPool(content.neutralPool(), s.unlockedCards)) },
           rewardCount(s),
         );
         s.rng.reward = rng.getState();

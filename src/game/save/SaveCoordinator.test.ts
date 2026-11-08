@@ -34,6 +34,10 @@ class DeferredStore implements SaveStore {
     await this.gate('clear');
     await this.inner.clearRun();
   }
+  async endRun(profile: unknown): Promise<void> {
+    await this.gate('endRun');
+    await this.inner.endRun(profile);
+  }
   loadRun = () => this.inner.loadRun();
   loadMeta = () => this.inner.loadMeta();
   saveMeta = (p: unknown) => this.inner.saveMeta(p);
@@ -70,6 +74,35 @@ describe('SaveCoordinator', () => {
     await Promise.all([a, b, end]);
     expect(store.log).toEqual(['start save 1', 'end save 1', 'start save 2', 'end save 2', 'start clear', 'end clear']);
     expect(await store.loadRun()).toBeNull();
+  });
+
+  it('endRun waits for every earlier checkpoint (FIFO), so no older save can land after it', async () => {
+    const store = new DeferredStore();
+    const c = new SaveCoordinator(store, CONTENT);
+    const a = c.checkpoint(withGold(1));
+    const end = c.endRun({ crowns: 3 });
+    await tick();
+    expect(store.log).toEqual(['start save 1']);
+    store.release();
+    await tick();
+    store.release();
+    await Promise.all([a, end]);
+    expect(store.log).toEqual(['start save 1', 'end save 1', 'start endRun', 'end endRun']);
+    expect(await store.loadRun()).toBeNull();
+    expect(await store.loadMeta()).toEqual({ crowns: 3 });
+  });
+
+  it('clearRun goes through the same queue', async () => {
+    const store = new DeferredStore();
+    const c = new SaveCoordinator(store, CONTENT);
+    const a = c.checkpoint(withGold(1));
+    const clear = c.clearRun();
+    await tick();
+    store.release();
+    await tick();
+    store.release();
+    await Promise.all([a, clear]);
+    expect(store.log).toEqual(['start save 1', 'end save 1', 'start clear', 'end clear']);
   });
 
   it('an ended run clears the save and writes nothing', async () => {

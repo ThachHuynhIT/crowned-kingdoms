@@ -3,6 +3,9 @@ import { TICKS_PER_SECOND } from '../../core/SimClock';
 import type { BattleWorld } from '../../game/battle/world';
 import type { RunState } from '../../game/run/state';
 import { UI_PALETTE } from '../../data/uiPalette';
+import { META_MEMORY_ONLY_TEXT, META_READ_ONLY_TEXT, META_SAVE_FAILED_TEXT, RUN_ALREADY_SCORED_TEXT } from '../../data/save';
+import type { CrownBreakdown } from '../../game/meta';
+import { decimalVi } from '../crowns/crownsModel';
 import type { Point, Size, TooltipContent } from '../hud/layout';
 import type { BuildingInfoModel, UnitInfoModel } from './inspectionModel';
 
@@ -88,7 +91,7 @@ export const placeInfoBox = (anchor: Point, size: Size, screen: Size): Point => 
 
 /**
  * Tóm tắt cuối ván (spec §10.8, G3): năm hoàn thành, vua đã chinh phục, boss đã hạ, vương miện vàng
- * (chỉ khi boss 3 thật sự bị hạ). Điểm Vương Miện và mở khoá là của G4 nên chưa hiện ở đây.
+ * (chỉ khi boss 3 thật sự bị hạ). Điểm Vương Miện và mở khoá: `crownTally`.
  */
 export const runSummary = (state: RunState): string[] => {
   const s = state.stats;
@@ -101,6 +104,48 @@ export const runSummary = (state: RunState): string[] => {
   if (state.rules.calendar === 'full') lines.push(`Boss đã hạ: ${s.bossesDefeated.length} / 3`);
   lines.push(`Vàng kiếm được: ${s.goldEarned}`);
   if (s.bossesDefeated.includes('boss_crownless_king')) lines.push('Vương Miện Vàng: đã hạ Vua Không Ngai!');
+  return lines;
+};
+
+/** What the run settled for (the `run:ended` payload): points credited, their terms, unlock and save notices. */
+export interface RunEndTally {
+  crownPoints: number;
+  breakdown: CrownBreakdown;
+  unlocks: readonly string[];
+  /** Added to the saved profile (true), not added (false), or no profile in play (null / missing). */
+  credited?: boolean | null;
+}
+
+export type TallyTone = 'plain' | 'total' | 'unlock' | 'warning';
+
+export interface TallyLine {
+  text: string;
+  tone: TallyTone;
+}
+
+/** Notices that say the points were NOT kept (or only until the tab closes); shown as warnings. */
+const WARNINGS: readonly string[] = [META_SAVE_FAILED_TEXT, META_READ_ONLY_TEXT, META_MEMORY_ONLY_TEXT];
+
+/**
+ * Bảng cộng Điểm Vương Miện cuối ván (spec §9.1, §10.8): từng số hạng lấy từ `breakdown` (UI không tự tính lại),
+ * hệ số Gai khi d > 0, tổng, rồi các dòng mở khoá / cảnh báo lưu.
+ */
+export const crownTally = (state: RunState, tally: RunEndTally): TallyLine[] => {
+  const b = tally.breakdown;
+  const plain = (text: string): TallyLine => ({ text, tone: 'plain' });
+  const lines: TallyLine[] = [
+    plain(`Năm hoàn thành × 1: +${b.years}`),
+    plain(`Chinh phục × 3: +${b.conquests}`),
+    plain(`Boss × 5: +${b.bosses}`),
+  ];
+  if (b.victory > 0) lines.push(plain(`Thắng ván: +${b.victory}`));
+  if (state.difficulty > 0) lines.push(plain(`Gai ${state.difficulty}: ×${decimalVi(b.multiplier)}`));
+  lines.push({ text: `Tổng: ${b.total} điểm Vương Miện`, tone: 'total' });
+  for (const text of tally.unlocks) lines.push({ text, tone: WARNINGS.includes(text) ? 'warning' : 'unlock' });
+  // Not credited and no notice explaining why: the profile already held this run (dedupe).
+  if (tally.credited === false && !tally.unlocks.some((t) => WARNINGS.includes(t))) {
+    lines.push({ text: RUN_ALREADY_SCORED_TEXT, tone: 'warning' });
+  }
   return lines;
 };
 

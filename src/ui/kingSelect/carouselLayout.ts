@@ -108,3 +108,10 @@ export const carouselScreen = (screen: { w: number; h: number }): CarouselScreen
     next: { x: Math.floor(w / 2) + 8, y: h - 80, w: 48, h: 48 },
   };
 };
+
+/** The "Mở khoá (N)" button over the lower part of the middle (locked) card. */
+export const unlockButtonRect = (card: Rect): Rect => {
+  const w = Math.max(44, Math.min(180, card.w - 16));
+  const h = 48;
+  return { x: Math.round(card.x + (card.w - w) / 2), y: card.y + card.h - h - 12, w, h };
+};

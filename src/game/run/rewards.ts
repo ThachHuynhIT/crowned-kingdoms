@@ -10,6 +10,13 @@ export interface RewardPools {
   neutral: readonly CardDef[];
 }
 
+/**
+ * Bể thưởng trung lập: thẻ không có `unlock` luôn có; thẻ `unlock: 'meta'` chỉ khi đã nằm trong
+ * `unlockedCards` của ván (spec §6.1). Bể chinh phục không dùng hàm này.
+ */
+export const neutralRewardPool = (pool: readonly CardDef[], unlockedCards: readonly CardId[]): CardDef[] =>
+  pool.filter((c) => c.unlock === undefined || unlockedCards.includes(c.id));
+
 const RARITIES: readonly Rarity[] = ['common', 'uncommon', 'rare'];
 
 const rollRarity = (rng: Rng, year: number): Rarity => {

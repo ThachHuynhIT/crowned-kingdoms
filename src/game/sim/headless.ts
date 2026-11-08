@@ -1,7 +1,7 @@
 /** Chạy trọn một ván không giao diện (spec §13.3): bot → applyCommand → mô phỏng trận. */
 import { Rng, hashSeed } from '../../core/random';
 import { RULES_G1, type Rules } from '../../data/rules';
-import type { KingId } from '../../data/types';
+import type { CardId, KingId } from '../../data/types';
 import { simulateBattle } from '../battle/step';
 import { CONTENT } from '../cards/registry';
 import type { Content } from '../cards/registry';
@@ -18,6 +18,8 @@ export interface HeadlessOptions {
   /** Luật ván; mặc định G1 (G2 truyền `RULES_G2`). */
   rules?: Rules;
   bot?: Bot;
+  /** Lá meta đã mở (G4), truyền cho `newRun`. */
+  unlockedCards?: readonly CardId[];
 }
 
 export interface HeadlessResult {
@@ -30,7 +32,7 @@ const MAX_COMMANDS = 5000;
 export function runHeadless(opts: HeadlessOptions, content: Content = CONTENT): HeadlessResult {
   const bot = opts.bot ?? randomBot;
   const rng = new Rng(hashSeed(`${opts.seed}:bot`));
-  let state = newRun(opts.seed, opts.kingId, content, opts.rules ?? RULES_G1);
+  let state = newRun(opts.seed, opts.kingId, content, opts.rules ?? RULES_G1, { unlockedCards: opts.unlockedCards ?? [] });
   let commands = 0;
 
   const apply = (cmd: RunCommand): void => {

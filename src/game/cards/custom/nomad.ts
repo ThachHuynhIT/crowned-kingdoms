@@ -1,6 +1,9 @@
 /** Hiệu ứng riêng của thẻ chinh phục Vua Du Mục (spec §6.11). */
 import type { BuildingKind } from '../../../data/types';
-import { neighbours } from '../../run/board';
+import { THRONE_PLOT, neighbours } from '../../run/board';
+import { perkFreeMoves } from '../../run/perks';
+import type { IllegalReason, RunState } from '../../run/state';
+import type { Content } from '../registry';
 import type { FullRunCardHooks } from './fullRunTypes';
 import type { IncomeHandler, StatHandler } from './types';
 
@@ -30,6 +33,35 @@ export const watchtowerOpen: StatHandler = (ctx, params) => {
   }).length;
   return open > 0 ? [{ stat: 'dmg', mode: 'pct', value: pct * open }] : [];
 };
+
+/** Số lượt dời miễn phí mỗi năm theo cấp Ngai (0 nếu Ngai không có Lều Di Động). */
+export function freeMovesAllowed(state: RunState, content: Content): number {
+  for (const e of content.king(state.kingId).throne.passive) {
+    if (e.type !== 'custom' || e.id !== 'nomad_mobile_camp') continue;
+    const moves = e.params?.moves;
+    if (moves === undefined) return 0;
+    const base = typeof moves === 'number' ? moves : (moves[state.throneLevel - 1] ?? 0);
+    return base + perkFreeMoves(state, content); // perk Nhổ Trại Nhanh
+  }
+  return 0;
+}
+
+/**
+ * Luật duy nhất cho lệnh `freeMove` (cũng dùng để tô ô hợp lệ trên giao diện): trả lý do bị từ chối,
+ * hoặc `null` nếu dời được `from` → `to` (ô đích có công trình thì đổi chỗ).
+ */
+export function freeMoveIllegal(state: RunState, content: Content, from: number, to: number): IllegalReason | null {
+  if (state.phase !== 'planning') return 'wrongPhase';
+  if (state.kingId !== 'nomad') return 'wrongKing';
+  if (state.freeMovesUsed >= freeMovesAllowed(state, content)) return 'noFreeMove';
+  const valid = (p: number): boolean => Number.isInteger(p) && p >= 0 && p < state.plots.length;
+  if (!valid(from) || !valid(to) || from === to) return 'badTarget';
+  if (from === THRONE_PLOT || to === THRONE_PLOT) return 'throne';
+  if (!state.plots[from]!.unlocked || !state.plots[to]!.unlocked) return 'locked';
+  if (state.plots[from]!.building === null) return 'noBuilding';
+  if (!neighbours(from).includes(to)) return 'notAdjacent';
+  return null;
+}
 
 /**
  * Đoàn Lữ Hành: mỗi hành động dời công trình (kể cả đổi chỗ, chỉ tính một lần) cho +1 vàng ngay,

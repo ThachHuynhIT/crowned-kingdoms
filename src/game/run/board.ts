@@ -2,7 +2,7 @@
 import { RUN } from '../../data/run';
 import type { BuildingKind, CardDef, CardId, Level, TomeCardDef } from '../../data/types';
 import { CONTENT, type Content } from '../cards/registry';
-import type { BuildingState, IllegalReason, PlayTarget, PlotState } from './state';
+import type { BuildingState, IllegalReason, PlayTarget, PlotState, RunState } from './state';
 
 const SIZE = 5;
 const COUNT = SIZE * SIZE;
@@ -56,10 +56,34 @@ export const targetCount = (card: CardDef): 0 | 1 | 2 => {
   return card.target === 'buildingThenPlot' || card.target === 'buildingThenBuilding' ? 2 : 1;
 };
 
+const hasCustom = (card: TomeCardDef, id: string): boolean =>
+  card.actions.some((a) => a.type === 'custom' && a.id === id);
+
+/**
+ * Ngai +1 cấp (kẹp `RUN.maxLevel`): nâng `throneLevel` và công trình Ngai cùng một giá trị (bộ giải mã lưu
+ * đòi hai số bằng nhau). Cách duy nhất để lên cấp Ngai: thắng boss, sắc lệnh Đăng Quang, Ấn Triện.
+ */
+export function raiseThrone(state: RunState): RunState {
+  const throneLevel = Math.min(RUN.maxLevel, state.throneLevel + 1) as RunState['throneLevel'];
+  const plots = clonePlots(state.plots);
+  plots[THRONE_PLOT]!.building!.level = throneLevel;
+  return { ...state, throneLevel, plots };
+}
+
+/** Nhân Bản: `first` là công trình (không phải Ngai), `second` là ô trống đã mở (không phải Ngai). */
+export const duplicateIllegal = (plots: readonly PlotState[], first: number, second: number): IllegalReason | null => {
+  if (first === THRONE_PLOT || second === THRONE_PLOT) return 'throne';
+  if (!plots[first]!.unlocked || !plots[second]!.unlocked) return 'locked';
+  if (plots[first]!.building === null) return 'noBuilding';
+  if (second === first) return 'badTarget';
+  return plots[second]!.building === null ? null : 'occupied';
+};
+
 export function hasAnyTarget(
   plots: readonly PlotState[],
   card: CardDef,
   content: Content = CONTENT,
+  maxStacks: number = RUN.maxEnchantStacks,
 ): boolean {
   switch (card.kind) {
     case 'throne':
@@ -80,7 +104,7 @@ export function hasAnyTarget(
           p.unlocked &&
           p.building !== null &&
           card.targets.includes(kindOf(p.building, content)) &&
-          stacksOf(p.building) < RUN.maxEnchantStacks,
+          stacksOf(p.building) < maxStacks,
       );
     case 'tome':
       switch (card.target) {
@@ -99,6 +123,12 @@ export function hasAnyTarget(
               (!hasAction(card, 'levelUp') || p.building.level < RUN.maxLevel),
           );
         case 'buildingThenPlot':
+          if (hasCustom(card, 'duplicate_building')) {
+            return (
+              plots.some((p, i) => p.unlocked && p.building !== null && i !== THRONE_PLOT) &&
+              plots.some((p, i) => p.unlocked && p.building === null && i !== THRONE_PLOT)
+            );
+          }
           return (
             plots.some((p, i) => p.building !== null && i !== THRONE_PLOT) &&
             plots.filter((p) => p.unlocked).length >= 2
@@ -114,6 +144,7 @@ export function checkPlay(
   card: CardDef,
   target: PlayTarget,
   content: Content = CONTENT,
+  maxStacks: number = RUN.maxEnchantStacks,
 ): IllegalReason | null {
   if (card.kind === 'throne') return 'badTarget';
   const count = targetCount(card);
@@ -126,7 +157,7 @@ export function checkPlay(
     if (target.kind !== 'plot') return 'badTarget';
     if (!validPlot(target.plot)) return 'badTarget';
   }
-  if (!hasAnyTarget(plots, card, content)) return 'noTarget';
+  if (!hasAnyTarget(plots, card, content, maxStacks)) return 'noTarget';
 
   if (target.kind === 'plot') {
     const plot = target.plot;
@@ -150,7 +181,7 @@ export function checkPlay(
       if (!card.targets.includes(kindOf(p.building, content))) {
         return plot === THRONE_PLOT ? 'throne' : 'wrongKind';
       }
-      return stacksOf(p.building) >= RUN.maxEnchantStacks ? 'stacksFull' : null;
+      return stacksOf(p.building) >= maxStacks ? 'stacksFull' : null;
     }
     if (plot === THRONE_PLOT) return 'throne';
     if (p.building === null) return null;
@@ -159,6 +190,7 @@ export function checkPlay(
   }
   if (target.kind === 'two') {
     const { first, second } = target;
+    if (card.kind === 'tome' && hasCustom(card, 'duplicate_building')) return duplicateIllegal(plots, first, second);
     const anyBuilding = card.kind === 'tome' && card.target === 'buildingThenBuilding';
     if (!anyBuilding && first === THRONE_PLOT) return 'throne';
     if (!plots[first]!.unlocked) return 'locked';
@@ -186,25 +218,26 @@ export function checkTargetStep(
   chosen: readonly number[],
   plot: number,
   content: Content = CONTENT,
+  maxStacks: number = RUN.maxEnchantStacks,
 ): IllegalReason | null {
   const count = targetCount(card);
-  if (count === 0) return checkPlay(plots, card, { kind: 'none' }, content);
-  if (count === 1) return checkPlay(plots, card, { kind: 'plot', plot }, content);
+  if (count === 0) return checkPlay(plots, card, { kind: 'none' }, content, maxStacks);
+  if (count === 1) return checkPlay(plots, card, { kind: 'plot', plot }, content, maxStacks);
   const first = chosen[0];
-  if (first !== undefined) return checkPlay(plots, card, { kind: 'two', first, second: plot }, content);
+  if (first !== undefined) return checkPlay(plots, card, { kind: 'two', first, second: plot }, content, maxStacks);
   for (let second = 0; second < COUNT; second++) {
     if (second === plot) continue;
-    if (checkPlay(plots, card, { kind: 'two', first: plot, second }, content) === null) return null;
+    if (checkPlay(plots, card, { kind: 'two', first: plot, second }, content, maxStacks) === null) return null;
   }
   // No second plot works: report why `plot` fails as a first pick ('badTarget' if it is
   // a fine first pick with nowhere to go).
-  return checkPlay(plots, card, { kind: 'two', first: plot, second: plot }, content);
+  return checkPlay(plots, card, { kind: 'two', first: plot, second: plot }, content, maxStacks);
 }
 
 const cloneBuilding = (b: BuildingState | null): BuildingState | null =>
   b ? { ...b, enchants: b.enchants.map((e) => ({ ...e })), permanent: { ...b.permanent } } : null;
 
-const clonePlots = (plots: readonly PlotState[]): PlotState[] =>
+export const clonePlots = (plots: readonly PlotState[]): PlotState[] =>
   plots.map((p) => ({ unlocked: p.unlocked, building: cloneBuilding(p.building) }));
 
 export function placeBuilding(

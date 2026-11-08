@@ -19,7 +19,7 @@ describe('G2 card coverage (spec §14 "Done khi")', () => {
     expect(missing).toEqual([]);
   });
 
-  it('has the 6 G2 neutral cards, 9 cards per king and a throne for each of the 3 kings', () => {
+  it('has the 6 G2 neutral cards, 9 cards per king and a throne for each of the 9 kings', () => {
     const neutral = CONTENT.neutralPool().map((c) => c.id);
     for (const id of [
       'neutral_well',
@@ -30,7 +30,7 @@ describe('G2 card coverage (spec §14 "Done khi")', () => {
       'neutral_demolish',
     ])
       expect(neutral, id).toContain(id);
-    expect(CONTENT.kings()).toHaveLength(3);
+    expect(CONTENT.kings()).toHaveLength(9);
     for (const king of CONTENT.kings()) {
       expect(king.cards, king.id).toHaveLength(9);
       expect(king.throne.kind).toBe('throne');

@@ -5,7 +5,7 @@ import type { RunState } from '../game/run/state';
 import { UI_KEY, addPixelTexture } from '../render/atlas';
 import { HILL_LAYERS, MENU_SKY_H, menuPixelScale, paintHills, paintSky } from '../render/uiArt';
 import { resolveShortcut, shortcutFlags } from '../ui/input/shortcuts';
-import { MENU_BUTTON, layoutMenu } from '../ui/menuLayout';
+import { MENU_BUTTON, layoutMenu, visibleMenuItems, type MenuItemId } from '../ui/menuLayout';
 import { openHelp } from './helpLauncher';
 import {
   addUiText,
@@ -30,39 +30,21 @@ const hillKey = (layer: number): string => `menu-hills-${layer}`;
 const PARALLAX = [4, 8, 16] as const;
 const FIREFLIES = 24;
 
-/**
- * One §10.2 menu button. Buttons of features that do not exist yet are simply not listed
- * ("Vương Miện" G4, "Cài đặt" G5). "Tiếp tục" starts disabled and is enabled once a valid
- * saved run has loaded; "Ván mới" opens the king select.
- */
-interface MenuEntry {
-  readonly label: string;
-  readonly enabled: boolean;
-  readonly onClick: (scene: MainMenuScene) => void;
-}
-
 /** A fresh run seed; scenes may use wall-clock randomness (the run itself is seeded). */
 export const newRunSeed = (): number => (Date.now() ^ Math.floor(Math.random() * 0xffffffff)) >>> 0;
 
-const MENU_ENTRIES: readonly MenuEntry[] = [
-  {
-    label: 'Tiếp tục',
-    enabled: false,
-    onClick: (scene) => scene.resume(),
-  },
-  {
-    label: 'Ván mới',
-    enabled: true,
-    onClick: (scene) => {
-      scene.scene.start(SCENES.kingSelect);
-    },
-  },
-  {
-    label: 'Trợ giúp',
-    enabled: true,
-    onClick: (scene) => openHelp(scene, null, null),
-  },
-];
+/**
+ * What each §10.2 button does. The list and order live in `MENU_ITEMS` (hidden ones, e.g.
+ * "Cài đặt" until G5, are not drawn). "Tiếp tục" starts disabled and is enabled once a valid
+ * saved run has loaded; "Ván mới" opens the king select; "Vương Miện" the Crowns screen.
+ */
+const MENU_ACTIONS: Record<MenuItemId, (scene: MainMenuScene) => void> = {
+  continue: (scene) => scene.resume(),
+  newRun: (scene) => scene.scene.start(SCENES.kingSelect),
+  crowns: (scene) => scene.scene.start(SCENES.crowns),
+  settings: () => undefined,
+  help: (scene) => openHelp(scene, null, null),
+};
 
 export class MainMenuScene extends Phaser.Scene {
   private pix = 2;
@@ -111,14 +93,14 @@ export class MainMenuScene extends Phaser.Scene {
       .setShadow(2, 2, toCss(UI_PALETTE.textShadow), 0, false, true);
     this.subtitle = addUiText(this, 0, 0, SUBTITLE, 14).setOrigin(0.5, 0).setAlign('center');
 
-    this.buttons = MENU_ENTRIES.map((entry) => {
-      const button = createButton(this, 0, 0, entry.label, {
+    this.buttons = visibleMenuItems().map((item) => {
+      const button = createButton(this, 0, 0, item.label, {
         width: MENU_BUTTON.w,
         height: MENU_BUTTON.h,
         fontSize: 18,
-        onClick: () => entry.onClick(this),
+        onClick: () => MENU_ACTIONS[item.id](this),
       });
-      button.setEnabled(entry.enabled);
+      button.setEnabled(item.id !== 'continue'); // enabled once a saved run loads
       return button;
     });
     this.footer = this.add

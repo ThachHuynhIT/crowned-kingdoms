@@ -4,11 +4,19 @@ import { SimClock, type GameSpeed } from '../../core/SimClock';
 import { BattleRunner } from '../battle/BattleRunner';
 import type { Content } from '../cards/registry';
 import type { GameEvents } from '../events';
-import type { SessionPersistence } from '../save/types';
+import { META_SAVE_FAILED_TEXT } from '../../data/save';
+import { crownPoints } from '../meta/crowns';
+import type { SessionPersistence, SettleOutcome } from '../save/types';
 import { buildBattleSetup } from './battleSetup';
 import { applyCommand } from './commands';
 import { hasPlayableCard } from './playable';
 import type { RunCommand, RunState } from './state';
+
+/** Điểm tính tại chỗ khi không có hồ sơ để chấm (hoặc chấm hỏng: không được cộng). */
+const localOutcome = (state: RunState, unlocks: string[]): SettleOutcome => {
+  const breakdown = crownPoints(state);
+  return { crownPoints: breakdown.total, breakdown, unlocks, credited: false };
+};
 
 /**
  * Tốc độ chơi (1×–3×) người chơi chọn lần gần nhất: trận sau và ván sau bắt đầu ở tốc độ này.
@@ -111,13 +119,18 @@ export class RunController {
       return;
     }
     this.current = result.state;
+    const ended = result.state.phase === 'ended' && result.events.some((e) => e.type === 'runEnded');
+    // Without a meta profile (no persistence, or none that settles) the score is still computed and shown.
+    let outcome: SettleOutcome | null = null;
     const finish = (): void => {
       if (this.disposed) return;
       this.bus.emit('run:state', { state: this.current });
       for (const event of result.events) {
         if (event.type === 'runEnded') {
-          // G4 (meta-progression) fills crownPoints and unlocks.
-          this.bus.emit('run:ended', { won: event.won, crownPoints: 0, unlocks: [] });
+          // No outcome: no profile was consulted (no session), so there is nothing to say about crediting.
+          const o = outcome ?? localOutcome(result.state, []);
+          const credited = outcome === null ? null : outcome.credited;
+          this.bus.emit('run:ended', { won: event.won, crownPoints: o.crownPoints, breakdown: o.breakdown, unlocks: o.unlocks, credited });
         }
       }
       if (command.type === 'setAutoFire') this.active?.setAutoFire(command.on);
@@ -130,7 +143,22 @@ export class RunController {
       finish();
       return;
     }
-    return this.persistence!.checkpoint(this.current).catch(() => undefined).then(finish);
+    const persistence = this.persistence!;
+    const write = async (): Promise<void> => {
+      if (ended && persistence.settle) {
+        // settle() scores the exact ended state AND ends the run save (one atomic endRun), so no checkpoint
+        // follows. If it fails, the run save is kept: the next load replays to the same end and settles again.
+        try {
+          outcome = await persistence.settle(result.state);
+        } catch (e) {
+          console.error('RunController: settling the run failed', e);
+          outcome = localOutcome(result.state, [META_SAVE_FAILED_TEXT]);
+        }
+        return;
+      }
+      await persistence.checkpoint(this.current).catch(() => undefined);
+    };
+    return write().then(finish);
   }
 
   private startRunner(): void {

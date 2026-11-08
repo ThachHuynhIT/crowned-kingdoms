@@ -3,14 +3,13 @@
  * → (hook, chưa có) → chọn mục tiêu → di chuyển → đánh → đạn → áp sát thương → trạng thái →
  * chết → kiểm tra kết thúc, rồi `tick += 1`. Không dùng Rng.
  */
-import { BATTLE } from '../../data/battle';
 import { bannerPhase, settleBattleGold, tickBehaviours } from './behaviours';
 import { spawnBossDue, tickBosses } from './bosses';
 import { applyDamagePhase, attackPhase, deathPhase, projectilePhase, statusPhase } from './combat';
 import { autoFirePhase, boulderPhase, setAutoFire, tryIntervene } from './intervention';
 import { moveEntities } from './movement';
 import { tickStatuses } from './statuses';
-import { bellPhase, pulsePhase, respawnPhase, shieldPulsePhase, summonPhase } from './structures';
+import { bellPhase, pulsePhase, respawnPhase, shieldPulsePhase, soulHarvestPhase, summonPhase } from './structures';
 import { retarget } from './targeting';
 import type { BattleCommand, BattleResult, BattleSetup } from './types';
 import { TEAM_FOE, createBattle, spawnWave, type BattleWorld } from './world';
@@ -38,7 +37,7 @@ const checkEnd = (world: BattleWorld): void => {
   let won: boolean | null = null;
   if (world.hp[world.throneId]! <= 0) won = false;
   else if (world.spawnedWaves >= world.setup.waves.length && bossResolved(world) && !anyFoeAlive(world)) won = true;
-  else if (world.tick >= BATTLE.hardLimitTick) won = true;
+  else if (world.tick >= world.hardLimitTick) won = true;
   if (won === null) return;
   world.ended = true;
   world.won = won;
@@ -52,7 +51,7 @@ export const stepBattle = (world: BattleWorld, inputs: readonly BattleCommand[])
   // (1) xuất đợt
   spawnDueWaves(world);
   spawnBossDue(world);
-  if (world.tick === BATTLE.rageTick) world.events.push({ type: 'rage' });
+  if (world.tick === world.rageTick) world.events.push({ type: 'rage' });
   // (2) can thiệp: lệnh của tick này theo thứ tự nhận (lệnh tick khác bị bỏ), rồi tảng đá đến hạn rơi.
   for (const input of inputs) {
     if (input.tick !== world.tick) continue;
@@ -77,6 +76,7 @@ export const stepBattle = (world: BattleWorld, inputs: readonly BattleCommand[])
   statusPhase(world); // (9)
   tickStatuses(world); // bỏng, độc, hồi máu theo giây
   deathPhase(world); // (10)
+  soulHarvestPhase(world); // Thu Hồn của Ngai theo Hồn vừa có
   bannerPhase(world); // cờ hiệu theo dõi HP Ngai
   checkEnd(world); // (11)
   if (world.ended) settleBattleGold(world);
@@ -114,7 +114,7 @@ export const simulateBattle = (
   inputs: readonly BattleCommand[] = [],
 ): BattleResult => {
   const world = createBattle(setup);
-  const maxSteps = BATTLE.hardLimitTick + 1;
+  const maxSteps = world.hardLimitTick + 1;
   for (let step = 0; step < maxSteps; step++) {
     const tick = world.tick;
     stepBattle(

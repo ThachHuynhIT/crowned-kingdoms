@@ -1,5 +1,6 @@
 import { cells } from '../boardGeometry';
-import type { CardDef, EnemyKingDef } from '../types';
+import type { CardDef, EnemyKingDef, KingDef } from '../types';
+import { enemyFromKing } from './enemy';
 
 const horse = { owner: 'nomad' as const, tags: ['cavalry'] as const };
 const plain = { owner: 'nomad' as const, tags: [] as const };
@@ -117,12 +118,52 @@ export const NOMAD_CARDS: readonly CardDef[] = [
   },
 ];
 
-/** Vua Du Mục (spec §6.11) phía kẻ địch: kỵ binh xung phong. Thẻ chinh phục: G3b-B5. */
-export const NOMAD_ENEMY: EnemyKingDef = {
+/** Vua Du Mục (spec §6): Ngai, 9 thẻ, đơn vị, cờ hiệu và roster khi làm địch. */
+export const NOMAD: KingDef = {
   id: 'nomad',
   nameVi: 'Vua Du Mục',
   name: 'Nomad King',
   color: 'sand',
+  blurbVi: 'Dời công trình mỗi năm, kỵ binh xung phong.',
+  perks: [
+    {
+      id: 'nomad_p1',
+      nameVi: 'Vó Ngựa',
+      textVi: 'Kỵ binh +10% tốc độ và +10% sát thương.',
+      effects: [
+        { type: 'stat', filter: { unitTags: ['cavalry'] }, stat: 'speed', mode: 'pct', value: 10 },
+        { type: 'stat', filter: { unitTags: ['cavalry'] }, stat: 'dmg', mode: 'pct', value: 10 },
+      ],
+    },
+    {
+      id: 'nomad_p2',
+      nameVi: 'Thảo Nguyên Rộng',
+      textVi: 'Bắt đầu ván với hai ô giữa mép tây và mép đông đã mở.',
+      // Spec ghi (2,0) và (2,4), nhưng (2,0) giờ là ô Ngai: chọn hai ô giữa mép tây/đông (plot 10, 14).
+      effects: [{ type: 'startUnlocked', plots: [10, 14] }],
+    },
+    {
+      id: 'nomad_p3',
+      nameVi: 'Nhổ Trại Nhanh',
+      textVi: 'Lều Di Động thêm 1 lượt dời miễn phí mỗi năm.',
+      effects: [{ type: 'freeMoves', add: 1 }],
+    },
+  ],
+  throne: {
+    id: 'nomad_throne',
+    owner: 'nomad',
+    nameVi: 'Ngai Lều Vàng',
+    name: 'Golden Tent Throne',
+    kind: 'throne',
+    rarity: 'common',
+    tags: [],
+    textVi:
+      'Ngai của Vua Du Mục: bắn trong tầm. Lều Di Động: mỗi năm được dời miễn phí 1 công trình (từ Ngai cấp 3: 2 lần), không cần chơi thẻ.',
+    hp: 300,
+    armor: 0,
+    attack: { dmg: 9, type: 'physical', range: cells(1.6875), interval: 10, projectileSpeed: 16 },
+    passive: [{ type: 'custom', id: 'nomad_mobile_camp', params: { moves: [1, 1, 2, 2, 2] } }],
+  },
   units: [
     {
       id: 'rider',
@@ -178,5 +219,8 @@ export const NOMAD_ENEMY: EnemyKingDef = {
       { type: 'extraEdge', count: 1 },
     ],
   },
-  conquestCards: NOMAD_CARDS,
+  cards: NOMAD_CARDS,
 };
+
+/** Phần kẻ địch của nomad: cùng dữ liệu, thẻ chinh phục là 9 thẻ của vua. */
+export const NOMAD_ENEMY: EnemyKingDef = enemyFromKing(NOMAD);

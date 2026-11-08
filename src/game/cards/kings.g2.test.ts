@@ -1,11 +1,12 @@
 /** Toàn vẹn dữ liệu G2 (spec §13.1): ba vua Lúa Mì, Đá Núi, Phép Thuật và thẻ trung lập. */
 import { describe, expect, it } from 'vitest';
-import { CUSTOM_INCOME_HANDLERS, CUSTOM_STAT_HANDLERS, CUSTOM_TOME_HANDLERS } from './custom';
+import { CUSTOM_FLAG_IDS, CUSTOM_INCOME_HANDLERS, CUSTOM_STAT_HANDLERS, CUSTOM_TOME_HANDLERS } from './custom';
 import { CONTENT } from './registry';
 import { startDeck } from '../run/calendar';
 import { KINGS_G2 } from '../../data/kings';
+import { ALL_KINGS } from '../../data/rules';
 import { PALETTE } from '../../data/palette';
-import type { CardDef, EffectDef, PerLevel, Scalar } from '../../data/types';
+import type { CardDef, CustomEffectId, EffectDef, PerLevel, Scalar } from '../../data/types';
 
 const cards: readonly CardDef[] = CONTENT.allCards();
 const units = CONTENT.allUnits();
@@ -22,6 +23,7 @@ const perLevelsOf = (card: CardDef): PerLevel[] => {
     else if (e.type === 'stat') out.push(...perLevels(e.value));
     else if (e.type === 'pulse') out.push(...perLevels(e.radius));
     else if (e.type === 'shieldPulse') out.push(...perLevels(e.amount));
+    else if (e.type === 'killGold') out.push(...perLevels(e.max));
     else if (e.type === 'custom') for (const v of Object.values(e.params ?? {})) out.push(...perLevels(v));
   };
   if (card.kind === 'throne') card.passive.forEach(fromEffect);
@@ -115,7 +117,7 @@ describe('G2 content integrity', () => {
     }
   });
 
-  it('has a handler for every custom effect it uses', () => {
+  it('has a handler (or a flag reader) for every custom effect it uses', () => {
     for (const c of cards) {
       const customs: string[] = [];
       if (c.kind === 'throne') for (const e of c.passive) if (e.type === 'custom') customs.push(e.id);
@@ -127,9 +129,15 @@ describe('G2 content integrity', () => {
         const registered =
           c.kind === 'tome'
             ? id in CUSTOM_TOME_HANDLERS
-            : id in CUSTOM_STAT_HANDLERS || id in CUSTOM_INCOME_HANDLERS;
+            : id in CUSTOM_STAT_HANDLERS || id in CUSTOM_INCOME_HANDLERS || CUSTOM_FLAG_IDS.includes(id as CustomEffectId);
         expect(registered, `${c.id} uses ${id}`).toBe(true);
       }
+    }
+  });
+
+  it('keeps flag ids out of the handler tables (they are read directly, never through a no-op handler)', () => {
+    for (const id of CUSTOM_FLAG_IDS) {
+      expect(id in CUSTOM_STAT_HANDLERS || id in CUSTOM_INCOME_HANDLERS || id in CUSTOM_TOME_HANDLERS, id).toBe(false);
     }
   });
 
@@ -137,6 +145,6 @@ describe('G2 content integrity', () => {
     // Conquest-only cards of the other kings are in the content too (spec 3.7).
     const owners = new Set<string>(['neutral', ...CONTENT.enemyKings().map((k) => k.id)]);
     for (const c of cards) expect(owners.has(c.owner), c.id).toBe(true);
-    expect(CONTENT.kings().map((k) => k.id)).toEqual(['wheat', 'stone', 'arcane']);
+    expect(CONTENT.kings().map((k) => k.id)).toEqual([...ALL_KINGS]);
   });
 });

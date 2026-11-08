@@ -1,4 +1,4 @@
-import { ENEMY_KINGS, KINGS_G2 } from '../../data/kings';
+import { ENEMY_KINGS, PLAYABLE_KINGS } from '../../data/kings';
 import { NEUTRAL_CARDS, NEUTRAL_UNITS } from '../../data/neutral';
 import { BOSSES } from '../../data/bosses';
 import { BOSS_SUMMON_UNITS, RAIDER_ROSTER, RAIDER_UNITS } from '../../data/raiders';
@@ -13,7 +13,7 @@ export interface Content {
   kings(): readonly KingDef[];
   /** Roster địch của một vua (đơn vị đã tra cứu, kèm trọng số). */
   enemyRoster(king: KingId): readonly { unit: UnitDef; weight: number }[];
-  /** Phần kẻ địch của một vua (cả 6 vua chưa chơi được), kể cả cờ hiệu và thẻ chinh phục. */
+  /** Phần kẻ địch của một vua (cả 9 vua), kể cả cờ hiệu và thẻ chinh phục. */
   enemyKing(id: KingId): EnemyKingDef;
   /** Cả 9 vua dưới dạng kẻ địch, theo id. */
   enemyKings(): readonly EnemyKingDef[];
@@ -31,8 +31,7 @@ const byId = <T extends { readonly id: string }>(items: readonly T[]): T[] =>
 
 function buildContent(): Content {
   const cards = byId([
-    ...KINGS_G2.flatMap((k) => [k.throne, ...k.cards]),
-    ...ENEMY_KINGS.flatMap((k) => (KINGS_G2.some((g) => g.id === k.id) ? [] : k.conquestCards)),
+    ...PLAYABLE_KINGS.flatMap((k) => [k.throne, ...k.cards]),
     ...NEUTRAL_CARDS,
   ]);
   const units = byId([
@@ -45,7 +44,7 @@ function buildContent(): Content {
   const enemyMap = new Map<string, EnemyKingDef>(ENEMY_KINGS.map((k) => [k.id, k]));
   const cardMap = new Map<string, CardDef>(cards.map((c) => [c.id, c]));
   const unitMap = new Map<string, UnitDef>(units.map((u) => [u.id, u]));
-  const kingMap = new Map<string, KingDef>(KINGS_G2.map((k) => [k.id, k]));
+  const kingMap = new Map<string, KingDef>(PLAYABLE_KINGS.map((k) => [k.id, k]));
 
   const need = <T>(map: Map<string, T>, id: string, what: string): T => {
     const v = map.get(id);
@@ -60,7 +59,7 @@ function buildContent(): Content {
     unit: (id) => need(unitMap, id, 'unit'),
     king: (id) => need(kingMap, id, 'king'),
     raiderRoster: () => roster,
-    kings: () => KINGS_G2,
+    kings: () => PLAYABLE_KINGS,
     enemyRoster: (id) =>
       need(enemyMap, id, 'king').enemyRoster.map((r) => ({
         unit: need(unitMap, r.unit, 'unit'),

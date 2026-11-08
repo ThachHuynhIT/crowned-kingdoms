@@ -12,6 +12,7 @@ import { RUN } from '../../data/run';
 import { INCOMPATIBLE_RUN_TEXT, SAVE_FORMAT_VERSION } from '../../data/save';
 import type { Content } from '../cards/registry';
 import { THRONE_PLOT } from '../run/board';
+import { maxEnchantStacks } from '../run/perks';
 import type { RunPhase, RunState } from '../run/state';
 import { RUN_SAVE_VERSION } from '../run/state';
 import { migrateRunState } from './migrate';
@@ -95,9 +96,15 @@ function validate(raw: unknown, content: Content): asserts raw is RunState {
   ensure(inRange(s.lives, 0, RUN.maxLives), 'lives');
   ensure(inRange(s.throneLevel, 1, RUN.maxLevel), 'throne level');
   ensure(isInt(s.gold) && (s.gold as number) >= 0, 'gold');
-  for (const key of ['rerollsThisYear', 'paidRerollsThisYear', 'purchasedPlots', 'freeRerollsLeft', 'difficulty', 'nextUid', 'interventionDmgPct'] as const) {
+  for (const key of ['rerollsThisYear', 'paidRerollsThisYear', 'purchasedPlots', 'freeRerollsLeft', 'freeMovesUsed', 'difficulty', 'nextUid', 'interventionDmgPct'] as const) {
     ensure(isInt(s[key]) && (s[key] as number) >= 0, key);
   }
+  ensure((s.difficulty as number) <= RUN.difficultyLevels, 'difficulty');
+  // Perk phải là một trong ba perk của vua của ván trong kho nội dung hiện tại.
+  const king = content.king(s.kingId as RunState['kingId']);
+  ensure(s.perk === null || (typeof s.perk === 'string' && king.perks.some((p) => p.id === s.perk)), 'perk');
+  const maxStacks = maxEnchantStacks({ kingId: king.id, perk: s.perk as RunState['perk'] }, content);
+  cardList(s.unlockedCards, 'unlockedCards');
   ensure(typeof s.autoFire === 'boolean' && typeof s.played === 'boolean' && typeof s.yearStartPendingDraw === 'boolean', 'flags');
   ensure(s.won === null || typeof s.won === 'boolean', 'won');
 
@@ -125,10 +132,10 @@ function validate(raw: unknown, content: Content): asserts raw is RunState {
     for (const e of arr(bd.enchants, 'enchants')) {
       ensure(isObject(e), 'enchant');
       card((e as Loose).cardId, 'enchant');
-      ensure(inRange((e as Loose).stacks, 1, RUN.maxEnchantStacks), 'stacks');
+      ensure(inRange((e as Loose).stacks, 1, maxStacks), 'stacks');
       stacks += (e as Loose).stacks as number;
     }
-    ensure(stacks <= RUN.maxEnchantStacks, 'too many stacks');
+    ensure(stacks <= maxStacks, 'too many stacks');
     if (i === THRONE_PLOT) ensure(bd.level === s.throneLevel, 'throne building level');
   });
   const throne = (plots[THRONE_PLOT] as Loose).building;

@@ -1,8 +1,13 @@
 import { cells } from '../boardGeometry';
-import type { CardDef, EnemyKingDef } from '../types';
+import { RUN } from '../run';
+import type { CardDef, EnemyKingDef, KingDef } from '../types';
+import { enemyFromKing } from './enemy';
 
 const dead = { owner: 'moon' as const, tags: ['undead'] as const };
 const plain = { owner: 'moon' as const, tags: [] as const };
+
+/** Đơn vị Thu Hồn (bị động Ngai Nguyệt Thực) triệu hồi tại Ngai. */
+export const SOUL_HARVEST_UNIT = 'wraith';
 
 /** Chín thẻ của Vua Ánh Trăng (spec §6.10), không gồm Ngai; chỉ có được nhờ chinh phục ở G3. */
 export const MOON_CARDS: readonly CardDef[] = [
@@ -113,12 +118,52 @@ export const MOON_CARDS: readonly CardDef[] = [
   },
 ];
 
-/** Vua Ánh Trăng (spec §6.10) phía kẻ địch: hiến tế, triệu hồi, bất tử. Thẻ chinh phục: G3b-B5. */
-export const MOON_ENEMY: EnemyKingDef = {
+/** Vua Ánh Trăng (spec §6): Ngai, 9 thẻ, đơn vị, cờ hiệu và roster khi làm địch. */
+export const MOON: KingDef = {
   id: 'moon',
   nameVi: 'Vua Ánh Trăng',
   name: 'Moon King',
   color: 'plum',
+  blurbVi: 'Hiến tế và triệu hồi: gom Hồn, đổi lấy bóng ma. Rủi ro cao.',
+  perks: [
+    {
+      id: 'moon_p1',
+      nameVi: 'Hồn Đói',
+      textVi: 'Thu Hồn cần ít hơn 2 Hồn.',
+      effects: [{ type: 'soulCost', add: -2 }],
+    },
+    {
+      id: 'moon_p2',
+      nameVi: 'Trăng Non',
+      textVi: 'Bộ bài khởi đầu có thêm 1 Khế Ước Máu.',
+      effects: [{ type: 'startDeckCard', card: 'moon_blood_pact' }],
+    },
+    {
+      id: 'moon_p3',
+      nameVi: 'Mạng Thứ Tư',
+      textVi: 'Bắt đầu ván với 4 mạng, nhưng Ngai −20% máu.',
+      effects: [
+        { type: 'startLives', lives: RUN.maxLives },
+        { type: 'stat', filter: { kinds: ['throne'] }, stat: 'structureHp', mode: 'pct', value: -20 },
+      ],
+    },
+  ],
+  throne: {
+    id: 'moon_throne',
+    owner: 'moon',
+    nameVi: 'Ngai Nguyệt Thực',
+    name: 'Eclipse Throne',
+    kind: 'throne',
+    rarity: 'common',
+    tags: [],
+    textVi:
+      'Ngai của Vua Ánh Trăng: bắn phép trong tầm. Thu Hồn: cứ vài Hồn từ lính chết lại triệu hồi một bóng ma tại Ngai (tối đa 20 mỗi trận).',
+    hp: 240,
+    armor: 0,
+    attack: { dmg: 10, type: 'magic', range: cells(1.6875), interval: 12, projectileSpeed: 16 },
+    // Thu Hồn: cứ `souls` Hồn (theo cấp Ngai) triệu hồi 1 `SOUL_HARVEST_UNIT` tại Ngai, tối đa `max` mỗi trận.
+    passive: [{ type: 'custom', id: 'moon_soul_harvest', params: { souls: [6, 6, 5, 5, 4], max: 20 } }],
+  },
   units: [
     {
       id: 'skeleton',
@@ -185,5 +230,8 @@ export const MOON_ENEMY: EnemyKingDef = {
     textVi: '20% địch đầu tiên bị hạ sẽ sống lại một lần với 30% máu.',
     effects: [{ type: 'undying', pct: 20, hpPct: 30 }],
   },
-  conquestCards: MOON_CARDS,
+  cards: MOON_CARDS,
 };
+
+/** Phần kẻ địch của moon: cùng dữ liệu, thẻ chinh phục là 9 thẻ của vua. */
+export const MOON_ENEMY: EnemyKingDef = enemyFromKing(MOON);

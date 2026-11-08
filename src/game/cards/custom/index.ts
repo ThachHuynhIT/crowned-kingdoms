@@ -8,16 +8,16 @@ import type { PlayTarget, RunState } from '../../run/state';
 import type { Content } from '../registry';
 import { archmageRamp, arcaneHarmony, libraryVirtualStacks, mirrorEnchants } from './arcane';
 import { CLOCK_HOOKS, rewind } from './clock';
-import { MOON_HOOKS, bloodPact, eclipsePact } from './moon';
+import { MOON_HOOKS, bloodPact, eclipsePact, eclipsePactGuard } from './moon';
 import { NOMAD_HOOKS, bazaarKinds, watchtowerOpen } from './nomad';
 import { FORGE_HOOKS, armoryArmor, masterHammer } from './forge';
 import type { FullRunCardHooks } from './fullRunTypes';
-import { GROVE_HOOKS, springRain } from './grove';
-import { mercenaryUpkeep } from './neutral';
+import { GROVE_HOOKS, groveGrowth, springRain } from './grove';
+import { duplicateBuilding, mercenaryUpkeep, royalSeal, royalSealGuard } from './neutral';
 import { runeCarving } from './stone';
 import { TIDE_HOOKS, privateers, treasureChest } from './tide';
 import { harvestFestival, peasantHorde, wheatHarvest } from './wheat';
-import type { IncomeHandler, StatHandler, TomeHandler } from './types';
+import type { IncomeHandler, StatHandler, TomeGuard, TomeHandler } from './types';
 
 export const CUSTOM_STAT_HANDLERS: Partial<Record<CustomEffectId, StatHandler>> = {
   peasant_horde: peasantHorde,
@@ -26,6 +26,7 @@ export const CUSTOM_STAT_HANDLERS: Partial<Record<CustomEffectId, StatHandler>> 
   arcane_harmony: arcaneHarmony,
   armory_armor: armoryArmor,
   watchtower_open: watchtowerOpen,
+  grove_growth: groveGrowth,
 };
 export const CUSTOM_INCOME_HANDLERS: Partial<Record<CustomEffectId, IncomeHandler>> = {
   mercenary_upkeep: mercenaryUpkeep,
@@ -33,6 +34,11 @@ export const CUSTOM_INCOME_HANDLERS: Partial<Record<CustomEffectId, IncomeHandle
   treasure_chest: treasureChest,
   bazaar_kinds: bazaarKinds,
 };
+/**
+ * Id `custom` không có handler chỉ số / vàng / sách phép: mã khác đọc thẳng `params` của chúng
+ * (Lều Di Động: lệnh dời miễn phí; Thu Hồn: dựng trận).
+ */
+export const CUSTOM_FLAG_IDS: readonly CustomEffectId[] = ['nomad_mobile_camp', 'moon_soul_harvest'];
 export const CUSTOM_TOME_HANDLERS: Partial<Record<CustomEffectId, TomeHandler>> = {
   harvest_festival: harvestFestival,
   rune_carving: runeCarving,
@@ -43,6 +49,13 @@ export const CUSTOM_TOME_HANDLERS: Partial<Record<CustomEffectId, TomeHandler>> 
   rewind,
   blood_pact: bloodPact,
   eclipse_pact: eclipsePact,
+  duplicate_building: duplicateBuilding,
+  royal_seal: royalSeal,
+};
+/** Điều kiện run state của sách phép `custom` (Ấn Triện: Ngai chưa tối đa; Giao Ước Nguyệt Thực: còn hơn 1 mạng). */
+export const CUSTOM_TOME_GUARDS: Partial<Record<CustomEffectId, TomeGuard>> = {
+  eclipse_pact: eclipsePactGuard,
+  royal_seal: royalSealGuard,
 };
 
 /**

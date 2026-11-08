@@ -1,5 +1,6 @@
 import { cells } from '../boardGeometry';
-import type { CardDef, EnemyKingDef } from '../types';
+import type { CardDef, EnemyKingDef, KingDef } from '../types';
+import { enemyFromKing } from './enemy';
 
 const pirate = { owner: 'tide' as const, tags: ['pirate'] as const };
 const plain = { owner: 'tide' as const, tags: [] as const };
@@ -141,12 +142,49 @@ export const TIDE_CARDS: readonly CardDef[] = [
   },
 ];
 
-/** Vua Thuỷ Triều (spec §6.7) phía kẻ địch: cướp biển, cướp vàng. Thẻ chinh phục: G3b-B3. */
-export const TIDE_ENEMY: EnemyKingDef = {
+/** Vua Thuỷ Triều (spec §6): Ngai, 9 thẻ, đơn vị, cờ hiệu và roster khi làm địch. */
+export const TIDE: KingDef = {
   id: 'tide',
   nameVi: 'Vua Thuỷ Triều',
   name: 'Tide King',
   color: 'water',
+  blurbVi: 'Cướp biển và pháo nổ: đẩy lùi địch, gom chiến lợi phẩm.',
+  perks: [
+    {
+      id: 'tide_p1',
+      nameVi: 'Túi Đầy',
+      textVi: '+5 vàng khởi đầu.',
+      effects: [{ type: 'startGold', amount: 5 }],
+    },
+    {
+      id: 'tide_p2',
+      nameVi: 'Gió Thuận',
+      textVi: 'Mọi đẩy lùi của phe mình +50%.',
+      effects: [{ type: 'stat', stat: 'knockback', mode: 'pct', value: 50 }],
+    },
+    {
+      id: 'tide_p3',
+      nameVi: 'Chuộc Tù',
+      textVi: 'Thua trận vẫn nhận một nửa vàng thắng trận (làm tròn xuống).',
+      effects: [{ type: 'lossGold', pct: 50 }],
+    },
+  ],
+  throne: {
+    id: 'tide_throne',
+    owner: 'tide',
+    nameVi: 'Ngai San Hô',
+    name: 'Coral Throne',
+    kind: 'throne',
+    rarity: 'common',
+    tags: [],
+    textVi:
+      'Ngai của Vua Thuỷ Triều: pháo nổ lan, đẩy lùi kẻ địch. Chiến Lợi Phẩm: mỗi 10 địch bị hạ trong trận +1 vàng (tối đa 3 vàng mỗi trận, hơn khi lên cấp).',
+    hp: 300,
+    armor: 0,
+    attack: { dmg: 12, type: 'physical', range: cells(1.6875), interval: 16, projectileSpeed: 12, splash: cells(0.3125), onHit: [{ type: 'knockback', px: 16 }] },
+    // Chiến Lợi Phẩm: mỗi 10 địch bị hạ trong trận (bởi bất kỳ ai) +1 vàng, tối đa theo cấp Ngai.
+    passive: [{ type: 'killGold', every: 10, gold: 1, max: [3, 3, 4, 4, 5], counts: 'all' }],
+  },
   units: [
     {
       id: 'pirate',
@@ -203,5 +241,8 @@ export const TIDE_ENEMY: EnemyKingDef = {
     textVi: 'Mỗi lần Ngai mất thêm 10% máu tối đa trong trận, bạn mất 1 vàng (tối đa 3 mỗi trận).',
     effects: [{ type: 'throneGoldLoss', everyPct: 10, gold: 1, max: 3 }],
   },
-  conquestCards: TIDE_CARDS,
+  cards: TIDE_CARDS,
 };
+
+/** Phần kẻ địch của tide: cùng dữ liệu, thẻ chinh phục là 9 thẻ của vua. */
+export const TIDE_ENEMY: EnemyKingDef = enemyFromKing(TIDE);

@@ -41,7 +41,7 @@ const playOn = (s: RunState, card: string, plot: number): RunState => {
 describe('the nine Forge King cards (spec 6.8)', () => {
   it('conquering the Forge King offers exactly these nine, never the throne', () => {
     expect(CONTENT.conquestCards('forge').map((c) => c.id).sort()).toEqual(IDS);
-    expect(CONTENT.allCards().filter((c) => c.owner === 'forge').map((c) => c.id).sort()).toEqual(IDS);
+    expect(CONTENT.allCards().filter((c) => c.owner === 'forge' && c.kind !== 'throne').map((c) => c.id).sort()).toEqual(IDS);
   });
 
   describe.each([

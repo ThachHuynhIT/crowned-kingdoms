@@ -5,8 +5,11 @@ import { QUESTS } from '../../../data/quests';
 import { unlockCost } from '../../../data/run';
 import type { CardDef } from '../../../data/types';
 import type { Content } from '../../cards/registry';
+import { freeMoveIllegal, freeMovesAllowed } from '../../cards/custom/nomad';
 import { adjacentToUnlocked, checkPlay, targetCount, unlockPlot } from '../../run/board';
 import { rerollPrice } from '../../run/decrees';
+import { maxEnchantStacks } from '../../run/perks';
+import { applyCommand } from '../../run/commands';
 import { cardOffer } from '../../run/flow';
 import type { CouncilSelection, PlayTarget, RunCommand, RunState } from '../../run/state';
 
@@ -17,6 +20,8 @@ const PLOTS = 25;
 const ONE_IN_REROLL = 6;
 const ONE_IN_BUY = 3;
 const ONE_IN_SELL = 10;
+/** Du Mục: xác suất (1/n) dời một công trình miễn phí khi còn lượt. */
+const ONE_IN_MOVE = 4;
 /** Đổi bài tối đa chừng này lần mỗi năm để bot không đốt hết vàng. */
 const MAX_REROLLS = 2;
 
@@ -35,14 +40,27 @@ const candidateTargets = (card: CardDef): PlayTarget[] => {
   return targets;
 };
 
+/** Nomad: every legal free move (the reducer's own rule), in plot order. */
+const freeMoves = (state: RunState, content: Content): RunCommand[] => {
+  if (state.kingId !== 'nomad' || state.freeMovesUsed >= freeMovesAllowed(state, content)) return [];
+  const moves: RunCommand[] = [];
+  for (let from = 0; from < PLOTS; from++) {
+    for (let to = 0; to < PLOTS; to++) {
+      if (freeMoveIllegal(state, content, from, to) === null) moves.push({ type: 'freeMove', from, to });
+    }
+  }
+  return moves;
+};
+
 const playOptions = (state: RunState, content: Content): RunCommand[] => {
   const options: RunCommand[] = [];
   state.hand.forEach((cardId, handIndex) => {
     const card = content.card(cardId);
     for (const target of candidateTargets(card)) {
-      if (checkPlay(state.plots, card, target, content) === null) {
-        options.push({ type: 'play', handIndex, target });
-      }
+      if (checkPlay(state.plots, card, target, content, maxEnchantStacks(state, content)) !== null) continue;
+      // checkPlay only knows the board: custom effects can still refuse (e.g. lastLife), so ask the reducer.
+      const cmd: RunCommand = { type: 'play', handIndex, target };
+      if (!('error' in applyCommand(state, cmd, content))) options.push(cmd);
     }
   });
   return options;
@@ -89,12 +107,16 @@ export const randomBot: Bot = (state, content, rng) => {
         }
         if (buyable.length > 0) return { type: 'unlockPlot', plot: rng.pick(buyable) };
       }
+      const moves = freeMoves(state, content);
+      if (moves.length > 0 && rng.int(1, ONE_IN_MOVE) === 1) return rng.pick(moves);
       const options = playOptions(state, content);
       if (state.hand.length > 0 && rng.int(1, ONE_IN_SELL) === 1) {
         return { type: 'discard', handIndex: rng.int(0, state.hand.length - 1) };
       }
-      // Không có nước đi hợp lệ nghĩa là không lá nào chơi được: startBattle hợp lệ.
-      return options.length === 0 ? { type: 'startBattle' } : rng.pick(options);
+      if (options.length > 0) return rng.pick(options);
+      // Không lá nào chơi được: ra trận nếu luật cho (startBattle tự hỏi hasPlayableCard), không thì bỏ lá đầu tay.
+      const start: RunCommand = { type: 'startBattle' };
+      return 'error' in applyCommand(state, start, content) ? { type: 'discard', handIndex: 0 } : start;
     }
     case 'quest': {
       const fee = state.offers?.kind === 'quest' ? QUESTS.find((q) => q.id === (state.offers as { questId: string }).questId)!.acceptGold : 0;

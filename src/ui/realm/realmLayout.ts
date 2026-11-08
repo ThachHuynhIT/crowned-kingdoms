@@ -121,6 +121,8 @@ export interface PlanningLayout {
   reroll: Rect;
   sell: Rect;
   deck: Rect;
+  /** "Dời trại (N)", the Nomad King's free relocation (shown only for him): over "Bộ bài" on desktop, right of ✓/✕ on a phone. */
+  freeMove: Rect;
   fight: Rect;
   /** Default ✓/✕ spot: the row above the board on mobile, beside the centre plot on desktop. */
   confirm: Rect;
@@ -293,6 +295,7 @@ const desktopLayout = (screen: Size, handSize: number): PlanningLayout => {
     reroll,
     sell,
     deck,
+    freeMove: { ...deck, y: reroll.y },
     fight: fightOver(screen, hand),
     ...besidePlot(centre, screen),
     // The play hint sits in the empty top-left corner of the board box, beside the diamond's top corner: the diamond is
@@ -358,6 +361,7 @@ const mobileLayout = (screen: Size, handSize: number): PlanningLayout => {
     reroll,
     sell,
     deck,
+    freeMove: { x: w - MARGIN - b.w, y: pair.confirm.y, w: b.w, h: b.h },
     fight: fightOver(screen, hand),
     ...pair,
     hint: {

@@ -7,6 +7,26 @@ export const ARCANE: KingDef = {
   nameVi: 'Vua Phép Thuật',
   name: 'Arcane King',
   blurbVi: 'Bùa chồng bùa: phép thuật lan rộng, mỗi công trình một nguồn sức mạnh.',
+  perks: [
+    {
+      id: 'arcane_p1',
+      nameVi: 'Sách Phép Dày',
+      textVi: 'Mỗi công trình gắn được tối đa 6 stack Bùa.',
+      effects: [{ type: 'maxEnchantStacks', value: 6 }],
+    },
+    {
+      id: 'arcane_p2',
+      nameVi: 'Bùa Đầu Mùa',
+      textVi: 'Ngai bắt đầu ván với 1 stack Bùa Tia Lửa.',
+      effects: [{ type: 'startThroneEnchant', card: 'arcane_spark_rune', stacks: 1 }],
+    },
+    {
+      id: 'arcane_p3',
+      nameVi: 'Ma Lực Dồi Dào',
+      textVi: 'Hồi chiêu Can Thiệp −30%.',
+      effects: [{ type: 'interventionCooldownPct', pct: 30 }],
+    },
+  ],
   color: 'purple',
   throne: {
     id: 'arcane_throne',

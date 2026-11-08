@@ -20,6 +20,7 @@ import type { StatCtx, StatHandler } from '../cards/custom/types';
 import type { Content } from '../cards/registry';
 import { THRONE_PLOT, neighbours } from './board';
 import { decree } from './decrees';
+import { perkEffects } from './perks';
 import type { BuildingState, RunState } from './state';
 
 export interface StatCell {
@@ -66,12 +67,15 @@ const add = (sheet: StatSheet, stat: StatKey, mode: StatMode, value: number): vo
 
 const kindOf = (card: CardDef): BuildingKind => card.kind as BuildingKind;
 
-const matches = (filter: Filter | undefined, card: CardDef, unit: UnitDef | undefined): boolean => {
+const matches = (filter: Filter | undefined, card: CardDef, unit: UnitDef | undefined, level: Level): boolean => {
   if (!filter) return true;
+  if (filter.minLevel !== undefined && level < filter.minLevel) return false;
   if (filter.kinds && !filter.kinds.includes(kindOf(card))) return false;
   if (filter.cardIds && !filter.cardIds.includes(card.id)) return false;
   if (filter.tags && !filter.tags.some((t) => card.tags.includes(t))) return false;
   if (filter.unitTags && (!unit || !filter.unitTags.some((t) => unit.tags.includes(t)))) return false;
+  if (filter.unitIds && (!unit || !filter.unitIds.includes(unit.id))) return false;
+  if (filter.unitsOnly && !unit) return false;
   return true;
 };
 
@@ -109,6 +113,7 @@ export function collectStatSheet(
   const target = state.plots[plot]?.building ?? null;
   if (target === null) return sheet;
   const targetCard = content.card(target.cardId);
+  const targetLevel = levelOf(state, plot, target);
 
   const applySource = (srcPlot: number, src: BuildingState): void => {
     const srcCard = content.card(src.cardId);
@@ -121,7 +126,7 @@ export function collectStatSheet(
             : e.scope === 'neighbours'
               ? neighbours(srcPlot).includes(plot)
               : true;
-        if (related && matches(e.filter, targetCard, unit)) {
+        if (related && matches(e.filter, targetCard, unit, targetLevel)) {
           add(sheet, e.stat, e.mode, resolve(e.value, level));
         }
       } else if (e.type === 'custom') {
@@ -144,7 +149,7 @@ export function collectStatSheet(
     const card = content.card(entry.cardId);
     if (card.kind !== 'enchantment') continue;
     for (const e of card.perStack) {
-      if (e.type === 'stat' && matches(e.filter, targetCard, unit)) {
+      if (e.type === 'stat' && matches(e.filter, targetCard, unit, targetLevel)) {
         // Bùa Gió Thảo Nguyên: nhân lên nếu công trình vừa được dời trong năm nay.
         const mult = card.movedYearMult !== undefined && target.movedYear === state.year ? card.movedYearMult : 1;
         add(sheet, e.stat, e.mode, resolve(e.value, 1) * entry.stacks * mult);
@@ -160,10 +165,14 @@ export function collectStatSheet(
   for (const id of state.decrees) {
     // Sắc lệnh: sau công trình và Ngai, trước `permanent` (§5.3); mỗi sắc lệnh là một nguồn.
     for (const e of decree(id).effects) {
-      if (e.type === 'stat' && matches(e.filter, targetCard, unit)) {
+      if (e.type === 'stat' && matches(e.filter, targetCard, unit, targetLevel)) {
         add(sheet, e.stat, e.mode, resolve(e.value, 1));
       }
     }
+  }
+  for (const e of perkEffects(state, content)) {
+    // (f) perk: sau sắc lệnh, trước `permanent` (§5.3); luôn áp cho cả bàn cờ.
+    if (e.type === 'stat' && matches(e.filter, targetCard, unit, targetLevel)) add(sheet, e.stat, e.mode, e.value);
   }
   for (const [stat, value] of Object.entries(target.permanent) as [StatKey, number][]) {
     add(sheet, stat, 'pct', value); // (g)

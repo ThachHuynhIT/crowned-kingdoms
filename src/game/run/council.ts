@@ -8,8 +8,9 @@ import { DECREES, DECREE_RULES } from '../../data/decrees';
 import { RUN } from '../../data/run';
 import type { CardId } from '../../data/types';
 import type { Content } from '../cards/registry';
-import { THRONE_PLOT, adjacentToUnlocked, attachEnchant, unlockPlot } from './board';
+import { adjacentToUnlocked, attachEnchant, raiseThrone, unlockPlot } from './board';
 import { decree } from './decrees';
+import { maxEnchantStacks } from './perks';
 import { closeOffer, enqueueOffers } from './flow';
 import type { CouncilSelection, IllegalReason, OfferState, PlotState, RunState } from './state';
 
@@ -151,15 +152,14 @@ function removeOne(
 }
 
 /** Áp hiệu ứng tức thời của sắc lệnh lên bản sao `s`. */
-function apply(s: RunState, action: string, sel: CouncilSelection): void {
+function apply(s: RunState, action: string, sel: CouncilSelection, content: Content): void {
   const earn = (gold: number): void => {
     s.gold += gold;
     s.stats.goldEarned += gold;
   };
   switch (action) {
     case 'crown': {
-      s.throneLevel = Math.min(RUN.maxLevel, s.throneLevel + 1) as RunState['throneLevel'];
-      s.plots[THRONE_PLOT]!.building!.level = s.throneLevel;
+      Object.assign(s, raiseThrone(s));
       break;
     }
     case 'treasury':
@@ -172,7 +172,7 @@ function apply(s: RunState, action: string, sel: CouncilSelection): void {
     case 'runeFestival': {
       s.plots.forEach((p, plot) => {
         const first = p.building?.enchants[0];
-        if (first) s.plots = attachEnchant(s.plots, plot, first.cardId, RUN.maxEnchantStacks);
+        if (first) s.plots = attachEnchant(s.plots, plot, first.cardId, maxEnchantStacks(s, content));
       });
       break;
     }
@@ -203,7 +203,7 @@ export function enactDecree(state: RunState, content: Content): RunState | Illeg
   const clean = validate(state, def.action, offer.selection, content);
   if (clean === null || !councilComplete(state, def.action, clean, content)) return 'badTarget';
   const next = structuredClone(state);
-  apply(next, def.action, clean);
+  apply(next, def.action, clean, content);
   next.decrees.push(def.id);
   return closeOffer(next);
 }

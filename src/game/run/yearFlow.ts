@@ -3,13 +3,14 @@ import { hashSeed } from '../../core/random';
 import { ALL_KINGS, RULES_G1, PLAYABLE_KINGS_G2, type Rules } from '../../data/rules';
 import { RUN, START_DECK_G1 } from '../../data/run';
 import { yearIncome } from './income';
-import type { KingId } from '../../data/types';
+import type { CardId, KingId, PerkId } from '../../data/types';
 import type { Content } from '../cards/registry';
 import { THRONE_PLOT, initialPlots } from './board';
 import { pickEnemyKings, pickEnemyKingsWithState, startDeck } from './calendar';
 import { buildYearArmy } from './enemyArmy';
 import { runYearGrowth } from '../cards/custom';
 import { freeRerollsPerYear } from './decrees';
+import { applyStartPerk, findPerk, perkFreeRerolls } from './perks';
 import { finishYearStart } from './flow';
 import { offerQuest } from './quests';
 import { RUN_SAVE_VERSION } from './state';
@@ -33,8 +34,9 @@ export function startYear(input: RunState, content: Content): RunState {
     played: false,
     offers: null,
     rerollsThisYear: 0,
+    freeMovesUsed: 0,
     paidRerollsThisYear: 0,
-    freeRerollsLeft: freeRerollsPerYear(state),
+    freeRerollsLeft: freeRerollsPerYear(state) + perkFreeRerolls(state, content),
     idleUids: income.idleUids,
     gold: state.gold + RUN.taxPerYear + income.delta,
     stats: { ...state.stats, goldEarned: state.stats.goldEarned + gained },
@@ -45,13 +47,26 @@ export function startYear(input: RunState, content: Content): RunState {
   return offered.phase === 'quest' ? offered : finishYearStart(offered, content);
 }
 
+/** Lựa chọn lúc bắt đầu ván (G4): perk, độ khó và thẻ meta đã mở. */
+export interface NewRunOptions {
+  perk?: PerkId | null;
+  /** 0..`RUN.difficultyLevels`; ngoài khoảng thì bị kẹp. */
+  difficulty?: number;
+  unlockedCards?: readonly CardId[];
+}
+
 /** Mặc định `RULES_G1` cho tới khi G2c chuyển giao diện sang G2. */
 export function newRun(
   seed: number,
   kingId: KingId,
   content: Content,
   rules: Rules = RULES_G1,
+  options: NewRunOptions = {},
 ): RunState {
+  const perk = options.perk ?? null;
+  if (perk !== null && findPerk(content, kingId, perk) === undefined) throw new Error(`perk ${perk} does not belong to king ${kingId}`);
+  const difficulty = Math.min(RUN.difficultyLevels, Math.max(0, Math.floor(options.difficulty ?? 0)));
+  const unlockedCards = [...(options.unlockedCards ?? [])].sort();
   const plots = initialPlots();
   plots[THRONE_PLOT]!.building = {
     uid: 0,
@@ -90,6 +105,7 @@ export function newRun(
     autoFire: false,
     gold: RUN.startGold,
     rerollsThisYear: 0,
+    freeMovesUsed: 0,
     paidRerollsThisYear: 0,
     purchasedPlots: 0,
     idleUids: [],
@@ -105,7 +121,9 @@ export function newRun(
     offeredQuestIds: [],
     freeRerollsLeft: 0,
     interventionDmgPct: 0,
-    difficulty: 0,
+    difficulty,
+    perk,
+    unlockedCards,
     yearStartPendingDraw: false,
     rng: {
       draw: hashSeed(`${seed}:draw`),
@@ -127,5 +145,6 @@ export function newRun(
     nextUid: 1,
     won: null,
   };
-  return startYear(base, content);
+  // Perk áp trước năm 1: công trình/ô/bài/vàng khởi đầu được tính như có sẵn từ đầu (thu nhập, rút bài).
+  return startYear(applyStartPerk(base, content), content);
 }

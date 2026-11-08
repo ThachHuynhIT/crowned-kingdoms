@@ -2,6 +2,7 @@ import { describe, expect, it } from 'vitest';
 import { RULES_G1 } from '../../data/rules';
 import { CONTENT } from '../cards/registry';
 import { createGameBus } from '../events';
+import { crownPoints } from '../meta';
 import { runState } from '../testing/fixtures';
 import { RunController } from './RunController';
 import type { BattleResult } from '../battle/types';
@@ -149,7 +150,8 @@ describe('RunController', () => {
     runBattle(bus, controller);
     expect(controller.state.phase).toBe('ended');
     expect(order.slice(-2)).toEqual(['state', 'ended']);
-    expect(ended).toEqual([{ won: false, crownPoints: 0, unlocks: [] }]);
+    const breakdown = crownPoints(controller.state);
+    expect(ended).toEqual([{ won: false, crownPoints: breakdown.total, breakdown, unlocks: [], credited: null }]);
   });
 
   it('dispose stops handling ui:command', () => {

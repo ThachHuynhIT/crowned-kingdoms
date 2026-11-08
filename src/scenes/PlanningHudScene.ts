@@ -5,9 +5,11 @@ import { RUN } from '../data/run';
 import { UI_PALETTE } from '../data/uiPalette';
 import { describeCard } from '../game/cards/describe';
 import { CONTENT } from '../game/cards/registry';
+import { maxEnchantStacks } from '../game/run/perks';
 import type { GameEvents } from '../game/events';
 import type { RunController } from '../game/run/RunController';
-import { hasAnyTarget, targetCount } from '../game/run/board';
+import { targetCount } from '../game/run/board';
+import { canPlayCard } from '../game/run/playable';
 import { rerollPrice } from '../game/run/decrees';
 import { cardOffer } from '../game/run/flow';
 import type { IllegalReason, RunState } from '../game/run/state';
@@ -40,6 +42,16 @@ import { HandView } from '../ui/planning/HandView';
 import { ScoutPanel } from '../ui/planning/ScoutPanel';
 import { canFight } from '../ui/planning/fightRule';
 import { dropOutcome, plotIllegalReason } from '../ui/planning/targetHints';
+import {
+  freeMoveHint,
+  freeMoveLabel,
+  freeMoveReady,
+  freeMoveReason,
+  freeMoveReasonText,
+  freeMovesLeft,
+  showFreeMove,
+  type FreeMovePick,
+} from '../ui/planning/freeMoveModel';
 import { calendarCells, illegalText } from '../ui/realm/calendarModel';
 import {
   centerHand,
@@ -108,6 +120,10 @@ export class PlanningHudScene extends Phaser.Scene {
   private sellBtn!: Button;
   private rerollBtn!: Button;
   private deckBtn!: Button;
+  /** "Dời trại (N)": the Nomad King's free relocation (hidden for every other king). */
+  private freeMoveBtn!: Button;
+  /** The free relocation being picked on the board, as RealmScene last told it (null = none). */
+  private freeMove: FreeMovePick | null = null;
   private scoutBtn!: Button;
   private helpBtn!: Button;
   private questNotice!: QuestNoticeView;
@@ -162,6 +178,7 @@ export class PlanningHudScene extends Phaser.Scene {
     this.inspected = null;
     this.pending = NO_PENDING;
     this.buy = null;
+    this.freeMove = null;
     this.illegal = null;
     this.illegalTimer = null;
     this.plotTimer = null;
@@ -220,6 +237,13 @@ export class PlanningHudScene extends Phaser.Scene {
     });
     this.questNotice.setState(this.controller.state);
     this.createActionButtons();
+    this.freeMoveBtn = createButton(this, 0, 0, 'Dời trại', {
+      width: this.lay.freeMove.w,
+      height: this.lay.freeMove.h,
+      fontSize: this.lay.desktop ? 15 : 13,
+      onClick: () => this.toggleFreeMove(),
+      tooltip: { host: this.tooltip, content: () => textContent(this.freeMoveTip()) },
+    });
     this.scoutBtn = createButton(this, 0, 0, 'Địch', {
       width: 52,
       height: 52,
@@ -274,6 +298,11 @@ export class PlanningHudScene extends Phaser.Scene {
         this.flashIllegal(reason);
       }),
       bus.on('log', ({ text }) => this.toasts.push(text)),
+      bus.on('ui:pending-free-move', ({ active, from, to }) => {
+        this.freeMove = active ? { from, to } : null;
+        if (active) this.tooltip.hide(PLOT_TIP);
+        this.refreshPending();
+      }),
       bus.on('ui:pending-buy', ({ plot, price }) => {
         this.buy = plot === null ? null : { plot, price };
         this.refreshPending();
@@ -304,7 +333,7 @@ export class PlanningHudScene extends Phaser.Scene {
   /** The playing king's colours on the HUD panels, buttons and hand. */
   private applySkin(): void {
     const king = this.controller.state.kingId;
-    for (const b of [this.sellBtn, this.rerollBtn, this.deckBtn, this.scoutBtn, this.helpBtn, this.fight, this.confirmBtn, this.cancelBtn]) b.setSkin(king);
+    for (const b of [this.sellBtn, this.rerollBtn, this.deckBtn, this.freeMoveBtn, this.scoutBtn, this.helpBtn, this.fight, this.confirmBtn, this.cancelBtn]) b.setSkin(king);
     for (const box of [this.livesBox, this.goldBox]) box.setSkin(king);
     this.hand.setTheme(king);
   }
@@ -333,7 +362,7 @@ export class PlanningHudScene extends Phaser.Scene {
     const choosing = planning && !state.played;
     this.hand.setHand(
       choosing ? state.hand : [],
-      state.hand.map((id) => !hasAnyTarget(state.plots, CONTENT.card(id))),
+      state.hand.map((id) => !canPlayCard(state, CONTENT, id)),
       state.hand.map((id) => {
         const card = CONTENT.card(id);
         return cardBadge(card, willLevelUpTo(state.plots, card));
@@ -405,6 +434,45 @@ export class PlanningHudScene extends Phaser.Scene {
     this.deckBtn.setLabel(desktop ? `Bộ bài (${state.deck.length})` : `Bộ bài\n${state.deck.length}`);
     this.sellBtn.setEnabled(this.pending.handIndex !== null);
     this.rerollBtn.setEnabled(state.gold >= price);
+    const left = freeMovesLeft(state, CONTENT);
+    this.freeMoveBtn.setVisible(showFreeMove(state));
+    this.freeMoveBtn.setLabel(freeMoveLabel(left, desktop, this.freeMove !== null));
+    this.freeMoveBtn.setEnabled(left > 0 || this.freeMove !== null);
+  }
+
+  private freeMoveTip(): string[] {
+    if (this.freeMove !== null) return ['Huỷ dời (Esc)'];
+    const left = freeMovesLeft(this.controller.state, CONTENT);
+    return left > 0
+      ? ['Dời trại', `Dời một công trình sang ô kề (có công trình thì đổi chỗ), không tốn thẻ. Còn ${left} lượt năm nay.`]
+      : ['Dời trại', 'Năm nay đã hết lượt dời miễn phí.'];
+  }
+
+  /** "Dời trại": start picking a free move on the board, or drop the one being picked. */
+  private toggleFreeMove(): void {
+    if (this.freeMove !== null) {
+      this.bus.emit('ui:free-move', { active: false });
+      return;
+    }
+    const state = this.controller.state;
+    if (!showFreeMove(state) || this.modalOpen()) return;
+    if (freeMovesLeft(state, CONTENT) === 0) {
+      this.flashIllegal('noFreeMove');
+      return;
+    }
+    this.inspect(null, { x: 0, y: 0 });
+    this.bus.emit('ui:free-move', { active: true });
+  }
+
+  /** The free move ready for ✓ (both plots picked), or null. */
+  private freeMoveDone(): { from: number; to: number } | null {
+    const f = this.freeMove;
+    return f !== null && freeMoveReady(f) ? { from: f.from!, to: f.to! } : null;
+  }
+
+  /** A refusal said the way the current pick needs it (a relocation words a few reasons differently). */
+  private reasonText(reason: IllegalReason): string {
+    return this.freeMove !== null ? freeMoveReasonText(reason) : illegalText(reason);
   }
 
   private sellTip(): string[] {
@@ -426,8 +494,9 @@ export class PlanningHudScene extends Phaser.Scene {
     this.hand.setSelected(p.handIndex);
     this.refreshActions(this.controller.state);
     const buy = this.buy;
-    const last = buy ? buy.plot : p.targets.at(-1);
-    const show = buy !== null || p.ready;
+    const moved = this.freeMoveDone();
+    const last = buy ? buy.plot : moved ? moved.to : p.targets.at(-1);
+    const show = buy !== null || p.ready || moved !== null;
     if (show) {
       const screen = { w: this.scale.width, h: this.scale.height };
       // A no-target tome has no plot: ✓/✕ take their default spot.
@@ -438,26 +507,33 @@ export class PlanningHudScene extends Phaser.Scene {
       this.confirmBtn.container.setPosition(confirm.x + confirm.w / 2, confirm.y + confirm.h / 2);
       this.cancelBtn.container.setPosition(cancel.x + cancel.w / 2, cancel.y + cancel.h / 2);
     }
-    this.confirmBtn.setLabel(buy ? '✓\nMua' : p.ready && last === undefined ? '✓\nDùng' : '✓\nĐặt');
+    this.confirmBtn.setLabel(
+      buy ? '✓\nMua' : moved ? '✓\nDời' : p.ready && last === undefined ? '✓\nDùng' : '✓\nĐặt',
+    );
     this.confirmBtn.setEnabled(buy === null || this.controller.state.gold >= buy.price);
     this.confirmBtn.setVisible(show);
     this.cancelBtn.setVisible(show);
-    if (p.handIndex === null) this.tooltip.hide(PLOT_TIP);
+    if (p.handIndex === null && this.freeMove === null) this.tooltip.hide(PLOT_TIP);
     this.refreshHint();
   }
 
   private refreshHint(): void {
     const content = this.hintContent();
     // On mobile ✓/✕ take the row above the board, which the hint shares.
-    const hidden = !this.lay.desktop && (this.pending.ready || this.buy !== null) && this.illegal === null;
+    const hidden =
+      !this.lay.desktop && (this.pending.ready || this.buy !== null || this.freeMoveDone() !== null) && this.illegal === null;
     this.hint.setContent(hidden ? null : content);
     const { x, y, w } = this.lay.hint;
     this.hint.setPosition(this.lay.desktop ? x + (w - this.hint.width) / 2 : x, y);
   }
 
   private hintContent(): TooltipContent | null {
-    if (this.illegal !== null) return { lines: [[{ text: illegalText(this.illegal) }]] };
+    if (this.illegal !== null) return { lines: [[{ text: this.reasonText(this.illegal) }]] };
     const state = this.controller.state;
+    if (this.freeMove !== null) {
+      const text = freeMoveHint(this.freeMove, this.lay.desktop);
+      return this.lay.desktop ? { title: 'Dời trại', lines: [[{ text }]] } : { lines: [[{ text }]] };
+    }
     if (this.buy) {
       const text = state.gold >= this.buy.price ? `Mở ô này: ${this.buy.price} vàng.` : 'Không đủ vàng.';
       return this.lay.desktop ? { title: 'Mở ô mới', lines: [[{ text }]] } : { lines: [[{ text }]] };
@@ -482,6 +558,11 @@ export class PlanningHudScene extends Phaser.Scene {
   /** Tooltip of ✓: what exactly the play will do (level-up preview, enchantment, purchase). */
   private confirmTip(): string[] {
     const state = this.controller.state;
+    const moved = this.freeMoveDone();
+    if (moved) {
+      const swap = (state.plots[moved.to]?.building ?? null) !== null;
+      return ['Dời trại (Enter)', swap ? 'Đổi chỗ hai công trình.' : 'Dời công trình sang ô này.'];
+    }
     if (this.buy) {
       return [`Mua ô (Enter)`, state.gold >= this.buy.price ? `Giá ${this.buy.price} vàng.` : 'Không đủ vàng.'];
     }
@@ -528,7 +609,7 @@ export class PlanningHudScene extends Phaser.Scene {
     if (this.modalOpen()) return;
     const plot = this.plotAt({ x, y });
     if (plot === null) return; // released off the board: the card just returns to the hand
-    const out = dropOutcome(state.plots, CONTENT.card(cardId), plot);
+    const out = dropOutcome(state.plots, CONTENT.card(cardId), plot, maxEnchantStacks(state, CONTENT));
     if (out.action === 'reject') {
       if (this.pending.handIndex !== index) this.bus.emit('ui:select-card', { handIndex: index });
       this.flashIllegal(out.reason);
@@ -617,11 +698,11 @@ export class PlanningHudScene extends Phaser.Scene {
         break;
       case 'confirm':
         if (this.buy && state.gold < this.buy.price) this.flashIllegal('notEnoughGold');
-        else if (this.pending.ready || this.buy) this.bus.emit('ui:confirm-play', {});
+        else if (this.pending.ready || this.buy || this.freeMoveDone()) this.bus.emit('ui:confirm-play', {});
         else if (canFight(state)) this.command('startBattle');
         break;
       case 'cancel':
-        if (this.pending.handIndex !== null || this.buy) this.bus.emit('ui:cancel-play', {});
+        if (this.pending.handIndex !== null || this.buy || this.freeMove) this.bus.emit('ui:cancel-play', {});
         break;
     }
   }
@@ -633,11 +714,16 @@ export class PlanningHudScene extends Phaser.Scene {
     if (this.modalOpen()) return null;
     const p = this.pending;
     const state = this.controller.state;
+    if (this.freeMove !== null) {
+      const plot = this.plotAt({ x, y });
+      const reason = plot === null ? null : freeMoveReason(state, CONTENT, this.freeMove, plot);
+      return plot === null || reason === null ? null : { plot, reason };
+    }
     const cardId = p.handIndex === null ? undefined : state.hand[p.handIndex];
     if (cardId === undefined) return null;
     const plot = this.plotAt({ x, y });
     if (plot === null) return null;
-    const reason = plotIllegalReason(state.plots, CONTENT.card(cardId), p.targets, plot);
+    const reason = plotIllegalReason(state.plots, CONTENT.card(cardId), p.targets, plot, maxEnchantStacks(state, CONTENT));
     return reason === null ? null : { plot, reason };
   }
 
@@ -647,7 +733,7 @@ export class PlanningHudScene extends Phaser.Scene {
       return;
     }
     const hit = this.plotReason(pointer.x, pointer.y);
-    if (hit) this.tooltip.showAtPointer({ title: illegalText(hit.reason), lines: [] }, PLOT_TIP);
+    if (hit) this.tooltip.showAtPointer({ title: this.reasonText(hit.reason), lines: [] }, PLOT_TIP);
     else this.tooltip.hide(PLOT_TIP);
     this.hoverRange(pointer);
   }
@@ -674,7 +760,7 @@ export class PlanningHudScene extends Phaser.Scene {
     this.plotTimer = this.time.delayedCall(LONG_PRESS_MS, () => {
       this.plotTimer = null;
       const r = this.plotRect(hit.plot);
-      this.tooltip.showAbove({ title: illegalText(hit.reason), lines: [] }, r, PLOT_TIP);
+      this.tooltip.showAbove({ title: this.reasonText(hit.reason), lines: [] }, r, PLOT_TIP);
     });
   }
 
@@ -865,6 +951,8 @@ export class PlanningHudScene extends Phaser.Scene {
     ] as const) {
       button.container.setPosition(r.x + r.w / 2, r.y + r.h / 2);
     }
+    this.freeMoveBtn.resize(l.freeMove.w, l.freeMove.h);
+    this.freeMoveBtn.container.setPosition(l.freeMove.x + l.freeMove.w / 2, l.freeMove.y + l.freeMove.h / 2);
     this.refreshActions(this.controller.state);
     this.fight.container.setPosition(l.fight.x + l.fight.w / 2, l.fight.y + l.fight.h / 2);
     this.hint.setMaxWidth(l.hint.w);

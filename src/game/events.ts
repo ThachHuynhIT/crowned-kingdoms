@@ -3,6 +3,7 @@ import { EventBus } from '../core/events';
 import type { GameSpeed } from '../core/SimClock';
 import type { HelpTab } from '../data/help';
 import type { BattleResult, BattleSetup } from './battle/types';
+import type { CrownBreakdown } from './meta/crowns';
 import type { IllegalReason, RunCommand, RunState } from './run/state';
 
 export interface GameEvents {
@@ -11,7 +12,12 @@ export interface GameEvents {
   log: { text: string };
   'run:state': { state: RunState };
   'run:illegal': { reason: IllegalReason };
-  'run:ended': { won: boolean; crownPoints: number; unlocks: string[] };
+  /**
+   * `crownPoints` = `breakdown.total`; `unlocks` lists what the run opened, or why progress was not saved.
+   * `credited`: the points were added to the saved profile (true), were not (false: already scored, read-only
+   * profile, save failed), or there is no profile at all (null: no session, nothing to report).
+   */
+  'run:ended': { won: boolean; crownPoints: number; breakdown: CrownBreakdown; unlocks: string[]; credited: boolean | null };
   'battle:started': { setup: BattleSetup };
   'battle:tick': { tick: number };
   'battle:ended': { result: BattleResult };
@@ -22,6 +28,10 @@ export interface GameEvents {
   'ui:drop-card': { handIndex: number; plot: number };
   /** A locked plot picked for purchase (null = none); ✓ buys it, ✕ drops it. */
   'ui:pending-buy': { plot: number | null; price: number };
+  /** The Nomad King's "Dời trại" button: start (true) or drop (false) picking a free relocation. */
+  'ui:free-move': { active: boolean };
+  /** The free relocation being picked on the board (RealmScene → HUD); `active` false = none. */
+  'ui:pending-free-move': { active: boolean; from: number | null; to: number | null };
   'ui:confirm-play': Record<string, never>;
   'ui:cancel-play': Record<string, never>;
   'ui:set-speed': { speed: GameSpeed };

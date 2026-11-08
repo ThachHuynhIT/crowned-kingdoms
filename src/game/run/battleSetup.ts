@@ -2,6 +2,7 @@
 import { formationRowsFor } from '../battle/bounds';
 import { EMBER_TICKS, ENEMY_LEVEL_STAT, WAVES } from '../../data/battle';
 import { BOSSES } from '../../data/bosses';
+import { SOUL_HARVEST_UNIT } from '../../data/kings/moon';
 import { BOSS_SUMMON_UNITS } from '../../data/raiders';
 import { RUN } from '../../data/run';
 import {
@@ -15,7 +16,7 @@ import {
   TROOP_STD,
   levelMult,
 } from '../../data/scaling';
-import type { AttackSpec, BannerEffect, Level, Scalar, UnitDef } from '../../data/types';
+import type { AttackSpec, BannerEffect, EffectDef, Level, Scalar, UnitDef } from '../../data/types';
 import type { Content } from '../cards/registry';
 import type {
   AttackStats,
@@ -29,6 +30,7 @@ import type {
 import { THRONE_PLOT } from './board';
 import { foeSpeedMult, interventionStats } from './decrees';
 import { collectStatSheet, finalStat, type StatSheet } from './modifiers';
+import { perkBattleMods, perkCooldownPct, perkSoulCost } from './perks';
 import type { RunState } from './state';
 
 const clamp = (value: number, min: number, max: number): number => Math.min(Math.max(value, min), max);
@@ -44,10 +46,10 @@ export const attackStats = (a: AttackSpec, dmgMult = 1, rangeBonus = 0, sheet?: 
   const listed = (a.onHit ?? []).filter(
     (h) => h.type !== 'slow' && h.type !== 'stun' && h.type !== 'rampSameTarget',
   );
-  // Bùa Sóng Ngầm (`knockback` flat): mỗi đòn đẩy lùi thêm, kể cả đòn vốn không đẩy.
-  const kbBonus = sheet ? sheet.knockback.flat : 0;
+  // Bùa Sóng Ngầm (`knockback` flat): mỗi đòn đẩy lùi thêm, kể cả đòn vốn không đẩy; perk Gió Thuận: +%.
   const kbBase = listed.find((h) => h.type === 'knockback');
-  const kbPx = (kbBase && kbBase.type === 'knockback' ? kbBase.px : 0) + kbBonus;
+  const kbRaw = kbBase && kbBase.type === 'knockback' ? kbBase.px : 0;
+  const kbPx = sheet ? finalStat(kbRaw, sheet.knockback) : kbRaw;
   // Bỏng (§8.6): bỏng gốc cộng Bùa Than Hồng (flat), rồi nhân phần trăm của Lò Cao.
   const burnBase = listed.find((h) => h.type === 'burn');
   const burnDps = sheet
@@ -128,6 +130,15 @@ const unitStats = (
   };
 };
 
+/** Xung phong (`charge`) đẩy lùi thêm `pct`% (perk Gió Thuận); không đổi gì khi pct = 0. */
+const withKnockbackPct = (
+  behaviours: UnitDef['behaviours'],
+  pct: number,
+): UnitDef['behaviours'] =>
+  pct === 0 || behaviours === undefined
+    ? behaviours
+    : behaviours.map((b) => (b.type === 'charge' ? { ...b, knockback: (b.knockback * (100 + pct)) / 100 } : b));
+
 /** Lính của công trình lính ở cấp `level`: HP/DMG theo TROOP_STD rồi modifier, kèm các giới hạn §5.3. */
 const spawnedStats = (
   u: UnitDef,
@@ -150,10 +161,12 @@ const spawnedStats = (
     shield: 0,
     deathSpawn: null,
     tags: u.tags,
-    behaviours:
+    behaviours: withKnockbackPct(
       sheet.rampAs.flat > 0
         ? [...(u.behaviours ?? []), { type: 'rampAttackSpeed' as const, pctPerSecond: sheet.rampAs.flat, cap: sheet.rampAsCap.flat }]
         : u.behaviours,
+      sheet.knockback.pct,
+    ),
     defIndex: defIndexOf(content, u.id),
     ...(sheet.prewind.flat > 0 ? { prewind: sheet.prewind.flat } : {}),
   };
@@ -201,6 +214,37 @@ const throneMercenaries = (
   return { spawnAtThrone: { stats: spawnedStats(unit, state.throneLevel, sheet, content), count } };
 };
 
+/** Vàng theo số địch bị hạ (`killGold`) của công trình hoặc bị động Ngai ở cấp `level`. */
+const killGoldOf = (effects: readonly EffectDef[], level: Level): Pick<StructureSetup, 'killGold'> => {
+  const fx = effects.find((e) => e.type === 'killGold');
+  if (!fx || fx.type !== 'killGold') return {};
+  return {
+    killGold: {
+      every: fx.every,
+      gold: fx.gold,
+      max: scalarAt(fx.max, level),
+      ...(fx.counts === 'all' ? { all: true } : {}),
+    },
+  };
+};
+
+/** Thu Hồn (§6.10): cứ `souls` Hồn triệu hồi 1 lính tại Ngai, tối đa `max`; đọc thẳng từ bị động Ngai. */
+const soulSummonOf = (
+  state: RunState,
+  content: Content,
+  passive: readonly EffectDef[],
+): Pick<StructureSetup, 'soulSummon'> => {
+  const fx = passive.find((e) => e.type === 'custom' && e.id === 'moon_soul_harvest');
+  if (!fx || fx.type !== 'custom') return {};
+  const level = state.throneLevel;
+  const souls = scalarAt(fx.params?.souls ?? 0, level);
+  const max = scalarAt(fx.params?.max ?? 0, level);
+  if (souls <= 0 || max <= 0) return {};
+  // Perk Hồn Đói: giá Hồn giảm, không dưới 1.
+  const every = Math.max(1, souls + perkSoulCost(state, content));
+  return { soulSummon: { every, max, stats: summonStats(state, content, THRONE_PLOT, SOUL_HARVEST_UNIT, level) } };
+};
+
 /** Công trình/Ngai ở `plot` đúng như vào trận (range/radius theo px thế giới, interval theo tick); UI dùng lại, không tính lại. */
 export const structureFor = (state: RunState, plot: number, content: Content): StructureSetup => {
   const b = state.plots[plot]!.building!;
@@ -222,6 +266,8 @@ export const structureFor = (state: RunState, plot: number, content: Content): S
       shieldPulse: null,
       ...throneMercenaries(state, content, b.counters.privateers ?? 0),
       ...timingExtras(sheet, []),
+      ...killGoldOf(card.passive, state.throneLevel),
+      ...soulSummonOf(state, content, card.passive),
     };
   }
   if (card.kind === 'tome' || card.kind === 'enchantment') {
@@ -270,7 +316,7 @@ export const structureFor = (state: RunState, plot: number, content: Content): S
           dmgType: pulseFx.attack.type,
           stunTicks:
             pulseFx.attack.onHit?.reduce((m, h) => (h.type === 'stun' ? Math.max(m, h.ticks) : m), 0) ?? 0,
-          ...(pulseKnock > 0 ? { knockback: pulseKnock } : {}),
+          ...(pulseKnock > 0 ? { knockback: (pulseKnock * (100 + sheet.knockback.pct)) / 100 } : {}),
         }
       : null;
   const killSummonFx = card.effects.find((e) => e.type === 'summonOnKill');
@@ -280,7 +326,6 @@ export const structureFor = (state: RunState, plot: number, content: Content): S
   const bellFx = card.effects.find((e) => e.type === 'bellPulse');
   const respawnFx = card.effects.find((e) => e.type === 'respawnLost');
   const multiFx = card.effects.find((e) => e.type === 'multiAttack');
-  const goldFx = card.effects.find((e) => e.type === 'killGold');
   return {
     ...base,
     kind: card.kind as StructureSetup['kind'],
@@ -346,9 +391,7 @@ export const structureFor = (state: RunState, plot: number, content: Content): S
     ...(respawnFx && respawnFx.type === 'respawnLost' && spawn && spawn.count > 0
       ? { respawn: { everyTicks: respawnFx.everyTicks, stats: spawn.stats, count: spawn.count } }
       : {}),
-    ...(goldFx && goldFx.type === 'killGold'
-      ? { killGold: { every: goldFx.every, gold: goldFx.gold, max: goldFx.max } }
-      : {}),
+    ...killGoldOf(card.effects, level),
   };
 };
 
@@ -429,6 +472,8 @@ export function buildBattleSetup(state: RunState, content: Content): BattleSetup
   }));
 
   const boss = bossSetup(state, army, content, structures, speedScale);
+  const cooldownPct = perkCooldownPct(state, content);
+  const perk = perkBattleMods(state, content);
 
   return {
     year: state.year,
@@ -438,9 +483,10 @@ export function buildBattleSetup(state: RunState, content: Content): BattleSetup
     autoFire: state.autoFire,
     ...(bannerDef ? { banner: bannerDef } : {}),
     ...(boss ? { boss } : {}),
-    // Vắng khi không có sắc lệnh/nhiệm vụ: trận giữ số gốc §7.4 (G1/G2).
-    ...(state.decrees.length > 0 || state.interventionDmgPct > 0
-      ? { intervention: interventionStats(state) }
+    // Vắng khi không có sắc lệnh/nhiệm vụ/perk: trận giữ số gốc §7.4 (G1/G2).
+    ...(state.decrees.length > 0 || state.interventionDmgPct > 0 || cooldownPct > 0
+      ? { intervention: interventionStats(state, cooldownPct) }
       : {}),
+    ...(Object.keys(perk).length > 0 ? { perk } : {}),
   };
 }

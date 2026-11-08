@@ -32,25 +32,39 @@ class IdbSaveStore implements SaveStore {
     db.onversionchange = () => db.close();
   }
 
-  /** Chạy một thao tác; xong khi giao dịch `complete`, không phải khi request `success`. */
+  /** Chạy một thao tác trên một kho; xong khi giao dịch `complete`, không phải khi request `success`. */
   private run<T>(store: string, mode: IDBTransactionMode, work: (s: IDBObjectStore) => IDBRequest<T>): Promise<T> {
+    return this.transact([store], mode, (tx) => work(tx.objectStore(store)));
+  }
+
+  /**
+   * Một giao dịch trên `stores`; `work` đặt các request và trả request mà kết quả của nó được trả về.
+   * Xong khi giao dịch `complete`; bị huỷ (abort) thì không request nào của nó có hiệu lực.
+   */
+  private transact<T>(stores: string[], mode: IDBTransactionMode, work: (tx: IDBTransaction) => IDBRequest<T>): Promise<T> {
     return new Promise<T>((resolve, reject) => {
       let result: T;
-      let tx: IDBTransaction;
+      let tx: IDBTransaction | undefined;
       try {
-        tx = this.db.transaction(store, mode);
-        const request = work(tx.objectStore(store));
+        tx = this.db.transaction(stores, mode);
+        const request = work(tx);
         request.onsuccess = () => {
           result = request.result;
         };
         request.onerror = () => reject(failure(request.error, 'indexeddb request failed'));
       } catch (e) {
+        try {
+          tx?.abort(); // a request placed before the throw must not commit on its own
+        } catch {
+          // already finished or aborted
+        }
         reject(e instanceof Error ? e : new Error('indexeddb transaction failed'));
         return;
       }
-      tx.oncomplete = () => resolve(result);
-      tx.onabort = () => reject(failure(tx.error, 'indexeddb transaction aborted'));
-      tx.onerror = () => reject(failure(tx.error, 'indexeddb transaction failed'));
+      const done = tx;
+      done.oncomplete = () => resolve(result);
+      done.onabort = () => reject(failure(done.error, 'indexeddb transaction aborted'));
+      done.onerror = () => reject(failure(done.error, 'indexeddb transaction failed'));
     });
   }
 
@@ -72,6 +86,14 @@ class IdbSaveStore implements SaveStore {
 
   async saveMeta(profile: unknown): Promise<void> {
     await this.run(SAVE_DB.metaStore, 'readwrite', (s) => s.put(profile, SAVE_DB.metaKey));
+  }
+
+  /** Hồ sơ + xoá ván trong MỘT giao dịch readwrite trên cả hai kho: cùng thành công hoặc cùng không có gì. */
+  async endRun(profile: unknown): Promise<void> {
+    await this.transact([SAVE_DB.runStore, SAVE_DB.metaStore], 'readwrite', (tx) => {
+      tx.objectStore(SAVE_DB.metaStore).put(profile, SAVE_DB.metaKey);
+      return tx.objectStore(SAVE_DB.runStore).delete(SAVE_DB.runKey);
+    });
   }
 }
 

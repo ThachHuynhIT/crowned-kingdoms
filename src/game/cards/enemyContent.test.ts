@@ -58,12 +58,12 @@ const ROSTERS: Record<string, [string, number][]> = {
 };
 
 describe('enemy_catalog_9_playable_3', () => {
-  it('knows all nine kings as enemies but only three are playable', () => {
+  it('knows all nine kings as enemies and all nine are playable', () => {
     expect(CONTENT.enemyKings().map((k) => k.id)).toEqual([
       'arcane', 'clock', 'forge', 'grove', 'moon', 'nomad', 'stone', 'tide', 'wheat',
     ]);
-    expect(CONTENT.kings().map((k) => k.id).sort()).toEqual(['arcane', 'stone', 'wheat']);
-    expect(() => CONTENT.king('grove')).toThrow();
+    expect(CONTENT.kings().map((k) => k.id).sort()).toEqual(CONTENT.enemyKings().map((k) => k.id));
+    expect(CONTENT.king('grove').throne.id).toBe('grove_throne');
     expect(CONTENT.enemyKing('grove').nameVi).toBe('Vua Rừng Xanh');
   });
 

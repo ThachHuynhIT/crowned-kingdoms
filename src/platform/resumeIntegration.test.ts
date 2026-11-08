@@ -9,6 +9,7 @@ import { IDBFactory } from 'fake-indexeddb';
 import { describe, expect, it } from 'vitest';
 import { Rng } from '../core/random';
 import { INCOMPATIBLE_RUN_TEXT } from '../data/save';
+import { RULES_FULL } from '../data/rules';
 import type { CardId, KingId } from '../data/types';
 import { createSession } from './session';
 import { simulateBattle } from '../game/battle/step';
@@ -20,7 +21,8 @@ import { RunController } from '../game/run/RunController';
 import type { RunCommand, RunState } from '../game/run/state';
 import { randomBot } from '../game/sim/bots/random';
 import { scriptedBot } from '../game/sim/bots/scripted';
-import { contentWith, fakeKing, fullRunFixture, unitStats } from '../game/testing/fixtures';
+import { contentWith, fakeKing, fullRunFixture, unitStats, withBuilding } from '../game/testing/fixtures';
+import { newRun } from '../game/run/yearFlow';
 import { contentHash, decodeRun, encodeRun } from '../game/save/codec';
 
 interface Sample {
@@ -219,5 +221,53 @@ describe('resume_matrix', () => {
     };
     // the piles agree with the deck, so only the id that no registry knows any more is wrong
     expect(decodeRun(encodeRun(broken, CONTENT), CONTENT)).toEqual({ kind: 'incompatible', message: INCOMPATIBLE_RUN_TEXT });
+  });
+});
+
+describe('resume_matrix with G4 kings and perks', () => {
+  it("a run with perk 'stone_p1' reloaded mid-battle restarts with the throne at 650 HP on tick 0", async () => {
+    let state = newRun(5, 'stone', CONTENT, RULES_FULL, { perk: 'stone_p1' });
+    const rng = new Rng(9);
+    for (let i = 0; i < 200 && state.phase !== 'battle'; i++) {
+      const r = applyCommand(state, randomBot(state, CONTENT, rng), CONTENT);
+      if ('error' in r) throw new Error(r.error);
+      state = r.state;
+    }
+    expect(state.phase).toBe('battle');
+    const disk = new IDBFactory();
+    await (await reload(disk)).persistence.checkpoint(state);
+
+    const session = await reload(disk);
+    const loaded = await session.load();
+    expect(loaded.kind).toBe('ok');
+    if (loaded.kind !== 'ok') return;
+    expect(loaded.state.perk).toBe('stone_p1');
+    const controller = new RunController(createGameBus(), CONTENT, loaded.state, session.persistence);
+    controller.kickoff();
+    await controller.whenIdle();
+    const world = controller.runner!.world;
+    expect(world.tick).toBe(0);
+    expect(world.hp[world.throneId]).toBe(650);
+    expect(world.maxHp[world.throneId]).toBe(650);
+  });
+
+  it('a Nomad run that used its free move this year still has used it after a reload', async () => {
+    let state: RunState = { ...newRun(3, 'nomad', CONTENT, RULES_FULL), year: 4, phase: 'planning' };
+    state = { ...withBuilding(state, 6, 'wheat_militia', 3), nextUid: 200 }; // the fixture's uid is 106
+    const disk = new IDBFactory();
+    const first = await reload(disk);
+    const bus = createGameBus();
+    const controller = new RunController(bus, CONTENT, state, first.persistence);
+    bus.emit('ui:command', { command: { type: 'freeMove', from: 6, to: 11 } });
+    await controller.whenIdle();
+    expect(controller.state.freeMovesUsed).toBe(1);
+
+    const loaded = await (await reload(disk)).load();
+    expect(loaded.kind).toBe('ok');
+    if (loaded.kind !== 'ok') return;
+    expect(loaded.state.freeMovesUsed).toBe(1);
+    expect(loaded.state.plots[11]!.building!.cardId).toBe('wheat_militia');
+    const again = applyCommand(loaded.state, { type: 'freeMove', from: 11, to: 12 }, CONTENT);
+    expect(again).toEqual({ error: 'noFreeMove' });
   });
 });

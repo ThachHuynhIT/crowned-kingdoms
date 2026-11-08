@@ -4,13 +4,14 @@ import { PALETTE } from '../data/palette';
 import type { Edge } from '../game/battle/types';
 import { drainEvents, structureFoot } from '../game/battle/world';
 import { CONTENT } from '../game/cards/registry';
+import { maxEnchantStacks } from '../game/run/perks';
 import { createGameBus, type GameEvents } from '../game/events';
 import { RunController } from '../game/run/RunController';
 import { checkTargetStep, targetCount } from '../game/run/board';
 import type { SessionPersistence } from '../game/save/types';
 import type { PlayTarget, RunState } from '../game/run/state';
 import { RULES_FULL } from '../data/rules';
-import type { KingId } from '../data/types';
+import type { KingId, PerkId } from '../data/types';
 import { newRun } from '../game/run/yearFlow';
 import { BoardRenderer } from '../render/BoardRenderer';
 import { FieldRenderer } from '../render/FieldRenderer';
@@ -21,6 +22,15 @@ import { buildSpritesTexture } from '../render/atlas';
 import { DRAG_SLOP, type Size } from '../ui/hud/layout';
 import { lockedPlotTap, plotHighlights, plotIllegalReason } from '../ui/planning/targetHints';
 import { lockedPlotPrice } from '../ui/realm/calendarModel';
+import {
+  START_FREE_MOVE,
+  freeMoveCommand,
+  freeMoveHighlights,
+  freeMovesLeft,
+  showFreeMove,
+  tapFreeMove,
+  type FreeMovePick,
+} from '../ui/planning/freeMoveModel';
 import { buildingRanges, entityRanges } from '../ui/info/rangeModel';
 import { unproject } from '../core/iso';
 import {
@@ -38,15 +48,17 @@ import { realmCamera, realmCameraMix, type RealmPhase } from '../ui/realm/realmL
 import { SCENES } from './keys';
 import { STORAGE_WARNING_KEY, WARNING_EVENT, getSession } from './sessionRegistry';
 import type { RunEndData } from './RunEndScene';
+import type { RunEndTally } from '../ui/info/infoLines';
 
 /**
- * Launch data of the realm: a new run (seed + chosen king, from the king-select scene) or a
- * saved run to resume exactly as written (`resume`, from the menu's "Tiếp tục").
+ * Launch data of the realm: a new run (seed, chosen king, perk and thorn level, from the
+ * king-select scene) or a saved run to resume exactly as written (`resume`, from the menu's
+ * "Tiếp tục").
  */
 type RangeTarget = GameEvents['ui:range-selection']['target'];
 
 export type RealmData =
-  | { seed: number; kingId: KingId }
+  | { seed: number; kingId: KingId; perk: PerkId | null; difficulty: number }
   | { resume: RunState }
   /** DEV sample run (`src/dev`): its own state and in-memory persistence; ignored in production builds. */
   | { preview: { state: RunState; persistence: SessionPersistence } };
@@ -84,6 +96,8 @@ export class RealmScene extends Phaser.Scene {
   private pending: PendingPlay | null = null;
   /** A locked plot waiting for ✓ to be bought. */
   private pendingBuy: number | null = null;
+  /** The Nomad King's free relocation being picked (null = none). */
+  private freeMove: FreeMovePick | null = null;
   private inBattle = false;
   /** The controller's auto-start check runs once, on the first frame after the HUD is up. */
   private kicked = false;
@@ -91,6 +105,9 @@ export class RealmScene extends Phaser.Scene {
   private resumedAtYearEnd = false;
   /** "advance" was sent and its answer (the next year's first step) is still to come. */
   private awaitingAdvance = false;
+  /** The `run:ended` payload, kept for the end screen; `awaitingEnd`: the run ended before it arrived. */
+  private endTally: RunEndTally | null = null;
+  private awaitingEnd = false;
   /** The battle HUD (and its summary with Tiếp tục) is the screen in charge until the planning HUD comes back. */
   private battleHudUp = false;
   private readonly onResize = (): void => this.resizeCamera();
@@ -122,10 +139,13 @@ export class RealmScene extends Phaser.Scene {
     // Scene instances are reused: reset every per-run field first.
     this.pending = null;
     this.pendingBuy = null;
+    this.freeMove = null;
     this.inBattle = false;
     this.kicked = false;
     this.resumedAtYearEnd = false;
     this.awaitingAdvance = false;
+    this.endTally = null;
+    this.awaitingEnd = false;
     this.battleHudUp = false;
     this.cameraEase = null;
     this.range = null;
@@ -139,8 +159,16 @@ export class RealmScene extends Phaser.Scene {
     this.panning = false;
     const preview = import.meta.env.DEV && data !== undefined && 'preview' in data ? data.preview : null;
     const resume = data !== undefined && 'resume' in data ? data.resume : null;
-    const fresh = data !== undefined && 'seed' in data ? data : { seed: 1, kingId: 'wheat' as KingId };
-    const initial = preview?.state ?? resume ?? newRun(fresh.seed, fresh.kingId, CONTENT, RULES_FULL);
+    const fresh = data !== undefined && 'seed' in data ? data : { seed: 1, kingId: 'wheat' as KingId, perk: null, difficulty: 0 };
+    const session = getSession(this);
+    const initial =
+      preview?.state ??
+      resume ??
+      newRun(fresh.seed, fresh.kingId, CONTENT, RULES_FULL, {
+        perk: fresh.perk,
+        difficulty: fresh.difficulty,
+        unlockedCards: session ? session.meta().unlockedCards : [],
+      });
     const seed = initial.seed;
     this.resumedAtYearEnd = resume?.phase === 'yearEnd';
 
@@ -150,7 +178,7 @@ export class RealmScene extends Phaser.Scene {
       this.bus,
       CONTENT,
       initial,
-      preview ? preview.persistence : getSession(this)?.persistence,
+      preview ? preview.persistence : session?.persistence,
     );
     this.cameras.main.setBackgroundColor(PALETTE.grass);
     this.field = new FieldRenderer(this, seed, initial.kingId);
@@ -162,13 +190,19 @@ export class RealmScene extends Phaser.Scene {
     const bus = this.bus;
     bus.on('run:state', ({ state }) => this.onState(state));
     bus.on('battle:started', () => this.onBattleStarted());
+    bus.on('run:ended', ({ crownPoints, breakdown, unlocks, credited }) => {
+      this.endTally = { crownPoints, breakdown, unlocks, credited };
+      if (this.awaitingEnd) this.continueFlow();
+    });
     bus.on('ui:select-card', ({ handIndex }) => this.select(handIndex));
     bus.on('ui:cancel-play', () => {
       this.setPendingBuy(null);
+      this.setFreeMove(null);
       this.bus.emit('ui:select-card', { handIndex: null });
     });
     bus.on('ui:drop-card', ({ handIndex, plot }) => this.drop(handIndex, plot));
     bus.on('ui:confirm-play', () => this.confirm());
+    bus.on('ui:free-move', ({ active }) => this.startFreeMove(active));
     bus.on('ui:continue', () => this.onContinue());
     bus.on('ui:range-selection', ({ target, mode }) => {
       if (mode === 'hover') this.rangeHover = target;
@@ -281,6 +315,8 @@ export class RealmScene extends Phaser.Scene {
     const edges = new Set<Edge>();
     for (const wave of state.army?.waves ?? []) for (const u of wave.units) edges.add(u.edge);
     this.board?.setEdgeArrows([...edges].sort());
+    // A finished move (or a new year) may leave no free move: stop picking.
+    if (this.freeMove && (!showFreeMove(state) || freeMovesLeft(state, CONTENT) === 0)) this.setFreeMove(null);
     if (state.played) this.setPending(null);
     else this.refreshHighlights();
     if (reframe) this.placeCamera();
@@ -292,6 +328,7 @@ export class RealmScene extends Phaser.Scene {
     this.inBattle = true;
     this.setPending(null);
     this.setPendingBuy(null);
+    this.setFreeMove(null);
     this.board?.setEdgeArrows([]);
     this.board?.setBuildingsVisible(false);
     this.placeCamera(true);
@@ -311,7 +348,13 @@ export class RealmScene extends Phaser.Scene {
       this.awaitingAdvance = true;
       this.bus.emit('ui:command', { command: { type: 'advance' } });
     } else if (state.phase === 'ended') {
-      const data: RunEndData = { state };
+      // `run:state` arrives just before `run:ended`: wait for the tally, then show the end screen with it.
+      if (this.endTally === null) {
+        this.awaitingEnd = true;
+        return;
+      }
+      this.awaitingEnd = false;
+      const data: RunEndData = { state, tally: this.endTally };
       this.scene.start(SCENES.runEnd, data);
     } else if (state.phase !== 'battle') {
       this.relaunchPlanningHud(); // reward, conquest, council, quest or planning: the planning HUD shows it
@@ -328,7 +371,10 @@ export class RealmScene extends Phaser.Scene {
   // ---- pending play --------------------------------------------------------------------
 
   private select(handIndex: number | null): void {
-    if (handIndex !== null) this.setPendingBuy(null);
+    if (handIndex !== null) {
+      this.setPendingBuy(null);
+      this.setFreeMove(null); // a card and a free move are never aimed together
+    }
     const state = this.controller.state;
     const ok =
       handIndex !== null &&
@@ -360,12 +406,16 @@ export class RealmScene extends Phaser.Scene {
     if (!board) return;
     const p = this.pending;
     const state = this.controller.state;
+    if (this.freeMove) {
+      board.setHighlights(freeMoveHighlights(state, CONTENT, this.freeMove));
+      return;
+    }
     const cardId = p ? state.hand[p.handIndex] : undefined;
     if (!p || cardId === undefined) {
       board.setHighlights(this.pendingBuy === null ? new Map() : new Map([[this.pendingBuy, 'selected']]));
       return;
     }
-    board.setHighlights(plotHighlights(state.plots, CONTENT.card(cardId), p.targets));
+    board.setHighlights(plotHighlights(state.plots, CONTENT.card(cardId), p.targets, maxEnchantStacks(state, CONTENT)));
   }
 
   /** A click on `plot` while aiming: add it as the next target (replacing the last if full). */
@@ -376,7 +426,8 @@ export class RealmScene extends Phaser.Scene {
     const card = CONTENT.card(cardId);
     const need = targetCount(card);
     const chosen = p.targets.slice(0, need - 1);
-    if (checkTargetStep(this.controller.state.plots, card, chosen, plot) !== null) return;
+    const state = this.controller.state;
+    if (checkTargetStep(state.plots, card, chosen, plot, CONTENT, maxEnchantStacks(state, CONTENT)) !== null) return;
     this.setPending({ handIndex: p.handIndex, targets: [...chosen, plot] });
   }
 
@@ -401,7 +452,33 @@ export class RealmScene extends Phaser.Scene {
     });
   }
 
+  /** The "Dời trại" button: start picking (dropping an aimed card or a purchase offer) or stop. */
+  private startFreeMove(active: boolean): void {
+    const state = this.controller.state;
+    if (!active || !showFreeMove(state) || freeMovesLeft(state, CONTENT) === 0) {
+      this.setFreeMove(null);
+      return;
+    }
+    this.setPendingBuy(null);
+    if (this.pending) this.bus.emit('ui:select-card', { handIndex: null });
+    this.setFreeMove(START_FREE_MOVE);
+  }
+
+  private setFreeMove(next: FreeMovePick | null): void {
+    if (next === null && this.freeMove === null) return;
+    this.freeMove = next;
+    this.refreshHighlights();
+    this.bus.emit('ui:pending-free-move', { active: next !== null, from: next?.from ?? null, to: next?.to ?? null });
+  }
+
   private confirm(): void {
+    if (this.freeMove) {
+      const command = freeMoveCommand(this.freeMove);
+      if (command === null) return;
+      this.setFreeMove(null);
+      this.bus.emit('ui:command', { command });
+      return;
+    }
     if (this.pendingBuy !== null) {
       const plot = this.pendingBuy;
       if (this.controller.state.gold < lockedPlotPrice(this.controller.state)) {
@@ -512,10 +589,18 @@ export class RealmScene extends Phaser.Scene {
     const state = this.controller.state;
     const aimedId = this.pending ? state.hand[this.pending.handIndex] : undefined;
     const aiming = aimedId === undefined ? null : CONTENT.card(aimedId);
+    if (this.freeMove) {
+      // Picking a free move: every tap is a pick (locked plots are refused, never offered for sale).
+      if (plot === null) return;
+      const tap = tapFreeMove(state, CONTENT, this.freeMove, plot);
+      if ('reject' in tap) this.bus.emit('run:illegal', { reason: tap.reject });
+      else this.setFreeMove(tap.next);
+      return;
+    }
     if (plot !== null && state.plots[plot]?.unlocked === false) {
       if (aiming !== null) {
         // A tap has no hover or long-press: say why the aimed card cannot go on this plot.
-        const reason = plotIllegalReason(state.plots, aiming, this.pending?.targets ?? [], plot);
+        const reason = plotIllegalReason(state.plots, aiming, this.pending?.targets ?? [], plot, maxEnchantStacks(state, CONTENT));
         if (reason !== null) {
           this.bus.emit('run:illegal', { reason });
           return;
@@ -635,6 +720,7 @@ export class RealmScene extends Phaser.Scene {
     this.board = null;
     this.field = null;
     this.pending = null;
+    this.freeMove = null;
     this.bus.clear();
   }
 }

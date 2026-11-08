@@ -1,4 +1,5 @@
 /** Kiểu của lớp lưu ván (spec §9.3). Thuần: không DOM, không Phaser; kho thật nằm ở `src/platform`. */
+import type { CrownBreakdown } from '../meta/crowns';
 import type { RunState } from '../run/state';
 
 /** Phong bì một ván đang chơi. `version` là phiên bản RunState; `contentHash` băm các id thẻ / đơn vị. */
@@ -25,6 +26,11 @@ export interface SaveStore {
   clearRun(): Promise<void>;
   loadMeta(): Promise<unknown>;
   saveMeta(profile: unknown): Promise<void>;
+  /**
+   * Kết thúc ván (G4): ghi hồ sơ `profile` VÀ xoá ván đang lưu trong cùng một giao dịch — hoặc cả hai,
+   * hoặc không gì cả. Không có lúc nào hồ sơ đã cộng điểm mà ván cũ vẫn còn trên đĩa.
+   */
+  endRun(profile: unknown): Promise<void>;
 }
 
 /** Cầu nối từ RunController sang kho: lưu sau mỗi lệnh thành công, xếp hàng tuần tự. */
@@ -33,4 +39,21 @@ export interface SessionPersistence {
   checkpoint(state: RunState): Promise<void>;
   /** Chờ mọi ghi đang xếp hàng xong. */
   flush(): Promise<void>;
+  /**
+   * Chấm điểm ván vừa kết thúc vào hồ sơ meta VÀ kết thúc ván đang lưu (G4): khi điểm được cộng, hồ sơ và
+   * việc xoá ván đi chung một `endRun` (một giao dịch), xếp hàng sau mọi checkpoint trước đó; ván đã chấm
+   * hoặc hồ sơ chỉ đọc thì chỉ xoá ván. RunController gọi với đúng state đã kết thúc và KHÔNG checkpoint thêm.
+   * Bị từ chối (ghi hỏng) thì ván đang lưu được giữ nguyên.
+   */
+  settle?(state: RunState): Promise<SettleOutcome>;
+}
+
+/** Kết quả chấm điểm cuối ván: `crownPoints` = `breakdown.total`. */
+export interface SettleOutcome {
+  crownPoints: number;
+  breakdown: CrownBreakdown;
+  /** Những gì vừa mở (tiếng Việt), hoặc lời báo tiến trình không lưu được. */
+  unlocks: string[];
+  /** true chỉ khi điểm thật sự được cộng vào hồ sơ đã lưu; false khi ván đã chấm rồi, hồ sơ chỉ đọc, hoặc ghi hỏng. */
+  credited: boolean;
 }

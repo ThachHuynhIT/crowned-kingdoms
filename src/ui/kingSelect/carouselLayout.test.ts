@@ -1,6 +1,6 @@
 import { describe, expect, it } from 'vitest';
 import type { Rect } from '../hud/layout';
-import { carouselScreen, carouselSlots } from './carouselLayout';
+import { carouselScreen, carouselSlots, unlockButtonRect } from './carouselLayout';
 
 const DESKTOP: Rect = { x: 0, y: 150, w: 1280, h: 500 };
 const MOBILE: Rect = { x: 0, y: 130, w: 375, h: 520 };
@@ -138,6 +138,22 @@ describe('carouselScreen', () => {
       expect(apart(l.area, l.back)).toBe(true);
       expect(apart(l.area, l.previous)).toBe(true);
       expect(apart(l.area, l.next)).toBe(true);
+    }
+  });
+});
+
+describe('unlockButtonRect', () => {
+  it('sits inside the lower part of the middle card, at least 44 px each way', () => {
+    for (const screen of [{ w: 1280, h: 720 }, { w: 375, h: 812 }]) {
+      const cs = carouselScreen(screen);
+      const mid = carouselSlots(cs.area, 3, 9)[3]!.rect;
+      const r = unlockButtonRect(mid);
+      expect(r.w).toBeGreaterThanOrEqual(44);
+      expect(r.h).toBeGreaterThanOrEqual(44);
+      expect(r.x).toBeGreaterThanOrEqual(mid.x);
+      expect(r.x + r.w).toBeLessThanOrEqual(mid.x + mid.w);
+      expect(r.y).toBeGreaterThanOrEqual(mid.y + mid.h / 2);
+      expect(r.y + r.h).toBeLessThanOrEqual(mid.y + mid.h);
     }
   });
 });

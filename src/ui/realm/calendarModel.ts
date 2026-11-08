@@ -87,4 +87,6 @@ const ILLEGAL_TEXT: Record<IllegalReason, string> = {
   notPlayed: 'Hãy chơi hoặc bỏ một thẻ trước.',
   badTarget: 'Mục tiêu không hợp lệ.',
   lastLife: 'Không thể: bạn chỉ còn 1 mạng.',
+  noFreeMove: 'Năm nay đã hết lượt dời miễn phí.',
+  wrongKing: 'Chỉ Vua Du Mục được dời miễn phí.',
 };

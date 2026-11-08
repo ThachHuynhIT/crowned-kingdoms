@@ -69,15 +69,20 @@ const unitLines = (u: UnitDef): string[] => {
 const CONTEXT_NAMES: Record<ShortcutContext, string> = {
   menu: 'Menu',
   kingSelect: 'Chọn vua',
+  crowns: 'Vương Miện',
   planning: 'Lên kế hoạch',
   battle: 'Trong trận',
   runEnd: 'Kết thúc ván',
   help: 'Trợ giúp',
 };
 
+/** A binding listed once on its own (e.g. F1), not under each screen. */
+const inEveryContext = (d: (typeof SHORTCUTS)[number]): boolean =>
+  (Object.keys(CONTEXT_NAMES) as ShortcutContext[]).every((ctx) => d.contexts.includes(ctx));
+
 const shortcutEntries = (): HelpEntry[] =>
   (Object.keys(CONTEXT_NAMES) as ShortcutContext[]).flatMap((ctx) => {
-    const defs = SHORTCUTS.filter((d) => d.contexts.length < 6 && d.contexts.includes(ctx));
+    const defs = SHORTCUTS.filter((d) => !inEveryContext(d) && d.contexts.includes(ctx));
     if (defs.length === 0) return [];
     return [
       {
@@ -90,7 +95,7 @@ const shortcutEntries = (): HelpEntry[] =>
   });
 
 const allContextShortcut = (): HelpEntry[] =>
-  SHORTCUTS.filter((d) => d.contexts.length === 6).map((d) => ({
+  SHORTCUTS.filter(inEveryContext).map((d) => ({
     id: `shortcuts_${d.id}`,
     title: 'Mọi màn hình',
     lines: [`${shortcutLabel(d.id)} — ${d.labelVi}`],

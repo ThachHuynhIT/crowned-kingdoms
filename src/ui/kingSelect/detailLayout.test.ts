@@ -1,6 +1,6 @@
 import { describe, expect, it } from 'vitest';
 import type { Rect, Size } from '../hud/layout';
-import { detailLayout } from './detailLayout';
+import { detailLayout, perkDialogLayout } from './detailLayout';
 
 const DESKTOP: Size = { w: 1280, h: 720 };
 const TABLET: Size = { w: 768, h: 1024 };
@@ -90,5 +90,60 @@ describe('detailLayout', () => {
   it('keeps the whole mobile content inside 375×812 with a margin', () => {
     const l = detailLayout(MOBILE, 6);
     expect(l.play.y + l.play.h).toBeLessThanOrEqual(812 - 10);
+  });
+});
+
+describe('detailLayout perk caption', () => {
+  for (const [name, screen] of [
+    ['desktop', DESKTOP],
+    ['tablet 768', TABLET],
+    ['mobile', MOBILE],
+    ['767', PHONE_767],
+  ] as const) {
+    it(`the chosen perk's name has its own room on screen, clear of everything else (${name})`, () => {
+      const l = detailLayout(screen, 6);
+      expect(inside(l.perkName, screen)).toBe(true);
+      expect(l.perkName.w).toBeGreaterThanOrEqual(96);
+      expect(l.perkName.h).toBeGreaterThanOrEqual(18);
+      const others = [l.title, l.back, l.portrait, l.perks, l.difficulty, l.previous, l.next, l.play, l.seed, l.reroll, ...l.cards];
+      for (const r of others) expect(overlaps(l.perkName, r)).toBe(false);
+    });
+  }
+
+  it('sits next to the perks button on desktop (just above it)', () => {
+    const l = detailLayout(DESKTOP, 6);
+    expect(l.perkName.y + l.perkName.h).toBeLessThanOrEqual(l.perks.y);
+    expect(l.perks.y - (l.perkName.y + l.perkName.h)).toBeLessThanOrEqual(8);
+    expect(l.perkName.x).toBe(l.perks.x);
+  });
+});
+
+describe('perkDialogLayout', () => {
+  for (const [name, screen] of [
+    ['desktop', DESKTOP],
+    ['mobile', MOBILE],
+    ['767', PHONE_767],
+  ] as const) {
+    it(`fits the screen with a 48×48 close button and three ≥ 44 px perk rows (${name})`, () => {
+      const l = perkDialogLayout(screen, 12);
+      expect(inside(l.panel, screen)).toBe(true);
+      expect([l.close.w, l.close.h]).toEqual([48, 48]);
+      expect(l.rows).toHaveLength(3);
+      const contained = (r: Rect): boolean =>
+        r.x >= l.panel.x && r.y >= l.panel.y && r.x + r.w <= l.panel.x + l.panel.w && r.y + r.h <= l.panel.y + l.panel.h;
+      for (const r of [l.title, l.close, ...l.rows]) expect(contained(r)).toBe(true);
+      for (const r of l.rows) {
+        expect(r.w).toBeGreaterThanOrEqual(44);
+        expect(r.h).toBeGreaterThanOrEqual(44);
+      }
+      const parts = [l.title, l.close, ...l.rows];
+      for (let i = 0; i < parts.length; i++) {
+        for (let j = i + 1; j < parts.length; j++) expect(overlaps(parts[i]!, parts[j]!), `${i} × ${j}`).toBe(false);
+      }
+    });
+  }
+
+  it('rows are tall enough for a wrapped perk text on phones', () => {
+    for (const r of perkDialogLayout(MOBILE, 12).rows) expect(r.h).toBeGreaterThanOrEqual(88);
   });
 });

@@ -170,8 +170,10 @@ export interface StructureSetup {
   respawn?: { everyTicks: number; stats: UnitStats; count: number } | null;
   /** đánh `count` mục tiêu khác nhau mỗi nhịp (Vực Kraken) */
   multiAttack?: number;
-  /** mỗi `every` địch do lính của công trình này hạ: +`gold` vàng, tối đa `max` mỗi trận */
-  killGold?: { every: number; gold: number; max: number } | null;
+  /** mỗi `every` địch do lính của công trình này hạ (`all`: mọi địch bị hạ trong trận): +`gold` vàng, tối đa `max` mỗi trận */
+  killGold?: { every: number; gold: number; max: number; all?: boolean } | null;
+  /** Thu Hồn (chỉ Ngai): cứ `every` Hồn phe mình triệu hồi 1 `stats` tại Ngai, tối đa `max` mỗi trận */
+  soulSummon?: { every: number; max: number; stats: UnitStats } | null;
   /** lính triệu hồi thêm tại Ngai đầu trận (Hợp Đồng Lính Đánh Thuê) */
   spawnAtThrone?: { stats: UnitStats; count: number } | null;
   /** bán kính khiêu khích: địch trong vòng này phải đánh công trình này trước; 0 = không */
@@ -216,6 +218,18 @@ export interface BattleSetup {
   autoFire?: boolean;
   /** Can Thiệp đã chốt cho trận (sắc lệnh + nhiệm vụ); vắng = số gốc §7.4. */
   intervention?: { dmgPct: number; radius: number; cooldownTicks: number };
+  /** Mod trận của perk (dữ liệu thuần, không tham chiếu RunState); vắng khi perk không đổi gì trong trận. */
+  perk?: PerkBattleMods;
+}
+
+/** Phần perk mà trận đọc (spec §6.6, §6.9): giá trị hiệu lực, trường vắng = số gốc. */
+export interface PerkBattleMods {
+  /** Ngai hồi `throneRegenPct`% HP tối đa mỗi giây (Đất Lành). */
+  throneRegenPct?: number;
+  /** Tick bắt đầu Cuồng Nộ thay cho `BATTLE.rageTick` (Giờ Vàng). */
+  rageTick?: number;
+  /** Tick hết trận thay cho `BATTLE.hardLimitTick` (Giờ Vàng). */
+  hardLimitTick?: number;
 }
 
 /** Sự kiện cho render, rút ra bằng drainEvents. */

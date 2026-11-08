@@ -5,7 +5,8 @@ import type { SaveStore, SessionPersistence } from './types';
 
 /**
  * Xếp hàng các lần ghi checkpoint theo đúng thứ tự gọi (FIFO): lệnh A rồi B luôn lưu A rồi B dù A chậm.
- * Ván đã kết thúc không được lưu mà xoá ván đang lưu, cũng đi qua cùng hàng đợi.
+ * Ván đã kết thúc không được lưu mà xoá ván đang lưu; `clearRun` / `endRun` cũng đi qua cùng hàng đợi,
+ * nên không checkpoint nào gọi trước chúng có thể ghi sau chúng.
  */
 export class SaveCoordinator implements SessionPersistence {
   private tail: Promise<void> = Promise.resolve();
@@ -21,6 +22,20 @@ export class SaveCoordinator implements SessionPersistence {
       state.phase === 'ended'
         ? () => this.store.clearRun()
         : ((envelope) => () => this.store.saveRun(envelope))(encodeRun(state, this.content));
+    return this.enqueue(job);
+  }
+
+  /** Xoá ván đang lưu, sau mọi ghi đã xếp hàng. */
+  clearRun(): Promise<void> {
+    return this.enqueue(() => this.store.clearRun());
+  }
+
+  /** Ghi hồ sơ và xoá ván trong một giao dịch (`SaveStore.endRun`), sau mọi ghi đã xếp hàng. */
+  endRun(profile: unknown): Promise<void> {
+    return this.enqueue(() => this.store.endRun(profile));
+  }
+
+  private enqueue(job: () => Promise<void>): Promise<void> {
     const run = this.tail.then(job);
     this.tail = run.catch(() => undefined); // một lần ghi hỏng không làm kẹt hàng đợi
     return run;

@@ -43,7 +43,7 @@ const play = (s: RunState, card: string): RunState => {
 describe('the nine Tide King cards (spec 6.7)', () => {
   it('conquering the Tide King offers exactly these nine, never the throne', () => {
     expect(CONTENT.conquestCards('tide').map((c) => c.id).sort()).toEqual(IDS);
-    expect(CONTENT.allCards().filter((c) => c.owner === 'tide').map((c) => c.id).sort()).toEqual(IDS);
+    expect(CONTENT.allCards().filter((c) => c.owner === 'tide' && c.kind !== 'throne').map((c) => c.id).sort()).toEqual(IDS);
   });
 
   describe.each([

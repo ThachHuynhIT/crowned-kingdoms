@@ -39,16 +39,55 @@ const asV3 = (s: RunState): Loose => {
   return v3;
 };
 
+/** A state exactly as the version-5 game wrote it: version 6 without perk, unlockedCards and freeMovesUsed. */
+const asV5 = (s: RunState): Loose => {
+  const v5 = structuredClone(s) as unknown as Loose;
+  v5.version = 5;
+  for (const k of ['perk', 'unlockedCards', 'freeMovesUsed']) delete v5[k];
+  return v5;
+};
+
+describe('migrate_v5_to6', () => {
+  const base = (): RunState => {
+    const s = newRun(8, 'stone', CONTENT, RULES_G2);
+    return { ...s, gold: 11, rerollsThisYear: 2, difficulty: 0, stats: { ...s.stats, battlesWon: 3, kills: 40 } };
+  };
+
+  it('adds perk null, no meta cards and no free moves used, keeping everything else', () => {
+    const original = base();
+    const migrated = migrateRunState(asV5(original)) as RunState;
+    expect(migrated.version).toBe(6);
+    expect(migrated).toEqual(original);
+    expect(migrated).toMatchObject({ perk: null, unlockedCards: [], freeMovesUsed: 0 });
+  });
+
+  it('does not change its input and keeps an existing difficulty', () => {
+    const v5 = { ...asV5(base()), difficulty: 2 };
+    const copy = structuredClone(v5);
+    const migrated = migrateRunState(v5) as RunState;
+    expect(v5).toEqual(copy);
+    expect(migrated.difficulty).toBe(2);
+  });
+
+  it('migrates all the way from version 3 and decodeRun accepts a version 5 envelope', () => {
+    const original = base();
+    expect((migrateRunState(asV3(original)) as RunState).version).toBe(6);
+    const r = decodeRun({ formatVersion: 1, version: 5, contentHash: 1, state: asV5(original) }, CONTENT);
+    expect(r.kind).toBe('ok');
+    if (r.kind === 'ok') expect(r.state).toEqual(original);
+  });
+});
+
 describe('migrate_v3_to4', () => {
   const base = (): RunState => {
     const s = newRun(8, 'stone', CONTENT, RULES_G2);
     return { ...s, gold: 11, rerollsThisYear: 2, stats: { ...s.stats, battlesWon: 3, battlesLost: 1, kills: 40 } };
   };
 
-  it('turns a version 3 state into version 5 (through 4) keeping the run and adding neutral defaults', () => {
+  it('turns a version 3 state into version 6 (through 4 and 5) keeping the run and adding neutral defaults', () => {
     const original = base();
     const migrated = migrateRunState(asV3(original)) as RunState;
-    expect(migrated.version).toBe(5);
+    expect(migrated.version).toBe(6);
     expect(migrated).toMatchObject({
       seed: original.seed,
       year: original.year,
@@ -85,7 +124,7 @@ describe('migrate_v3_to4', () => {
     expect(migrated.rng.draw).toBe(original.rng.draw);
   });
 
-  it('is exactly what a new version 5 run looks like when nothing was played yet', () => {
+  it('is exactly what a new version 6 run looks like when nothing was played yet', () => {
     const original = base();
     expect(migrateRunState(asV3({ ...original, stats: newRun(8, 'stone', CONTENT, RULES_G2).stats, rerollsThisYear: 0, gold: original.gold }))).toEqual(
       { ...original, stats: newRun(8, 'stone', CONTENT, RULES_G2).stats, rerollsThisYear: 0 },
@@ -99,23 +138,23 @@ describe('migrate_v3_to4', () => {
     expect(v3).toEqual(copy);
   });
 
-  it('leaves version 5, version 1, 2, 6 and non-objects untouched', () => {
-    const v5 = base();
-    expect(migrateRunState(v5)).toBe(v5);
-    for (const version of [1, 2, 6]) {
-      const s = { ...asV3(v5), version };
+  it('leaves version 6, version 1, 2, 7 and non-objects untouched', () => {
+    const v6 = base();
+    expect(migrateRunState(v6)).toBe(v6);
+    for (const version of [1, 2, 7]) {
+      const s = { ...asV3(v6), version };
       expect(migrateRunState(s)).toBe(s);
     }
     expect(migrateRunState('x')).toBe('x');
     expect(migrateRunState(null)).toBeNull();
   });
 
-  it('decodeRun accepts a version 3 envelope and a bare version 3 state, as a valid version 5 run', () => {
+  it('decodeRun accepts a version 3 envelope and a bare version 3 state, as a valid version 6 run', () => {
     const original = base();
     const v3 = asV3(original);
     const inEnvelope = decodeRun({ formatVersion: 1, version: 3, contentHash: 1, state: v3 }, CONTENT);
     expect(inEnvelope.kind).toBe('ok');
-    if (inEnvelope.kind === 'ok') expect(inEnvelope.state.version).toBe(5);
+    if (inEnvelope.kind === 'ok') expect(inEnvelope.state.version).toBe(6);
     expect(decodeRun(v3, CONTENT).kind).toBe('ok');
   });
 

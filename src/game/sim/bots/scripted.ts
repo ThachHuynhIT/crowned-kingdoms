@@ -10,7 +10,9 @@ import type { CardDef } from '../../../data/types';
 import type { Content } from '../../cards/registry';
 import { adjacentToUnlocked, checkPlay, targetCount, unlockPlot } from '../../run/board';
 import { decree } from '../../run/decrees';
+import { maxEnchantStacks } from '../../run/perks';
 import { cardOffer } from '../../run/flow';
+import { stateRefusal } from '../../run/playable';
 import type { CouncilSelection, PlayTarget, RunCommand, RunState } from '../../run/state';
 import type { Bot } from './random';
 
@@ -20,21 +22,22 @@ const PLOTS = 25;
 const priority = (card: CardDef): 0 | 1 | 2 =>
   card.kind === 'troop' || card.kind === 'tower' ? 0 : card.kind === 'economy' || card.kind === 'support' ? 1 : 2;
 
-/** Đích hợp lệ đầu tiên (ô tăng dần; thẻ hai ô theo cặp tăng dần), hoặc null. */
+/** Đích hợp lệ đầu tiên (ô tăng dần; thẻ hai ô theo cặp tăng dần), hoặc null. Lá bị run state từ chối: null. */
 const firstTarget = (state: RunState, card: CardDef, content: Content): PlayTarget | null => {
+  if (stateRefusal(state, card) !== null) return null; // ví dụ Ấn Hoàng Gia ở Ngai cấp 5, Giao Ước Nguyệt Thực khi còn 1 mạng
   const count = targetCount(card);
-  if (count === 0) return checkPlay(state.plots, card, { kind: 'none' }, content) === null ? { kind: 'none' } : null;
+  if (count === 0) return checkPlay(state.plots, card, { kind: 'none' }, content, maxEnchantStacks(state, content)) === null ? { kind: 'none' } : null;
   if (count === 1) {
     for (let plot = 0; plot < PLOTS; plot++) {
       const target: PlayTarget = { kind: 'plot', plot };
-      if (checkPlay(state.plots, card, target, content) === null) return target;
+      if (checkPlay(state.plots, card, target, content, maxEnchantStacks(state, content)) === null) return target;
     }
     return null;
   }
   for (let first = 0; first < PLOTS; first++) {
     for (let second = 0; second < PLOTS; second++) {
       const target: PlayTarget = { kind: 'two', first, second };
-      if (checkPlay(state.plots, card, target, content) === null) return target;
+      if (checkPlay(state.plots, card, target, content, maxEnchantStacks(state, content)) === null) return target;
     }
   }
   return null;
