@@ -1,4 +1,6 @@
-import type Phaser from 'phaser';
+import Phaser from 'phaser';
+import { HIT_FLASH_FRAMES } from '../data/juice';
+import type { BattleEvent } from '../game/battle/types';
 import { UI_PALETTE } from '../data/uiPalette';
 import type { CardId } from '../data/types';
 import { KIND_UNIT, TEAM_ALLY, type BattleWorld } from '../game/battle/world';
@@ -21,6 +23,8 @@ interface Slot {
   frame: string;
   facingLeft: boolean;
   dead: boolean;
+  flashFrames: number;
+  tint: { colors: [number, number, number, number]; mode: number } | null;
 }
 
 /**
@@ -45,13 +49,15 @@ export class UnitRenderer {
   }
 
   /** Draw `world` at `alpha` (0..1) of the way from the previous tick to the current one. */
-  sync(world: BattleWorld, alpha: number): void {
+  sync(world: BattleWorld, alpha: number, events: readonly BattleEvent[] = []): void {
     if (world !== this.world) {
       this.clearSlots();
       this.world = world;
     }
     const a = Math.min(1, Math.max(0, alpha));
     const now = this.scene.time.now;
+    const hits = new Set<number>();
+    for (const event of events) if (event.type === 'hit') hits.add(event.id);
     this.bars.clear();
     this.starsUsed = 0;
     for (let id = 0; id < world.count; id++) {
@@ -59,7 +65,9 @@ export class UnitRenderer {
       // Never create a sprite for an entity already dead on first sight (no flash).
       if (known === undefined && world.alive[id] === 0) continue;
       const slot = known === undefined ? this.create(world, id) : known;
-      if (slot === null || slot.dead) continue;
+      if (slot === null) continue;
+      if (hits.has(id)) this.syncFlash(slot, true);
+      if (slot.dead) continue;
       if (world.alive[id] === 0) {
         this.kill(slot);
         continue;
@@ -87,6 +95,13 @@ export class UnitRenderer {
     this.world = null;
   }
 
+  /** Keep render-frame flashes advancing even after the final simulation tick. */
+  updateFlashes(): void {
+    for (const slot of this.slots) {
+      if (slot) this.syncFlash(slot, false);
+    }
+  }
+
   private create(world: BattleWorld, id: number): Slot | null {
     const label = world.label[id] ?? '';
     const frame =
@@ -100,7 +115,14 @@ export class UnitRenderer {
     const at = iso({ x: world.x[id]!, y: world.y[id]! });
     const sprite = this.scene.add.image(at.x, at.y, SPRITES_KEY, frame);
     sprite.setOrigin(0.5, 1).setScale(imageFrameScale(frame) * ISO_SPRITE_SCALE);
-    const slot: Slot = { sprite, frame, facingLeft: world.team[id] !== TEAM_ALLY, dead: false };
+    const slot: Slot = {
+      sprite,
+      frame,
+      facingLeft: world.team[id] !== TEAM_ALLY,
+      dead: false,
+      flashFrames: 0,
+      tint: null,
+    };
     sprite.setFlipX(slot.facingLeft);
     this.slots[id] = slot;
     return slot;
@@ -126,6 +148,24 @@ export class UnitRenderer {
     if (face !== 0 && face < 0 !== slot.facingLeft) {
       slot.facingLeft = face < 0;
       slot.sprite.setFlipX(slot.facingLeft);
+    }
+  }
+
+  private syncFlash(slot: Slot, hit: boolean): void {
+    const s = slot.sprite;
+    if (hit) {
+      slot.tint ??= {
+        colors: [s.tintTopLeft, s.tintTopRight, s.tintBottomLeft, s.tintBottomRight],
+        mode: s.tintMode,
+      };
+      slot.flashFrames = HIT_FLASH_FRAMES;
+    }
+    if (slot.flashFrames > 0) {
+      s.setTint(0xffffff).setTintMode(Phaser.TintModes.FILL);
+      slot.flashFrames -= 1;
+    } else if (slot.tint) {
+      s.setTint(...slot.tint.colors).setTintMode(slot.tint.mode);
+      slot.tint = null;
     }
   }
 

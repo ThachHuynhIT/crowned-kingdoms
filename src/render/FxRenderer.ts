@@ -1,6 +1,9 @@
 import type Phaser from 'phaser';
 import { INTERVENTION } from '../data/battle';
 import { PALETTE } from '../data/palette';
+import { FLOAT_MS, FLOAT_POOL, FLOAT_RISE_PX } from '../data/juice';
+import { FONT_UI } from '../ui/theme';
+import { showsFloatingDamage } from './juiceModel';
 import type { BattleEvent } from '../game/battle/types';
 import type { BattleWorld } from '../game/battle/world';
 import { ISO_SPRITE_SCALE, iso } from './isoView';
@@ -43,6 +46,11 @@ export class FxRenderer {
   /** Pulse bursts and shield bubbles, pooled separately from the hit sparks. */
   private readonly bursts: Phaser.GameObjects.Image[] = [];
   private readonly rings: Ring[] = [];
+  private readonly damageTexts: {
+    text: Phaser.GameObjects.Text;
+    start: number;
+    y: number;
+  }[] = [];
   private readonly ringGfx: Phaser.GameObjects.Graphics;
 
   constructor(scene: Phaser.Scene) {
@@ -54,8 +62,10 @@ export class FxRenderer {
     const a = Math.min(1, Math.max(0, alpha));
     const now = this.scene.time.now;
     for (const e of events) {
-      if (e.type === 'hit') this.spark(world, e.id);
-      else if (e.type === 'boulder' && e.phase === 'impact')
+      if (e.type === 'hit') {
+        this.spark(world, e.id);
+        if (showsFloatingDamage(e.dmg)) this.floatDamage(world, e.id, e.dmg, now);
+      } else if (e.type === 'boulder' && e.phase === 'impact')
         this.rings.push({ x: e.x, y: e.y, start: now, radius: INTERVENTION.radius, color: PALETTE.cream });
       else if (e.type === 'pulse' || e.type === 'revive') this.pulse(world, e.id, now);
       else if (e.type === 'shield') this.bubble(world, e.id);
@@ -63,6 +73,17 @@ export class FxRenderer {
     this.syncProjectiles(world, a);
     this.syncBoulders(world, a);
     this.drawRings(now);
+  }
+
+  /** Damage numbers finish in real time even after the runner has ended. */
+  updateDamage(): void {
+    const now = this.scene.time.now;
+    for (const slot of this.damageTexts) {
+      if (!slot.text.visible) continue;
+      const t = Math.min(1, Math.max(0, (now - slot.start) / FLOAT_MS));
+      slot.text.setY(Math.round(slot.y - FLOAT_RISE_PX * t)).setAlpha(1 - t);
+      if (t >= 1) slot.text.setVisible(false);
+    }
   }
 
   destroy(): void {
@@ -74,6 +95,8 @@ export class FxRenderer {
       list.length = 0;
     }
     this.rings.length = 0;
+    for (const slot of this.damageTexts) slot.text.destroy();
+    this.damageTexts.length = 0;
     this.ringGfx.destroy();
   }
 
@@ -160,6 +183,34 @@ export class FxRenderer {
       duration: SPARK_MS,
       onComplete: () => s.setVisible(false),
     });
+  }
+
+  private floatDamage(world: BattleWorld, id: number, dmg: number, now: number): void {
+    if (id < 0 || id >= world.count) return;
+    let slot = this.damageTexts.find((s) => !s.text.visible || now - s.start >= FLOAT_MS);
+    if (!slot) {
+      if (this.damageTexts.length >= FLOAT_POOL) return;
+      const text = this.scene.add
+        .text(0, 0, '', {
+          fontFamily: FONT_UI,
+          fontSize: '16px',
+          color: '#ffffff',
+          stroke: '#201820',
+          strokeThickness: 2,
+        })
+        .setOrigin(0.5, 1)
+        .setDepth(RING_DEPTH + 1);
+      slot = { text, start: now, y: 0 };
+      this.damageTexts.push(slot);
+    }
+    const at = iso({ x: world.x[id]!, y: world.y[id]! });
+    slot.start = now;
+    slot.y = Math.round(at.y - world.radius[id]!);
+    slot.text
+      .setText(`${Math.round(dmg)}`)
+      .setPosition(Math.round(at.x), slot.y)
+      .setAlpha(1)
+      .setVisible(true);
   }
 
   /** A structure's pulse: a gold burst on it and a ring growing to the pulse radius. */

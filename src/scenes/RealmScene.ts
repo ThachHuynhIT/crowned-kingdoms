@@ -1,4 +1,6 @@
 import Phaser from 'phaser';
+import { SHAKE_MS } from '../data/juice';
+import { shakeOffset } from '../render/juiceModel';
 import type { EventBus } from '../core/events';
 import { PALETTE } from '../data/palette';
 import type { Edge } from '../game/battle/types';
@@ -114,6 +116,7 @@ export class RealmScene extends Phaser.Scene {
   private readonly onResize = (): void => this.resizeCamera();
   /** The live camera (free zoom and scroll, before pixel snapping) and the screen size it was set for. */
   private view: CameraView | null = null;
+  private shakeStart: number | null = null;
   private viewScreen: Size = { w: 0, h: 0 };
   /** A modal or the help view is open: the map takes no wheel, pan or pinch. */
   private mapBlocked = false;
@@ -154,6 +157,7 @@ export class RealmScene extends Phaser.Scene {
     this.rangeHover = null;
     this.down = null;
     this.view = null;
+    this.shakeStart = null;
     this.mapBlocked = false;
     this.pointers.clear();
     this.pinch = null;
@@ -247,6 +251,7 @@ export class RealmScene extends Phaser.Scene {
   };
 
   update(_time: number, delta: number): void {
+    this.units?.updateFlashes();
     // Taken before update: the tick that ends the battle drops the runner, and that final
     // state (deaths included) must still be drawn.
     if (!this.kicked) {
@@ -259,9 +264,23 @@ export class RealmScene extends Phaser.Scene {
     if (runner && this.units && this.fx) {
       const alpha = runner.clock.alpha;
       const events = drainEvents(runner.world);
-      this.units.sync(runner.world, alpha);
+      this.units.sync(runner.world, alpha, events);
       this.fx.sync(runner.world, events, alpha);
+      if (
+        events.some((e) => e.type === 'boulder' && e.phase === 'impact') &&
+        getSession(this)?.meta().settings.screenShake !== false
+      ) {
+        this.shakeStart = this.time.now;
+      }
       if (events.some((e) => e.type === 'rage')) this.bus.emit('log', { text: RAGE_TEXT });
+    }
+    this.fx?.updateDamage();
+    if (this.shakeStart !== null) {
+      const elapsed = this.time.now - this.shakeStart;
+      if (elapsed >= SHAKE_MS || getSession(this)?.meta().settings.screenShake === false) {
+        this.shakeStart = null;
+      }
+      this.drawView();
     }
     this.syncRange();
   }
@@ -694,8 +713,29 @@ export class RealmScene extends Phaser.Scene {
     this.view = view;
     this.viewScreen = this.screen();
     const shown = snapView(view, this.viewScreen);
-    this.cameras.main.setZoom(shown.zoom).setScroll(shown.scroll.x, shown.scroll.y);
+    this.drawView();
     this.bus.emit('realm:view', { zoom: shown.zoom, scroll: { x: shown.scroll.x, y: shown.scroll.y } });
+  }
+
+  /** Shake is a temporary screen translation; the player's view and view events stay unchanged. */
+  private drawView(): void {
+    if (!this.view) return;
+    const base = snapView(this.view, this.viewScreen);
+    const offset = shakeOffset(
+      this.shakeStart === null ? SHAKE_MS : this.time.now - this.shakeStart,
+      getSession(this)?.meta().settings.screenShake !== false,
+    );
+    const shown = snapView(
+      {
+        zoom: base.zoom,
+        scroll: {
+          x: base.scroll.x - offset.x / base.zoom,
+          y: base.scroll.y - offset.y / base.zoom,
+        },
+      },
+      this.viewScreen,
+    );
+    this.cameras.main.setZoom(shown.zoom).setScroll(shown.scroll.x, shown.scroll.y);
   }
 
   /** A resize keeps a zoomed view's centre; the overview stays the overview. */
