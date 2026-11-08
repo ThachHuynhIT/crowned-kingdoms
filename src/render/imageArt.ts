@@ -102,8 +102,8 @@ export const FOREST_CATALOG: readonly { id: string; tall: boolean; radius: numbe
   { id: 'forest_pine_b', tall: true, radius: 18 },
   { id: 'forest_rock', tall: true, radius: 24 },
 ];
-/** Owner-approved forest objects (the pine sample approved 2026-11-08; pine_b and the rock wait for their review). */
-export const FOREST_APPROVED: readonly string[] = ['forest_pine_a'];
+/** Owner-approved forest objects (the pine sample approved 2026-11-08, pine_b and the rock 2026-11-09). */
+export const FOREST_APPROVED: readonly string[] = ['forest_pine_a', 'forest_pine_b', 'forest_rock'];
 /** File of an approved forest object. */
 export const forestFile = (id: string): string => `iso/polish/${id}`;
 
