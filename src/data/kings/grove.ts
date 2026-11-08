@@ -151,7 +151,7 @@ export const GROVE: KingDef = {
     tags: [],
     textVi:
       'Ngai của Vua Rừng Xanh: bắn gai độc vào kẻ địch trong tầm. Sinh Trưởng: công trình Rừng Xanh mạnh thêm mỗi năm tuổi (tối đa +60% máu và sát thương).',
-    hp: 320,
+    hp: 330,
     armor: 0,
     attack: { dmg: 8, type: 'physical', range: cells(1.5), interval: 10, projectileSpeed: 14, onHit: [{ type: 'poison', dps: 1, ticks: 30, maxStacks: 1 }] },
     // Sinh Trưởng: +pct% HP và DMG mỗi năm tuổi cho công trình tag `grove`, tối đa +cap%.

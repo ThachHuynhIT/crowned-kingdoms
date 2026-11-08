@@ -159,7 +159,7 @@ export const NOMAD: KingDef = {
     tags: [],
     textVi:
       'Ngai của Vua Du Mục: bắn trong tầm. Lều Di Động: mỗi năm được dời miễn phí 1 công trình (từ Ngai cấp 3: 2 lần), không cần chơi thẻ.',
-    hp: 300,
+    hp: 470,
     armor: 0,
     attack: { dmg: 9, type: 'physical', range: cells(1.6875), interval: 10, projectileSpeed: 16 },
     passive: [{ type: 'custom', id: 'nomad_mobile_camp', params: { moves: [1, 1, 2, 2, 2] } }],

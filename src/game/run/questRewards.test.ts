@@ -226,8 +226,9 @@ describe('quest rewards: board and deck', () => {
   });
 
   it.each([
-    [2, 3, 'lives 2 -> 3, no gold'],
-    [3, 3, 'lives stay, +8 gold'],
+    // heals up to RUN.startLives (2 since the G5 balance pass), otherwise pays gold
+    [1, 2, 'lives 1 -> 2, no gold'],
+    [2, 2, 'lives stay, +8 gold'],
     [4, 4, 'lives stay, +8 gold'],
   ])('diversity: lives %i -> %i (%s)', (lives, expected) => {
     let s = withQuest('quest_diversity', { lives });

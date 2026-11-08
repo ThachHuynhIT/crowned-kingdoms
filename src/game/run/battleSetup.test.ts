@@ -113,7 +113,7 @@ describe('buildBattleSetup', () => {
   });
 
   it('maps the throne', () => {
-    expect(setup.throne.hp).toBe(300);
+    expect(setup.throne.hp).toBe(430);
     expect(setup.throne.plot).toBe(THRONE_PLOT);
     expect(setup.throne.uid).toBe(0);
     expect(setup.throne.kind).toBe('throne');

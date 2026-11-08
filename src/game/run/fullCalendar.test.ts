@@ -57,7 +57,7 @@ describe('the 30-year calendar of spec 3.5', () => {
 
   it('maps every slot to its budget multiplier of spec 3.6', () => {
     expect(slotMultFor({ kind: 'coalition', kings: [1, 2] })).toBe(1.1);
-    expect([1, 2, 3].map((o) => slotMultFor({ kind: 'boss', boss: 'boss_bog_ogre', ordinal: o as 1 | 2 | 3 }))).toEqual([1.5, 1.75, 2.0]);
+    expect([1, 2, 3].map((o) => slotMultFor({ kind: 'boss', boss: 'boss_bog_ogre', ordinal: o as 1 | 2 | 3 }))).toEqual([1.4, 1.6, 1.8]);
     expect(slotMultFor({ kind: 'king', king: 5, attack: 3 })).toBe(1.2);
   });
 

@@ -5,7 +5,13 @@ import { ALL_KINGS, RULES_FULL } from '../../../data/rules';
 import { CONTENT } from '../../cards/registry';
 import { applyCommand } from '../../run/commands';
 import { newRun } from '../../run/yearFlow';
-import { attackStats, battleSetup, structure, throneSetup, unitStats } from '../../testing/fixtures';
+import {
+  attackStats,
+  battleSetup,
+  structure,
+  throneSetup,
+  unitStats,
+} from '../../testing/fixtures';
 import { runHeadless } from '../headless';
 import { estimatePower, greedyBot } from './greedy';
 
@@ -13,8 +19,14 @@ const rng = () => new Rng(hashSeed('greedy-test'));
 
 describe('estimatePower', () => {
   it('counts our units and towers once, never the enemy waves', () => {
-    const troop = structure(7, { spawn: { stats: unitStats({ hp: 10, dmg: 4, interval: 20 }), count: 2 } }); // 2 × 10 × 2 = 40
-    const tower = structure(8, { kind: 'tower', hp: 30, attack: attackStats({ dmg: 6, interval: 10 }) }); // 30 × 6 = 180
+    const troop = structure(7, {
+      spawn: { stats: unitStats({ hp: 10, dmg: 4, interval: 20 }), count: 2 },
+    }); // 2 × 10 × 2 = 40
+    const tower = structure(8, {
+      kind: 'tower',
+      hp: 30,
+      attack: attackStats({ dmg: 6, interval: 10 }),
+    }); // 30 × 6 = 180
     const throne = throneSetup({ attack: null, hp: 300 });
     const setup = battleSetup({
       throne,
@@ -39,7 +51,9 @@ describe('estimatePower', () => {
   });
 
   it('gives 0 for a non-positive interval', () => {
-    const setup = battleSetup({ throne: throneSetup({ attack: attackStats({ dmg: 6, interval: 0 }) }) });
+    const setup = battleSetup({
+      throne: throneSetup({ attack: attackStats({ dmg: 6, interval: 0 }) }),
+    });
     expect(estimatePower(setup)).toBe(0);
   });
 });
@@ -59,6 +73,13 @@ describe('greedyBot', () => {
     expect(JSON.stringify(newRun(1, 'wheat', CONTENT, RULES_FULL))).toBe(before);
   });
 
+  it('never plays a card that costs a life (Eclipse Pact)', () => {
+    const base = { ...newRun(1, 'moon', CONTENT, RULES_FULL), autoFire: true };
+    const state = { ...base, hand: ['moon_eclipse_pact' as const], lives: 3 };
+    const cmd = greedyBot(state, CONTENT, rng());
+    expect(cmd.type).not.toBe('play');
+  });
+
   it('is deterministic: the same state always gives the same command', () => {
     const state = { ...newRun(3, 'stone', CONTENT, RULES_FULL), autoFire: true };
     expect(greedyBot(state, CONTENT, rng())).toEqual(greedyBot(state, CONTENT, rng()));
@@ -68,7 +89,9 @@ describe('greedyBot', () => {
     const base = { ...newRun(1, 'wheat', CONTENT, RULES_FULL), autoFire: true, gold: 999 };
     const empty = { ...base, hand: [] as typeof base.hand };
     expect(greedyBot({ ...empty, rerollsThisYear: 0 }, CONTENT, rng()).type).toBe('reroll');
-    expect(greedyBot({ ...empty, rerollsThisYear: GREEDY_MAX_REROLLS }, CONTENT, rng()).type).not.toBe('reroll');
+    expect(
+      greedyBot({ ...empty, rerollsThisYear: GREEDY_MAX_REROLLS }, CONTENT, rng()).type,
+    ).not.toBe('reroll');
     expect(greedyBot(base, CONTENT, rng()).type).not.toBe('reroll');
   });
 });

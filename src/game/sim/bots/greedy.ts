@@ -5,7 +5,8 @@
  *
  * Power = Σ HP × DPS over our side of `buildBattleSetup` (throne once, structures by plot, their units, start summons
  * and throne mercenaries; never the enemy waves). It ignores future value (economy, summonEvery, ramp, DOT, healing,
- * splash): a stated limit of the heuristic, not something the rules bend to.
+ * splash): a stated limit of the heuristic, not something the rules bend to. It never plays a card that costs a life
+ * (lives are not power; without this rule it spent every life on Eclipse Pact and Moon won 2.8%).
  */
 import { GREEDY_MAX_REROLLS } from '../../../data/balance';
 import { unlockCost } from '../../../data/run';
@@ -34,7 +35,8 @@ const unitPower = (group: { stats: UnitStats; count: number } | null | undefined
   group ? group.count * group.stats.hp * dps(group.stats) : 0;
 
 const structurePower = (s: StructureSetup): number => {
-  const pulseDps = s.pulse && s.pulse.everyTicks > 0 ? (s.pulse.dmg * TICKS_PER_SECOND) / s.pulse.everyTicks : 0;
+  const pulseDps =
+    s.pulse && s.pulse.everyTicks > 0 ? (s.pulse.dmg * TICKS_PER_SECOND) / s.pulse.everyTicks : 0;
   const own = s.hp * (dps(s.attack) * (s.multiAttack ?? 1) + pulseDps);
   return own + unitPower(s.spawn) + unitPower(s.startSummon) + unitPower(s.spawnAtThrone);
 };
@@ -45,7 +47,8 @@ export function estimatePower(setup: BattleSetup): number {
   return structures.reduce((sum, s) => sum + structurePower(s), structurePower(setup.throne));
 }
 
-const powerOf = (state: RunState, content: Content): number => estimatePower(buildBattleSetup(state, content));
+const powerOf = (state: RunState, content: Content): number =>
+  estimatePower(buildBattleSetup(state, content));
 
 /** Every target to try for a card, in enumeration order (not yet filtered). */
 const candidateTargets = (card: CardDef): PlayTarget[] => {
@@ -74,10 +77,12 @@ const bestPlay = (state: RunState, content: Content): Scored | null => {
   state.hand.forEach((cardId, handIndex) => {
     const card = content.card(cardId);
     for (const target of candidateTargets(card)) {
-      if (checkPlay(state.plots, card, target, content, maxEnchantStacks(state, content)) !== null) continue;
+      if (checkPlay(state.plots, card, target, content, maxEnchantStacks(state, content)) !== null)
+        continue;
       const command: RunCommand = { type: 'play', handIndex, target };
       const r = applyCommand(state, command, content);
       if ('error' in r) continue; // custom refusals (lastLife, max level, …)
+      if (r.state.lives < state.lives) continue; // a life is not army power: never trade one (Eclipse Pact)
       const gain = powerOf(r.state, content) - base;
       if (best === null || gain > best.gain) best = { command, gain };
     }
@@ -87,7 +92,8 @@ const bestPlay = (state: RunState, content: Content): Scored | null => {
 
 /** Nomad: the free move with the largest strictly positive gain, or null. */
 const bestFreeMove = (state: RunState, content: Content): Scored | null => {
-  if (state.kingId !== 'nomad' || state.freeMovesUsed >= freeMovesAllowed(state, content)) return null;
+  if (state.kingId !== 'nomad' || state.freeMovesUsed >= freeMovesAllowed(state, content))
+    return null;
   const base = powerOf(state, content);
   let best: Scored | null = null;
   for (let from = 0; from < PLOTS; from++) {
@@ -116,7 +122,8 @@ const enablingPlot = (state: RunState, content: Content): RunCommand | null => {
   return null;
 };
 
-const legal = (state: RunState, command: RunCommand, content: Content): boolean => !('error' in applyCommand(state, command, content));
+const legal = (state: RunState, command: RunCommand, content: Content): boolean =>
+  !('error' in applyCommand(state, command, content));
 
 const planning = (state: RunState, content: Content): RunCommand => {
   if (!state.autoFire) return { type: 'setAutoFire', on: true };
@@ -128,22 +135,39 @@ const planning = (state: RunState, content: Content): RunCommand => {
   const buy = enablingPlot(state, content);
   if (buy !== null) return buy;
   const reroll: RunCommand = { type: 'reroll' };
-  if (state.rerollsThisYear < GREEDY_MAX_REROLLS && state.gold >= rerollPrice(state) && legal(state, reroll, content)) return reroll;
+  if (
+    state.rerollsThisYear < GREEDY_MAX_REROLLS &&
+    state.gold >= rerollPrice(state) &&
+    legal(state, reroll, content)
+  )
+    return reroll;
   const start: RunCommand = { type: 'startBattle' };
-  if (state.hand.length > 0 && !legal(state, start, content)) return { type: 'discard', handIndex: 0 };
+  if (state.hand.length > 0 && !legal(state, start, content))
+    return { type: 'discard', handIndex: 0 };
   return start;
 };
 
 /** Value of taking `cardId` now: the best play gain it would have on the current board (0 when unplayable). */
 const offerValue = (state: RunState, content: Content, cardId: CardId): number => {
-  const probe: RunState = { ...state, phase: 'planning', hand: [cardId], played: false, offers: null, pendingOffers: [] };
+  const probe: RunState = {
+    ...state,
+    phase: 'planning',
+    hand: [cardId],
+    played: false,
+    offers: null,
+    pendingOffers: [],
+  };
   return bestPlay(probe, content)?.gain ?? 0;
 };
 
 const pick = (state: RunState, content: Content): RunCommand => {
   const offer = cardOffer(state);
   const ids = offer?.cardIds ?? [];
-  if (ids.length === 0) return { type: 'pickOffer', index: state.phase === 'reward' && offer?.kind === 'reward' ? null : 0 };
+  if (ids.length === 0)
+    return {
+      type: 'pickOffer',
+      index: state.phase === 'reward' && offer?.kind === 'reward' ? null : 0,
+    };
   let best = 0;
   let bestValue = offerValue(state, content, ids[0]!);
   for (let i = 1; i < ids.length; i++) {

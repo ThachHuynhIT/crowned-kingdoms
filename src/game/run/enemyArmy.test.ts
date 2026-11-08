@@ -19,16 +19,16 @@ const units = (a: { waves: readonly { units: readonly { unit: string }[] }[] }):
 const rosterIds = (k: KingId): string[] => CONTENT.enemyRoster(k).map((r) => r.unit.id);
 
 describe('army_budgets', () => {
-  it('year 1 raiders have 10 EP, bosses 63, 299 and 1382', () => {
+  it('year 1 raiders have 10 EP, bosses 59, 274 and 1244', () => {
     expect(buildYearArmy(at(1), CONTENT).budget).toBe(10);
-    expect(buildYearArmy(at(10), CONTENT).budget).toBe(63); // round(42 x 1.5)
-    expect(buildYearArmy(at(20), CONTENT).budget).toBe(299); // round(171 x 1.75)
-    expect(buildYearArmy(at(30), CONTENT).budget).toBe(1382); // round(691 x 2.0)
+    expect(buildYearArmy(at(10), CONTENT).budget).toBe(59); // round(42 x 1.4)
+    expect(buildYearArmy(at(20), CONTENT).budget).toBe(274); // round(171 x 1.6)
+    expect(buildYearArmy(at(30), CONTENT).budget).toBe(1244); // round(691 x 1.8)
   });
 
   it('scales with the thorn difficulty: x(1 + 0.1 d)', () => {
     expect([0, 1, 3, 5].map((d) => armyBudget(10, 1.5, d))).toEqual([63, 69, 82, 95]);
-    expect(buildYearArmy(at(10, { difficulty: 5 }), CONTENT).budget).toBe(95);
+    expect(buildYearArmy(at(10, { difficulty: 5 }), CONTENT).budget).toBe(88); // round(42 x 1.4 x 1.5)
     expect(armyBudget(10, 1.5)).toBe(63);
   });
 

@@ -101,7 +101,7 @@ describe('newRun', () => {
     const s = newRun(7, 'wheat', CONTENT);
     expect(s.year).toBe(1);
     expect(s.phase).toBe('planning');
-    expect(s.lives).toBe(3);
+    expect(s.lives).toBe(RUN.startLives);
     expect(s.plots.filter((p) => p.unlocked)).toHaveLength(10);
     expect(s.plots[THRONE_PLOT]!.building!.cardId).toBe('wheat_throne');
     expect(s.plots[THRONE_PLOT]!.building!.uid).toBe(0);
@@ -465,7 +465,7 @@ describe('battle flow', () => {
   });
 
   it('loss with 3 lives goes to yearEnd then advance', () => {
-    const s = planned({ phase: 'battle' });
+    const s = planned({ phase: 'battle', lives: 3 });
     const r = ok(applyCommand(s, { type: 'battleResult', result: result(false) }, CONTENT));
     expect(r.state.lives).toBe(2);
     expect(r.state.phase).toBe('yearEnd');

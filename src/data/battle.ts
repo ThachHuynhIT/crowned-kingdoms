@@ -12,7 +12,7 @@ export const SLOT_MULT = {
   raiders: 0.8, // Thổ Phỉ
   coalition: 1.1, // Liên Quân
   kingAttack: [0.9, 1.0, 1.2], // lần 1, 2, 3 của một vua
-  boss: [1.5, 1.75, 2.0], // đạo quân đi kèm boss 1, 2, 3 (chưa tính chính boss)
+  boss: [1.4, 1.6, 1.8], // đạo quân đi kèm boss 1, 2, 3 (chưa tính chính boss)
 } as const;
 
 /** Tối đa đơn vị địch được tạo từ ngân sách. */

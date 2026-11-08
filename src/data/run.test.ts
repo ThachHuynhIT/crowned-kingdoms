@@ -13,7 +13,7 @@ import {
 describe('G2 run constants and formulas (spec §3.1)', () => {
   it('has the full RUN table', () => {
     expect(RUN).toMatchObject({
-      startLives: 3,
+      startLives: 2,
       maxLives: 4,
       startGold: 5,
       taxPerYear: 3,
@@ -49,7 +49,7 @@ describe('G2 run constants and formulas (spec §3.1)', () => {
 describe('run constants', () => {
   it('has G1 rules and run basics', () => {
     expect(RULES_G1.years).toBe(10);
-    expect(RUN.startLives).toBe(3);
+    expect(RUN.startLives).toBe(2);
     expect(RUN.handSize).toBe(3);
     expect(REWARD.choices).toBe(3);
   });
