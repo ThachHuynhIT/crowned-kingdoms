@@ -49,7 +49,7 @@ describe('runHeadless', () => {
     for (let seed = 100; seed < 120; seed++) {
       expect(() => runHeadless({ seed, kingId: 'wheat' })).not.toThrow();
     }
-  });
+  }, 60_000); // twenty whole runs: ~1.3 s alone, but over the 5 s default when the full suite runs in parallel
 
   it('throws when a bot emits an illegal command', () => {
     expect(() => runHeadless({ seed: 1, kingId: 'wheat', bot: () => ({ type: 'advance' }) })).toThrow(
