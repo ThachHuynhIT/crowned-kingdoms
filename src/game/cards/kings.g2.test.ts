@@ -137,6 +137,6 @@ describe('G2 content integrity', () => {
     // Conquest-only cards of the other kings are in the content too (spec 3.7).
     const owners = new Set<string>(['neutral', ...CONTENT.enemyKings().map((k) => k.id)]);
     for (const c of cards) expect(owners.has(c.owner), c.id).toBe(true);
-    expect(CONTENT.kings().map((k) => k.id)).toEqual(['wheat', 'stone', 'arcane']);
+    expect(CONTENT.kings()).toHaveLength(9);
   });
 });

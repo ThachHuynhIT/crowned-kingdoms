@@ -52,7 +52,7 @@ const idOfPlot = (w: BattleWorld, plot: number): number => {
 describe('the nine Clock King cards (spec 6.9)', () => {
   it('conquering the Clock King offers exactly these nine, never the throne', () => {
     expect(CONTENT.conquestCards('clock').map((c) => c.id).sort()).toEqual(IDS);
-    expect(CONTENT.allCards().filter((c) => c.owner === 'clock').map((c) => c.id).sort()).toEqual(IDS);
+    expect(CONTENT.allCards().filter((c) => c.owner === 'clock' && c.kind !== 'throne').map((c) => c.id).sort()).toEqual(IDS);
   });
 
   describe.each([

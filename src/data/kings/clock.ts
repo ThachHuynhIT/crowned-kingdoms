@@ -1,5 +1,6 @@
 import { cells } from '../boardGeometry';
-import type { CardDef, EnemyKingDef } from '../types';
+import type { CardDef, EnemyKingDef, KingDef } from '../types';
+import { enemyFromKing } from './enemy';
 
 const gear = { owner: 'clock' as const, tags: ['clockwork'] as const };
 const plain = { owner: 'clock' as const, tags: [] as const };
@@ -133,12 +134,28 @@ export const CLOCK_CARDS: readonly CardDef[] = [
   },
 ];
 
-/** Vua Đồng Hồ (spec §6.9) phía kẻ địch: máy móc, mạnh dần trong trận. Thẻ chinh phục: G3b-B4. */
-export const CLOCK_ENEMY: EnemyKingDef = {
+/** Vua Đồng Hồ (spec §6): Ngai, 9 thẻ, đơn vị, cờ hiệu và roster khi làm địch. */
+export const CLOCK: KingDef = {
   id: 'clock',
   nameVi: 'Vua Đồng Hồ',
   name: 'Clock King',
   color: 'gold',
+  blurbVi: 'Máy móc lên dây: quân và tháp đánh nhanh dần trong trận.',
+  throne: {
+    id: 'clock_throne',
+    owner: 'clock',
+    nameVi: 'Ngai Bánh Răng',
+    name: 'Cogwheel Throne',
+    kind: 'throne',
+    rarity: 'common',
+    tags: [],
+    textVi:
+      'Ngai của Vua Đồng Hồ: bắn trong tầm. Lên Dây: mọi lính và tháp của mình đánh nhanh dần mỗi giây trong trận (tối đa +40% tốc đánh).',
+    hp: 300,
+    armor: 0.1,
+    attack: { dmg: 8, type: 'physical', range: cells(1.6875), interval: 12, projectileSpeed: 16 },
+    passive: [],
+  },
   units: [
     {
       id: 'tin_soldier',
@@ -203,5 +220,8 @@ export const CLOCK_ENEMY: EnemyKingDef = {
     textVi: 'Địch +1% sát thương mỗi giây (tối đa +50%).',
     effects: [{ type: 'enemyRampDmg', pctPerSecond: 1, cap: 50 }],
   },
-  conquestCards: CLOCK_CARDS,
+  cards: CLOCK_CARDS,
 };
+
+/** Phần kẻ địch của clock: cùng dữ liệu, thẻ chinh phục là 9 thẻ của vua. */
+export const CLOCK_ENEMY: EnemyKingDef = enemyFromKing(CLOCK);

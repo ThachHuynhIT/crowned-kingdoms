@@ -1,5 +1,6 @@
 import { cells } from '../boardGeometry';
-import type { CardDef, EnemyKingDef } from '../types';
+import type { CardDef, EnemyKingDef, KingDef } from '../types';
+import { enemyFromKing } from './enemy';
 
 const dead = { owner: 'moon' as const, tags: ['undead'] as const };
 const plain = { owner: 'moon' as const, tags: [] as const };
@@ -113,12 +114,28 @@ export const MOON_CARDS: readonly CardDef[] = [
   },
 ];
 
-/** Vua Ánh Trăng (spec §6.10) phía kẻ địch: hiến tế, triệu hồi, bất tử. Thẻ chinh phục: G3b-B5. */
-export const MOON_ENEMY: EnemyKingDef = {
+/** Vua Ánh Trăng (spec §6): Ngai, 9 thẻ, đơn vị, cờ hiệu và roster khi làm địch. */
+export const MOON: KingDef = {
   id: 'moon',
   nameVi: 'Vua Ánh Trăng',
   name: 'Moon King',
   color: 'plum',
+  blurbVi: 'Hiến tế và triệu hồi: gom Hồn, đổi lấy bóng ma. Rủi ro cao.',
+  throne: {
+    id: 'moon_throne',
+    owner: 'moon',
+    nameVi: 'Ngai Nguyệt Thực',
+    name: 'Eclipse Throne',
+    kind: 'throne',
+    rarity: 'common',
+    tags: [],
+    textVi:
+      'Ngai của Vua Ánh Trăng: bắn phép trong tầm. Thu Hồn: cứ vài Hồn từ lính chết lại triệu hồi một bóng ma tại Ngai (tối đa 20 mỗi trận).',
+    hp: 240,
+    armor: 0,
+    attack: { dmg: 10, type: 'magic', range: cells(1.6875), interval: 12, projectileSpeed: 16 },
+    passive: [],
+  },
   units: [
     {
       id: 'skeleton',
@@ -185,5 +202,8 @@ export const MOON_ENEMY: EnemyKingDef = {
     textVi: '20% địch đầu tiên bị hạ sẽ sống lại một lần với 30% máu.',
     effects: [{ type: 'undying', pct: 20, hpPct: 30 }],
   },
-  conquestCards: MOON_CARDS,
+  cards: MOON_CARDS,
 };
+
+/** Phần kẻ địch của moon: cùng dữ liệu, thẻ chinh phục là 9 thẻ của vua. */
+export const MOON_ENEMY: EnemyKingDef = enemyFromKing(MOON);

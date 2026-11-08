@@ -5,11 +5,11 @@ import { kingChoices, nextIndex, swipeTarget } from './carouselModel';
 describe('kingChoices', () => {
   const choices = kingChoices(CONTENT);
 
-  it('lists the three playable kings first, then the other six in ALL_KINGS order', () => {
+  it('lists all nine kings as playable, in registry (ALL_KINGS) order', () => {
     expect(choices.map((c) => c.id)).toEqual([
-      'wheat', 'stone', 'arcane', 'clock', 'forge', 'grove', 'moon', 'nomad', 'tide',
+      'arcane', 'clock', 'forge', 'grove', 'moon', 'nomad', 'stone', 'tide', 'wheat',
     ]);
-    expect(choices.map((c) => c.playable)).toEqual([true, true, true, false, false, false, false, false, false]);
+    expect(choices.every((c) => c.playable)).toBe(true);
   });
 
   it('takes playable kings and their nine cards from the registry, never hardcoded', () => {

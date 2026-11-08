@@ -41,7 +41,7 @@ const living = (w: BattleWorld, label: string): number =>
 describe('the nine Moon King cards (spec 6.10)', () => {
   it('conquering the Moon King offers exactly these nine, never the throne', () => {
     expect(CONTENT.conquestCards('moon').map((c) => c.id).sort()).toEqual(IDS);
-    expect(CONTENT.allCards().filter((c) => c.owner === 'moon').map((c) => c.id).sort()).toEqual(IDS);
+    expect(CONTENT.allCards().filter((c) => c.owner === 'moon' && c.kind !== 'throne').map((c) => c.id).sort()).toEqual(IDS);
   });
 
   describe.each([
@@ -222,9 +222,8 @@ describe('the nine Moon King cards (spec 6.10)', () => {
     });
   });
 
-  it('no perk or throne of the Moon King is playable: only the nine cards exist', () => {
-    expect(() => CONTENT.king('moon')).toThrow();
-    expect(CONTENT.allCards().some((c) => c.id === 'moon_throne')).toBe(false);
+  it('the Moon throne carries no passive yet (G4 task 2/3): only its nine cards act', () => {
+    expect(CONTENT.king('moon').throne.passive).toEqual([]);
     expect(collectStatSheet(withBuilding(runState(), 6, 'moon_crypt', 1), CONTENT, 6).hp.pct).toBe(0);
   });
 });

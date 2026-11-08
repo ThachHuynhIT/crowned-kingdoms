@@ -94,6 +94,10 @@ describe('startDeck', () => {
     expect(startDeck(king)).toEqual(['wheat_a', 'wheat_a', 'wheat_b']);
   });
 
+  it('gives every one of the nine kings a start deck of 11 cards', () => {
+    for (const k of CONTENT.kings()) expect(startDeck(k).length, k.id).toBe(11);
+  });
+
   it('works for the real wheat king', () => {
     const deck = startDeck(CONTENT.king('wheat'));
     expect(deck.length).toBeGreaterThan(0);

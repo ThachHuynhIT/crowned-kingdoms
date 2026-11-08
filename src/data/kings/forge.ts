@@ -1,6 +1,7 @@
 import { CONE } from '../battle';
 import { cells } from '../boardGeometry';
-import type { CardDef, EnemyKingDef } from '../types';
+import type { CardDef, EnemyKingDef, KingDef } from '../types';
+import { enemyFromKing } from './enemy';
 
 const fire = { owner: 'forge' as const, tags: ['fire'] as const };
 const plain = { owner: 'forge' as const, tags: [] as const };
@@ -124,12 +125,28 @@ export const FORGE_CARDS: readonly CardDef[] = [
   },
 ];
 
-/** Vua Lò Rèn (spec §6.8) phía kẻ địch: rèn đúc, sát thương lửa. Thẻ chinh phục: G3b-B4. */
-export const FORGE_ENEMY: EnemyKingDef = {
+/** Vua Lò Rèn (spec §6): Ngai, 9 thẻ, đơn vị, cờ hiệu và roster khi làm địch. */
+export const FORGE: KingDef = {
   id: 'forge',
   nameVi: 'Vua Lò Rèn',
   name: 'Forge King',
   color: 'orange',
+  blurbVi: 'Rèn đúc và lửa: bỏng thiêu đốt, công trình cấp cao mạnh hẳn.',
+  throne: {
+    id: 'forge_throne',
+    owner: 'forge',
+    nameVi: 'Ngai Đe Sắt',
+    name: 'Anvil Throne',
+    kind: 'throne',
+    rarity: 'common',
+    tags: [],
+    textVi:
+      'Ngai của Vua Lò Rèn: bắn lửa gây bỏng. Lửa Tôi: công trình cấp 3 trở lên được +10% sát thương (cao hơn khi Ngai lên cấp).',
+    hp: 340,
+    armor: 0.1,
+    attack: { dmg: 9, type: 'fire', range: cells(1.5), interval: 12, projectileSpeed: 14, onHit: [{ type: 'burn', dps: 2, ticks: 30 }] },
+    passive: [],
+  },
   units: [
     {
       id: 'swordsman',
@@ -206,5 +223,8 @@ export const FORGE_ENEMY: EnemyKingDef = {
     textVi: 'Địch được +0.15 giáp.',
     effects: [{ type: 'enemyArmor', add: 0.15 }],
   },
-  conquestCards: FORGE_CARDS,
+  cards: FORGE_CARDS,
 };
+
+/** Phần kẻ địch của forge: cùng dữ liệu, thẻ chinh phục là 9 thẻ của vua. */
+export const FORGE_ENEMY: EnemyKingDef = enemyFromKing(FORGE);

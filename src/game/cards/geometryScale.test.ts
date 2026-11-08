@@ -56,6 +56,7 @@ const OLD_UNIT_SPEEDS: readonly [string, number, number | null][] = [
 const OLD_STRUCTURE_RANGE: Record<string, number> = {
   wheat_throne: 72, wheat_scarecrow: 72, stone_throne: 56, arcane_throne: 80, arcane_mage_tower: 80,
   neutral_archer_tower: 88, tide_cannon: 88, stone_catapult: 96, nomad_watchtower: 96, stone_crystal: 64,
+  grove_throne: 64, tide_throne: 72, forge_throne: 64, clock_throne: 72, moon_throne: 72, nomad_throne: 72,
   grove_thorn_tower: 64, forge_flame_tower: 40, clock_gear_tower: 72, moon_shadow_spire: 72,
   clock_steam_cannon: 104, tide_kraken: 56,
 };
@@ -73,6 +74,16 @@ const radiusOf = (id: string): number | undefined => {
   for (const e of card.effects) if ('radius' in e && typeof e.radius === 'number') return e.radius;
   return undefined;
 };
+
+/** Ngai của sáu vua mới: [spec tầm, spec đạn, splash, đẩy lùi] ở hình học cũ. */
+const NEW_THRONES: readonly [string, number, number, number | null, number | null][] = [
+  ['grove_throne', 64, 7, null, null],
+  ['tide_throne', 72, 6, 10, 8],
+  ['forge_throne', 64, 7, null, null],
+  ['clock_throne', 72, 8, null, null],
+  ['moon_throne', 72, 8, null, null],
+  ['nomad_throne', 72, 8, null, null],
+];
 
 describe('content at 64 px plots (spec 06/11/2026)', () => {
   it('moves every unit the same number of plots per tick (speed and shell speed x2)', () => {
@@ -110,6 +121,17 @@ describe('content at 64 px plots (spec 06/11/2026)', () => {
     expect([at('stone_catapult').splash, at('stone_catapult').minRange]).toEqual([32, 48]);
     expect(at('tide_cannon').splash).toBe(24);
     expect(at('clock_steam_cannon').splash).toBe(36);
+  });
+
+  it('scales the six new thrones like the old ones (range x1.5, shell speed, splash and knockback x2)', () => {
+    for (const [id, range, shell, splash, knock] of NEW_THRONES) {
+      const a = attackOf(CONTENT.card(id as never))!;
+      expect(a.range, id).toBe(range * 1.5);
+      expect(a.projectileSpeed, id).toBe(shell * 2);
+      expect(a.splash ?? null, id).toBe(splash === null ? null : splash * 2);
+      const k = a.onHit?.find((h) => h.type === 'knockback');
+      expect(k ? k.px : null, id).toBe(knock === null ? null : knock * 2);
+    }
   });
 
   it('doubles knockback and pull distances', () => {

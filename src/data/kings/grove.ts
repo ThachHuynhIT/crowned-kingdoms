@@ -1,5 +1,6 @@
 import { cells } from '../boardGeometry';
-import type { CardDef, EnemyKingDef } from '../types';
+import type { CardDef, EnemyKingDef, KingDef } from '../types';
+import { enemyFromKing } from './enemy';
 
 const base = { owner: 'grove' as const, tags: ['grove'] as const };
 
@@ -113,12 +114,28 @@ export const GROVE_CARDS: readonly CardDef[] = [
   },
 ];
 
-/** Vua Rừng Xanh (spec §6.6) phía kẻ địch: thú rừng, hồi máu. Thẻ chinh phục: G3b-B3. */
-export const GROVE_ENEMY: EnemyKingDef = {
+/** Vua Rừng Xanh (spec §6): Ngai, 9 thẻ, đơn vị, cờ hiệu và roster khi làm địch. */
+export const GROVE: KingDef = {
   id: 'grove',
   nameVi: 'Vua Rừng Xanh',
   name: 'Grove King',
   color: 'leaf',
+  blurbVi: 'Mạnh dần theo năm: thú rừng và cây hồi máu.',
+  throne: {
+    id: 'grove_throne',
+    owner: 'grove',
+    nameVi: 'Ngai Cổ Thụ',
+    name: 'Elder Tree Throne',
+    kind: 'throne',
+    rarity: 'common',
+    tags: [],
+    textVi:
+      'Ngai của Vua Rừng Xanh: bắn gai độc vào kẻ địch trong tầm. Sinh Trưởng: công trình Rừng Xanh mạnh thêm mỗi năm tuổi (tối đa +60% máu và sát thương).',
+    hp: 320,
+    armor: 0,
+    attack: { dmg: 8, type: 'physical', range: cells(1.5), interval: 10, projectileSpeed: 14, onHit: [{ type: 'poison', dps: 1, ticks: 30, maxStacks: 1 }] },
+    passive: [],
+  },
   units: [
     {
       id: 'wolf',
@@ -208,5 +225,8 @@ export const GROVE_ENEMY: EnemyKingDef = {
     textVi: 'Địch hồi 1% máu tối đa mỗi giây.',
     effects: [{ type: 'enemyRegenPct', pct: 1 }],
   },
-  conquestCards: GROVE_CARDS,
+  cards: GROVE_CARDS,
 };
+
+/** Phần kẻ địch của grove: cùng dữ liệu, thẻ chinh phục là 9 thẻ của vua. */
+export const GROVE_ENEMY: EnemyKingDef = enemyFromKing(GROVE);

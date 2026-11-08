@@ -1,5 +1,6 @@
 import { cells } from '../boardGeometry';
-import type { CardDef, EnemyKingDef } from '../types';
+import type { CardDef, EnemyKingDef, KingDef } from '../types';
+import { enemyFromKing } from './enemy';
 
 const horse = { owner: 'nomad' as const, tags: ['cavalry'] as const };
 const plain = { owner: 'nomad' as const, tags: [] as const };
@@ -117,12 +118,28 @@ export const NOMAD_CARDS: readonly CardDef[] = [
   },
 ];
 
-/** Vua Du Mục (spec §6.11) phía kẻ địch: kỵ binh xung phong. Thẻ chinh phục: G3b-B5. */
-export const NOMAD_ENEMY: EnemyKingDef = {
+/** Vua Du Mục (spec §6): Ngai, 9 thẻ, đơn vị, cờ hiệu và roster khi làm địch. */
+export const NOMAD: KingDef = {
   id: 'nomad',
   nameVi: 'Vua Du Mục',
   name: 'Nomad King',
   color: 'sand',
+  blurbVi: 'Dời công trình mỗi năm, kỵ binh xung phong.',
+  throne: {
+    id: 'nomad_throne',
+    owner: 'nomad',
+    nameVi: 'Ngai Lều Vàng',
+    name: 'Golden Tent Throne',
+    kind: 'throne',
+    rarity: 'common',
+    tags: [],
+    textVi:
+      'Ngai của Vua Du Mục: bắn trong tầm. Lều Di Động: mỗi năm được dời miễn phí 1 công trình (từ Ngai cấp 3: 2 lần), không cần chơi thẻ.',
+    hp: 300,
+    armor: 0,
+    attack: { dmg: 9, type: 'physical', range: cells(1.6875), interval: 10, projectileSpeed: 16 },
+    passive: [],
+  },
   units: [
     {
       id: 'rider',
@@ -178,5 +195,8 @@ export const NOMAD_ENEMY: EnemyKingDef = {
       { type: 'extraEdge', count: 1 },
     ],
   },
-  conquestCards: NOMAD_CARDS,
+  cards: NOMAD_CARDS,
 };
+
+/** Phần kẻ địch của nomad: cùng dữ liệu, thẻ chinh phục là 9 thẻ của vua. */
+export const NOMAD_ENEMY: EnemyKingDef = enemyFromKing(NOMAD);

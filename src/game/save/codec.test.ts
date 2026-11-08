@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest';
-import { Rng } from '../../core/random';
+import { Rng, hashSeed } from '../../core/random';
 import { INCOMPATIBLE_RUN_TEXT, SAVE_FORMAT_VERSION } from '../../data/save';
 import { RULES_FULL } from '../../data/rules';
 import type { CardId, KingId } from '../../data/types';
@@ -139,6 +139,14 @@ describe('content hash', () => {
   it('a different hash is accepted when every reference still resolves (added ids)', () => {
     const e = env(runState());
     expect(ok({ ...e, contentHash: 123 })).toEqual(e.state);
+  });
+
+  it('a v5 save written before the six new thrones joined the content still loads', () => {
+    const oldCards = CONTENT.allCards().map((c) => c.id).filter((id) => !id.endsWith('_throne') || ['wheat_throne', 'stone_throne', 'arcane_throne'].includes(id));
+    const oldHash = hashSeed(JSON.stringify({ cards: oldCards.sort(), units: CONTENT.allUnits().map((u) => u.id).sort() }));
+    expect(oldHash).not.toBe(contentHash(CONTENT));
+    const e = env(runState());
+    expect(ok({ ...e, contentHash: oldHash })).toEqual(e.state);
   });
 
   it('a matching hash does not skip validation', () => {

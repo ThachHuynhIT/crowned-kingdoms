@@ -36,8 +36,8 @@ const wind = (stacks: number) => [{ cardId: 'nomad_wind_rune' as CardId, stacks 
 describe('the nine Nomad King cards (spec 6.11)', () => {
   it('conquering the Nomad King offers exactly these nine, never the throne', () => {
     expect(CONTENT.conquestCards('nomad').map((c) => c.id).sort()).toEqual(IDS);
-    expect(CONTENT.allCards().filter((c) => c.owner === 'nomad').map((c) => c.id).sort()).toEqual(IDS);
-    expect(() => CONTENT.king('nomad')).toThrow();
+    expect(CONTENT.allCards().filter((c) => c.owner === 'nomad' && c.kind !== 'throne').map((c) => c.id).sort()).toEqual(IDS);
+    expect(CONTENT.king('nomad').cards.map((c) => c.id).sort()).toEqual(IDS);
   });
 
   describe.each([

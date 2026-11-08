@@ -32,7 +32,7 @@ const LEVELS = [1, 5] as const satisfies readonly Level[];
 describe('the nine Grove King cards (spec 6.6)', () => {
   it('conquering the Grove King offers exactly these nine, never the throne', () => {
     expect(CONTENT.conquestCards('grove').map((c) => c.id).sort()).toEqual(IDS);
-    expect(CONTENT.allCards().filter((c) => c.owner === 'grove').map((c) => c.id).sort()).toEqual(IDS);
+    expect(CONTENT.allCards().filter((c) => c.owner === 'grove' && c.kind !== 'throne').map((c) => c.id).sort()).toEqual(IDS);
     expect(CONTENT.conquestCards('grove').map((c) => c.rarity).sort()).toEqual(
       ['common', 'common', 'common', 'common', 'rare', 'rare', 'uncommon', 'uncommon', 'uncommon'].sort(),
     );

@@ -52,9 +52,9 @@ describe('all9_conquest_pools', () => {
     }
   });
 
-  it('only the three first kings can be played; no Nomad throne, perk or free move exists', () => {
-    expect(CONTENT.kings().map((k) => k.id)).toEqual(['wheat', 'stone', 'arcane']);
-    expect(CONTENT.allCards().some((c) => c.kind === 'throne' && !['wheat', 'stone', 'arcane'].includes(c.owner))).toBe(false);
+  it('all nine kings can be played; no Nomad perk or free move exists yet', () => {
+    expect(CONTENT.kings().map((k) => k.id)).toEqual(['arcane', 'clock', 'forge', 'grove', 'moon', 'nomad', 'stone', 'tide', 'wheat']);
+    expect(CONTENT.king('nomad').throne.passive).toEqual([]);
     expect('freeMovesLeft' in runState()).toBe(false);
   });
 
