@@ -161,7 +161,9 @@ export type IllegalReason =
   | 'wrongKind'
   | 'stacksFull'
   | 'badTarget'
-  | 'lastLife';
+  | 'lastLife'
+  | 'noFreeMove'
+  | 'wrongKing';
 
 export type PlayTarget =
   | { kind: 'none' }
@@ -176,6 +178,8 @@ export type RunCommand =
   | { type: 'reroll' }
   /** Mua một ô khoá kề ô đã mở bằng vàng (spec §3.11). */
   | { type: 'unlockPlot'; plot: number }
+  /** Lều Di Động (Vua Du Mục): dời/đổi chỗ công trình sang ô kề, miễn phí, không cần chơi thẻ. */
+  | { type: 'freeMove'; from: number; to: number }
   | { type: 'setAutoFire'; on: boolean }
   | { type: 'startBattle' }
   | { type: 'battleResult'; result: BattleResult }

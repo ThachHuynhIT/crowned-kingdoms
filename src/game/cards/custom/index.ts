@@ -9,7 +9,7 @@ import type { Content } from '../registry';
 import { archmageRamp, arcaneHarmony, libraryVirtualStacks, mirrorEnchants } from './arcane';
 import { CLOCK_HOOKS, rewind } from './clock';
 import { MOON_HOOKS, bloodPact, eclipsePact } from './moon';
-import { NOMAD_HOOKS, bazaarKinds, watchtowerOpen } from './nomad';
+import { NOMAD_HOOKS, bazaarKinds, mobileCamp, watchtowerOpen } from './nomad';
 import { FORGE_HOOKS, armoryArmor, masterHammer } from './forge';
 import type { FullRunCardHooks } from './fullRunTypes';
 import { GROVE_HOOKS, springRain } from './grove';
@@ -32,6 +32,7 @@ export const CUSTOM_INCOME_HANDLERS: Partial<Record<CustomEffectId, IncomeHandle
   wheat_harvest: wheatHarvest,
   treasure_chest: treasureChest,
   bazaar_kinds: bazaarKinds,
+  nomad_mobile_camp: mobileCamp,
 };
 export const CUSTOM_TOME_HANDLERS: Partial<Record<CustomEffectId, TomeHandler>> = {
   harvest_festival: harvestFestival,

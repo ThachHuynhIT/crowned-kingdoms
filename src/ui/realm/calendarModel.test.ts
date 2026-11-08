@@ -66,6 +66,8 @@ describe('lockedPlotPrice and illegalText', () => {
   it('has Vietnamese text for every illegal reason', () => {
     const all: Record<IllegalReason, true> = {
       lastLife: true,
+      noFreeMove: true,
+      wrongKing: true,
       locked: true,
       throne: true,
       occupied: true,

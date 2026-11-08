@@ -138,7 +138,7 @@ export const NOMAD: KingDef = {
     hp: 300,
     armor: 0,
     attack: { dmg: 9, type: 'physical', range: cells(1.6875), interval: 10, projectileSpeed: 16 },
-    passive: [],
+    passive: [{ type: 'custom', id: 'nomad_mobile_camp', params: { moves: [1, 1, 2, 2, 2] } }],
   },
   units: [
     {

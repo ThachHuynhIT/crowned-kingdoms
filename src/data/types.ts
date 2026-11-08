@@ -194,7 +194,8 @@ export type CustomEffectId =
   | 'blood_pact'
   | 'eclipse_pact'
   | 'bazaar_kinds'
-  | 'watchtower_open';
+  | 'watchtower_open'
+  | 'nomad_mobile_camp';
 
 export type EffectDef =
   | { readonly type: 'spawn'; readonly unit: UnitId; readonly count: PerLevel }

@@ -52,10 +52,11 @@ describe('all9_conquest_pools', () => {
     }
   });
 
-  it('all nine kings can be played; no Nomad perk or free move exists yet', () => {
+  it('all nine kings can be played; the Nomad throne carries the Mobile Camp passive', () => {
     expect(CONTENT.kings().map((k) => k.id)).toEqual(['arcane', 'clock', 'forge', 'grove', 'moon', 'nomad', 'stone', 'tide', 'wheat']);
-    expect(CONTENT.king('nomad').throne.passive).toEqual([]);
-    expect('freeMovesLeft' in runState()).toBe(false);
+    expect(CONTENT.king('nomad').throne.passive).toEqual([
+      { type: 'custom', id: 'nomad_mobile_camp', params: { moves: [1, 1, 2, 2, 2] } },
+    ]);
   });
 
   /** A board with one of each building kind and free squares, to try every card on. */

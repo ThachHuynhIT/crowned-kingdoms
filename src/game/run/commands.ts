@@ -3,6 +3,7 @@ import { Rng } from '../../core/random';
 import { RUN, START_DECK_G1, battleGold, unlockCost } from '../../data/run';
 import type { CardDef, CardId, KingId } from '../../data/types';
 import { CUSTOM_TOME_HANDLERS, runAfterMove, runAfterPlay, runBattleEnd } from '../cards/custom';
+import { freeMoveIllegal } from '../cards/custom/nomad';
 import type { Content } from '../cards/registry';
 import {
   THRONE_PLOT,
@@ -187,6 +188,19 @@ function applyBase(input: RunState, cmd: RunCommand, content: Content): CommandR
       state.plots = unlockPlot(state.plots, plot);
       state.gold -= cost;
       state.purchasedPlots += 1;
+      return { state, events };
+    }
+
+    case 'freeMove': {
+      const illegal = freeMoveIllegal(state, content, cmd.from, cmd.to);
+      if (illegal !== null) return fail(illegal);
+      state.plots = moveBuilding(state.plots, cmd.from, cmd.to);
+      for (const plot of [cmd.from, cmd.to]) {
+        const moved = state.plots[plot]!.building;
+        if (moved !== null) moved.movedYear = state.year;
+      }
+      state.freeMovesUsed += 1;
+      Object.assign(state, runAfterMove(state, cmd.from, cmd.to, content));
       return { state, events };
     }
 
