@@ -3238,3 +3238,33 @@ assets:
     finalSize: 64x32
     anchor: feet
     notes: Wild low (inside the field) decoration (approved 2026-11-06); cut from the wilds sheet, black keyed and box-reduced 4x by docs/art-review/iso-board/wilds/make_wilds.py; placed by src/render/decorationModel.ts (DECOR_CATALOG)
+  - id: iso_enemy_portal
+    path: public/assets/art/ai-v1/iso/polish/enemy_portal.png
+    category: doodad
+    origin: custom
+    source: docs/art-review/iso-board/polish/enemy_portal/source.png
+    creator: Project owner (OpenAI imagegen via Codex; prompt in docs/art-review/iso-board/polish/enemy_portal/prompt.md)
+    license: project-owned
+    attribution: false
+    redistribute: true
+    evidence: docs/art-review/iso-board/polish/
+    modified: true
+    nativeSize: 1024x1024
+    finalSize: 112x99
+    anchor: feet
+    notes: Enemy teleport portal at the south end of the road (approved 2026-11-08); black keyed and box-reduced to 112 px wide by docs/art-review/iso-board/polish/make_polish_assets.py; foot (58, 71.5) on ENEMY_PORTAL, drawn by src/render/EnemyPortalRenderer.ts (PORTAL_ART)
+  - id: iso_forest_pine_a
+    path: public/assets/art/ai-v1/iso/polish/forest_pine_a.png
+    category: doodad
+    origin: custom
+    source: docs/art-review/iso-board/polish/forest_pine_a/source.png
+    creator: Project owner (OpenAI imagegen via Codex; prompt in docs/art-review/iso-board/polish/forest_pine_a/prompt.md)
+    license: project-owned
+    attribution: false
+    redistribute: true
+    evidence: docs/art-review/iso-board/polish/
+    modified: true
+    nativeSize: 1024x1024
+    finalSize: 33x64
+    anchor: feet
+    notes: Forest pine behind the mountain cliff (v2, approved 2026-11-08); black keyed and box-reduced to 64 px tall by docs/art-review/iso-board/polish/make_polish_assets.py; placed by src/render/forestModel.ts (FOREST_CATALOG)

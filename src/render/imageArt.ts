@@ -102,8 +102,8 @@ export const FOREST_CATALOG: readonly { id: string; tall: boolean; radius: numbe
   { id: 'forest_pine_b', tall: true, radius: 18 },
   { id: 'forest_rock', tall: true, radius: 24 },
 ];
-/** Owner-approved forest objects (none yet: waiting for the pine sample's approval). */
-export const FOREST_APPROVED: readonly string[] = [];
+/** Owner-approved forest objects (the pine sample approved 2026-11-08; pine_b and the rock wait for their review). */
+export const FOREST_APPROVED: readonly string[] = ['forest_pine_a'];
 /** File of an approved forest object. */
 export const forestFile = (id: string): string => `iso/polish/${id}`;
 
@@ -113,7 +113,8 @@ export const forestFile = (id: string): string => `iso/polish/${id}`;
  * approved it (`PORTAL_APPROVED`); until then the code-drawn portal stands there.
  */
 export const PORTAL_ART = { file: 'iso/polish/enemy_portal', width: 112, height: 99, foot: { x: 58, y: 71.5 } } as const;
-export const PORTAL_APPROVED = false;
+/** Approved by the owner 2026-11-08. */
+export const PORTAL_APPROVED = true;
 
 /** Every PNG of the set (file name without `.png`). */
 export const IMAGE_ART_FILES: readonly string[] = [

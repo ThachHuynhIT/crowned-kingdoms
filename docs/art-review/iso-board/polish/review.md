@@ -4,8 +4,8 @@ Theo spec `docs/superpowers/specs/2026-11-08-iso-board-polish-design.md` §6 và
 
 | Mẫu | Nguồn | Native | Trạng thái |
 |---|---|---|---|
-| `enemy_portal` | `enemy_portal/source.png` (prompt bên cạnh) | 112×99, chân (58; 71,5) | Chờ chủ dự án duyệt |
-| `forest_pine_a` v2 | `forest_pine_a/source.png` | 33×64 | Chờ chủ dự án duyệt |
+| `enemy_portal` | `enemy_portal/source.png` (prompt bên cạnh) | 112×99, chân (58; 71,5) | Đã duyệt 08/11/2026, đang dùng trong game |
+| `forest_pine_a` v2 | `forest_pine_a/source.png` | 33×64 | Đã duyệt 08/11/2026, đang dùng trong game |
 | `forest_pine_a` v1 | `forest_pine_a/v1/` | – | Bị loại khi review: đứng trên miếng đất hình thoi (thành mảng ô khi rải dày), màu xanh nõn chuối |
 
 `review.png`: hai native ×3 cạnh nhà Thợ Gặt đã duyệt. Đã xem thử trong game (bật tạm trên máy, không commit): cổng đứng đúng cuối con đường, đường đất của cổng nối liền đường trong game; rừng thông dày sau vách núi khi kéo camera lên phía bắc.

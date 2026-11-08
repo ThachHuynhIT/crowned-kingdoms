@@ -203,6 +203,22 @@ class PolishSamplePromptGateTest(unittest.TestCase):
             for r in [mp.REFERENCE, *mp.POLISH_REFS]:
                 self.assertEqual(runner.count(f'-i {r}'), 1, (ident, r))
 
+    def test_polish_forest_set_attaches_the_approved_pine(self):
+        self.assertEqual([i for i, _, _ in mp.POLISH_FOREST_SET], ['forest_pine_b', 'forest_rock'])
+        with self.assertRaises(SystemExit):
+            mp.main('polish-forest-set', ['enemy_portal'])
+        mp.main('polish-forest-set')
+        runner = (ROOT / '.superpowers/b-polish-forest-set.sh').read_text(encoding='utf-8')
+        self.assertEqual(runner.count('codex exec'), 2)
+        for r in [mp.REFERENCE, *mp.POLISH_REFS, mp.POLISH_FOREST_APPROVED_REF]:
+            self.assertEqual(runner.count(f'-i {r}'), 2, r)
+        for ident, _, _ in mp.POLISH_FOREST_SET:
+            p = (ROOT / mp.POLISH_DIR / ident / 'prompt.md').read_text(encoding='utf-8')
+            self.assertIn('docs/ART_STYLE.md', p, ident)
+            self.assertIn('ISOMETRIC view, classic 2:1 pixel-art isometric', p, ident)
+            self.assertIn(mp.POLISH_FOREST_APPROVED_REF, p, ident)
+            self.assertIn('#000000', p, ident)
+
 
 pspec = importlib.util.spec_from_file_location('portrait_prompts', ROOT / 'docs/art-review/g3e/portraits/make_prompts.py')
 pp = importlib.util.module_from_spec(pspec)

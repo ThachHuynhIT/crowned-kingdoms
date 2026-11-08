@@ -406,6 +406,54 @@ def main_polish_samples(only=None):
     print(path)
 
 
+# The rest of the forest (after the owner approved the pine sample, 2026-11-08): drawn from the same iso block with the
+# approved pine attached, so every forest object shares its viewpoint, palette and pixel size. Reviewed before use.
+POLISH_FOREST_APPROVED_REF = f'{POLISH_DIR}/forest_pine_a/source.png'
+POLISH_FOREST_SET = [
+    ('forest_pine_b', 'a second, slightly different tall pine tree of the same dense forest behind the mountain cliff, 2:1 isometric',
+     'A single tall evergreen pine that is a clear VARIANT of the attached approved pine: the same deep dark forest '
+     'greens (blue-green shadows, small lighter tips only on the upper-left lit side; NOT lime or yellow-green), the '
+     'same pixel size and outline, but a slightly narrower, a little shorter and less regular silhouette (one tier '
+     'slightly lopsided, a gap showing a bit of trunk), short dark-brown trunk. The trunk stands DIRECTLY on the '
+     'ground: NO tile, NO platform, NO earth block or raised diamond under it. Same high 2:1 isometric viewpoint as '
+     'the approved pine. About 230 px wide and at most 560 px tall, trunk foot at about y = 900.'),
+    ('forest_rock', 'a mossy grey boulder lying among the pine trees of the forest behind the mountain cliff, 2:1 isometric',
+     'A single rounded weathered grey boulder, wider than tall, with patches of dark-green moss on its top and a few '
+     'small ferns or grass tufts touching its foot; the same stone greys as the stonework of the approved buildings, lit '
+     'from the upper left. It lies DIRECTLY on the ground: NO tile, NO platform, NO earth block or raised diamond '
+     'under it. Same high 2:1 isometric viewpoint as the approved pine (its top seen slightly from above). About 300 '
+     'px wide and at most 220 px tall, its foot at about y = 900. It must read as a rock among dense pines.'),
+]
+
+
+def main_polish_forest_set(only=None):
+    """`polish-forest-set [<id> ...]`: the forest objects after the approved pine sample; the approved pine attached."""
+    if not (ROOT / POLISH_FOREST_APPROVED_REF).exists():
+        raise SystemExit(f'{POLISH_FOREST_APPROVED_REF} is missing: the approved pine must be attached')
+    ids = [i for i, _, _ in POLISH_FOREST_SET]
+    if only and any(i not in ids for i in only):
+        raise SystemExit(f'polish-forest-set ids are {ids}')
+    template = iso_template()
+    runner = ['#!/bin/bash', f'cd "{ROOT.as_posix()}"']
+    for ident, name, desc in POLISH_FOREST_SET:
+        if only and ident not in only:
+            continue
+        d = ROOT / POLISH_DIR / ident
+        d.mkdir(parents=True, exist_ok=True)
+        out = (d / 'source.png').relative_to(ROOT).as_posix()
+        extra = (f'\n\nMẪU CÂY THÔNG ĐÃ DUYỆT (đính kèm): `{POLISH_FOREST_APPROVED_REF}` — vật này đứng cùng rừng với nó: '
+                 'giữ đúng góc nhìn, bảng màu xanh đậm, cỡ cụm pixel, viền và ánh sáng của mẫu này.')
+        (d / 'prompt.md').write_text(build_polish_prompt(out, name, desc, template) + extra + '\n', encoding='utf-8')
+        prompt = (d / 'prompt.md').relative_to(ROOT).as_posix()
+        images = ' '.join(f'-i {r}' for r in [REFERENCE, *POLISH_REFS, POLISH_FOREST_APPROVED_REF])
+        runner.append(f'codex exec --sandbox workspace-write -C "$PWD" {images} - < {prompt} > .superpowers/codex-polish-{ident}.out 2>&1')
+        runner.append(f'if [ -s {out} ]; then echo "{ident} ok" >> .superpowers/b-polish.log; else echo "{ident} MISSING" >> .superpowers/b-polish.log; fi')
+    (ROOT / '.superpowers').mkdir(exist_ok=True)
+    path = ROOT / '.superpowers/b-polish-forest-set.sh'
+    path.write_text('\n'.join(runner) + '\n', encoding='utf-8', newline='\n')
+    print(path)
+
+
 def build_prompt(out, name, desc, theme, template=None):
     template = template or style_template()
     body = template.replace('[building and function]', f'{name}').replace(
@@ -425,6 +473,9 @@ def main(group, only=None):
         return
     if group == 'polish-samples':
         main_polish_samples(only)
+        return
+    if group == 'polish-forest-set':
+        main_polish_forest_set(only)
         return
     cfg = GROUPS[group]
     template = style_template()

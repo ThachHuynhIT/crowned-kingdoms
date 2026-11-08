@@ -7,6 +7,7 @@ vi.mock('./atlas', () => ({ ensurePortalTexture: () => 'enemy-portal' }));
 import { project } from '../core/iso';
 import { ENEMY_PORTAL } from '../data/battle';
 import { EnemyPortalRenderer } from './EnemyPortalRenderer';
+import { PORTAL_APPROVED, PORTAL_ART, imageArtKey } from './imageArt';
 import { PORTAL_FOOT_Y, PORTAL_SIZE } from './portalArt';
 
 class FakeImage {
@@ -27,13 +28,31 @@ class FakeImage {
   }
 }
 
+const fakeScene = (loaded: boolean) => {
+  const images: FakeImage[] = [];
+  const scene = {
+    textures: { exists: () => loaded },
+    add: { image: (x: number, y: number, key: string) => (images.push(new FakeImage(x, y, key)), images.at(-1)!) },
+  } as unknown as Phaser.Scene;
+  return { scene, images };
+};
+
 describe('EnemyPortalRenderer', () => {
-  it('portal_fallback_uses_data_and_destroy_is_idempotent: upright on the projected portal point', () => {
-    const images: FakeImage[] = [];
-    const scene = {
-      textures: { exists: () => true },
-      add: { image: (x: number, y: number, key: string) => (images.push(new FakeImage(x, y, key)), images.at(-1)!) },
-    } as unknown as Phaser.Scene;
+  it('approved_portal_art_stands_on_its_foot: the owner-approved PNG, its base diamond on the projected portal point', () => {
+    expect(PORTAL_APPROVED).toBe(true);
+    const { scene, images } = fakeScene(true);
+    const r = new EnemyPortalRenderer(scene);
+    const at = project(ENEMY_PORTAL);
+    expect(images).toHaveLength(1);
+    expect([images[0]!.x, images[0]!.y]).toEqual([Math.round(at.x), Math.round(at.y)]);
+    expect(images[0]!.key).toBe(imageArtKey(PORTAL_ART.file));
+    expect(images[0]!.origin).toEqual([PORTAL_ART.foot.x / PORTAL_ART.width, PORTAL_ART.foot.y / PORTAL_ART.height]);
+    expect(images[0]!.depth).toBe(at.y);
+    r.destroy();
+  });
+
+  it('portal_fallback_uses_data_and_destroy_is_idempotent: the code gate when the PNG did not load', () => {
+    const { scene, images } = fakeScene(false);
     const r = new EnemyPortalRenderer(scene);
     const at = project(ENEMY_PORTAL);
     expect(images).toHaveLength(1);
