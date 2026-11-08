@@ -13,7 +13,7 @@ import { scriptedBot } from './bots/scripted';
 import { randomBot } from './bots/random';
 import { runHeadless } from './headless';
 
-const KINGS: KingId[] = ['wheat', 'stone', 'arcane'];
+const KINGS: KingId[] = ['wheat', 'stone', 'arcane', 'grove', 'forge', 'clock', 'tide', 'moon', 'nomad'];
 const SEEDS = [1, 2, 3];
 
 const allFinite = (value: unknown): boolean => {
@@ -57,7 +57,7 @@ const playReal = (seed: number, kingId: KingId): Played => {
   return { state, commands, capped, bossFights };
 };
 
-describe('full_run_real_3x3', () => {
+describe('full_run_real_9x3', () => {
   const rows: string[] = [];
 
   for (const kingId of KINGS) {
@@ -87,9 +87,9 @@ describe('full_run_real_3x3', () => {
     }
   }
 
-  it('reports the nine runs', () => {
-    console.info(`full_run_real_3x3\n${rows.join('\n')}`);
-    expect(rows).toHaveLength(9);
+  it('reports the 27 runs', () => {
+    console.info(`full_run_real_9x3\n${rows.join('\n')}`);
+    expect(rows).toHaveLength(KINGS.length * SEEDS.length);
   });
 });
 
