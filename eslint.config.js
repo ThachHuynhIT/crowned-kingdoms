@@ -139,6 +139,35 @@ export default tseslint.config(
     },
   },
   {
+    // Audio (G5 §3) is presentation without Phaser: runtime imports only from data/, core/ and audio/;
+    // the one exception is a type-only import of GameEvents from game/events.ts.
+    files: ['src/audio/**/*.ts'],
+    rules: {
+      '@typescript-eslint/no-restricted-imports': [
+        'error',
+        {
+          paths: phaserPaths('audio/'),
+          patterns: [
+            phaserPatterns('audio/'),
+            {
+              group: ['**/scenes/**', '**/render/**', '**/ui/**', '**/platform/**'],
+              message: 'audio/ must not depend on scenes, render, ui or platform code.',
+            },
+            {
+              group: ['**/game/**', '!**/game/events'],
+              message: 'audio/ may only type-import GameEvents from game/events.ts.',
+            },
+            {
+              group: ['**/game/events'],
+              allowTypeImports: true,
+              message: 'audio/ may only type-import GameEvents from game/events.ts.',
+            },
+          ],
+        },
+      ],
+    },
+  },
+  {
     // Node CLIs (G5 balance tool)
     files: ['tools/**/*.ts'],
     languageOptions: { globals: { ...globals.node } },
