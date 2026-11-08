@@ -25,7 +25,7 @@ import { cardOffer, enqueueOffers } from './flow';
 import { maxEnchantStacks, perkLossGold, placedAgeBonus } from './perks';
 import { hasPlayableCard } from './playable';
 import { answerQuest, recordQuestCommand, settleQuests } from './quests';
-import { rollConquestCards, rollOffers } from './rewards';
+import { neutralRewardPool, rollConquestCards, rollOffers } from './rewards';
 import type { IllegalReason, RunCommand, RunState } from './state';
 import { advanceAfterBattle, finishYear } from './yearEnd';
 
@@ -291,7 +291,7 @@ function applyBase(input: RunState, cmd: RunCommand, content: Content): CommandR
         const cardIds = rollOffers(
           rng,
           s.year,
-          { king: only(content.king(s.kingId).cards), neutral: only(content.neutralPool()) },
+          { king: only(content.king(s.kingId).cards), neutral: only(neutralRewardPool(content.neutralPool(), s.unlockedCards)) },
           rewardCount(s),
         );
         s.rng.reward = rng.getState();

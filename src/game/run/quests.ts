@@ -11,7 +11,7 @@ import type { BattleResult } from '../battle/types';
 import { THRONE_PLOT, attachEnchant, levelUpBuilding } from './board';
 import { enqueueOffers, finishYearStart } from './flow';
 import { maxEnchantStacks } from './perks';
-import { rollRareOffers } from './rewards';
+import { neutralRewardPool, rollRareOffers } from './rewards';
 import type { IllegalReason, PlotState, QuestState, RunCommand, RunState } from './state';
 
 const unlockedCount = (plots: readonly PlotState[]): number => plots.filter((p) => p.unlocked).length;
@@ -172,7 +172,7 @@ export function settleQuests(
           const rng = new Rng(s.rng.reward);
           const cardIds = rollRareOffers(
             rng,
-            { king: content.king(s.kingId).cards, neutral: content.neutralPool() },
+            { king: content.king(s.kingId).cards, neutral: neutralRewardPool(content.neutralPool(), s.unlockedCards) },
             QUEST_RULES.rareChoices,
           );
           s.rng.reward = rng.getState();

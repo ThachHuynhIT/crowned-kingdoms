@@ -56,6 +56,24 @@ export const targetCount = (card: CardDef): 0 | 1 | 2 => {
   return card.target === 'buildingThenPlot' || card.target === 'buildingThenBuilding' ? 2 : 1;
 };
 
+const hasCustom = (card: TomeCardDef, id: string): boolean =>
+  card.actions.some((a) => a.type === 'custom' && a.id === id);
+
+/** Ấn Triện còn nâng được Ngai không (Ngai chưa đạt `RUN.maxLevel`). */
+export const throneCanLevel = (plots: readonly PlotState[]): boolean => {
+  const t = plots[THRONE_PLOT]?.building;
+  return t !== null && t !== undefined && t.level < RUN.maxLevel;
+};
+
+/** Nhân Bản: `first` là công trình (không phải Ngai), `second` là ô trống đã mở (không phải Ngai). */
+export const duplicateIllegal = (plots: readonly PlotState[], first: number, second: number): IllegalReason | null => {
+  if (first === THRONE_PLOT || second === THRONE_PLOT) return 'throne';
+  if (!plots[first]!.unlocked || !plots[second]!.unlocked) return 'locked';
+  if (plots[first]!.building === null) return 'noBuilding';
+  if (second === first) return 'badTarget';
+  return plots[second]!.building === null ? null : 'occupied';
+};
+
 export function hasAnyTarget(
   plots: readonly PlotState[],
   card: CardDef,
@@ -100,6 +118,12 @@ export function hasAnyTarget(
               (!hasAction(card, 'levelUp') || p.building.level < RUN.maxLevel),
           );
         case 'buildingThenPlot':
+          if (hasCustom(card, 'duplicate_building')) {
+            return (
+              plots.some((p, i) => p.unlocked && p.building !== null && i !== THRONE_PLOT) &&
+              plots.some((p, i) => p.unlocked && p.building === null && i !== THRONE_PLOT)
+            );
+          }
           return (
             plots.some((p, i) => p.building !== null && i !== THRONE_PLOT) &&
             plots.filter((p) => p.unlocked).length >= 2
@@ -128,6 +152,7 @@ export function checkPlay(
     if (target.kind !== 'plot') return 'badTarget';
     if (!validPlot(target.plot)) return 'badTarget';
   }
+  if (card.kind === 'tome' && hasCustom(card, 'royal_seal') && !throneCanLevel(plots)) return 'maxLevel';
   if (!hasAnyTarget(plots, card, content, maxStacks)) return 'noTarget';
 
   if (target.kind === 'plot') {
@@ -161,6 +186,7 @@ export function checkPlay(
   }
   if (target.kind === 'two') {
     const { first, second } = target;
+    if (card.kind === 'tome' && hasCustom(card, 'duplicate_building')) return duplicateIllegal(plots, first, second);
     const anyBuilding = card.kind === 'tome' && card.target === 'buildingThenBuilding';
     if (!anyBuilding && first === THRONE_PLOT) return 'throne';
     if (!plots[first]!.unlocked) return 'locked';
@@ -207,7 +233,7 @@ export function checkTargetStep(
 const cloneBuilding = (b: BuildingState | null): BuildingState | null =>
   b ? { ...b, enchants: b.enchants.map((e) => ({ ...e })), permanent: { ...b.permanent } } : null;
 
-const clonePlots = (plots: readonly PlotState[]): PlotState[] =>
+export const clonePlots = (plots: readonly PlotState[]): PlotState[] =>
   plots.map((p) => ({ unlocked: p.unlocked, building: cloneBuilding(p.building) }));
 
 export function placeBuilding(

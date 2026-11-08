@@ -203,7 +203,9 @@ export type CustomEffectId =
   | 'watchtower_open'
   | 'nomad_mobile_camp'
   | 'grove_growth'
-  | 'moon_soul_harvest';
+  | 'moon_soul_harvest'
+  | 'duplicate_building'
+  | 'royal_seal';
 
 export type EffectDef =
   | { readonly type: 'spawn'; readonly unit: UnitId; readonly count: PerLevel }

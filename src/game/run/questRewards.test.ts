@@ -7,7 +7,7 @@ import type { BuildingKind, CardDef, CardId, QuestId } from '../../data/types';
 import type { BattleResult } from '../battle/types';
 import { CONTENT } from '../cards/registry';
 import { settleQuests } from './quests';
-import { rollRareOffers } from './rewards';
+import { neutralRewardPool, rollRareOffers } from './rewards';
 import type { BuildingState, QuestState, RunState } from './state';
 import { newRun } from './yearFlow';
 
@@ -217,7 +217,7 @@ describe('quest rewards: board and deck', () => {
     const offer = done.offers;
     expect(offer).toMatchObject({ kind: 'questReward', questId: 'quest_three_barracks' });
     const ids = (offer as { cardIds: CardId[] }).cardIds;
-    const rares = new Set([...CONTENT.king('wheat').cards, ...CONTENT.neutralPool()].filter((c) => c.rarity === 'rare').map((c) => c.id));
+    const rares = new Set([...CONTENT.king('wheat').cards, ...neutralRewardPool(CONTENT.neutralPool(), s.unlockedCards)].filter((c) => c.rarity === 'rare').map((c) => c.id));
     expect(ids.length).toBe(Math.min(QUEST_RULES.rareChoices, rares.size));
     expect(new Set(ids).size).toBe(ids.length);
     for (const id of ids) expect(rares.has(id)).toBe(true);

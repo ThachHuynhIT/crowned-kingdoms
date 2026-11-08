@@ -13,7 +13,7 @@ import { NOMAD_HOOKS, bazaarKinds, watchtowerOpen } from './nomad';
 import { FORGE_HOOKS, armoryArmor, masterHammer } from './forge';
 import type { FullRunCardHooks } from './fullRunTypes';
 import { GROVE_HOOKS, groveGrowth, springRain } from './grove';
-import { mercenaryUpkeep } from './neutral';
+import { duplicateBuilding, mercenaryUpkeep, royalSeal } from './neutral';
 import { runeCarving } from './stone';
 import { TIDE_HOOKS, privateers, treasureChest } from './tide';
 import { harvestFestival, peasantHorde, wheatHarvest } from './wheat';
@@ -49,6 +49,8 @@ export const CUSTOM_TOME_HANDLERS: Partial<Record<CustomEffectId, TomeHandler>> 
   rewind,
   blood_pact: bloodPact,
   eclipse_pact: eclipsePact,
+  duplicate_building: duplicateBuilding,
+  royal_seal: royalSeal,
 };
 
 /**
