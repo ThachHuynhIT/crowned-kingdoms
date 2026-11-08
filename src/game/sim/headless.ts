@@ -1,7 +1,7 @@
 /** Chạy trọn một ván không giao diện (spec §13.3): bot → applyCommand → mô phỏng trận. */
 import { Rng, hashSeed } from '../../core/random';
 import { RULES_G1, type Rules } from '../../data/rules';
-import type { CardId, KingId } from '../../data/types';
+import type { CardId, KingId, PerkId } from '../../data/types';
 import { simulateBattle } from '../battle/step';
 import { CONTENT } from '../cards/registry';
 import type { Content } from '../cards/registry';
@@ -20,6 +20,12 @@ export interface HeadlessOptions {
   bot?: Bot;
   /** Lá meta đã mở (G4), truyền cho `newRun`. */
   unlockedCards?: readonly CardId[];
+  /** Perk chọn lúc tạo ván (G4), truyền cho `newRun`. */
+  perk?: PerkId | null;
+  /** Độ khó Gai 0..5 (G4), truyền cho `newRun`. */
+  difficulty?: number;
+  /** Gọi đúng một lần sau mỗi lệnh thành công (bộ đếm cân bằng G5); không đổi ván. */
+  onCommand?: (before: RunState, command: RunCommand, after: RunState) => void;
 }
 
 export interface HeadlessResult {
@@ -32,7 +38,11 @@ const MAX_COMMANDS = 5000;
 export function runHeadless(opts: HeadlessOptions, content: Content = CONTENT): HeadlessResult {
   const bot = opts.bot ?? randomBot;
   const rng = new Rng(hashSeed(`${opts.seed}:bot`));
-  let state = newRun(opts.seed, opts.kingId, content, opts.rules ?? RULES_G1, { unlockedCards: opts.unlockedCards ?? [] });
+  let state = newRun(opts.seed, opts.kingId, content, opts.rules ?? RULES_G1, {
+    unlockedCards: opts.unlockedCards ?? [],
+    perk: opts.perk ?? null,
+    difficulty: opts.difficulty ?? 0,
+  });
   let commands = 0;
 
   const apply = (cmd: RunCommand): void => {
@@ -40,8 +50,10 @@ export function runHeadless(opts: HeadlessOptions, content: Content = CONTENT): 
     if ('error' in r) {
       throw new Error(`runHeadless: illegal command ${JSON.stringify(cmd)}: ${r.error}`);
     }
+    const before = state;
     state = r.state;
     commands += 1;
+    opts.onCommand?.(before, cmd, state);
   };
 
   while (state.phase !== 'ended') {

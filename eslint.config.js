@@ -138,4 +138,9 @@ export default tseslint.config(
       ],
     },
   },
+  {
+    // Node CLIs (G5 balance tool)
+    files: ['tools/**/*.ts'],
+    languageOptions: { globals: { ...globals.node } },
+  },
 );
