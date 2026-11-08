@@ -29,8 +29,7 @@ const VOLUMES = [
   { key: 'music', label: 'Nhạc' },
   { key: 'sfx', label: 'Hiệu ứng' },
 ] as const;
-const DISCARD_WARNING =
-  'Ván đang chơi sẽ bị xoá. Điểm Vương Miện và mở khoá được giữ nguyên.';
+const DISCARD_WARNING = 'Ván đang chơi sẽ bị xoá. Điểm Vương Miện và mở khoá được giữ nguyên.';
 
 /** Reserve the next-frame launch too, so rapid taps cannot open two overlays. */
 export const openSettings = (
@@ -116,15 +115,15 @@ export class SettingsScene extends Phaser.Scene {
     this.rows = VOLUMES.map(({ key, label }) => ({
       label: addUiText(this, 0, 0, label, 18).setOrigin(0.5),
       value: addUiText(this, 0, 0, '', 18).setOrigin(0.5),
-      minus: this.button('−', () =>
-        void this.change({ [key]: stepVolume(this.settings[key], -1) }),
+      minus: this.button(
+        '−',
+        () => void this.change({ [key]: stepVolume(this.settings[key], -1) }),
       ),
-      plus: this.button('+', () =>
-        void this.change({ [key]: stepVolume(this.settings[key], 1) }),
-      ),
+      plus: this.button('+', () => void this.change({ [key]: stepVolume(this.settings[key], 1) })),
     }));
-    this.shake = this.button('', () =>
-      void this.change({ screenShake: !this.settings.screenShake }),
+    this.shake = this.button(
+      '',
+      () => void this.change({ screenShake: !this.settings.screenShake }),
     );
     this.discard = this.button('Xoá ván đang chơi', () => {
       this.confirming = true;

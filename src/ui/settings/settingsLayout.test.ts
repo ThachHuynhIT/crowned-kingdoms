@@ -20,12 +20,7 @@ describe('settingsLayout', () => {
         l.cancel,
         l.close,
       ];
-      const rects = [
-        ...buttons,
-        l.title,
-        l.message,
-        ...l.rows.flatMap((r) => [r.label, r.value]),
-      ];
+      const rects = [...buttons, l.title, l.message, ...l.rows.flatMap((r) => [r.label, r.value])];
       for (const b of buttons) {
         expect(b.w).toBeGreaterThanOrEqual(48);
         expect(b.h).toBeGreaterThanOrEqual(48);
