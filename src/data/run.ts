@@ -19,6 +19,7 @@ export const RUN = {
   bossGoldMult: 2, // vàng thắng trận boss nhân đôi
   difficultyLevels: 5, // Gai 0–5
   difficultyBudgetStep: 0.1, // ngân sách/HP boss × (1 + step × gai)
+  difficultyCrownStep: 0.2, // Điểm Vương Miện × (1 + step × gai)
 } as const;
 
 /** Vàng khi thắng trận năm y (trước nhân boss). */
