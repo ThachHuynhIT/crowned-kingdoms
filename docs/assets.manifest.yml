@@ -14658,3 +14658,3451 @@ assets:
     nativeSize: 1024x1024
     finalSize: 128x128
     notes: Seamless ground texture "Cỏ hoa" (approved 2026-11-09 by Claude under the owner's delegation); box-reduced 8x by docs/art-review/iso-board/terrain/make_textures.py; colours the flowers cells of the field (src/render/fieldArt.ts)
+  - id: building_neutral_barracks_iso
+    path: public/assets/art/ai-v1/iso-neutral/neutral_barracks.png
+    category: building
+    origin: custom
+    source: docs/art-review/neutral-iso/neutral_barracks/source.png
+    creator: Project owner (OpenAI imagegen via Codex; prompt in docs/art-review/neutral-iso/neutral_barracks/prompt.md)
+    license: project-owned
+    attribution: false
+    redistribute: true
+    evidence: docs/art-review/neutral-iso/
+    modified: true
+    nativeSize: 1024x1024
+    finalSize: 62x56
+    anchor: feet
+    notes: neutral_barracks, isometric 2:1 neutral building (approved 2026-11-09 by Claude under the owner's delegation); black keyed and box-reduced at the Wheat set scale (Reapers = 64 px wide) by docs/art-review/neutral-iso/make_assets.py; drawn at 0.5 x 2 once listed in src/render/imageArt.ts IMAGE_BUILDINGS
+  - id: building_neutral_archer_tower_iso
+    path: public/assets/art/ai-v1/iso-neutral/neutral_archer_tower.png
+    category: building
+    origin: custom
+    source: docs/art-review/neutral-iso/neutral_archer_tower/source.png
+    creator: Project owner (OpenAI imagegen via Codex; prompt in docs/art-review/neutral-iso/neutral_archer_tower/prompt.md)
+    license: project-owned
+    attribution: false
+    redistribute: true
+    evidence: docs/art-review/neutral-iso/
+    modified: true
+    nativeSize: 1024x1024
+    finalSize: 46x78
+    anchor: feet
+    notes: neutral_archer_tower, isometric 2:1 neutral building (approved 2026-11-09 by Claude under the owner's delegation); black keyed and box-reduced at the Wheat set scale (Reapers = 64 px wide) by docs/art-review/neutral-iso/make_assets.py; drawn at 0.5 x 2 once listed in src/render/imageArt.ts IMAGE_BUILDINGS
+  - id: building_neutral_well_iso
+    path: public/assets/art/ai-v1/iso-neutral/neutral_well.png
+    category: building
+    origin: custom
+    source: docs/art-review/neutral-iso/neutral_well/source.png
+    creator: Project owner (OpenAI imagegen via Codex; prompt in docs/art-review/neutral-iso/neutral_well/prompt.md)
+    license: project-owned
+    attribution: false
+    redistribute: true
+    evidence: docs/art-review/neutral-iso/
+    modified: true
+    nativeSize: 1024x1024
+    finalSize: 53x70
+    anchor: feet
+    notes: neutral_well, isometric 2:1 neutral building (approved 2026-11-09 by Claude under the owner's delegation); black keyed and box-reduced at the Wheat set scale (Reapers = 64 px wide) by docs/art-review/neutral-iso/make_assets.py; drawn at 0.5 x 2 once listed in src/render/imageArt.ts IMAGE_BUILDINGS
+  - id: building_neutral_mercenary_camp_iso
+    path: public/assets/art/ai-v1/iso-neutral/neutral_mercenary_camp.png
+    category: building
+    origin: custom
+    source: docs/art-review/neutral-iso/neutral_mercenary_camp/source.png
+    creator: Project owner (OpenAI imagegen via Codex; prompt in docs/art-review/neutral-iso/neutral_mercenary_camp/prompt.md)
+    license: project-owned
+    attribution: false
+    redistribute: true
+    evidence: docs/art-review/neutral-iso/
+    modified: true
+    nativeSize: 1024x1024
+    finalSize: 68x61
+    anchor: feet
+    notes: neutral_mercenary_camp, isometric 2:1 neutral building (approved 2026-11-09 by Claude under the owner's delegation); black keyed and box-reduced at the Wheat set scale (Reapers = 64 px wide) by docs/art-review/neutral-iso/make_assets.py; drawn at 0.5 x 2 once listed in src/render/imageArt.ts IMAGE_BUILDINGS
+  - id: ui_kpa_large_tile_0000
+    path: public/assets/ui/kenney-pixel-adventure/large/tile_0000.png
+    category: ui
+    origin: external
+    source: https://kenney.nl/assets/ui-pack-pixel-adventure
+    creator: Kenney Vleugels (Kenney)
+    license: CC0-1.0
+    attribution: false
+    redistribute: true
+    evidence: docs/licenses/kenney-ui-pack-pixel-adventure/
+    modified: false
+    nativeSize: 32x32
+    finalSize: 32x32
+    notes: UI Pack - Pixel Adventure, thin outline; candidate 9-slice frame (docs/art-review/ui-kenney/mapping.md)
+  - id: ui_kpa_large_tile_0001
+    path: public/assets/ui/kenney-pixel-adventure/large/tile_0001.png
+    category: ui
+    origin: external
+    source: https://kenney.nl/assets/ui-pack-pixel-adventure
+    creator: Kenney Vleugels (Kenney)
+    license: CC0-1.0
+    attribution: false
+    redistribute: true
+    evidence: docs/licenses/kenney-ui-pack-pixel-adventure/
+    modified: false
+    nativeSize: 32x32
+    finalSize: 32x32
+    notes: UI Pack - Pixel Adventure, thin outline; candidate 9-slice frame (docs/art-review/ui-kenney/mapping.md)
+  - id: ui_kpa_large_tile_0002
+    path: public/assets/ui/kenney-pixel-adventure/large/tile_0002.png
+    category: ui
+    origin: external
+    source: https://kenney.nl/assets/ui-pack-pixel-adventure
+    creator: Kenney Vleugels (Kenney)
+    license: CC0-1.0
+    attribution: false
+    redistribute: true
+    evidence: docs/licenses/kenney-ui-pack-pixel-adventure/
+    modified: false
+    nativeSize: 32x32
+    finalSize: 32x32
+    notes: UI Pack - Pixel Adventure, thin outline; candidate 9-slice frame (docs/art-review/ui-kenney/mapping.md)
+  - id: ui_kpa_large_tile_0003
+    path: public/assets/ui/kenney-pixel-adventure/large/tile_0003.png
+    category: ui
+    origin: external
+    source: https://kenney.nl/assets/ui-pack-pixel-adventure
+    creator: Kenney Vleugels (Kenney)
+    license: CC0-1.0
+    attribution: false
+    redistribute: true
+    evidence: docs/licenses/kenney-ui-pack-pixel-adventure/
+    modified: false
+    nativeSize: 32x32
+    finalSize: 32x32
+    notes: UI Pack - Pixel Adventure, thin outline; candidate 9-slice frame (docs/art-review/ui-kenney/mapping.md)
+  - id: ui_kpa_large_tile_0004
+    path: public/assets/ui/kenney-pixel-adventure/large/tile_0004.png
+    category: ui
+    origin: external
+    source: https://kenney.nl/assets/ui-pack-pixel-adventure
+    creator: Kenney Vleugels (Kenney)
+    license: CC0-1.0
+    attribution: false
+    redistribute: true
+    evidence: docs/licenses/kenney-ui-pack-pixel-adventure/
+    modified: false
+    nativeSize: 32x32
+    finalSize: 32x32
+    notes: UI Pack - Pixel Adventure, thin outline; candidate 9-slice frame (docs/art-review/ui-kenney/mapping.md)
+  - id: ui_kpa_large_tile_0005
+    path: public/assets/ui/kenney-pixel-adventure/large/tile_0005.png
+    category: ui
+    origin: external
+    source: https://kenney.nl/assets/ui-pack-pixel-adventure
+    creator: Kenney Vleugels (Kenney)
+    license: CC0-1.0
+    attribution: false
+    redistribute: true
+    evidence: docs/licenses/kenney-ui-pack-pixel-adventure/
+    modified: false
+    nativeSize: 32x32
+    finalSize: 32x32
+    notes: UI Pack - Pixel Adventure, thin outline; candidate 9-slice frame (docs/art-review/ui-kenney/mapping.md)
+  - id: ui_kpa_large_tile_0006
+    path: public/assets/ui/kenney-pixel-adventure/large/tile_0006.png
+    category: ui
+    origin: external
+    source: https://kenney.nl/assets/ui-pack-pixel-adventure
+    creator: Kenney Vleugels (Kenney)
+    license: CC0-1.0
+    attribution: false
+    redistribute: true
+    evidence: docs/licenses/kenney-ui-pack-pixel-adventure/
+    modified: false
+    nativeSize: 32x32
+    finalSize: 32x32
+    notes: UI Pack - Pixel Adventure, thin outline; candidate 9-slice frame (docs/art-review/ui-kenney/mapping.md)
+  - id: ui_kpa_large_tile_0007
+    path: public/assets/ui/kenney-pixel-adventure/large/tile_0007.png
+    category: ui
+    origin: external
+    source: https://kenney.nl/assets/ui-pack-pixel-adventure
+    creator: Kenney Vleugels (Kenney)
+    license: CC0-1.0
+    attribution: false
+    redistribute: true
+    evidence: docs/licenses/kenney-ui-pack-pixel-adventure/
+    modified: false
+    nativeSize: 32x32
+    finalSize: 32x32
+    notes: UI Pack - Pixel Adventure, thin outline; candidate 9-slice frame (docs/art-review/ui-kenney/mapping.md)
+  - id: ui_kpa_large_tile_0008
+    path: public/assets/ui/kenney-pixel-adventure/large/tile_0008.png
+    category: ui
+    origin: external
+    source: https://kenney.nl/assets/ui-pack-pixel-adventure
+    creator: Kenney Vleugels (Kenney)
+    license: CC0-1.0
+    attribution: false
+    redistribute: true
+    evidence: docs/licenses/kenney-ui-pack-pixel-adventure/
+    modified: false
+    nativeSize: 32x32
+    finalSize: 32x32
+    notes: UI Pack - Pixel Adventure, thin outline; candidate 9-slice frame (docs/art-review/ui-kenney/mapping.md)
+  - id: ui_kpa_large_tile_0009
+    path: public/assets/ui/kenney-pixel-adventure/large/tile_0009.png
+    category: ui
+    origin: external
+    source: https://kenney.nl/assets/ui-pack-pixel-adventure
+    creator: Kenney Vleugels (Kenney)
+    license: CC0-1.0
+    attribution: false
+    redistribute: true
+    evidence: docs/licenses/kenney-ui-pack-pixel-adventure/
+    modified: false
+    nativeSize: 32x32
+    finalSize: 32x32
+    notes: UI Pack - Pixel Adventure, thin outline; candidate 9-slice frame (docs/art-review/ui-kenney/mapping.md)
+  - id: ui_kpa_large_tile_0013
+    path: public/assets/ui/kenney-pixel-adventure/large/tile_0013.png
+    category: ui
+    origin: external
+    source: https://kenney.nl/assets/ui-pack-pixel-adventure
+    creator: Kenney Vleugels (Kenney)
+    license: CC0-1.0
+    attribution: false
+    redistribute: true
+    evidence: docs/licenses/kenney-ui-pack-pixel-adventure/
+    modified: false
+    nativeSize: 32x32
+    finalSize: 32x32
+    notes: UI Pack - Pixel Adventure, thin outline; candidate 9-slice frame (docs/art-review/ui-kenney/mapping.md)
+  - id: ui_kpa_large_tile_0014
+    path: public/assets/ui/kenney-pixel-adventure/large/tile_0014.png
+    category: ui
+    origin: external
+    source: https://kenney.nl/assets/ui-pack-pixel-adventure
+    creator: Kenney Vleugels (Kenney)
+    license: CC0-1.0
+    attribution: false
+    redistribute: true
+    evidence: docs/licenses/kenney-ui-pack-pixel-adventure/
+    modified: false
+    nativeSize: 32x32
+    finalSize: 32x32
+    notes: UI Pack - Pixel Adventure, thin outline; candidate 9-slice frame (docs/art-review/ui-kenney/mapping.md)
+  - id: ui_kpa_large_tile_0015
+    path: public/assets/ui/kenney-pixel-adventure/large/tile_0015.png
+    category: ui
+    origin: external
+    source: https://kenney.nl/assets/ui-pack-pixel-adventure
+    creator: Kenney Vleugels (Kenney)
+    license: CC0-1.0
+    attribution: false
+    redistribute: true
+    evidence: docs/licenses/kenney-ui-pack-pixel-adventure/
+    modified: false
+    nativeSize: 32x32
+    finalSize: 32x32
+    notes: UI Pack - Pixel Adventure, thin outline; candidate 9-slice frame (docs/art-review/ui-kenney/mapping.md)
+  - id: ui_kpa_large_tile_0016
+    path: public/assets/ui/kenney-pixel-adventure/large/tile_0016.png
+    category: ui
+    origin: external
+    source: https://kenney.nl/assets/ui-pack-pixel-adventure
+    creator: Kenney Vleugels (Kenney)
+    license: CC0-1.0
+    attribution: false
+    redistribute: true
+    evidence: docs/licenses/kenney-ui-pack-pixel-adventure/
+    modified: false
+    nativeSize: 32x32
+    finalSize: 32x32
+    notes: UI Pack - Pixel Adventure, thin outline; candidate 9-slice frame (docs/art-review/ui-kenney/mapping.md)
+  - id: ui_kpa_large_tile_0017
+    path: public/assets/ui/kenney-pixel-adventure/large/tile_0017.png
+    category: ui
+    origin: external
+    source: https://kenney.nl/assets/ui-pack-pixel-adventure
+    creator: Kenney Vleugels (Kenney)
+    license: CC0-1.0
+    attribution: false
+    redistribute: true
+    evidence: docs/licenses/kenney-ui-pack-pixel-adventure/
+    modified: false
+    nativeSize: 32x32
+    finalSize: 32x32
+    notes: UI Pack - Pixel Adventure, thin outline; candidate 9-slice frame (docs/art-review/ui-kenney/mapping.md)
+  - id: ui_kpa_large_tile_0018
+    path: public/assets/ui/kenney-pixel-adventure/large/tile_0018.png
+    category: ui
+    origin: external
+    source: https://kenney.nl/assets/ui-pack-pixel-adventure
+    creator: Kenney Vleugels (Kenney)
+    license: CC0-1.0
+    attribution: false
+    redistribute: true
+    evidence: docs/licenses/kenney-ui-pack-pixel-adventure/
+    modified: false
+    nativeSize: 32x32
+    finalSize: 32x32
+    notes: UI Pack - Pixel Adventure, thin outline; candidate 9-slice frame (docs/art-review/ui-kenney/mapping.md)
+  - id: ui_kpa_large_tile_0019
+    path: public/assets/ui/kenney-pixel-adventure/large/tile_0019.png
+    category: ui
+    origin: external
+    source: https://kenney.nl/assets/ui-pack-pixel-adventure
+    creator: Kenney Vleugels (Kenney)
+    license: CC0-1.0
+    attribution: false
+    redistribute: true
+    evidence: docs/licenses/kenney-ui-pack-pixel-adventure/
+    modified: false
+    nativeSize: 32x32
+    finalSize: 32x32
+    notes: UI Pack - Pixel Adventure, thin outline; candidate 9-slice frame (docs/art-review/ui-kenney/mapping.md)
+  - id: ui_kpa_large_tile_0020
+    path: public/assets/ui/kenney-pixel-adventure/large/tile_0020.png
+    category: ui
+    origin: external
+    source: https://kenney.nl/assets/ui-pack-pixel-adventure
+    creator: Kenney Vleugels (Kenney)
+    license: CC0-1.0
+    attribution: false
+    redistribute: true
+    evidence: docs/licenses/kenney-ui-pack-pixel-adventure/
+    modified: false
+    nativeSize: 32x32
+    finalSize: 32x32
+    notes: UI Pack - Pixel Adventure, thin outline; candidate 9-slice frame (docs/art-review/ui-kenney/mapping.md)
+  - id: ui_kpa_large_tile_0021
+    path: public/assets/ui/kenney-pixel-adventure/large/tile_0021.png
+    category: ui
+    origin: external
+    source: https://kenney.nl/assets/ui-pack-pixel-adventure
+    creator: Kenney Vleugels (Kenney)
+    license: CC0-1.0
+    attribution: false
+    redistribute: true
+    evidence: docs/licenses/kenney-ui-pack-pixel-adventure/
+    modified: false
+    nativeSize: 32x32
+    finalSize: 32x32
+    notes: UI Pack - Pixel Adventure, thin outline; candidate 9-slice frame (docs/art-review/ui-kenney/mapping.md)
+  - id: ui_kpa_large_tile_0022
+    path: public/assets/ui/kenney-pixel-adventure/large/tile_0022.png
+    category: ui
+    origin: external
+    source: https://kenney.nl/assets/ui-pack-pixel-adventure
+    creator: Kenney Vleugels (Kenney)
+    license: CC0-1.0
+    attribution: false
+    redistribute: true
+    evidence: docs/licenses/kenney-ui-pack-pixel-adventure/
+    modified: false
+    nativeSize: 32x32
+    finalSize: 32x32
+    notes: UI Pack - Pixel Adventure, thin outline; candidate 9-slice frame (docs/art-review/ui-kenney/mapping.md)
+  - id: ui_kpa_large_tile_0026
+    path: public/assets/ui/kenney-pixel-adventure/large/tile_0026.png
+    category: ui
+    origin: external
+    source: https://kenney.nl/assets/ui-pack-pixel-adventure
+    creator: Kenney Vleugels (Kenney)
+    license: CC0-1.0
+    attribution: false
+    redistribute: true
+    evidence: docs/licenses/kenney-ui-pack-pixel-adventure/
+    modified: false
+    nativeSize: 32x32
+    finalSize: 32x32
+    notes: UI Pack - Pixel Adventure, thin outline; candidate 9-slice frame (docs/art-review/ui-kenney/mapping.md)
+  - id: ui_kpa_large_tile_0027
+    path: public/assets/ui/kenney-pixel-adventure/large/tile_0027.png
+    category: ui
+    origin: external
+    source: https://kenney.nl/assets/ui-pack-pixel-adventure
+    creator: Kenney Vleugels (Kenney)
+    license: CC0-1.0
+    attribution: false
+    redistribute: true
+    evidence: docs/licenses/kenney-ui-pack-pixel-adventure/
+    modified: false
+    nativeSize: 32x32
+    finalSize: 32x32
+    notes: UI Pack - Pixel Adventure, thin outline; candidate 9-slice frame (docs/art-review/ui-kenney/mapping.md)
+  - id: ui_kpa_large_tile_0028
+    path: public/assets/ui/kenney-pixel-adventure/large/tile_0028.png
+    category: ui
+    origin: external
+    source: https://kenney.nl/assets/ui-pack-pixel-adventure
+    creator: Kenney Vleugels (Kenney)
+    license: CC0-1.0
+    attribution: false
+    redistribute: true
+    evidence: docs/licenses/kenney-ui-pack-pixel-adventure/
+    modified: false
+    nativeSize: 32x32
+    finalSize: 32x32
+    notes: UI Pack - Pixel Adventure, thin outline; candidate 9-slice frame (docs/art-review/ui-kenney/mapping.md)
+  - id: ui_kpa_large_tile_0029
+    path: public/assets/ui/kenney-pixel-adventure/large/tile_0029.png
+    category: ui
+    origin: external
+    source: https://kenney.nl/assets/ui-pack-pixel-adventure
+    creator: Kenney Vleugels (Kenney)
+    license: CC0-1.0
+    attribution: false
+    redistribute: true
+    evidence: docs/licenses/kenney-ui-pack-pixel-adventure/
+    modified: false
+    nativeSize: 32x32
+    finalSize: 32x32
+    notes: UI Pack - Pixel Adventure, thin outline; candidate 9-slice frame (docs/art-review/ui-kenney/mapping.md)
+  - id: ui_kpa_large_tile_0030
+    path: public/assets/ui/kenney-pixel-adventure/large/tile_0030.png
+    category: ui
+    origin: external
+    source: https://kenney.nl/assets/ui-pack-pixel-adventure
+    creator: Kenney Vleugels (Kenney)
+    license: CC0-1.0
+    attribution: false
+    redistribute: true
+    evidence: docs/licenses/kenney-ui-pack-pixel-adventure/
+    modified: false
+    nativeSize: 32x32
+    finalSize: 32x32
+    notes: UI Pack - Pixel Adventure, thin outline; candidate 9-slice frame (docs/art-review/ui-kenney/mapping.md)
+  - id: ui_kpa_large_tile_0031
+    path: public/assets/ui/kenney-pixel-adventure/large/tile_0031.png
+    category: ui
+    origin: external
+    source: https://kenney.nl/assets/ui-pack-pixel-adventure
+    creator: Kenney Vleugels (Kenney)
+    license: CC0-1.0
+    attribution: false
+    redistribute: true
+    evidence: docs/licenses/kenney-ui-pack-pixel-adventure/
+    modified: false
+    nativeSize: 32x32
+    finalSize: 32x32
+    notes: UI Pack - Pixel Adventure, thin outline; candidate 9-slice frame (docs/art-review/ui-kenney/mapping.md)
+  - id: ui_kpa_large_tile_0032
+    path: public/assets/ui/kenney-pixel-adventure/large/tile_0032.png
+    category: ui
+    origin: external
+    source: https://kenney.nl/assets/ui-pack-pixel-adventure
+    creator: Kenney Vleugels (Kenney)
+    license: CC0-1.0
+    attribution: false
+    redistribute: true
+    evidence: docs/licenses/kenney-ui-pack-pixel-adventure/
+    modified: false
+    nativeSize: 32x32
+    finalSize: 32x32
+    notes: UI Pack - Pixel Adventure, thin outline; candidate 9-slice frame (docs/art-review/ui-kenney/mapping.md)
+  - id: ui_kpa_large_tile_0033
+    path: public/assets/ui/kenney-pixel-adventure/large/tile_0033.png
+    category: ui
+    origin: external
+    source: https://kenney.nl/assets/ui-pack-pixel-adventure
+    creator: Kenney Vleugels (Kenney)
+    license: CC0-1.0
+    attribution: false
+    redistribute: true
+    evidence: docs/licenses/kenney-ui-pack-pixel-adventure/
+    modified: false
+    nativeSize: 32x32
+    finalSize: 32x32
+    notes: UI Pack - Pixel Adventure, thin outline; candidate 9-slice frame (docs/art-review/ui-kenney/mapping.md)
+  - id: ui_kpa_large_tile_0034
+    path: public/assets/ui/kenney-pixel-adventure/large/tile_0034.png
+    category: ui
+    origin: external
+    source: https://kenney.nl/assets/ui-pack-pixel-adventure
+    creator: Kenney Vleugels (Kenney)
+    license: CC0-1.0
+    attribution: false
+    redistribute: true
+    evidence: docs/licenses/kenney-ui-pack-pixel-adventure/
+    modified: false
+    nativeSize: 32x32
+    finalSize: 32x32
+    notes: UI Pack - Pixel Adventure, thin outline; candidate 9-slice frame (docs/art-review/ui-kenney/mapping.md)
+  - id: ui_kpa_large_tile_0035
+    path: public/assets/ui/kenney-pixel-adventure/large/tile_0035.png
+    category: ui
+    origin: external
+    source: https://kenney.nl/assets/ui-pack-pixel-adventure
+    creator: Kenney Vleugels (Kenney)
+    license: CC0-1.0
+    attribution: false
+    redistribute: true
+    evidence: docs/licenses/kenney-ui-pack-pixel-adventure/
+    modified: false
+    nativeSize: 32x32
+    finalSize: 32x32
+    notes: UI Pack - Pixel Adventure, thin outline; candidate 9-slice frame (docs/art-review/ui-kenney/mapping.md)
+  - id: ui_kpa_large_tile_0043
+    path: public/assets/ui/kenney-pixel-adventure/large/tile_0043.png
+    category: ui
+    origin: external
+    source: https://kenney.nl/assets/ui-pack-pixel-adventure
+    creator: Kenney Vleugels (Kenney)
+    license: CC0-1.0
+    attribution: false
+    redistribute: true
+    evidence: docs/licenses/kenney-ui-pack-pixel-adventure/
+    modified: false
+    nativeSize: 32x32
+    finalSize: 32x32
+    notes: UI Pack - Pixel Adventure, thin outline; candidate 9-slice frame (docs/art-review/ui-kenney/mapping.md)
+  - id: ui_kpa_large_tile_0044
+    path: public/assets/ui/kenney-pixel-adventure/large/tile_0044.png
+    category: ui
+    origin: external
+    source: https://kenney.nl/assets/ui-pack-pixel-adventure
+    creator: Kenney Vleugels (Kenney)
+    license: CC0-1.0
+    attribution: false
+    redistribute: true
+    evidence: docs/licenses/kenney-ui-pack-pixel-adventure/
+    modified: false
+    nativeSize: 32x32
+    finalSize: 32x32
+    notes: UI Pack - Pixel Adventure, thin outline; candidate 9-slice frame (docs/art-review/ui-kenney/mapping.md)
+  - id: ui_kpa_large_tile_0045
+    path: public/assets/ui/kenney-pixel-adventure/large/tile_0045.png
+    category: ui
+    origin: external
+    source: https://kenney.nl/assets/ui-pack-pixel-adventure
+    creator: Kenney Vleugels (Kenney)
+    license: CC0-1.0
+    attribution: false
+    redistribute: true
+    evidence: docs/licenses/kenney-ui-pack-pixel-adventure/
+    modified: false
+    nativeSize: 32x32
+    finalSize: 32x32
+    notes: UI Pack - Pixel Adventure, thin outline; candidate 9-slice frame (docs/art-review/ui-kenney/mapping.md)
+  - id: ui_kpa_large_tile_0056
+    path: public/assets/ui/kenney-pixel-adventure/large/tile_0056.png
+    category: ui
+    origin: external
+    source: https://kenney.nl/assets/ui-pack-pixel-adventure
+    creator: Kenney Vleugels (Kenney)
+    license: CC0-1.0
+    attribution: false
+    redistribute: true
+    evidence: docs/licenses/kenney-ui-pack-pixel-adventure/
+    modified: false
+    nativeSize: 32x32
+    finalSize: 32x32
+    notes: UI Pack - Pixel Adventure, thin outline; candidate 9-slice frame (docs/art-review/ui-kenney/mapping.md)
+  - id: ui_kpa_large_tile_0057
+    path: public/assets/ui/kenney-pixel-adventure/large/tile_0057.png
+    category: ui
+    origin: external
+    source: https://kenney.nl/assets/ui-pack-pixel-adventure
+    creator: Kenney Vleugels (Kenney)
+    license: CC0-1.0
+    attribution: false
+    redistribute: true
+    evidence: docs/licenses/kenney-ui-pack-pixel-adventure/
+    modified: false
+    nativeSize: 32x32
+    finalSize: 32x32
+    notes: UI Pack - Pixel Adventure, thin outline; candidate 9-slice frame (docs/art-review/ui-kenney/mapping.md)
+  - id: ui_kpa_large_tile_0058
+    path: public/assets/ui/kenney-pixel-adventure/large/tile_0058.png
+    category: ui
+    origin: external
+    source: https://kenney.nl/assets/ui-pack-pixel-adventure
+    creator: Kenney Vleugels (Kenney)
+    license: CC0-1.0
+    attribution: false
+    redistribute: true
+    evidence: docs/licenses/kenney-ui-pack-pixel-adventure/
+    modified: false
+    nativeSize: 32x32
+    finalSize: 32x32
+    notes: UI Pack - Pixel Adventure, thin outline; candidate 9-slice frame (docs/art-review/ui-kenney/mapping.md)
+  - id: ui_kpa_large_tile_0069
+    path: public/assets/ui/kenney-pixel-adventure/large/tile_0069.png
+    category: ui
+    origin: external
+    source: https://kenney.nl/assets/ui-pack-pixel-adventure
+    creator: Kenney Vleugels (Kenney)
+    license: CC0-1.0
+    attribution: false
+    redistribute: true
+    evidence: docs/licenses/kenney-ui-pack-pixel-adventure/
+    modified: false
+    nativeSize: 32x32
+    finalSize: 32x32
+    notes: UI Pack - Pixel Adventure, thin outline; candidate 9-slice frame (docs/art-review/ui-kenney/mapping.md)
+  - id: ui_kpa_large_tile_0070
+    path: public/assets/ui/kenney-pixel-adventure/large/tile_0070.png
+    category: ui
+    origin: external
+    source: https://kenney.nl/assets/ui-pack-pixel-adventure
+    creator: Kenney Vleugels (Kenney)
+    license: CC0-1.0
+    attribution: false
+    redistribute: true
+    evidence: docs/licenses/kenney-ui-pack-pixel-adventure/
+    modified: false
+    nativeSize: 32x32
+    finalSize: 32x32
+    notes: UI Pack - Pixel Adventure, thin outline; candidate 9-slice frame (docs/art-review/ui-kenney/mapping.md)
+  - id: ui_kpa_large_tile_0071
+    path: public/assets/ui/kenney-pixel-adventure/large/tile_0071.png
+    category: ui
+    origin: external
+    source: https://kenney.nl/assets/ui-pack-pixel-adventure
+    creator: Kenney Vleugels (Kenney)
+    license: CC0-1.0
+    attribution: false
+    redistribute: true
+    evidence: docs/licenses/kenney-ui-pack-pixel-adventure/
+    modified: false
+    nativeSize: 32x32
+    finalSize: 32x32
+    notes: UI Pack - Pixel Adventure, thin outline; candidate 9-slice frame (docs/art-review/ui-kenney/mapping.md)
+  - id: ui_kpa_large_tile_0082
+    path: public/assets/ui/kenney-pixel-adventure/large/tile_0082.png
+    category: ui
+    origin: external
+    source: https://kenney.nl/assets/ui-pack-pixel-adventure
+    creator: Kenney Vleugels (Kenney)
+    license: CC0-1.0
+    attribution: false
+    redistribute: true
+    evidence: docs/licenses/kenney-ui-pack-pixel-adventure/
+    modified: false
+    nativeSize: 32x32
+    finalSize: 32x32
+    notes: UI Pack - Pixel Adventure, thin outline; candidate 9-slice frame (docs/art-review/ui-kenney/mapping.md)
+  - id: ui_kpa_large_tile_0083
+    path: public/assets/ui/kenney-pixel-adventure/large/tile_0083.png
+    category: ui
+    origin: external
+    source: https://kenney.nl/assets/ui-pack-pixel-adventure
+    creator: Kenney Vleugels (Kenney)
+    license: CC0-1.0
+    attribution: false
+    redistribute: true
+    evidence: docs/licenses/kenney-ui-pack-pixel-adventure/
+    modified: false
+    nativeSize: 32x32
+    finalSize: 32x32
+    notes: UI Pack - Pixel Adventure, thin outline; candidate 9-slice frame (docs/art-review/ui-kenney/mapping.md)
+  - id: ui_kpa_large_tile_0084
+    path: public/assets/ui/kenney-pixel-adventure/large/tile_0084.png
+    category: ui
+    origin: external
+    source: https://kenney.nl/assets/ui-pack-pixel-adventure
+    creator: Kenney Vleugels (Kenney)
+    license: CC0-1.0
+    attribution: false
+    redistribute: true
+    evidence: docs/licenses/kenney-ui-pack-pixel-adventure/
+    modified: false
+    nativeSize: 32x32
+    finalSize: 32x32
+    notes: UI Pack - Pixel Adventure, thin outline; candidate 9-slice frame (docs/art-review/ui-kenney/mapping.md)
+  - id: ui_kpa_small_tile_0003
+    path: public/assets/ui/kenney-pixel-adventure/small/tile_0003.png
+    category: ui
+    origin: external
+    source: https://kenney.nl/assets/ui-pack-pixel-adventure
+    creator: Kenney Vleugels (Kenney)
+    license: CC0-1.0
+    attribution: false
+    redistribute: true
+    evidence: docs/licenses/kenney-ui-pack-pixel-adventure/
+    modified: false
+    nativeSize: 16x16
+    finalSize: 16x16
+    notes: UI Pack - Pixel Adventure, thin outline; candidate 9-slice frame (docs/art-review/ui-kenney/mapping.md)
+  - id: ui_kpa_small_tile_0004
+    path: public/assets/ui/kenney-pixel-adventure/small/tile_0004.png
+    category: ui
+    origin: external
+    source: https://kenney.nl/assets/ui-pack-pixel-adventure
+    creator: Kenney Vleugels (Kenney)
+    license: CC0-1.0
+    attribution: false
+    redistribute: true
+    evidence: docs/licenses/kenney-ui-pack-pixel-adventure/
+    modified: false
+    nativeSize: 16x16
+    finalSize: 16x16
+    notes: UI Pack - Pixel Adventure, thin outline; candidate 9-slice frame (docs/art-review/ui-kenney/mapping.md)
+  - id: ui_kpa_small_tile_0010
+    path: public/assets/ui/kenney-pixel-adventure/small/tile_0010.png
+    category: ui
+    origin: external
+    source: https://kenney.nl/assets/ui-pack-pixel-adventure
+    creator: Kenney Vleugels (Kenney)
+    license: CC0-1.0
+    attribution: false
+    redistribute: true
+    evidence: docs/licenses/kenney-ui-pack-pixel-adventure/
+    modified: false
+    nativeSize: 16x16
+    finalSize: 16x16
+    notes: UI Pack - Pixel Adventure, thin outline; candidate 9-slice frame (docs/art-review/ui-kenney/mapping.md)
+  - id: ui_kpa_small_tile_0011
+    path: public/assets/ui/kenney-pixel-adventure/small/tile_0011.png
+    category: ui
+    origin: external
+    source: https://kenney.nl/assets/ui-pack-pixel-adventure
+    creator: Kenney Vleugels (Kenney)
+    license: CC0-1.0
+    attribution: false
+    redistribute: true
+    evidence: docs/licenses/kenney-ui-pack-pixel-adventure/
+    modified: false
+    nativeSize: 16x16
+    finalSize: 16x16
+    notes: UI Pack - Pixel Adventure, thin outline; candidate 9-slice frame (docs/art-review/ui-kenney/mapping.md)
+  - id: ui_kpa_small_tile_0012
+    path: public/assets/ui/kenney-pixel-adventure/small/tile_0012.png
+    category: ui
+    origin: external
+    source: https://kenney.nl/assets/ui-pack-pixel-adventure
+    creator: Kenney Vleugels (Kenney)
+    license: CC0-1.0
+    attribution: false
+    redistribute: true
+    evidence: docs/licenses/kenney-ui-pack-pixel-adventure/
+    modified: false
+    nativeSize: 16x16
+    finalSize: 16x16
+    notes: UI Pack - Pixel Adventure, thin outline; candidate 9-slice frame (docs/art-review/ui-kenney/mapping.md)
+  - id: ui_kpa_small_tile_0013
+    path: public/assets/ui/kenney-pixel-adventure/small/tile_0013.png
+    category: ui
+    origin: external
+    source: https://kenney.nl/assets/ui-pack-pixel-adventure
+    creator: Kenney Vleugels (Kenney)
+    license: CC0-1.0
+    attribution: false
+    redistribute: true
+    evidence: docs/licenses/kenney-ui-pack-pixel-adventure/
+    modified: false
+    nativeSize: 16x16
+    finalSize: 16x16
+    notes: UI Pack - Pixel Adventure, thin outline; candidate 9-slice frame (docs/art-review/ui-kenney/mapping.md)
+  - id: ui_kpa_small_tile_0014
+    path: public/assets/ui/kenney-pixel-adventure/small/tile_0014.png
+    category: ui
+    origin: external
+    source: https://kenney.nl/assets/ui-pack-pixel-adventure
+    creator: Kenney Vleugels (Kenney)
+    license: CC0-1.0
+    attribution: false
+    redistribute: true
+    evidence: docs/licenses/kenney-ui-pack-pixel-adventure/
+    modified: false
+    nativeSize: 16x16
+    finalSize: 16x16
+    notes: UI Pack - Pixel Adventure, thin outline; candidate 9-slice frame (docs/art-review/ui-kenney/mapping.md)
+  - id: ui_kpa_small_tile_0015
+    path: public/assets/ui/kenney-pixel-adventure/small/tile_0015.png
+    category: ui
+    origin: external
+    source: https://kenney.nl/assets/ui-pack-pixel-adventure
+    creator: Kenney Vleugels (Kenney)
+    license: CC0-1.0
+    attribution: false
+    redistribute: true
+    evidence: docs/licenses/kenney-ui-pack-pixel-adventure/
+    modified: false
+    nativeSize: 16x16
+    finalSize: 16x16
+    notes: UI Pack - Pixel Adventure, thin outline; candidate 9-slice frame (docs/art-review/ui-kenney/mapping.md)
+  - id: ui_kpa_small_tile_0016
+    path: public/assets/ui/kenney-pixel-adventure/small/tile_0016.png
+    category: ui
+    origin: external
+    source: https://kenney.nl/assets/ui-pack-pixel-adventure
+    creator: Kenney Vleugels (Kenney)
+    license: CC0-1.0
+    attribution: false
+    redistribute: true
+    evidence: docs/licenses/kenney-ui-pack-pixel-adventure/
+    modified: false
+    nativeSize: 16x16
+    finalSize: 16x16
+    notes: UI Pack - Pixel Adventure, thin outline; candidate 9-slice frame (docs/art-review/ui-kenney/mapping.md)
+  - id: ui_kpa_small_tile_0017
+    path: public/assets/ui/kenney-pixel-adventure/small/tile_0017.png
+    category: ui
+    origin: external
+    source: https://kenney.nl/assets/ui-pack-pixel-adventure
+    creator: Kenney Vleugels (Kenney)
+    license: CC0-1.0
+    attribution: false
+    redistribute: true
+    evidence: docs/licenses/kenney-ui-pack-pixel-adventure/
+    modified: false
+    nativeSize: 16x16
+    finalSize: 16x16
+    notes: UI Pack - Pixel Adventure, thin outline; candidate 9-slice frame (docs/art-review/ui-kenney/mapping.md)
+  - id: ui_kpa_small_tile_0018
+    path: public/assets/ui/kenney-pixel-adventure/small/tile_0018.png
+    category: ui
+    origin: external
+    source: https://kenney.nl/assets/ui-pack-pixel-adventure
+    creator: Kenney Vleugels (Kenney)
+    license: CC0-1.0
+    attribution: false
+    redistribute: true
+    evidence: docs/licenses/kenney-ui-pack-pixel-adventure/
+    modified: false
+    nativeSize: 16x16
+    finalSize: 16x16
+    notes: UI Pack - Pixel Adventure, thin outline; candidate 9-slice frame (docs/art-review/ui-kenney/mapping.md)
+  - id: ui_kpa_small_tile_0019
+    path: public/assets/ui/kenney-pixel-adventure/small/tile_0019.png
+    category: ui
+    origin: external
+    source: https://kenney.nl/assets/ui-pack-pixel-adventure
+    creator: Kenney Vleugels (Kenney)
+    license: CC0-1.0
+    attribution: false
+    redistribute: true
+    evidence: docs/licenses/kenney-ui-pack-pixel-adventure/
+    modified: false
+    nativeSize: 16x16
+    finalSize: 16x16
+    notes: UI Pack - Pixel Adventure, thin outline; candidate 9-slice frame (docs/art-review/ui-kenney/mapping.md)
+  - id: ui_kpa_small_tile_0026
+    path: public/assets/ui/kenney-pixel-adventure/small/tile_0026.png
+    category: ui
+    origin: external
+    source: https://kenney.nl/assets/ui-pack-pixel-adventure
+    creator: Kenney Vleugels (Kenney)
+    license: CC0-1.0
+    attribution: false
+    redistribute: true
+    evidence: docs/licenses/kenney-ui-pack-pixel-adventure/
+    modified: false
+    nativeSize: 16x16
+    finalSize: 16x16
+    notes: UI Pack - Pixel Adventure, thin outline; candidate 9-slice frame (docs/art-review/ui-kenney/mapping.md)
+  - id: ui_kpa_small_tile_0027
+    path: public/assets/ui/kenney-pixel-adventure/small/tile_0027.png
+    category: ui
+    origin: external
+    source: https://kenney.nl/assets/ui-pack-pixel-adventure
+    creator: Kenney Vleugels (Kenney)
+    license: CC0-1.0
+    attribution: false
+    redistribute: true
+    evidence: docs/licenses/kenney-ui-pack-pixel-adventure/
+    modified: false
+    nativeSize: 16x16
+    finalSize: 16x16
+    notes: UI Pack - Pixel Adventure, thin outline; candidate 9-slice frame (docs/art-review/ui-kenney/mapping.md)
+  - id: ui_kpa_small_tile_0033
+    path: public/assets/ui/kenney-pixel-adventure/small/tile_0033.png
+    category: ui
+    origin: external
+    source: https://kenney.nl/assets/ui-pack-pixel-adventure
+    creator: Kenney Vleugels (Kenney)
+    license: CC0-1.0
+    attribution: false
+    redistribute: true
+    evidence: docs/licenses/kenney-ui-pack-pixel-adventure/
+    modified: false
+    nativeSize: 16x16
+    finalSize: 16x16
+    notes: UI Pack - Pixel Adventure, thin outline; candidate 9-slice frame (docs/art-review/ui-kenney/mapping.md)
+  - id: ui_kpa_small_tile_0034
+    path: public/assets/ui/kenney-pixel-adventure/small/tile_0034.png
+    category: ui
+    origin: external
+    source: https://kenney.nl/assets/ui-pack-pixel-adventure
+    creator: Kenney Vleugels (Kenney)
+    license: CC0-1.0
+    attribution: false
+    redistribute: true
+    evidence: docs/licenses/kenney-ui-pack-pixel-adventure/
+    modified: false
+    nativeSize: 16x16
+    finalSize: 16x16
+    notes: UI Pack - Pixel Adventure, thin outline; candidate 9-slice frame (docs/art-review/ui-kenney/mapping.md)
+  - id: ui_kpa_small_tile_0035
+    path: public/assets/ui/kenney-pixel-adventure/small/tile_0035.png
+    category: ui
+    origin: external
+    source: https://kenney.nl/assets/ui-pack-pixel-adventure
+    creator: Kenney Vleugels (Kenney)
+    license: CC0-1.0
+    attribution: false
+    redistribute: true
+    evidence: docs/licenses/kenney-ui-pack-pixel-adventure/
+    modified: false
+    nativeSize: 16x16
+    finalSize: 16x16
+    notes: UI Pack - Pixel Adventure, thin outline; candidate 9-slice frame (docs/art-review/ui-kenney/mapping.md)
+  - id: ui_kpa_small_tile_0036
+    path: public/assets/ui/kenney-pixel-adventure/small/tile_0036.png
+    category: ui
+    origin: external
+    source: https://kenney.nl/assets/ui-pack-pixel-adventure
+    creator: Kenney Vleugels (Kenney)
+    license: CC0-1.0
+    attribution: false
+    redistribute: true
+    evidence: docs/licenses/kenney-ui-pack-pixel-adventure/
+    modified: false
+    nativeSize: 16x16
+    finalSize: 16x16
+    notes: UI Pack - Pixel Adventure, thin outline; candidate 9-slice frame (docs/art-review/ui-kenney/mapping.md)
+  - id: ui_kpa_small_tile_0037
+    path: public/assets/ui/kenney-pixel-adventure/small/tile_0037.png
+    category: ui
+    origin: external
+    source: https://kenney.nl/assets/ui-pack-pixel-adventure
+    creator: Kenney Vleugels (Kenney)
+    license: CC0-1.0
+    attribution: false
+    redistribute: true
+    evidence: docs/licenses/kenney-ui-pack-pixel-adventure/
+    modified: false
+    nativeSize: 16x16
+    finalSize: 16x16
+    notes: UI Pack - Pixel Adventure, thin outline; candidate 9-slice frame (docs/art-review/ui-kenney/mapping.md)
+  - id: ui_kpa_small_tile_0038
+    path: public/assets/ui/kenney-pixel-adventure/small/tile_0038.png
+    category: ui
+    origin: external
+    source: https://kenney.nl/assets/ui-pack-pixel-adventure
+    creator: Kenney Vleugels (Kenney)
+    license: CC0-1.0
+    attribution: false
+    redistribute: true
+    evidence: docs/licenses/kenney-ui-pack-pixel-adventure/
+    modified: false
+    nativeSize: 16x16
+    finalSize: 16x16
+    notes: UI Pack - Pixel Adventure, thin outline; candidate 9-slice frame (docs/art-review/ui-kenney/mapping.md)
+  - id: ui_kpa_small_tile_0039
+    path: public/assets/ui/kenney-pixel-adventure/small/tile_0039.png
+    category: ui
+    origin: external
+    source: https://kenney.nl/assets/ui-pack-pixel-adventure
+    creator: Kenney Vleugels (Kenney)
+    license: CC0-1.0
+    attribution: false
+    redistribute: true
+    evidence: docs/licenses/kenney-ui-pack-pixel-adventure/
+    modified: false
+    nativeSize: 16x16
+    finalSize: 16x16
+    notes: UI Pack - Pixel Adventure, thin outline; candidate 9-slice frame (docs/art-review/ui-kenney/mapping.md)
+  - id: ui_kpa_small_tile_0040
+    path: public/assets/ui/kenney-pixel-adventure/small/tile_0040.png
+    category: ui
+    origin: external
+    source: https://kenney.nl/assets/ui-pack-pixel-adventure
+    creator: Kenney Vleugels (Kenney)
+    license: CC0-1.0
+    attribution: false
+    redistribute: true
+    evidence: docs/licenses/kenney-ui-pack-pixel-adventure/
+    modified: false
+    nativeSize: 16x16
+    finalSize: 16x16
+    notes: UI Pack - Pixel Adventure, thin outline; candidate 9-slice frame (docs/art-review/ui-kenney/mapping.md)
+  - id: ui_kpa_small_tile_0041
+    path: public/assets/ui/kenney-pixel-adventure/small/tile_0041.png
+    category: ui
+    origin: external
+    source: https://kenney.nl/assets/ui-pack-pixel-adventure
+    creator: Kenney Vleugels (Kenney)
+    license: CC0-1.0
+    attribution: false
+    redistribute: true
+    evidence: docs/licenses/kenney-ui-pack-pixel-adventure/
+    modified: false
+    nativeSize: 16x16
+    finalSize: 16x16
+    notes: UI Pack - Pixel Adventure, thin outline; candidate 9-slice frame (docs/art-review/ui-kenney/mapping.md)
+  - id: ui_kpa_small_tile_0042
+    path: public/assets/ui/kenney-pixel-adventure/small/tile_0042.png
+    category: ui
+    origin: external
+    source: https://kenney.nl/assets/ui-pack-pixel-adventure
+    creator: Kenney Vleugels (Kenney)
+    license: CC0-1.0
+    attribution: false
+    redistribute: true
+    evidence: docs/licenses/kenney-ui-pack-pixel-adventure/
+    modified: false
+    nativeSize: 16x16
+    finalSize: 16x16
+    notes: UI Pack - Pixel Adventure, thin outline; candidate 9-slice frame (docs/art-review/ui-kenney/mapping.md)
+  - id: ui_kpa_small_tile_0049
+    path: public/assets/ui/kenney-pixel-adventure/small/tile_0049.png
+    category: ui
+    origin: external
+    source: https://kenney.nl/assets/ui-pack-pixel-adventure
+    creator: Kenney Vleugels (Kenney)
+    license: CC0-1.0
+    attribution: false
+    redistribute: true
+    evidence: docs/licenses/kenney-ui-pack-pixel-adventure/
+    modified: false
+    nativeSize: 16x16
+    finalSize: 16x16
+    notes: UI Pack - Pixel Adventure, thin outline; candidate 9-slice frame (docs/art-review/ui-kenney/mapping.md)
+  - id: ui_kpa_small_tile_0050
+    path: public/assets/ui/kenney-pixel-adventure/small/tile_0050.png
+    category: ui
+    origin: external
+    source: https://kenney.nl/assets/ui-pack-pixel-adventure
+    creator: Kenney Vleugels (Kenney)
+    license: CC0-1.0
+    attribution: false
+    redistribute: true
+    evidence: docs/licenses/kenney-ui-pack-pixel-adventure/
+    modified: false
+    nativeSize: 16x16
+    finalSize: 16x16
+    notes: UI Pack - Pixel Adventure, thin outline; candidate 9-slice frame (docs/art-review/ui-kenney/mapping.md)
+  - id: ui_kpa_small_tile_0056
+    path: public/assets/ui/kenney-pixel-adventure/small/tile_0056.png
+    category: ui
+    origin: external
+    source: https://kenney.nl/assets/ui-pack-pixel-adventure
+    creator: Kenney Vleugels (Kenney)
+    license: CC0-1.0
+    attribution: false
+    redistribute: true
+    evidence: docs/licenses/kenney-ui-pack-pixel-adventure/
+    modified: false
+    nativeSize: 16x16
+    finalSize: 16x16
+    notes: UI Pack - Pixel Adventure, thin outline; candidate 9-slice frame (docs/art-review/ui-kenney/mapping.md)
+  - id: ui_kpa_small_tile_0057
+    path: public/assets/ui/kenney-pixel-adventure/small/tile_0057.png
+    category: ui
+    origin: external
+    source: https://kenney.nl/assets/ui-pack-pixel-adventure
+    creator: Kenney Vleugels (Kenney)
+    license: CC0-1.0
+    attribution: false
+    redistribute: true
+    evidence: docs/licenses/kenney-ui-pack-pixel-adventure/
+    modified: false
+    nativeSize: 16x16
+    finalSize: 16x16
+    notes: UI Pack - Pixel Adventure, thin outline; candidate 9-slice frame (docs/art-review/ui-kenney/mapping.md)
+  - id: ui_kpa_small_tile_0058
+    path: public/assets/ui/kenney-pixel-adventure/small/tile_0058.png
+    category: ui
+    origin: external
+    source: https://kenney.nl/assets/ui-pack-pixel-adventure
+    creator: Kenney Vleugels (Kenney)
+    license: CC0-1.0
+    attribution: false
+    redistribute: true
+    evidence: docs/licenses/kenney-ui-pack-pixel-adventure/
+    modified: false
+    nativeSize: 16x16
+    finalSize: 16x16
+    notes: UI Pack - Pixel Adventure, thin outline; candidate 9-slice frame (docs/art-review/ui-kenney/mapping.md)
+  - id: ui_kpa_small_tile_0059
+    path: public/assets/ui/kenney-pixel-adventure/small/tile_0059.png
+    category: ui
+    origin: external
+    source: https://kenney.nl/assets/ui-pack-pixel-adventure
+    creator: Kenney Vleugels (Kenney)
+    license: CC0-1.0
+    attribution: false
+    redistribute: true
+    evidence: docs/licenses/kenney-ui-pack-pixel-adventure/
+    modified: false
+    nativeSize: 16x16
+    finalSize: 16x16
+    notes: UI Pack - Pixel Adventure, thin outline; candidate 9-slice frame (docs/art-review/ui-kenney/mapping.md)
+  - id: ui_kpa_small_tile_0060
+    path: public/assets/ui/kenney-pixel-adventure/small/tile_0060.png
+    category: ui
+    origin: external
+    source: https://kenney.nl/assets/ui-pack-pixel-adventure
+    creator: Kenney Vleugels (Kenney)
+    license: CC0-1.0
+    attribution: false
+    redistribute: true
+    evidence: docs/licenses/kenney-ui-pack-pixel-adventure/
+    modified: false
+    nativeSize: 16x16
+    finalSize: 16x16
+    notes: UI Pack - Pixel Adventure, thin outline; candidate 9-slice frame (docs/art-review/ui-kenney/mapping.md)
+  - id: ui_kpa_small_tile_0061
+    path: public/assets/ui/kenney-pixel-adventure/small/tile_0061.png
+    category: ui
+    origin: external
+    source: https://kenney.nl/assets/ui-pack-pixel-adventure
+    creator: Kenney Vleugels (Kenney)
+    license: CC0-1.0
+    attribution: false
+    redistribute: true
+    evidence: docs/licenses/kenney-ui-pack-pixel-adventure/
+    modified: false
+    nativeSize: 16x16
+    finalSize: 16x16
+    notes: UI Pack - Pixel Adventure, thin outline; candidate 9-slice frame (docs/art-review/ui-kenney/mapping.md)
+  - id: ui_kpa_small_tile_0062
+    path: public/assets/ui/kenney-pixel-adventure/small/tile_0062.png
+    category: ui
+    origin: external
+    source: https://kenney.nl/assets/ui-pack-pixel-adventure
+    creator: Kenney Vleugels (Kenney)
+    license: CC0-1.0
+    attribution: false
+    redistribute: true
+    evidence: docs/licenses/kenney-ui-pack-pixel-adventure/
+    modified: false
+    nativeSize: 16x16
+    finalSize: 16x16
+    notes: UI Pack - Pixel Adventure, thin outline; candidate 9-slice frame (docs/art-review/ui-kenney/mapping.md)
+  - id: ui_kpa_small_tile_0063
+    path: public/assets/ui/kenney-pixel-adventure/small/tile_0063.png
+    category: ui
+    origin: external
+    source: https://kenney.nl/assets/ui-pack-pixel-adventure
+    creator: Kenney Vleugels (Kenney)
+    license: CC0-1.0
+    attribution: false
+    redistribute: true
+    evidence: docs/licenses/kenney-ui-pack-pixel-adventure/
+    modified: false
+    nativeSize: 16x16
+    finalSize: 16x16
+    notes: UI Pack - Pixel Adventure, thin outline; candidate 9-slice frame (docs/art-review/ui-kenney/mapping.md)
+  - id: ui_kpa_small_tile_0064
+    path: public/assets/ui/kenney-pixel-adventure/small/tile_0064.png
+    category: ui
+    origin: external
+    source: https://kenney.nl/assets/ui-pack-pixel-adventure
+    creator: Kenney Vleugels (Kenney)
+    license: CC0-1.0
+    attribution: false
+    redistribute: true
+    evidence: docs/licenses/kenney-ui-pack-pixel-adventure/
+    modified: false
+    nativeSize: 16x16
+    finalSize: 16x16
+    notes: UI Pack - Pixel Adventure, thin outline; candidate 9-slice frame (docs/art-review/ui-kenney/mapping.md)
+  - id: ui_kpa_small_tile_0065
+    path: public/assets/ui/kenney-pixel-adventure/small/tile_0065.png
+    category: ui
+    origin: external
+    source: https://kenney.nl/assets/ui-pack-pixel-adventure
+    creator: Kenney Vleugels (Kenney)
+    license: CC0-1.0
+    attribution: false
+    redistribute: true
+    evidence: docs/licenses/kenney-ui-pack-pixel-adventure/
+    modified: false
+    nativeSize: 16x16
+    finalSize: 16x16
+    notes: UI Pack - Pixel Adventure, thin outline; candidate 9-slice frame (docs/art-review/ui-kenney/mapping.md)
+  - id: ui_kpa_small_tile_0069
+    path: public/assets/ui/kenney-pixel-adventure/small/tile_0069.png
+    category: ui
+    origin: external
+    source: https://kenney.nl/assets/ui-pack-pixel-adventure
+    creator: Kenney Vleugels (Kenney)
+    license: CC0-1.0
+    attribution: false
+    redistribute: true
+    evidence: docs/licenses/kenney-ui-pack-pixel-adventure/
+    modified: false
+    nativeSize: 16x16
+    finalSize: 16x16
+    notes: UI Pack - Pixel Adventure, thin outline; candidate 9-slice frame (docs/art-review/ui-kenney/mapping.md)
+  - id: ui_kpa_small_tile_0070
+    path: public/assets/ui/kenney-pixel-adventure/small/tile_0070.png
+    category: ui
+    origin: external
+    source: https://kenney.nl/assets/ui-pack-pixel-adventure
+    creator: Kenney Vleugels (Kenney)
+    license: CC0-1.0
+    attribution: false
+    redistribute: true
+    evidence: docs/licenses/kenney-ui-pack-pixel-adventure/
+    modified: false
+    nativeSize: 16x16
+    finalSize: 16x16
+    notes: UI Pack - Pixel Adventure, thin outline; candidate 9-slice frame (docs/art-review/ui-kenney/mapping.md)
+  - id: ui_kpa_small_tile_0071
+    path: public/assets/ui/kenney-pixel-adventure/small/tile_0071.png
+    category: ui
+    origin: external
+    source: https://kenney.nl/assets/ui-pack-pixel-adventure
+    creator: Kenney Vleugels (Kenney)
+    license: CC0-1.0
+    attribution: false
+    redistribute: true
+    evidence: docs/licenses/kenney-ui-pack-pixel-adventure/
+    modified: false
+    nativeSize: 16x16
+    finalSize: 16x16
+    notes: UI Pack - Pixel Adventure, thin outline; candidate 9-slice frame (docs/art-review/ui-kenney/mapping.md)
+  - id: ui_kpa_small_tile_0072
+    path: public/assets/ui/kenney-pixel-adventure/small/tile_0072.png
+    category: ui
+    origin: external
+    source: https://kenney.nl/assets/ui-pack-pixel-adventure
+    creator: Kenney Vleugels (Kenney)
+    license: CC0-1.0
+    attribution: false
+    redistribute: true
+    evidence: docs/licenses/kenney-ui-pack-pixel-adventure/
+    modified: false
+    nativeSize: 16x16
+    finalSize: 16x16
+    notes: UI Pack - Pixel Adventure, thin outline; candidate 9-slice frame (docs/art-review/ui-kenney/mapping.md)
+  - id: ui_kpa_small_tile_0073
+    path: public/assets/ui/kenney-pixel-adventure/small/tile_0073.png
+    category: ui
+    origin: external
+    source: https://kenney.nl/assets/ui-pack-pixel-adventure
+    creator: Kenney Vleugels (Kenney)
+    license: CC0-1.0
+    attribution: false
+    redistribute: true
+    evidence: docs/licenses/kenney-ui-pack-pixel-adventure/
+    modified: false
+    nativeSize: 16x16
+    finalSize: 16x16
+    notes: UI Pack - Pixel Adventure, thin outline; candidate 9-slice frame (docs/art-review/ui-kenney/mapping.md)
+  - id: ui_kpa_small_tile_0074
+    path: public/assets/ui/kenney-pixel-adventure/small/tile_0074.png
+    category: ui
+    origin: external
+    source: https://kenney.nl/assets/ui-pack-pixel-adventure
+    creator: Kenney Vleugels (Kenney)
+    license: CC0-1.0
+    attribution: false
+    redistribute: true
+    evidence: docs/licenses/kenney-ui-pack-pixel-adventure/
+    modified: false
+    nativeSize: 16x16
+    finalSize: 16x16
+    notes: UI Pack - Pixel Adventure, thin outline; candidate 9-slice frame (docs/art-review/ui-kenney/mapping.md)
+  - id: ui_kpa_small_tile_0075
+    path: public/assets/ui/kenney-pixel-adventure/small/tile_0075.png
+    category: ui
+    origin: external
+    source: https://kenney.nl/assets/ui-pack-pixel-adventure
+    creator: Kenney Vleugels (Kenney)
+    license: CC0-1.0
+    attribution: false
+    redistribute: true
+    evidence: docs/licenses/kenney-ui-pack-pixel-adventure/
+    modified: false
+    nativeSize: 16x16
+    finalSize: 16x16
+    notes: UI Pack - Pixel Adventure, thin outline; candidate 9-slice frame (docs/art-review/ui-kenney/mapping.md)
+  - id: ui_kpa_small_tile_0083
+    path: public/assets/ui/kenney-pixel-adventure/small/tile_0083.png
+    category: ui
+    origin: external
+    source: https://kenney.nl/assets/ui-pack-pixel-adventure
+    creator: Kenney Vleugels (Kenney)
+    license: CC0-1.0
+    attribution: false
+    redistribute: true
+    evidence: docs/licenses/kenney-ui-pack-pixel-adventure/
+    modified: false
+    nativeSize: 16x16
+    finalSize: 16x16
+    notes: UI Pack - Pixel Adventure, thin outline; candidate 9-slice frame (docs/art-review/ui-kenney/mapping.md)
+  - id: ui_kpa_small_tile_0084
+    path: public/assets/ui/kenney-pixel-adventure/small/tile_0084.png
+    category: ui
+    origin: external
+    source: https://kenney.nl/assets/ui-pack-pixel-adventure
+    creator: Kenney Vleugels (Kenney)
+    license: CC0-1.0
+    attribution: false
+    redistribute: true
+    evidence: docs/licenses/kenney-ui-pack-pixel-adventure/
+    modified: false
+    nativeSize: 16x16
+    finalSize: 16x16
+    notes: UI Pack - Pixel Adventure, thin outline; candidate 9-slice frame (docs/art-review/ui-kenney/mapping.md)
+  - id: ui_kpa_small_tile_0085
+    path: public/assets/ui/kenney-pixel-adventure/small/tile_0085.png
+    category: ui
+    origin: external
+    source: https://kenney.nl/assets/ui-pack-pixel-adventure
+    creator: Kenney Vleugels (Kenney)
+    license: CC0-1.0
+    attribution: false
+    redistribute: true
+    evidence: docs/licenses/kenney-ui-pack-pixel-adventure/
+    modified: false
+    nativeSize: 16x16
+    finalSize: 16x16
+    notes: UI Pack - Pixel Adventure, thin outline; candidate 9-slice frame (docs/art-review/ui-kenney/mapping.md)
+  - id: ui_kpa_small_tile_0092
+    path: public/assets/ui/kenney-pixel-adventure/small/tile_0092.png
+    category: ui
+    origin: external
+    source: https://kenney.nl/assets/ui-pack-pixel-adventure
+    creator: Kenney Vleugels (Kenney)
+    license: CC0-1.0
+    attribution: false
+    redistribute: true
+    evidence: docs/licenses/kenney-ui-pack-pixel-adventure/
+    modified: false
+    nativeSize: 16x16
+    finalSize: 16x16
+    notes: UI Pack - Pixel Adventure, thin outline; candidate 9-slice frame (docs/art-review/ui-kenney/mapping.md)
+  - id: ui_kpa_small_tile_0093
+    path: public/assets/ui/kenney-pixel-adventure/small/tile_0093.png
+    category: ui
+    origin: external
+    source: https://kenney.nl/assets/ui-pack-pixel-adventure
+    creator: Kenney Vleugels (Kenney)
+    license: CC0-1.0
+    attribution: false
+    redistribute: true
+    evidence: docs/licenses/kenney-ui-pack-pixel-adventure/
+    modified: false
+    nativeSize: 16x16
+    finalSize: 16x16
+    notes: UI Pack - Pixel Adventure, thin outline; candidate 9-slice frame (docs/art-review/ui-kenney/mapping.md)
+  - id: ui_kpa_small_tile_0094
+    path: public/assets/ui/kenney-pixel-adventure/small/tile_0094.png
+    category: ui
+    origin: external
+    source: https://kenney.nl/assets/ui-pack-pixel-adventure
+    creator: Kenney Vleugels (Kenney)
+    license: CC0-1.0
+    attribution: false
+    redistribute: true
+    evidence: docs/licenses/kenney-ui-pack-pixel-adventure/
+    modified: false
+    nativeSize: 16x16
+    finalSize: 16x16
+    notes: UI Pack - Pixel Adventure, thin outline; candidate 9-slice frame (docs/art-review/ui-kenney/mapping.md)
+  - id: ui_kpa_small_tile_0095
+    path: public/assets/ui/kenney-pixel-adventure/small/tile_0095.png
+    category: ui
+    origin: external
+    source: https://kenney.nl/assets/ui-pack-pixel-adventure
+    creator: Kenney Vleugels (Kenney)
+    license: CC0-1.0
+    attribution: false
+    redistribute: true
+    evidence: docs/licenses/kenney-ui-pack-pixel-adventure/
+    modified: false
+    nativeSize: 16x16
+    finalSize: 16x16
+    notes: UI Pack - Pixel Adventure, thin outline; candidate 9-slice frame (docs/art-review/ui-kenney/mapping.md)
+  - id: ui_kpa_small_tile_0096
+    path: public/assets/ui/kenney-pixel-adventure/small/tile_0096.png
+    category: ui
+    origin: external
+    source: https://kenney.nl/assets/ui-pack-pixel-adventure
+    creator: Kenney Vleugels (Kenney)
+    license: CC0-1.0
+    attribution: false
+    redistribute: true
+    evidence: docs/licenses/kenney-ui-pack-pixel-adventure/
+    modified: false
+    nativeSize: 16x16
+    finalSize: 16x16
+    notes: UI Pack - Pixel Adventure, thin outline; candidate 9-slice frame (docs/art-review/ui-kenney/mapping.md)
+  - id: ui_kpa_small_tile_0097
+    path: public/assets/ui/kenney-pixel-adventure/small/tile_0097.png
+    category: ui
+    origin: external
+    source: https://kenney.nl/assets/ui-pack-pixel-adventure
+    creator: Kenney Vleugels (Kenney)
+    license: CC0-1.0
+    attribution: false
+    redistribute: true
+    evidence: docs/licenses/kenney-ui-pack-pixel-adventure/
+    modified: false
+    nativeSize: 16x16
+    finalSize: 16x16
+    notes: UI Pack - Pixel Adventure, thin outline; candidate 9-slice frame (docs/art-review/ui-kenney/mapping.md)
+  - id: ui_kpa_small_tile_0098
+    path: public/assets/ui/kenney-pixel-adventure/small/tile_0098.png
+    category: ui
+    origin: external
+    source: https://kenney.nl/assets/ui-pack-pixel-adventure
+    creator: Kenney Vleugels (Kenney)
+    license: CC0-1.0
+    attribution: false
+    redistribute: true
+    evidence: docs/licenses/kenney-ui-pack-pixel-adventure/
+    modified: false
+    nativeSize: 16x16
+    finalSize: 16x16
+    notes: UI Pack - Pixel Adventure, thin outline; candidate 9-slice frame (docs/art-review/ui-kenney/mapping.md)
+  - id: ui_kpa_small_tile_0106
+    path: public/assets/ui/kenney-pixel-adventure/small/tile_0106.png
+    category: ui
+    origin: external
+    source: https://kenney.nl/assets/ui-pack-pixel-adventure
+    creator: Kenney Vleugels (Kenney)
+    license: CC0-1.0
+    attribution: false
+    redistribute: true
+    evidence: docs/licenses/kenney-ui-pack-pixel-adventure/
+    modified: false
+    nativeSize: 16x16
+    finalSize: 16x16
+    notes: UI Pack - Pixel Adventure, thin outline; candidate 9-slice frame (docs/art-review/ui-kenney/mapping.md)
+  - id: ui_kpa_small_tile_0107
+    path: public/assets/ui/kenney-pixel-adventure/small/tile_0107.png
+    category: ui
+    origin: external
+    source: https://kenney.nl/assets/ui-pack-pixel-adventure
+    creator: Kenney Vleugels (Kenney)
+    license: CC0-1.0
+    attribution: false
+    redistribute: true
+    evidence: docs/licenses/kenney-ui-pack-pixel-adventure/
+    modified: false
+    nativeSize: 16x16
+    finalSize: 16x16
+    notes: UI Pack - Pixel Adventure, thin outline; candidate 9-slice frame (docs/art-review/ui-kenney/mapping.md)
+  - id: ui_kpa_small_tile_0108
+    path: public/assets/ui/kenney-pixel-adventure/small/tile_0108.png
+    category: ui
+    origin: external
+    source: https://kenney.nl/assets/ui-pack-pixel-adventure
+    creator: Kenney Vleugels (Kenney)
+    license: CC0-1.0
+    attribution: false
+    redistribute: true
+    evidence: docs/licenses/kenney-ui-pack-pixel-adventure/
+    modified: false
+    nativeSize: 16x16
+    finalSize: 16x16
+    notes: UI Pack - Pixel Adventure, thin outline; candidate 9-slice frame (docs/art-review/ui-kenney/mapping.md)
+  - id: ui_kpa_small_tile_0115
+    path: public/assets/ui/kenney-pixel-adventure/small/tile_0115.png
+    category: ui
+    origin: external
+    source: https://kenney.nl/assets/ui-pack-pixel-adventure
+    creator: Kenney Vleugels (Kenney)
+    license: CC0-1.0
+    attribution: false
+    redistribute: true
+    evidence: docs/licenses/kenney-ui-pack-pixel-adventure/
+    modified: false
+    nativeSize: 16x16
+    finalSize: 16x16
+    notes: UI Pack - Pixel Adventure, thin outline; candidate 9-slice frame (docs/art-review/ui-kenney/mapping.md)
+  - id: ui_kpa_small_tile_0116
+    path: public/assets/ui/kenney-pixel-adventure/small/tile_0116.png
+    category: ui
+    origin: external
+    source: https://kenney.nl/assets/ui-pack-pixel-adventure
+    creator: Kenney Vleugels (Kenney)
+    license: CC0-1.0
+    attribution: false
+    redistribute: true
+    evidence: docs/licenses/kenney-ui-pack-pixel-adventure/
+    modified: false
+    nativeSize: 16x16
+    finalSize: 16x16
+    notes: UI Pack - Pixel Adventure, thin outline; candidate 9-slice frame (docs/art-review/ui-kenney/mapping.md)
+  - id: ui_kpa_small_tile_0117
+    path: public/assets/ui/kenney-pixel-adventure/small/tile_0117.png
+    category: ui
+    origin: external
+    source: https://kenney.nl/assets/ui-pack-pixel-adventure
+    creator: Kenney Vleugels (Kenney)
+    license: CC0-1.0
+    attribution: false
+    redistribute: true
+    evidence: docs/licenses/kenney-ui-pack-pixel-adventure/
+    modified: false
+    nativeSize: 16x16
+    finalSize: 16x16
+    notes: UI Pack - Pixel Adventure, thin outline; candidate 9-slice frame (docs/art-review/ui-kenney/mapping.md)
+  - id: ui_kpa_small_tile_0118
+    path: public/assets/ui/kenney-pixel-adventure/small/tile_0118.png
+    category: ui
+    origin: external
+    source: https://kenney.nl/assets/ui-pack-pixel-adventure
+    creator: Kenney Vleugels (Kenney)
+    license: CC0-1.0
+    attribution: false
+    redistribute: true
+    evidence: docs/licenses/kenney-ui-pack-pixel-adventure/
+    modified: false
+    nativeSize: 16x16
+    finalSize: 16x16
+    notes: UI Pack - Pixel Adventure, thin outline; candidate 9-slice frame (docs/art-review/ui-kenney/mapping.md)
+  - id: ui_kpa_small_tile_0119
+    path: public/assets/ui/kenney-pixel-adventure/small/tile_0119.png
+    category: ui
+    origin: external
+    source: https://kenney.nl/assets/ui-pack-pixel-adventure
+    creator: Kenney Vleugels (Kenney)
+    license: CC0-1.0
+    attribution: false
+    redistribute: true
+    evidence: docs/licenses/kenney-ui-pack-pixel-adventure/
+    modified: false
+    nativeSize: 16x16
+    finalSize: 16x16
+    notes: UI Pack - Pixel Adventure, thin outline; candidate 9-slice frame (docs/art-review/ui-kenney/mapping.md)
+  - id: ui_kpa_small_tile_0120
+    path: public/assets/ui/kenney-pixel-adventure/small/tile_0120.png
+    category: ui
+    origin: external
+    source: https://kenney.nl/assets/ui-pack-pixel-adventure
+    creator: Kenney Vleugels (Kenney)
+    license: CC0-1.0
+    attribution: false
+    redistribute: true
+    evidence: docs/licenses/kenney-ui-pack-pixel-adventure/
+    modified: false
+    nativeSize: 16x16
+    finalSize: 16x16
+    notes: UI Pack - Pixel Adventure, thin outline; candidate 9-slice frame (docs/art-review/ui-kenney/mapping.md)
+  - id: ui_kpa_small_tile_0121
+    path: public/assets/ui/kenney-pixel-adventure/small/tile_0121.png
+    category: ui
+    origin: external
+    source: https://kenney.nl/assets/ui-pack-pixel-adventure
+    creator: Kenney Vleugels (Kenney)
+    license: CC0-1.0
+    attribution: false
+    redistribute: true
+    evidence: docs/licenses/kenney-ui-pack-pixel-adventure/
+    modified: false
+    nativeSize: 16x16
+    finalSize: 16x16
+    notes: UI Pack - Pixel Adventure, thin outline; candidate 9-slice frame (docs/art-review/ui-kenney/mapping.md)
+  - id: ui_kpa_small_tile_0122
+    path: public/assets/ui/kenney-pixel-adventure/small/tile_0122.png
+    category: ui
+    origin: external
+    source: https://kenney.nl/assets/ui-pack-pixel-adventure
+    creator: Kenney Vleugels (Kenney)
+    license: CC0-1.0
+    attribution: false
+    redistribute: true
+    evidence: docs/licenses/kenney-ui-pack-pixel-adventure/
+    modified: false
+    nativeSize: 16x16
+    finalSize: 16x16
+    notes: UI Pack - Pixel Adventure, thin outline; candidate 9-slice frame (docs/art-review/ui-kenney/mapping.md)
+  - id: ui_kpa_small_tile_0129
+    path: public/assets/ui/kenney-pixel-adventure/small/tile_0129.png
+    category: ui
+    origin: external
+    source: https://kenney.nl/assets/ui-pack-pixel-adventure
+    creator: Kenney Vleugels (Kenney)
+    license: CC0-1.0
+    attribution: false
+    redistribute: true
+    evidence: docs/licenses/kenney-ui-pack-pixel-adventure/
+    modified: false
+    nativeSize: 16x16
+    finalSize: 16x16
+    notes: UI Pack - Pixel Adventure, thin outline; candidate 9-slice frame (docs/art-review/ui-kenney/mapping.md)
+  - id: ui_kpa_small_tile_0130
+    path: public/assets/ui/kenney-pixel-adventure/small/tile_0130.png
+    category: ui
+    origin: external
+    source: https://kenney.nl/assets/ui-pack-pixel-adventure
+    creator: Kenney Vleugels (Kenney)
+    license: CC0-1.0
+    attribution: false
+    redistribute: true
+    evidence: docs/licenses/kenney-ui-pack-pixel-adventure/
+    modified: false
+    nativeSize: 16x16
+    finalSize: 16x16
+    notes: UI Pack - Pixel Adventure, thin outline; candidate 9-slice frame (docs/art-review/ui-kenney/mapping.md)
+  - id: ui_kpa_small_tile_0131
+    path: public/assets/ui/kenney-pixel-adventure/small/tile_0131.png
+    category: ui
+    origin: external
+    source: https://kenney.nl/assets/ui-pack-pixel-adventure
+    creator: Kenney Vleugels (Kenney)
+    license: CC0-1.0
+    attribution: false
+    redistribute: true
+    evidence: docs/licenses/kenney-ui-pack-pixel-adventure/
+    modified: false
+    nativeSize: 16x16
+    finalSize: 16x16
+    notes: UI Pack - Pixel Adventure, thin outline; candidate 9-slice frame (docs/art-review/ui-kenney/mapping.md)
+  - id: ui_kpa_small_tile_0138
+    path: public/assets/ui/kenney-pixel-adventure/small/tile_0138.png
+    category: ui
+    origin: external
+    source: https://kenney.nl/assets/ui-pack-pixel-adventure
+    creator: Kenney Vleugels (Kenney)
+    license: CC0-1.0
+    attribution: false
+    redistribute: true
+    evidence: docs/licenses/kenney-ui-pack-pixel-adventure/
+    modified: false
+    nativeSize: 16x16
+    finalSize: 16x16
+    notes: UI Pack - Pixel Adventure, thin outline; candidate 9-slice frame (docs/art-review/ui-kenney/mapping.md)
+  - id: ui_kpa_small_tile_0139
+    path: public/assets/ui/kenney-pixel-adventure/small/tile_0139.png
+    category: ui
+    origin: external
+    source: https://kenney.nl/assets/ui-pack-pixel-adventure
+    creator: Kenney Vleugels (Kenney)
+    license: CC0-1.0
+    attribution: false
+    redistribute: true
+    evidence: docs/licenses/kenney-ui-pack-pixel-adventure/
+    modified: false
+    nativeSize: 16x16
+    finalSize: 16x16
+    notes: UI Pack - Pixel Adventure, thin outline; candidate 9-slice frame (docs/art-review/ui-kenney/mapping.md)
+  - id: ui_kpa_small_tile_0140
+    path: public/assets/ui/kenney-pixel-adventure/small/tile_0140.png
+    category: ui
+    origin: external
+    source: https://kenney.nl/assets/ui-pack-pixel-adventure
+    creator: Kenney Vleugels (Kenney)
+    license: CC0-1.0
+    attribution: false
+    redistribute: true
+    evidence: docs/licenses/kenney-ui-pack-pixel-adventure/
+    modified: false
+    nativeSize: 16x16
+    finalSize: 16x16
+    notes: UI Pack - Pixel Adventure, thin outline; candidate 9-slice frame (docs/art-review/ui-kenney/mapping.md)
+  - id: ui_kpa_small_tile_0141
+    path: public/assets/ui/kenney-pixel-adventure/small/tile_0141.png
+    category: ui
+    origin: external
+    source: https://kenney.nl/assets/ui-pack-pixel-adventure
+    creator: Kenney Vleugels (Kenney)
+    license: CC0-1.0
+    attribution: false
+    redistribute: true
+    evidence: docs/licenses/kenney-ui-pack-pixel-adventure/
+    modified: false
+    nativeSize: 16x16
+    finalSize: 16x16
+    notes: UI Pack - Pixel Adventure, thin outline; candidate 9-slice frame (docs/art-review/ui-kenney/mapping.md)
+  - id: ui_kpa_small_tile_0142
+    path: public/assets/ui/kenney-pixel-adventure/small/tile_0142.png
+    category: ui
+    origin: external
+    source: https://kenney.nl/assets/ui-pack-pixel-adventure
+    creator: Kenney Vleugels (Kenney)
+    license: CC0-1.0
+    attribution: false
+    redistribute: true
+    evidence: docs/licenses/kenney-ui-pack-pixel-adventure/
+    modified: false
+    nativeSize: 16x16
+    finalSize: 16x16
+    notes: UI Pack - Pixel Adventure, thin outline; candidate 9-slice frame (docs/art-review/ui-kenney/mapping.md)
+  - id: ui_kpa_small_tile_0143
+    path: public/assets/ui/kenney-pixel-adventure/small/tile_0143.png
+    category: ui
+    origin: external
+    source: https://kenney.nl/assets/ui-pack-pixel-adventure
+    creator: Kenney Vleugels (Kenney)
+    license: CC0-1.0
+    attribution: false
+    redistribute: true
+    evidence: docs/licenses/kenney-ui-pack-pixel-adventure/
+    modified: false
+    nativeSize: 16x16
+    finalSize: 16x16
+    notes: UI Pack - Pixel Adventure, thin outline; candidate 9-slice frame (docs/art-review/ui-kenney/mapping.md)
+  - id: ui_kpa_small_tile_0144
+    path: public/assets/ui/kenney-pixel-adventure/small/tile_0144.png
+    category: ui
+    origin: external
+    source: https://kenney.nl/assets/ui-pack-pixel-adventure
+    creator: Kenney Vleugels (Kenney)
+    license: CC0-1.0
+    attribution: false
+    redistribute: true
+    evidence: docs/licenses/kenney-ui-pack-pixel-adventure/
+    modified: false
+    nativeSize: 16x16
+    finalSize: 16x16
+    notes: UI Pack - Pixel Adventure, thin outline; candidate 9-slice frame (docs/art-review/ui-kenney/mapping.md)
+  - id: ui_kpa_small_tile_0145
+    path: public/assets/ui/kenney-pixel-adventure/small/tile_0145.png
+    category: ui
+    origin: external
+    source: https://kenney.nl/assets/ui-pack-pixel-adventure
+    creator: Kenney Vleugels (Kenney)
+    license: CC0-1.0
+    attribution: false
+    redistribute: true
+    evidence: docs/licenses/kenney-ui-pack-pixel-adventure/
+    modified: false
+    nativeSize: 16x16
+    finalSize: 16x16
+    notes: UI Pack - Pixel Adventure, thin outline; candidate 9-slice frame (docs/art-review/ui-kenney/mapping.md)
+  - id: ui_kpa_small_tile_0152
+    path: public/assets/ui/kenney-pixel-adventure/small/tile_0152.png
+    category: ui
+    origin: external
+    source: https://kenney.nl/assets/ui-pack-pixel-adventure
+    creator: Kenney Vleugels (Kenney)
+    license: CC0-1.0
+    attribution: false
+    redistribute: true
+    evidence: docs/licenses/kenney-ui-pack-pixel-adventure/
+    modified: false
+    nativeSize: 16x16
+    finalSize: 16x16
+    notes: UI Pack - Pixel Adventure, thin outline; candidate 9-slice frame (docs/art-review/ui-kenney/mapping.md)
+  - id: ui_kpa_small_tile_0153
+    path: public/assets/ui/kenney-pixel-adventure/small/tile_0153.png
+    category: ui
+    origin: external
+    source: https://kenney.nl/assets/ui-pack-pixel-adventure
+    creator: Kenney Vleugels (Kenney)
+    license: CC0-1.0
+    attribution: false
+    redistribute: true
+    evidence: docs/licenses/kenney-ui-pack-pixel-adventure/
+    modified: false
+    nativeSize: 16x16
+    finalSize: 16x16
+    notes: UI Pack - Pixel Adventure, thin outline; candidate 9-slice frame (docs/art-review/ui-kenney/mapping.md)
+  - id: ui_kpa_small_tile_0154
+    path: public/assets/ui/kenney-pixel-adventure/small/tile_0154.png
+    category: ui
+    origin: external
+    source: https://kenney.nl/assets/ui-pack-pixel-adventure
+    creator: Kenney Vleugels (Kenney)
+    license: CC0-1.0
+    attribution: false
+    redistribute: true
+    evidence: docs/licenses/kenney-ui-pack-pixel-adventure/
+    modified: false
+    nativeSize: 16x16
+    finalSize: 16x16
+    notes: UI Pack - Pixel Adventure, thin outline; candidate 9-slice frame (docs/art-review/ui-kenney/mapping.md)
+  - id: ui_kfb_border_panel_border_000
+    path: public/assets/ui/kenney-fantasy-borders/border/panel-border-000.png
+    category: ui
+    origin: external
+    source: https://kenney.nl/assets/fantasy-ui-borders
+    creator: Kenney Vleugels (Kenney)
+    license: CC0-1.0
+    attribution: false
+    redistribute: true
+    evidence: docs/licenses/kenney-fantasy-ui-borders/
+    modified: false
+    nativeSize: 48x48
+    finalSize: 48x48
+    notes: Fantasy UI Borders (Default 1x, white, tint at runtime); candidate 9-slice frame (docs/art-review/ui-kenney/mapping.md)
+  - id: ui_kfb_border_panel_border_001
+    path: public/assets/ui/kenney-fantasy-borders/border/panel-border-001.png
+    category: ui
+    origin: external
+    source: https://kenney.nl/assets/fantasy-ui-borders
+    creator: Kenney Vleugels (Kenney)
+    license: CC0-1.0
+    attribution: false
+    redistribute: true
+    evidence: docs/licenses/kenney-fantasy-ui-borders/
+    modified: false
+    nativeSize: 48x48
+    finalSize: 48x48
+    notes: Fantasy UI Borders (Default 1x, white, tint at runtime); candidate 9-slice frame (docs/art-review/ui-kenney/mapping.md)
+  - id: ui_kfb_border_panel_border_002
+    path: public/assets/ui/kenney-fantasy-borders/border/panel-border-002.png
+    category: ui
+    origin: external
+    source: https://kenney.nl/assets/fantasy-ui-borders
+    creator: Kenney Vleugels (Kenney)
+    license: CC0-1.0
+    attribution: false
+    redistribute: true
+    evidence: docs/licenses/kenney-fantasy-ui-borders/
+    modified: false
+    nativeSize: 48x48
+    finalSize: 48x48
+    notes: Fantasy UI Borders (Default 1x, white, tint at runtime); candidate 9-slice frame (docs/art-review/ui-kenney/mapping.md)
+  - id: ui_kfb_border_panel_border_003
+    path: public/assets/ui/kenney-fantasy-borders/border/panel-border-003.png
+    category: ui
+    origin: external
+    source: https://kenney.nl/assets/fantasy-ui-borders
+    creator: Kenney Vleugels (Kenney)
+    license: CC0-1.0
+    attribution: false
+    redistribute: true
+    evidence: docs/licenses/kenney-fantasy-ui-borders/
+    modified: false
+    nativeSize: 48x48
+    finalSize: 48x48
+    notes: Fantasy UI Borders (Default 1x, white, tint at runtime); candidate 9-slice frame (docs/art-review/ui-kenney/mapping.md)
+  - id: ui_kfb_border_panel_border_004
+    path: public/assets/ui/kenney-fantasy-borders/border/panel-border-004.png
+    category: ui
+    origin: external
+    source: https://kenney.nl/assets/fantasy-ui-borders
+    creator: Kenney Vleugels (Kenney)
+    license: CC0-1.0
+    attribution: false
+    redistribute: true
+    evidence: docs/licenses/kenney-fantasy-ui-borders/
+    modified: false
+    nativeSize: 48x48
+    finalSize: 48x48
+    notes: Fantasy UI Borders (Default 1x, white, tint at runtime); candidate 9-slice frame (docs/art-review/ui-kenney/mapping.md)
+  - id: ui_kfb_border_panel_border_005
+    path: public/assets/ui/kenney-fantasy-borders/border/panel-border-005.png
+    category: ui
+    origin: external
+    source: https://kenney.nl/assets/fantasy-ui-borders
+    creator: Kenney Vleugels (Kenney)
+    license: CC0-1.0
+    attribution: false
+    redistribute: true
+    evidence: docs/licenses/kenney-fantasy-ui-borders/
+    modified: false
+    nativeSize: 48x48
+    finalSize: 48x48
+    notes: Fantasy UI Borders (Default 1x, white, tint at runtime); candidate 9-slice frame (docs/art-review/ui-kenney/mapping.md)
+  - id: ui_kfb_border_panel_border_006
+    path: public/assets/ui/kenney-fantasy-borders/border/panel-border-006.png
+    category: ui
+    origin: external
+    source: https://kenney.nl/assets/fantasy-ui-borders
+    creator: Kenney Vleugels (Kenney)
+    license: CC0-1.0
+    attribution: false
+    redistribute: true
+    evidence: docs/licenses/kenney-fantasy-ui-borders/
+    modified: false
+    nativeSize: 48x48
+    finalSize: 48x48
+    notes: Fantasy UI Borders (Default 1x, white, tint at runtime); candidate 9-slice frame (docs/art-review/ui-kenney/mapping.md)
+  - id: ui_kfb_border_panel_border_007
+    path: public/assets/ui/kenney-fantasy-borders/border/panel-border-007.png
+    category: ui
+    origin: external
+    source: https://kenney.nl/assets/fantasy-ui-borders
+    creator: Kenney Vleugels (Kenney)
+    license: CC0-1.0
+    attribution: false
+    redistribute: true
+    evidence: docs/licenses/kenney-fantasy-ui-borders/
+    modified: false
+    nativeSize: 48x48
+    finalSize: 48x48
+    notes: Fantasy UI Borders (Default 1x, white, tint at runtime); candidate 9-slice frame (docs/art-review/ui-kenney/mapping.md)
+  - id: ui_kfb_border_panel_border_008
+    path: public/assets/ui/kenney-fantasy-borders/border/panel-border-008.png
+    category: ui
+    origin: external
+    source: https://kenney.nl/assets/fantasy-ui-borders
+    creator: Kenney Vleugels (Kenney)
+    license: CC0-1.0
+    attribution: false
+    redistribute: true
+    evidence: docs/licenses/kenney-fantasy-ui-borders/
+    modified: false
+    nativeSize: 48x48
+    finalSize: 48x48
+    notes: Fantasy UI Borders (Default 1x, white, tint at runtime); candidate 9-slice frame (docs/art-review/ui-kenney/mapping.md)
+  - id: ui_kfb_border_panel_border_009
+    path: public/assets/ui/kenney-fantasy-borders/border/panel-border-009.png
+    category: ui
+    origin: external
+    source: https://kenney.nl/assets/fantasy-ui-borders
+    creator: Kenney Vleugels (Kenney)
+    license: CC0-1.0
+    attribution: false
+    redistribute: true
+    evidence: docs/licenses/kenney-fantasy-ui-borders/
+    modified: false
+    nativeSize: 48x48
+    finalSize: 48x48
+    notes: Fantasy UI Borders (Default 1x, white, tint at runtime); candidate 9-slice frame (docs/art-review/ui-kenney/mapping.md)
+  - id: ui_kfb_border_panel_border_010
+    path: public/assets/ui/kenney-fantasy-borders/border/panel-border-010.png
+    category: ui
+    origin: external
+    source: https://kenney.nl/assets/fantasy-ui-borders
+    creator: Kenney Vleugels (Kenney)
+    license: CC0-1.0
+    attribution: false
+    redistribute: true
+    evidence: docs/licenses/kenney-fantasy-ui-borders/
+    modified: false
+    nativeSize: 48x48
+    finalSize: 48x48
+    notes: Fantasy UI Borders (Default 1x, white, tint at runtime); candidate 9-slice frame (docs/art-review/ui-kenney/mapping.md)
+  - id: ui_kfb_border_panel_border_011
+    path: public/assets/ui/kenney-fantasy-borders/border/panel-border-011.png
+    category: ui
+    origin: external
+    source: https://kenney.nl/assets/fantasy-ui-borders
+    creator: Kenney Vleugels (Kenney)
+    license: CC0-1.0
+    attribution: false
+    redistribute: true
+    evidence: docs/licenses/kenney-fantasy-ui-borders/
+    modified: false
+    nativeSize: 48x48
+    finalSize: 48x48
+    notes: Fantasy UI Borders (Default 1x, white, tint at runtime); candidate 9-slice frame (docs/art-review/ui-kenney/mapping.md)
+  - id: ui_kfb_border_panel_border_012
+    path: public/assets/ui/kenney-fantasy-borders/border/panel-border-012.png
+    category: ui
+    origin: external
+    source: https://kenney.nl/assets/fantasy-ui-borders
+    creator: Kenney Vleugels (Kenney)
+    license: CC0-1.0
+    attribution: false
+    redistribute: true
+    evidence: docs/licenses/kenney-fantasy-ui-borders/
+    modified: false
+    nativeSize: 48x48
+    finalSize: 48x48
+    notes: Fantasy UI Borders (Default 1x, white, tint at runtime); candidate 9-slice frame (docs/art-review/ui-kenney/mapping.md)
+  - id: ui_kfb_border_panel_border_013
+    path: public/assets/ui/kenney-fantasy-borders/border/panel-border-013.png
+    category: ui
+    origin: external
+    source: https://kenney.nl/assets/fantasy-ui-borders
+    creator: Kenney Vleugels (Kenney)
+    license: CC0-1.0
+    attribution: false
+    redistribute: true
+    evidence: docs/licenses/kenney-fantasy-ui-borders/
+    modified: false
+    nativeSize: 48x48
+    finalSize: 48x48
+    notes: Fantasy UI Borders (Default 1x, white, tint at runtime); candidate 9-slice frame (docs/art-review/ui-kenney/mapping.md)
+  - id: ui_kfb_border_panel_border_014
+    path: public/assets/ui/kenney-fantasy-borders/border/panel-border-014.png
+    category: ui
+    origin: external
+    source: https://kenney.nl/assets/fantasy-ui-borders
+    creator: Kenney Vleugels (Kenney)
+    license: CC0-1.0
+    attribution: false
+    redistribute: true
+    evidence: docs/licenses/kenney-fantasy-ui-borders/
+    modified: false
+    nativeSize: 48x48
+    finalSize: 48x48
+    notes: Fantasy UI Borders (Default 1x, white, tint at runtime); candidate 9-slice frame (docs/art-review/ui-kenney/mapping.md)
+  - id: ui_kfb_border_panel_border_015
+    path: public/assets/ui/kenney-fantasy-borders/border/panel-border-015.png
+    category: ui
+    origin: external
+    source: https://kenney.nl/assets/fantasy-ui-borders
+    creator: Kenney Vleugels (Kenney)
+    license: CC0-1.0
+    attribution: false
+    redistribute: true
+    evidence: docs/licenses/kenney-fantasy-ui-borders/
+    modified: false
+    nativeSize: 48x48
+    finalSize: 48x48
+    notes: Fantasy UI Borders (Default 1x, white, tint at runtime); candidate 9-slice frame (docs/art-review/ui-kenney/mapping.md)
+  - id: ui_kfb_border_panel_border_016
+    path: public/assets/ui/kenney-fantasy-borders/border/panel-border-016.png
+    category: ui
+    origin: external
+    source: https://kenney.nl/assets/fantasy-ui-borders
+    creator: Kenney Vleugels (Kenney)
+    license: CC0-1.0
+    attribution: false
+    redistribute: true
+    evidence: docs/licenses/kenney-fantasy-ui-borders/
+    modified: false
+    nativeSize: 48x48
+    finalSize: 48x48
+    notes: Fantasy UI Borders (Default 1x, white, tint at runtime); candidate 9-slice frame (docs/art-review/ui-kenney/mapping.md)
+  - id: ui_kfb_border_panel_border_017
+    path: public/assets/ui/kenney-fantasy-borders/border/panel-border-017.png
+    category: ui
+    origin: external
+    source: https://kenney.nl/assets/fantasy-ui-borders
+    creator: Kenney Vleugels (Kenney)
+    license: CC0-1.0
+    attribution: false
+    redistribute: true
+    evidence: docs/licenses/kenney-fantasy-ui-borders/
+    modified: false
+    nativeSize: 48x48
+    finalSize: 48x48
+    notes: Fantasy UI Borders (Default 1x, white, tint at runtime); candidate 9-slice frame (docs/art-review/ui-kenney/mapping.md)
+  - id: ui_kfb_border_panel_border_018
+    path: public/assets/ui/kenney-fantasy-borders/border/panel-border-018.png
+    category: ui
+    origin: external
+    source: https://kenney.nl/assets/fantasy-ui-borders
+    creator: Kenney Vleugels (Kenney)
+    license: CC0-1.0
+    attribution: false
+    redistribute: true
+    evidence: docs/licenses/kenney-fantasy-ui-borders/
+    modified: false
+    nativeSize: 48x48
+    finalSize: 48x48
+    notes: Fantasy UI Borders (Default 1x, white, tint at runtime); candidate 9-slice frame (docs/art-review/ui-kenney/mapping.md)
+  - id: ui_kfb_border_panel_border_019
+    path: public/assets/ui/kenney-fantasy-borders/border/panel-border-019.png
+    category: ui
+    origin: external
+    source: https://kenney.nl/assets/fantasy-ui-borders
+    creator: Kenney Vleugels (Kenney)
+    license: CC0-1.0
+    attribution: false
+    redistribute: true
+    evidence: docs/licenses/kenney-fantasy-ui-borders/
+    modified: false
+    nativeSize: 48x48
+    finalSize: 48x48
+    notes: Fantasy UI Borders (Default 1x, white, tint at runtime); candidate 9-slice frame (docs/art-review/ui-kenney/mapping.md)
+  - id: ui_kfb_border_panel_border_020
+    path: public/assets/ui/kenney-fantasy-borders/border/panel-border-020.png
+    category: ui
+    origin: external
+    source: https://kenney.nl/assets/fantasy-ui-borders
+    creator: Kenney Vleugels (Kenney)
+    license: CC0-1.0
+    attribution: false
+    redistribute: true
+    evidence: docs/licenses/kenney-fantasy-ui-borders/
+    modified: false
+    nativeSize: 48x48
+    finalSize: 48x48
+    notes: Fantasy UI Borders (Default 1x, white, tint at runtime); candidate 9-slice frame (docs/art-review/ui-kenney/mapping.md)
+  - id: ui_kfb_border_panel_border_021
+    path: public/assets/ui/kenney-fantasy-borders/border/panel-border-021.png
+    category: ui
+    origin: external
+    source: https://kenney.nl/assets/fantasy-ui-borders
+    creator: Kenney Vleugels (Kenney)
+    license: CC0-1.0
+    attribution: false
+    redistribute: true
+    evidence: docs/licenses/kenney-fantasy-ui-borders/
+    modified: false
+    nativeSize: 48x48
+    finalSize: 48x48
+    notes: Fantasy UI Borders (Default 1x, white, tint at runtime); candidate 9-slice frame (docs/art-review/ui-kenney/mapping.md)
+  - id: ui_kfb_border_panel_border_022
+    path: public/assets/ui/kenney-fantasy-borders/border/panel-border-022.png
+    category: ui
+    origin: external
+    source: https://kenney.nl/assets/fantasy-ui-borders
+    creator: Kenney Vleugels (Kenney)
+    license: CC0-1.0
+    attribution: false
+    redistribute: true
+    evidence: docs/licenses/kenney-fantasy-ui-borders/
+    modified: false
+    nativeSize: 48x48
+    finalSize: 48x48
+    notes: Fantasy UI Borders (Default 1x, white, tint at runtime); candidate 9-slice frame (docs/art-review/ui-kenney/mapping.md)
+  - id: ui_kfb_border_panel_border_023
+    path: public/assets/ui/kenney-fantasy-borders/border/panel-border-023.png
+    category: ui
+    origin: external
+    source: https://kenney.nl/assets/fantasy-ui-borders
+    creator: Kenney Vleugels (Kenney)
+    license: CC0-1.0
+    attribution: false
+    redistribute: true
+    evidence: docs/licenses/kenney-fantasy-ui-borders/
+    modified: false
+    nativeSize: 48x48
+    finalSize: 48x48
+    notes: Fantasy UI Borders (Default 1x, white, tint at runtime); candidate 9-slice frame (docs/art-review/ui-kenney/mapping.md)
+  - id: ui_kfb_border_panel_border_024
+    path: public/assets/ui/kenney-fantasy-borders/border/panel-border-024.png
+    category: ui
+    origin: external
+    source: https://kenney.nl/assets/fantasy-ui-borders
+    creator: Kenney Vleugels (Kenney)
+    license: CC0-1.0
+    attribution: false
+    redistribute: true
+    evidence: docs/licenses/kenney-fantasy-ui-borders/
+    modified: false
+    nativeSize: 48x48
+    finalSize: 48x48
+    notes: Fantasy UI Borders (Default 1x, white, tint at runtime); candidate 9-slice frame (docs/art-review/ui-kenney/mapping.md)
+  - id: ui_kfb_border_panel_border_025
+    path: public/assets/ui/kenney-fantasy-borders/border/panel-border-025.png
+    category: ui
+    origin: external
+    source: https://kenney.nl/assets/fantasy-ui-borders
+    creator: Kenney Vleugels (Kenney)
+    license: CC0-1.0
+    attribution: false
+    redistribute: true
+    evidence: docs/licenses/kenney-fantasy-ui-borders/
+    modified: false
+    nativeSize: 48x48
+    finalSize: 48x48
+    notes: Fantasy UI Borders (Default 1x, white, tint at runtime); candidate 9-slice frame (docs/art-review/ui-kenney/mapping.md)
+  - id: ui_kfb_border_panel_border_026
+    path: public/assets/ui/kenney-fantasy-borders/border/panel-border-026.png
+    category: ui
+    origin: external
+    source: https://kenney.nl/assets/fantasy-ui-borders
+    creator: Kenney Vleugels (Kenney)
+    license: CC0-1.0
+    attribution: false
+    redistribute: true
+    evidence: docs/licenses/kenney-fantasy-ui-borders/
+    modified: false
+    nativeSize: 48x48
+    finalSize: 48x48
+    notes: Fantasy UI Borders (Default 1x, white, tint at runtime); candidate 9-slice frame (docs/art-review/ui-kenney/mapping.md)
+  - id: ui_kfb_border_panel_border_027
+    path: public/assets/ui/kenney-fantasy-borders/border/panel-border-027.png
+    category: ui
+    origin: external
+    source: https://kenney.nl/assets/fantasy-ui-borders
+    creator: Kenney Vleugels (Kenney)
+    license: CC0-1.0
+    attribution: false
+    redistribute: true
+    evidence: docs/licenses/kenney-fantasy-ui-borders/
+    modified: false
+    nativeSize: 48x48
+    finalSize: 48x48
+    notes: Fantasy UI Borders (Default 1x, white, tint at runtime); candidate 9-slice frame (docs/art-review/ui-kenney/mapping.md)
+  - id: ui_kfb_border_panel_border_028
+    path: public/assets/ui/kenney-fantasy-borders/border/panel-border-028.png
+    category: ui
+    origin: external
+    source: https://kenney.nl/assets/fantasy-ui-borders
+    creator: Kenney Vleugels (Kenney)
+    license: CC0-1.0
+    attribution: false
+    redistribute: true
+    evidence: docs/licenses/kenney-fantasy-ui-borders/
+    modified: false
+    nativeSize: 48x48
+    finalSize: 48x48
+    notes: Fantasy UI Borders (Default 1x, white, tint at runtime); candidate 9-slice frame (docs/art-review/ui-kenney/mapping.md)
+  - id: ui_kfb_border_panel_border_029
+    path: public/assets/ui/kenney-fantasy-borders/border/panel-border-029.png
+    category: ui
+    origin: external
+    source: https://kenney.nl/assets/fantasy-ui-borders
+    creator: Kenney Vleugels (Kenney)
+    license: CC0-1.0
+    attribution: false
+    redistribute: true
+    evidence: docs/licenses/kenney-fantasy-ui-borders/
+    modified: false
+    nativeSize: 48x48
+    finalSize: 48x48
+    notes: Fantasy UI Borders (Default 1x, white, tint at runtime); candidate 9-slice frame (docs/art-review/ui-kenney/mapping.md)
+  - id: ui_kfb_border_panel_border_030
+    path: public/assets/ui/kenney-fantasy-borders/border/panel-border-030.png
+    category: ui
+    origin: external
+    source: https://kenney.nl/assets/fantasy-ui-borders
+    creator: Kenney Vleugels (Kenney)
+    license: CC0-1.0
+    attribution: false
+    redistribute: true
+    evidence: docs/licenses/kenney-fantasy-ui-borders/
+    modified: false
+    nativeSize: 48x48
+    finalSize: 48x48
+    notes: Fantasy UI Borders (Default 1x, white, tint at runtime); candidate 9-slice frame (docs/art-review/ui-kenney/mapping.md)
+  - id: ui_kfb_border_panel_border_031
+    path: public/assets/ui/kenney-fantasy-borders/border/panel-border-031.png
+    category: ui
+    origin: external
+    source: https://kenney.nl/assets/fantasy-ui-borders
+    creator: Kenney Vleugels (Kenney)
+    license: CC0-1.0
+    attribution: false
+    redistribute: true
+    evidence: docs/licenses/kenney-fantasy-ui-borders/
+    modified: false
+    nativeSize: 48x48
+    finalSize: 48x48
+    notes: Fantasy UI Borders (Default 1x, white, tint at runtime); candidate 9-slice frame (docs/art-review/ui-kenney/mapping.md)
+  - id: ui_kfb_panel_panel_000
+    path: public/assets/ui/kenney-fantasy-borders/panel/panel-000.png
+    category: ui
+    origin: external
+    source: https://kenney.nl/assets/fantasy-ui-borders
+    creator: Kenney Vleugels (Kenney)
+    license: CC0-1.0
+    attribution: false
+    redistribute: true
+    evidence: docs/licenses/kenney-fantasy-ui-borders/
+    modified: false
+    nativeSize: 48x48
+    finalSize: 48x48
+    notes: Fantasy UI Borders (Default 1x, white, tint at runtime); candidate 9-slice frame (docs/art-review/ui-kenney/mapping.md)
+  - id: ui_kfb_panel_panel_001
+    path: public/assets/ui/kenney-fantasy-borders/panel/panel-001.png
+    category: ui
+    origin: external
+    source: https://kenney.nl/assets/fantasy-ui-borders
+    creator: Kenney Vleugels (Kenney)
+    license: CC0-1.0
+    attribution: false
+    redistribute: true
+    evidence: docs/licenses/kenney-fantasy-ui-borders/
+    modified: false
+    nativeSize: 48x48
+    finalSize: 48x48
+    notes: Fantasy UI Borders (Default 1x, white, tint at runtime); candidate 9-slice frame (docs/art-review/ui-kenney/mapping.md)
+  - id: ui_kfb_panel_panel_002
+    path: public/assets/ui/kenney-fantasy-borders/panel/panel-002.png
+    category: ui
+    origin: external
+    source: https://kenney.nl/assets/fantasy-ui-borders
+    creator: Kenney Vleugels (Kenney)
+    license: CC0-1.0
+    attribution: false
+    redistribute: true
+    evidence: docs/licenses/kenney-fantasy-ui-borders/
+    modified: false
+    nativeSize: 48x48
+    finalSize: 48x48
+    notes: Fantasy UI Borders (Default 1x, white, tint at runtime); candidate 9-slice frame (docs/art-review/ui-kenney/mapping.md)
+  - id: ui_kfb_panel_panel_003
+    path: public/assets/ui/kenney-fantasy-borders/panel/panel-003.png
+    category: ui
+    origin: external
+    source: https://kenney.nl/assets/fantasy-ui-borders
+    creator: Kenney Vleugels (Kenney)
+    license: CC0-1.0
+    attribution: false
+    redistribute: true
+    evidence: docs/licenses/kenney-fantasy-ui-borders/
+    modified: false
+    nativeSize: 48x48
+    finalSize: 48x48
+    notes: Fantasy UI Borders (Default 1x, white, tint at runtime); candidate 9-slice frame (docs/art-review/ui-kenney/mapping.md)
+  - id: ui_kfb_panel_panel_004
+    path: public/assets/ui/kenney-fantasy-borders/panel/panel-004.png
+    category: ui
+    origin: external
+    source: https://kenney.nl/assets/fantasy-ui-borders
+    creator: Kenney Vleugels (Kenney)
+    license: CC0-1.0
+    attribution: false
+    redistribute: true
+    evidence: docs/licenses/kenney-fantasy-ui-borders/
+    modified: false
+    nativeSize: 48x48
+    finalSize: 48x48
+    notes: Fantasy UI Borders (Default 1x, white, tint at runtime); candidate 9-slice frame (docs/art-review/ui-kenney/mapping.md)
+  - id: ui_kfb_panel_panel_005
+    path: public/assets/ui/kenney-fantasy-borders/panel/panel-005.png
+    category: ui
+    origin: external
+    source: https://kenney.nl/assets/fantasy-ui-borders
+    creator: Kenney Vleugels (Kenney)
+    license: CC0-1.0
+    attribution: false
+    redistribute: true
+    evidence: docs/licenses/kenney-fantasy-ui-borders/
+    modified: false
+    nativeSize: 48x48
+    finalSize: 48x48
+    notes: Fantasy UI Borders (Default 1x, white, tint at runtime); candidate 9-slice frame (docs/art-review/ui-kenney/mapping.md)
+  - id: ui_kfb_panel_panel_006
+    path: public/assets/ui/kenney-fantasy-borders/panel/panel-006.png
+    category: ui
+    origin: external
+    source: https://kenney.nl/assets/fantasy-ui-borders
+    creator: Kenney Vleugels (Kenney)
+    license: CC0-1.0
+    attribution: false
+    redistribute: true
+    evidence: docs/licenses/kenney-fantasy-ui-borders/
+    modified: false
+    nativeSize: 48x48
+    finalSize: 48x48
+    notes: Fantasy UI Borders (Default 1x, white, tint at runtime); candidate 9-slice frame (docs/art-review/ui-kenney/mapping.md)
+  - id: ui_kfb_panel_panel_007
+    path: public/assets/ui/kenney-fantasy-borders/panel/panel-007.png
+    category: ui
+    origin: external
+    source: https://kenney.nl/assets/fantasy-ui-borders
+    creator: Kenney Vleugels (Kenney)
+    license: CC0-1.0
+    attribution: false
+    redistribute: true
+    evidence: docs/licenses/kenney-fantasy-ui-borders/
+    modified: false
+    nativeSize: 48x48
+    finalSize: 48x48
+    notes: Fantasy UI Borders (Default 1x, white, tint at runtime); candidate 9-slice frame (docs/art-review/ui-kenney/mapping.md)
+  - id: ui_kfb_panel_panel_008
+    path: public/assets/ui/kenney-fantasy-borders/panel/panel-008.png
+    category: ui
+    origin: external
+    source: https://kenney.nl/assets/fantasy-ui-borders
+    creator: Kenney Vleugels (Kenney)
+    license: CC0-1.0
+    attribution: false
+    redistribute: true
+    evidence: docs/licenses/kenney-fantasy-ui-borders/
+    modified: false
+    nativeSize: 48x48
+    finalSize: 48x48
+    notes: Fantasy UI Borders (Default 1x, white, tint at runtime); candidate 9-slice frame (docs/art-review/ui-kenney/mapping.md)
+  - id: ui_kfb_panel_panel_009
+    path: public/assets/ui/kenney-fantasy-borders/panel/panel-009.png
+    category: ui
+    origin: external
+    source: https://kenney.nl/assets/fantasy-ui-borders
+    creator: Kenney Vleugels (Kenney)
+    license: CC0-1.0
+    attribution: false
+    redistribute: true
+    evidence: docs/licenses/kenney-fantasy-ui-borders/
+    modified: false
+    nativeSize: 48x48
+    finalSize: 48x48
+    notes: Fantasy UI Borders (Default 1x, white, tint at runtime); candidate 9-slice frame (docs/art-review/ui-kenney/mapping.md)
+  - id: ui_kfb_panel_panel_010
+    path: public/assets/ui/kenney-fantasy-borders/panel/panel-010.png
+    category: ui
+    origin: external
+    source: https://kenney.nl/assets/fantasy-ui-borders
+    creator: Kenney Vleugels (Kenney)
+    license: CC0-1.0
+    attribution: false
+    redistribute: true
+    evidence: docs/licenses/kenney-fantasy-ui-borders/
+    modified: false
+    nativeSize: 48x48
+    finalSize: 48x48
+    notes: Fantasy UI Borders (Default 1x, white, tint at runtime); candidate 9-slice frame (docs/art-review/ui-kenney/mapping.md)
+  - id: ui_kfb_panel_panel_011
+    path: public/assets/ui/kenney-fantasy-borders/panel/panel-011.png
+    category: ui
+    origin: external
+    source: https://kenney.nl/assets/fantasy-ui-borders
+    creator: Kenney Vleugels (Kenney)
+    license: CC0-1.0
+    attribution: false
+    redistribute: true
+    evidence: docs/licenses/kenney-fantasy-ui-borders/
+    modified: false
+    nativeSize: 48x48
+    finalSize: 48x48
+    notes: Fantasy UI Borders (Default 1x, white, tint at runtime); candidate 9-slice frame (docs/art-review/ui-kenney/mapping.md)
+  - id: ui_kfb_panel_panel_012
+    path: public/assets/ui/kenney-fantasy-borders/panel/panel-012.png
+    category: ui
+    origin: external
+    source: https://kenney.nl/assets/fantasy-ui-borders
+    creator: Kenney Vleugels (Kenney)
+    license: CC0-1.0
+    attribution: false
+    redistribute: true
+    evidence: docs/licenses/kenney-fantasy-ui-borders/
+    modified: false
+    nativeSize: 48x48
+    finalSize: 48x48
+    notes: Fantasy UI Borders (Default 1x, white, tint at runtime); candidate 9-slice frame (docs/art-review/ui-kenney/mapping.md)
+  - id: ui_kfb_panel_panel_013
+    path: public/assets/ui/kenney-fantasy-borders/panel/panel-013.png
+    category: ui
+    origin: external
+    source: https://kenney.nl/assets/fantasy-ui-borders
+    creator: Kenney Vleugels (Kenney)
+    license: CC0-1.0
+    attribution: false
+    redistribute: true
+    evidence: docs/licenses/kenney-fantasy-ui-borders/
+    modified: false
+    nativeSize: 48x48
+    finalSize: 48x48
+    notes: Fantasy UI Borders (Default 1x, white, tint at runtime); candidate 9-slice frame (docs/art-review/ui-kenney/mapping.md)
+  - id: ui_kfb_panel_panel_014
+    path: public/assets/ui/kenney-fantasy-borders/panel/panel-014.png
+    category: ui
+    origin: external
+    source: https://kenney.nl/assets/fantasy-ui-borders
+    creator: Kenney Vleugels (Kenney)
+    license: CC0-1.0
+    attribution: false
+    redistribute: true
+    evidence: docs/licenses/kenney-fantasy-ui-borders/
+    modified: false
+    nativeSize: 48x48
+    finalSize: 48x48
+    notes: Fantasy UI Borders (Default 1x, white, tint at runtime); candidate 9-slice frame (docs/art-review/ui-kenney/mapping.md)
+  - id: ui_kfb_panel_panel_015
+    path: public/assets/ui/kenney-fantasy-borders/panel/panel-015.png
+    category: ui
+    origin: external
+    source: https://kenney.nl/assets/fantasy-ui-borders
+    creator: Kenney Vleugels (Kenney)
+    license: CC0-1.0
+    attribution: false
+    redistribute: true
+    evidence: docs/licenses/kenney-fantasy-ui-borders/
+    modified: false
+    nativeSize: 48x48
+    finalSize: 48x48
+    notes: Fantasy UI Borders (Default 1x, white, tint at runtime); candidate 9-slice frame (docs/art-review/ui-kenney/mapping.md)
+  - id: ui_kfb_panel_panel_016
+    path: public/assets/ui/kenney-fantasy-borders/panel/panel-016.png
+    category: ui
+    origin: external
+    source: https://kenney.nl/assets/fantasy-ui-borders
+    creator: Kenney Vleugels (Kenney)
+    license: CC0-1.0
+    attribution: false
+    redistribute: true
+    evidence: docs/licenses/kenney-fantasy-ui-borders/
+    modified: false
+    nativeSize: 48x48
+    finalSize: 48x48
+    notes: Fantasy UI Borders (Default 1x, white, tint at runtime); candidate 9-slice frame (docs/art-review/ui-kenney/mapping.md)
+  - id: ui_kfb_panel_panel_017
+    path: public/assets/ui/kenney-fantasy-borders/panel/panel-017.png
+    category: ui
+    origin: external
+    source: https://kenney.nl/assets/fantasy-ui-borders
+    creator: Kenney Vleugels (Kenney)
+    license: CC0-1.0
+    attribution: false
+    redistribute: true
+    evidence: docs/licenses/kenney-fantasy-ui-borders/
+    modified: false
+    nativeSize: 48x48
+    finalSize: 48x48
+    notes: Fantasy UI Borders (Default 1x, white, tint at runtime); candidate 9-slice frame (docs/art-review/ui-kenney/mapping.md)
+  - id: ui_kfb_panel_panel_018
+    path: public/assets/ui/kenney-fantasy-borders/panel/panel-018.png
+    category: ui
+    origin: external
+    source: https://kenney.nl/assets/fantasy-ui-borders
+    creator: Kenney Vleugels (Kenney)
+    license: CC0-1.0
+    attribution: false
+    redistribute: true
+    evidence: docs/licenses/kenney-fantasy-ui-borders/
+    modified: false
+    nativeSize: 48x48
+    finalSize: 48x48
+    notes: Fantasy UI Borders (Default 1x, white, tint at runtime); candidate 9-slice frame (docs/art-review/ui-kenney/mapping.md)
+  - id: ui_kfb_panel_panel_019
+    path: public/assets/ui/kenney-fantasy-borders/panel/panel-019.png
+    category: ui
+    origin: external
+    source: https://kenney.nl/assets/fantasy-ui-borders
+    creator: Kenney Vleugels (Kenney)
+    license: CC0-1.0
+    attribution: false
+    redistribute: true
+    evidence: docs/licenses/kenney-fantasy-ui-borders/
+    modified: false
+    nativeSize: 48x48
+    finalSize: 48x48
+    notes: Fantasy UI Borders (Default 1x, white, tint at runtime); candidate 9-slice frame (docs/art-review/ui-kenney/mapping.md)
+  - id: ui_kfb_panel_panel_020
+    path: public/assets/ui/kenney-fantasy-borders/panel/panel-020.png
+    category: ui
+    origin: external
+    source: https://kenney.nl/assets/fantasy-ui-borders
+    creator: Kenney Vleugels (Kenney)
+    license: CC0-1.0
+    attribution: false
+    redistribute: true
+    evidence: docs/licenses/kenney-fantasy-ui-borders/
+    modified: false
+    nativeSize: 48x48
+    finalSize: 48x48
+    notes: Fantasy UI Borders (Default 1x, white, tint at runtime); candidate 9-slice frame (docs/art-review/ui-kenney/mapping.md)
+  - id: ui_kfb_panel_panel_021
+    path: public/assets/ui/kenney-fantasy-borders/panel/panel-021.png
+    category: ui
+    origin: external
+    source: https://kenney.nl/assets/fantasy-ui-borders
+    creator: Kenney Vleugels (Kenney)
+    license: CC0-1.0
+    attribution: false
+    redistribute: true
+    evidence: docs/licenses/kenney-fantasy-ui-borders/
+    modified: false
+    nativeSize: 48x48
+    finalSize: 48x48
+    notes: Fantasy UI Borders (Default 1x, white, tint at runtime); candidate 9-slice frame (docs/art-review/ui-kenney/mapping.md)
+  - id: ui_kfb_panel_panel_022
+    path: public/assets/ui/kenney-fantasy-borders/panel/panel-022.png
+    category: ui
+    origin: external
+    source: https://kenney.nl/assets/fantasy-ui-borders
+    creator: Kenney Vleugels (Kenney)
+    license: CC0-1.0
+    attribution: false
+    redistribute: true
+    evidence: docs/licenses/kenney-fantasy-ui-borders/
+    modified: false
+    nativeSize: 48x48
+    finalSize: 48x48
+    notes: Fantasy UI Borders (Default 1x, white, tint at runtime); candidate 9-slice frame (docs/art-review/ui-kenney/mapping.md)
+  - id: ui_kfb_panel_panel_023
+    path: public/assets/ui/kenney-fantasy-borders/panel/panel-023.png
+    category: ui
+    origin: external
+    source: https://kenney.nl/assets/fantasy-ui-borders
+    creator: Kenney Vleugels (Kenney)
+    license: CC0-1.0
+    attribution: false
+    redistribute: true
+    evidence: docs/licenses/kenney-fantasy-ui-borders/
+    modified: false
+    nativeSize: 48x48
+    finalSize: 48x48
+    notes: Fantasy UI Borders (Default 1x, white, tint at runtime); candidate 9-slice frame (docs/art-review/ui-kenney/mapping.md)
+  - id: ui_kfb_panel_panel_024
+    path: public/assets/ui/kenney-fantasy-borders/panel/panel-024.png
+    category: ui
+    origin: external
+    source: https://kenney.nl/assets/fantasy-ui-borders
+    creator: Kenney Vleugels (Kenney)
+    license: CC0-1.0
+    attribution: false
+    redistribute: true
+    evidence: docs/licenses/kenney-fantasy-ui-borders/
+    modified: false
+    nativeSize: 48x48
+    finalSize: 48x48
+    notes: Fantasy UI Borders (Default 1x, white, tint at runtime); candidate 9-slice frame (docs/art-review/ui-kenney/mapping.md)
+  - id: ui_kfb_panel_panel_025
+    path: public/assets/ui/kenney-fantasy-borders/panel/panel-025.png
+    category: ui
+    origin: external
+    source: https://kenney.nl/assets/fantasy-ui-borders
+    creator: Kenney Vleugels (Kenney)
+    license: CC0-1.0
+    attribution: false
+    redistribute: true
+    evidence: docs/licenses/kenney-fantasy-ui-borders/
+    modified: false
+    nativeSize: 48x48
+    finalSize: 48x48
+    notes: Fantasy UI Borders (Default 1x, white, tint at runtime); candidate 9-slice frame (docs/art-review/ui-kenney/mapping.md)
+  - id: ui_kfb_panel_panel_026
+    path: public/assets/ui/kenney-fantasy-borders/panel/panel-026.png
+    category: ui
+    origin: external
+    source: https://kenney.nl/assets/fantasy-ui-borders
+    creator: Kenney Vleugels (Kenney)
+    license: CC0-1.0
+    attribution: false
+    redistribute: true
+    evidence: docs/licenses/kenney-fantasy-ui-borders/
+    modified: false
+    nativeSize: 48x48
+    finalSize: 48x48
+    notes: Fantasy UI Borders (Default 1x, white, tint at runtime); candidate 9-slice frame (docs/art-review/ui-kenney/mapping.md)
+  - id: ui_kfb_panel_panel_027
+    path: public/assets/ui/kenney-fantasy-borders/panel/panel-027.png
+    category: ui
+    origin: external
+    source: https://kenney.nl/assets/fantasy-ui-borders
+    creator: Kenney Vleugels (Kenney)
+    license: CC0-1.0
+    attribution: false
+    redistribute: true
+    evidence: docs/licenses/kenney-fantasy-ui-borders/
+    modified: false
+    nativeSize: 48x48
+    finalSize: 48x48
+    notes: Fantasy UI Borders (Default 1x, white, tint at runtime); candidate 9-slice frame (docs/art-review/ui-kenney/mapping.md)
+  - id: ui_kfb_panel_panel_028
+    path: public/assets/ui/kenney-fantasy-borders/panel/panel-028.png
+    category: ui
+    origin: external
+    source: https://kenney.nl/assets/fantasy-ui-borders
+    creator: Kenney Vleugels (Kenney)
+    license: CC0-1.0
+    attribution: false
+    redistribute: true
+    evidence: docs/licenses/kenney-fantasy-ui-borders/
+    modified: false
+    nativeSize: 48x48
+    finalSize: 48x48
+    notes: Fantasy UI Borders (Default 1x, white, tint at runtime); candidate 9-slice frame (docs/art-review/ui-kenney/mapping.md)
+  - id: ui_kfb_panel_panel_029
+    path: public/assets/ui/kenney-fantasy-borders/panel/panel-029.png
+    category: ui
+    origin: external
+    source: https://kenney.nl/assets/fantasy-ui-borders
+    creator: Kenney Vleugels (Kenney)
+    license: CC0-1.0
+    attribution: false
+    redistribute: true
+    evidence: docs/licenses/kenney-fantasy-ui-borders/
+    modified: false
+    nativeSize: 48x48
+    finalSize: 48x48
+    notes: Fantasy UI Borders (Default 1x, white, tint at runtime); candidate 9-slice frame (docs/art-review/ui-kenney/mapping.md)
+  - id: ui_kfb_panel_panel_030
+    path: public/assets/ui/kenney-fantasy-borders/panel/panel-030.png
+    category: ui
+    origin: external
+    source: https://kenney.nl/assets/fantasy-ui-borders
+    creator: Kenney Vleugels (Kenney)
+    license: CC0-1.0
+    attribution: false
+    redistribute: true
+    evidence: docs/licenses/kenney-fantasy-ui-borders/
+    modified: false
+    nativeSize: 48x48
+    finalSize: 48x48
+    notes: Fantasy UI Borders (Default 1x, white, tint at runtime); candidate 9-slice frame (docs/art-review/ui-kenney/mapping.md)
+  - id: ui_kfb_panel_panel_031
+    path: public/assets/ui/kenney-fantasy-borders/panel/panel-031.png
+    category: ui
+    origin: external
+    source: https://kenney.nl/assets/fantasy-ui-borders
+    creator: Kenney Vleugels (Kenney)
+    license: CC0-1.0
+    attribution: false
+    redistribute: true
+    evidence: docs/licenses/kenney-fantasy-ui-borders/
+    modified: false
+    nativeSize: 48x48
+    finalSize: 48x48
+    notes: Fantasy UI Borders (Default 1x, white, tint at runtime); candidate 9-slice frame (docs/art-review/ui-kenney/mapping.md)
+  - id: ui_krpg_bar_back_horizontal_left
+    path: public/assets/ui/kenney-rpg-expansion/barBack_horizontalLeft.png
+    category: ui
+    origin: external
+    source: https://kenney.nl/assets/ui-pack-rpg-expansion
+    creator: Kenney Vleugels (Kenney)
+    license: CC0-1.0
+    attribution: false
+    redistribute: true
+    evidence: docs/licenses/kenney-ui-pack-rpg-expansion/
+    modified: false
+    nativeSize: 9x18
+    finalSize: 9x18
+    notes: UI Pack RPG Expansion (not pixel art, anti-aliased edges); candidate frame/bar piece (docs/art-review/ui-kenney/mapping.md)
+  - id: ui_krpg_bar_back_horizontal_mid
+    path: public/assets/ui/kenney-rpg-expansion/barBack_horizontalMid.png
+    category: ui
+    origin: external
+    source: https://kenney.nl/assets/ui-pack-rpg-expansion
+    creator: Kenney Vleugels (Kenney)
+    license: CC0-1.0
+    attribution: false
+    redistribute: true
+    evidence: docs/licenses/kenney-ui-pack-rpg-expansion/
+    modified: false
+    nativeSize: 18x18
+    finalSize: 18x18
+    notes: UI Pack RPG Expansion (not pixel art, anti-aliased edges); candidate frame/bar piece (docs/art-review/ui-kenney/mapping.md)
+  - id: ui_krpg_bar_back_horizontal_right
+    path: public/assets/ui/kenney-rpg-expansion/barBack_horizontalRight.png
+    category: ui
+    origin: external
+    source: https://kenney.nl/assets/ui-pack-rpg-expansion
+    creator: Kenney Vleugels (Kenney)
+    license: CC0-1.0
+    attribution: false
+    redistribute: true
+    evidence: docs/licenses/kenney-ui-pack-rpg-expansion/
+    modified: false
+    nativeSize: 9x18
+    finalSize: 9x18
+    notes: UI Pack RPG Expansion (not pixel art, anti-aliased edges); candidate frame/bar piece (docs/art-review/ui-kenney/mapping.md)
+  - id: ui_krpg_bar_back_vertical_bottom
+    path: public/assets/ui/kenney-rpg-expansion/barBack_verticalBottom.png
+    category: ui
+    origin: external
+    source: https://kenney.nl/assets/ui-pack-rpg-expansion
+    creator: Kenney Vleugels (Kenney)
+    license: CC0-1.0
+    attribution: false
+    redistribute: true
+    evidence: docs/licenses/kenney-ui-pack-rpg-expansion/
+    modified: false
+    nativeSize: 18x9
+    finalSize: 18x9
+    notes: UI Pack RPG Expansion (not pixel art, anti-aliased edges); candidate frame/bar piece (docs/art-review/ui-kenney/mapping.md)
+  - id: ui_krpg_bar_back_vertical_mid
+    path: public/assets/ui/kenney-rpg-expansion/barBack_verticalMid.png
+    category: ui
+    origin: external
+    source: https://kenney.nl/assets/ui-pack-rpg-expansion
+    creator: Kenney Vleugels (Kenney)
+    license: CC0-1.0
+    attribution: false
+    redistribute: true
+    evidence: docs/licenses/kenney-ui-pack-rpg-expansion/
+    modified: false
+    nativeSize: 18x18
+    finalSize: 18x18
+    notes: UI Pack RPG Expansion (not pixel art, anti-aliased edges); candidate frame/bar piece (docs/art-review/ui-kenney/mapping.md)
+  - id: ui_krpg_bar_back_vertical_top
+    path: public/assets/ui/kenney-rpg-expansion/barBack_verticalTop.png
+    category: ui
+    origin: external
+    source: https://kenney.nl/assets/ui-pack-rpg-expansion
+    creator: Kenney Vleugels (Kenney)
+    license: CC0-1.0
+    attribution: false
+    redistribute: true
+    evidence: docs/licenses/kenney-ui-pack-rpg-expansion/
+    modified: false
+    nativeSize: 18x9
+    finalSize: 18x9
+    notes: UI Pack RPG Expansion (not pixel art, anti-aliased edges); candidate frame/bar piece (docs/art-review/ui-kenney/mapping.md)
+  - id: ui_krpg_bar_blue_horizontal_blue
+    path: public/assets/ui/kenney-rpg-expansion/barBlue_horizontalBlue.png
+    category: ui
+    origin: external
+    source: https://kenney.nl/assets/ui-pack-rpg-expansion
+    creator: Kenney Vleugels (Kenney)
+    license: CC0-1.0
+    attribution: false
+    redistribute: true
+    evidence: docs/licenses/kenney-ui-pack-rpg-expansion/
+    modified: false
+    nativeSize: 18x18
+    finalSize: 18x18
+    notes: UI Pack RPG Expansion (not pixel art, anti-aliased edges); candidate frame/bar piece (docs/art-review/ui-kenney/mapping.md)
+  - id: ui_krpg_bar_blue_horizontal_left
+    path: public/assets/ui/kenney-rpg-expansion/barBlue_horizontalLeft.png
+    category: ui
+    origin: external
+    source: https://kenney.nl/assets/ui-pack-rpg-expansion
+    creator: Kenney Vleugels (Kenney)
+    license: CC0-1.0
+    attribution: false
+    redistribute: true
+    evidence: docs/licenses/kenney-ui-pack-rpg-expansion/
+    modified: false
+    nativeSize: 9x18
+    finalSize: 9x18
+    notes: UI Pack RPG Expansion (not pixel art, anti-aliased edges); candidate frame/bar piece (docs/art-review/ui-kenney/mapping.md)
+  - id: ui_krpg_bar_blue_horizontal_right
+    path: public/assets/ui/kenney-rpg-expansion/barBlue_horizontalRight.png
+    category: ui
+    origin: external
+    source: https://kenney.nl/assets/ui-pack-rpg-expansion
+    creator: Kenney Vleugels (Kenney)
+    license: CC0-1.0
+    attribution: false
+    redistribute: true
+    evidence: docs/licenses/kenney-ui-pack-rpg-expansion/
+    modified: false
+    nativeSize: 9x18
+    finalSize: 9x18
+    notes: UI Pack RPG Expansion (not pixel art, anti-aliased edges); candidate frame/bar piece (docs/art-review/ui-kenney/mapping.md)
+  - id: ui_krpg_bar_blue_vertical_bottom
+    path: public/assets/ui/kenney-rpg-expansion/barBlue_verticalBottom.png
+    category: ui
+    origin: external
+    source: https://kenney.nl/assets/ui-pack-rpg-expansion
+    creator: Kenney Vleugels (Kenney)
+    license: CC0-1.0
+    attribution: false
+    redistribute: true
+    evidence: docs/licenses/kenney-ui-pack-rpg-expansion/
+    modified: false
+    nativeSize: 18x9
+    finalSize: 18x9
+    notes: UI Pack RPG Expansion (not pixel art, anti-aliased edges); candidate frame/bar piece (docs/art-review/ui-kenney/mapping.md)
+  - id: ui_krpg_bar_blue_vertical_mid
+    path: public/assets/ui/kenney-rpg-expansion/barBlue_verticalMid.png
+    category: ui
+    origin: external
+    source: https://kenney.nl/assets/ui-pack-rpg-expansion
+    creator: Kenney Vleugels (Kenney)
+    license: CC0-1.0
+    attribution: false
+    redistribute: true
+    evidence: docs/licenses/kenney-ui-pack-rpg-expansion/
+    modified: false
+    nativeSize: 18x18
+    finalSize: 18x18
+    notes: UI Pack RPG Expansion (not pixel art, anti-aliased edges); candidate frame/bar piece (docs/art-review/ui-kenney/mapping.md)
+  - id: ui_krpg_bar_blue_vertical_top
+    path: public/assets/ui/kenney-rpg-expansion/barBlue_verticalTop.png
+    category: ui
+    origin: external
+    source: https://kenney.nl/assets/ui-pack-rpg-expansion
+    creator: Kenney Vleugels (Kenney)
+    license: CC0-1.0
+    attribution: false
+    redistribute: true
+    evidence: docs/licenses/kenney-ui-pack-rpg-expansion/
+    modified: false
+    nativeSize: 18x9
+    finalSize: 18x9
+    notes: UI Pack RPG Expansion (not pixel art, anti-aliased edges); candidate frame/bar piece (docs/art-review/ui-kenney/mapping.md)
+  - id: ui_krpg_bar_green_horizontal_left
+    path: public/assets/ui/kenney-rpg-expansion/barGreen_horizontalLeft.png
+    category: ui
+    origin: external
+    source: https://kenney.nl/assets/ui-pack-rpg-expansion
+    creator: Kenney Vleugels (Kenney)
+    license: CC0-1.0
+    attribution: false
+    redistribute: true
+    evidence: docs/licenses/kenney-ui-pack-rpg-expansion/
+    modified: false
+    nativeSize: 9x18
+    finalSize: 9x18
+    notes: UI Pack RPG Expansion (not pixel art, anti-aliased edges); candidate frame/bar piece (docs/art-review/ui-kenney/mapping.md)
+  - id: ui_krpg_bar_green_horizontal_mid
+    path: public/assets/ui/kenney-rpg-expansion/barGreen_horizontalMid.png
+    category: ui
+    origin: external
+    source: https://kenney.nl/assets/ui-pack-rpg-expansion
+    creator: Kenney Vleugels (Kenney)
+    license: CC0-1.0
+    attribution: false
+    redistribute: true
+    evidence: docs/licenses/kenney-ui-pack-rpg-expansion/
+    modified: false
+    nativeSize: 18x18
+    finalSize: 18x18
+    notes: UI Pack RPG Expansion (not pixel art, anti-aliased edges); candidate frame/bar piece (docs/art-review/ui-kenney/mapping.md)
+  - id: ui_krpg_bar_green_horizontal_right
+    path: public/assets/ui/kenney-rpg-expansion/barGreen_horizontalRight.png
+    category: ui
+    origin: external
+    source: https://kenney.nl/assets/ui-pack-rpg-expansion
+    creator: Kenney Vleugels (Kenney)
+    license: CC0-1.0
+    attribution: false
+    redistribute: true
+    evidence: docs/licenses/kenney-ui-pack-rpg-expansion/
+    modified: false
+    nativeSize: 9x18
+    finalSize: 9x18
+    notes: UI Pack RPG Expansion (not pixel art, anti-aliased edges); candidate frame/bar piece (docs/art-review/ui-kenney/mapping.md)
+  - id: ui_krpg_bar_green_vertical_bottom
+    path: public/assets/ui/kenney-rpg-expansion/barGreen_verticalBottom.png
+    category: ui
+    origin: external
+    source: https://kenney.nl/assets/ui-pack-rpg-expansion
+    creator: Kenney Vleugels (Kenney)
+    license: CC0-1.0
+    attribution: false
+    redistribute: true
+    evidence: docs/licenses/kenney-ui-pack-rpg-expansion/
+    modified: false
+    nativeSize: 18x9
+    finalSize: 18x9
+    notes: UI Pack RPG Expansion (not pixel art, anti-aliased edges); candidate frame/bar piece (docs/art-review/ui-kenney/mapping.md)
+  - id: ui_krpg_bar_green_vertical_mid
+    path: public/assets/ui/kenney-rpg-expansion/barGreen_verticalMid.png
+    category: ui
+    origin: external
+    source: https://kenney.nl/assets/ui-pack-rpg-expansion
+    creator: Kenney Vleugels (Kenney)
+    license: CC0-1.0
+    attribution: false
+    redistribute: true
+    evidence: docs/licenses/kenney-ui-pack-rpg-expansion/
+    modified: false
+    nativeSize: 18x18
+    finalSize: 18x18
+    notes: UI Pack RPG Expansion (not pixel art, anti-aliased edges); candidate frame/bar piece (docs/art-review/ui-kenney/mapping.md)
+  - id: ui_krpg_bar_green_vertical_top
+    path: public/assets/ui/kenney-rpg-expansion/barGreen_verticalTop.png
+    category: ui
+    origin: external
+    source: https://kenney.nl/assets/ui-pack-rpg-expansion
+    creator: Kenney Vleugels (Kenney)
+    license: CC0-1.0
+    attribution: false
+    redistribute: true
+    evidence: docs/licenses/kenney-ui-pack-rpg-expansion/
+    modified: false
+    nativeSize: 18x9
+    finalSize: 18x9
+    notes: UI Pack RPG Expansion (not pixel art, anti-aliased edges); candidate frame/bar piece (docs/art-review/ui-kenney/mapping.md)
+  - id: ui_krpg_bar_red_horizontal_left
+    path: public/assets/ui/kenney-rpg-expansion/barRed_horizontalLeft.png
+    category: ui
+    origin: external
+    source: https://kenney.nl/assets/ui-pack-rpg-expansion
+    creator: Kenney Vleugels (Kenney)
+    license: CC0-1.0
+    attribution: false
+    redistribute: true
+    evidence: docs/licenses/kenney-ui-pack-rpg-expansion/
+    modified: false
+    nativeSize: 9x18
+    finalSize: 9x18
+    notes: UI Pack RPG Expansion (not pixel art, anti-aliased edges); candidate frame/bar piece (docs/art-review/ui-kenney/mapping.md)
+  - id: ui_krpg_bar_red_horizontal_mid
+    path: public/assets/ui/kenney-rpg-expansion/barRed_horizontalMid.png
+    category: ui
+    origin: external
+    source: https://kenney.nl/assets/ui-pack-rpg-expansion
+    creator: Kenney Vleugels (Kenney)
+    license: CC0-1.0
+    attribution: false
+    redistribute: true
+    evidence: docs/licenses/kenney-ui-pack-rpg-expansion/
+    modified: false
+    nativeSize: 18x18
+    finalSize: 18x18
+    notes: UI Pack RPG Expansion (not pixel art, anti-aliased edges); candidate frame/bar piece (docs/art-review/ui-kenney/mapping.md)
+  - id: ui_krpg_bar_red_horizontal_right
+    path: public/assets/ui/kenney-rpg-expansion/barRed_horizontalRight.png
+    category: ui
+    origin: external
+    source: https://kenney.nl/assets/ui-pack-rpg-expansion
+    creator: Kenney Vleugels (Kenney)
+    license: CC0-1.0
+    attribution: false
+    redistribute: true
+    evidence: docs/licenses/kenney-ui-pack-rpg-expansion/
+    modified: false
+    nativeSize: 9x18
+    finalSize: 9x18
+    notes: UI Pack RPG Expansion (not pixel art, anti-aliased edges); candidate frame/bar piece (docs/art-review/ui-kenney/mapping.md)
+  - id: ui_krpg_bar_red_vertical_bottom
+    path: public/assets/ui/kenney-rpg-expansion/barRed_verticalBottom.png
+    category: ui
+    origin: external
+    source: https://kenney.nl/assets/ui-pack-rpg-expansion
+    creator: Kenney Vleugels (Kenney)
+    license: CC0-1.0
+    attribution: false
+    redistribute: true
+    evidence: docs/licenses/kenney-ui-pack-rpg-expansion/
+    modified: false
+    nativeSize: 18x9
+    finalSize: 18x9
+    notes: UI Pack RPG Expansion (not pixel art, anti-aliased edges); candidate frame/bar piece (docs/art-review/ui-kenney/mapping.md)
+  - id: ui_krpg_bar_red_vertical_mid
+    path: public/assets/ui/kenney-rpg-expansion/barRed_verticalMid.png
+    category: ui
+    origin: external
+    source: https://kenney.nl/assets/ui-pack-rpg-expansion
+    creator: Kenney Vleugels (Kenney)
+    license: CC0-1.0
+    attribution: false
+    redistribute: true
+    evidence: docs/licenses/kenney-ui-pack-rpg-expansion/
+    modified: false
+    nativeSize: 18x18
+    finalSize: 18x18
+    notes: UI Pack RPG Expansion (not pixel art, anti-aliased edges); candidate frame/bar piece (docs/art-review/ui-kenney/mapping.md)
+  - id: ui_krpg_bar_red_vertical_top
+    path: public/assets/ui/kenney-rpg-expansion/barRed_verticalTop.png
+    category: ui
+    origin: external
+    source: https://kenney.nl/assets/ui-pack-rpg-expansion
+    creator: Kenney Vleugels (Kenney)
+    license: CC0-1.0
+    attribution: false
+    redistribute: true
+    evidence: docs/licenses/kenney-ui-pack-rpg-expansion/
+    modified: false
+    nativeSize: 18x9
+    finalSize: 18x9
+    notes: UI Pack RPG Expansion (not pixel art, anti-aliased edges); candidate frame/bar piece (docs/art-review/ui-kenney/mapping.md)
+  - id: ui_krpg_bar_yellow_horizontal_left
+    path: public/assets/ui/kenney-rpg-expansion/barYellow_horizontalLeft.png
+    category: ui
+    origin: external
+    source: https://kenney.nl/assets/ui-pack-rpg-expansion
+    creator: Kenney Vleugels (Kenney)
+    license: CC0-1.0
+    attribution: false
+    redistribute: true
+    evidence: docs/licenses/kenney-ui-pack-rpg-expansion/
+    modified: false
+    nativeSize: 9x18
+    finalSize: 9x18
+    notes: UI Pack RPG Expansion (not pixel art, anti-aliased edges); candidate frame/bar piece (docs/art-review/ui-kenney/mapping.md)
+  - id: ui_krpg_bar_yellow_horizontal_mid
+    path: public/assets/ui/kenney-rpg-expansion/barYellow_horizontalMid.png
+    category: ui
+    origin: external
+    source: https://kenney.nl/assets/ui-pack-rpg-expansion
+    creator: Kenney Vleugels (Kenney)
+    license: CC0-1.0
+    attribution: false
+    redistribute: true
+    evidence: docs/licenses/kenney-ui-pack-rpg-expansion/
+    modified: false
+    nativeSize: 18x18
+    finalSize: 18x18
+    notes: UI Pack RPG Expansion (not pixel art, anti-aliased edges); candidate frame/bar piece (docs/art-review/ui-kenney/mapping.md)
+  - id: ui_krpg_bar_yellow_horizontal_right
+    path: public/assets/ui/kenney-rpg-expansion/barYellow_horizontalRight.png
+    category: ui
+    origin: external
+    source: https://kenney.nl/assets/ui-pack-rpg-expansion
+    creator: Kenney Vleugels (Kenney)
+    license: CC0-1.0
+    attribution: false
+    redistribute: true
+    evidence: docs/licenses/kenney-ui-pack-rpg-expansion/
+    modified: false
+    nativeSize: 9x18
+    finalSize: 9x18
+    notes: UI Pack RPG Expansion (not pixel art, anti-aliased edges); candidate frame/bar piece (docs/art-review/ui-kenney/mapping.md)
+  - id: ui_krpg_bar_yellow_vertical_bottom
+    path: public/assets/ui/kenney-rpg-expansion/barYellow_verticalBottom.png
+    category: ui
+    origin: external
+    source: https://kenney.nl/assets/ui-pack-rpg-expansion
+    creator: Kenney Vleugels (Kenney)
+    license: CC0-1.0
+    attribution: false
+    redistribute: true
+    evidence: docs/licenses/kenney-ui-pack-rpg-expansion/
+    modified: false
+    nativeSize: 18x9
+    finalSize: 18x9
+    notes: UI Pack RPG Expansion (not pixel art, anti-aliased edges); candidate frame/bar piece (docs/art-review/ui-kenney/mapping.md)
+  - id: ui_krpg_bar_yellow_vertical_mid
+    path: public/assets/ui/kenney-rpg-expansion/barYellow_verticalMid.png
+    category: ui
+    origin: external
+    source: https://kenney.nl/assets/ui-pack-rpg-expansion
+    creator: Kenney Vleugels (Kenney)
+    license: CC0-1.0
+    attribution: false
+    redistribute: true
+    evidence: docs/licenses/kenney-ui-pack-rpg-expansion/
+    modified: false
+    nativeSize: 18x18
+    finalSize: 18x18
+    notes: UI Pack RPG Expansion (not pixel art, anti-aliased edges); candidate frame/bar piece (docs/art-review/ui-kenney/mapping.md)
+  - id: ui_krpg_bar_yellow_vertical_top
+    path: public/assets/ui/kenney-rpg-expansion/barYellow_verticalTop.png
+    category: ui
+    origin: external
+    source: https://kenney.nl/assets/ui-pack-rpg-expansion
+    creator: Kenney Vleugels (Kenney)
+    license: CC0-1.0
+    attribution: false
+    redistribute: true
+    evidence: docs/licenses/kenney-ui-pack-rpg-expansion/
+    modified: false
+    nativeSize: 18x9
+    finalSize: 18x9
+    notes: UI Pack RPG Expansion (not pixel art, anti-aliased edges); candidate frame/bar piece (docs/art-review/ui-kenney/mapping.md)
+  - id: ui_krpg_button_long_beige
+    path: public/assets/ui/kenney-rpg-expansion/buttonLong_beige.png
+    category: ui
+    origin: external
+    source: https://kenney.nl/assets/ui-pack-rpg-expansion
+    creator: Kenney Vleugels (Kenney)
+    license: CC0-1.0
+    attribution: false
+    redistribute: true
+    evidence: docs/licenses/kenney-ui-pack-rpg-expansion/
+    modified: false
+    nativeSize: 190x49
+    finalSize: 190x49
+    notes: UI Pack RPG Expansion (not pixel art, anti-aliased edges); candidate frame/bar piece (docs/art-review/ui-kenney/mapping.md)
+  - id: ui_krpg_button_long_beige_pressed
+    path: public/assets/ui/kenney-rpg-expansion/buttonLong_beige_pressed.png
+    category: ui
+    origin: external
+    source: https://kenney.nl/assets/ui-pack-rpg-expansion
+    creator: Kenney Vleugels (Kenney)
+    license: CC0-1.0
+    attribution: false
+    redistribute: true
+    evidence: docs/licenses/kenney-ui-pack-rpg-expansion/
+    modified: false
+    nativeSize: 190x45
+    finalSize: 190x45
+    notes: UI Pack RPG Expansion (not pixel art, anti-aliased edges); candidate frame/bar piece (docs/art-review/ui-kenney/mapping.md)
+  - id: ui_krpg_button_long_blue
+    path: public/assets/ui/kenney-rpg-expansion/buttonLong_blue.png
+    category: ui
+    origin: external
+    source: https://kenney.nl/assets/ui-pack-rpg-expansion
+    creator: Kenney Vleugels (Kenney)
+    license: CC0-1.0
+    attribution: false
+    redistribute: true
+    evidence: docs/licenses/kenney-ui-pack-rpg-expansion/
+    modified: false
+    nativeSize: 190x49
+    finalSize: 190x49
+    notes: UI Pack RPG Expansion (not pixel art, anti-aliased edges); candidate frame/bar piece (docs/art-review/ui-kenney/mapping.md)
+  - id: ui_krpg_button_long_blue_pressed
+    path: public/assets/ui/kenney-rpg-expansion/buttonLong_blue_pressed.png
+    category: ui
+    origin: external
+    source: https://kenney.nl/assets/ui-pack-rpg-expansion
+    creator: Kenney Vleugels (Kenney)
+    license: CC0-1.0
+    attribution: false
+    redistribute: true
+    evidence: docs/licenses/kenney-ui-pack-rpg-expansion/
+    modified: false
+    nativeSize: 190x45
+    finalSize: 190x45
+    notes: UI Pack RPG Expansion (not pixel art, anti-aliased edges); candidate frame/bar piece (docs/art-review/ui-kenney/mapping.md)
+  - id: ui_krpg_button_long_brown
+    path: public/assets/ui/kenney-rpg-expansion/buttonLong_brown.png
+    category: ui
+    origin: external
+    source: https://kenney.nl/assets/ui-pack-rpg-expansion
+    creator: Kenney Vleugels (Kenney)
+    license: CC0-1.0
+    attribution: false
+    redistribute: true
+    evidence: docs/licenses/kenney-ui-pack-rpg-expansion/
+    modified: false
+    nativeSize: 190x49
+    finalSize: 190x49
+    notes: UI Pack RPG Expansion (not pixel art, anti-aliased edges); candidate frame/bar piece (docs/art-review/ui-kenney/mapping.md)
+  - id: ui_krpg_button_long_brown_pressed
+    path: public/assets/ui/kenney-rpg-expansion/buttonLong_brown_pressed.png
+    category: ui
+    origin: external
+    source: https://kenney.nl/assets/ui-pack-rpg-expansion
+    creator: Kenney Vleugels (Kenney)
+    license: CC0-1.0
+    attribution: false
+    redistribute: true
+    evidence: docs/licenses/kenney-ui-pack-rpg-expansion/
+    modified: false
+    nativeSize: 190x45
+    finalSize: 190x45
+    notes: UI Pack RPG Expansion (not pixel art, anti-aliased edges); candidate frame/bar piece (docs/art-review/ui-kenney/mapping.md)
+  - id: ui_krpg_button_long_grey
+    path: public/assets/ui/kenney-rpg-expansion/buttonLong_grey.png
+    category: ui
+    origin: external
+    source: https://kenney.nl/assets/ui-pack-rpg-expansion
+    creator: Kenney Vleugels (Kenney)
+    license: CC0-1.0
+    attribution: false
+    redistribute: true
+    evidence: docs/licenses/kenney-ui-pack-rpg-expansion/
+    modified: false
+    nativeSize: 190x49
+    finalSize: 190x49
+    notes: UI Pack RPG Expansion (not pixel art, anti-aliased edges); candidate frame/bar piece (docs/art-review/ui-kenney/mapping.md)
+  - id: ui_krpg_button_long_grey_pressed
+    path: public/assets/ui/kenney-rpg-expansion/buttonLong_grey_pressed.png
+    category: ui
+    origin: external
+    source: https://kenney.nl/assets/ui-pack-rpg-expansion
+    creator: Kenney Vleugels (Kenney)
+    license: CC0-1.0
+    attribution: false
+    redistribute: true
+    evidence: docs/licenses/kenney-ui-pack-rpg-expansion/
+    modified: false
+    nativeSize: 190x45
+    finalSize: 190x45
+    notes: UI Pack RPG Expansion (not pixel art, anti-aliased edges); candidate frame/bar piece (docs/art-review/ui-kenney/mapping.md)
+  - id: ui_krpg_button_round_beige
+    path: public/assets/ui/kenney-rpg-expansion/buttonRound_beige.png
+    category: ui
+    origin: external
+    source: https://kenney.nl/assets/ui-pack-rpg-expansion
+    creator: Kenney Vleugels (Kenney)
+    license: CC0-1.0
+    attribution: false
+    redistribute: true
+    evidence: docs/licenses/kenney-ui-pack-rpg-expansion/
+    modified: false
+    nativeSize: 35x38
+    finalSize: 35x38
+    notes: UI Pack RPG Expansion (not pixel art, anti-aliased edges); candidate frame/bar piece (docs/art-review/ui-kenney/mapping.md)
+  - id: ui_krpg_button_round_blue
+    path: public/assets/ui/kenney-rpg-expansion/buttonRound_blue.png
+    category: ui
+    origin: external
+    source: https://kenney.nl/assets/ui-pack-rpg-expansion
+    creator: Kenney Vleugels (Kenney)
+    license: CC0-1.0
+    attribution: false
+    redistribute: true
+    evidence: docs/licenses/kenney-ui-pack-rpg-expansion/
+    modified: false
+    nativeSize: 35x38
+    finalSize: 35x38
+    notes: UI Pack RPG Expansion (not pixel art, anti-aliased edges); candidate frame/bar piece (docs/art-review/ui-kenney/mapping.md)
+  - id: ui_krpg_button_round_brown
+    path: public/assets/ui/kenney-rpg-expansion/buttonRound_brown.png
+    category: ui
+    origin: external
+    source: https://kenney.nl/assets/ui-pack-rpg-expansion
+    creator: Kenney Vleugels (Kenney)
+    license: CC0-1.0
+    attribution: false
+    redistribute: true
+    evidence: docs/licenses/kenney-ui-pack-rpg-expansion/
+    modified: false
+    nativeSize: 35x38
+    finalSize: 35x38
+    notes: UI Pack RPG Expansion (not pixel art, anti-aliased edges); candidate frame/bar piece (docs/art-review/ui-kenney/mapping.md)
+  - id: ui_krpg_button_round_grey
+    path: public/assets/ui/kenney-rpg-expansion/buttonRound_grey.png
+    category: ui
+    origin: external
+    source: https://kenney.nl/assets/ui-pack-rpg-expansion
+    creator: Kenney Vleugels (Kenney)
+    license: CC0-1.0
+    attribution: false
+    redistribute: true
+    evidence: docs/licenses/kenney-ui-pack-rpg-expansion/
+    modified: false
+    nativeSize: 35x38
+    finalSize: 35x38
+    notes: UI Pack RPG Expansion (not pixel art, anti-aliased edges); candidate frame/bar piece (docs/art-review/ui-kenney/mapping.md)
+  - id: ui_krpg_button_square_beige
+    path: public/assets/ui/kenney-rpg-expansion/buttonSquare_beige.png
+    category: ui
+    origin: external
+    source: https://kenney.nl/assets/ui-pack-rpg-expansion
+    creator: Kenney Vleugels (Kenney)
+    license: CC0-1.0
+    attribution: false
+    redistribute: true
+    evidence: docs/licenses/kenney-ui-pack-rpg-expansion/
+    modified: false
+    nativeSize: 45x49
+    finalSize: 45x49
+    notes: UI Pack RPG Expansion (not pixel art, anti-aliased edges); candidate frame/bar piece (docs/art-review/ui-kenney/mapping.md)
+  - id: ui_krpg_button_square_beige_pressed
+    path: public/assets/ui/kenney-rpg-expansion/buttonSquare_beige_pressed.png
+    category: ui
+    origin: external
+    source: https://kenney.nl/assets/ui-pack-rpg-expansion
+    creator: Kenney Vleugels (Kenney)
+    license: CC0-1.0
+    attribution: false
+    redistribute: true
+    evidence: docs/licenses/kenney-ui-pack-rpg-expansion/
+    modified: false
+    nativeSize: 45x45
+    finalSize: 45x45
+    notes: UI Pack RPG Expansion (not pixel art, anti-aliased edges); candidate frame/bar piece (docs/art-review/ui-kenney/mapping.md)
+  - id: ui_krpg_button_square_blue
+    path: public/assets/ui/kenney-rpg-expansion/buttonSquare_blue.png
+    category: ui
+    origin: external
+    source: https://kenney.nl/assets/ui-pack-rpg-expansion
+    creator: Kenney Vleugels (Kenney)
+    license: CC0-1.0
+    attribution: false
+    redistribute: true
+    evidence: docs/licenses/kenney-ui-pack-rpg-expansion/
+    modified: false
+    nativeSize: 45x49
+    finalSize: 45x49
+    notes: UI Pack RPG Expansion (not pixel art, anti-aliased edges); candidate frame/bar piece (docs/art-review/ui-kenney/mapping.md)
+  - id: ui_krpg_button_square_blue_pressed
+    path: public/assets/ui/kenney-rpg-expansion/buttonSquare_blue_pressed.png
+    category: ui
+    origin: external
+    source: https://kenney.nl/assets/ui-pack-rpg-expansion
+    creator: Kenney Vleugels (Kenney)
+    license: CC0-1.0
+    attribution: false
+    redistribute: true
+    evidence: docs/licenses/kenney-ui-pack-rpg-expansion/
+    modified: false
+    nativeSize: 45x45
+    finalSize: 45x45
+    notes: UI Pack RPG Expansion (not pixel art, anti-aliased edges); candidate frame/bar piece (docs/art-review/ui-kenney/mapping.md)
+  - id: ui_krpg_button_square_brown
+    path: public/assets/ui/kenney-rpg-expansion/buttonSquare_brown.png
+    category: ui
+    origin: external
+    source: https://kenney.nl/assets/ui-pack-rpg-expansion
+    creator: Kenney Vleugels (Kenney)
+    license: CC0-1.0
+    attribution: false
+    redistribute: true
+    evidence: docs/licenses/kenney-ui-pack-rpg-expansion/
+    modified: false
+    nativeSize: 45x49
+    finalSize: 45x49
+    notes: UI Pack RPG Expansion (not pixel art, anti-aliased edges); candidate frame/bar piece (docs/art-review/ui-kenney/mapping.md)
+  - id: ui_krpg_button_square_brown_pressed
+    path: public/assets/ui/kenney-rpg-expansion/buttonSquare_brown_pressed.png
+    category: ui
+    origin: external
+    source: https://kenney.nl/assets/ui-pack-rpg-expansion
+    creator: Kenney Vleugels (Kenney)
+    license: CC0-1.0
+    attribution: false
+    redistribute: true
+    evidence: docs/licenses/kenney-ui-pack-rpg-expansion/
+    modified: false
+    nativeSize: 45x45
+    finalSize: 45x45
+    notes: UI Pack RPG Expansion (not pixel art, anti-aliased edges); candidate frame/bar piece (docs/art-review/ui-kenney/mapping.md)
+  - id: ui_krpg_button_square_grey
+    path: public/assets/ui/kenney-rpg-expansion/buttonSquare_grey.png
+    category: ui
+    origin: external
+    source: https://kenney.nl/assets/ui-pack-rpg-expansion
+    creator: Kenney Vleugels (Kenney)
+    license: CC0-1.0
+    attribution: false
+    redistribute: true
+    evidence: docs/licenses/kenney-ui-pack-rpg-expansion/
+    modified: false
+    nativeSize: 45x49
+    finalSize: 45x49
+    notes: UI Pack RPG Expansion (not pixel art, anti-aliased edges); candidate frame/bar piece (docs/art-review/ui-kenney/mapping.md)
+  - id: ui_krpg_button_square_grey_pressed
+    path: public/assets/ui/kenney-rpg-expansion/buttonSquare_grey_pressed.png
+    category: ui
+    origin: external
+    source: https://kenney.nl/assets/ui-pack-rpg-expansion
+    creator: Kenney Vleugels (Kenney)
+    license: CC0-1.0
+    attribution: false
+    redistribute: true
+    evidence: docs/licenses/kenney-ui-pack-rpg-expansion/
+    modified: false
+    nativeSize: 45x45
+    finalSize: 45x45
+    notes: UI Pack RPG Expansion (not pixel art, anti-aliased edges); candidate frame/bar piece (docs/art-review/ui-kenney/mapping.md)
+  - id: ui_krpg_panel_inset_beige
+    path: public/assets/ui/kenney-rpg-expansion/panelInset_beige.png
+    category: ui
+    origin: external
+    source: https://kenney.nl/assets/ui-pack-rpg-expansion
+    creator: Kenney Vleugels (Kenney)
+    license: CC0-1.0
+    attribution: false
+    redistribute: true
+    evidence: docs/licenses/kenney-ui-pack-rpg-expansion/
+    modified: false
+    nativeSize: 93x94
+    finalSize: 93x94
+    notes: UI Pack RPG Expansion (not pixel art, anti-aliased edges); candidate frame/bar piece (docs/art-review/ui-kenney/mapping.md)
+  - id: ui_krpg_panel_inset_beige_light
+    path: public/assets/ui/kenney-rpg-expansion/panelInset_beigeLight.png
+    category: ui
+    origin: external
+    source: https://kenney.nl/assets/ui-pack-rpg-expansion
+    creator: Kenney Vleugels (Kenney)
+    license: CC0-1.0
+    attribution: false
+    redistribute: true
+    evidence: docs/licenses/kenney-ui-pack-rpg-expansion/
+    modified: false
+    nativeSize: 93x94
+    finalSize: 93x94
+    notes: UI Pack RPG Expansion (not pixel art, anti-aliased edges); candidate frame/bar piece (docs/art-review/ui-kenney/mapping.md)
+  - id: ui_krpg_panel_inset_blue
+    path: public/assets/ui/kenney-rpg-expansion/panelInset_blue.png
+    category: ui
+    origin: external
+    source: https://kenney.nl/assets/ui-pack-rpg-expansion
+    creator: Kenney Vleugels (Kenney)
+    license: CC0-1.0
+    attribution: false
+    redistribute: true
+    evidence: docs/licenses/kenney-ui-pack-rpg-expansion/
+    modified: false
+    nativeSize: 93x94
+    finalSize: 93x94
+    notes: UI Pack RPG Expansion (not pixel art, anti-aliased edges); candidate frame/bar piece (docs/art-review/ui-kenney/mapping.md)
+  - id: ui_krpg_panel_inset_brown
+    path: public/assets/ui/kenney-rpg-expansion/panelInset_brown.png
+    category: ui
+    origin: external
+    source: https://kenney.nl/assets/ui-pack-rpg-expansion
+    creator: Kenney Vleugels (Kenney)
+    license: CC0-1.0
+    attribution: false
+    redistribute: true
+    evidence: docs/licenses/kenney-ui-pack-rpg-expansion/
+    modified: false
+    nativeSize: 93x94
+    finalSize: 93x94
+    notes: UI Pack RPG Expansion (not pixel art, anti-aliased edges); candidate frame/bar piece (docs/art-review/ui-kenney/mapping.md)
+  - id: ui_krpg_panel_beige
+    path: public/assets/ui/kenney-rpg-expansion/panel_beige.png
+    category: ui
+    origin: external
+    source: https://kenney.nl/assets/ui-pack-rpg-expansion
+    creator: Kenney Vleugels (Kenney)
+    license: CC0-1.0
+    attribution: false
+    redistribute: true
+    evidence: docs/licenses/kenney-ui-pack-rpg-expansion/
+    modified: false
+    nativeSize: 100x100
+    finalSize: 100x100
+    notes: UI Pack RPG Expansion (not pixel art, anti-aliased edges); candidate frame/bar piece (docs/art-review/ui-kenney/mapping.md)
+  - id: ui_krpg_panel_beige_light
+    path: public/assets/ui/kenney-rpg-expansion/panel_beigeLight.png
+    category: ui
+    origin: external
+    source: https://kenney.nl/assets/ui-pack-rpg-expansion
+    creator: Kenney Vleugels (Kenney)
+    license: CC0-1.0
+    attribution: false
+    redistribute: true
+    evidence: docs/licenses/kenney-ui-pack-rpg-expansion/
+    modified: false
+    nativeSize: 100x100
+    finalSize: 100x100
+    notes: UI Pack RPG Expansion (not pixel art, anti-aliased edges); candidate frame/bar piece (docs/art-review/ui-kenney/mapping.md)
+  - id: ui_krpg_panel_blue
+    path: public/assets/ui/kenney-rpg-expansion/panel_blue.png
+    category: ui
+    origin: external
+    source: https://kenney.nl/assets/ui-pack-rpg-expansion
+    creator: Kenney Vleugels (Kenney)
+    license: CC0-1.0
+    attribution: false
+    redistribute: true
+    evidence: docs/licenses/kenney-ui-pack-rpg-expansion/
+    modified: false
+    nativeSize: 100x100
+    finalSize: 100x100
+    notes: UI Pack RPG Expansion (not pixel art, anti-aliased edges); candidate frame/bar piece (docs/art-review/ui-kenney/mapping.md)
+  - id: ui_krpg_panel_brown
+    path: public/assets/ui/kenney-rpg-expansion/panel_brown.png
+    category: ui
+    origin: external
+    source: https://kenney.nl/assets/ui-pack-rpg-expansion
+    creator: Kenney Vleugels (Kenney)
+    license: CC0-1.0
+    attribution: false
+    redistribute: true
+    evidence: docs/licenses/kenney-ui-pack-rpg-expansion/
+    modified: false
+    nativeSize: 100x100
+    finalSize: 100x100
+    notes: UI Pack RPG Expansion (not pixel art, anti-aliased edges); candidate frame/bar piece (docs/art-review/ui-kenney/mapping.md)

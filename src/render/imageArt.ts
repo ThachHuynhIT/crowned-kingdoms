@@ -175,7 +175,11 @@ export const IMAGE_BUILDINGS: Readonly<Record<string, string>> = {
   wheat_militia: 'iso/wheat_militia',
   wheat_reapers: 'iso/wheat_reapers',
   wheat_scarecrow: 'iso/wheat_scarecrow',
-  neutral_barracks: 'barracks',
+  // Neutral buildings, isometric (2026-11-09, docs/art-review/neutral-iso/review.md; the old 45° barracks retired).
+  neutral_barracks: 'iso-neutral/neutral_barracks',
+  neutral_archer_tower: 'iso-neutral/neutral_archer_tower',
+  neutral_well: 'iso-neutral/neutral_well',
+  neutral_mercenary_camp: 'iso-neutral/neutral_mercenary_camp',
 };
 export const GRASS_FILES: readonly string[] = ['grass_0', 'grass_1', 'grass_2'];
 
