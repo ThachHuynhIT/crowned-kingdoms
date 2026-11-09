@@ -80,3 +80,15 @@ describe('main-menu strips', () => {
     }
   });
 });
+
+describe('king-select card backgrounds', () => {
+  it('every king has an approved card picture on disk, registered', async () => {
+    const { KING_CARDS_APPROVED, kingCardFile } = await import('../src/render/imageArt');
+    const { ALL_KINGS } = await import('../src/data/rules');
+    expect([...KING_CARDS_APPROVED].sort()).toEqual([...ALL_KINGS].sort());
+    for (const king of KING_CARDS_APPROVED) {
+      expect(existsSync(png(kingCardFile(king))), king).toBe(true);
+      expect(manifest).toContain(`path: ${png(kingCardFile(king))}`);
+    }
+  });
+});

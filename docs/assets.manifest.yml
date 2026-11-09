@@ -18106,3 +18106,129 @@ assets:
     nativeSize: 100x100
     finalSize: 100x100
     notes: UI Pack RPG Expansion (not pixel art, anti-aliased edges); candidate frame/bar piece (docs/art-review/ui-kenney/mapping.md)
+  - id: king_card_wheat
+    path: public/assets/art/ai-v1/king-cards/wheat.png
+    category: ui
+    origin: custom
+    source: docs/art-review/g5/king-cards/wheat/source.png
+    creator: Project owner (OpenAI imagegen via Codex; prompt in docs/art-review/g5/king-cards/wheat/prompt.md)
+    license: project-owned
+    attribution: false
+    redistribute: true
+    evidence: docs/art-review/g5/king-cards/wheat/preview.png
+    modified: true
+    nativeSize: 1024x1536
+    finalSize: 66x96
+    notes: King-select card background (approved 2026-11-09 by Claude under the owner's delegation); magenta keyed out and box-reduced by docs/art-review/g5/king-cards/make_assets.py; window and glyphs drawn over it by src/render/kingCardArt.ts (KING_CARDS_APPROVED)
+  - id: king_card_stone
+    path: public/assets/art/ai-v1/king-cards/stone.png
+    category: ui
+    origin: custom
+    source: docs/art-review/g5/king-cards/stone/source.png
+    creator: Project owner (OpenAI imagegen via Codex; prompt in docs/art-review/g5/king-cards/stone/prompt.md)
+    license: project-owned
+    attribution: false
+    redistribute: true
+    evidence: docs/art-review/g5/king-cards/stone/preview.png
+    modified: true
+    nativeSize: 1024x1536
+    finalSize: 66x96
+    notes: King-select card background (approved 2026-11-09 by Claude under the owner's delegation); magenta keyed out and box-reduced by docs/art-review/g5/king-cards/make_assets.py; window and glyphs drawn over it by src/render/kingCardArt.ts (KING_CARDS_APPROVED)
+  - id: king_card_arcane
+    path: public/assets/art/ai-v1/king-cards/arcane.png
+    category: ui
+    origin: custom
+    source: docs/art-review/g5/king-cards/arcane/source.png
+    creator: Project owner (OpenAI imagegen via Codex; prompt in docs/art-review/g5/king-cards/arcane/prompt.md)
+    license: project-owned
+    attribution: false
+    redistribute: true
+    evidence: docs/art-review/g5/king-cards/arcane/preview.png
+    modified: true
+    nativeSize: 1024x1536
+    finalSize: 66x96
+    notes: King-select card background (approved 2026-11-09 by Claude under the owner's delegation); magenta keyed out and box-reduced by docs/art-review/g5/king-cards/make_assets.py; window and glyphs drawn over it by src/render/kingCardArt.ts (KING_CARDS_APPROVED)
+  - id: king_card_grove
+    path: public/assets/art/ai-v1/king-cards/grove.png
+    category: ui
+    origin: custom
+    source: docs/art-review/g5/king-cards/grove/source.png
+    creator: Project owner (OpenAI imagegen via Codex; prompt in docs/art-review/g5/king-cards/grove/prompt.md)
+    license: project-owned
+    attribution: false
+    redistribute: true
+    evidence: docs/art-review/g5/king-cards/grove/preview.png
+    modified: true
+    nativeSize: 1024x1536
+    finalSize: 66x96
+    notes: King-select card background (approved 2026-11-09 by Claude under the owner's delegation); magenta keyed out and box-reduced by docs/art-review/g5/king-cards/make_assets.py; window and glyphs drawn over it by src/render/kingCardArt.ts (KING_CARDS_APPROVED)
+  - id: king_card_tide
+    path: public/assets/art/ai-v1/king-cards/tide.png
+    category: ui
+    origin: custom
+    source: docs/art-review/g5/king-cards/tide/source.png
+    creator: Project owner (OpenAI imagegen via Codex; prompt in docs/art-review/g5/king-cards/tide/prompt.md)
+    license: project-owned
+    attribution: false
+    redistribute: true
+    evidence: docs/art-review/g5/king-cards/tide/preview.png
+    modified: true
+    nativeSize: 1024x1536
+    finalSize: 66x96
+    notes: King-select card background (approved 2026-11-09 by Claude under the owner's delegation); magenta keyed out and box-reduced by docs/art-review/g5/king-cards/make_assets.py; window and glyphs drawn over it by src/render/kingCardArt.ts (KING_CARDS_APPROVED)
+  - id: king_card_forge
+    path: public/assets/art/ai-v1/king-cards/forge.png
+    category: ui
+    origin: custom
+    source: docs/art-review/g5/king-cards/forge/source.png
+    creator: Project owner (OpenAI imagegen via Codex; prompt in docs/art-review/g5/king-cards/forge/prompt.md)
+    license: project-owned
+    attribution: false
+    redistribute: true
+    evidence: docs/art-review/g5/king-cards/forge/preview.png
+    modified: true
+    nativeSize: 1024x1536
+    finalSize: 66x96
+    notes: King-select card background (approved 2026-11-09 by Claude under the owner's delegation); magenta keyed out and box-reduced by docs/art-review/g5/king-cards/make_assets.py; window and glyphs drawn over it by src/render/kingCardArt.ts (KING_CARDS_APPROVED)
+  - id: king_card_clock
+    path: public/assets/art/ai-v1/king-cards/clock.png
+    category: ui
+    origin: custom
+    source: docs/art-review/g5/king-cards/clock/source.png
+    creator: Project owner (OpenAI imagegen via Codex; prompt in docs/art-review/g5/king-cards/clock/prompt.md)
+    license: project-owned
+    attribution: false
+    redistribute: true
+    evidence: docs/art-review/g5/king-cards/clock/preview.png
+    modified: true
+    nativeSize: 1024x1536
+    finalSize: 66x96
+    notes: King-select card background (approved 2026-11-09 by Claude under the owner's delegation); magenta keyed out and box-reduced by docs/art-review/g5/king-cards/make_assets.py; window and glyphs drawn over it by src/render/kingCardArt.ts (KING_CARDS_APPROVED)
+  - id: king_card_moon
+    path: public/assets/art/ai-v1/king-cards/moon.png
+    category: ui
+    origin: custom
+    source: docs/art-review/g5/king-cards/moon/source.png
+    creator: Project owner (OpenAI imagegen via Codex; prompt in docs/art-review/g5/king-cards/moon/prompt.md)
+    license: project-owned
+    attribution: false
+    redistribute: true
+    evidence: docs/art-review/g5/king-cards/moon/preview.png
+    modified: true
+    nativeSize: 1024x1536
+    finalSize: 66x96
+    notes: King-select card background (approved 2026-11-09 by Claude under the owner's delegation); magenta keyed out and box-reduced by docs/art-review/g5/king-cards/make_assets.py; window and glyphs drawn over it by src/render/kingCardArt.ts (KING_CARDS_APPROVED)
+  - id: king_card_nomad
+    path: public/assets/art/ai-v1/king-cards/nomad.png
+    category: ui
+    origin: custom
+    source: docs/art-review/g5/king-cards/nomad/source.png
+    creator: Project owner (OpenAI imagegen via Codex; prompt in docs/art-review/g5/king-cards/nomad/prompt.md)
+    license: project-owned
+    attribution: false
+    redistribute: true
+    evidence: docs/art-review/g5/king-cards/nomad/preview.png
+    modified: true
+    nativeSize: 1024x1536
+    finalSize: 66x96
+    notes: King-select card background (approved 2026-11-09 by Claude under the owner's delegation); magenta keyed out and box-reduced by docs/art-review/g5/king-cards/make_assets.py; window and glyphs drawn over it by src/render/kingCardArt.ts (KING_CARDS_APPROVED)

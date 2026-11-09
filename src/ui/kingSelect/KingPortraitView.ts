@@ -2,7 +2,8 @@ import type Phaser from 'phaser';
 import type { KingId } from '../../data/types';
 import { describeCard } from '../../game/cards/describe';
 import type { Content } from '../../game/cards/registry';
-import { addPixelTexture } from '../../render/atlas';
+import { addPixelTexture, imageFile } from '../../render/atlas';
+import { kingCardFile } from '../../render/imageArt';
 import { KING_CARD_NATIVE, KING_CARD_WINDOW, paintKingCard } from '../../render/kingCardArt';
 import { paintPortrait, PORTRAIT_SIZE } from '../../render/portraitArt';
 import { PORTRAIT_ASSETS, portraitPlacement, portraitTextureKey } from '../../render/portraitAssets';
@@ -62,7 +63,9 @@ export class KingPortraitView {
   setKing(choice: KingChoice): void {
     this.choice = choice;
     const locked = !choice.playable;
-    addPixelTexture(this.scene.textures, cardKey(choice.id, locked), paintKingCard(choice.id, locked));
+    // The approved card picture when it loaded (2026-11-09), else the painted card; glyphs and window drawn on top either way.
+    const picture = imageFile(this.scene.textures, kingCardFile(choice.id));
+    addPixelTexture(this.scene.textures, cardKey(choice.id, locked), paintKingCard(choice.id, locked, picture));
     this.card.setTexture(cardKey(choice.id, locked)).setVisible(this.shown);
     this.portrait?.destroy();
     this.portrait = null;

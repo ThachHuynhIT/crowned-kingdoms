@@ -2,7 +2,7 @@ import { describe, expect, it } from 'vitest';
 import { ALL_KINGS } from '../data/rules';
 import { KING_THEMES, LOCKED_THEME } from '../data/uiPalette';
 import { KING_CARD_NATIVE, KING_CARD_WINDOW, kingSuit, paintKingCard } from './kingCardArt';
-import type { PixelCanvas } from './pixel';
+import { PixelCanvas } from './pixel';
 
 const colorAt = (c: PixelCanvas, x: number, y: number): number => {
   const i = (y * c.width + x) * 4;
@@ -78,5 +78,30 @@ describe('paintKingCard', () => {
       const r = (c >> 16) & 255; const g = (c >> 8) & 255; const b = c & 255;
       expect(Math.max(r, g, b) - Math.min(r, g, b)).toBeLessThan(24); // grey only
     }
+  });
+});
+
+describe('king card from an approved picture (2026-11-09)', () => {
+  const bg = (): PixelCanvas => {
+    const c = new PixelCanvas(KING_CARD_NATIVE.w, KING_CARD_NATIVE.h);
+    c.fillRect(0, 0, c.width, c.height, 0x336699);
+    return c;
+  };
+  it('keeps the picture under the border, and still draws the window and the glyphs in place', () => {
+    const plain = paintKingCard('wheat');
+    const art = paintKingCard('wheat', false, bg());
+    const at = (c: PixelCanvas, x: number, y: number) => [...c.data.slice((y * c.width + x) * 4, (y * c.width + x) * 4 + 4)];
+    expect(at(art, 5, 40)).toEqual([0x33, 0x66, 0x99, 255]); // border area: the picture
+    const wx = KING_CARD_WINDOW.x + 4;
+    const wy = KING_CARD_WINDOW.y + 4;
+    expect(at(art, wx, wy)).toEqual(at(plain, wx, wy)); // window fill: unchanged
+    expect(at(art, 2, 2)).toEqual(at(plain, 2, 2)); // the K glyph's first pixel
+  });
+  it('greys the picture for a locked king and ignores a picture of the wrong size', () => {
+    const locked = paintKingCard('wheat', true, bg());
+    const i = (40 * locked.width + 5) * 4;
+    expect(locked.data[i]).toBe(locked.data[i + 1]);
+    expect(locked.data[i + 1]).toBe(locked.data[i + 2]);
+    expect(paintKingCard('wheat', false, new PixelCanvas(10, 10)).data).toEqual(paintKingCard('wheat').data);
   });
 });

@@ -3,6 +3,7 @@
  * Density is 2 art px per world unit, so these frames are drawn at scale 0.5 (camera zoom 2 → 1:1 screen pixels).
  * Anything not listed here keeps its generated art at scale 1.
  */
+import type { KingId } from '../data/types';
 import type { UnitAnim } from './unitArt';
 
 export const IMAGE_ART_DIR = 'assets/art/ai-v1/';
@@ -292,6 +293,14 @@ export const IMAGE_ICONS: Readonly<Record<string, string>> = {
 };
 
 /**
+ * King-select card backgrounds drawn as pictures (G5, `docs/art-review/g5/king-cards/`), 66×96 each; only the kings
+ * listed here are loaded, the others keep the painted card. The portrait window and the corner glyphs are always
+ * drawn over the picture (`paintKingCard`).
+ */
+export const KING_CARDS_APPROVED: readonly KingId[] = ['wheat', 'stone', 'arcane', 'grove', 'tide', 'forge', 'clock', 'moon', 'nomad'];
+export const kingCardFile = (king: KingId): string => `king-cards/${king}`;
+
+/**
  * Main-menu backdrop drawn as pictures (G5, `docs/art-review/g5/menu/`): strips far → near, each repeating
  * left-to-right in front of the code sky, drifting at `parallax` screen px per second. The middle strip is a whole
  * countryside down to the screen's bottom edge, so it replaces both nearer code hill layers.
@@ -316,6 +325,7 @@ export const IMAGE_ART_FILES: readonly string[] = [
   ...Object.values(IMAGE_BUILDINGS),
   ...Object.values(IMAGE_ICONS),
   ...MENU_IMAGE_LAYERS.map((layer) => layer.file),
+  ...KING_CARDS_APPROVED.map(kingCardFile),
   ...Object.values(IMAGE_PLOTS).flatMap((prefix) => PLOT_STATES.map((s) => `${prefix}_${s}`)),
   ...GRASS_FILES,
   WALL_FILE,
