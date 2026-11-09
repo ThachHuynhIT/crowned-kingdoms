@@ -47,4 +47,4 @@ Mục 1, 2, 4 làm người chơi mạnh lên. Sau khi xong, chạy lại `npm r
 ## Giới hạn đã biết (soát lỗi 09/11/2026)
 
 - **Boss to chen giữa hai nhà:** khe giữa hai khối chặn kề nhau rộng 28 px. Một boss bán kính ≥ 14 không lọt qua khe đó, nên có thể tì vào tường nhà khi đuổi một lính phe mình nằm sâu trong bàn cờ. Luật "đánh công trình gần nhất" và Cuồng Nộ giới hạn tác hại; tìm đường thật (nhiều vật cản một lúc) để sau.
-- **Tầm đánh cận chiến tính theo hình tròn, khối chặn là hình vuông:** một lính cận chiến tới gần góc nhà dừng ở khoảng cách tròn, rồi bị đẩy ra khỏi hình vuông, nên mất vài tick đánh cho tới khi trượt về giữa cạnh. Chỉ ảnh hưởng cân bằng; muốn sửa thì dùng khoảng cách mép theo hình vuông cho công trình.
+- **Đã sửa sau soát lỗi:** khoảng cách từ một lính tới công trình/Ngai giờ đo tới khối vuông (`edgeGap`), cùng hình với va chạm. Tầm của chính công trình (tháp, xung, hào quang, khiêu khích) vẫn là vòng tròn như khi vẽ.

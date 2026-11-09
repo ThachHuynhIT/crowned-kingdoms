@@ -170,7 +170,7 @@ describe('Wheat King (spec §6.3)', () => {
     );
     expect(byRarity('rare').sort()).toEqual(['wheat_granary', 'wheat_peasant_horde'].sort());
     for (const c of wheat.cards) expect(c.id.startsWith('wheat_')).toBe(true);
-    expect(wheat.throne).toMatchObject({ hp: 900, armor: 0 });
+    expect(wheat.throne).toMatchObject({ hp: 1100, armor: 0 });
     expect(wheat.throne.attack).toMatchObject({ dmg: 8, range: 108, interval: 10, projectileSpeed: 8 * SPEC_MOVE_SCALE }); // 72 × 1,5
   });
 

@@ -29,8 +29,22 @@ Cả hai đều vượt xa mục tiêu: với 60 fps, ngân sách mỗi frame l�
 
 Benchmark mô phỏng trong `npm test` (`src/game/battle/benchmark.test.ts`) vẫn đạt; lần đo gần nhất trên máy này khoảng 0,4 ms/tick.
 
+## Đo lại sau khi làm lại chiến trường (09/11/2026, nhánh `battle-field-rework`)
+
+- **Thay đổi đã có lúc đo:** công trình chặn đường và đi vòng, đội hình, tầm tháp ×3, lính to 1,3 lần, FX bằng ảnh.
+- **Cách đo:** cùng cảnh (Đá Núi, seed 3, bot greedy, năm 29), cùng cách đo 20 giây, nhưng trên Chromium có cửa sổ, nên vsync khoá khoảng 60 fps.
+
+| CPU | Frame | fps TB | Frame TB | p95 | Thực thể tối đa |
+|---|---:|---:|---:|---:|---:|
+| ×1 | 1147 | 57,3 | 17,44 ms | 18,2 ms | 112 |
+| ×4 | 1117 | 55,8 | 17,91 ms | 18,1 ms | 112 |
+
+- **Kết quả:** khi bóp CPU 4 lần, game vẫn bám gần 60 fps. Mục tiêu điện thoại / CPU ×4 là ≥ 30 fps, nên còn dư xa.
+- **Trận ép tới trần:** `src/game/battle/stress.test.ts` chạm đủ 512 thực thể, 160 lính phe mình và 400 đạn, khoảng 0,65 ms/tick khi chạy riêng.
+- **Đo trên điện thoại:** bản dev có chỉ số `?fps`, và cấu hình `dev-lan` chạy game cho mạng nội bộ.
+
 ## Giới hạn
 
 - Chưa đo trên điện thoại thật.
-- Trận đo có 98 thực thể, chưa phải mức trần (512). Chưa dựng cảnh ép tới trần quân và đạn.
+- Trận đo có 98–112 thực thể. Mức trần được kiểm riêng bằng `stress.test.ts`, không đo bằng khung hình.
 - Kết quả từ trình duyệt headless có GPU phần mềm; trên máy thật, vsync sẽ khoá ở 60 fps.

@@ -8,7 +8,20 @@ import { BATTLE } from '../../data/battle';
 import { clampNorthY } from './bounds';
 import { leashBox } from './formation';
 import { separationPush } from './steering';
-import { edgeDistance, isRage } from './targeting';
+import { edgeDistance, edgeGap, isRage } from './targeting';
+
+/** `edgeDistance` on prevX/prevY (the positions at the start of the tick, as the rest of `steer`). */
+const edgeDistanceAt = (w: BattleWorld, a: number, b: number): number =>
+  edgeGap(
+    w.prevX[a]!,
+    w.prevY[a]!,
+    w.radius[a]!,
+    false,
+    w.prevX[b]!,
+    w.prevY[b]!,
+    w.radius[b]!,
+    w.kind[a] === KIND_UNIT && w.kind[b] !== KIND_UNIT,
+  );
 import { KIND_UNIT, TEAM_ALLY, TEAM_FOE, type BattleWorld } from './world';
 
 /** Rảnh và cách nhà < SNAP px → đặt đúng vào nhà (không rung). */
@@ -165,7 +178,8 @@ const steer = (w: BattleWorld, i: number, rage: boolean): void => {
       }
       return;
     }
-    const gap = d - w.radius[i]! - w.radius[t]! - w.range[i]!;
+    // Measured like the attack check (edgeDistance: square footprint for a building), from the start-of-tick positions.
+    const gap = edgeDistanceAt(w, i, t) - w.range[i]!;
     if (gap <= 0) engaged[i] = 1;
     if (gap <= 0 || step <= 0) return; // đã trong tầm (d > 0 khi gap > 0)
     if (!detour(w, i, px, py, w.prevX[t]!, w.prevY[t]!, t)) {

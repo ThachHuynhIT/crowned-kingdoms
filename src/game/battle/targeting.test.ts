@@ -426,3 +426,27 @@ describe('retarget — taunt (spec §8.4)', () => {
     expect(w.target[foe]).toBe(friend);
   });
 });
+
+describe('edgeDistance to a building is measured to its square footprint (review 2026-11-09)', () => {
+  it('on an axis it equals the circle; off a corner it is the distance to the corner, not to the circle', () => {
+    const s = structureFoot(12);
+    const w = world([structure(12)]);
+    const h = BATTLE.structureRadius;
+    const side = unit(w, TEAM_FOE, s.x + h + 10, s.y); // 10 px east of the east face
+    expect(edgeDistance(w, side, 1)).toBeCloseTo(10 - 4, 9);
+    // the building's own reach (tower range, pulses) stays its circle
+    const diag = unit(w, TEAM_FOE, s.x + h + 6, s.y + h + 8);
+    expect(edgeDistance(w, 1, diag)).toBeCloseTo(Math.sqrt((h + 6) * (h + 6) + (h + 8) * (h + 8)) - h - 4, 9);
+    const corner = unit(w, TEAM_FOE, s.x + h + 6, s.y + h + 8); // off the south-east corner
+    expect(edgeDistance(w, corner, 1)).toBeCloseTo(Math.sqrt(6 * 6 + 8 * 8) - 4, 9);
+    const inside = unit(w, TEAM_FOE, s.x + 2, s.y);
+    expect(edgeDistance(w, inside, 1)).toBeLessThan(0);
+  });
+
+  it('two units still use their circles', () => {
+    const w = world();
+    const a = unit(w, TEAM_ALLY, 100, 300);
+    const b = unit(w, TEAM_FOE, 130, 340);
+    expect(edgeDistance(w, a, b)).toBeCloseTo(50 - 8, 9);
+  });
+});

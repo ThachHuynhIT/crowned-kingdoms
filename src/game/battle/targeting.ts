@@ -15,12 +15,50 @@ import {
   type BattleWorld,
 } from './world';
 
-/** Khoảng cách tâm − rA − rB (âm nếu chồng nhau). */
-export const edgeDistance = (world: BattleWorld, a: number, b: number): number => {
-  const dx = world.x[b]! - world.x[a]!;
-  const dy = world.y[b]! - world.y[a]!;
-  return Math.sqrt(dx * dx + dy * dy) - world.radius[a]! - world.radius[b]!;
+/**
+ * Khoảng cách mép (âm nếu chồng nhau) giữa hai thân ở (ax, ay) và (bx, by). Hai lính (hoặc hai công trình): tâm − rA − rB.
+ * Một lính và một công trình/Ngai (`square`): từ mép lính tới khối chặn vuông nửa cạnh = bán kính công trình
+ * (2026-11-09, cùng hình với va chạm), nên lính cận chiến dừng đúng chỗ đánh tới được, kể cả ở góc nhà.
+ */
+export const edgeGap = (
+  ax: number,
+  ay: number,
+  ra: number,
+  squareA: boolean,
+  bx: number,
+  by: number,
+  rb: number,
+  squareB: boolean,
+): number => {
+  const dx = bx - ax;
+  const dy = by - ay;
+  if (squareA === squareB) return Math.sqrt(dx * dx + dy * dy) - ra - rb;
+  const h = squareA ? ra : rb;
+  const r = squareA ? rb : ra;
+  const ox = Math.abs(dx) - h;
+  const oy = Math.abs(dy) - h;
+  if (ox <= 0 && oy <= 0) return Math.max(ox, oy) - r; // centre inside the footprint
+  const px = Math.max(ox, 0);
+  const py = Math.max(oy, 0);
+  return Math.sqrt(px * px + py * py) - r;
 };
+
+/**
+ * Edge distance from `a` to `b` at their current positions. Only a unit measuring to a building or the throne (melee
+ * reach, walking up to it) uses the square footprint; a building's own reach (tower range, pulses, auras, taunt) stays
+ * the circle it is drawn as.
+ */
+export const edgeDistance = (world: BattleWorld, a: number, b: number): number =>
+  edgeGap(
+    world.x[a]!,
+    world.y[a]!,
+    world.radius[a]!,
+    false,
+    world.x[b]!,
+    world.y[b]!,
+    world.radius[b]!,
+    world.kind[a] === KIND_UNIT && world.kind[b] !== KIND_UNIT,
+  );
 
 /**
  * Đơn vị bay chỉ bị đòn của lính có tầm ≥ `flyingHitMinRange`; công trình, Ngai, xung vòng tròn

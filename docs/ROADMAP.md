@@ -40,10 +40,10 @@ Game đổi thể loại từ colony sim sang **roguelite xây vương quốc + 
 - **Tầm và cổng:** tầm bắn của tháp ×3, trừ đẩy lùi và phun quạt; cổng địch xa hơn 1,5 lần.
 - **Lính to:** mọi lính to 1,3 lần, bằng cỡ lính của Trại Lính; khổng lồ cao khoảng 2 lần lính thường.
 - **Lưu ván:** nhiều bản lưu có tên, có màn Tải ván.
-- **Giao diện:** khung lấy từ Kenney Pixel Adventure, cả khung theo màu từng vua; bốn công trình trung lập có art isometric.
+- **Giao diện và art:** khung lấy từ Kenney Pixel Adventure, cả khung theo màu từng vua. Bốn công trình trung lập có art isometric, thẻ vua có nền riêng cho từng vua. FX trận và trời menu đều là ảnh; chỉ còn bóng đá tảng vẽ bằng code.
 - **Âm thanh:** to bằng một nửa.
-- **Cân bằng lại:** `docs/balance/2026-11-09-battle-rework-balance.md` (46,8–57,8%, chênh lệch 11,0).
-- **Đo trên điện thoại:** `?fps` hiện chỉ số khung hình (bản dev); cấu hình `dev-lan` chạy game cho mạng nội bộ. Chưa có số đo trên điện thoại thật.
+- **Cân bằng lại:** `docs/balance/2026-11-09-battle-rework-balance.md` (45,0–55,4%, chênh lệch 10,4).
+- **Hiệu năng:** CPU bóp 4× vẫn khoảng 56 fps (`docs/balance/2026-11-09-g5-performance.md`). `?fps` hiện chỉ số khung hình (bản dev); cấu hình `dev-lan` chạy game cho mạng nội bộ. Chưa có số đo trên điện thoại thật.
 
 **G4 (kings và meta, nhánh `g4-kings-meta`, plan `docs/superpowers/plans/2026-11-09-g4-kings-and-meta.md`):** chơi được đủ 9 vua (Lúa Mì, Đá Núi, Phép Thuật, Rừng Xanh, Thuỷ Triều, Lò Rèn, Đồng Hồ, Ánh Trăng, Du Mục), mỗi vua một Ngai, bị động và 3 perk (27 perk), hai thẻ trung lập meta (Nhân Bản, Ấn Triện), lệnh dời trại miễn phí của Du Mục. Meta (`src/game/meta/`): Điểm Vương Miện `round((số năm + 3 × vua chinh phục + 5 × boss + 20 nếu thắng) × (1 + 0,2 × Gai))`, thông thạo từng vua (perk mở ở 10/30/60), mở vua (25/25/40/40/60/80, Du Mục cần thêm ≥ 1 thắng), mở thẻ trung lập (15/20), độ khó Gai 0–5; hồ sơ meta lưu IndexedDB (store `meta`), không bao giờ bị xoá; `RunState` v6 (migrator 5 → 6). `KingSelectScene` có khoá, perk và Gai; `RunEndScene` hiện bảng điểm; `CrownsScene` hiện điểm, thông thạo và mở khoá.
 
