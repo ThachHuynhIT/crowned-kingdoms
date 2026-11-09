@@ -126,9 +126,9 @@ describe('wheat perks', () => {
 });
 
 describe('stone perks', () => {
-  it("'stone_p1' Nền Móng Vững: throne +200 HP flat (270 → 470)", () => {
-    expect(setupOf(run('stone')).throne.hp).toBe(270);
-    expect(setupOf(run('stone', 'stone_p1')).throne.hp).toBe(470);
+  it("'stone_p1' Nền Móng Vững: throne +200 HP flat (115 → 315)", () => {
+    expect(setupOf(run('stone')).throne.hp).toBe(115);
+    expect(setupOf(run('stone', 'stone_p1')).throne.hp).toBe(315);
   });
 
   it("'stone_p2' Đá Gọi Đá: a level-1 Tháp Ném Đá on plot 7", () => {
@@ -141,7 +141,7 @@ describe('stone perks', () => {
       return plot === THRONE_PLOT ? setup.throne.hp : setup.structures.find((x) => x.plot === plot)!.hp;
     };
     expect(hp('stone_p3', 8)).toBeCloseTo(hp(null, 8) * 1.3);
-    expect(hp('stone_p3', THRONE_PLOT)).toBeCloseTo(270 * 1.3);
+    expect(hp('stone_p3', THRONE_PLOT)).toBeCloseTo(115 * 1.3);
   });
 });
 
@@ -316,11 +316,11 @@ describe('moon perks', () => {
     expect([...s.hand, ...s.drawPile, ...s.discardPile].sort()).toEqual([...s.deck].sort());
   });
 
-  it("'moon_p3' Mạng Thứ Tư: start with RUN.maxLives lives, throne −20% HP (465 → 372)", () => {
+  it("'moon_p3' Mạng Thứ Tư: start with RUN.maxLives lives, throne −20% HP (560 → 448)", () => {
     const s = run('moon', 'moon_p3');
     expect(s.lives).toBe(RUN.maxLives);
     expect(s.lives).toBe(4);
-    expect(setupOf(s).throne.hp).toBeCloseTo(372);
+    expect(setupOf(s).throne.hp).toBeCloseTo(448);
     expect(run('moon').lives).toBe(RUN.startLives);
   });
 });

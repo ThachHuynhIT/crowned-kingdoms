@@ -96,5 +96,5 @@ describe('battle stress at the caps (§8.10)', () => {
         `${a.peakProjectiles} projectiles, avg ${avgMs.toFixed(3)} ms/tick`,
     );
     expect(avgMs).toBeLessThanOrEqual(LIMIT_MS);
-  });
+  }, 20_000); // three 300-tick battles at the caps; the per-tick limit above is what is measured
 });

@@ -1,6 +1,6 @@
 /** Bị động Ngai trong trận (spec §6.6–6.10): Sinh Trưởng, Lửa Tôi, Lên Dây, Chiến Lợi Phẩm, Thu Hồn. */
 import { describe, expect, it } from 'vitest';
-import { TOWER_STD, TROOP_STD, levelMult } from '../../data/scaling';
+import { TOWER_SHOT_DMG_MULT, TOWER_STD, TROOP_STD, levelMult } from '../../data/scaling';
 import type { KingId, Level } from '../../data/types';
 import { BattleRunner } from '../battle/BattleRunner';
 import { tickBehaviours } from '../battle/behaviours';
@@ -76,7 +76,7 @@ describe('grove_growth (Sinh Trưởng)', () => {
 });
 
 describe('forge_tempered (Lửa Tôi)', () => {
-  const towerDmg = (level: Level) => 7 * levelMult(TOWER_STD, level);
+  const towerDmg = (level: Level) => 7 * levelMult(TOWER_STD, level) * TOWER_SHOT_DMG_MULT;
 
   it('a level-3 tower deals ×1.20 at throne level 5, ×1.10 at throne level 1', () => {
     const at5 = withBuilding(kingRun('forge', 5), 7, 'neutral_archer_tower', 3);

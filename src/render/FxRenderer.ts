@@ -7,7 +7,7 @@ import { deathPopFrame, deathPopPuffs, showsFloatingDamage } from './juiceModel'
 import type { BattleEvent } from '../game/battle/types';
 import type { BattleWorld } from '../game/battle/world';
 import { ISO_SPRITE_SCALE, iso } from './isoView';
-import { SPRITES_KEY, fxFrame } from './atlas';
+import { SPRITES_KEY, fxFrame, imageFrameScale } from './atlas';
 import { arrowDir } from './fxArt';
 
 /** Projectiles fly this many px above the ground point they track. */
@@ -168,7 +168,7 @@ export class FxRenderer {
       const rock = this.image(this.boulders, i, fxFrame('boulder'));
       // Accelerating fall: height × (1 − t²), straight down on screen.
       rock
-        .setScale(ISO_SPRITE_SCALE)
+        .setScale(imageFrameScale(fxFrame('boulder')) * ISO_SPRITE_SCALE)
         .setPosition(at.x, Math.round(at.y + 4 - BOULDER_DROP_H * (1 - t * t)))
         .setDepth(at.y + 4);
     }

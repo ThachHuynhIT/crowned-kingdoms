@@ -14,9 +14,9 @@ export const FIELD_DECOR = {
    */
   low: { count: 12, attempts: 600, margin: 32, boardPad: 24, roadHalf: 44, edge: { west: 192, east: 576 } },
   /** The main battlefield, from the board's south edge to past the portal: no decoration footprint touches it. */
-  combatClear: { x0: 256, x1: 512, y0: 544, y1: 832 },
-  /** Around the enemy portal (`ENEMY_PORTAL`, 384 × 792) and where its foes fan out: kept empty too. */
-  portalClear: { x0: 328, x1: 440, y0: 736, y1: 848 },
+  combatClear: { x0: 256, x1: 512, y0: 544, y1: 956 },
+  /** Around the enemy portal (`ENEMY_PORTAL`, 384 × 916 since 2026-11-09) and where its foes fan out: kept empty too. */
+  portalClear: { x0: 328, x1: 440, y0: 860, y1: 972 },
   /**
    * The forest behind the mountain cliff (spec 2026-11-08 §6; denser than the plan's 64 px grid after the in-game review): one candidate per `grid` cell of world
    * [x0, x1) × [y0, y1), kept with probability `occupancy`, a pine `pineShare` of the time, jittered by ±`jitter`;

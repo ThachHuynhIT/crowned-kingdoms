@@ -10,4 +10,5 @@ export const SCENES = {
   runEnd: 'RunEnd',
   help: 'Help',
   settings: 'Settings',
+  saves: 'Saves',
 } as const;

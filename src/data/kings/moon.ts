@@ -158,7 +158,7 @@ export const MOON: KingDef = {
     tags: [],
     textVi:
       'Ngai của Vua Ánh Trăng: bắn phép trong tầm. Thu Hồn: cứ vài Hồn từ lính chết lại triệu hồi một bóng ma tại Ngai (tối đa 20 mỗi trận).',
-    hp: 465,
+    hp: 560,
     armor: 0,
     attack: { dmg: 10, type: 'magic', range: cells(1.6875), interval: 12, projectileSpeed: 16 },
     // Thu Hồn: cứ `souls` Hồn (theo cấp Ngai) triệu hồi 1 `SOUL_HARVEST_UNIT` tại Ngai, tối đa `max` mỗi trận.

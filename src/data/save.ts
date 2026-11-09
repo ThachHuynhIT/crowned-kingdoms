@@ -13,6 +13,15 @@ export const SAVE_DB = {
   metaKey: 'profile',
 } as const;
 
+/** Nhiều bản lưu (2026-11-09): bản có tên nằm trong kho `run` dưới khoá `slot:<id>`; khoá `current` là bản tự lưu. */
+export const SLOT_KEY_PREFIX = 'slot:';
+export const MAX_SAVE_SLOTS = 10;
+export const SLOT_NAME_MAX = 40;
+export const SLOTS_FULL_TEXT = 'Đã đủ 10 bản lưu: xoá bớt một bản rồi lưu lại.';
+export const SLOT_SAVE_FAILED_TEXT = 'Không lưu được bản lưu này.';
+export const SLOT_BROKEN_TEXT = 'Bản lưu này không còn dùng được với bản cập nhật hiện tại.';
+export const AUTOSAVE_NAME = 'Tự động lưu';
+
 export const INCOMPATIBLE_RUN_TEXT = 'Ván đang chơi không còn tương thích với bản cập nhật này.';
 export const STORAGE_WARNING_TEXT = 'Trình duyệt này không lưu được tiến trình.';
 /** Hồ sơ meta do bản mới hơn của trò chơi ghi: chỉ đọc, không ghi đè. */

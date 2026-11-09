@@ -8,17 +8,19 @@ import { deathBehaviours, hitBehaviours } from './behaviours';
 import { afterBossDamage } from './bosses';
 import { mitigate } from './damage';
 import { BOSS_RULES } from '../../data/bosses';
-import { allowsFoeStructureTarget, canHit, edgeDistance, inRange, pickShotTarget, pickShotTargets } from './targeting';
+import { allowsFoeStructureTarget, canHit, edgeDistance, inRange, isRage, pickShotTarget, pickShotTargets } from './targeting';
 import {
   DMG_NAME,
   DMG_FIRE,
   DMG_MAGIC,
+  KIND_STRUCTURE,
   KIND_UNIT,
   TEAM_ALLY,
   TEAM_FOE,
   addUnit,
   bossImmune,
   heal,
+  joinFormation,
   spawnOffset,
   stunFor,
   type BattleWorld,
@@ -364,6 +366,8 @@ const applySlow = (w: BattleWorld, id: number, pct: number, ticks: number): void
 export const applyDamagePhase = (world: BattleWorld): void => {
   const queue = world.damageQueue;
   world.damageQueue = [];
+  // Cuồng Nộ: đòn của địch vào công trình nặng hơn (Ngai không tính).
+  const rageMult = isRage(world) ? 1 + BATTLE.rageStructureDmgPct / 100 : 1;
   const order = queue.map((_, i) => i);
   order.sort((a, b) => {
     const qa = queue[a]!;
@@ -376,7 +380,9 @@ export const applyDamagePhase = (world: BattleWorld): void => {
     if (world.alive[v] === 0 || world.hp[v]! <= 0) continue;
     // Nữ Hoàng đáp xuống nhận thêm sát thương (tính mỗi đòn, không chồng theo tick).
     const landed = v === world.bossId && world.bossLanded ? 1 + BOSS_RULES.hornet.landDmgTakenPct / 100 : 1;
-    const dmg = Math.max(0, mitigateCode(q.raw, q.type, world.armor[v]!)) * landed;
+    const raging =
+      rageMult !== 1 && q.sourceId >= 0 && world.team[q.sourceId] === TEAM_FOE && world.kind[v] === KIND_STRUCTURE;
+    const dmg = Math.max(0, mitigateCode(q.raw, q.type, world.armor[v]!)) * landed * (raging ? rageMult : 1);
     // Khiên hấp thụ trước HP, sau giáp (§8.5).
     const absorbed = Math.min(world.shield[v]!, dmg);
     world.shield[v] = world.shield[v]! - absorbed;
@@ -422,6 +428,7 @@ const summonForKill = (world: BattleWorld, killer: number): void => {
   }
   const o = spawnOffset(world.killSummonDone[killer]!);
   const id = addUnit(world, stats, TEAM_ALLY, world.homeX[killer]! + o.dx, world.homeY[killer]! + o.dy, world.homeX[killer]!, world.homeY[killer]!, world.sourceUid[killer]!);
+  joinFormation(world, id);
   world.killSummonDone[killer] = world.killSummonDone[killer]! + 1;
   if (id < 0) world.capped += 1;
   else world.playerUnits += 1;

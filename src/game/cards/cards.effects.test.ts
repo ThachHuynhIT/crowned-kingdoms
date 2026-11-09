@@ -2,6 +2,7 @@ import { SPEC_MOVE_SCALE } from '../../data/boardGeometry';
 /** Final stats of every G2 card through the real content (spec §6, §13.1 "mỗi thẻ có test hiệu ứng"). */
 import { describe, expect, it } from 'vitest';
 import { RUN } from '../../data/run';
+import { TOWER_SHOT_DMG_MULT } from '../../data/scaling';
 import type { CardId, Level } from '../../data/types';
 import { buildBattleSetup } from '../run/battleSetup';
 import { applyCommand } from '../run/commands';
@@ -169,7 +170,7 @@ describe('Wheat King (spec §6.3)', () => {
     );
     expect(byRarity('rare').sort()).toEqual(['wheat_granary', 'wheat_peasant_horde'].sort());
     for (const c of wheat.cards) expect(c.id.startsWith('wheat_')).toBe(true);
-    expect(wheat.throne).toMatchObject({ hp: 430, armor: 0 });
+    expect(wheat.throne).toMatchObject({ hp: 1100, armor: 0 });
     expect(wheat.throne.attack).toMatchObject({ dmg: 8, range: 108, interval: 10, projectileSpeed: 8 * SPEC_MOVE_SCALE }); // 72 × 1,5
   });
 
@@ -264,7 +265,7 @@ describe('Stone King (spec §6.4)', () => {
     expect(ids('uncommon')).toEqual(['stone_wall', 'stone_crystal', 'stone_miners'].sort());
     expect(ids('rare')).toEqual(['stone_rune_carving', 'stone_mountain_heart'].sort());
     for (const c of stone.cards) expect(c.id.startsWith('stone_')).toBe(true);
-    expect(stone.throne).toMatchObject({ id: 'stone_throne', hp: 270, armor: 0.2 });
+    expect(stone.throne).toMatchObject({ id: 'stone_throne', hp: 115, armor: 0.2 });
     expect(stone.throne.attack).toMatchObject({ dmg: 12, type: 'physical', range: 84, interval: 14, projectileSpeed: 6 * SPEC_MOVE_SCALE }); // 56 × 1,5
   });
 
@@ -278,8 +279,8 @@ describe('Stone King (spec §6.4)', () => {
       { unit: 'slinger', weight: 35 },
       { unit: 'golem', weight: 15 },
     ]);
-    expect(CONTENT.unit('golem')).toMatchObject({ hp: 220, speed: 0.6 * SPEC_MOVE_SCALE, radius: 7, armor: 0.3, enemyCost: 6 });
-    expect(CONTENT.unit('golem').attack).toMatchObject({ dmg: 14, range: 3, interval: 15 });
+    expect(CONTENT.unit('golem')).toMatchObject({ hp: 130, speed: 0.6 * SPEC_MOVE_SCALE, radius: 7, armor: 0.3, enemyCost: 6 });
+    expect(CONTENT.unit('golem').attack).toMatchObject({ dmg: 12, range: 3, interval: 15 });
     expect(CONTENT.unit('miner')).toMatchObject({ hp: 70, speed: 0.8 * SPEC_MOVE_SCALE, radius: 5, armor: 0.2, enemyCost: 2.2 });
     expect(CONTENT.unit('miner').behaviours).toEqual([{ type: 'deathSpawn', unit: 'rubble', count: 1 }]);
     expect(CONTENT.unit('rubble')).toMatchObject({ hp: 40, speed: 0.7 * SPEC_MOVE_SCALE, radius: 4, armor: 0.2, enemyCost: 0 });
@@ -287,9 +288,9 @@ describe('Stone King (spec §6.4)', () => {
     expect(CONTENT.unit('slinger').attack).toMatchObject({ dmg: 7, range: 64, interval: 16, projectileSpeed: 6 * SPEC_MOVE_SCALE });
   });
 
-  it('the throne gives every tower +10/12/15/18/20% damage by throne level', () => {
+  it('the throne gives every tower +5/6/8/9/10% damage by throne level', () => {
     const plain = structureAt(setupOf([[6, bld(1, 'wheat_scarecrow')]]), 6).attack!.dmg;
-    const pct = [10, 12, 15, 18, 20];
+    const pct = [5, 6, 8, 9, 10];
     for (const level of [1, 2, 3, 4, 5] as const) {
       const s = setupOf([[THRONE_PLOT, bld(0, 'stone_throne')], [6, bld(1, 'wheat_scarecrow')]], { ...asStone, throneLevel: level });
       expect(structureAt(s, 6).attack!.dmg).toBeCloseTo(plain * (1 + pct[level - 1]! / 100), 9);
@@ -301,10 +302,10 @@ describe('Stone King (spec §6.4)', () => {
 
   it('Tháp Ném Đá throws splash shells with a minimum range', () => {
     const a = structureAt(setupOf([[6, bld(1, 'stone_catapult')]]), 6).attack!;
-    expect(a).toMatchObject({ dmg: 14, range: 144, minRange: 48, interval: 25, projectileSpeed: 5 * SPEC_MOVE_SCALE, splash: 32 });
+    expect(a).toMatchObject({ dmg: 14 * TOWER_SHOT_DMG_MULT, range: 144 * 3, minRange: 48, interval: 25, projectileSpeed: 5 * SPEC_MOVE_SCALE, splash: 32 });
     const l5 = structureAt(setupOf([[6, bld(1, 'stone_catapult', 5)]]), 6).attack!;
-    expect(l5.dmg).toBeCloseTo(14 * 2.4, 9);
-    expect(l5.range).toBe(144 + 24);
+    expect(l5.dmg).toBeCloseTo(14 * 2.4 * TOWER_SHOT_DMG_MULT, 9);
+    expect(l5.range).toBe((144 + 24) * 3);
   });
 
   it('Xưởng Người Đá spawns 1/1/2/2/3 golems', () => {
@@ -326,12 +327,12 @@ describe('Stone King (spec §6.4)', () => {
     }
   });
 
-  it('Bùa Da Đá gives +20% unit and structure HP and +0.05 armor per stack', () => {
+  it('Bùa Da Đá gives +12% unit and structure HP and +0.05 armor per stack', () => {
     const skin = [{ cardId: 'stone_stoneskin' as CardId, stacks: 2 }];
     const plain = structureAt(setupOf([[6, bld(1, 'wheat_militia')]]), 6);
     const two = structureAt(setupOf([[6, bld(1, 'wheat_militia', 1, skin)]]), 6);
-    expect(two.hp).toBeCloseTo(plain.hp * 1.4, 9);
-    expect(two.spawn!.stats.hp).toBeCloseTo(plain.spawn!.stats.hp * 1.4, 9);
+    expect(two.hp).toBeCloseTo(plain.hp * 1.24, 9);
+    expect(two.spawn!.stats.hp).toBeCloseTo(plain.spawn!.stats.hp * 1.24, 9);
     expect(two.spawn!.stats.armor).toBeCloseTo(plain.spawn!.stats.armor + 0.1, 9);
   });
 
@@ -348,16 +349,16 @@ describe('Stone King (spec §6.4)', () => {
     expect(near).toBeCloseTo(plain * 1.2, 9);
   });
 
-  it('Tháp Pha Lê: 4 magic, range 64, interval 3, instant, +20% per consecutive hit up to +200%', () => {
+  it('Tháp Pha Lê: 4 magic, range 64, interval 3, instant, +20% per consecutive hit up to +100%', () => {
     const a = structureAt(setupOf([[6, bld(1, 'stone_crystal')]]), 6).attack!;
     expect(a).toMatchObject({
-      dmg: 4,
+      dmg: 4 * TOWER_SHOT_DMG_MULT,
       dmgType: 'magic',
-      range: 96, // 64 × 1,5
+      range: 96 * 3, // 64 × 1,5, ×3 (2026-11-09)
       interval: 3,
       projectileSpeed: 0,
       rampPctPerHit: 20,
-      rampCapPct: 200,
+      rampCapPct: 100,
     });
   });
 
@@ -390,13 +391,13 @@ describe('Stone King (spec §6.4)', () => {
     expect(buffed).toBeCloseTo(plain * 1.16, 9);
   });
 
-  it('Tim Núi: HP table, a 40-tick pulse of 30 damage and 10-tick stun, +30% HP to neighbouring golems', () => {
-    const hp = [600, 750, 900, 1050, 1200];
+  it('Tim Núi: HP table, a 60-tick pulse of 30 damage and 10-tick stun, +30% HP to neighbouring golems', () => {
+    const hp = [450, 560, 680, 790, 900];
     for (const level of [1, 2, 3, 4, 5] as const) {
       expect(structureAt(setupOf([[6, bld(1, 'stone_mountain_heart', level)]]), 6).hp).toBe(hp[level - 1]);
     }
     const heart = structureAt(setupOf([[6, bld(1, 'stone_mountain_heart')]]), 6);
-    expect(heart.pulse).toEqual({ everyTicks: 40, radius: 96, dmg: 30, dmgType: 'physical', stunTicks: 10 });
+    expect(heart.pulse).toEqual({ everyTicks: 60, radius: 96, dmg: 30, dmgType: 'physical', stunTicks: 10 });
     expect(heart.attack).toBeNull();
     const plain = structureAt(setupOf([[7, bld(2, 'stone_golem_forge')]]), 7).spawn!.stats.hp;
     const near = structureAt(setupOf([[6, bld(1, 'stone_mountain_heart')], [7, bld(2, 'stone_golem_forge')]]), 7).spawn!.stats.hp;
@@ -420,7 +421,7 @@ describe('Arcane King (spec §6.5)', () => {
     expect(ids('uncommon')).toEqual(['arcane_library', 'arcane_frost_mages', 'arcane_mirror'].sort());
     expect(ids('rare')).toEqual(['arcane_ward', 'arcane_archmage'].sort());
     for (const c of arcane.cards) expect(c.id.startsWith('arcane_')).toBe(true);
-    expect(arcane.throne).toMatchObject({ id: 'arcane_throne', hp: 378, armor: 0 });
+    expect(arcane.throne).toMatchObject({ id: 'arcane_throne', hp: 450, armor: 0 });
     expect(arcane.throne.attack).toMatchObject({ dmg: 10, type: 'magic', range: 120, interval: 12, projectileSpeed: 8 * SPEC_MOVE_SCALE }); // 80 × 1,5
   });
 
@@ -443,9 +444,9 @@ describe('Arcane King (spec §6.5)', () => {
   it('Tháp Pháp Sư bounces once to a foe within 32 px for 60%', () => {
     const a = structureAt(setupOf([[6, bld(1, 'arcane_mage_tower')]]), 6).attack!;
     expect(a).toMatchObject({
-      dmg: 9,
+      dmg: 9 * TOWER_SHOT_DMG_MULT,
       dmgType: 'magic',
-      range: 120, // 80 × 1,5
+      range: 120 * 3, // 80 × 1,5, ×3 (2026-11-09)
       interval: 14,
       projectileSpeed: 8 * SPEC_MOVE_SCALE,
       chain: { count: 1, radius: 64, falloff: 0.6 },
@@ -469,7 +470,7 @@ describe('Arcane King (spec §6.5)', () => {
       { cardId: 'arcane_spark_rune' as CardId, stacks: 2 },
     ];
     const t = structureAt(setupOf([[6, bld(1, 'arcane_mage_tower', 1, both)]]), 6).attack!;
-    expect(t.dmg).toBeCloseTo(9 * 1.15 + 4, 9);
+    expect(t.dmg).toBeCloseTo(9 * TOWER_SHOT_DMG_MULT * 1.15 + 4, 9); // the flat bonus is not scaled
     const fast = structureAt(setupOf([[6, bld(1, 'arcane_mage_tower', 1, spells('arcane_haste_rune', 1))]]), 6).attack!;
     expect(fast.interval).toBeCloseTo(14 / 1.12, 9);
     const capped = structureAt(setupOf([[6, bld(1, 'arcane_mage_tower', 1, spells('arcane_haste_rune', 4))]]), 6).attack!;
@@ -483,13 +484,13 @@ describe('Arcane King (spec §6.5)', () => {
     for (const level of [1, 2, 3, 4, 5] as const) {
       const virt = [1, 1, 1, 2, 2][level - 1]!;
       const s = setupOf([[6, bld(1, 'arcane_library', level)], [7, bld(2, 'arcane_mage_tower', 1, sharp)]]);
-      expect(structureAt(s, 7).attack!.dmg).toBeCloseTo(9 * (1 + (15 + 15 * virt) / 100), 9);
+      expect(structureAt(s, 7).attack!.dmg).toBeCloseTo(9 * TOWER_SHOT_DMG_MULT * (1 + (15 + 15 * virt) / 100), 9);
     }
-    expect(plain).toBeCloseTo(9 * 1.15, 9);
+    expect(plain).toBeCloseTo(9 * TOWER_SHOT_DMG_MULT * 1.15, 9);
     const bare = setupOf([[6, bld(1, 'arcane_library')], [7, bld(2, 'arcane_mage_tower')]]);
-    expect(structureAt(bare, 7).attack!.dmg).toBe(9);
+    expect(structureAt(bare, 7).attack!.dmg).toBe(9 * TOWER_SHOT_DMG_MULT);
     const far = setupOf([[6, bld(1, 'arcane_library')], [8, bld(2, 'arcane_mage_tower', 1, sharp)]]);
-    expect(structureAt(far, 8).attack!.dmg).toBeCloseTo(9 * 1.15, 9);
+    expect(structureAt(far, 8).attack!.dmg).toBeCloseTo(9 * TOWER_SHOT_DMG_MULT * 1.15, 9);
   });
 
   it('virtual stacks do not count toward the stack limit', () => {
@@ -565,7 +566,7 @@ describe('Arcane King (spec §6.5)', () => {
     const plain = structureAt(setupOf([[6, bld(1, 'arcane_mage_tower', 1, two)]]), 6);
     for (const level of [1, 2, 3, 4, 5] as const) {
       const s = setupOf([[THRONE_PLOT, bld(0, 'arcane_throne')], [6, bld(1, 'arcane_mage_tower', 1, two)]], { ...asArcane, throneLevel: level });
-      expect(structureAt(s, 6).attack!.dmg).toBeCloseTo(9 * (1 + (30 + pct[level - 1]!) / 100), 9); // percentages add
+      expect(structureAt(s, 6).attack!.dmg).toBeCloseTo(9 * TOWER_SHOT_DMG_MULT * (1 + (30 + pct[level - 1]!) / 100), 9); // percentages add
       expect(structureAt(s, 6).hp).toBeCloseTo(plain.hp * (1 + pct[level - 1]! / 100), 9);
     }
     const one = setupOf([[THRONE_PLOT, bld(0, 'arcane_throne')], [6, bld(1, 'arcane_mage_tower', 1, spells('neutral_sharpen', 1))]], asArcane);
@@ -585,7 +586,7 @@ describe('tooltips at the viewed level (spec §5.6)', () => {
 
   it('a tower shows damage and range scaled by level', () => {
     const line = describeCard(CONTENT.card('wheat_scarecrow'), 3).lines[0]!;
-    expect(line).toContain('tầm 120'); // 108 + 12
+    expect(line).toContain('tầm 360'); // (108 + 12) × 3
     expect(line).toContain(`${Math.round(6 * 1.7)} sát`);
   });
 });

@@ -111,8 +111,8 @@ describe('decree_stat_matrix', () => {
   it('royal archers: tower range 88 -> 100 and throne 72 -> 84', () => {
     const before = withBoard();
     const after = withBoard(['decree_royal_archers']);
-    expect(structure(before, 8).attack!.range).toBeCloseTo(132);
-    expect(structure(after, 8).attack!.range).toBeCloseTo(150);
+    expect(structure(before, 8).attack!.range).toBeCloseTo(132 * 3); // ×3 (2026-11-09); the decree stays a flat +18
+    expect(structure(after, 8).attack!.range).toBeCloseTo(132 * 3 + 18);
     expect(structure(before, 12).attack!.range).toBeCloseTo(108);
     expect(structure(after, 12).attack!.range).toBeCloseTo(126);
     // troop buildings are not towers

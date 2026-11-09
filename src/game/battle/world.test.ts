@@ -1,3 +1,4 @@
+import { NORMAL_GEOMETRY } from '../../data/boardGeometry';
 import { describe, expect, it } from 'vitest';
 import { BATTLE, ENEMY_PORTAL, INTERVENTION, SPAWN_OFFSETS } from '../../data/battle';
 import { BOARD_ORIGIN, PLOT } from '../../data/boardGeometry';
@@ -65,10 +66,8 @@ describe('createBattle', () => {
       expect(w.label[id]).toBe('militia');
       expect(w.hp[id]).toBe(40);
       expect(w.maxHp[id]).toBe(40);
-      // troops stand in the deploy box of their plot; home = their own slot
-      const slot = deploymentPosition(7, id - 3, 3, w.radius[id]!);
-      expect(w.homeX[id]).toBe(slot.x);
-      expect(w.homeY[id]).toBe(slot.y);
+      // troops start in the deploy box of their plot; home = a formation slot in front of the board (2026-11-09)
+      expect(w.homeY[id]).toBeGreaterThan(NORMAL_GEOMETRY.boardMax);
       expect(w.sourceUid[id]).toBe(107);
       pos.push([w.x[id]!, w.y[id]!]);
     }

@@ -1,6 +1,6 @@
 import { describe, expect, it } from 'vitest';
 import { CONE } from '../../data/battle';
-import { TOWER_RANGE, TOWER_STD } from '../../data/scaling';
+import { TOWER_RANGE, TOWER_SHOT_DMG_MULT, TOWER_STD } from '../../data/scaling';
 import type { CardId, Level } from '../../data/types';
 import { stepBattle } from '../battle/step';
 import { TEAM_FOE, addUnit, createBattle, structureFoot } from '../battle/world';
@@ -62,7 +62,7 @@ describe('the nine Forge King cards (spec 6.8)', () => {
     it('breathes 4 fire over a 60 px 45-degree cone every 4 ticks with a 1/s, 20 tick burn', () => {
       for (const level of [1, 5] as Level[]) {
         const a = at(withBuilding(runState(), 6, 'forge_flame_tower', level), 6).attack!;
-        expect(a.dmg).toBeCloseTo(4 * TOWER_STD[level - 1]!);
+        expect(a.dmg).toBeCloseTo(4 * TOWER_STD[level - 1]! * TOWER_SHOT_DMG_MULT);
         expect([a.dmgType, a.interval, a.projectileSpeed]).toEqual(['fire', 4, 0]);
         expect(a.range).toBe(60 + TOWER_RANGE[level - 1]!); // 40 × 1,5
         expect(a.cone).toEqual({ range: 60, halfAngleCos: CONE.cos45 });

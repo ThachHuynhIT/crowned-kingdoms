@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest';
-import { BATTLE, ENEMY_LEVEL_STAT, WAVES } from '../../data/battle';
+import { BATTLE, ENEMY_LEVEL_STAT, ENEMY_PORTAL, ENEMY_STAT_MULT, WAVES } from '../../data/battle';
 import { SPEC_MOVE_SCALE } from '../../data/boardGeometry';
 import { RULES_FULL } from '../../data/rules';
 import { CONTENT } from '../cards/registry';
@@ -97,13 +97,14 @@ describe('spawn_at120_once', () => {
       const w = world(edge);
       run(w, 120);
       const id = w.bossId;
-      const p = edgePositions(edge, 1)[0]!;
+      // South: the boss comes out of the portal mouth (ENEMY_PORTAL), like every southern foe.
+      const p = edge === 'S' ? { x: ENEMY_PORTAL.x, y: ENEMY_PORTAL.y } : edgePositions(edge, 1)[0]!;
       if (edge === 'N') {
         // The raw N slot lies north of the mountain wall, so the boss is placed on the wall line.
         expect(w.y[id]!).toBeGreaterThanOrEqual(BATTLE.wallY + w.radius[id]!);
         continue;
       }
-      expect([w.x[id]! === p.x || Math.abs(w.x[id]! - p.x) < 5, w.y[id]! === p.y || Math.abs(w.y[id]! - p.y) < 5]).toEqual([true, true]);
+      expect([w.x[id]! === p.x || Math.abs(w.x[id]! - p.x) < 5, w.y[id]! === p.y || Math.abs(w.y[id]! - p.y) < 5], `${edge} ${w.x[id]} ${w.y[id]} vs ${p.x} ${p.y}`).toEqual([true, true]);
     }
   });
 
@@ -159,7 +160,7 @@ describe('setup_mirror', () => {
     expect(m.stats.unit).toBe('militia'); // level 4 beats level 2
     const count = setup.structures.find((x) => x.plot === 8)!.spawn!.count;
     expect(m.count).toBe(Math.max(1, Math.floor(count / 2)));
-    const mult = ENEMY_LEVEL_STAT[s.army!.level - 1]! * s.army!.statMult;
+    const mult = ENEMY_LEVEL_STAT[s.army!.level - 1]! * s.army!.statMult * ENEMY_STAT_MULT;
     expect(m.stats.hp).toBeCloseTo(CONTENT.unit('militia').hp * mult);
   });
 

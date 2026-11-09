@@ -26,7 +26,7 @@ const UNITS: [string, number, number, string, number, number, number, number, nu
   ['moon_reaper', 150, 25, 'physical', 3, 14, 1.0, 6, 0.1, 9.0, ['melee', 'undead']],
   ['rider', 50, 9, 'physical', 2, 10, 2.0, 5, 0.05, 2.0, ['melee', 'cavalry']],
   ['horse_archer', 34, 6, 'physical', 56, 12, 1.8, 5, 0, 1.8, ['ranged', 'cavalry']],
-  ['khan_guard', 110, 14, 'physical', 2, 12, 1.6, 6, 0.2, 4.5, ['melee', 'cavalry']],
+  ['khan_guard', 90, 14, 'physical', 2, 12, 1.6, 6, 0.2, 4.5, ['melee', 'cavalry']],
 ];
 
 const BEHAVIOURS: Record<string, unknown[]> = {

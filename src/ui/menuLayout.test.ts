@@ -63,15 +63,17 @@ describe('layoutMenu', () => {
 });
 
 describe('menu items', () => {
-  it('lists Vương Miện between Ván mới and the visible Cài đặt button', () => {
+  it('lists Tải ván after Ván mới, then Vương Miện, then the visible Cài đặt button', () => {
     const ids = MENU_ITEMS.map((m) => m.id);
-    expect(ids.indexOf('crowns')).toBe(ids.indexOf('newRun') + 1);
+    expect(ids.indexOf('saves')).toBe(ids.indexOf('newRun') + 1);
+    expect(ids.indexOf('crowns')).toBe(ids.indexOf('saves') + 1);
     expect(ids.indexOf('settings')).toBe(ids.indexOf('crowns') + 1);
     expect(MENU_ITEMS.find((m) => m.id === 'crowns')).toMatchObject({ label: 'Vương Miện', visible: true });
     expect(MENU_ITEMS.find((m) => m.id === 'settings')!.visible).toBe(true);
     expect(visibleMenuItems().map((m) => m.label)).toEqual([
       'Tiếp tục',
       'Ván mới',
+      'Tải ván',
       'Vương Miện',
       'Cài đặt',
       'Trợ giúp',

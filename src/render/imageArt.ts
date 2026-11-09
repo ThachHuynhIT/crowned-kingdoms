@@ -3,6 +3,7 @@
  * Density is 2 art px per world unit, so these frames are drawn at scale 0.5 (camera zoom 2 → 1:1 screen pixels).
  * Anything not listed here keeps its generated art at scale 1.
  */
+import type { KingId } from '../data/types';
 import type { UnitAnim } from './unitArt';
 
 export const IMAGE_ART_DIR = 'assets/art/ai-v1/';
@@ -175,7 +176,11 @@ export const IMAGE_BUILDINGS: Readonly<Record<string, string>> = {
   wheat_militia: 'iso/wheat_militia',
   wheat_reapers: 'iso/wheat_reapers',
   wheat_scarecrow: 'iso/wheat_scarecrow',
-  neutral_barracks: 'barracks',
+  // Neutral buildings, isometric (2026-11-09, docs/art-review/neutral-iso/review.md; the old 45° barracks retired).
+  neutral_barracks: 'iso-neutral/neutral_barracks',
+  neutral_archer_tower: 'iso-neutral/neutral_archer_tower',
+  neutral_well: 'iso-neutral/neutral_well',
+  neutral_mercenary_camp: 'iso-neutral/neutral_mercenary_camp',
 };
 export const GRASS_FILES: readonly string[] = ['grass_0', 'grass_1', 'grass_2'];
 
@@ -288,6 +293,36 @@ export const IMAGE_ICONS: Readonly<Record<string, string>> = {
 };
 
 /**
+ * Battle effects drawn as pictures (G5, `docs/art-review/g5/fx/review.md`): fx id → file, at 2 art px per world px like
+ * units. The eight arrows come from one sheet with each direction drawn separately (sprites never rotate); only the
+ * boulder's translucent shadow stays painted in code.
+ */
+export const IMAGE_FX: Readonly<Record<string, string>> = {
+  boulder: 'fx/fx_boulder',
+  pulse: 'fx/fx_pulse',
+  shield: 'fx/fx_shield',
+  stun: 'fx/fx_stun',
+  spark: 'fx/fx_spark',
+  // eight arrows, each drawn for its own direction on one sheet (sprites never rotate)
+  arrow_e: 'fx/fx_arrow_e',
+  arrow_ne: 'fx/fx_arrow_ne',
+  arrow_n: 'fx/fx_arrow_n',
+  arrow_nw: 'fx/fx_arrow_nw',
+  arrow_w: 'fx/fx_arrow_w',
+  arrow_sw: 'fx/fx_arrow_sw',
+  arrow_s: 'fx/fx_arrow_s',
+  arrow_se: 'fx/fx_arrow_se',
+};
+
+/**
+ * King-select card backgrounds drawn as pictures (G5, `docs/art-review/g5/king-cards/`), 66×96 each; only the kings
+ * listed here are loaded, the others keep the painted card. The portrait window and the corner glyphs are always
+ * drawn over the picture (`paintKingCard`).
+ */
+export const KING_CARDS_APPROVED: readonly KingId[] = ['wheat', 'stone', 'arcane', 'grove', 'tide', 'forge', 'clock', 'moon', 'nomad'];
+export const kingCardFile = (king: KingId): string => `king-cards/${king}`;
+
+/**
  * Main-menu backdrop drawn as pictures (G5, `docs/art-review/g5/menu/`): strips far → near, each repeating
  * left-to-right in front of the code sky, drifting at `parallax` screen px per second. The middle strip is a whole
  * countryside down to the screen's bottom edge, so it replaces both nearer code hill layers.
@@ -296,6 +331,9 @@ export const MENU_IMAGE_LAYERS: readonly { readonly file: string; readonly paral
   { file: 'menu/hills_far', parallax: 4 },
   { file: 'menu/hills_mid', parallax: 10 },
 ];
+
+/** The dusk sky behind the strips as a picture (384×256, repeats left to right); null keeps the painted bands. */
+export const MENU_SKY_FILE: string | null = 'menu/sky';
 
 /** The picture strips when every one of them loaded, else null (the menu keeps its painted hills). */
 export const menuImageLayers = (
@@ -312,6 +350,9 @@ export const IMAGE_ART_FILES: readonly string[] = [
   ...Object.values(IMAGE_BUILDINGS),
   ...Object.values(IMAGE_ICONS),
   ...MENU_IMAGE_LAYERS.map((layer) => layer.file),
+  ...(MENU_SKY_FILE ? [MENU_SKY_FILE] : []),
+  ...Object.values(IMAGE_FX),
+  ...KING_CARDS_APPROVED.map(kingCardFile),
   ...Object.values(IMAGE_PLOTS).flatMap((prefix) => PLOT_STATES.map((s) => `${prefix}_${s}`)),
   ...GRASS_FILES,
   WALL_FILE,

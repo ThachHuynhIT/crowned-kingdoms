@@ -3,7 +3,9 @@
  * phân xử bằng id nhỏ hơn (so sánh chặt `<` khi duyệt tăng dần). Không dùng Rng.
  */
 import { BATTLE } from '../../data/battle';
+import { insideLeash } from './formation';
 import {
+  KIND_STRUCTURE,
   KIND_UNIT,
   TARGET_CLOSEST_TO_THRONE,
   TARGET_HIGHEST_HP,
@@ -13,12 +15,50 @@ import {
   type BattleWorld,
 } from './world';
 
-/** Khoảng cách tâm − rA − rB (âm nếu chồng nhau). */
-export const edgeDistance = (world: BattleWorld, a: number, b: number): number => {
-  const dx = world.x[b]! - world.x[a]!;
-  const dy = world.y[b]! - world.y[a]!;
-  return Math.sqrt(dx * dx + dy * dy) - world.radius[a]! - world.radius[b]!;
+/**
+ * Khoảng cách mép (âm nếu chồng nhau) giữa hai thân ở (ax, ay) và (bx, by). Hai lính (hoặc hai công trình): tâm − rA − rB.
+ * Một lính và một công trình/Ngai (`square`): từ mép lính tới khối chặn vuông nửa cạnh = bán kính công trình
+ * (2026-11-09, cùng hình với va chạm), nên lính cận chiến dừng đúng chỗ đánh tới được, kể cả ở góc nhà.
+ */
+export const edgeGap = (
+  ax: number,
+  ay: number,
+  ra: number,
+  squareA: boolean,
+  bx: number,
+  by: number,
+  rb: number,
+  squareB: boolean,
+): number => {
+  const dx = bx - ax;
+  const dy = by - ay;
+  if (squareA === squareB) return Math.sqrt(dx * dx + dy * dy) - ra - rb;
+  const h = squareA ? ra : rb;
+  const r = squareA ? rb : ra;
+  const ox = Math.abs(dx) - h;
+  const oy = Math.abs(dy) - h;
+  if (ox <= 0 && oy <= 0) return Math.max(ox, oy) - r; // centre inside the footprint
+  const px = Math.max(ox, 0);
+  const py = Math.max(oy, 0);
+  return Math.sqrt(px * px + py * py) - r;
 };
+
+/**
+ * Edge distance from `a` to `b` at their current positions. Only a unit measuring to a building or the throne (melee
+ * reach, walking up to it) uses the square footprint; a building's own reach (tower range, pulses, auras, taunt) stays
+ * the circle it is drawn as.
+ */
+export const edgeDistance = (world: BattleWorld, a: number, b: number): number =>
+  edgeGap(
+    world.x[a]!,
+    world.y[a]!,
+    world.radius[a]!,
+    false,
+    world.x[b]!,
+    world.y[b]!,
+    world.radius[b]!,
+    world.kind[a] === KIND_UNIT && world.kind[b] !== KIND_UNIT,
+  );
 
 /**
  * Đơn vị bay chỉ bị đòn của lính có tầm ≥ `flyingHitMinRange`; công trình, Ngai, xung vòng tròn
@@ -33,7 +73,8 @@ export const canHit = (world: BattleWorld, attacker: number, victim: number): bo
 export const inRange = (world: BattleWorld, attacker: number, victim: number): boolean => {
   if (!canHit(world, attacker, victim)) return false;
   const d = edgeDistance(world, attacker, victim);
-  return d <= world.range[attacker]! && d >= world.minRange[attacker]!;
+  const min = world.minRange[attacker]!;
+  return d <= world.range[attacker]! && (min <= 0 || d >= min); // chồng lên nhau (mép âm) vẫn là trong tầm
 };
 
 /** Cuồng Nộ (§8.8): từ rageTick trở đi. */
@@ -47,6 +88,7 @@ const nearestFoe = (w: BattleWorld, self: number): number => {
   let bestD = 0;
   for (let j = 0; j < w.count; j++) {
     if (w.alive[j] === 0 || w.team[j] !== TEAM_FOE || !canHit(w, self, j)) continue;
+    if (!insideLeash(w.geometry, w.x[j]!, w.y[j]!)) continue; // lính phe mình không đuổi ra ngoài vùng của mình
     const dx = w.x[j]! - sx;
     const dy = w.y[j]! - sy;
     const d = dx * dx + dy * dy;
@@ -108,31 +150,20 @@ export const allowsFoeStructureTarget = (w: BattleWorld, self: number): boolean 
   isRage(w) || tauntingStructure(w, self) >= 0 || nearestHittableAllyUnit(w, self) < 0;
 
 /**
- * Địch (không Cuồng Nộ, spec 2026-11-08 §2): công trình Khiêu khích nếu đang trong bán kính; không thì lính
- * phe mình đánh được gần nhất trên cả sân (siege và boss cũng vậy); hết lính thì thực thể phe mình còn sống
- * gần nhất có khoảng cách mép ≤ enemyAggro (siege: siegeAggro) — tức công trình/Ngai; không có → Ngai
- * (−1 nếu Ngai đã chết).
+ * Công trình phe mình còn sống gần nhất (khoảng cách mép, hoà → id nhỏ) ở bất kỳ đâu trên sân; không còn
+ * công trình nào → Ngai (−1 nếu Ngai đã chết). Địch phải phá hết công trình rồi mới đánh Ngai (2026-11-09).
  */
-const foeTarget = (w: BattleWorld, self: number): number => {
-  const taunter = tauntingStructure(w, self);
-  if (taunter >= 0) return taunter;
-  const unit = nearestHittableAllyUnit(w, self);
-  if (unit >= 0) return unit;
-  const siege = w.siege[self] === 1;
-  const limit = siege ? BATTLE.siegeAggro : BATTLE.enemyAggro;
+const nearestStructureOrThrone = (w: BattleWorld, self: number): number => {
   const sx = w.x[self]!;
   const sy = w.y[self]!;
-  const sr = w.radius[self]!;
   let best = -1;
   let bestD = 0;
   for (let j = 0; j < w.count; j++) {
-    if (w.alive[j] === 0 || w.team[j] !== TEAM_ALLY || w.kind[j] === KIND_UNIT) continue;
+    if (w.alive[j] === 0 || w.team[j] !== TEAM_ALLY || w.kind[j] !== KIND_STRUCTURE) continue;
     const dx = w.x[j]! - sx;
     const dy = w.y[j]! - sy;
-    const reach = limit + sr + w.radius[j]!;
-    const d2 = dx * dx + dy * dy;
-    if (d2 > reach * reach) continue; // sqrt chỉ cho ứng viên trong tầm aggro
-    const d = Math.sqrt(d2) - sr - w.radius[j]!;
+    const r = w.radius[j]!;
+    const d = Math.sqrt(dx * dx + dy * dy) - r;
     if (best < 0 || d < bestD) {
       best = j;
       bestD = d;
@@ -140,6 +171,21 @@ const foeTarget = (w: BattleWorld, self: number): number => {
   }
   if (best >= 0) return best;
   return w.alive[w.throneId] === 1 ? w.throneId : -1;
+};
+
+/**
+ * Địch (spec 2026-11-08 §2, sửa 2026-11-09): công trình Khiêu khích nếu đang trong bán kính; không thì lính
+ * phe mình đánh được gần nhất trên cả sân (siege và boss cũng vậy; Cuồng Nộ bỏ qua lính); hết lính thì công
+ * trình gần nhất ở bất kỳ đâu; hết công trình mới tới Ngai.
+ */
+const foeTarget = (w: BattleWorld, self: number, rage: boolean): number => {
+  const taunter = tauntingStructure(w, self);
+  if (taunter >= 0) return taunter;
+  if (!rage) {
+    const unit = nearestHittableAllyUnit(w, self);
+    if (unit >= 0) return unit;
+  }
+  return nearestStructureOrThrone(w, self);
 };
 
 /**
@@ -153,15 +199,15 @@ export const retarget = (world: BattleWorld): void => {
   for (let i = 0; i < world.count; i++) {
     if (world.alive[i] === 0 || world.kind[i] !== KIND_UNIT) continue;
     const foe = world.team[i] === TEAM_FOE;
-    if (foe && rage) {
-      world.target[i] = world.alive[world.throneId] === 1 ? world.throneId : -1;
+    const t = world.target[i]!;
+    if (foe && rage && t >= 0 && world.kind[t] === KIND_UNIT) {
+      world.target[i] = foeTarget(world, i, true); // Cuồng Nộ: bỏ lính, quay sang công trình
       continue;
     }
-    const t = world.target[i]!;
     // Mục tiêu đã chết, hoặc lính phe mình mà địch này không còn đánh được (vừa cất cánh): chọn lại ngay.
     const valid = t >= 0 && world.alive[t] === 1 && (!foe || world.kind[t] !== KIND_UNIT || canHit(world, i, t));
     if (!periodic && valid) continue;
-    world.target[i] = foe ? foeTarget(world, i) : nearestFoe(world, i);
+    world.target[i] = foe ? foeTarget(world, i, rage) : nearestFoe(world, i);
   }
 };
 

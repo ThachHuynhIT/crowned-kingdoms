@@ -1,6 +1,6 @@
 import { SPEC_MOVE_SCALE } from '../../data/boardGeometry';
 import { describe, expect, it } from 'vitest';
-import { PULSE_RADIUS_BONUS, TOWER_RANGE, TOWER_STD } from '../../data/scaling';
+import { PULSE_RADIUS_BONUS, TOWER_RANGE, TOWER_SHOT_DMG_MULT, TOWER_STD } from '../../data/scaling';
 import type { CardId, Level } from '../../data/types';
 import { settleBattleGold } from '../battle/behaviours';
 import { attackPhase } from '../battle/combat';
@@ -91,7 +91,7 @@ describe('the nine Tide King cards (spec 6.7)', () => {
     it('fires 16 splash-12 shells over 88 range every 22 ticks with a 16 px knockback', () => {
       for (const level of [1, 5] as Level[]) {
         const a = at(withBuilding(runState(), 6, 'tide_cannon', level), 6).attack!;
-        expect(a.dmg).toBeCloseTo(16 * TOWER_STD[level - 1]!);
+        expect(a.dmg).toBeCloseTo(16 * TOWER_STD[level - 1]! * TOWER_SHOT_DMG_MULT);
         expect([a.range, a.interval, a.projectileSpeed, a.splash]).toEqual([132 + TOWER_RANGE[level - 1]!, 22, 6 * SPEC_MOVE_SCALE, 24]);
         expect(a.onHit).toEqual([{ type: 'knockback', px: 16 * SPEC_MOVE_SCALE }]);
       }
@@ -202,7 +202,7 @@ describe('the nine Tide King cards (spec 6.7)', () => {
         expect(s.hp).toBe(hp);
         expect(s.multiAttack).toBe(4);
         expect([s.attack!.dmg, s.attack!.range, s.attack!.interval, s.attack!.projectileSpeed]).toEqual([
-          14 * TOWER_STD[level - 1]!,
+          14 * (TOWER_STD[level - 1]! * TOWER_SHOT_DMG_MULT),
           84 + TOWER_RANGE[level - 1]!,
           12,
           0,

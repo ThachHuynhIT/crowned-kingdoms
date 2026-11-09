@@ -1,5 +1,6 @@
 /** Kho lưu IndexedDB (spec §9.3). Chỉ thuần trình duyệt: `src/game` không import file này. */
-import { SAVE_DB } from '../../data/save';
+import { SAVE_DB, SLOT_KEY_PREFIX } from '../../data/save';
+import type { SlotRecord, SlotStore } from '../../game/save/slots';
 import type { SaveEnvelope, SaveStore } from '../../game/save/types';
 
 const failure = (error: DOMException | null | undefined, fallback: string): Error =>
@@ -26,7 +27,7 @@ const open = (factory: IDBFactory): Promise<IDBDatabase> =>
     request.onblocked = () => reject(new Error('indexeddb open blocked'));
   });
 
-class IdbSaveStore implements SaveStore {
+class IdbSaveStore implements SaveStore, SlotStore {
   constructor(private readonly db: IDBDatabase) {
     // Một tab khác nâng phiên bản hoặc trình duyệt đóng kết nối: đóng để không chặn họ.
     db.onversionchange = () => db.close();
@@ -95,8 +96,29 @@ class IdbSaveStore implements SaveStore {
       return tx.objectStore(SAVE_DB.runStore).delete(SAVE_DB.runKey);
     });
   }
+
+  /** Mọi bản lưu có tên: khoá bắt đầu bằng `slot:` (vài chục khoá là cùng, nên đọc từng bản). */
+  async listSlots(): Promise<unknown[]> {
+    const keys = await this.run(SAVE_DB.runStore, 'readonly', (s) => s.getAllKeys());
+    const slotKeys = keys.filter((k): k is string => typeof k === 'string' && k.startsWith(SLOT_KEY_PREFIX));
+    const out: unknown[] = [];
+    for (const key of slotKeys) out.push(await this.run(SAVE_DB.runStore, 'readonly', (s) => s.get(key)));
+    return out.filter((v) => v !== undefined);
+  }
+
+  async loadSlot(id: string): Promise<unknown> {
+    return (await this.run(SAVE_DB.runStore, 'readonly', (s) => s.get(`${SLOT_KEY_PREFIX}${id}`))) ?? null;
+  }
+
+  async saveSlot(id: string, record: SlotRecord): Promise<void> {
+    await this.run(SAVE_DB.runStore, 'readwrite', (s) => s.put(record, `${SLOT_KEY_PREFIX}${id}`));
+  }
+
+  async deleteSlot(id: string): Promise<void> {
+    await this.run(SAVE_DB.runStore, 'readwrite', (s) => s.delete(`${SLOT_KEY_PREFIX}${id}`));
+  }
 }
 
-export async function openIdbSaveStore(factory: IDBFactory): Promise<SaveStore> {
+export async function openIdbSaveStore(factory: IDBFactory): Promise<SaveStore & SlotStore> {
   return new IdbSaveStore(await open(factory));
 }

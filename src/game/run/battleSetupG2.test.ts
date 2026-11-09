@@ -1,5 +1,7 @@
 import { describe, expect, it } from 'vitest';
 import type { CardDef, CardId, EnchantCardDef, Level, UnitDef } from '../../data/types';
+import { ENEMY_STAT_MULT } from '../../data/battle';
+import { TOWER_SHOT_DMG_MULT } from '../../data/scaling';
 import { CONTENT } from '../cards/registry';
 import { contentWith, fakeKing, runState } from '../testing/fixtures';
 import { buildBattleSetup } from './battleSetup';
@@ -115,13 +117,13 @@ describe('level scaling (spec §5.2)', () => {
     }
   });
 
-  it('scales tower damage by TOWER_STD and adds TOWER_RANGE', () => {
+  it('scales tower damage by TOWER_STD and adds TOWER_RANGE, then triples the range', () => {
     const t5 = at(setupOf([[6, bld(1, 'neutral_archer_tower', 5)]]), 6).attack!;
-    expect(t5.dmg).toBeCloseTo(7 * 2.4, 9);
-    expect(t5.range).toBe(88 + 24); // test card keeps 88; TOWER_RANGE L5 is +24
+    expect(t5.dmg).toBeCloseTo(7 * 2.4 * TOWER_SHOT_DMG_MULT, 9);
+    expect(t5.range).toBe((88 + 24) * 3); // test card keeps 88; TOWER_RANGE L5 is +24; ×3 (2026-11-09)
     const t1 = at(setupOf([[6, bld(1, 'neutral_archer_tower', 1)]]), 6).attack!;
-    expect(t1.dmg).toBe(7);
-    expect(t1.range).toBe(88);
+    expect(t1.dmg).toBe(7 * TOWER_SHOT_DMG_MULT);
+    expect(t1.range).toBe(88 * 3);
   });
 
   it('scales structure HP by STRUCT_STD, except cards with their own table', () => {
@@ -164,7 +166,7 @@ describe('modifiers in the setup', () => {
       { cardId: 'neutral_sharpen', stacks: 1 },
       { cardId: 'arcane_spark', stacks: 1 },
     ])]]), 6).attack!;
-    expect(t.dmg).toBeCloseTo(7 * 1.15 + 2, 9);
+    expect(t.dmg).toBeCloseTo(7 * TOWER_SHOT_DMG_MULT * 1.15 + 2, 9); // flatPost is not scaled
   });
 
   it('Stoneskin raises unit HP, structure HP and armor', () => {
@@ -236,8 +238,8 @@ describe('upkeep', () => {
 describe('G1 behaviour is unchanged for level-1 plain buildings', () => {
   it('keeps the shipped numbers', () => {
     const s = buildBattleSetup(board([[6, bld(1, 'wheat_scarecrow')]]), CONTENT);
-    expect(s.structures[0]!.attack!.dmg).toBe(6);
-    expect(s.throne.hp).toBe(430);
+    expect(s.structures[0]!.attack!.dmg).toBe(6 * TOWER_SHOT_DMG_MULT);
+    expect(s.throne.hp).toBe(1100);
   });
 });
 
@@ -402,14 +404,14 @@ describe('enemy banners', () => {
   it('raises HP, slows speed and shields every enemy of that king by the percentages', () => {
     const plain = cB.unit('stone_grunt');
     const s = foe('stone');
-    expect(s.hp).toBeCloseTo(plain.hp * 1.2, 9);
+    expect(s.hp).toBeCloseTo(plain.hp * 1.2 * ENEMY_STAT_MULT, 9);
     expect(s.speed).toBeCloseTo(plain.speed * 0.9, 9);
     expect(s.shield).toBeCloseTo(s.hp * 0.15, 9);
   });
 
   it('leaves raiders untouched', () => {
     const s = foe('raiders');
-    expect(s.hp).toBe(30);
+    expect(s.hp).toBe(30 * ENEMY_STAT_MULT); // no banner, only the global enemy multiplier
     expect(s.shield).toBe(0);
   });
 });

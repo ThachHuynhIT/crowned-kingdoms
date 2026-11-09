@@ -7,7 +7,7 @@ import { queueDamage } from './combat';
 import { BATTLE } from '../../data/battle';
 import { BUILDING_FOOT_OFFSET } from '../../data/boardGeometry';
 import { deploySlot } from './deployment';
-import { KIND_UNIT, TEAM_ALLY, addUnit, stunFor, type BattleWorld } from './world';
+import { KIND_UNIT, TEAM_ALLY, addUnit, joinFormation, stunFor, type BattleWorld } from './world';
 
 /**
  * Ô thứ `index` trong `count` của khu tập kết của công trình `i`: tâm ô suy ra từ chân công trình
@@ -115,6 +115,7 @@ export const respawnPhase = (world: BattleWorld): void => {
     }
     const p = boxSlotOf(world, i, living, world.respawnCount[i]!, stats.radius);
     const id = addUnit(world, stats, TEAM_ALLY, p.x, p.y, p.x, p.y, world.sourceUid[i]!);
+    joinFormation(world, id);
     if (id < 0) world.capped += 1;
     else world.playerUnits += 1;
   }
@@ -132,6 +133,7 @@ export const summonPhase = (world: BattleWorld): void => {
     }
     const p = boxSlotOf(world, i, world.summonDone[i]!, world.summonMax[i]!, stats.radius);
     const id = addUnit(world, stats, TEAM_ALLY, p.x, p.y, p.x, p.y, world.sourceUid[i]!);
+    joinFormation(world, id);
     world.summonDone[i] = world.summonDone[i]! + 1;
     if (id < 0) world.capped += 1;
     else world.playerUnits += 1;
@@ -156,6 +158,7 @@ export const soulHarvestPhase = (world: BattleWorld): void => {
     }
     const p = boxSlotOf(world, world.throneId, index, world.soulMax, stats.radius);
     const id = addUnit(world, stats, TEAM_ALLY, p.x, p.y, p.x, p.y, world.sourceUid[world.throneId]!);
+    joinFormation(world, id);
     if (id < 0) world.capped += 1;
     else world.playerUnits += 1;
   }

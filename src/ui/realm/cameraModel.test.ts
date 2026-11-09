@@ -230,7 +230,7 @@ describe('camera model (spec 06/11/2026, P2 zoom)', () => {
     expect(w.y).toBeCloseTo(ENEMY_PORTAL.y, 6);
     expect(plotAtView(z, DESKTOP, portal)).toBeNull();
     // past the clamp line it is off the field again
-    expect(worldAtView(z, DESKTOP, worldToScreen(z, DESKTOP, { x: 384, y: BATTLE.field + BATTLE.fieldClampMargin + 8 }))).toBeNull();
+    expect(worldAtView(z, DESKTOP, worldToScreen(z, DESKTOP, { x: 384, y: ENEMY_PORTAL.y + BATTLE.spawnRowGap + 8 }))).toBeNull();
   });
 
   it('clamp_centre_stays_south_of_wall_at_fractional_zoom and inverse_roundtrip_all_25_plots_at_fractional_view', () => {

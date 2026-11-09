@@ -83,6 +83,16 @@ const OUTER_CELLS: readonly PlotCell[] = Array.from({ length: (BOARD_SIDE + 2) *
   col: (i % (BOARD_SIDE + 2)) - 1,
 })).filter((c) => c.row < 0 || c.row >= BOARD_SIDE || c.col < 0 || c.col >= BOARD_SIDE);
 
+/**
+ * Cổng dịch chuyển của địch: cuối con đường phía nam. Chủ dự án 09/11/2026: xa hơn 1,5 lần — trước đây cách mép nam
+ * bàn cờ 248 px (y 792), nay 372 px (y 916). Cùng một điểm ở mọi chế độ; sân (FIELD) không đổi, đoạn đường ra cổng dài thêm.
+ */
+export const PORTAL_DISTANCE_MULT = 1.5;
+export const PORTAL = {
+  x: FIELD / 2,
+  y: BOARD_ORIGIN + BOARD_SIDE * PLOT + 248 * PORTAL_DISTANCE_MULT,
+} as const;
+
 export const NORMAL_GEOMETRY: BoardGeometryDef = {
   id: 'normal',
   plotCount: 25,
@@ -95,7 +105,7 @@ export const NORMAL_GEOMETRY: BoardGeometryDef = {
   wallY: WALL_Y,
   thronePlot: THRONE_PLOT,
   roadStartY: BOARD_ORIGIN + BOARD_SIDE * PLOT,
-  portal: { x: 384, y: 792 },
+  portal: PORTAL,
   plotCells: INNER_CELLS,
 };
 
@@ -112,6 +122,6 @@ export const ENDLESS_GEOMETRY: BoardGeometryDef = {
   wallY: WALL_Y - PLOT,
   thronePlot: THRONE_PLOT,
   roadStartY: BOARD_ORIGIN + (BOARD_SIDE + 1) * PLOT,
-  portal: { x: 384, y: 792 },
+  portal: PORTAL,
   plotCells: [...INNER_CELLS, ...OUTER_CELLS],
 };

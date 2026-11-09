@@ -3,7 +3,8 @@ import { BATTLE } from '../data/battle';
 import type { RunMode } from '../data/rules';
 import { fieldTextureKey } from './endlessBoardModel';
 import { PALETTE } from '../data/palette';
-import type { CardDef, CardId, UnitId } from '../data/types';
+import type { CardDef, CardId, KingId, UnitId } from '../data/types';
+import { KING_THEMES } from '../data/uiPalette';
 import type { Content } from '../game/cards/registry';
 import { paintBuilding, paintThrone } from './buildingArt';
 import { paintCardArt } from './cardArt';
@@ -27,6 +28,7 @@ import {
   GROUND_TEXTURES_APPROVED,
   IMAGE_ART_SCALE,
   IMAGE_BUILDINGS,
+  IMAGE_FX,
   IMAGE_ICONS,
   IMAGE_PLOTS,
   IMAGE_UNITS,
@@ -41,11 +43,23 @@ import {
   UI_DECOR_IDS,
   UI_FRAME_IDS,
   UI_THEMED_FRAME_IDS,
+  baseFrame,
   paintUiDecor,
   paintUiFrame,
+  type AnyUiFrame,
   type UiFrame,
 } from './uiArt';
-import { UI_KIT_FILES, UI_KIT_FRAME, activateUiKitFrames, kitTextureKey } from './uiKit';
+import {
+  KIT_COLOURS,
+  UI_KIT_FILES,
+  UI_KIT_FRAME,
+  activateUiKitFrames,
+  kitStatePal,
+  kitSwaps,
+  kitTextureKey,
+  recolorKit,
+  themeKitPal,
+} from './uiKit';
 import { UNIT_FRAME_COUNT, paintUnit, unitCloth, type UnitAnim, type UnitTeam } from './unitArt';
 
 /**
@@ -120,26 +134,31 @@ export const addPixelTexture = (
  */
 export const buildUiTexture = (textures: Phaser.Textures.TextureManager): void => {
   if (textures.exists(UI_KEY)) return;
-  const kitFrames: UiFrame[] = [];
-  const frameArt = (id: UiFrame): PixelCanvas => {
+  const kitFrames: AnyUiFrame[] = [];
+  /** The loaded kit tile of base frame `id`, or null (missing, wrong size): the frame stays generated. */
+  const kitArt = (id: UiFrame): PixelCanvas | null => {
     const key = kitTextureKey(id);
-    if (UI_KIT_FILES[id] && textures.exists(key)) {
-      const art = imageToPixelCanvas(
-        textures.get(key).getSourceImage() as CanvasImageSource & {
-          width: number;
-          height: number;
-        },
-      );
-      if (art && art.width === UI_KIT_FRAME.w && art.height === UI_KIT_FRAME.h) {
-        kitFrames.push(id);
-        return art;
-      }
-    }
-    return paintUiFrame(id);
+    if (!UI_KIT_FILES[id] || !textures.exists(key)) return null;
+    const art = imageToPixelCanvas(
+      textures.get(key).getSourceImage() as CanvasImageSource & {
+        width: number;
+        height: number;
+      },
+    );
+    return art && art.width === UI_KIT_FRAME.w && art.height === UI_KIT_FRAME.h ? art : null;
+  };
+  const frameArt = (id: AnyUiFrame): PixelCanvas => {
+    const base = baseFrame(id);
+    const art = kitArt(base);
+    if (art === null) return paintUiFrame(id);
+    const at = id.indexOf('@');
+    const pal = at >= 0 ? themeKitPal(KING_THEMES[id.slice(at + 1) as KingId]) : KIT_COLOURS;
+    kitFrames.push(id);
+    return recolorKit(art, kitSwaps(kitStatePal(base, pal)));
   };
   const sprites: { name: string; art: PixelCanvas }[] = [
     ...UI_FRAME_IDS.map((id) => ({ name: id, art: frameArt(id) })),
-    ...UI_THEMED_FRAME_IDS.map((id) => ({ name: id, art: paintUiFrame(id) })),
+    ...UI_THEMED_FRAME_IDS.map((id) => ({ name: id, art: frameArt(id) })),
     ...UI_DECOR_IDS.map((id) => ({ name: id, art: paintUiDecor(id) })),
   ];
   const width = 128;
@@ -233,7 +252,7 @@ export const imageFrameScale = (frame: string): number =>
   IMAGE_FRAMES.has(frame) ? IMAGE_ART_SCALE : 1;
 
 /** Pixels of a loaded image texture by file name, or null when it did not load. */
-const imageFile = (textures: Phaser.Textures.TextureManager, file: string): PixelCanvas | null => {
+export const imageFile = (textures: Phaser.Textures.TextureManager, file: string): PixelCanvas | null => {
   const key = imageArtKey(file);
   if (!textures.exists(key)) return null;
   return imageToPixelCanvas(
@@ -257,6 +276,7 @@ export const withImageArt = (
     wanted.set(buildingFrame(card as CardId), file);
   for (const [icon, file] of Object.entries(IMAGE_ICONS))
     wanted.set(iconFrame(icon as IconId), file);
+  for (const [fx, file] of Object.entries(IMAGE_FX)) wanted.set(fxFrame(fx), file);
   for (const [king, prefix] of Object.entries(IMAGE_PLOTS))
     for (const state of PLOT_STATES) wanted.set(kingPlotFrame(king, state), `${prefix}_${state}`);
   return list.map((s) => {

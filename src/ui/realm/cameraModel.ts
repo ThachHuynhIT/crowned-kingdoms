@@ -1,5 +1,5 @@
 import { project, unproject } from '../../core/iso';
-import { BATTLE } from '../../data/battle';
+import { BATTLE, ENEMY_PORTAL } from '../../data/battle';
 import type { RunMode } from '../../data/rules';
 import { geometryFor, plotCoords } from '../../game/run/boardGeometry';
 import { plotAtWorld } from '../../render/endlessBoardModel';
@@ -25,7 +25,8 @@ const WORLD_BOUNDS = {
   x0: -BATTLE.plot,
   y0: 0,
   x1: BATTLE.field + BATTLE.plot,
-  y1: BATTLE.field + BATTLE.plot + BATTLE.spawnOutside + BATTLE.spawnRowGap,
+  // past the enemy portal (y 916 since 2026-11-09) by one plot, so its mouth and the foes in front of it stay in view
+  y1: Math.max(BATTLE.field + BATTLE.plot + BATTLE.spawnOutside + BATTLE.spawnRowGap, ENEMY_PORTAL.y + BATTLE.plot),
 } as const;
 
 /** `WORLD_BOUNDS` as the camera sees it: the bounding box of its isometric diamond (camera space, x' = y − x). */
@@ -232,7 +233,8 @@ export const resizeView = (
  */
 export const worldAtView = (view: CameraView, screen: Size, p: Point): Point | null => {
   const w = unproject(screenToWorld(p, view.scroll, screen, view.zoom));
-  if (w.x < 0 || w.x > BATTLE.field || w.y < 0 || w.y > BATTLE.field + BATTLE.fieldClampMargin) return null;
+  const south = Math.max(BATTLE.field + BATTLE.fieldClampMargin, ENEMY_PORTAL.y + BATTLE.spawnRowGap);
+  if (w.x < 0 || w.x > BATTLE.field || w.y < 0 || w.y > south) return null;
   return w;
 };
 

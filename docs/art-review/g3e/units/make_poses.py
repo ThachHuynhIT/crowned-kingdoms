@@ -27,6 +27,9 @@ GRASS = (88, 140, 72, 255)
 # less than the others (1/5.3), so it came out 1.6x the militia with finer pixels; the project owner chose on
 # 2026-11-06 to reduce it at the same density as the militia (~1/8).
 FACTOR_OVERRIDE = {'reaper': 8.0}
+# Owner 2026-11-09: soldiers should be as big as the barracks footman (34 px in game, from batch-01-barracks), so every
+# pose-sheet unit is cut 1.3x larger than its reviewed size (militia 26 -> 34 px); giants and bosses grow the same way.
+UNIT_SCALE = 1.3
 ZOOM = 4
 
 
@@ -154,7 +157,7 @@ def make(unit, export=False):
     sheet = np.array(Image.open(src).convert('RGBA'))
     figures = [crop_figure(c) for c in cells(sheet)]
     # idle frame 1 matches the reviewed standing size, unless the owner fixed the density
-    factor = FACTOR_OVERRIDE.get(unit) or figures[0][1].shape[0] / reference_height(unit)
+    factor = (FACTOR_OVERRIDE.get(unit) or figures[0][1].shape[0] / reference_height(unit)) / UNIT_SCALE
     ally = place([reduce(rgb, solid, factor) for rgb, solid in figures])
     out = P / unit / 'poses'
     out.mkdir(exist_ok=True)

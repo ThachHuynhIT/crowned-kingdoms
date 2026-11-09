@@ -61,11 +61,40 @@ const roundCorners = (c: PixelCanvas, outline: number): void => {
   }
 };
 
-/** King card art; `locked` paints it in the grey theme with a "?" and a padlock in the window. */
-export const paintKingCard = (king: KingId, locked = false): PixelCanvas => {
+/** `art` in greys (luminance), for the locked card drawn from a picture. */
+const greyed = (art: PixelCanvas): PixelCanvas => {
+  const out = new PixelCanvas(art.width, art.height);
+  out.data.set(art.data);
+  for (let i = 0; i < out.data.length; i += 4) {
+    const l = Math.round(out.data[i]! * 0.3 + out.data[i + 1]! * 0.59 + out.data[i + 2]! * 0.11);
+    out.data[i] = l;
+    out.data[i + 1] = l;
+    out.data[i + 2] = l;
+  }
+  return out;
+};
+
+/**
+ * King card art; `locked` paints it in the grey theme with a "?" and a padlock in the window. With `background` (the
+ * approved 66×96 picture of that king's card, 2026-11-09) the picture replaces the painted paper, smoke and frame;
+ * the portrait window and the corner glyphs are still drawn over it, so their layout never changes.
+ */
+export const paintKingCard = (king: KingId, locked = false, background: PixelCanvas | null = null): PixelCanvas => {
   const t: KingTheme = locked ? LOCKED_THEME : KING_THEMES[king];
   const seed = hashSeed(locked ? `${king}-locked` : king);
   const c = new PixelCanvas(W, H);
+  if (background && background.width === W && background.height === H) {
+    const art = locked ? greyed(background) : background;
+    c.blit(art, 0, 0);
+    // The glyphs sit on a patch of the picture's own paper (its centre, which the portrait covers anyway), so they
+    // read even where the picture's ornament reaches into the corners.
+    const i = ((WIN.y + WIN.h / 2) * W + W / 2) * 4;
+    const paper = (art.data[i]! << 16) | (art.data[i + 1]! << 8) | art.data[i + 2]!;
+    c.fillRect(1, 1, 7, 16, paper);
+    c.fillRect(W - 8, H - 17, 7, 16, paper);
+    drawFaceMarks(c, king, locked, t);
+    return c;
+  }
   c.fillRect(0, 0, W, H, t.panel);
 
   // Smoky edge: 2×2 blocks of light and shade that thin out towards the middle.
@@ -90,7 +119,13 @@ export const paintKingCard = (king: KingId, locked = false): PixelCanvas => {
   };
   ring(0, t.bgDark);
 
-  // Portrait window: outline, then a flat fill the portrait is drawn over.
+  drawFaceMarks(c, king, locked, t);
+  roundCorners(c, t.bgDark);
+  return c;
+};
+
+/** Portrait window (outline, then a flat fill the portrait is drawn over), the corner glyphs, and the lock marks. */
+const drawFaceMarks = (c: PixelCanvas, king: KingId, locked: boolean, t: KingTheme): void => {
   c.fillRect(WIN.x - 1, WIN.y - 1, WIN.w + 2, WIN.h + 2, t.bgDark);
   c.fillRect(WIN.x, WIN.y, WIN.w, WIN.h, t.bgMid);
 
@@ -105,6 +140,4 @@ export const paintKingCard = (king: KingId, locked = false): PixelCanvas => {
     blit(c, GLYPH_QUESTION, WIN.x + 14, WIN.y + 12, t.light, 4);
     blit(c, GLYPH_LOCK, WIN.x + 14, WIN.y + 44, t.panel, 3);
   }
-  roundCorners(c, t.bgDark);
-  return c;
 };

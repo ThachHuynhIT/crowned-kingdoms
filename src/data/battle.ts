@@ -1,5 +1,5 @@
 /** Hằng số trận (spec §3.6, §7.4, §8.2); hình học ô 64 theo spec 06/11/2026. */
-import { BOARD_ORIGIN, FIELD, PLOT, WALL_Y, cells } from './boardGeometry';
+import { BOARD_ORIGIN, FIELD, PLOT, PORTAL, WALL_Y, cells } from './boardGeometry';
 
 /** Ngân sách gốc năm 1..30 = round(12 × 1.15^(y−1)), lưu sẵn để không phụ thuộc Math.pow. */
 export const ENEMY_BUDGET = [
@@ -21,6 +21,11 @@ export const ENEMY_CAP = 120;
 export const ENEMY_LEVEL_COST = [1, 2, 4, 8, 16] as const;
 /** Hệ số HP & DMG theo cấp. */
 export const ENEMY_LEVEL_STAT = [1, 1.45, 2.1, 3.05, 4.42] as const;
+/**
+ * HP và sát thương của mọi lính địch nhân thêm hệ số này (cân bằng lại 2026-11-09 sau khi tầm tháp ×3, công trình
+ * chặn đường và địch phải phá hết nhà: bot greedy Gai 0 thắng gần 100%; mục tiêu 35–65% mỗi vua).
+ */
+export const ENEMY_STAT_MULT = 2.05;
 export const WAVES = { share: [0.4, 0.35, 0.25], spawnTick: [0, 120, 240] } as const;
 
 /** Hằng hình quạt 45° (cos 45° làm tròn xuống nên đúng 45° vẫn nằm trong quạt); không dùng Math.cos. */
@@ -46,18 +51,29 @@ export const BATTLE = {
   field: FIELD,
   plot: PLOT,
   boardOrigin: BOARD_ORIGIN,
-  structureRadius: 12,
-  throneRadius: 14,
+  /** Nửa cạnh khối chặn vuông của công trình / Ngai giữa ô 64 px (2026-11-09: công trình không chiếm cả ô). */
+  structureRadius: 18,
+  throneRadius: 18,
   retargetTicks: 5,
-  // Tầm phát hiện công trình/Ngai của địch, chỉ dùng khi không còn lính phe mình nó đánh được (spec 2026-11-08 §2).
-  enemyAggro: cells(1.5),
-  siegeAggro: cells(3),
   tauntRadiusDefault: cells(1.25),
   flyingHitMinRange: 24, // đòn có tầm ≥ 24 (và tháp, pulse, can thiệp) mới đánh được đơn vị bay
   rageTick: 600,
   hardLimitTick: 900,
   rageSpeedPct: 50,
+  /** Cuồng Nộ: đòn của địch vào công trình (không phải Ngai) thêm % này — địch vẫn phải phá hết nhà trước (2026-11-09). */
+  rageStructureDmgPct: 100,
   playerUnitCap: 160,
+  /** Lính phe mình không ra quá mép bàn cờ + số ô này ở mỗi phía (2026-11-09). */
+  allyLeashPlots: 4,
+  /** Tầm đánh ≤ số này là cận chiến (đứng hàng trước đội hình). */
+  meleeMaxRange: 8,
+  /** Đội hình khi rảnh trước bàn cờ: hàng đầu cách mép nam bàn `formationMargin`, mỗi hàng `formationPerRow` lính. */
+  formationMargin: 14,
+  formationPerRow: 20,
+  formationSpacing: 16,
+  formationRowGap: 16, // 12 → 16 cùng khoảng cách: lính to 1,3 lần (2026-11-09)
+  /** Khoảng trống giữa khối bắn xa và khối cận chiến. */
+  formationBandGap: 6,
   bossSummonCap: 40,
   entityCap: 512,
   projectileCap: 400,
@@ -88,8 +104,8 @@ export const BATTLE = {
  * k ở ô k mod 25 (cột trái → phải, hàng từ chân cổng lên bắc), boss ở tâm. Chỉ là vị trí xuất quân, không va chạm.
  */
 export const ENEMY_PORTAL = {
-  x: FIELD / 2,
-  y: FIELD + BATTLE.spawnOutside,
+  x: PORTAL.x,
+  y: PORTAL.y,
   columns: 5,
   rows: 5,
   spacingX: 12,

@@ -100,7 +100,7 @@ describe('south_spawn_progress (through the enemy portal, spec 2026-11-08 §3)',
     spawnWave(w, 0);
     const ys = new Set<number>();
     for (let i = 0; i < w.count; i++) if (w.team[i] === 1) ys.add(w.y[i]!);
-    expect([...ys].sort((a, b) => a - b)).toEqual([768, 774, 780, 786, 792]);
+    expect([...ys].sort((a, b) => a - b)).toEqual([892, 898, 904, 910, 916]);
     expect(Math.max(...ys)).toBeLessThanOrEqual(w.maxY);
     const y0 = Math.min(...ys);
     for (let t = 0; t < 30; t++) stepBattle(w, []);

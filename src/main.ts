@@ -11,6 +11,7 @@ import { PlanningHudScene } from './scenes/PlanningHudScene';
 import { PreloadScene } from './scenes/PreloadScene';
 import { RealmScene } from './scenes/RealmScene';
 import { RunEndScene } from './scenes/RunEndScene';
+import { SavesScene } from './scenes/SavesScene';
 import { SettingsScene } from './scenes/SettingsScene';
 
 const game = new Phaser.Game({
@@ -44,12 +45,14 @@ const game = new Phaser.Game({
     RunEndScene,
     HelpScene,
     SettingsScene,
+    SavesScene,
   ],
 });
 
 if (import.meta.env.DEV) {
   (window as unknown as { game: Phaser.Game }).game = game;
   void import('./dev/registerPreview').then((m) => m.registerPreview(game));
+  void import('./dev/fpsOverlay').then((m) => m.startFpsOverlay());
 }
 
 void registerPwa();

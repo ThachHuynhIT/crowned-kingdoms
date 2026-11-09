@@ -1,3 +1,4 @@
+import { NORMAL_GEOMETRY } from '../../data/boardGeometry';
 import { describe, expect, it } from 'vitest';
 import { BUILDING_FOOT_OFFSET, DEPLOY_BOX, PLOT } from '../../data/boardGeometry';
 import { battleSetup, structure, throneSetup, unitStats } from '../testing/fixtures';
@@ -62,7 +63,7 @@ describe('battles deploy into the boxes', () => {
   const unitsOf = (w: ReturnType<typeof createBattle>, uid: number) =>
     Array.from({ length: w.count }, (_, i) => i).filter((i) => w.kind[i] === KIND_UNIT && w.sourceUid[i] === uid);
 
-  it('starts barracks troops, start summons and the Ngai mercenaries in their own boxes, home = slot', () => {
+  it('starts barracks troops, start summons and the Ngai mercenaries in their own boxes; home = a formation slot', () => {
     const w = createBattle(
       battleSetup({
         throne: throneSetup({ plot: 2, spawnAtThrone: troops(3) }),
@@ -74,7 +75,8 @@ describe('battles deploy into the boxes', () => {
       expect(ids).toHaveLength(count);
       ids.forEach((id, k) => {
         const slot = deploymentPosition(plot, k, count, 4);
-        expect([w.x[id], w.y[id], w.homeX[id], w.homeY[id]]).toEqual([slot.x, slot.y, slot.x, slot.y]);
+        expect([w.x[id], w.y[id]]).toEqual([slot.x, slot.y]);
+        expect(w.homeY[id]).toBeGreaterThan(NORMAL_GEOMETRY.boardMax); // 2026-11-09: they line up in front of the board
       });
     }
   });
@@ -85,13 +87,15 @@ describe('battles deploy into the boxes', () => {
     expect([w.x[id], w.y[id]]).toEqual([plotCenter(7).x + BUILDING_FOOT_OFFSET.x, plotCenter(7).y]);
   });
 
-  it('respawns a fallen trooper back into its box', () => {
+  it('respawns a fallen trooper in its box; its home is a formation slot in front of the board (review 2026-11-09)', () => {
     const w = createBattle(battleSetup({ structures: [structure(7, { respawn: { everyTicks: 10, stats: unitStats({ radius: 4 }), count: 2 } })] }));
     addUnit(w, unitStats({ speed: 0, dmg: 0, interval: 0 }), TEAM_FOE, 740, 740, 740, 740, -1); // keeps the battle going
     for (let i = 0; i < 11; i++) stepBattle(w, []);
     const ids = unitsOf(w, 8);
     expect(ids.length).toBeGreaterThan(0);
     const first = deploymentPosition(7, 0, 2, 4);
-    expect([w.homeX[ids[0]!], w.homeY[ids[0]!]]).toEqual([first.x, first.y]);
+    // it appears in the deploy box, then walks to the formation (a home inside the footprint would jitter forever)
+    expect(Math.abs(w.x[ids[0]!]! - first.x) + Math.abs(w.y[ids[0]!]! - first.y)).toBeLessThan(12);
+    expect(w.homeY[ids[0]!]).toBeGreaterThan(NORMAL_GEOMETRY.boardMax);
   });
 });

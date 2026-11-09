@@ -278,3 +278,48 @@ describe('separationPush pass-through team (spec 06/11/2026, D)', () => {
     expect(withPass([building, { x: 6, r: 4, team: 0 }], undefined)).toEqual([[0, 0], [10, 0]]);
   });
 });
+
+describe('separationPush: a structure is a square footprint (2026-11-09)', () => {
+  it('pushes a unit off a corner of the square, where a circle of the same radius would not reach', () => {
+    const [dx, dy] = push([
+      { x: 0, r: 12, fixed: true },
+      { x: 13, y: 13, r: 4 },
+    ])[1]!;
+    const out = 4 - Math.sqrt(2); // closest point (12, 12)
+    expect(dx).toBeCloseTo(out / Math.sqrt(2), 9);
+    expect(dy).toBeCloseTo(out / Math.sqrt(2), 9);
+  });
+
+  it('pushes a unit inside the square out along the axis of least overlap', () => {
+    expect(
+      push([
+        { x: 0, r: 12, fixed: true },
+        { x: 10, y: 5, r: 4 },
+      ]),
+    ).toEqual([
+      [0, 0],
+      [6, 0],
+    ]);
+    expect(
+      push([
+        { x: 0, r: 12, fixed: true },
+        { x: -3, y: -11, r: 4 },
+      ]),
+    ).toEqual([
+      [0, 0],
+      [0, -5],
+    ]);
+  });
+
+  it('leaves a unit just outside a side alone', () => {
+    expect(
+      push([
+        { x: 0, r: 12, fixed: true },
+        { x: 5, y: 16, r: 4 },
+      ]),
+    ).toEqual([
+      [0, 0],
+      [0, 0],
+    ]);
+  });
+});

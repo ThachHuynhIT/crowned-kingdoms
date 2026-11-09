@@ -1,6 +1,19 @@
 import { describe, expect, it } from 'vitest';
-import { BATTLE, INTERVENTION } from './battle';
-import { BOARD_ORIGIN, BOARD_SIDE, BUILDING_FOOT_OFFSET, DEPLOY_BOX, FIELD, PLOT, WALL_Y, cells } from './boardGeometry';
+import { BATTLE, ENEMY_PORTAL, INTERVENTION } from './battle';
+import {
+  BOARD_ORIGIN,
+  BOARD_SIDE,
+  BUILDING_FOOT_OFFSET,
+  DEPLOY_BOX,
+  ENDLESS_GEOMETRY,
+  FIELD,
+  NORMAL_GEOMETRY,
+  PLOT,
+  PORTAL,
+  PORTAL_DISTANCE_MULT,
+  WALL_Y,
+  cells,
+} from './boardGeometry';
 import { DECREE_RULES } from './decrees';
 import { PULSE_RADIUS_BONUS, TOWER_RANGE } from './scaling';
 
@@ -12,8 +25,7 @@ describe('board geometry (64 px plots, spec 06/11/2026)', () => {
     expect(cells(1.5)).toBe(96);
   });
 
-  it('keeps aggro, spawn rows and the spatial grid at the same reach in plots', () => {
-    expect([BATTLE.enemyAggro, BATTLE.siegeAggro]).toEqual([cells(1.5), cells(3)]);
+  it('keeps spawn rows and the spatial grid at the same reach in plots', () => {
     expect([BATTLE.fieldClampMargin, BATTLE.spawnOutside, BATTLE.spawnSpacing, BATTLE.spawnRowGap]).toEqual([64, 24, 20, 20]);
     expect(BATTLE.edgeSpan).toBe(0.6);
     expect(Math.floor((BATTLE.edgeSpan * BATTLE.field) / BATTLE.spawnSpacing) + 1).toBe(24);
@@ -22,7 +34,7 @@ describe('board geometry (64 px plots, spec 06/11/2026)', () => {
 
   it('doubles every per-tick displacement cap, keeps bodies and the anti-air threshold', () => {
     expect([BATTLE.separationPushMax, BATTLE.separationPushCross]).toEqual([2, 0.4]);
-    expect([BATTLE.structureRadius, BATTLE.throneRadius]).toEqual([12, 14]);
+    expect([BATTLE.structureRadius, BATTLE.throneRadius]).toEqual([18, 18]); // square footprints, 2026-11-09
     expect(BATTLE.flyingHitMinRange).toBe(24);
     expect(BATTLE.tauntRadiusDefault).toBe(cells(1.25));
     expect([INTERVENTION.radius, INTERVENTION.knockback]).toEqual([48, 24]);
@@ -43,5 +55,16 @@ describe('board geometry (64 px plots, spec 06/11/2026)', () => {
     expect(south).toBeLessThan(DEPLOY_BOX.y0);
     expect(DEPLOY_BOX.y1).toBeLessThanOrEqual(half);
     expect([DEPLOY_BOX.x0, DEPLOY_BOX.x1].every((x) => Math.abs(x) <= half)).toBe(true);
+  });
+});
+
+describe('enemy portal 1.5x farther (owner 2026-11-09)', () => {
+  it('stands 1.5x its old distance (248 px) south of the board, the same point in every mode and in the battle data', () => {
+    expect(PORTAL_DISTANCE_MULT).toBe(1.5);
+    expect(PORTAL.y - NORMAL_GEOMETRY.boardMax).toBe(248 * 1.5);
+    expect(PORTAL).toEqual({ x: FIELD / 2, y: 916 });
+    expect(NORMAL_GEOMETRY.portal).toEqual(PORTAL);
+    expect(ENDLESS_GEOMETRY.portal).toEqual(PORTAL);
+    expect([ENEMY_PORTAL.x, ENEMY_PORTAL.y]).toEqual([PORTAL.x, PORTAL.y]);
   });
 });

@@ -1,5 +1,6 @@
 import { ESLint } from 'eslint';
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
+import { MASTER_OUTPUT } from '../data/settings';
 import { SFX_IDS } from '../data/sfx';
 import { AudioManager } from './AudioManager';
 import { asContext, FakeAudioContext, type FakeBufferSource, type FakeGain } from './testing/fakeAudio';
@@ -49,12 +50,13 @@ describe('AudioManager', () => {
     await manager.destroy();
   });
 
-  it('master 50 × sfx 20 gives an effective sfx gain of 0.1', async () => {
+  it('master 50 × sfx 20 gives an effective sfx gain of 0.1 × MASTER_OUTPUT (the whole mix is halved)', async () => {
     const { manager, contexts } = setup();
     manager.setVolumes({ master: 50, music: 100, sfx: 20, screenShake: true });
     await manager.unlock();
     const [master, , sfx] = contexts[0]!.gains as FakeGain[];
-    expect(master!.gain.value * sfx!.gain.value).toBeCloseTo(0.1);
+    expect(master!.gain.value * sfx!.gain.value).toBeCloseTo(0.1 * MASTER_OUTPUT);
+    expect(MASTER_OUTPUT).toBe(0.5);
     await manager.destroy();
   });
 
