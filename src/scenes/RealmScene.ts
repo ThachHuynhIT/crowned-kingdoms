@@ -50,7 +50,7 @@ import {
 import { realmCamera, realmCameraMix, type RealmPhase } from '../ui/realm/realmLayout';
 import { SCENES } from './keys';
 import { getAudio } from './audioRegistry';
-import { battleCues } from './audioCues';
+import { battleCues, transitionCues } from './audioCues';
 
 /** Strikers whose shot plays the cannon sound instead of the arrow (G5 Task 6). */
 const CANNON_LABELS: ReadonlySet<string> = new Set([
@@ -127,6 +127,8 @@ export class RealmScene extends Phaser.Scene {
   /** The live camera (free zoom and scroll, before pixel snapping) and the screen size it was set for. */
   private view: CameraView | null = null;
   private shakeStart: number | null = null;
+  /** Last announced run state, to play planning sounds for what changed (null until the first one). */
+  private soundState: RunState | null = null;
   private viewScreen: Size = { w: 0, h: 0 };
   /** A modal or the help view is open: the map takes no wheel, pan or pinch. */
   private mapBlocked = false;
@@ -170,6 +172,7 @@ export class RealmScene extends Phaser.Scene {
     this.down = null;
     this.view = null;
     this.shakeStart = null;
+    this.soundState = null;
     this.mapBlocked = false;
     this.pointers.clear();
     this.pinch = null;
@@ -227,7 +230,13 @@ export class RealmScene extends Phaser.Scene {
       audio?.play(result.won ? 'victory' : 'defeat');
       audio?.setMusic('planning');
     });
-    bus.on('run:state', ({ state }) => this.onState(state));
+    this.soundState = initial; // the opening (or resumed) state itself plays nothing
+    bus.on('run:state', ({ state }) => {
+      if (this.soundState !== null && audio)
+        for (const id of transitionCues(this.soundState, state)) audio.play(id);
+      this.soundState = state;
+      this.onState(state);
+    });
     bus.on('battle:started', () => {
       audio?.setMusic('battle');
       audio?.play('battle_horn');

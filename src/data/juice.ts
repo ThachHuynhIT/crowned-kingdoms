@@ -10,3 +10,6 @@ export const DEATH_POP_FRAMES = 4;
 export const DEATH_FRAME_MS = 45;
 /** At most this many pops drawn at once (oldest dropped). */
 export const DEATH_POP_POOL = 64;
+/** Gold gained: `+N` rises from the gold counter this long and this far (HUD px). */
+export const COIN_FLY_MS = 700;
+export const COIN_RISE_PX = 18;

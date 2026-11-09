@@ -9,6 +9,7 @@
  */
 import type { SfxId } from '../data/sfx';
 import type { BattleEvent } from '../game/battle/types';
+import type { RunState } from '../game/run/state';
 
 export const HEAVY_HIT_MIN = 50;
 
@@ -37,4 +38,25 @@ export function battleCues(events: readonly BattleEvent[], world: CueWorld): Sfx
       out.add(e.phase === 'drop' ? 'boulder_whoosh' : 'boulder_impact');
   }
   return [...out];
+}
+
+/**
+ * Planning sounds from one accepted state change (a refused command changes nothing, so it plays nothing): card played,
+ * cards drawn, reroll, gold gained, plot unlocked, building levelled.
+ */
+export function transitionCues(before: RunState, after: RunState): SfxId[] {
+  if (before === after) return [];
+  const out: SfxId[] = [];
+  if (after.played && !before.played) out.push('card_play');
+  if (after.hand.length > before.hand.length) out.push('card_draw');
+  if (after.rerollsThisYear > before.rerollsThisYear) out.push('reroll');
+  if (after.gold > before.gold) out.push('coin');
+  const unlocked = (s: RunState): number => s.plots.filter((p) => p.unlocked).length;
+  if (unlocked(after) > unlocked(before)) out.push('plot_unlock');
+  const levels = (s: RunState): number => s.plots.reduce((n, p) => n + (p.building?.level ?? 0), 0);
+  const sameBuildings = before.plots.every(
+    (p, i) => (p.building?.uid ?? -1) === (after.plots[i]?.building?.uid ?? -1),
+  );
+  if (sameBuildings && levels(after) > levels(before)) out.push('level_up');
+  return out;
 }

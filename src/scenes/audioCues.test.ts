@@ -1,6 +1,10 @@
 import { describe, expect, it } from 'vitest';
 import type { BattleEvent } from '../game/battle/types';
-import { battleCues, type CueWorld } from './audioCues';
+import { RULES_FULL } from '../data/rules';
+import { CONTENT } from '../game/cards/registry';
+import type { RunState } from '../game/run/state';
+import { newRun } from '../game/run/yearFlow';
+import { battleCues, transitionCues, type CueWorld } from './audioCues';
 
 const world: CueWorld = {
   throneId: 0,
@@ -59,5 +63,27 @@ describe('battleCues', () => {
 
   it('ignores other events', () => {
     expect(battleCues([{ type: 'spawn', id: 1 }, { type: 'rage' }], world)).toEqual([]);
+  });
+});
+
+describe('transitionCues', () => {
+  const base = (): RunState => newRun(1, 'wheat', CONTENT, RULES_FULL);
+  it('nothing for the same state (an illegal command changes nothing)', () => {
+    const s = base();
+    expect(transitionCues(s, s)).toEqual([]);
+  });
+  it('play, draw, reroll, coin, plot unlock and level up from what changed', () => {
+    const s = base();
+    expect(transitionCues(s, { ...s, played: true })).toContain('card_play');
+    expect(transitionCues(s, { ...s, hand: [...s.hand, s.hand[0]!] })).toContain('card_draw');
+    expect(transitionCues(s, { ...s, rerollsThisYear: s.rerollsThisYear + 1 })).toContain('reroll');
+    expect(transitionCues(s, { ...s, gold: s.gold + 3 })).toContain('coin');
+    expect(transitionCues(s, { ...s, gold: s.gold - 3 })).not.toContain('coin');
+    const unlocked = s.plots.map((p, i) => (i === 0 ? { ...p, unlocked: true } : p));
+    expect(transitionCues(s, { ...s, plots: unlocked })).toContain('plot_unlock');
+    const levelled = s.plots.map((p) =>
+      p.building ? { ...p, building: { ...p.building, level: 2 as const } } : p,
+    );
+    expect(transitionCues(s, { ...s, plots: levelled })).toContain('level_up');
   });
 });
