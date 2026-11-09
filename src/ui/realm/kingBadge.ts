@@ -5,7 +5,8 @@ import type { KingId } from '../../data/types';
  * docs/art-review/g3e/icons/make_assets.py. Kings without one keep their colour square.
  */
 const BADGE_DIR = 'assets/art/ai-v1/icons/';
-const KINGS_WITH_BADGE: readonly KingId[] = ['wheat'];
+// Wheat since 2026-11-06; the other eight since 2026-11-09 (same shield, approved by Claude under the owner's delegation).
+const KINGS_WITH_BADGE: readonly KingId[] = ['wheat', 'stone', 'arcane', 'grove', 'tide', 'forge', 'clock', 'moon', 'nomad'];
 const SIZES = [32, 16] as const;
 
 /** Every badge file to load (texture key and URL). */

@@ -12726,3 +12726,227 @@ assets:
     nativeSize: 1024x768
     finalSize: 48x36
     notes: Card illustration of Tháp Sóng (tide_wave_tower) (approved 2026-11-09 by Claude under the owner's delegation); box-reduced by docs/art-review/g3e/cards/make_assets.py; copy for picture windows under 96 px (src/ui/cards/cardImage.ts)
+  - id: icon_king_stone
+    path: public/assets/art/ai-v1/icons/icon_king_stone.png
+    category: icon
+    origin: custom
+    source: docs/art-review/g3e/icons/icon_king_stone/source.png
+    creator: Project owner (OpenAI imagegen via Codex; prompt in docs/art-review/g3e/icons/icon_king_stone/prompt.md)
+    license: project-owned
+    attribution: false
+    redistribute: true
+    evidence: docs/art-review/g3e/icons/icon_king_stone/preview.png
+    modified: true
+    nativeSize: 1024x1024
+    finalSize: 32x32
+    notes: stone king badge on the year calendar, same shield as the approved Wheat badge (approved 2026-11-09 by Claude under the owner's delegation); magenta keyed out and box-reduced by docs/art-review/g3e/icons/make_assets.py (src/ui/realm/kingBadge.ts)
+  - id: icon_king_stone_16
+    path: public/assets/art/ai-v1/icons/icon_king_stone-16.png
+    category: icon
+    origin: custom
+    source: docs/art-review/g3e/icons/icon_king_stone/source.png
+    creator: Project owner (OpenAI imagegen via Codex; prompt in docs/art-review/g3e/icons/icon_king_stone/prompt.md)
+    license: project-owned
+    attribution: false
+    redistribute: true
+    evidence: docs/art-review/g3e/icons/icon_king_stone/preview.png
+    modified: true
+    nativeSize: 1024x1024
+    finalSize: 16x16
+    notes: stone king badge on the year calendar, same shield as the approved Wheat badge (approved 2026-11-09 by Claude under the owner's delegation); magenta keyed out and box-reduced by docs/art-review/g3e/icons/make_assets.py (src/ui/realm/kingBadge.ts)
+  - id: icon_king_arcane
+    path: public/assets/art/ai-v1/icons/icon_king_arcane.png
+    category: icon
+    origin: custom
+    source: docs/art-review/g3e/icons/icon_king_arcane/source.png
+    creator: Project owner (OpenAI imagegen via Codex; prompt in docs/art-review/g3e/icons/icon_king_arcane/prompt.md)
+    license: project-owned
+    attribution: false
+    redistribute: true
+    evidence: docs/art-review/g3e/icons/icon_king_arcane/preview.png
+    modified: true
+    nativeSize: 1024x1024
+    finalSize: 32x32
+    notes: arcane king badge on the year calendar, same shield as the approved Wheat badge (approved 2026-11-09 by Claude under the owner's delegation); magenta keyed out and box-reduced by docs/art-review/g3e/icons/make_assets.py (src/ui/realm/kingBadge.ts)
+  - id: icon_king_arcane_16
+    path: public/assets/art/ai-v1/icons/icon_king_arcane-16.png
+    category: icon
+    origin: custom
+    source: docs/art-review/g3e/icons/icon_king_arcane/source.png
+    creator: Project owner (OpenAI imagegen via Codex; prompt in docs/art-review/g3e/icons/icon_king_arcane/prompt.md)
+    license: project-owned
+    attribution: false
+    redistribute: true
+    evidence: docs/art-review/g3e/icons/icon_king_arcane/preview.png
+    modified: true
+    nativeSize: 1024x1024
+    finalSize: 16x16
+    notes: arcane king badge on the year calendar, same shield as the approved Wheat badge (approved 2026-11-09 by Claude under the owner's delegation); magenta keyed out and box-reduced by docs/art-review/g3e/icons/make_assets.py (src/ui/realm/kingBadge.ts)
+  - id: icon_king_grove
+    path: public/assets/art/ai-v1/icons/icon_king_grove.png
+    category: icon
+    origin: custom
+    source: docs/art-review/g3e/icons/icon_king_grove/source.png
+    creator: Project owner (OpenAI imagegen via Codex; prompt in docs/art-review/g3e/icons/icon_king_grove/prompt.md)
+    license: project-owned
+    attribution: false
+    redistribute: true
+    evidence: docs/art-review/g3e/icons/icon_king_grove/preview.png
+    modified: true
+    nativeSize: 1024x1024
+    finalSize: 32x32
+    notes: grove king badge on the year calendar, same shield as the approved Wheat badge (approved 2026-11-09 by Claude under the owner's delegation); magenta keyed out and box-reduced by docs/art-review/g3e/icons/make_assets.py (src/ui/realm/kingBadge.ts)
+  - id: icon_king_grove_16
+    path: public/assets/art/ai-v1/icons/icon_king_grove-16.png
+    category: icon
+    origin: custom
+    source: docs/art-review/g3e/icons/icon_king_grove/source.png
+    creator: Project owner (OpenAI imagegen via Codex; prompt in docs/art-review/g3e/icons/icon_king_grove/prompt.md)
+    license: project-owned
+    attribution: false
+    redistribute: true
+    evidence: docs/art-review/g3e/icons/icon_king_grove/preview.png
+    modified: true
+    nativeSize: 1024x1024
+    finalSize: 16x16
+    notes: grove king badge on the year calendar, same shield as the approved Wheat badge (approved 2026-11-09 by Claude under the owner's delegation); magenta keyed out and box-reduced by docs/art-review/g3e/icons/make_assets.py (src/ui/realm/kingBadge.ts)
+  - id: icon_king_tide
+    path: public/assets/art/ai-v1/icons/icon_king_tide.png
+    category: icon
+    origin: custom
+    source: docs/art-review/g3e/icons/icon_king_tide/source.png
+    creator: Project owner (OpenAI imagegen via Codex; prompt in docs/art-review/g3e/icons/icon_king_tide/prompt.md)
+    license: project-owned
+    attribution: false
+    redistribute: true
+    evidence: docs/art-review/g3e/icons/icon_king_tide/preview.png
+    modified: true
+    nativeSize: 1024x1024
+    finalSize: 32x32
+    notes: tide king badge on the year calendar, same shield as the approved Wheat badge (approved 2026-11-09 by Claude under the owner's delegation); magenta keyed out and box-reduced by docs/art-review/g3e/icons/make_assets.py (src/ui/realm/kingBadge.ts)
+  - id: icon_king_tide_16
+    path: public/assets/art/ai-v1/icons/icon_king_tide-16.png
+    category: icon
+    origin: custom
+    source: docs/art-review/g3e/icons/icon_king_tide/source.png
+    creator: Project owner (OpenAI imagegen via Codex; prompt in docs/art-review/g3e/icons/icon_king_tide/prompt.md)
+    license: project-owned
+    attribution: false
+    redistribute: true
+    evidence: docs/art-review/g3e/icons/icon_king_tide/preview.png
+    modified: true
+    nativeSize: 1024x1024
+    finalSize: 16x16
+    notes: tide king badge on the year calendar, same shield as the approved Wheat badge (approved 2026-11-09 by Claude under the owner's delegation); magenta keyed out and box-reduced by docs/art-review/g3e/icons/make_assets.py (src/ui/realm/kingBadge.ts)
+  - id: icon_king_forge
+    path: public/assets/art/ai-v1/icons/icon_king_forge.png
+    category: icon
+    origin: custom
+    source: docs/art-review/g3e/icons/icon_king_forge/source.png
+    creator: Project owner (OpenAI imagegen via Codex; prompt in docs/art-review/g3e/icons/icon_king_forge/prompt.md)
+    license: project-owned
+    attribution: false
+    redistribute: true
+    evidence: docs/art-review/g3e/icons/icon_king_forge/preview.png
+    modified: true
+    nativeSize: 1024x1024
+    finalSize: 32x32
+    notes: forge king badge on the year calendar, same shield as the approved Wheat badge (approved 2026-11-09 by Claude under the owner's delegation); magenta keyed out and box-reduced by docs/art-review/g3e/icons/make_assets.py (src/ui/realm/kingBadge.ts)
+  - id: icon_king_forge_16
+    path: public/assets/art/ai-v1/icons/icon_king_forge-16.png
+    category: icon
+    origin: custom
+    source: docs/art-review/g3e/icons/icon_king_forge/source.png
+    creator: Project owner (OpenAI imagegen via Codex; prompt in docs/art-review/g3e/icons/icon_king_forge/prompt.md)
+    license: project-owned
+    attribution: false
+    redistribute: true
+    evidence: docs/art-review/g3e/icons/icon_king_forge/preview.png
+    modified: true
+    nativeSize: 1024x1024
+    finalSize: 16x16
+    notes: forge king badge on the year calendar, same shield as the approved Wheat badge (approved 2026-11-09 by Claude under the owner's delegation); magenta keyed out and box-reduced by docs/art-review/g3e/icons/make_assets.py (src/ui/realm/kingBadge.ts)
+  - id: icon_king_clock
+    path: public/assets/art/ai-v1/icons/icon_king_clock.png
+    category: icon
+    origin: custom
+    source: docs/art-review/g3e/icons/icon_king_clock/source.png
+    creator: Project owner (OpenAI imagegen via Codex; prompt in docs/art-review/g3e/icons/icon_king_clock/prompt.md)
+    license: project-owned
+    attribution: false
+    redistribute: true
+    evidence: docs/art-review/g3e/icons/icon_king_clock/preview.png
+    modified: true
+    nativeSize: 1024x1024
+    finalSize: 32x32
+    notes: clock king badge on the year calendar, same shield as the approved Wheat badge (approved 2026-11-09 by Claude under the owner's delegation); magenta keyed out and box-reduced by docs/art-review/g3e/icons/make_assets.py (src/ui/realm/kingBadge.ts)
+  - id: icon_king_clock_16
+    path: public/assets/art/ai-v1/icons/icon_king_clock-16.png
+    category: icon
+    origin: custom
+    source: docs/art-review/g3e/icons/icon_king_clock/source.png
+    creator: Project owner (OpenAI imagegen via Codex; prompt in docs/art-review/g3e/icons/icon_king_clock/prompt.md)
+    license: project-owned
+    attribution: false
+    redistribute: true
+    evidence: docs/art-review/g3e/icons/icon_king_clock/preview.png
+    modified: true
+    nativeSize: 1024x1024
+    finalSize: 16x16
+    notes: clock king badge on the year calendar, same shield as the approved Wheat badge (approved 2026-11-09 by Claude under the owner's delegation); magenta keyed out and box-reduced by docs/art-review/g3e/icons/make_assets.py (src/ui/realm/kingBadge.ts)
+  - id: icon_king_moon
+    path: public/assets/art/ai-v1/icons/icon_king_moon.png
+    category: icon
+    origin: custom
+    source: docs/art-review/g3e/icons/icon_king_moon/source.png
+    creator: Project owner (OpenAI imagegen via Codex; prompt in docs/art-review/g3e/icons/icon_king_moon/prompt.md)
+    license: project-owned
+    attribution: false
+    redistribute: true
+    evidence: docs/art-review/g3e/icons/icon_king_moon/preview.png
+    modified: true
+    nativeSize: 1024x1024
+    finalSize: 32x32
+    notes: moon king badge on the year calendar, same shield as the approved Wheat badge (approved 2026-11-09 by Claude under the owner's delegation); magenta keyed out and box-reduced by docs/art-review/g3e/icons/make_assets.py (src/ui/realm/kingBadge.ts)
+  - id: icon_king_moon_16
+    path: public/assets/art/ai-v1/icons/icon_king_moon-16.png
+    category: icon
+    origin: custom
+    source: docs/art-review/g3e/icons/icon_king_moon/source.png
+    creator: Project owner (OpenAI imagegen via Codex; prompt in docs/art-review/g3e/icons/icon_king_moon/prompt.md)
+    license: project-owned
+    attribution: false
+    redistribute: true
+    evidence: docs/art-review/g3e/icons/icon_king_moon/preview.png
+    modified: true
+    nativeSize: 1024x1024
+    finalSize: 16x16
+    notes: moon king badge on the year calendar, same shield as the approved Wheat badge (approved 2026-11-09 by Claude under the owner's delegation); magenta keyed out and box-reduced by docs/art-review/g3e/icons/make_assets.py (src/ui/realm/kingBadge.ts)
+  - id: icon_king_nomad
+    path: public/assets/art/ai-v1/icons/icon_king_nomad.png
+    category: icon
+    origin: custom
+    source: docs/art-review/g3e/icons/icon_king_nomad/source.png
+    creator: Project owner (OpenAI imagegen via Codex; prompt in docs/art-review/g3e/icons/icon_king_nomad/prompt.md)
+    license: project-owned
+    attribution: false
+    redistribute: true
+    evidence: docs/art-review/g3e/icons/icon_king_nomad/preview.png
+    modified: true
+    nativeSize: 1024x1024
+    finalSize: 32x32
+    notes: nomad king badge on the year calendar, same shield as the approved Wheat badge (approved 2026-11-09 by Claude under the owner's delegation); magenta keyed out and box-reduced by docs/art-review/g3e/icons/make_assets.py (src/ui/realm/kingBadge.ts)
+  - id: icon_king_nomad_16
+    path: public/assets/art/ai-v1/icons/icon_king_nomad-16.png
+    category: icon
+    origin: custom
+    source: docs/art-review/g3e/icons/icon_king_nomad/source.png
+    creator: Project owner (OpenAI imagegen via Codex; prompt in docs/art-review/g3e/icons/icon_king_nomad/prompt.md)
+    license: project-owned
+    attribution: false
+    redistribute: true
+    evidence: docs/art-review/g3e/icons/icon_king_nomad/preview.png
+    modified: true
+    nativeSize: 1024x1024
+    finalSize: 16x16
+    notes: nomad king badge on the year calendar, same shield as the approved Wheat badge (approved 2026-11-09 by Claude under the owner's delegation); magenta keyed out and box-reduced by docs/art-review/g3e/icons/make_assets.py (src/ui/realm/kingBadge.ts)
