@@ -1,5 +1,6 @@
 /** Hằng số trận (spec §3.6, §7.4, §8.2); hình học ô 64 theo spec 06/11/2026. */
 import { BOARD_ORIGIN, FIELD, PLOT, PORTAL, WALL_Y, cells } from './boardGeometry';
+import type { KingId } from './types';
 
 /** Ngân sách gốc năm 1..30 = round(12 × 1.15^(y−1)), lưu sẵn để không phụ thuộc Math.pow. */
 export const ENEMY_BUDGET = [
@@ -25,13 +26,28 @@ export const ENEMY_LEVEL_STAT = [1, 1.45, 2.1, 3.05, 4.42] as const;
  * HP và sát thương của mọi lính địch nhân thêm hệ số này (cân bằng lại 2026-11-09 sau khi tầm tháp ×3, công trình
  * chặn đường và địch phải phá hết nhà: bot greedy Gai 0 thắng gần 100%; mục tiêu 35–65% mỗi vua).
  */
-export const ENEMY_STAT_MULT = 1.75;
+export const ENEMY_STAT_MULT = 2.05;
 /**
  * Máu và sát thương của boss 1/2/3 lúc vào trận, nhân với số trong `BOSSES` (10/11/2026: hết giờ không
  * còn là thắng, boss phải hạ được). Đo bằng `npm run balance`, xem docs/balance/2026-11-10-draw-one-balance.md.
  */
-export const BOSS_HP_MULT = [1, 0.39, 0.27] as const;
+export const BOSS_HP_MULT = [1, 0.55, 0.27] as const;
 export const BOSS_DMG_MULT = [1, 0.64, 1] as const;
+/**
+ * Hệ số sức địch (và máu boss) theo vua người chơi chọn (10/11/2026). Cân bằng TẠM: các vua chênh nhau
+ * ổn định dù đổi số chung; cách lâu dài là chỉnh thẻ từng vua. Đo: docs/balance/2026-11-10-draw-one-balance.md.
+ */
+export const FOE_MULT_BY_KING: Readonly<Record<KingId, number>> = {
+  wheat: 0.92,
+  stone: 1.18,
+  arcane: 1.03,
+  grove: 0.95,
+  tide: 0.85,
+  forge: 1.07,
+  clock: 0.9,
+  moon: 0.92,
+  nomad: 1.04,
+};
 export const WAVES = { share: [0.4, 0.35, 0.25], spawnTick: [0, 120, 240] } as const;
 
 /** Hằng hình quạt 45° (cos 45° làm tròn xuống nên đúng 45° vẫn nằm trong quạt); không dùng Math.cos. */

@@ -1,6 +1,6 @@
 /** Dựng BattleSetup từ RunState (spec §5.3: G1 = cấp 1; §3.6: cấp địch). Thuần, không sửa đầu vào. */
 import { formationRowsFor } from '../battle/bounds';
-import { BOSS_DMG_MULT, BOSS_HP_MULT, EMBER_TICKS, ENEMY_LEVEL_STAT, ENEMY_STAT_MULT, WAVES } from '../../data/battle';
+import { BOSS_DMG_MULT, BOSS_HP_MULT, EMBER_TICKS, FOE_MULT_BY_KING, ENEMY_LEVEL_STAT, ENEMY_STAT_MULT, WAVES } from '../../data/battle';
 import { BOSSES, BOSS_RULES } from '../../data/bosses';
 import { SOUL_HARVEST_UNIT } from '../../data/kings/moon';
 import { BOSS_SUMMON_UNITS } from '../../data/raiders';
@@ -417,7 +417,7 @@ const bossSetup = (
   if (def === undefined) throw new Error(`Unknown boss ${army.boss}`);
   const stats = unitStats(def.unit, 1, def.unit.tags.includes('siege'), content, [], speedScale);
   // Trận không còn thắng vì hết giờ (10/11/2026): boss phải hạ được, nên máu/sát thương nhân hệ số theo thứ tự boss.
-  stats.hp = def.unit.hp * BOSS_HP_MULT[def.ordinal - 1]! * (1 + RUN.difficultyBudgetStep * state.difficulty);
+  stats.hp = def.unit.hp * BOSS_HP_MULT[def.ordinal - 1]! * FOE_MULT_BY_KING[state.kingId] * (1 + RUN.difficultyBudgetStep * state.difficulty);
   stats.dmg = stats.dmg * BOSS_DMG_MULT[def.ordinal - 1]!;
   const summons: Record<string, UnitStats> = {};
   for (const u of BOSS_SUMMON_UNITS) summons[u.id] = unitStats(u, 1, false, content, [], speedScale);
@@ -433,7 +433,7 @@ const bossSetup = (
     }
     if (best !== null) {
       const unit = content.unit(best.spawn!.stats.unit);
-      const mult = ENEMY_LEVEL_STAT[army.level - 1]! * army.statMult * ENEMY_STAT_MULT;
+      const mult = ENEMY_LEVEL_STAT[army.level - 1]! * army.statMult * ENEMY_STAT_MULT * FOE_MULT_BY_KING[state.kingId];
       mirror = {
         stats: unitStats(unit, mult, false, content, [], speedScale),
         count: Math.max(1, Math.floor(best.spawn!.count / 2)),
@@ -482,7 +482,8 @@ export function buildBattleSetup(state: RunState, content: Content): BattleSetup
     if (plot !== THRONE_PLOT && p.building !== null) structures.push(structureFor(state, plot, content));
   });
 
-  const mult = ENEMY_LEVEL_STAT[army.level - 1]! * army.statMult * ENEMY_STAT_MULT;
+  // Sức địch theo vua mình chơi (10/11/2026, cân bằng tạm: vua mạnh gặp địch mạnh hơn).
+  const mult = ENEMY_LEVEL_STAT[army.level - 1]! * army.statMult * ENEMY_STAT_MULT * FOE_MULT_BY_KING[state.kingId];
   const bannerDef =
     army.attacker === 'raiders' || army.attacker === 'coalition' || army.attacker === 'boss'
       ? null

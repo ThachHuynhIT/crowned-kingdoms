@@ -1,7 +1,7 @@
 import { describe, expect, it } from 'vitest';
 import { RULES_G1 } from '../../data/rules';
 import { WHEAT } from '../../data/kings/wheat';
-import { ENEMY_LEVEL_STAT, ENEMY_STAT_MULT } from '../../data/battle';
+import { ENEMY_LEVEL_STAT, ENEMY_STAT_MULT, FOE_MULT_BY_KING } from '../../data/battle';
 import { STRUCT_HP, TOWER_SHOT_DMG_MULT } from '../../data/scaling';
 import { composeArmy, armyBudget } from '../battle/compose';
 import type { ArmyPlan } from '../battle/types';
@@ -141,9 +141,9 @@ describe('buildBattleSetup', () => {
       waves: [{ spawnTick: 0, units: [{ unit: 'bandit', edge: 'N' }] }],
     };
     const s = buildBattleSetup(makeState(army), CONTENT).waves[0]!.spawns[0]!.stats;
-    expect(s.hp).toBeCloseTo(30 * ENEMY_LEVEL_STAT[1]! * 1.5 * ENEMY_STAT_MULT, 6);
-    expect(s.hp).toBeCloseTo(114.1875, 6); // 30 × 1.45 × 1.5 × 1.75
-    expect(s.dmg).toBeCloseTo(5 * 1.45 * 1.5 * ENEMY_STAT_MULT, 6);
+    expect(s.hp).toBeCloseTo(30 * ENEMY_LEVEL_STAT[1]! * 1.5 * ENEMY_STAT_MULT * FOE_MULT_BY_KING.wheat, 6);
+    expect(s.hp).toBeCloseTo(30 * 1.45 * 1.5 * 2.05 * 0.92, 6); // 30 × 1.45 × 1.5 × ENEMY_STAT_MULT 2.05 × wheat 0.92 (pinned)
+    expect(s.dmg).toBeCloseTo(5 * 1.45 * 1.5 * ENEMY_STAT_MULT * FOE_MULT_BY_KING.wheat, 6);
   });
 
   it('is pure and deterministic', () => {

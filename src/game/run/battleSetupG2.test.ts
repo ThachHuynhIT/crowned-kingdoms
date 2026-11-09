@@ -1,6 +1,6 @@
 import { describe, expect, it } from 'vitest';
 import type { CardDef, CardId, EnchantCardDef, Level, UnitDef } from '../../data/types';
-import { ENEMY_STAT_MULT } from '../../data/battle';
+import { ENEMY_STAT_MULT, FOE_MULT_BY_KING } from '../../data/battle';
 import { WHEAT } from '../../data/kings/wheat';
 import { TOWER_SHOT_DMG_MULT } from '../../data/scaling';
 import { CONTENT } from '../cards/registry';
@@ -405,14 +405,14 @@ describe('enemy banners', () => {
   it('raises HP, slows speed and shields every enemy of that king by the percentages', () => {
     const plain = cB.unit('stone_grunt');
     const s = foe('stone');
-    expect(s.hp).toBeCloseTo(plain.hp * 1.2 * ENEMY_STAT_MULT, 9);
+    expect(s.hp).toBeCloseTo(plain.hp * 1.2 * ENEMY_STAT_MULT * FOE_MULT_BY_KING.wheat, 9);
     expect(s.speed).toBeCloseTo(plain.speed * 0.9, 9);
     expect(s.shield).toBeCloseTo(s.hp * 0.15, 9);
   });
 
   it('leaves raiders untouched', () => {
     const s = foe('raiders');
-    expect(s.hp).toBe(30 * ENEMY_STAT_MULT); // no banner, only the global enemy multiplier
+    expect(s.hp).toBeCloseTo(30 * ENEMY_STAT_MULT * FOE_MULT_BY_KING.wheat, 9); // no banner: the global and the per-king enemy multipliers
     expect(s.shield).toBe(0);
   });
 });
