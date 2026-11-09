@@ -9,12 +9,14 @@
  * (lives are not power; without this rule it spent every life on Eclipse Pact and Moon won 2.8%).
  */
 import { GREEDY_MAX_REROLLS } from '../../../data/balance';
+import { ENDLESS_BLESSINGS } from '../../../data/endless';
 import { unlockCost } from '../../../data/run';
 import type { CardDef, CardId } from '../../../data/types';
 import type { AttackStats, BattleSetup, StructureSetup, UnitStats } from '../../battle/types';
 import { freeMoveIllegal, freeMovesAllowed } from '../../cards/custom/nomad';
 import type { Content } from '../../cards/registry';
 import { buildBattleSetup } from '../../run/battleSetup';
+import { blessingStacks } from '../../run/endlessBlessings';
 import { adjacentToUnlocked, checkPlay, targetCount } from '../../run/board';
 import { applyCommand } from '../../run/commands';
 import { rerollPrice } from '../../run/decrees';
@@ -24,7 +26,6 @@ import type { PlayTarget, RunCommand, RunState } from '../../run/state';
 import type { Bot } from './random';
 import { scriptedBot } from './scripted';
 
-const PLOTS = 25;
 const TICKS_PER_SECOND = 10;
 
 /** Damage per second of one attack profile; no attack or a non-positive interval gives 0. */
@@ -50,17 +51,17 @@ export function estimatePower(setup: BattleSetup): number {
 const powerOf = (state: RunState, content: Content): number =>
   estimatePower(buildBattleSetup(state, content));
 
-/** Every target to try for a card, in enumeration order (not yet filtered). */
-const candidateTargets = (card: CardDef): PlayTarget[] => {
+/** Every target to try for a card, in enumeration order (not yet filtered); `plots` is 25, or 49 in Endless. */
+const candidateTargets = (card: CardDef, plots: number): PlayTarget[] => {
   const count = targetCount(card);
   if (count === 0) return [{ kind: 'none' }];
   const targets: PlayTarget[] = [];
-  for (let first = 0; first < PLOTS; first++) {
+  for (let first = 0; first < plots; first++) {
     if (count === 1) {
       targets.push({ kind: 'plot', plot: first });
       continue;
     }
-    for (let second = 0; second < PLOTS; second++) targets.push({ kind: 'two', first, second });
+    for (let second = 0; second < plots; second++) targets.push({ kind: 'two', first, second });
   }
   return targets;
 };
@@ -76,7 +77,7 @@ const bestPlay = (state: RunState, content: Content): Scored | null => {
   let best: Scored | null = null;
   state.hand.forEach((cardId, handIndex) => {
     const card = content.card(cardId);
-    for (const target of candidateTargets(card)) {
+    for (const target of candidateTargets(card, state.plots.length)) {
       if (checkPlay(state.plots, card, target, content, maxEnchantStacks(state, content)) !== null)
         continue;
       const command: RunCommand = { type: 'play', handIndex, target };
@@ -96,8 +97,8 @@ const bestFreeMove = (state: RunState, content: Content): Scored | null => {
     return null;
   const base = powerOf(state, content);
   let best: Scored | null = null;
-  for (let from = 0; from < PLOTS; from++) {
-    for (let to = 0; to < PLOTS; to++) {
+  for (let from = 0; from < state.plots.length; from++) {
+    for (let to = 0; to < state.plots.length; to++) {
       if (freeMoveIllegal(state, content, from, to) !== null) continue;
       const command: RunCommand = { type: 'freeMove', from, to };
       const r = applyCommand(state, command, content);
@@ -112,7 +113,7 @@ const bestFreeMove = (state: RunState, content: Content): Scored | null => {
 /** The lowest buyable plot whose purchase makes a card playable, or null. */
 const enablingPlot = (state: RunState, content: Content): RunCommand | null => {
   if (state.gold < unlockCost(state.purchasedPlots)) return null;
-  for (let plot = 0; plot < PLOTS; plot++) {
+  for (let plot = 0; plot < state.plots.length; plot++) {
     if (state.plots[plot]!.unlocked || !adjacentToUnlocked(state.plots, plot)) continue;
     const command: RunCommand = { type: 'unlockPlot', plot };
     const r = applyCommand(state, command, content);
@@ -180,8 +181,42 @@ const pick = (state: RunState, content: Content): RunCommand => {
   return { type: 'pickOffer', index: best };
 };
 
+/**
+ * Endless blessing: the first offered id in a fixed order of survival value (lives, throne and building HP, army
+ * HP and damage, towers, then economy); a capped blessing (it only pays gold) goes last. Deterministic.
+ */
+const BLESSING_ORDER = [
+  'vitality',
+  'masonry',
+  'vigor',
+  'might',
+  'tower_might',
+  'tower_haste',
+  'haste',
+  'harvest',
+  'treasury',
+  'interest',
+  'reroll',
+  'survey',
+] as const;
+const pickBlessing = (state: RunState): RunCommand => {
+  const offer = state.offers;
+  const ids = offer?.kind === 'blessing' ? offer.blessingIds : [];
+  const capped = (id: string): boolean => {
+    const def = ENDLESS_BLESSINGS.find((b) => b.id === id);
+    return def !== undefined && blessingStacks(state, def.id) >= def.maxStacks;
+  };
+  const rank = (id: string): number =>
+    (capped(id) ? 100 : 0) + BLESSING_ORDER.indexOf(id as (typeof BLESSING_ORDER)[number]);
+  let best = 0;
+  for (let i = 1; i < ids.length; i++) if (rank(ids[i]!) < rank(ids[best]!)) best = i;
+  return { type: 'pickBlessing', index: best };
+};
+
 export const greedyBot: Bot = (state, content, rng) => {
   switch (state.phase) {
+    case 'blessing':
+      return pickBlessing(state);
     case 'planning':
       return planning(state, content);
     case 'reward':
