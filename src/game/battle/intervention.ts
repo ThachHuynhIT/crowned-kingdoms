@@ -42,7 +42,7 @@ export const tryIntervene = (world: BattleWorld, input: BattleInput): boolean =>
   // The ranks of a southern wave stand below the field line, so the drop may go as deep as world.maxY.
   if (x < 0 || x > BATTLE.field || y < 0 || y > world.maxY) return false;
   if (tick < INTERVENTION.firstReadyTick || tick < world.readyTick) return false;
-  const clampedY = clampNorthY(y, 0); // điểm rơi không nằm trong tường núi
+  const clampedY = clampNorthY(y, 0, world.geometry); // điểm rơi không nằm trong tường núi
   scheduleBoulder(world, tick, x, clampedY);
   world.inputs.push({ tick, x, y: clampedY });
   return true;
@@ -86,7 +86,7 @@ export const pickAutoTarget = (world: BattleWorld): { x: number; y: number } | n
   if (best < 0) return null;
   return {
     x: Math.min(Math.max(world.x[best]!, 0), BATTLE.field),
-    y: Math.min(Math.max(world.y[best]!, BATTLE.wallY), world.maxY),
+    y: Math.min(clampNorthY(world.y[best]!, 0, world.geometry), world.maxY),
   };
 };
 

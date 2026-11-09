@@ -225,6 +225,11 @@ export interface BattleSetup {
   intervention?: { dmgPct: number; radius: number; cooldownTicks: number };
   /** Mod trận của perk (dữ liệu thuần, không tham chiếu RunState); vắng khi perk không đổi gì trong trận. */
   perk?: PerkBattleMods;
+  /**
+   * Hình học bàn của trận (spec 2026-11-09 §4): `'endless'` = bàn 49 ô, tường 112; vắng = bàn thường.
+   * Chỉ ván Vô tận đặt trường này, nên setup và băm của trận thường giữ nguyên từng byte.
+   */
+  geometry?: 'endless';
 }
 
 /** Phần perk mà trận đọc (spec §6.6, §6.9): giá trị hiệu lực, trường vắng = số gốc. */

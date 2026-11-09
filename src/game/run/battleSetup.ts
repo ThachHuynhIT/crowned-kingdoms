@@ -525,5 +525,7 @@ export function buildBattleSetup(state: RunState, content: Content): BattleSetup
       ? { intervention: interventionStats(state, cooldownPct) }
       : {}),
     ...(Object.keys(perk).length > 0 ? { perk } : {}),
+    // Vô tận: trận dùng bàn 49 ô (spec 2026-11-09 §4); ván thường không có trường này.
+    ...(state.mode === 'endless' ? { geometry: 'endless' as const } : {}),
   };
 }

@@ -129,6 +129,6 @@ export const moveEntities = (world: BattleWorld): void => {
       }
     }
     world.x[i] = Math.min(hi, Math.max(lo, x));
-    world.y[i] = Math.min(world.maxY, clampNorthY(y, world.radius[i]!));
+    world.y[i] = Math.min(world.maxY, clampNorthY(y, world.radius[i]!, world.geometry));
   }
 };
