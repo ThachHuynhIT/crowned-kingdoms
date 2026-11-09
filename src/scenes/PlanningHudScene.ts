@@ -3,7 +3,8 @@ import type { EventBus } from '../core/events';
 import { toCss } from '../data/palette';
 import { RUN } from '../data/run';
 import { UI_PALETTE } from '../data/uiPalette';
-import { COIN_FLY_MS, COIN_RISE_PX } from '../data/juice';
+import { CARD_FLY_MS, COIN_FLY_MS, COIN_RISE_PX } from '../data/juice';
+import { playedPlot } from '../ui/planning/cardFlyModel';
 import { describeCard } from '../game/cards/describe';
 import { CONTENT } from '../game/cards/registry';
 import { maxEnchantStacks } from '../game/run/perks';
@@ -124,6 +125,8 @@ export class PlanningHudScene extends Phaser.Scene {
   private goldText!: Phaser.GameObjects.Text;
   /** Gold of the last refresh (null until the first one): a rise floats `+N` up from the counter (juice §11.5). */
   private lastGold: number | null = null;
+  /** Last refreshed state, to fly the played card onto its plot (juice §11.5). */
+  private lastFlyState: RunState | null = null;
   private calendar!: CalendarStrip;
   private sellBtn!: Button;
   private rerollBtn!: Button;
@@ -180,6 +183,7 @@ export class PlanningHudScene extends Phaser.Scene {
     this.controller = data.controller;
     this.offs = [];
     this.lastGold = null;
+    this.lastFlyState = null;
     this.reward = null;
     this.council = null;
     this.quest = null;
@@ -386,6 +390,38 @@ export class PlanningHudScene extends Phaser.Scene {
 
   // ---- state → widgets ---------------------------------------------------------------------
 
+  /** A card-sized panel flies from hand slot `index` to `plot` in CARD_FLY_MS, shrinking and fading (juice §11.5). */
+  private flyCard(index: number, handSize: number, plot: number): void {
+    const slots = centerHand(this.lay.hand, handSize);
+    const from = slots[Math.min(Math.max(0, index), slots.length - 1)];
+    if (!from) return;
+    const to = this.plotRect(plot);
+    const card = createPanel(this, 'card', Math.round(from.w), Math.round(from.h));
+    const img = card.image.setDepth(60).setPosition(Math.round(from.x), Math.round(from.y));
+    const tx = Math.round(to.x + to.w / 2 - from.w / 4);
+    const ty = Math.round(to.y + to.h / 2 - from.h / 4);
+    this.tweens.addCounter({
+      from: 0,
+      to: 1,
+      duration: CARD_FLY_MS,
+      ease: 'Quad.easeIn',
+      onUpdate: (tw) => {
+        const t = tw.getValue() ?? 0;
+        img
+          .setPosition(
+            Math.round(from.x + (tx - from.x) * t),
+            Math.round(from.y + (ty - from.y) * t),
+          )
+          .setAlpha(1 - 0.6 * t);
+        card.resize(
+          Math.max(8, Math.round(from.w * (1 - 0.5 * t))),
+          Math.max(8, Math.round(from.h * (1 - 0.5 * t))),
+        );
+      },
+      onComplete: () => img.destroy(),
+    });
+  }
+
   /** `+N` in gold rising from the gold counter for COIN_FLY_MS, whole pixels (juice §11.5). */
   private floatGold(gain: number): void {
     const x = Math.round(this.goldText.x + this.goldText.width + 8);
@@ -407,6 +443,12 @@ export class PlanningHudScene extends Phaser.Scene {
   }
 
   private refresh(state: RunState): void {
+    const flyFrom = this.lastFlyState;
+    this.lastFlyState = state;
+    if (flyFrom !== null) {
+      const plot = playedPlot(flyFrom, state);
+      if (plot !== null) this.flyCard(this.pending.handIndex ?? 0, flyFrom.hand.length, plot);
+    }
     if (this.lay.hand.length !== handLimit(state)) this.layout(); // a decree changed the hand size
     this.decreePanel.setState(state);
     this.endlessPanel.setState(state);

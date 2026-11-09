@@ -13,3 +13,5 @@ export const DEATH_POP_POOL = 64;
 /** Gold gained: `+N` rises from the gold counter this long and this far (HUD px). */
 export const COIN_FLY_MS = 700;
 export const COIN_RISE_PX = 18;
+/** Card fly: the played card flies from its hand slot to its plot in this time (spec §11.5: 250 ms). */
+export const CARD_FLY_MS = 250;
