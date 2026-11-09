@@ -57,6 +57,15 @@ export const IMAGE_UNITS: Readonly<Record<string, string>> = {
   horse_archer: 'horse_archer',
   khan_guard: 'khan_guard',
   mercenary: 'mercenary',
+  // raiders, boss summons and two bosses (2026-11-09); the Crownless King's pose sheet was rejected and waits for a redraw
+  bandit: 'bandit',
+  bandit_archer: 'bandit_archer',
+  boar_rider: 'boar_rider',
+  ogre: 'ogre',
+  frog: 'frog',
+  hornet: 'hornet',
+  boss_bog_ogre: 'boss_bog_ogre',
+  boss_hornet_queen: 'boss_hornet_queen',
 };
 
 const POSE_INDEXES = [0, 1, 2, 3, 4, 5];

@@ -71,12 +71,21 @@ UNITS = {
     'horse_archer': ('Cung Kỵ (Du Mục)', 'a ranged horse archer of the Nomad kingdom.', 'a chibi steppe archer on a small tan horse, a red felt coat with a BLUE sash, a fur hat, a short recurve bow and a quiver; the horse has a BLUE saddle blanket.', 96, 96),
     'khan_guard': ('Cận Vệ Khả Hãn (Du Mục)', 'an elite heavy guard of the Nomad king.', 'a broad chibi guard in lamellar armour of red and gold plates, a BLUE sash, a spiked helmet with a horse-tail plume, holding a long glaive.', 64, 96),
     'mercenary': ('Lính Đánh Thuê (trung lập)', 'a hired neutral mercenary soldier.', 'a rough chibi sellsword in a patched brown leather jerkin with a BLUE armband, a scarred cheerful face, holding a short sword and a small buckler.', 64, 64),
+    'bandit': ('Thổ Phỉ', 'a basic neutral bandit raider that only appears as an enemy.', 'a scruffy chibi bandit with a cloth mask over the nose, a patched leather vest, a BLUE headband, holding a short curved knife; sly grin.', 64, 64),
+    'bandit_archer': ('Cung Thủ Thổ Phỉ', 'a ranged bandit archer.', 'a lean chibi bandit archer in a hooded ragged cloak with a BLUE scarf, a short bow and a quiver of crude arrows.', 64, 64),
+    'boar_rider': ('Kỵ Sĩ Lợn Rừng', 'a bandit riding a wild boar, fast and tough.', "a chibi bandit riding a big bristly brown wild boar with tusks, the rider waving a spiked club, a BLUE rag tied on the boar's saddle.", 96, 96),
+    'ogre': ('Yêu Tinh Khổng Lồ', 'a huge slow ogre brute of the raiders.', 'a big chibi green-grey ogre with a round belly, a loincloth and a BLUE belt, a big wooden club with nails; dumb friendly-scary face.', 96, 128),
+    'frog': ('Ếch Đầm Lầy', 'a small swamp frog summoned by the Bog Ogre boss.', 'a small round chubby green swamp frog with big eyes, a tiny BLUE lily-pad hat; cute.', 64, 64),
+    'hornet': ('Ong Bắp Cày', 'a small flying hornet summoned by the Hornet Queen boss.', 'a small chubby flying hornet with yellow and black stripes, clear wings, a tiny BLUE stripe on the abdomen, a stinger; it hovers above the ground.', 64, 64),
+    'boss_bog_ogre': ('Ông Kẹ Đầm Lầy (boss)', 'the first boss: a giant swamp ogre that throws mud.', 'a HUGE chibi swamp ogre covered in moss, mud and hanging weeds, a frog sitting on its head, a BLUE rag belt, holding a dripping log as a club; scary but cartoonish.', 192, 192),
+    'boss_hornet_queen': ('Nữ Hoàng Ong Bắp Cày (boss)', 'the second boss: a giant hornet queen that summons hornets.', 'a LARGE chibi hornet queen with a tiny golden crown, big translucent wings, yellow and black striped abdomen, four small arms holding a stinger spear, a BLUE sash; it hovers above the ground.', 192, 192),
+    'boss_crownless_king': ('Vua Không Ngai (boss)', 'the final boss: a dark armoured king without a crown.', 'a LARGE chibi dark king in heavy black-and-gold plate armour with a torn purple cape, an empty spot on the helmet where a crown should be, glowing eyes in the visor, a BLUE gem on the chest, holding a huge greatsword.', 192, 192),
 }
 
 # In-game height in art pixels (4 art px per world unit) of units added after the Wheat set, chosen against the
 # approved militia (51 px tall). The standing sample is reduced to this height (make_poses.py --sample) and the pose
 # sheet is drawn at a block size that makes this height fit a 512 px cell.
-HEIGHT = {'golem': 76, 'miner': 58, 'rubble': 34, 'slinger': 50, 'apprentice': 50, 'frost_mage': 52, 'archmage': 60, 'construct': 70, 'wolf': 40, 'bear': 66, 'treant': 80, 'stag': 58, 'dryad': 52, 'pirate': 50, 'hookman': 58, 'musketeer': 58, 'swordsman': 52, 'bombardier': 50, 'shieldbearer': 54, 'iron_drake': 76, 'tin_soldier': 50, 'spider': 34, 'gear_gunner': 50, 'colossus': 80, 'skeleton': 48, 'wraith': 48, 'vampire': 56, 'moon_reaper': 70, 'rider': 62, 'horse_archer': 62, 'khan_guard': 58, 'mercenary': 50}
+HEIGHT = {'golem': 76, 'miner': 58, 'rubble': 34, 'slinger': 50, 'apprentice': 50, 'frost_mage': 52, 'archmage': 60, 'construct': 70, 'wolf': 40, 'bear': 66, 'treant': 80, 'stag': 58, 'dryad': 52, 'pirate': 50, 'hookman': 58, 'musketeer': 58, 'swordsman': 52, 'bombardier': 50, 'shieldbearer': 54, 'iron_drake': 76, 'tin_soldier': 50, 'spider': 34, 'gear_gunner': 50, 'colossus': 80, 'skeleton': 48, 'wraith': 48, 'vampire': 56, 'moon_reaper': 70, 'rider': 62, 'horse_archer': 62, 'khan_guard': 58, 'mercenary': 50, 'bandit': 50, 'bandit_archer': 50, 'boar_rider': 60, 'ogre': 74, 'frog': 30, 'hornet': 32, 'boss_bog_ogre': 110, 'boss_hornet_queen': 110, 'boss_crownless_king': 116}
 MILITIA_HEIGHT = 51
 # approved unit of the same kind, attached to every new unit's standing sample (ART_STYLE: "ảnh đã duyệt cùng loại")
 UNIT_REFERENCE = 'docs/art-review/g3e/units/militia/source.png'
@@ -116,6 +125,15 @@ POSES = [
 
 # unit id -> (wind-up, strike); the strike text is also what the gate test looks for
 ATTACK = {
+    'bandit': 'the knife drawn back, crouching low.',
+    'bandit_archer': 'the bow drawn, aiming to the right.',
+    'boar_rider': 'the boar lowering its tusks, the rider raising the club.',
+    'ogre': 'the club raised high over the head with both hands.',
+    'frog': 'the frog squatting low, cheeks puffed.',
+    'hornet': 'the hornet pulled back in the air, stinger raised.',
+    'boss_bog_ogre': 'the log club raised high, mud dripping, roaring.',
+    'boss_hornet_queen': 'the stinger spear raised, wings spread wide.',
+    'boss_crownless_king': 'the greatsword raised high behind the head with both hands, cape flaring.',
     'tin_soldier': 'the bayonet drawn back to the hip, the wind-up key spinning.',
     'spider': 'the front legs raised high, body leaning back.',
     'gear_gunner': 'the gun raised and aimed to the right, cranking the handle.',
@@ -153,6 +171,15 @@ ATTACK = {
     'slinger': 'the sling whirled above the head in one hand, the stone in the pouch, the other arm pointing right.',
 }
 STRIKE = {
+    'bandit': 'a quick stab forward to the right, leaning in.',
+    'bandit_archer': 'the arrow just released to the right (the arrow is drawn by the game).',
+    'boar_rider': 'the boar charging to the right, tusks forward, the club swinging down.',
+    'ogre': 'the club slammed down forward to the right at ground level.',
+    'frog': 'a hop forward to the right with the tongue flicking out.',
+    'hornet': 'a dive forward to the right, stinger first.',
+    'boss_bog_ogre': 'the log club slammed down forward to the right, a splash of mud at the ground.',
+    'boss_hornet_queen': 'a dive forward to the right with the stinger spear thrust out.',
+    'boss_crownless_king': 'a huge downward slash of the greatsword forward to the right, cape trailing.',
     'tin_soldier': 'a stiff thrust of the bayonet forward to the right, one leg kicked forward.',
     'spider': 'a lunge forward to the right with the front legs stabbing down.',
     'gear_gunner': 'the gun firing to the right, a small muzzle flash and spinning gears (bullets drawn by the game).',
