@@ -54,9 +54,9 @@ function trace(seed: number, kingId: KingId): Trace {
 }
 
 const BASELINE: Record<string, Trace> = {
-  'wheat:1': { commands: 19, commandHash: 342283945, setupHash: 3704092950, stateHash: 3390349438 },
-  'stone:2': { commands: 48, commandHash: 87655060, setupHash: 3099714380, stateHash: 2853763960 },
-  'arcane:3': { commands: 20, commandHash: 512543555, setupHash: 2269548629, stateHash: 4005659208 },
+  'wheat:1': { commands: 19, commandHash: 1021144613, setupHash: 3704092950, stateHash: 3415844865 },
+  'stone:2': { commands: 32, commandHash: 2504810424, setupHash: 3595121216, stateHash: 4206235299 },
+  'arcane:3': { commands: 32, commandHash: 1940276589, setupHash: 3337970644, stateHash: 1429959077 },
 };
 
 describe('normal 30-year baseline is unchanged by Endless', () => {

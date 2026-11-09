@@ -69,9 +69,9 @@ export const BATTLE = {
   meleeMaxRange: 8,
   /** Đội hình khi rảnh trước bàn cờ: hàng đầu cách mép nam bàn `formationMargin`, mỗi hàng `formationPerRow` lính. */
   formationMargin: 14,
-  formationPerRow: 24,
-  formationSpacing: 12,
-  formationRowGap: 12,
+  formationPerRow: 20,
+  formationSpacing: 16,
+  formationRowGap: 16, // 12 → 16 cùng khoảng cách: lính to 1,3 lần (2026-11-09)
   /** Khoảng trống giữa khối bắn xa và khối cận chiến. */
   formationBandGap: 6,
   bossSummonCap: 40,
