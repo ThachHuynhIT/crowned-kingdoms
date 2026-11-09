@@ -31,7 +31,7 @@ describe('board geometry for drawing and picking', () => {
       expect(terrain).toEqual({
         wallY: mode === 'endless' ? 112 : 176,
         road: { x: 384, y0: mode === 'endless' ? 608 : 544, y1: 768 },
-        portal: { x: 384, y: 792 },
+        portal: { x: 384, y: 916 },
       });
       const field = generateField(7, mode);
       const path = FIELD_TERRAINS.indexOf('path');

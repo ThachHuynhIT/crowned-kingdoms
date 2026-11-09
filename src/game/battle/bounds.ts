@@ -1,5 +1,5 @@
 /** Biên thế giới của trận: tường núi phía bắc và biên nam đủ chứa mọi hàng xuất quân. */
-import { BATTLE } from '../../data/battle';
+import { BATTLE, ENEMY_PORTAL } from '../../data/battle';
 import type { RunMode } from '../../data/rules';
 import { geometryFor } from '../run/boardGeometry';
 import { portalPositions, rowCapacity } from './spawnLayout';
@@ -18,6 +18,8 @@ export const spawnMaxY = (setup: BattleSetup): number => {
     for (const s of wave.spawns) perEdge[s.edge] += 1;
     for (const p of portalPositions(perEdge.S)) maxY = Math.max(maxY, p.y);
   }
+  // A southern boss also comes out of the portal mouth (bosses.ts): keep it inside the bound too.
+  if (setup.boss && setup.boss.edge === 'S') maxY = Math.max(maxY, ENEMY_PORTAL.y);
   return maxY;
 };
 

@@ -1,6 +1,19 @@
 import { describe, expect, it } from 'vitest';
-import { BATTLE, INTERVENTION } from './battle';
-import { BOARD_ORIGIN, BOARD_SIDE, BUILDING_FOOT_OFFSET, DEPLOY_BOX, FIELD, PLOT, WALL_Y, cells } from './boardGeometry';
+import { BATTLE, ENEMY_PORTAL, INTERVENTION } from './battle';
+import {
+  BOARD_ORIGIN,
+  BOARD_SIDE,
+  BUILDING_FOOT_OFFSET,
+  DEPLOY_BOX,
+  ENDLESS_GEOMETRY,
+  FIELD,
+  NORMAL_GEOMETRY,
+  PLOT,
+  PORTAL,
+  PORTAL_DISTANCE_MULT,
+  WALL_Y,
+  cells,
+} from './boardGeometry';
 import { DECREE_RULES } from './decrees';
 import { PULSE_RADIUS_BONUS, TOWER_RANGE } from './scaling';
 
@@ -42,5 +55,16 @@ describe('board geometry (64 px plots, spec 06/11/2026)', () => {
     expect(south).toBeLessThan(DEPLOY_BOX.y0);
     expect(DEPLOY_BOX.y1).toBeLessThanOrEqual(half);
     expect([DEPLOY_BOX.x0, DEPLOY_BOX.x1].every((x) => Math.abs(x) <= half)).toBe(true);
+  });
+});
+
+describe('enemy portal 1.5x farther (owner 2026-11-09)', () => {
+  it('stands 1.5x its old distance (248 px) south of the board, the same point in every mode and in the battle data', () => {
+    expect(PORTAL_DISTANCE_MULT).toBe(1.5);
+    expect(PORTAL.y - NORMAL_GEOMETRY.boardMax).toBe(248 * 1.5);
+    expect(PORTAL).toEqual({ x: FIELD / 2, y: 916 });
+    expect(NORMAL_GEOMETRY.portal).toEqual(PORTAL);
+    expect(ENDLESS_GEOMETRY.portal).toEqual(PORTAL);
+    expect([ENEMY_PORTAL.x, ENEMY_PORTAL.y]).toEqual([PORTAL.x, PORTAL.y]);
   });
 });

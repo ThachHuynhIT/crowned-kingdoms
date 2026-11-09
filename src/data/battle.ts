@@ -1,5 +1,5 @@
 /** Hằng số trận (spec §3.6, §7.4, §8.2); hình học ô 64 theo spec 06/11/2026. */
-import { BOARD_ORIGIN, FIELD, PLOT, WALL_Y, cells } from './boardGeometry';
+import { BOARD_ORIGIN, FIELD, PLOT, PORTAL, WALL_Y, cells } from './boardGeometry';
 
 /** Ngân sách gốc năm 1..30 = round(12 × 1.15^(y−1)), lưu sẵn để không phụ thuộc Math.pow. */
 export const ENEMY_BUDGET = [
@@ -99,8 +99,8 @@ export const BATTLE = {
  * k ở ô k mod 25 (cột trái → phải, hàng từ chân cổng lên bắc), boss ở tâm. Chỉ là vị trí xuất quân, không va chạm.
  */
 export const ENEMY_PORTAL = {
-  x: FIELD / 2,
-  y: FIELD + BATTLE.spawnOutside,
+  x: PORTAL.x,
+  y: PORTAL.y,
   columns: 5,
   rows: 5,
   spacingX: 12,

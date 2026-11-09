@@ -1,7 +1,7 @@
 /**
  * Baseline của chế độ thường trước Endless (spec 2026-11-09 §8, plan E1 Task 1 Step 1). Các literal dưới
  * đây ghi lần đầu trên commit 43ad681 TRƯỚC khi sửa mã Endless, rồi ghi lại trên commit 3652e5a (cân bằng G5 `75a1448`:
- * 2 mạng, máu Ngai mới; vẫn KHÔNG có mã Endless) khi gộp `endless-e1` vào G5, rồi ghi lại khi đổi luật trận (2026-11-09, nhánh `battle-field-rework`: địch phá hết công trình rồi mới tới Ngai, rồi tầm tháp ×3, rồi công trình chặn đường + đội hình + giới hạn đi xa; vẫn KHÔNG có mã Endless); không được ghi lại để test xanh. Nếu dữ liệu cân bằng thay đổi có chủ
+ * 2 mạng, máu Ngai mới; vẫn KHÔNG có mã Endless) khi gộp `endless-e1` vào G5, rồi ghi lại khi đổi luật trận (2026-11-09, nhánh `battle-field-rework`: địch phá hết công trình rồi mới tới Ngai, rồi tầm tháp ×3, rồi công trình chặn đường + đội hình + giới hạn đi xa, rồi cổng xa 1,5 lần; vẫn KHÔNG có mã Endless); không được ghi lại để test xanh. Nếu dữ liệu cân bằng thay đổi có chủ
  * đích (thuế, mạng, máu Ngai…), ghi lại baseline ở một commit riêng KHÔNG chứa thay đổi Endless.
  *
  * Gameplay projection bỏ đúng các trường schema mới của RunState v7 (`version`, `mode`, `endless`,
@@ -54,9 +54,9 @@ function trace(seed: number, kingId: KingId): Trace {
 }
 
 const BASELINE: Record<string, Trace> = {
-  'wheat:1': { commands: 38, commandHash: 3076624803, setupHash: 1568750235, stateHash: 4056399932 },
-  'stone:2': { commands: 184, commandHash: 4169843945, setupHash: 1089530736, stateHash: 2320747183 },
-  'arcane:3': { commands: 87, commandHash: 2162753505, setupHash: 2694863671, stateHash: 3705735959 },
+  'wheat:1': { commands: 38, commandHash: 18966020, setupHash: 1568750235, stateHash: 2768934041 },
+  'stone:2': { commands: 183, commandHash: 1137660991, setupHash: 4222870000, stateHash: 3300904112 },
+  'arcane:3': { commands: 87, commandHash: 3959861982, setupHash: 2694863671, stateHash: 1826040665 },
 };
 
 describe('normal 30-year baseline is unchanged by Endless', () => {

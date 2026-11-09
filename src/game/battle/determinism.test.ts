@@ -63,8 +63,11 @@ const SETUP: BattleSetup = battleSetup({
   waves: [wave(0, 'S', 'S'), wave(120, 'S', 'S')],
 });
 
-/** Giữa sân, cách mép nam ≈ 212 px: đúng chỗ kỵ lợn (6 px/tick) đi tới quanh tick 36 (bản ô 32: (192, 290)). */
-const INPUTS: readonly BattleInput[] = [{ tick: 30, x: BATTLE.field / 2, y: 290 * SPEC_MOVE_SCALE }];
+/**
+ * Giữa sân (y 580): kỵ lợn (6 px/tick) ra từ cổng y 916 (cổng xa 1,5 lần từ 2026-11-09) tới đây quanh tick 56, nên
+ * tảng đá thả ở tick 50 rơi xuống (6 tick sau) đúng lúc chúng tới (bản ô 32: (192, 290)).
+ */
+const INPUTS: readonly BattleInput[] = [{ tick: 50, x: BATTLE.field / 2, y: 290 * SPEC_MOVE_SCALE }];
 
 const step = (w: BattleWorld, inputs: readonly BattleCommand[]): void => {
   const tick = w.tick;

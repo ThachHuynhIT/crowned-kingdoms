@@ -67,7 +67,7 @@ describe('board descriptors (spec 2026-11-09 §4)', () => {
     expect(NORMAL_GEOMETRY).toMatchObject({ plotCount: 25, boardMin: 224, boardMax: 544, wallY: 176, roadStartY: 544 });
     expect(ENDLESS_GEOMETRY).toMatchObject({ plotCount: 49, boardMin: 160, boardMax: 608, wallY: 112, roadStartY: 608 });
     for (const g of [NORMAL_GEOMETRY, ENDLESS_GEOMETRY]) {
-      expect(g).toMatchObject({ plotSize: 64, innerOrigin: 224, field: 768, thronePlot: 2, portal: { x: 384, y: 792 } });
+      expect(g).toMatchObject({ plotSize: 64, innerOrigin: 224, field: 768, thronePlot: 2, portal: { x: 384, y: 916 } });
       expect(g.plotCells).toHaveLength(g.plotCount);
       expect(g.boardMin - g.wallY).toBe(48);
     }

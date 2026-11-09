@@ -145,6 +145,6 @@ describe('north mountain wall', () => {
     const wave = { spawnTick: 0, spawns: Array.from({ length: 120 }, () => spawn()) };
     const w = make({ waves: [wave] });
     expect(w.maxY).toBeGreaterThanOrEqual(ENEMY_PORTAL.y);
-    expect(w.maxY).toBe(BATTLE.field + BATTLE.fieldClampMargin);
+    expect(w.maxY).toBe(ENEMY_PORTAL.y); // past the field margin since the portal moved (2026-11-09)
   });
 });

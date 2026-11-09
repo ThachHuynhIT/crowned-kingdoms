@@ -21,10 +21,11 @@ const foes = (w: ReturnType<typeof createBattle>) =>
 
 describe('enemy portal (spec 2026-11-08 §3, Q2)', () => {
   it('portal_centre_projects_right_and_down: at the road end, south of the board centre', () => {
-    expect(ENEMY_PORTAL).toMatchObject({ x: 384, y: 792, columns: 5, rows: 5, spacingX: 12, spacingY: 6 });
+    expect(ENEMY_PORTAL).toMatchObject({ x: 384, y: 916, columns: 5, rows: 5, spacingX: 12, spacingY: 6 });
     expect(ENEMY_PORTAL.x).toBe(BATTLE.field / 2);
-    expect(ENEMY_PORTAL.y).toBe(BATTLE.field + BATTLE.spawnOutside);
-    expect(project(ENEMY_PORTAL)).toEqual({ x: 408, y: 588 });
+    // 2026-11-09: 1.5x its old 248 px from the board's south edge (544)
+    expect(ENEMY_PORTAL.y).toBe(544 + 248 * 1.5);
+    expect(project(ENEMY_PORTAL)).toEqual({ x: 532, y: 650 });
     expect(project({ x: 384, y: 384 })).toEqual({ x: 0, y: 384 });
   });
 
@@ -36,15 +37,15 @@ describe('enemy portal (spec 2026-11-08 §3, Q2)', () => {
       for (const q of p) {
         expect(q.x).toBeGreaterThanOrEqual(360);
         expect(q.x).toBeLessThanOrEqual(408);
-        expect(q.y).toBeGreaterThanOrEqual(768);
-        expect(q.y).toBeLessThanOrEqual(792);
+        expect(q.y).toBeGreaterThanOrEqual(892);
+        expect(q.y).toBeLessThanOrEqual(916);
       }
     }
     const p = portalPositions(26);
-    expect(p[0]).toEqual({ x: 360, y: 792 });
-    expect(p[4]).toEqual({ x: 408, y: 792 });
-    expect(p[5]).toEqual({ x: 360, y: 786 });
-    expect(p[24]).toEqual({ x: 408, y: 768 });
+    expect(p[0]).toEqual({ x: 360, y: 916 });
+    expect(p[4]).toEqual({ x: 408, y: 916 });
+    expect(p[5]).toEqual({ x: 360, y: 910 });
+    expect(p[24]).toEqual({ x: 408, y: 892 });
     expect(p[25]).toEqual(p[0]);
   });
 
@@ -88,9 +89,9 @@ describe('enemy portal (spec 2026-11-08 §3, Q2)', () => {
     expect(w.count).toBe(count);
   });
 
-  it('south_bounds_include_portal_without_long_rows: spawnMaxY stays at the field margin', () => {
+  it('south_bounds_include_portal_without_long_rows: spawnMaxY reaches the portal mouth (y 916 since 2026-11-09)', () => {
     const setup = battleSetup({ waves: [south(120, 0, 4)] });
-    expect(spawnMaxY(setup)).toBe(BATTLE.field + BATTLE.fieldClampMargin);
+    expect(spawnMaxY(setup)).toBe(ENEMY_PORTAL.y);
     expect(spawnMaxY(setup)).toBeGreaterThanOrEqual(ENEMY_PORTAL.y);
   });
 
