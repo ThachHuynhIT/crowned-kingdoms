@@ -33,6 +33,17 @@ Game đổi thể loại từ colony sim sang **roguelite xây vương quốc + 
   - Chế độ Vô tận: `docs/superpowers/plans/2026-11-09-endless-mode.md`. Đã gộp vào nhánh G5: E1 (luật, dữ liệu, save v7, meta v2), E2 (hình học trận và vẽ bàn 7×7), E4 (chạy không giao diện, bot greedy sống qua năm 40). E3 (giao diện: chọn chế độ, bảng phúc lành, lịch chia trang, điểm sống sót) và test tải lại ở các năm 30–41 cũng đã xong.
   - Toàn bộ asset còn thiếu: `docs/superpowers/plans/2026-11-09-missing-art-assets.md`.
 
+**Làm lại chiến trường (nhánh `battle-field-rework`, spec `docs/superpowers/specs/2026-11-09-battle-field-rework-design.md`, 09/11/2026):**
+- **Đường đi:** công trình chặn một khối vuông 36 px giữa ô, cả hai phe đều đi vòng.
+- **Đội hình:** khi rảnh lính phe mình xếp hàng trước bàn cờ (bắn xa sát bàn, cận chiến đứng trước) và không đi quá 4 ô ra ngoài.
+- **Mục tiêu của địch:** phá hết công trình rồi mới đánh Ngai; trong Cuồng Nộ đòn vào công trình +100%.
+- **Tầm và cổng:** tầm bắn của tháp ×3, trừ đẩy lùi và phun quạt; cổng địch xa hơn 1,5 lần.
+- **Lính to:** khổng lồ cao khoảng 2 lần lính thường.
+- **Lưu ván:** nhiều bản lưu có tên, có màn Tải ván.
+- **Giao diện:** khung lấy từ Kenney Pixel Adventure; bốn công trình trung lập có art isometric.
+- **Âm thanh:** to bằng một nửa.
+- **Cân bằng lại:** `docs/balance/2026-11-09-battle-rework-balance.md` (43,4–56,2%, chênh lệch 12,8).
+
 **G4 (kings và meta, nhánh `g4-kings-meta`, plan `docs/superpowers/plans/2026-11-09-g4-kings-and-meta.md`):** chơi được đủ 9 vua (Lúa Mì, Đá Núi, Phép Thuật, Rừng Xanh, Thuỷ Triều, Lò Rèn, Đồng Hồ, Ánh Trăng, Du Mục), mỗi vua một Ngai, bị động và 3 perk (27 perk), hai thẻ trung lập meta (Nhân Bản, Ấn Triện), lệnh dời trại miễn phí của Du Mục. Meta (`src/game/meta/`): Điểm Vương Miện `round((số năm + 3 × vua chinh phục + 5 × boss + 20 nếu thắng) × (1 + 0,2 × Gai))`, thông thạo từng vua (perk mở ở 10/30/60), mở vua (25/25/40/40/60/80, Du Mục cần thêm ≥ 1 thắng), mở thẻ trung lập (15/20), độ khó Gai 0–5; hồ sơ meta lưu IndexedDB (store `meta`), không bao giờ bị xoá; `RunState` v6 (migrator 5 → 6). `KingSelectScene` có khoá, perk và Gai; `RunEndScene` hiện bảng điểm; `CrownsScene` hiện điểm, thông thạo và mở khoá.
 
 **Kiểm "Done khi" G4:** 9 vua chơi được (`kings.*.test.ts`, `perkCoverage.test.ts`, `cardCoverage.test.ts`); Du Mục khoá đúng điều kiện và điểm khớp công thức (`unlocks.test.ts`, `crowns.test.ts`); mở khoá còn sau khi tải lại (`src/platform/resumeIntegration.test.ts`, `codec.test.ts`); headless 9 vua × 3 seed, ván 30 năm thật, deterministic (`fullRun.test.ts`, 27 ván); gate đầy đủ xanh (179 file, 2275 test); mỗi task có kiểm trình duyệt ở 1280×720 và 375×812 (ảnh trong thư mục SDD của PR), console không lỗi.

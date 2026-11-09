@@ -41,7 +41,7 @@ export const WHEAT: KingDef = {
     tags: [],
     textVi:
       'Ngai của Vua Lúa Mì: bắn kẻ địch trong tầm. Mùa Gặt: đầu năm +1 vàng cho mỗi 2 Ruộng Lúa (từ Ngai cấp 3: mỗi Ruộng Lúa).',
-    hp: 430,
+    hp: 900,
     armor: 0,
     attack: { dmg: 8, type: 'physical', range: cells(1.6875), interval: 10, projectileSpeed: 16 },
     passive: [{ type: 'custom', id: 'wheat_harvest' }],

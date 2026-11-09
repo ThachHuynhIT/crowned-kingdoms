@@ -13,6 +13,11 @@ export const TOWER_RANGE: PerLevel = [0, 6, 12, 18, 24];
  * đòn đẩy lùi (pháo và xúc tu của Thuỷ Triều) và tháp phun hình quạt (Tháp Lửa của Lò Rèn). Không áp cho Ngai, lính, xung, khiên, hồi máu, khiêu khích.
  */
 export const TOWER_RANGE_MULT = 3;
+/**
+ * Sát thương đòn bắn của tháp nhân hệ số này (cân bằng 2026-11-09): tầm ×3 làm vua nhiều tháp (Đá Núi) mạnh vượt hẳn
+ * vua nhiều lính; giữ tầm như chủ dự án muốn, hạ sát thương. Không áp cho xung, Ngai hay lính.
+ */
+export const TOWER_SHOT_DMG_MULT = 0.6;
 
 /** Tầm của đòn tháp `attack` ở cấp `level` (world px). */
 export const towerRange = (attack: AttackSpec, level: Level): number => {

@@ -38,7 +38,7 @@ export const STONE: KingDef = {
     rarity: 'common',
     tags: [],
     textVi: 'Ngai của Vua Đá Núi: ném đá vào kẻ địch. Núi Che Chở: mọi tháp +{pct}% sát thương.',
-    hp: 270,
+    hp: 140,
     armor: 0.2,
     attack: { dmg: 12, type: 'physical', range: cells(1.3125), interval: 14, projectileSpeed: 12 },
     passive: [
@@ -48,7 +48,7 @@ export const STONE: KingDef = {
         filter: { kinds: ['tower'] },
         stat: 'dmg',
         mode: 'pct',
-        value: [10, 12, 15, 18, 20],
+        value: [5, 6, 8, 9, 10], // [10..20] → [5..10] (cân bằng 2026-11-09)
       },
     ],
   },
@@ -121,8 +121,8 @@ export const STONE: KingDef = {
       textVi: 'Mỗi lần gắn: +{pct}% máu lính và máu công trình, +0.05 giáp.',
       targets: ['troop', 'tower', 'support', 'throne'],
       perStack: [
-        { type: 'stat', scope: 'self', stat: 'hp', mode: 'pct', value: 20 },
-        { type: 'stat', scope: 'self', stat: 'structureHp', mode: 'pct', value: 20 },
+        { type: 'stat', scope: 'self', stat: 'hp', mode: 'pct', value: 12 }, // 20 → 12 (cân bằng 2026-11-09)
+        { type: 'stat', scope: 'self', stat: 'structureHp', mode: 'pct', value: 12 },
         { type: 'stat', scope: 'self', stat: 'armor', mode: 'flat', value: 0.05 },
       ],
     },
@@ -150,7 +150,7 @@ export const STONE: KingDef = {
       kind: 'tower',
       rarity: 'uncommon',
       tags: [],
-      textVi: 'Tia {dmg} sát thương phép, tầm {range}, bắn rất nhanh; mỗi đòn liên tiếp vào cùng mục tiêu +20% (tối đa +200%).',
+      textVi: 'Tia {dmg} sát thương phép, tầm {range}, bắn rất nhanh; mỗi đòn liên tiếp vào cùng mục tiêu +20% (tối đa +100%).',
       effects: [
         {
           type: 'tower',
@@ -159,7 +159,7 @@ export const STONE: KingDef = {
             type: 'magic',
             range: cells(1.5),
             interval: 3,
-            onHit: [{ type: 'rampSameTarget', pctPerHit: 20, cap: 200 }],
+            onHit: [{ type: 'rampSameTarget', pctPerHit: 20, cap: 100 }], // cap 200 → 100 (cân bằng 2026-11-09)
           },
           targeting: 'closestToThrone',
         },
@@ -197,12 +197,12 @@ export const STONE: KingDef = {
       rarity: 'rare',
       tags: [],
       textVi:
-        'Mỗi 40 tick, mọi địch trong {radius} px nhận {dmg} sát thương vật lý và choáng 10 tick. Lân cận: Người Đá +{pct}% máu.',
-      structureHp: [600, 750, 900, 1050, 1200],
+        'Mỗi 60 tick, mọi địch trong {radius} px nhận {dmg} sát thương vật lý và choáng 10 tick. Lân cận: Người Đá +{pct}% máu.',
+      structureHp: [450, 560, 680, 790, 900], // [600..1200] → [450..900] (cân bằng 2026-11-09)
       effects: [
         {
           type: 'pulse',
-          everyTicks: 40,
+          everyTicks: 60, // 40 → 60 (cân bằng 2026-11-09)
           radius: cells(1.5),
           attack: {
             dmg: 30,
@@ -227,8 +227,8 @@ export const STONE: KingDef = {
     {
       id: 'golem',
       nameVi: 'Người Đá',
-      hp: 220,
-      attack: { dmg: 14, type: 'physical', range: 3, interval: 15 },
+      hp: 130, // 220 → 130 (cân bằng 2026-11-09: đứng đầu đội hình mới, gánh quá nhiều)
+      attack: { dmg: 12, type: 'physical', range: 3, interval: 15 },
       speed: 1.2,
       radius: 7,
       armor: 0.3,

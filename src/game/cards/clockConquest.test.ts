@@ -1,6 +1,6 @@
 import { SPEC_MOVE_SCALE } from '../../data/boardGeometry';
 import { describe, expect, it } from 'vitest';
-import { TOWER_RANGE, TOWER_STD } from '../../data/scaling';
+import { TOWER_RANGE, TOWER_SHOT_DMG_MULT, TOWER_STD } from '../../data/scaling';
 import type { CardId, Level } from '../../data/types';
 import { tickBehaviours } from '../battle/behaviours';
 import { stepBattle } from '../battle/step';
@@ -73,7 +73,7 @@ describe('the nine Clock King cards (spec 6.9)', () => {
     it('gear tower: 5 physical, range 72, every 10 ticks, shell speed 8, +2%/s up to +100%', () => {
       for (const level of [1, 5] as Level[]) {
         const s = at(withBuilding(runState(), 6, 'clock_gear_tower', level), 6);
-        expect(s.attack!.dmg).toBeCloseTo(5 * TOWER_STD[level - 1]!);
+        expect(s.attack!.dmg).toBeCloseTo(5 * TOWER_STD[level - 1]! * TOWER_SHOT_DMG_MULT);
         expect([s.attack!.range, s.attack!.interval, s.attack!.projectileSpeed]).toEqual([(108 + TOWER_RANGE[level - 1]!) * 3, 10, 8 * SPEC_MOVE_SCALE]);
         expect(s.rampAs).toEqual({ pps: 2, cap: 100 });
       }
@@ -81,7 +81,7 @@ describe('the nine Clock King cards (spec 6.9)', () => {
 
     it('steam cannon: 30 physical, splash 18, range 104, every 40, +1.5%/s up to +90%', () => {
       const s = at(withBuilding(runState(), 6, 'clock_steam_cannon', 1), 6);
-      expect(s.attack).toMatchObject({ dmg: 30, splash: 36, range: 156 * 3, interval: 40, projectileSpeed: 5 * SPEC_MOVE_SCALE });
+      expect(s.attack).toMatchObject({ dmg: 30 * TOWER_SHOT_DMG_MULT, splash: 36, range: 156 * 3, interval: 40, projectileSpeed: 5 * SPEC_MOVE_SCALE });
       expect(s.rampAs).toEqual({ pps: 1.5, cap: 90 });
     });
 

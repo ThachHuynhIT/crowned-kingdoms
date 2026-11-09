@@ -1,6 +1,6 @@
 /** Dựng BattleSetup từ RunState (spec §5.3: G1 = cấp 1; §3.6: cấp địch). Thuần, không sửa đầu vào. */
 import { formationRowsFor } from '../battle/bounds';
-import { EMBER_TICKS, ENEMY_LEVEL_STAT, WAVES } from '../../data/battle';
+import { EMBER_TICKS, ENEMY_LEVEL_STAT, ENEMY_STAT_MULT, WAVES } from '../../data/battle';
 import { BOSSES, BOSS_RULES } from '../../data/bosses';
 import { SOUL_HARVEST_UNIT } from '../../data/kings/moon';
 import { BOSS_SUMMON_UNITS } from '../../data/raiders';
@@ -11,6 +11,7 @@ import {
   STRUCT_HP,
   STRUCT_STD,
   THRONE_STD,
+  TOWER_SHOT_DMG_MULT,
   towerRange,
   TOWER_STD,
   TROOP_STD,
@@ -335,7 +336,7 @@ export const structureFor = (state: RunState, plot: number, content: Content): S
     armor,
     attack:
       towerFx && towerFx.type === 'tower'
-        ? attackStats({ ...towerFx.attack, range: towerRange(towerFx.attack, level) }, levelMult(TOWER_STD, level), 0, sheet)
+        ? attackStats({ ...towerFx.attack, range: towerRange(towerFx.attack, level) }, levelMult(TOWER_STD, level) * TOWER_SHOT_DMG_MULT, 0, sheet)
         : null,
     targeting: towerFx && towerFx.type === 'tower' ? towerFx.targeting : 'closestToThrone',
     spawn,
@@ -430,7 +431,7 @@ const bossSetup = (
     }
     if (best !== null) {
       const unit = content.unit(best.spawn!.stats.unit);
-      const mult = ENEMY_LEVEL_STAT[army.level - 1]! * army.statMult;
+      const mult = ENEMY_LEVEL_STAT[army.level - 1]! * army.statMult * ENEMY_STAT_MULT;
       mirror = {
         stats: unitStats(unit, mult, false, content, [], speedScale),
         count: Math.max(1, Math.floor(best.spawn!.count / 2)),
@@ -479,7 +480,7 @@ export function buildBattleSetup(state: RunState, content: Content): BattleSetup
     if (plot !== THRONE_PLOT && p.building !== null) structures.push(structureFor(state, plot, content));
   });
 
-  const mult = ENEMY_LEVEL_STAT[army.level - 1]! * army.statMult;
+  const mult = ENEMY_LEVEL_STAT[army.level - 1]! * army.statMult * ENEMY_STAT_MULT;
   const bannerDef =
     army.attacker === 'raiders' || army.attacker === 'coalition' || army.attacker === 'boss'
       ? null

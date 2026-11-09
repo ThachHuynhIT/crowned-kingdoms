@@ -1,6 +1,6 @@
 import { SPEC_MOVE_SCALE } from '../../data/boardGeometry';
 import { describe, expect, it } from 'vitest';
-import { TOWER_RANGE, TOWER_STD } from '../../data/scaling';
+import { TOWER_RANGE, TOWER_SHOT_DMG_MULT, TOWER_STD } from '../../data/scaling';
 import type { CardId, Level } from '../../data/types';
 import { buildBattleSetup } from '../run/battleSetup';
 import { applyCommand } from '../run/commands';
@@ -148,7 +148,7 @@ describe('the nine Nomad King cards (spec 6.11)', () => {
         const a = at(withBuilding(runState(), 22, 'nomad_watchtower', level), 22).attack!;
         // a plot on the edge has 3 neighbours, none open and empty at the start except those unlocked
         expect([a.range, a.interval, a.projectileSpeed]).toEqual([(144 + TOWER_RANGE[level - 1]!) * 3, 12, 9 * SPEC_MOVE_SCALE]);
-        expect(a.dmg).toBeGreaterThanOrEqual(7 * TOWER_STD[level - 1]!);
+        expect(a.dmg).toBeGreaterThanOrEqual(7 * TOWER_STD[level - 1]! * TOWER_SHOT_DMG_MULT);
       }
     });
 
@@ -157,9 +157,9 @@ describe('the nine Nomad King cards (spec 6.11)', () => {
       const bare = withBuilding(runState(), 6, 'nomad_watchtower', 1);
       // plot 6 = (1,1): neighbours 1, 7, 11, 5. In the opening 3x3 only 7, 11 and 5? count them from the board itself
       const open = [1, 7, 11, 5].filter((n) => bare.plots[n]!.unlocked && bare.plots[n]!.building === null).length;
-      expect(dmgAt(bare)).toBeCloseTo(7 * (1 + 0.2 * open));
+      expect(dmgAt(bare)).toBeCloseTo(7 * TOWER_SHOT_DMG_MULT * (1 + 0.2 * open));
       const filled = withBuilding(bare, 7, 'wheat_militia');
-      expect(dmgAt(filled)).toBeCloseTo(7 * (1 + 0.2 * (open - 1)));
+      expect(dmgAt(filled)).toBeCloseTo(7 * TOWER_SHOT_DMG_MULT * (1 + 0.2 * (open - 1)));
     });
   });
 

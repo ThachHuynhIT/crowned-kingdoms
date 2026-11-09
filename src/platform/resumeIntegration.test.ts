@@ -243,7 +243,7 @@ describe('resume_matrix', () => {
 });
 
 describe('resume_matrix with G4 kings and perks', () => {
-  it("a run with perk 'stone_p1' reloaded mid-battle restarts with the throne at 470 HP on tick 0", async () => {
+  it("a run with perk 'stone_p1' reloaded mid-battle restarts with the throne at 340 HP (140 + 200) on tick 0", async () => {
     let state = newRun(5, 'stone', CONTENT, RULES_FULL, { perk: 'stone_p1' });
     const rng = new Rng(9);
     for (let i = 0; i < 200 && state.phase !== 'battle'; i++) {
@@ -265,8 +265,8 @@ describe('resume_matrix with G4 kings and perks', () => {
     await controller.whenIdle();
     const world = controller.runner!.world;
     expect(world.tick).toBe(0);
-    expect(world.hp[world.throneId]).toBe(470);
-    expect(world.maxHp[world.throneId]).toBe(470);
+    expect(world.hp[world.throneId]).toBe(340);
+    expect(world.maxHp[world.throneId]).toBe(340);
   });
 
   it('a Nomad run that used its free move this year still has used it after a reload', async () => {

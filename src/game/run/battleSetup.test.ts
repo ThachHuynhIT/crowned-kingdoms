@@ -1,7 +1,7 @@
 import { describe, expect, it } from 'vitest';
 import { RULES_G1 } from '../../data/rules';
-import { ENEMY_LEVEL_STAT } from '../../data/battle';
-import { STRUCT_HP } from '../../data/scaling';
+import { ENEMY_LEVEL_STAT, ENEMY_STAT_MULT } from '../../data/battle';
+import { STRUCT_HP, TOWER_SHOT_DMG_MULT } from '../../data/scaling';
 import { composeArmy, armyBudget } from '../battle/compose';
 import type { ArmyPlan } from '../battle/types';
 import { CONTENT } from '../cards/registry';
@@ -98,7 +98,7 @@ describe('buildBattleSetup', () => {
     const t = setup.structures[1]!;
     expect(t.kind).toBe('tower');
     expect(t.hp).toBe(220);
-    expect(t.attack!.dmg).toBe(7);
+    expect(t.attack!.dmg).toBe(7 * TOWER_SHOT_DMG_MULT);
     expect(t.attack!.range).toBe(132 * 3); // 88 × 1,5, ×3 (2026-11-09)
     expect(t.attack!.projectileSpeed).toBe(16); // 8 × 2 (spec 06/11/2026)
     expect(t.attack!.slowPct).toBe(0);
@@ -115,7 +115,7 @@ describe('buildBattleSetup', () => {
   });
 
   it('maps the throne', () => {
-    expect(setup.throne.hp).toBe(430);
+    expect(setup.throne.hp).toBe(900);
     expect(setup.throne.plot).toBe(THRONE_PLOT);
     expect(setup.throne.uid).toBe(0);
     expect(setup.throne.kind).toBe('throne');
@@ -130,7 +130,7 @@ describe('buildBattleSetup', () => {
     expect(total).toBe(army1.waves.reduce((n, w) => n + w.units.length, 0));
   });
 
-  it('scales foe hp and dmg by level and statMult', () => {
+  it('scales foe hp and dmg by level, statMult and ENEMY_STAT_MULT', () => {
     const army: ArmyPlan = {
       attacker: 'raiders',
       budget: 10,
@@ -139,9 +139,9 @@ describe('buildBattleSetup', () => {
       waves: [{ spawnTick: 0, units: [{ unit: 'bandit', edge: 'N' }] }],
     };
     const s = buildBattleSetup(makeState(army), CONTENT).waves[0]!.spawns[0]!.stats;
-    expect(s.hp).toBeCloseTo(30 * ENEMY_LEVEL_STAT[1]! * 1.5, 6);
-    expect(s.hp).toBeCloseTo(65.25, 6);
-    expect(s.dmg).toBeCloseTo(5 * 1.45 * 1.5, 6);
+    expect(s.hp).toBeCloseTo(30 * ENEMY_LEVEL_STAT[1]! * 1.5 * ENEMY_STAT_MULT, 6);
+    expect(s.hp).toBeCloseTo(146.8125, 6); // 30 × 1.45 × 1.5 × 2.25
+    expect(s.dmg).toBeCloseTo(5 * 1.45 * 1.5 * ENEMY_STAT_MULT, 6);
   });
 
   it('is pure and deterministic', () => {

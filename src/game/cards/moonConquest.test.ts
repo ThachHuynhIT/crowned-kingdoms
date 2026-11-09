@@ -1,6 +1,6 @@
 import { SPEC_MOVE_SCALE } from '../../data/boardGeometry';
 import { describe, expect, it } from 'vitest';
-import { TOWER_RANGE, TOWER_STD } from '../../data/scaling';
+import { TOWER_RANGE, TOWER_SHOT_DMG_MULT, TOWER_STD } from '../../data/scaling';
 import type { CardId, Level } from '../../data/types';
 import { stepBattle } from '../battle/step';
 import { TEAM_ALLY, TEAM_FOE, addUnit, createBattle, type BattleWorld } from '../battle/world';
@@ -70,7 +70,7 @@ describe('the nine Moon King cards (spec 6.10)', () => {
     it('shoots 7 magic at range 72 every 10 ticks, shell speed 8', () => {
       for (const level of [1, 5] as Level[]) {
         const s = at(withBuilding(runState(), 6, 'moon_shadow_spire', level), 6);
-        expect(s.attack!.dmg).toBeCloseTo(7 * TOWER_STD[level - 1]!);
+        expect(s.attack!.dmg).toBeCloseTo(7 * TOWER_STD[level - 1]! * TOWER_SHOT_DMG_MULT);
         expect([s.attack!.dmgType, s.attack!.range, s.attack!.interval, s.attack!.projectileSpeed]).toEqual([
           'magic',
           (108 + TOWER_RANGE[level - 1]!) * 3,
