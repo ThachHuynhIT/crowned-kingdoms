@@ -40,6 +40,8 @@ describe('modalKind', () => {
     expect(modalKind(cards('questReward', 'reward'))).toBe('cards');
     expect(modalKind(runState())).toBeNull();
     expect(modalKind(runState({ phase: 'yearEnd' }))).toBeNull();
+    const blessing = runState({ phase: 'blessing', offers: { kind: 'blessing', blessingIds: ['harvest', 'might', 'vigor'], year: 30 } });
+    expect(modalKind(blessing)).toBe('blessing');
   });
 });
 

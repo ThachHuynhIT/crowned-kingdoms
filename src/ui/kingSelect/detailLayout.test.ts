@@ -56,6 +56,7 @@ describe('detailLayout', () => {
       const parts: Record<string, Rect> = {
         title: l.title, back: l.back, portrait: l.portrait, perks: l.perks, difficulty: l.difficulty,
         previous: l.previous, next: l.next, play: l.play, seed: l.seed, reroll: l.reroll,
+        mode0: l.modes[0]!, mode1: l.modes[1]!, modeNote: l.modeNote,
       };
       l.cards.forEach((c, i) => (parts[`card${i}`] = c));
       const names = Object.keys(parts);
@@ -69,7 +70,7 @@ describe('detailLayout', () => {
 
     it(`every button is at least 44×44 and the buttons are not shrunk to fit (${name})`, () => {
       const l = detailLayout(screen, 6);
-      for (const [n, r] of Object.entries({ back: l.back, perks: l.perks, previous: l.previous, next: l.next, play: l.play, reroll: l.reroll })) {
+      for (const [n, r] of Object.entries({ back: l.back, perks: l.perks, previous: l.previous, next: l.next, play: l.play, reroll: l.reroll, mode0: l.modes[0]!, mode1: l.modes[1]! })) {
         expect(r.w, n).toBeGreaterThanOrEqual(44);
         expect(r.h, n).toBeGreaterThanOrEqual(44);
       }
@@ -93,6 +94,32 @@ describe('detailLayout', () => {
   });
 });
 
+describe('detailLayout run-mode toggle (spec 2026-11-09 §2)', () => {
+  it('has two toggle buttons, "30 năm" before "Vô tận", and room for the locked reason', () => {
+    for (const screen of [DESKTOP, MOBILE, TABLET, PHONE_767]) {
+      const l = detailLayout(screen, 6);
+      expect(l.modes).toHaveLength(2);
+      const [a, b] = l.modes as [Rect, Rect];
+      expect(a.x < b.x || a.y < b.y).toBe(true);
+      expect(l.modeNote.w).toBeGreaterThanOrEqual(96);
+      expect(l.modeNote.h).toBeGreaterThanOrEqual(44);
+    }
+  });
+
+  it('desktop: one row under the seed row, still inside 1280×720', () => {
+    const l = detailLayout(DESKTOP, 6);
+    expect(l.modes[0]!.y).toBeGreaterThanOrEqual(l.seed.y + l.seed.h);
+    expect(l.modes[0]!.y).toBe(l.modes[1]!.y);
+    expect(l.modeNote.y + l.modeNote.h).toBeLessThanOrEqual(720 - 10);
+  });
+
+  it('phone: stacked left of the king card, clear of it', () => {
+    const l = detailLayout(MOBILE, 6);
+    for (const r of [...l.modes, l.modeNote]) expect(r.x + r.w).toBeLessThanOrEqual(l.portrait.x);
+    expect(l.modes[1]!.y).toBeGreaterThan(l.modes[0]!.y);
+  });
+});
+
 describe('detailLayout perk caption', () => {
   for (const [name, screen] of [
     ['desktop', DESKTOP],
@@ -105,7 +132,7 @@ describe('detailLayout perk caption', () => {
       expect(inside(l.perkName, screen)).toBe(true);
       expect(l.perkName.w).toBeGreaterThanOrEqual(96);
       expect(l.perkName.h).toBeGreaterThanOrEqual(18);
-      const others = [l.title, l.back, l.portrait, l.perks, l.difficulty, l.previous, l.next, l.play, l.seed, l.reroll, ...l.cards];
+      const others = [l.title, l.back, l.portrait, l.perks, l.difficulty, l.previous, l.next, l.play, l.seed, l.reroll, ...l.modes, l.modeNote, ...l.cards];
       for (const r of others) expect(overlaps(l.perkName, r)).toBe(false);
     });
   }

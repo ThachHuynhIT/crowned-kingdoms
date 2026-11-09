@@ -12,7 +12,7 @@ import { RunController } from '../game/run/RunController';
 import { checkTargetStep, targetCount } from '../game/run/board';
 import type { SessionPersistence } from '../game/save/types';
 import type { PlayTarget, RunState } from '../game/run/state';
-import { RULES_FULL } from '../data/rules';
+import type { RunMode } from '../data/rules';
 import type { KingId, PerkId } from '../data/types';
 import { newRun } from '../game/run/yearFlow';
 import { BoardRenderer } from '../render/BoardRenderer';
@@ -24,6 +24,7 @@ import { buildSpritesTexture } from '../render/atlas';
 import { DRAG_SLOP, type Size } from '../ui/hud/layout';
 import { lockedPlotTap, plotHighlights, plotIllegalReason } from '../ui/planning/targetHints';
 import { lockedPlotPrice } from '../ui/realm/calendarModel';
+import { freshRunRules } from '../ui/kingSelect/modeModel';
 import {
   START_FREE_MOVE,
   freeMoveCommand,
@@ -56,12 +57,13 @@ import type { RunEndTally } from '../ui/info/infoLines';
 /**
  * Launch data of the realm: a new run (seed, chosen king, perk and thorn level, from the
  * king-select scene) or a saved run to resume exactly as written (`resume`, from the menu's
- * "Tiếp tục").
+ * "Tiếp tục"). A new run's `mode` (missing = the normal 30-year run) picks `RULES_FULL` or
+ * `RULES_ENDLESS`; Endless is checked again against the session's profile, a resume never is.
  */
 type RangeTarget = GameEvents['ui:range-selection']['target'];
 
 export type RealmData =
-  | { seed: number; kingId: KingId; perk: PerkId | null; difficulty: number }
+  | { seed: number; kingId: KingId; perk: PerkId | null; difficulty: number; mode?: RunMode }
   | { resume: RunState }
   /** DEV sample run (`src/dev`): its own state and in-memory persistence; ignored in production builds. */
   | { preview: { state: RunState; persistence: SessionPersistence } };
@@ -134,6 +136,8 @@ export class RealmScene extends Phaser.Scene {
   private rangeHover: RangeTarget = null;
   /** The press that may become a board click (only that pointer's release counts). */
   private down: { id: number; x: number; y: number } | null = null;
+  /** A new Endless run was refused (locked profile): this visit builds nothing and goes back. */
+  private refused = false;
 
   constructor() {
     super(SCENES.realm);
@@ -162,18 +166,27 @@ export class RealmScene extends Phaser.Scene {
     this.pointers.clear();
     this.pinch = null;
     this.panning = false;
+    this.refused = false;
     const preview = import.meta.env.DEV && data !== undefined && 'preview' in data ? data.preview : null;
     const resume = data !== undefined && 'resume' in data ? data.resume : null;
     const fresh = data !== undefined && 'seed' in data ? data : { seed: 1, kingId: 'wheat' as KingId, perk: null, difficulty: 0 };
     const session = getSession(this);
-    const initial =
-      preview?.state ??
-      resume ??
-      newRun(fresh.seed, fresh.kingId, CONTENT, RULES_FULL, {
+    let initial: RunState;
+    if (preview || resume) {
+      initial = (preview?.state ?? resume)!; // resuming never re-checks the meta profile
+    } else {
+      const start = freshRunRules('mode' in fresh ? fresh.mode : undefined, session ? session.meta() : null);
+      if (!start.ok) {
+        this.refused = true;
+        this.scene.start(SCENES.kingSelect, { notice: start.reason });
+        return;
+      }
+      initial = newRun(fresh.seed, fresh.kingId, CONTENT, start.rules, {
         perk: fresh.perk,
         difficulty: fresh.difficulty,
         unlockedCards: session ? session.meta().unlockedCards : [],
       });
+    }
     const seed = initial.seed;
     this.resumedAtYearEnd = resume?.phase === 'yearEnd';
 
@@ -251,6 +264,7 @@ export class RealmScene extends Phaser.Scene {
   };
 
   update(_time: number, delta: number): void {
+    if (this.refused) return;
     this.units?.updateFlashes();
     // Taken before update: the tick that ends the battle drops the runner, and that final
     // state (deaths included) must still be drawn.

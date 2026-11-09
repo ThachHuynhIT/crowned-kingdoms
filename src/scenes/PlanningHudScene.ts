@@ -23,11 +23,13 @@ import { DeckModal } from '../ui/modals/DeckModal';
 import { CLOSE_BUTTON, centredPanel } from '../ui/modals/modalLayout';
 import { createOverlay, fitOverlay } from '../ui/modals/overlay';
 import { offerHeadingFor } from '../ui/modals/offerModel';
+import { BlessingModal } from '../ui/modals/BlessingModal';
 import { CouncilModal } from '../ui/modals/CouncilModal';
 import { QuestModal } from '../ui/modals/QuestModal';
 import { RewardModal } from '../ui/modals/RewardModal';
 import { modalKind } from '../ui/modals/councilModel';
 import { DecreeQuestPanel } from '../ui/planning/DecreeQuestPanel';
+import { EndlessPanel } from '../ui/planning/EndlessPanel';
 import { handLimit } from '../game/run/decrees';
 import { InspectionView } from '../ui/info/InspectionView';
 import { buildingInfoModel } from '../ui/info/inspectionModel';
@@ -145,6 +147,9 @@ export class PlanningHudScene extends Phaser.Scene {
   private reward: RewardModal | null = null;
   private council: CouncilModal | null = null;
   private quest: QuestModal | null = null;
+  /** The Endless blessing offer (mandatory) and the "Phúc lành & Biến thể" panel (Endless only). */
+  private blessing: BlessingModal | null = null;
+  private endlessPanel!: EndlessPanel;
   private decreePanel!: DecreeQuestPanel;
   /** Which offer the open RewardModal shows (kind + cards). */
   private rewardKey: string | null = null;
@@ -172,6 +177,7 @@ export class PlanningHudScene extends Phaser.Scene {
     this.reward = null;
     this.council = null;
     this.quest = null;
+    this.blessing = null;
     this.rewardKey = null;
     this.scoutModal = null;
     this.calendarModal = null;
@@ -233,6 +239,13 @@ export class PlanningHudScene extends Phaser.Scene {
     );
     this.hand = new HandView(this, CONTENT, this.tooltip, 4);
     this.decreePanel = new DecreeQuestPanel(this, this.bus, this.controller.state);
+    this.endlessPanel = new EndlessPanel(
+      this,
+      this.controller.state,
+      this.tooltip,
+      () => this.bus.emit('ui:open-modal', { modal: 'endless' }),
+      () => this.bus.emit('ui:close-modal', {}),
+    ).setDepth(0, MODAL_DEPTH + 20);
     this.hand.onSelect((i) => this.selectCard(i));
     this.hand.onDrop((i, x, y) => this.dropCard(i, x, y));
 
@@ -305,7 +318,10 @@ export class PlanningHudScene extends Phaser.Scene {
       }),
       bus.on('run:illegal', ({ reason }) => {
         // A refused pick (the offer is still open) must not leave Nhận disabled for good.
-        if (reason === 'wrongPhase' || reason === 'badTarget') this.reward?.retry();
+        if (reason === 'wrongPhase' || reason === 'badTarget') {
+          this.reward?.retry();
+          this.blessing?.retry();
+        }
         this.flashIllegal(reason);
       }),
       bus.on('log', ({ text }) => this.toasts.push(text)),
@@ -354,6 +370,7 @@ export class PlanningHudScene extends Phaser.Scene {
   private refresh(state: RunState): void {
     if (this.lay.hand.length !== handLimit(state)) this.layout(); // a decree changed the hand size
     this.decreePanel.setState(state);
+    this.endlessPanel.setState(state);
     this.questNotice.setState(state);
     this.refreshModals(state);
     this.livesText.setText(`× ${state.lives}`);
@@ -422,6 +439,21 @@ export class PlanningHudScene extends Phaser.Scene {
     } else if (this.council) {
       this.council.destroy();
       this.council = null;
+    }
+    if (kind === 'blessing') {
+      if (this.blessing) this.blessing.setState(state);
+      else {
+        this.blessing = new BlessingModal(
+          this,
+          state,
+          this.tooltip,
+          (command) => this.bus.emit('ui:command', { command }),
+          () => this.bus.emit('ui:open-modal', { modal: 'endless' }),
+        ).setDepth(MODAL_DEPTH);
+      }
+    } else if (this.blessing) {
+      this.blessing.destroy();
+      this.blessing = null;
     }
     if (kind === 'quest') {
       if (this.quest) this.quest.setState(state);
@@ -653,18 +685,45 @@ export class PlanningHudScene extends Phaser.Scene {
 
   private modalOpen(): boolean {
     return Boolean(
-      this.reward || this.council || this.quest || this.scoutModal || this.calendarModal || this.deckModal || this.decreePanel.isOpen,
+      this.reward ||
+        this.council ||
+        this.quest ||
+        this.blessing ||
+        this.scoutModal ||
+        this.calendarModal ||
+        this.deckModal ||
+        this.decreePanel.isOpen ||
+        this.endlessPanel.isOpen,
     );
   }
 
+  /** Keys of the blessing offer: 1–3 and the arrows move the focus (Enter picks it, in `onKey`). */
+  private blessingKey(event: KeyboardEvent): boolean {
+    const blessing = this.blessing;
+    if (!blessing || this.endlessPanel.isOpen || event.ctrlKey || event.altKey || event.metaKey) return false;
+    const key = event.key;
+    if (key === '1' || key === '2' || key === '3') blessing.focusAt(Number(key) - 1);
+    else if (key === 'ArrowLeft' || key === 'ArrowUp') blessing.focusBy(-1);
+    else if (key === 'ArrowRight' || key === 'ArrowDown') blessing.focusBy(1);
+    else return false;
+    return true;
+  }
+
   private onKey(event: KeyboardEvent): void {
+    if (this.blessingKey(event)) return;
+    const mandatory = this.reward !== null || this.council !== null || this.quest !== null || this.blessing !== null;
     const action = resolveShortcut(
       event.key,
       'planning',
       shortcutFlags(event, {
-        mandatoryOpen: this.reward !== null || this.council !== null || this.quest !== null,
+        // The summary panel over the blessing offer answers Esc first; the offer itself never does.
+        mandatoryOpen: mandatory && !this.endlessPanel.isOpen,
         sideModalOpen:
-          this.decreePanel.isOpen || this.scoutModal !== null || this.calendarModal !== null || this.deckModal !== null,
+          this.decreePanel.isOpen ||
+          this.scoutModal !== null ||
+          this.calendarModal !== null ||
+          this.deckModal !== null ||
+          this.endlessPanel.isOpen,
       }),
     );
     if (action === null) return;
@@ -673,9 +732,17 @@ export class PlanningHudScene extends Phaser.Scene {
       this.bus.emit('ui:help', { open: true });
       return;
     }
+    if (this.endlessPanel.isOpen) {
+      if (action === 'cancel') this.bus.emit('ui:close-modal', {});
+      return;
+    }
     if (this.reward) {
       if (action === 'confirm') this.reward.confirm();
       return;
+    }
+    if (this.blessing) {
+      if (action === 'confirm') this.blessing.pickFocused();
+      return; // mandatory: Esc does not skip it
     }
     if (this.council || this.quest) return; // mandatory decisions: Esc does not skip them
     if (this.decreePanel.isOpen) {
@@ -823,8 +890,15 @@ export class PlanningHudScene extends Phaser.Scene {
 
   // ---- modals ------------------------------------------------------------------------------
 
-  private openModal(modal: 'scout' | 'calendar' | 'deck'): void {
-    if (this.modalOpen()) return;
+  private openModal(modal: 'scout' | 'calendar' | 'deck' | 'endless'): void {
+    // The summary panel may open over the blessing offer (it only reads); everything else needs a free screen.
+    if (modal === 'endless' && !this.endlessPanel.isOpen && (this.blessing !== null || !this.modalOpen())) {
+      this.inspect(null, { x: 0, y: 0 });
+      this.tooltip.hide(PLOT_TIP);
+      this.endlessPanel.setOpen(true);
+      return;
+    }
+    if (modal === 'endless' || this.modalOpen()) return;
     const state = this.controller.state;
     this.inspect(null, { x: 0, y: 0 });
     this.tooltip.hide(PLOT_TIP);
@@ -841,6 +915,7 @@ export class PlanningHudScene extends Phaser.Scene {
   }
 
   private closeModals(): void {
+    this.endlessPanel.setOpen(false);
     this.closeScout();
     this.calendarModal?.destroy();
     this.calendarModal = null;
@@ -958,6 +1033,12 @@ export class PlanningHudScene extends Phaser.Scene {
       l.desktop ? l.help.x + 24 : MARGIN + 24,
       l.desktop ? l.help.y + l.help.h + 32 : l.calendar[0]!.y + l.calendar[0]!.h + 32,
     );
+    this.endlessPanel.layoutButton(
+      l.desktop
+        ? { x: l.help.x + 56, y: l.help.y + l.help.h + 8, w: 96, h: 48 }
+        : { x: MARGIN + 56, y: l.calendar[0]!.y + l.calendar[0]!.h + 8, w: 96, h: 48 },
+    );
+    this.endlessPanel.layout();
     const noticeX = l.help.x + l.help.w + 8;
     const noticeW = Math.min(320, l.calendar[0]!.x - 8 - noticeX);
     this.questNotice.layout(l.desktop && noticeW >= 160 ? { x: noticeX, y: l.help.y, w: noticeW, h: l.help.h } : null);
@@ -984,6 +1065,7 @@ export class PlanningHudScene extends Phaser.Scene {
     this.reward?.layout();
     this.council?.layout();
     this.quest?.layout();
+    this.blessing?.layout();
     this.decreePanel.layout(l);
     this.layoutScout();
     this.calendarModal?.layout();
@@ -1012,6 +1094,9 @@ export class PlanningHudScene extends Phaser.Scene {
     this.council = null;
     this.quest?.destroy();
     this.quest = null;
+    this.blessing?.destroy();
+    this.blessing = null;
+    this.endlessPanel.destroy();
     this.decreePanel.destroy();
     this.hand.destroy();
     this.scout.destroy();
