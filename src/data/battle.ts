@@ -49,14 +49,13 @@ export const BATTLE = {
   structureRadius: 12,
   throneRadius: 14,
   retargetTicks: 5,
-  // Tầm phát hiện công trình/Ngai của địch, chỉ dùng khi không còn lính phe mình nó đánh được (spec 2026-11-08 §2).
-  enemyAggro: cells(1.5),
-  siegeAggro: cells(3),
   tauntRadiusDefault: cells(1.25),
   flyingHitMinRange: 24, // đòn có tầm ≥ 24 (và tháp, pulse, can thiệp) mới đánh được đơn vị bay
   rageTick: 600,
   hardLimitTick: 900,
   rageSpeedPct: 50,
+  /** Cuồng Nộ: đòn của địch vào công trình (không phải Ngai) thêm % này — địch vẫn phải phá hết nhà trước (2026-11-09). */
+  rageStructureDmgPct: 100,
   playerUnitCap: 160,
   bossSummonCap: 40,
   entityCap: 512,

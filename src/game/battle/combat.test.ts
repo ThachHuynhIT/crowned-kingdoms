@@ -755,3 +755,31 @@ describe('death spawns', () => {
     expect(w.count).toBe(before);
   });
 });
+
+describe('rage breaks structures faster (2026-11-09)', () => {
+  const hitStructure = (tick: number, team: number): number => {
+    const w = world([structure(4, { hp: 1000 })]);
+    const foe = unit(w, team, 0, 0);
+    w.tick = tick;
+    queueDamage(w, 1, 10, DMG_PHYSICAL, -1, undefined, foe);
+    applyDamagePhase(w);
+    return 1000 - w.hp[1]!;
+  };
+
+  it(`a foe's hit on a structure deals +${BATTLE.rageStructureDmgPct}% from rageTick on`, () => {
+    expect(hitStructure(BATTLE.rageTick - 1, TEAM_FOE)).toBeCloseTo(10);
+    expect(hitStructure(BATTLE.rageTick, TEAM_FOE)).toBeCloseTo(10 * (1 + BATTLE.rageStructureDmgPct / 100));
+    expect(BATTLE.rageStructureDmgPct).toBeGreaterThan(0);
+  });
+
+  it('only foes, only on structures: our units and the throne take normal damage', () => {
+    expect(hitStructure(BATTLE.rageTick, TEAM_ALLY)).toBeCloseTo(10);
+    const w = world();
+    const foe = unit(w, TEAM_FOE, 0, 0);
+    w.tick = BATTLE.rageTick;
+    const before = w.hp[w.throneId]!;
+    queueDamage(w, w.throneId, 10, DMG_PHYSICAL, -1, undefined, foe);
+    applyDamagePhase(w);
+    expect(before - w.hp[w.throneId]!).toBeCloseTo(10);
+  });
+});

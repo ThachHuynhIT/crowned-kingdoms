@@ -12,8 +12,7 @@ describe('board geometry (64 px plots, spec 06/11/2026)', () => {
     expect(cells(1.5)).toBe(96);
   });
 
-  it('keeps aggro, spawn rows and the spatial grid at the same reach in plots', () => {
-    expect([BATTLE.enemyAggro, BATTLE.siegeAggro]).toEqual([cells(1.5), cells(3)]);
+  it('keeps spawn rows and the spatial grid at the same reach in plots', () => {
     expect([BATTLE.fieldClampMargin, BATTLE.spawnOutside, BATTLE.spawnSpacing, BATTLE.spawnRowGap]).toEqual([64, 24, 20, 20]);
     expect(BATTLE.edgeSpan).toBe(0.6);
     expect(Math.floor((BATTLE.edgeSpan * BATTLE.field) / BATTLE.spawnSpacing) + 1).toBe(24);

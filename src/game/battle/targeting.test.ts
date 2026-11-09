@@ -85,71 +85,79 @@ describe('retarget — allies', () => {
 });
 
 describe('retarget — foes', () => {
-  it('goes for one of our units anywhere on the field, beyond enemyAggro too (spec 2026-11-08 §2)', () => {
+  it('goes for one of our units anywhere on the field, far away too (spec 2026-11-08 §2)', () => {
     // far west of the throne
     const w = world();
     const f = unit(w, TEAM_FOE, 100, 300);
-    const a = unit(w, TEAM_ALLY, 100, 300 + 8 + BATTLE.enemyAggro - 16); // edge aggro − 16
+    const a = unit(w, TEAM_ALLY, 100, 300 + 8 + 80);
     retarget(w);
     expect(w.target[f]).toBe(a);
 
     const w2 = world();
     const f2 = unit(w2, TEAM_FOE, 100, 300);
-    const far = unit(w2, TEAM_ALLY, 100, 300 + 8 + BATTLE.enemyAggro + 400); // well beyond aggro
+    const far = unit(w2, TEAM_ALLY, 100, 300 + 8 + 500);
     retarget(w2);
     expect(w2.target[f2]).toBe(far);
   });
 
-  it('with no unit of ours left, picks the nearer structure within enemyAggro (edge distance), else the throne', () => {
+  it('with no unit of ours left, picks the nearest structure anywhere; the throne only when none is left (2026-11-09)', () => {
     const s = structureFoot(4); // id 1
     const w = world([structure(4)]);
-    const f = unit(w, TEAM_FOE, s.x, s.y + 58); // structure edge 58 − 4 − 12 = 42
+    const f = unit(w, TEAM_FOE, s.x, s.y + 58);
     retarget(w);
     expect(w.target[f]).toBe(1);
 
+    // far from every structure, nearer to the throne than to plot 4: still the structure
     const w2 = world([structure(4)]);
     const f2 = unit(w2, TEAM_FOE, 20, 380);
     retarget(w2);
-    expect(w2.target[f2]).toBe(w2.throneId);
+    expect(w2.target[f2]).toBe(1);
+
+    const w3 = world();
+    const f3 = unit(w3, TEAM_FOE, 20, 380);
+    retarget(w3);
+    expect(w3.target[f3]).toBe(w3.throneId);
   });
 
-  it('siege units go for our units first too, then structures within siegeAggro, then the throne', () => {
+  it('siege units go for our units first too, then any structure, then the throne', () => {
     const s = structureFoot(4);
     const w = world([structure(4)]);
-    const f = unit(w, TEAM_FOE, s.x + 44, s.y - 38, { siege: true }); // structure edge ≈ 42.1
+    const f = unit(w, TEAM_FOE, s.x + 44, s.y - 38, { siege: true });
     const a = unit(w, TEAM_ALLY, s.x + 44, s.y + 300);
     retarget(w);
     expect(w.target[f]).toBe(a);
 
     const w2 = world([structure(4)]);
-    const f2 = unit(w2, TEAM_FOE, s.x + 44, s.y - 38, { siege: true });
+    const f2 = unit(w2, TEAM_FOE, 20, 380, { siege: true });
     retarget(w2);
     expect(w2.target[f2]).toBe(1);
-
-    const w3 = world([structure(4)]);
-    const f3 = unit(w3, TEAM_FOE, 20, 380, { siege: true });
-    retarget(w3);
-    expect(w3.target[f3]).toBe(w3.throneId);
   });
 
-  it('during rage targets only the throne', () => {
-    const w = world();
+  it('during rage ignores our units but still breaks every structure before the throne (2026-11-09)', () => {
+    const w = world([structure(4)]);
     const f = unit(w, TEAM_FOE, 300, 90);
     unit(w, TEAM_ALLY, 300, 98);
     w.tick = BATTLE.rageTick;
     retarget(w);
-    expect(w.target[f]).toBe(w.throneId);
+    expect(w.target[f]).toBe(1);
 
     const w2 = world();
     const f2 = unit(w2, TEAM_FOE, 300, 90);
-    const a2 = unit(w2, TEAM_ALLY, 300, 98);
-    w2.tick = BATTLE.rageTick - 1;
+    unit(w2, TEAM_ALLY, 300, 98);
+    w2.tick = BATTLE.rageTick;
     retarget(w2);
-    expect(w2.target[f2]).toBe(a2);
+    expect(w2.target[f2]).toBe(w2.throneId);
+
+    const w3 = world([structure(4)]);
+    const f3 = unit(w3, TEAM_FOE, 300, 90);
+    const a3 = unit(w3, TEAM_ALLY, 300, 98);
+    w3.tick = BATTLE.rageTick - 1;
+    retarget(w3);
+    expect(w3.target[f3]).toBe(a3);
   });
 
-  it('switches to the throne at rageTick even with a living target', () => {
-    const w = world();
+  it('switches from a living unit to a structure at rageTick', () => {
+    const w = world([structure(4)]);
     const f = unit(w, TEAM_FOE, 300, 90);
     const a = unit(w, TEAM_ALLY, 300, 98);
     w.tick = BATTLE.rageTick - 1;
@@ -157,7 +165,7 @@ describe('retarget — foes', () => {
     expect(w.target[f]).toBe(a);
     w.tick = BATTLE.rageTick;
     retarget(w);
-    expect(w.target[f]).toBe(w.throneId);
+    expect(w.target[f]).toBe(1);
   });
 });
 
@@ -222,7 +230,7 @@ describe('retarget — foes kill our units before our buildings (spec 2026-11-08
     expect(w.target[f]).toBe(a);
   });
 
-  it('taunt_beats_units_but_global_rage_beats_taunt', () => {
+  it('taunt_beats_units_and_in_the_rage_the_taunting_wall_is_still_a_structure_to_break', () => {
     const W6 = structureFoot(6);
     const w = world([structure(6, { taunt: 40 })]);
     unit(w, TEAM_ALLY, W6.x + 200, W6.y);
@@ -231,7 +239,7 @@ describe('retarget — foes kill our units before our buildings (spec 2026-11-08
     expect(w.target[foe]).toBe(1);
     w.tick = BATTLE.rageTick;
     retarget(w);
-    expect(w.target[foe]).toBe(w.throneId);
+    expect(w.target[foe]).toBe(1);
   });
 
   it('dead_throne_with_no_targets_returns_minus_one', () => {
@@ -401,7 +409,7 @@ describe('retarget — taunt (spec §8.4)', () => {
     expect(w.target[tie]).toBe(1);
   });
 
-  it('ignores a destroyed taunting structure and is ignored during the rage', () => {
+  it('ignores a destroyed taunting structure; in the rage it is a structure to break like any other', () => {
     const { w, friend, foe, wall } = scene(30);
     w.alive[wall] = 0;
     retarget(w);
@@ -409,7 +417,7 @@ describe('retarget — taunt (spec §8.4)', () => {
     w.alive[wall] = 1;
     w.tick = BATTLE.rageTick;
     retarget(w);
-    expect(w.target[foe]).toBe(w.throneId);
+    expect(w.target[foe]).toBe(wall);
   });
 
   it('does not make structures without taunt special', () => {
