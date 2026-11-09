@@ -15,8 +15,8 @@ Theo lưu ý của chủ dự án ngày 09/11/2026. Nhánh `battle-field-rework`
 
 ## 3. Kích thước lính
 
-- Nhóm khổng lồ (Rồng Sắt, Colossus, Treant, Golem, Ogre) cao khoảng 2 lần lính thường; Gấu, Construct, Moon Reaper khoảng 1,6 lần. Đổi `HEIGHT` trong `docs/art-review/g3e/units/make_prompts.py`, cắt lại tư thế từ ảnh nguồn đã duyệt (không vẽ lại).
-- Bán kính va chạm của các lính này tăng theo trong dữ liệu.
+- Nhóm khổng lồ (Rồng Sắt, Colossus, Treant, Golem, Ogre) cao khoảng 2 lần lính thường; Gấu, Construct, Moon Reaper khoảng 1,6 lần; ba boss cao hơn nữa để vẫn to nhất. Đổi `HEIGHT` trong `docs/art-review/g3e/units/make_prompts.py`, cắt lại tư thế từ ảnh nguồn đã duyệt (không vẽ lại).
+- Chỉ đổi hình: bán kính va chạm giữ nguyên (không nới hitbox để chữa art).
 
 ## 4. Công trình chặn đường, đi vòng, đội hình, giới hạn đi xa
 
