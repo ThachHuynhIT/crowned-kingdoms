@@ -261,6 +261,28 @@ export const PORTAL_ART = {
 /** Approved by the owner 2026-11-08. */
 export const PORTAL_APPROVED = true;
 
+/**
+ * In-game icons drawn from image art (G5, 2026-11-09): icon id → 16 px cut of an approved icon source
+ * (`docs/art-review/g3e/icons/make_assets.py` writes `icons/icon_<name>-16.png`). The frames stay 16×16, so every
+ * place that draws an icon keeps its size; icons not listed keep the generated art.
+ */
+export const IMAGE_ICONS: Readonly<Record<string, string>> = {
+  troop: 'icons/icon_troop-16',
+  tower: 'icons/icon_tower-16',
+  tome: 'icons/icon_tome-16',
+  throne: 'icons/icon_throne-16',
+  gold: 'icons/icon_gold-16',
+  level: 'icons/icon_level-16',
+  enchant: 'icons/icon_enchant_stack-16',
+  crown: 'icons/icon_crown-16',
+  boulder: 'icons/icon_boulder-16',
+  skull: 'icons/icon_skull-16',
+  reroll: 'icons/icon_reroll-16',
+  sell: 'icons/icon_sell-16',
+  lock: 'icons/icon_lock-16',
+  conquer: 'icons/icon_conquer-16',
+};
+
 /** Every PNG of the set (file name without `.png`). */
 export const IMAGE_ART_FILES: readonly string[] = [
   ...Object.values(IMAGE_UNITS).flatMap((prefix) => [
@@ -268,6 +290,7 @@ export const IMAGE_ART_FILES: readonly string[] = [
     ...POSE_INDEXES.map((i) => `${prefix}_foe_${i}`),
   ]),
   ...Object.values(IMAGE_BUILDINGS),
+  ...Object.values(IMAGE_ICONS),
   ...Object.values(IMAGE_PLOTS).flatMap((prefix) => PLOT_STATES.map((s) => `${prefix}_${s}`)),
   ...GRASS_FILES,
   WALL_FILE,

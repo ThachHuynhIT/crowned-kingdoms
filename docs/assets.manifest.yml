@@ -12950,3 +12950,395 @@ assets:
     nativeSize: 1024x1024
     finalSize: 16x16
     notes: nomad king badge on the year calendar, same shield as the approved Wheat badge (approved 2026-11-09 by Claude under the owner's delegation); magenta keyed out and box-reduced by docs/art-review/g3e/icons/make_assets.py (src/ui/realm/kingBadge.ts)
+  - id: icon_troop
+    path: public/assets/art/ai-v1/icons/icon_troop.png
+    category: icon
+    origin: custom
+    source: docs/art-review/g3e/icons/icon_troop/source.png
+    creator: Project owner (OpenAI imagegen via Codex; prompt in docs/art-review/g3e/icons/icon_troop/prompt.md)
+    license: project-owned
+    attribution: false
+    redistribute: true
+    evidence: docs/art-review/g3e/icons/icon_troop/preview.png
+    modified: true
+    nativeSize: 1024x1024
+    finalSize: 32x32
+    notes: Lính icon (approved 2026-11-09 by Claude under the owner's delegation); magenta keyed out and box-reduced by docs/art-review/g3e/icons/make_assets.py; 32 px (src/render/imageArt.ts IMAGE_ICONS)
+  - id: icon_troop_16
+    path: public/assets/art/ai-v1/icons/icon_troop-16.png
+    category: icon
+    origin: custom
+    source: docs/art-review/g3e/icons/icon_troop/source.png
+    creator: Project owner (OpenAI imagegen via Codex; prompt in docs/art-review/g3e/icons/icon_troop/prompt.md)
+    license: project-owned
+    attribution: false
+    redistribute: true
+    evidence: docs/art-review/g3e/icons/icon_troop/preview.png
+    modified: true
+    nativeSize: 1024x1024
+    finalSize: 16x16
+    notes: Lính icon (approved 2026-11-09 by Claude under the owner's delegation); magenta keyed out and box-reduced by docs/art-review/g3e/icons/make_assets.py; 16 px frame in the world atlas (src/render/imageArt.ts IMAGE_ICONS)
+  - id: icon_tower
+    path: public/assets/art/ai-v1/icons/icon_tower.png
+    category: icon
+    origin: custom
+    source: docs/art-review/g3e/icons/icon_tower/source.png
+    creator: Project owner (OpenAI imagegen via Codex; prompt in docs/art-review/g3e/icons/icon_tower/prompt.md)
+    license: project-owned
+    attribution: false
+    redistribute: true
+    evidence: docs/art-review/g3e/icons/icon_tower/preview.png
+    modified: true
+    nativeSize: 1024x1024
+    finalSize: 32x32
+    notes: Tháp icon (approved 2026-11-09 by Claude under the owner's delegation); magenta keyed out and box-reduced by docs/art-review/g3e/icons/make_assets.py; 32 px (src/render/imageArt.ts IMAGE_ICONS)
+  - id: icon_tower_16
+    path: public/assets/art/ai-v1/icons/icon_tower-16.png
+    category: icon
+    origin: custom
+    source: docs/art-review/g3e/icons/icon_tower/source.png
+    creator: Project owner (OpenAI imagegen via Codex; prompt in docs/art-review/g3e/icons/icon_tower/prompt.md)
+    license: project-owned
+    attribution: false
+    redistribute: true
+    evidence: docs/art-review/g3e/icons/icon_tower/preview.png
+    modified: true
+    nativeSize: 1024x1024
+    finalSize: 16x16
+    notes: Tháp icon (approved 2026-11-09 by Claude under the owner's delegation); magenta keyed out and box-reduced by docs/art-review/g3e/icons/make_assets.py; 16 px frame in the world atlas (src/render/imageArt.ts IMAGE_ICONS)
+  - id: icon_tome
+    path: public/assets/art/ai-v1/icons/icon_tome.png
+    category: icon
+    origin: custom
+    source: docs/art-review/g3e/icons/icon_tome/source.png
+    creator: Project owner (OpenAI imagegen via Codex; prompt in docs/art-review/g3e/icons/icon_tome/prompt.md)
+    license: project-owned
+    attribution: false
+    redistribute: true
+    evidence: docs/art-review/g3e/icons/icon_tome/preview.png
+    modified: true
+    nativeSize: 1024x1024
+    finalSize: 32x32
+    notes: Sách phép icon (approved 2026-11-09 by Claude under the owner's delegation); magenta keyed out and box-reduced by docs/art-review/g3e/icons/make_assets.py; 32 px (src/render/imageArt.ts IMAGE_ICONS)
+  - id: icon_tome_16
+    path: public/assets/art/ai-v1/icons/icon_tome-16.png
+    category: icon
+    origin: custom
+    source: docs/art-review/g3e/icons/icon_tome/source.png
+    creator: Project owner (OpenAI imagegen via Codex; prompt in docs/art-review/g3e/icons/icon_tome/prompt.md)
+    license: project-owned
+    attribution: false
+    redistribute: true
+    evidence: docs/art-review/g3e/icons/icon_tome/preview.png
+    modified: true
+    nativeSize: 1024x1024
+    finalSize: 16x16
+    notes: Sách phép icon (approved 2026-11-09 by Claude under the owner's delegation); magenta keyed out and box-reduced by docs/art-review/g3e/icons/make_assets.py; 16 px frame in the world atlas (src/render/imageArt.ts IMAGE_ICONS)
+  - id: icon_throne
+    path: public/assets/art/ai-v1/icons/icon_throne.png
+    category: icon
+    origin: custom
+    source: docs/art-review/g3e/icons/icon_throne/source.png
+    creator: Project owner (OpenAI imagegen via Codex; prompt in docs/art-review/g3e/icons/icon_throne/prompt.md)
+    license: project-owned
+    attribution: false
+    redistribute: true
+    evidence: docs/art-review/g3e/icons/icon_throne/preview.png
+    modified: true
+    nativeSize: 1024x1024
+    finalSize: 32x32
+    notes: Ngai icon (approved 2026-11-09 by Claude under the owner's delegation); magenta keyed out and box-reduced by docs/art-review/g3e/icons/make_assets.py; 32 px (src/render/imageArt.ts IMAGE_ICONS)
+  - id: icon_throne_16
+    path: public/assets/art/ai-v1/icons/icon_throne-16.png
+    category: icon
+    origin: custom
+    source: docs/art-review/g3e/icons/icon_throne/source.png
+    creator: Project owner (OpenAI imagegen via Codex; prompt in docs/art-review/g3e/icons/icon_throne/prompt.md)
+    license: project-owned
+    attribution: false
+    redistribute: true
+    evidence: docs/art-review/g3e/icons/icon_throne/preview.png
+    modified: true
+    nativeSize: 1024x1024
+    finalSize: 16x16
+    notes: Ngai icon (approved 2026-11-09 by Claude under the owner's delegation); magenta keyed out and box-reduced by docs/art-review/g3e/icons/make_assets.py; 16 px frame in the world atlas (src/render/imageArt.ts IMAGE_ICONS)
+  - id: icon_gold
+    path: public/assets/art/ai-v1/icons/icon_gold.png
+    category: icon
+    origin: custom
+    source: docs/art-review/g3e/icons/icon_gold/source.png
+    creator: Project owner (OpenAI imagegen via Codex; prompt in docs/art-review/g3e/icons/icon_gold/prompt.md)
+    license: project-owned
+    attribution: false
+    redistribute: true
+    evidence: docs/art-review/g3e/icons/icon_gold/preview.png
+    modified: true
+    nativeSize: 1024x1024
+    finalSize: 32x32
+    notes: Vàng icon (approved 2026-11-09 by Claude under the owner's delegation); magenta keyed out and box-reduced by docs/art-review/g3e/icons/make_assets.py; 32 px (src/render/imageArt.ts IMAGE_ICONS)
+  - id: icon_gold_16
+    path: public/assets/art/ai-v1/icons/icon_gold-16.png
+    category: icon
+    origin: custom
+    source: docs/art-review/g3e/icons/icon_gold/source.png
+    creator: Project owner (OpenAI imagegen via Codex; prompt in docs/art-review/g3e/icons/icon_gold/prompt.md)
+    license: project-owned
+    attribution: false
+    redistribute: true
+    evidence: docs/art-review/g3e/icons/icon_gold/preview.png
+    modified: true
+    nativeSize: 1024x1024
+    finalSize: 16x16
+    notes: Vàng icon (approved 2026-11-09 by Claude under the owner's delegation); magenta keyed out and box-reduced by docs/art-review/g3e/icons/make_assets.py; 16 px frame in the world atlas (src/render/imageArt.ts IMAGE_ICONS)
+  - id: icon_level
+    path: public/assets/art/ai-v1/icons/icon_level.png
+    category: icon
+    origin: custom
+    source: docs/art-review/g3e/icons/icon_level/source.png
+    creator: Project owner (OpenAI imagegen via Codex; prompt in docs/art-review/g3e/icons/icon_level/prompt.md)
+    license: project-owned
+    attribution: false
+    redistribute: true
+    evidence: docs/art-review/g3e/icons/icon_level/preview.png
+    modified: true
+    nativeSize: 1024x1024
+    finalSize: 32x32
+    notes: Cấp icon (approved 2026-11-09 by Claude under the owner's delegation); magenta keyed out and box-reduced by docs/art-review/g3e/icons/make_assets.py; 32 px (src/render/imageArt.ts IMAGE_ICONS)
+  - id: icon_level_16
+    path: public/assets/art/ai-v1/icons/icon_level-16.png
+    category: icon
+    origin: custom
+    source: docs/art-review/g3e/icons/icon_level/source.png
+    creator: Project owner (OpenAI imagegen via Codex; prompt in docs/art-review/g3e/icons/icon_level/prompt.md)
+    license: project-owned
+    attribution: false
+    redistribute: true
+    evidence: docs/art-review/g3e/icons/icon_level/preview.png
+    modified: true
+    nativeSize: 1024x1024
+    finalSize: 16x16
+    notes: Cấp icon (approved 2026-11-09 by Claude under the owner's delegation); magenta keyed out and box-reduced by docs/art-review/g3e/icons/make_assets.py; 16 px frame in the world atlas (src/render/imageArt.ts IMAGE_ICONS)
+  - id: icon_enchant_stack
+    path: public/assets/art/ai-v1/icons/icon_enchant_stack.png
+    category: icon
+    origin: custom
+    source: docs/art-review/g3e/icons/icon_enchant_stack/source.png
+    creator: Project owner (OpenAI imagegen via Codex; prompt in docs/art-review/g3e/icons/icon_enchant_stack/prompt.md)
+    license: project-owned
+    attribution: false
+    redistribute: true
+    evidence: docs/art-review/g3e/icons/icon_enchant_stack/preview.png
+    modified: true
+    nativeSize: 1024x1024
+    finalSize: 32x32
+    notes: Chồng bùa icon (approved 2026-11-09 by Claude under the owner's delegation); magenta keyed out and box-reduced by docs/art-review/g3e/icons/make_assets.py; 32 px (src/render/imageArt.ts IMAGE_ICONS)
+  - id: icon_enchant_stack_16
+    path: public/assets/art/ai-v1/icons/icon_enchant_stack-16.png
+    category: icon
+    origin: custom
+    source: docs/art-review/g3e/icons/icon_enchant_stack/source.png
+    creator: Project owner (OpenAI imagegen via Codex; prompt in docs/art-review/g3e/icons/icon_enchant_stack/prompt.md)
+    license: project-owned
+    attribution: false
+    redistribute: true
+    evidence: docs/art-review/g3e/icons/icon_enchant_stack/preview.png
+    modified: true
+    nativeSize: 1024x1024
+    finalSize: 16x16
+    notes: Chồng bùa icon (approved 2026-11-09 by Claude under the owner's delegation); magenta keyed out and box-reduced by docs/art-review/g3e/icons/make_assets.py; 16 px frame in the world atlas (src/render/imageArt.ts IMAGE_ICONS)
+  - id: icon_crown
+    path: public/assets/art/ai-v1/icons/icon_crown.png
+    category: icon
+    origin: custom
+    source: docs/art-review/g3e/icons/icon_crown/source.png
+    creator: Project owner (OpenAI imagegen via Codex; prompt in docs/art-review/g3e/icons/icon_crown/prompt.md)
+    license: project-owned
+    attribution: false
+    redistribute: true
+    evidence: docs/art-review/g3e/icons/icon_crown/preview.png
+    modified: true
+    nativeSize: 1024x1024
+    finalSize: 32x32
+    notes: Vương Miện icon (approved 2026-11-09 by Claude under the owner's delegation); magenta keyed out and box-reduced by docs/art-review/g3e/icons/make_assets.py; 32 px (src/render/imageArt.ts IMAGE_ICONS)
+  - id: icon_crown_16
+    path: public/assets/art/ai-v1/icons/icon_crown-16.png
+    category: icon
+    origin: custom
+    source: docs/art-review/g3e/icons/icon_crown/source.png
+    creator: Project owner (OpenAI imagegen via Codex; prompt in docs/art-review/g3e/icons/icon_crown/prompt.md)
+    license: project-owned
+    attribution: false
+    redistribute: true
+    evidence: docs/art-review/g3e/icons/icon_crown/preview.png
+    modified: true
+    nativeSize: 1024x1024
+    finalSize: 16x16
+    notes: Vương Miện icon (approved 2026-11-09 by Claude under the owner's delegation); magenta keyed out and box-reduced by docs/art-review/g3e/icons/make_assets.py; 16 px frame in the world atlas (src/render/imageArt.ts IMAGE_ICONS)
+  - id: icon_boulder
+    path: public/assets/art/ai-v1/icons/icon_boulder.png
+    category: icon
+    origin: custom
+    source: docs/art-review/g3e/icons/icon_boulder/source.png
+    creator: Project owner (OpenAI imagegen via Codex; prompt in docs/art-review/g3e/icons/icon_boulder/prompt.md)
+    license: project-owned
+    attribution: false
+    redistribute: true
+    evidence: docs/art-review/g3e/icons/icon_boulder/preview.png
+    modified: true
+    nativeSize: 1024x1024
+    finalSize: 32x32
+    notes: Đá Tảng icon (approved 2026-11-09 by Claude under the owner's delegation); magenta keyed out and box-reduced by docs/art-review/g3e/icons/make_assets.py; 32 px (src/render/imageArt.ts IMAGE_ICONS)
+  - id: icon_boulder_16
+    path: public/assets/art/ai-v1/icons/icon_boulder-16.png
+    category: icon
+    origin: custom
+    source: docs/art-review/g3e/icons/icon_boulder/source.png
+    creator: Project owner (OpenAI imagegen via Codex; prompt in docs/art-review/g3e/icons/icon_boulder/prompt.md)
+    license: project-owned
+    attribution: false
+    redistribute: true
+    evidence: docs/art-review/g3e/icons/icon_boulder/preview.png
+    modified: true
+    nativeSize: 1024x1024
+    finalSize: 16x16
+    notes: Đá Tảng icon (approved 2026-11-09 by Claude under the owner's delegation); magenta keyed out and box-reduced by docs/art-review/g3e/icons/make_assets.py; 16 px frame in the world atlas (src/render/imageArt.ts IMAGE_ICONS)
+  - id: icon_skull
+    path: public/assets/art/ai-v1/icons/icon_skull.png
+    category: icon
+    origin: custom
+    source: docs/art-review/g3e/icons/icon_skull/source.png
+    creator: Project owner (OpenAI imagegen via Codex; prompt in docs/art-review/g3e/icons/icon_skull/prompt.md)
+    license: project-owned
+    attribution: false
+    redistribute: true
+    evidence: docs/art-review/g3e/icons/icon_skull/preview.png
+    modified: true
+    nativeSize: 1024x1024
+    finalSize: 32x32
+    notes: Thổ Phỉ icon (approved 2026-11-09 by Claude under the owner's delegation); magenta keyed out and box-reduced by docs/art-review/g3e/icons/make_assets.py; 32 px (src/render/imageArt.ts IMAGE_ICONS)
+  - id: icon_skull_16
+    path: public/assets/art/ai-v1/icons/icon_skull-16.png
+    category: icon
+    origin: custom
+    source: docs/art-review/g3e/icons/icon_skull/source.png
+    creator: Project owner (OpenAI imagegen via Codex; prompt in docs/art-review/g3e/icons/icon_skull/prompt.md)
+    license: project-owned
+    attribution: false
+    redistribute: true
+    evidence: docs/art-review/g3e/icons/icon_skull/preview.png
+    modified: true
+    nativeSize: 1024x1024
+    finalSize: 16x16
+    notes: Thổ Phỉ icon (approved 2026-11-09 by Claude under the owner's delegation); magenta keyed out and box-reduced by docs/art-review/g3e/icons/make_assets.py; 16 px frame in the world atlas (src/render/imageArt.ts IMAGE_ICONS)
+  - id: icon_reroll
+    path: public/assets/art/ai-v1/icons/icon_reroll.png
+    category: icon
+    origin: custom
+    source: docs/art-review/g3e/icons/icon_reroll/source.png
+    creator: Project owner (OpenAI imagegen via Codex; prompt in docs/art-review/g3e/icons/icon_reroll/prompt.md)
+    license: project-owned
+    attribution: false
+    redistribute: true
+    evidence: docs/art-review/g3e/icons/icon_reroll/preview.png
+    modified: true
+    nativeSize: 1024x1024
+    finalSize: 32x32
+    notes: Đổi bài icon (approved 2026-11-09 by Claude under the owner's delegation); magenta keyed out and box-reduced by docs/art-review/g3e/icons/make_assets.py; 32 px (src/render/imageArt.ts IMAGE_ICONS)
+  - id: icon_reroll_16
+    path: public/assets/art/ai-v1/icons/icon_reroll-16.png
+    category: icon
+    origin: custom
+    source: docs/art-review/g3e/icons/icon_reroll/source.png
+    creator: Project owner (OpenAI imagegen via Codex; prompt in docs/art-review/g3e/icons/icon_reroll/prompt.md)
+    license: project-owned
+    attribution: false
+    redistribute: true
+    evidence: docs/art-review/g3e/icons/icon_reroll/preview.png
+    modified: true
+    nativeSize: 1024x1024
+    finalSize: 16x16
+    notes: Đổi bài icon (approved 2026-11-09 by Claude under the owner's delegation); magenta keyed out and box-reduced by docs/art-review/g3e/icons/make_assets.py; 16 px frame in the world atlas (src/render/imageArt.ts IMAGE_ICONS)
+  - id: icon_sell
+    path: public/assets/art/ai-v1/icons/icon_sell.png
+    category: icon
+    origin: custom
+    source: docs/art-review/g3e/icons/icon_sell/source.png
+    creator: Project owner (OpenAI imagegen via Codex; prompt in docs/art-review/g3e/icons/icon_sell/prompt.md)
+    license: project-owned
+    attribution: false
+    redistribute: true
+    evidence: docs/art-review/g3e/icons/icon_sell/preview.png
+    modified: true
+    nativeSize: 1024x1024
+    finalSize: 32x32
+    notes: Bán bài icon (approved 2026-11-09 by Claude under the owner's delegation); magenta keyed out and box-reduced by docs/art-review/g3e/icons/make_assets.py; 32 px (src/render/imageArt.ts IMAGE_ICONS)
+  - id: icon_sell_16
+    path: public/assets/art/ai-v1/icons/icon_sell-16.png
+    category: icon
+    origin: custom
+    source: docs/art-review/g3e/icons/icon_sell/source.png
+    creator: Project owner (OpenAI imagegen via Codex; prompt in docs/art-review/g3e/icons/icon_sell/prompt.md)
+    license: project-owned
+    attribution: false
+    redistribute: true
+    evidence: docs/art-review/g3e/icons/icon_sell/preview.png
+    modified: true
+    nativeSize: 1024x1024
+    finalSize: 16x16
+    notes: Bán bài icon (approved 2026-11-09 by Claude under the owner's delegation); magenta keyed out and box-reduced by docs/art-review/g3e/icons/make_assets.py; 16 px frame in the world atlas (src/render/imageArt.ts IMAGE_ICONS)
+  - id: icon_lock
+    path: public/assets/art/ai-v1/icons/icon_lock.png
+    category: icon
+    origin: custom
+    source: docs/art-review/g3e/icons/icon_lock/source.png
+    creator: Project owner (OpenAI imagegen via Codex; prompt in docs/art-review/g3e/icons/icon_lock/prompt.md)
+    license: project-owned
+    attribution: false
+    redistribute: true
+    evidence: docs/art-review/g3e/icons/icon_lock/preview.png
+    modified: true
+    nativeSize: 1024x1024
+    finalSize: 32x32
+    notes: Khoá icon (approved 2026-11-09 by Claude under the owner's delegation); magenta keyed out and box-reduced by docs/art-review/g3e/icons/make_assets.py; 32 px (src/render/imageArt.ts IMAGE_ICONS)
+  - id: icon_lock_16
+    path: public/assets/art/ai-v1/icons/icon_lock-16.png
+    category: icon
+    origin: custom
+    source: docs/art-review/g3e/icons/icon_lock/source.png
+    creator: Project owner (OpenAI imagegen via Codex; prompt in docs/art-review/g3e/icons/icon_lock/prompt.md)
+    license: project-owned
+    attribution: false
+    redistribute: true
+    evidence: docs/art-review/g3e/icons/icon_lock/preview.png
+    modified: true
+    nativeSize: 1024x1024
+    finalSize: 16x16
+    notes: Khoá icon (approved 2026-11-09 by Claude under the owner's delegation); magenta keyed out and box-reduced by docs/art-review/g3e/icons/make_assets.py; 16 px frame in the world atlas (src/render/imageArt.ts IMAGE_ICONS)
+  - id: icon_conquer
+    path: public/assets/art/ai-v1/icons/icon_conquer.png
+    category: icon
+    origin: custom
+    source: docs/art-review/g3e/icons/icon_conquer/source.png
+    creator: Project owner (OpenAI imagegen via Codex; prompt in docs/art-review/g3e/icons/icon_conquer/prompt.md)
+    license: project-owned
+    attribution: false
+    redistribute: true
+    evidence: docs/art-review/g3e/icons/icon_conquer/preview.png
+    modified: true
+    nativeSize: 1024x1024
+    finalSize: 32x32
+    notes: Chinh phục icon (approved 2026-11-09 by Claude under the owner's delegation); magenta keyed out and box-reduced by docs/art-review/g3e/icons/make_assets.py; 32 px (src/render/imageArt.ts IMAGE_ICONS)
+  - id: icon_conquer_16
+    path: public/assets/art/ai-v1/icons/icon_conquer-16.png
+    category: icon
+    origin: custom
+    source: docs/art-review/g3e/icons/icon_conquer/source.png
+    creator: Project owner (OpenAI imagegen via Codex; prompt in docs/art-review/g3e/icons/icon_conquer/prompt.md)
+    license: project-owned
+    attribution: false
+    redistribute: true
+    evidence: docs/art-review/g3e/icons/icon_conquer/preview.png
+    modified: true
+    nativeSize: 1024x1024
+    finalSize: 16x16
+    notes: Chinh phục icon (approved 2026-11-09 by Claude under the owner's delegation); magenta keyed out and box-reduced by docs/art-review/g3e/icons/make_assets.py; 16 px frame in the world atlas (src/render/imageArt.ts IMAGE_ICONS)

@@ -27,6 +27,7 @@ import {
   GROUND_TEXTURES_APPROVED,
   IMAGE_ART_SCALE,
   IMAGE_BUILDINGS,
+  IMAGE_ICONS,
   IMAGE_PLOTS,
   IMAGE_UNITS,
   PLOT_STATES,
@@ -123,10 +124,12 @@ export const buildUiTexture = (textures: Phaser.Textures.TextureManager): void =
   const frameArt = (id: UiFrame): PixelCanvas => {
     const key = kitTextureKey(id);
     if (UI_KIT_FILES[id] && textures.exists(key)) {
-      const art = imageToPixelCanvas(textures.get(key).getSourceImage() as CanvasImageSource & {
-        width: number;
-        height: number;
-      });
+      const art = imageToPixelCanvas(
+        textures.get(key).getSourceImage() as CanvasImageSource & {
+          width: number;
+          height: number;
+        },
+      );
       if (art && art.width === UI_KIT_FRAME.w && art.height === UI_KIT_FRAME.h) {
         kitFrames.push(id);
         return art;
@@ -209,7 +212,8 @@ export const spriteList = (content: Content): { name: string; art: PixelCanvas }
   for (const state of PLOT_STATES) out.push({ name: plotFrame(state), art: paintPlot(state) });
   // per-king plot skins: generated plot until `withImageArt` swaps in the king's image
   for (const king of Object.keys(IMAGE_PLOTS))
-    for (const state of PLOT_STATES) out.push({ name: kingPlotFrame(king, state), art: paintPlot(state) });
+    for (const state of PLOT_STATES)
+      out.push({ name: kingPlotFrame(king, state), art: paintPlot(state) });
   for (const id of ICON_IDS) out.push({ name: iconFrame(id), art: paintIcon(id) });
   for (const dir of ARROW_DIRS) out.push({ name: fxFrame(`arrow_${dir}`), art: paintArrow(dir) });
   out.push({ name: fxFrame('boulder'), art: paintBoulder() });
@@ -225,13 +229,16 @@ export const spriteList = (content: Content): { name: string; art: PixelCanvas }
 const IMAGE_FRAMES = new Set<string>();
 
 /** Display scale of a sprite frame: 0.5 for image art, 1 for generated art. */
-export const imageFrameScale = (frame: string): number => (IMAGE_FRAMES.has(frame) ? IMAGE_ART_SCALE : 1);
+export const imageFrameScale = (frame: string): number =>
+  IMAGE_FRAMES.has(frame) ? IMAGE_ART_SCALE : 1;
 
 /** Pixels of a loaded image texture by file name, or null when it did not load. */
 const imageFile = (textures: Phaser.Textures.TextureManager, file: string): PixelCanvas | null => {
   const key = imageArtKey(file);
   if (!textures.exists(key)) return null;
-  return imageToPixelCanvas(textures.get(key).getSourceImage() as CanvasImageSource & { width: number; height: number });
+  return imageToPixelCanvas(
+    textures.get(key).getSourceImage() as CanvasImageSource & { width: number; height: number },
+  );
 };
 
 /** `list` with the frames of `imageArt` replaced by their PNGs (those that loaded; the rest keep generated art). */
@@ -246,7 +253,10 @@ export const withImageArt = (
       for (const anim of ['idle', 'walk', 'attack'] as const)
         for (let n = 0; n < UNIT_FRAME_COUNT; n++)
           wanted.set(unitFrame(unit, team, anim, n), unitPoseFile(unit, team, anim, n));
-  for (const [card, file] of Object.entries(IMAGE_BUILDINGS)) wanted.set(buildingFrame(card as CardId), file);
+  for (const [card, file] of Object.entries(IMAGE_BUILDINGS))
+    wanted.set(buildingFrame(card as CardId), file);
+  for (const [icon, file] of Object.entries(IMAGE_ICONS))
+    wanted.set(iconFrame(icon as IconId), file);
   for (const [king, prefix] of Object.entries(IMAGE_PLOTS))
     for (const state of PLOT_STATES) wanted.set(kingPlotFrame(king, state), `${prefix}_${state}`);
   return list.map((s) => {
@@ -278,8 +288,14 @@ export const groundTextures = (textures: Phaser.Textures.TextureManager): Ground
  * Plot frames laid onto the isometric ground (spec 2026-11-06): each square plot picture becomes
  * a 2:1 diamond (`squareToIso`) until isometric plot art replaces it (Task 11).
  */
-export const isoPlots = (list: { name: string; art: PixelCanvas }[]): { name: string; art: PixelCanvas }[] =>
-  list.map((s) => (s.name.startsWith('plot_') && s.art.width === s.art.height ? { name: s.name, art: squareToIso(s.art) } : s));
+export const isoPlots = (
+  list: { name: string; art: PixelCanvas }[],
+): { name: string; art: PixelCanvas }[] =>
+  list.map((s) =>
+    s.name.startsWith('plot_') && s.art.width === s.art.height
+      ? { name: s.name, art: squareToIso(s.art) }
+      : s,
+  );
 
 /** Build the `sprites` atlas once (no-op if it already exists). */
 export const buildSpritesTexture = (
@@ -287,7 +303,10 @@ export const buildSpritesTexture = (
   content: Content,
 ): void => {
   if (textures.exists(SPRITES_KEY)) return;
-  const { placed, height } = packShelves(isoPlots(withImageArt(textures, spriteList(content))), SPRITES_WIDTH);
+  const { placed, height } = packShelves(
+    isoPlots(withImageArt(textures, spriteList(content))),
+    SPRITES_WIDTH,
+  );
   const sheet = new PixelCanvas(SPRITES_WIDTH, height);
   for (const p of placed) sheet.blit(p.art, p.x, p.y);
   const texture = textures.addCanvas(SPRITES_KEY, toCanvas(sheet));
@@ -313,7 +332,11 @@ export const GROUND_KEY = 'field-ground';
  */
 export const ensureGroundTexture = (textures: Phaser.Textures.TextureManager): string => {
   if (!textures.exists(GROUND_KEY))
-    addPixelTexture(textures, GROUND_KEY, isoGroundTile(groundPatch(grassArt(textures) ?? [paintGroundTile()])));
+    addPixelTexture(
+      textures,
+      GROUND_KEY,
+      isoGroundTile(groundPatch(grassArt(textures) ?? [paintGroundTile()])),
+    );
   return GROUND_KEY;
 };
 
@@ -321,7 +344,12 @@ export const ROAD_TAIL_KEY = 'field-road-tail';
 
 /** The road's last stretch to the portal, laid onto the iso ground (painted once, never removed). */
 export const ensureRoadTailTexture = (textures: Phaser.Textures.TextureManager): string => {
-  if (!textures.exists(ROAD_TAIL_KEY)) addPixelTexture(textures, ROAD_TAIL_KEY, squareToIso(paintRoadTail(grassArt(textures) ? 2 : 1)));
+  if (!textures.exists(ROAD_TAIL_KEY))
+    addPixelTexture(
+      textures,
+      ROAD_TAIL_KEY,
+      squareToIso(paintRoadTail(grassArt(textures) ? 2 : 1)),
+    );
   return ROAD_TAIL_KEY;
 };
 

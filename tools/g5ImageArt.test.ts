@@ -58,3 +58,15 @@ describe('card illustrations', () => {
     }
   });
 });
+
+describe('in-game icons', () => {
+  it('every image icon replaces one generated icon id, exists on disk and is registered', async () => {
+    const { IMAGE_ICONS } = await import('../src/render/imageArt');
+    const { ICON_IDS } = await import('../src/render/iconArt');
+    expect(Object.keys(IMAGE_ICONS).sort()).toEqual([...ICON_IDS].sort());
+    for (const file of Object.values(IMAGE_ICONS)) {
+      expect(existsSync(png(file)), file).toBe(true);
+      expect(manifest).toContain(`path: ${png(file)}`);
+    }
+  });
+});
