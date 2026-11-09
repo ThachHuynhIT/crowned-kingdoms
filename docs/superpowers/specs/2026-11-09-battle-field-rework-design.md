@@ -43,3 +43,8 @@ Thay bộ Pixel UI Pack bằng ba bộ CC0 của Kenney do chủ dự án chọn
 ## Cân bằng
 
 Mục 1, 2, 4 làm người chơi mạnh lên. Sau khi xong, chạy lại `npm run balance` và chỉnh dữ liệu để bot greedy Gai 0 thắng 35–65% mỗi vua, chênh lệch ≤ 15 điểm.
+
+## Giới hạn đã biết (soát lỗi 09/11/2026)
+
+- **Boss to chen giữa hai nhà:** khe giữa hai khối chặn kề nhau rộng 28 px. Một boss bán kính ≥ 14 không lọt qua khe đó, nên có thể tì vào tường nhà khi đuổi một lính phe mình nằm sâu trong bàn cờ. Luật "đánh công trình gần nhất" và Cuồng Nộ giới hạn tác hại; tìm đường thật (nhiều vật cản một lúc) để sau.
+- **Tầm đánh cận chiến tính theo hình tròn, khối chặn là hình vuông:** một lính cận chiến tới gần góc nhà dừng ở khoảng cách tròn, rồi bị đẩy ra khỏi hình vuông, nên mất vài tick đánh cho tới khi trượt về giữa cạnh. Chỉ ảnh hưởng cân bằng; muốn sửa thì dùng khoảng cách mép theo hình vuông cho công trình.

@@ -17,7 +17,17 @@ import type { Content } from '../game/cards/registry';
 import { decodeMeta, type MetaProfile, settleRun, unlockCard, unlockKing } from '../game/meta';
 import type { RunState } from '../game/run/state';
 import { decodeRun, encodeRun } from '../game/save/codec';
-import { cleanSlotName, makeSlot, nextSlotId, readSlot, slotSummaries, summaryOf, type SlotStore, type SlotSummary } from '../game/save/slots';
+import {
+  cleanSlotName,
+  makeSlot,
+  nextSlotId,
+  readSlot,
+  slotIdsOf,
+  slotSummaries,
+  summaryOf,
+  type SlotStore,
+  type SlotSummary,
+} from '../game/save/slots';
 import { SaveCoordinator } from '../game/save/SaveCoordinator';
 import type { LoadRunResult, SaveStore, SessionPersistence, SettleOutcome } from '../game/save/types';
 import { createSaveStore } from './storage/createSaveStore';
@@ -28,7 +38,8 @@ export type UnlockResult =
   | { ok: false; reason: 'readOnly' | 'notAllowed' | 'saveFailed'; message: string };
 
 /** Kết quả một thao tác trên bản lưu có tên. */
-export type SlotResult = { ok: true; slot: SlotSummary } | { ok: false; message: string };
+/** `memoryOnly`: the browser store has fallen back to RAM, so the slot lasts only until the tab closes. */
+export type SlotResult = { ok: true; slot: SlotSummary; memoryOnly?: boolean } | { ok: false; message: string };
 
 export interface GameSession {
   store: SaveStore & SlotStore;
@@ -178,28 +189,30 @@ export async function openSession(
   const saveSlot = async (state: RunState, rawName: string): Promise<SlotResult> => {
     const name = cleanSlotName(rawName);
     if (name === null) return slotFailed;
-    const used = slotSummaries(await store.listSlots()).map((x) => x.id);
+    // Ids and the cap come from every stored entry, broken ones included, so a damaged slot is never overwritten.
+    const used = slotIdsOf(await store.listSlots());
     const id = nextSlotId(used);
     if (id === null || used.length >= MAX_SAVE_SLOTS) return { ok: false, message: SLOTS_FULL_TEXT };
-    const record = makeSlot(id, name, now(), state, encodeRun(state, content));
     try {
+      const record = makeSlot(id, name, now(), state, encodeRun(state, content));
       await store.saveSlot(id, record);
+      return { ok: true, slot: summaryOf(record), memoryOnly: store.isPersistent?.() === false };
     } catch {
       return slotFailed;
     }
-    return { ok: true, slot: summaryOf(record) };
   };
 
   const renameSlot = async (id: string, rawName: string): Promise<SlotResult> => {
     const name = cleanSlotName(rawName);
-    const record = readSlot(await store.loadSlot(id));
-    if (name === null || record === null) return slotFailed;
+    if (name === null) return slotFailed;
     try {
+      const record = readSlot(await store.loadSlot(id));
+      if (record === null) return slotFailed;
       await store.saveSlot(id, { ...record, name });
+      return { ok: true, slot: summaryOf({ ...record, name }) };
     } catch {
       return slotFailed;
     }
-    return { ok: true, slot: summaryOf({ ...record, name }) };
   };
 
   const loadSlot = async (id: string): Promise<LoadRunResult> => {

@@ -13,7 +13,7 @@ describe('saves screen layout (2026-11-09)', () => {
       const l = savesLayout(screen, 11);
       expect(l.rows).toHaveLength(11);
       expect(inside(l.panel, { x: 0, y: 0, ...screen })).toBe(true);
-      const targets = [l.back, ...l.rows.flatMap((r) => [r.open, r.rename, r.remove])];
+      const targets = [l.back, l.prev, l.next, ...l.rows.flatMap((r) => [r.open, r.rename, r.remove])];
       for (const t of targets) {
         expect(t.w).toBeGreaterThanOrEqual(44);
         expect(t.h).toBeGreaterThanOrEqual(44);
@@ -28,8 +28,12 @@ describe('saves screen layout (2026-11-09)', () => {
     });
   }
 
-  it('drops the rows that would not fit a short screen', () => {
-    expect(savesLayout({ w: 1280, h: 400 }, 11).rows.length).toBeLessThan(11);
+  it('a short screen (phone in landscape) shows fewer rows per page; the rest are on later pages', () => {
+    const l = savesLayout({ w: 812, h: 375 }, 11);
+    expect(l.rows.length).toBeLessThan(11);
+    expect(l.perPage).toBe(l.rows.length);
+    expect(l.perPage).toBeGreaterThan(0);
+    expect(inside(l.panel, { x: 0, y: 0, w: 812, h: 375 })).toBe(true);
   });
 
   it('shortens a long name with an ellipsis', () => {

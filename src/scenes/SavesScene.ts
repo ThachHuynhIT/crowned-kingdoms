@@ -38,7 +38,12 @@ export class SavesScene extends Phaser.Scene {
   private title!: Phaser.GameObjects.Text;
   private message!: Phaser.GameObjects.Text;
   private back!: Button;
+  private prev!: Button;
+  private next!: Button;
   private rows: Row[] = [];
+  private page = 0;
+  /** Bumped on every visit: an async call from an earlier visit must not touch this one (review 2026-11-09). */
+  private visit = 0;
   private autosave: RunState | null = null;
   private armedDelete: string | null = null;
   private busy = false;
@@ -51,6 +56,8 @@ export class SavesScene extends Phaser.Scene {
   create(data?: { notice?: string }): void {
     // Scene instances are reused: reset every per-visit field first.
     this.rows = [];
+    this.page = 0;
+    this.visit += 1;
     this.autosave = null;
     this.armedDelete = null;
     this.busy = false;
@@ -60,6 +67,8 @@ export class SavesScene extends Phaser.Scene {
     this.title = addUiText(this, 0, 0, 'Tải ván', 24).setFontStyle('bold').setOrigin(0.5);
     this.message = addUiText(this, 0, 0, this.notice, 14).setOrigin(0.5);
     this.back = createButton(this, 0, 0, 'Về menu', { onClick: () => this.scene.start(SCENES.mainMenu) });
+    this.prev = createButton(this, 0, 0, '‹', { fontSize: 20, onClick: () => this.turn(-1) });
+    this.next = createButton(this, 0, 0, '›', { fontSize: 20, onClick: () => this.turn(1) });
     this.input.keyboard?.on('keydown-ESC', () => this.scene.start(SCENES.mainMenu));
     this.scale.on(Phaser.Scale.Events.RESIZE, this.layout, this);
     this.events.once(Phaser.Scenes.Events.SHUTDOWN, () => this.scale.off(Phaser.Scale.Events.RESIZE, this.layout, this));
@@ -74,8 +83,9 @@ export class SavesScene extends Phaser.Scene {
       this.message.setText('Trình duyệt này không lưu được tiến trình.');
       return;
     }
+    const visit = this.visit;
     const [current, slots] = await Promise.all([session.load(), session.listSlots()]);
-    if (!this.scene.isActive()) return;
+    if (visit !== this.visit || !this.scene.isActive()) return;
     this.autosave = current.kind === 'ok' ? current.state : null;
     if (this.autosave) this.rows.push(this.makeRow(null, AUTOSAVE_NAME, this.detailOf(this.autosave.kingId, this.autosave.year)));
     for (const slot of slots) this.rows.push(this.makeRow(slot, slot.name, `${this.detailOf(slot.kingId, slot.year)} · ${when(slot.savedAt)}`));
@@ -111,13 +121,22 @@ export class SavesScene extends Phaser.Scene {
       this.scene.start(SCENES.realm, data);
       return;
     }
+    // Opening a slot replaces the run being played (the autosave): ask first when there is one (review 2026-11-09).
+    if (this.autosave && !window.confirm('Ván đang chơi (Tự động lưu) sẽ được thay bằng bản lưu này. Mở bản lưu?')) return;
+    const visit = this.visit;
     this.busy = true;
-    const result = await session.loadSlot(id);
-    this.busy = false;
-    if (result.kind === 'ok') {
-      const data: RealmData = { resume: result.state };
-      this.scene.start(SCENES.realm, data);
-    } else this.message.setText(result.kind === 'incompatible' ? result.message : 'Không tìm thấy bản lưu này.');
+    try {
+      const result = await session.loadSlot(id);
+      if (visit !== this.visit) return;
+      if (result.kind === 'ok') {
+        const data: RealmData = { resume: result.state };
+        this.scene.start(SCENES.realm, data);
+      } else this.message.setText(result.kind === 'incompatible' ? result.message : 'Không tìm thấy bản lưu này.');
+    } catch {
+      if (visit === this.visit) this.message.setText('Không mở được bản lưu này, hãy thử lại.');
+    } finally {
+      if (visit === this.visit) this.busy = false;
+    }
   }
 
   private async rename(slot: SlotSummary): Promise<void> {
@@ -125,9 +144,14 @@ export class SavesScene extends Phaser.Scene {
     if (this.busy || !session) return;
     const name = window.prompt('Tên mới của bản lưu', slot.name);
     if (name === null) return;
+    const visit = this.visit;
     this.busy = true;
-    const result = await session.renameSlot(slot.id, name);
-    this.scene.restart({ notice: result.ok ? `Đã đổi tên thành "${result.slot.name}".` : result.message });
+    try {
+      const result = await session.renameSlot(slot.id, name);
+      if (visit === this.visit) this.scene.restart({ notice: result.ok ? `Đã đổi tên thành "${result.slot.name}".` : result.message });
+    } finally {
+      if (visit === this.visit) this.busy = false;
+    }
   }
 
   private async remove(slot: SlotSummary): Promise<void> {
@@ -140,13 +164,30 @@ export class SavesScene extends Phaser.Scene {
       this.message.setText(`Bấm "Chắc?" lần nữa để xoá "${slot.name}".`);
       return;
     }
+    const visit = this.visit;
     this.busy = true;
-    await session.deleteSlot(slot.id);
-    this.scene.restart({ notice: `Đã xoá "${slot.name}".` });
+    try {
+      await session.deleteSlot(slot.id);
+      if (visit === this.visit) this.scene.restart({ notice: `Đã xoá "${slot.name}".` });
+    } catch {
+      if (visit === this.visit) this.message.setText('Chưa xoá được bản lưu này, hãy thử lại.');
+    } finally {
+      if (visit === this.visit) this.busy = false;
+    }
+  }
+
+  private turn(by: number): void {
+    const l = savesLayout({ w: this.scale.width, h: this.scale.height }, this.rows.length);
+    const pages = Math.max(1, Math.ceil(this.rows.length / l.perPage));
+    this.page = Math.min(pages - 1, Math.max(0, this.page + by));
+    this.layout();
   }
 
   private layout(): void {
     const l: SavesLayout = savesLayout({ w: this.scale.width, h: this.scale.height }, this.rows.length);
+    const pages = Math.max(1, Math.ceil(this.rows.length / l.perPage));
+    this.page = Math.min(this.page, pages - 1);
+    const first = this.page * l.perPage;
     this.panel.resize(l.panel.w, l.panel.h);
     this.panel.image.setPosition(l.panel.x, l.panel.y);
     const centre = (r: Rect): [number, number] => [r.x + r.w / 2, r.y + r.h / 2];
@@ -158,8 +199,14 @@ export class SavesScene extends Phaser.Scene {
       b.container.setPosition(...centre(r));
     };
     place(this.back, l.back);
+    place(this.prev, l.prev);
+    place(this.next, l.next);
+    this.prev.setVisible(pages > 1);
+    this.next.setVisible(pages > 1);
+    this.prev.setEnabled(this.page > 0);
+    this.next.setEnabled(this.page < pages - 1);
     this.rows.forEach((row, i) => {
-      const r = l.rows[i];
+      const r = i >= first ? l.rows[i - first] : undefined;
       const shown = r !== undefined;
       for (const o of [row.bg.image, row.name, row.detail]) o.setVisible(shown);
       for (const b of [row.open, row.rename, row.remove]) b?.setVisible(shown);

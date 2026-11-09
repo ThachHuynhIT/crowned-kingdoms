@@ -54,8 +54,8 @@ function trace(seed: number, kingId: KingId): Trace {
 }
 
 const BASELINE: Record<string, Trace> = {
-  'wheat:1': { commands: 19, commandHash: 1021144613, setupHash: 3704092950, stateHash: 3415844865 },
-  'stone:2': { commands: 32, commandHash: 2118539031, setupHash: 3558239974, stateHash: 4206235299 },
+  'wheat:1': { commands: 19, commandHash: 1213100208, setupHash: 3704092950, stateHash: 1985519757 },
+  'stone:2': { commands: 53, commandHash: 791511380, setupHash: 51403531, stateHash: 1955840884 },
   'arcane:3': { commands: 32, commandHash: 1940276589, setupHash: 3337970644, stateHash: 1429959077 },
 };
 

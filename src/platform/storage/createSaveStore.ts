@@ -5,7 +5,7 @@
  */
 import { STORAGE_WARNING_TEXT } from '../../data/save';
 import { MemorySaveStore } from '../../game/save/MemorySaveStore';
-import type { SlotStore } from '../../game/save/slots';
+import type { SlotRecord, SlotStore } from '../../game/save/slots';
 import type { SaveEnvelope, SaveStore } from '../../game/save/types';
 import { openIdbSaveStore } from './idbSaveStore';
 
@@ -88,11 +88,17 @@ export async function createSaveStore(options: SaveStoreOptions): Promise<Persis
     async listSlots() {
       const r = await onDisk((s) => s.listSlots());
       if (!r) return mirror.listSlots();
+      // Keep RAM in step with the disk, so a later fall-back still lists (and never reuses the ids of) these slots.
+      for (const raw of r.value) {
+        const id = (raw as { id?: unknown } | null)?.id;
+        if (typeof id === 'string') await mirror.saveSlot(id, raw as SlotRecord);
+      }
       return r.value;
     },
     async loadSlot(id) {
       const r = await onDisk((s) => s.loadSlot(id));
       if (!r) return mirror.loadSlot(id);
+      if (r.value !== null && r.value !== undefined) await mirror.saveSlot(id, r.value as SlotRecord);
       return r.value;
     },
     async saveSlot(id, record) {

@@ -10,6 +10,7 @@ const BUTTON_W = 64;
 const BUTTON_GAP = 6;
 const TOP = 56;
 const BOTTOM = 96;
+const PAGE_W = 52;
 
 export interface SaveRowLayout {
   row: Rect;
@@ -25,11 +26,16 @@ export interface SavesLayout {
   rows: SaveRowLayout[];
   message: Rect;
   back: Rect;
+  /** Page buttons either side of "Về menu": rows that do not fit the screen are on later pages. */
+  prev: Rect;
+  next: Rect;
+  /** Rows shown per page. */
+  perPage: number;
   /** Số chữ tối đa của tên trên một hàng (điện thoại hẹp hơn). */
   nameChars: number;
 }
 
-/** Bố cục cho `count` hàng; hàng không vừa màn hình thì bị bỏ (tối đa 11: bản tự lưu + 10). */
+/** Bố cục cho `count` hàng; hàng không vừa màn hình sang trang sau (tối đa 11: bản tự lưu + 10). */
 export const savesLayout = (screen: Size, count: number): SavesLayout => {
   const w = Math.min(screen.w - 24, screen.w >= 768 ? 720 : 400);
   const fit = Math.max(0, Math.floor((screen.h - 24 - TOP - BOTTOM + ROW_GAP) / (SAVES_ROW_H + ROW_GAP)));
@@ -62,7 +68,10 @@ export const savesLayout = (screen: Size, count: number): SavesLayout => {
     title: { x: innerX, y: y + 12, w: innerW, h: 32 },
     rows,
     message: { x: innerX, y: bottom + 4, w: innerW, h: 32 },
-    back: { x: innerX, y: bottom + 40, w: innerW, h: 48 },
+    prev: { x: innerX, y: bottom + 40, w: PAGE_W, h: 48 },
+    back: { x: innerX + PAGE_W + BUTTON_GAP, y: bottom + 40, w: innerW - 2 * (PAGE_W + BUTTON_GAP), h: 48 },
+    next: { x: innerX + innerW - PAGE_W, y: bottom + 40, w: PAGE_W, h: 48 },
+    perPage: Math.max(1, fit),
     nameChars: screen.w >= 768 ? 40 : 18,
   };
 };

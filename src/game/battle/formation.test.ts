@@ -1,7 +1,9 @@
 import { describe, expect, it } from 'vitest';
 import { BATTLE } from '../../data/battle';
 import { NORMAL_GEOMETRY } from '../../data/boardGeometry';
+import { battleSetup, structure, unitStats } from '../testing/fixtures';
 import { formationSlots, insideLeash, isRanged, leashBox } from './formation';
+import { KIND_UNIT, TEAM_ALLY, TEAM_FOE, addUnit, createBattle, joinFormation } from './world';
 
 describe('formation in front of the board (2026-11-09)', () => {
   const g = NORMAL_GEOMETRY;
@@ -48,5 +50,30 @@ describe('formation in front of the board (2026-11-09)', () => {
     expect(box).toEqual({ x0: g.boardMin - reach, x1: g.boardMax + reach, y0: g.boardMin - reach, y1: g.boardMax + reach });
     expect(insideLeash('normal', g.boardMax + reach + 1, 400)).toBe(false);
     expect(BATTLE.allyLeashPlots).toBe(4);
+  });
+});
+
+describe('allies added mid-battle join the formation (review 2026-11-09)', () => {
+  it('a summon or respawn gets the next free slot of its band, never a home inside a building', () => {
+    const w = createBattle(battleSetup({ structures: [structure(12, { spawn: { stats: unitStats(), count: 3 } })] }));
+    const homes = new Set<string>();
+    for (let i = 0; i < w.count; i++) if (w.team[i] === TEAM_ALLY && w.kind[i] === KIND_UNIT) homes.add(`${w.homeX[i]},${w.homeY[i]}`);
+    const melee = addUnit(w, unitStats({ radius: 10 }), TEAM_ALLY, 384, 384, 384, 384 + 24, -1);
+    const archer = addUnit(w, unitStats({ range: 56 }), TEAM_ALLY, 384, 384, 384, 384 + 24, -1);
+    joinFormation(w, melee);
+    joinFormation(w, archer);
+    for (const id of [melee, archer]) {
+      expect(w.homeY[id]).toBeGreaterThan(NORMAL_GEOMETRY.boardMax);
+      expect(homes.has(`${w.homeX[id]},${w.homeY[id]}`)).toBe(false);
+      expect(insideLeash('normal', w.homeX[id]!, w.homeY[id]!)).toBe(true);
+    }
+    expect(w.homeY[archer]).toBeLessThan(w.homeY[melee]!); // ranged band nearer the board
+  });
+
+  it('foes keep the home they were given', () => {
+    const w = createBattle(battleSetup({}));
+    const f = addUnit(w, unitStats(), TEAM_FOE, 100, 900, 100, 900, -1);
+    joinFormation(w, f);
+    expect([w.homeX[f], w.homeY[f]]).toEqual([100, 900]);
   });
 });

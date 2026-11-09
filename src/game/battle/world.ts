@@ -7,7 +7,7 @@ import { BATTLE, INTERVENTION, SPAWN_OFFSETS } from '../../data/battle';
 import { BUILDING_FOOT_OFFSET } from '../../data/boardGeometry';
 import type { RunMode } from '../../data/rules';
 import { plotCoords } from '../run/boardGeometry';
-import { formationSlots, isRanged, type Slot } from './formation';
+import { formationSlotAt, formationSlots, isRanged, rangedRowsFor, type Slot } from './formation';
 import { clampNorthY, spawnMaxY } from './bounds';
 import { deploymentPosition } from './deployment';
 import { edgePositions, portalPositions } from './spawnLayout';
@@ -350,6 +350,9 @@ export class BattleWorld {
   spawnedWaves = 0;
   /** Số lính phe mình đã sinh (so với BATTLE.playerUnitCap). */
   playerUnits = 0;
+  /** Đội hình phe mình (2026-11-09): số hàng của khối bắn xa (−1 trước khi giao đầu trận) và số ô đã giao mỗi khối. */
+  formationRangedRows = -1;
+  formationNext = { ranged: 0, melee: 0 };
 
   /** Tick sớm nhất can thiệp được (§7.4). */
   readyTick: number = INTERVENTION.firstReadyTick;
@@ -766,8 +769,22 @@ export const createBattle = (setup: BattleSetup): BattleWorld => {
 };
 
 /**
+ * Lính phe mình `id` sinh giữa trận (triệu hồi, hồi sinh, Thu Hồn) về ô kế tiếp của khối đội hình của nó, không về khu
+ * tập kết trước cửa nhà hay chân công trình (điểm đó nằm trong khối chặn: lính sẽ rung mãi, review 2026-11-09).
+ * Không làm gì với id < 0 (đầy entityCap) hoặc trước khi đội hình đầu trận được giao.
+ */
+export const joinFormation = (w: BattleWorld, id: number): void => {
+  if (id < 0 || w.formationRangedRows < 0 || w.team[id] !== TEAM_ALLY) return;
+  const ranged = isRanged(w.range[id]!);
+  const k = ranged ? w.formationNext.ranged++ : w.formationNext.melee++;
+  const slot = formationSlotAt(w.geometry, ranged, k, w.formationRangedRows);
+  w.homeX[id] = slot.x;
+  w.homeY[id] = slot.y;
+};
+
+/**
  * Điểm về của mọi lính phe mình đầu trận là một ô đội hình trước bàn cờ (2026-11-09), không còn là cửa nhà:
- * bắn xa sát bàn, cận chiến đứng trước, mỗi nhóm theo id tăng dần. Lính sinh giữa trận giữ điểm về riêng của nó.
+ * bắn xa sát bàn, cận chiến đứng trước, mỗi nhóm theo id tăng dần. Lính sinh giữa trận nhận ô kế tiếp của khối (`addUnit`).
  */
 const assignFormation = (w: BattleWorld): void => {
   const ranged: number[] = [];
@@ -777,6 +794,8 @@ const assignFormation = (w: BattleWorld): void => {
     (isRanged(w.range[i]!) ? ranged : melee).push(i);
   }
   const slots = formationSlots(w.geometry, ranged.length, melee.length);
+  w.formationRangedRows = rangedRowsFor(ranged.length);
+  w.formationNext = { ranged: ranged.length, melee: melee.length };
   const put = (ids: number[], at: readonly Slot[]): void =>
     ids.forEach((id, k) => {
       w.homeX[id] = at[k]!.x;

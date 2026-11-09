@@ -20,6 +20,7 @@ import {
   addUnit,
   bossImmune,
   heal,
+  joinFormation,
   spawnOffset,
   stunFor,
   type BattleWorld,
@@ -427,6 +428,7 @@ const summonForKill = (world: BattleWorld, killer: number): void => {
   }
   const o = spawnOffset(world.killSummonDone[killer]!);
   const id = addUnit(world, stats, TEAM_ALLY, world.homeX[killer]! + o.dx, world.homeY[killer]! + o.dy, world.homeX[killer]!, world.homeY[killer]!, world.sourceUid[killer]!);
+  joinFormation(world, id);
   world.killSummonDone[killer] = world.killSummonDone[killer]! + 1;
   if (id < 0) world.capped += 1;
   else world.playerUnits += 1;

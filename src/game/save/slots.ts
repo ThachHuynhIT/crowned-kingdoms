@@ -83,6 +83,13 @@ export const slotSummaries = (raws: readonly unknown[]): SlotSummary[] =>
     .sort((a, b) => b.savedAt - a.savedAt || (a.id < b.id ? -1 : a.id > b.id ? 1 : 0))
     .map(summaryOf);
 
+/**
+ * Id đã dùng của mọi bản trên đĩa, kể cả bản hỏng hình (review 2026-11-09): bản hỏng không bị bản mới ghi đè và vẫn
+ * tính vào trần. Bản không đọc được id thì giữ chỗ bằng một id không bao giờ được cấp.
+ */
+export const slotIdsOf = (raws: readonly unknown[]): string[] =>
+  raws.map((raw, k) => (isObject(raw) && typeof raw.id === 'string' && raw.id.length > 0 ? raw.id : `?${k}`));
+
 /** Id cho bản lưu mới: số nhỏ nhất chưa dùng; null khi đã đủ `MAX_SAVE_SLOTS` bản. */
 export const nextSlotId = (used: readonly string[]): string | null => {
   if (used.length >= MAX_SAVE_SLOTS) return null;

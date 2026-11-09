@@ -1,5 +1,5 @@
-import { IDBFactory } from 'fake-indexeddb';
-import { describe, expect, it } from 'vitest';
+import { IDBDatabase, IDBFactory } from 'fake-indexeddb';
+import { describe, expect, it, vi } from 'vitest';
 import { MAX_SAVE_SLOTS, SLOTS_FULL_TEXT } from '../data/save';
 import { CONTENT } from '../game/cards/registry';
 import { runState } from '../game/testing/fixtures';
@@ -50,5 +50,35 @@ describe('named save slots on the device (2026-11-09)', () => {
     await s.store.saveSlot(first!.id, { ...(await s.store.loadSlot(first!.id) as object), save: { formatVersion: 99 } } as never);
     expect((await s.loadSlot(first!.id)).kind).toBe('incompatible');
     expect((await s.loadSlot('nope')).kind).toBe('empty');
+  });
+});
+
+describe('save slots: review fixes (2026-11-09)', () => {
+  it('a damaged slot keeps its id and counts toward the cap; a new slot never overwrites it', async () => {
+    const s = await open(new IDBFactory());
+    await s.store.saveSlot('s1', { id: 's1', name: '', broken: true } as never);
+    const saved = await s.saveSlot(runState(), 'Ván mới');
+    expect(saved.ok && saved.slot.id).toBe('s2');
+    expect(await s.store.loadSlot('s1')).toMatchObject({ broken: true });
+  });
+
+  it('after the disk store falls back to memory, slots read before are still listed', async () => {
+    const disk = new IDBFactory();
+    const first = await open(disk);
+    await first.saveSlot(runState({ year: 4 }), 'Trước khi hỏng');
+    const s = await open(disk);
+    expect(await s.listSlots()).toHaveLength(1);
+    // the disk starts failing: every later call falls back to RAM
+    const spy = vi.spyOn(IDBDatabase.prototype, 'transaction').mockImplementation(() => {
+      throw new Error('disk gone');
+    });
+    try {
+      expect((await s.listSlots()).map((x) => x.name)).toEqual(['Trước khi hỏng']);
+      const more = await s.saveSlot(runState(), 'Chỉ trong phiên');
+      expect(more.ok && more.slot.id).toBe('s2');
+      expect(more.ok && more.memoryOnly).toBe(true);
+    } finally {
+      spy.mockRestore();
+    }
   });
 });

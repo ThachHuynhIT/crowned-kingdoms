@@ -238,7 +238,15 @@ export class SettingsScene extends Phaser.Scene {
     try {
       const result = await session.saveSlot(state, name);
       if (visit !== this.visit) return;
-      this.showMessage(result.ok ? `Đã lưu "${result.slot.name}".` : result.message);
+      this.showMessage(
+        !result.ok
+          ? result.message
+          : result.memoryOnly
+            ? `Đã lưu "${result.slot.name}" trong phiên này (trình duyệt không ghi được ra máy).`
+            : `Đã lưu "${result.slot.name}".`,
+      );
+    } catch {
+      if (visit === this.visit) this.showMessage('Không lưu được bản lưu này, hãy thử lại.');
     } finally {
       if (visit === this.visit) {
         this.busy = false;

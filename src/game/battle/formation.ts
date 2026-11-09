@@ -26,14 +26,35 @@ const rows = (count: number, mid: number, y0: number): Slot[] => {
   return out;
 };
 
+/** Hàng dành cho khối bắn xa: đủ cho `ranged` lính đầu trận cộng một hàng cho lính bắn xa sinh giữa trận. */
+export const rangedRowsFor = (ranged: number): number => Math.ceil(ranged / BATTLE.formationPerRow) + 1;
+
+const bandsY0 = (mode: RunMode, rangedRows: number): { ranged: number; melee: number } => {
+  const g = geometryFor(mode);
+  const ranged = g.boardMax + BATTLE.formationMargin;
+  return { ranged, melee: ranged + rangedRows * BATTLE.formationRowGap + BATTLE.formationBandGap };
+};
+
 /** Ô đội hình cho `ranged` lính bắn xa rồi `melee` lính cận chiến, theo thứ tự được giao. */
 export const formationSlots = (mode: RunMode, ranged: number, melee: number): { ranged: Slot[]; melee: Slot[] } => {
   const g = geometryFor(mode);
   const mid = (g.boardMin + g.boardMax) / 2;
-  const y0 = g.boardMax + BATTLE.formationMargin;
-  const rangedRows = Math.ceil(ranged / BATTLE.formationPerRow);
-  const meleeY0 = y0 + rangedRows * BATTLE.formationRowGap + (rangedRows > 0 ? BATTLE.formationBandGap : 0);
-  return { ranged: rows(ranged, mid, y0), melee: rows(melee, mid, meleeY0) };
+  const y0 = bandsY0(mode, rangedRowsFor(ranged));
+  return { ranged: rows(ranged, mid, y0.ranged), melee: rows(melee, mid, y0.melee) };
+};
+
+/**
+ * Ô thứ `k` của một khối cho lính sinh giữa trận (sau các ô đầu trận), khối bắn xa có `rangedRows` hàng: theo hàng đầy
+ * (`formationPerRow` ô, căn giữa bàn), nên không trùng ô đã giao trong cùng hàng đầy.
+ */
+export const formationSlotAt = (mode: RunMode, ranged: boolean, k: number, rangedRows: number): Slot => {
+  const g = geometryFor(mode);
+  const mid = (g.boardMin + g.boardMax) / 2;
+  const per = BATTLE.formationPerRow;
+  const y0 = bandsY0(mode, rangedRows);
+  const row = Math.floor(k / per);
+  const col = k - row * per;
+  return { x: mid + (col - (per - 1) / 2) * BATTLE.formationSpacing, y: (ranged ? y0.ranged : y0.melee) + row * BATTLE.formationRowGap };
 };
 
 interface Box {

@@ -87,13 +87,15 @@ describe('battles deploy into the boxes', () => {
     expect([w.x[id], w.y[id]]).toEqual([plotCenter(7).x + BUILDING_FOOT_OFFSET.x, plotCenter(7).y]);
   });
 
-  it('respawns a fallen trooper back into its box', () => {
+  it('respawns a fallen trooper in its box; its home is a formation slot in front of the board (review 2026-11-09)', () => {
     const w = createBattle(battleSetup({ structures: [structure(7, { respawn: { everyTicks: 10, stats: unitStats({ radius: 4 }), count: 2 } })] }));
     addUnit(w, unitStats({ speed: 0, dmg: 0, interval: 0 }), TEAM_FOE, 740, 740, 740, 740, -1); // keeps the battle going
     for (let i = 0; i < 11; i++) stepBattle(w, []);
     const ids = unitsOf(w, 8);
     expect(ids.length).toBeGreaterThan(0);
     const first = deploymentPosition(7, 0, 2, 4);
-    expect([w.homeX[ids[0]!], w.homeY[ids[0]!]]).toEqual([first.x, first.y]);
+    // it appears in the deploy box, then walks to the formation (a home inside the footprint would jitter forever)
+    expect(Math.abs(w.x[ids[0]!]! - first.x) + Math.abs(w.y[ids[0]!]! - first.y)).toBeLessThan(12);
+    expect(w.homeY[ids[0]!]).toBeGreaterThan(NORMAL_GEOMETRY.boardMax);
   });
 });
