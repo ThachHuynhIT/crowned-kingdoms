@@ -13342,3 +13342,1263 @@ assets:
     nativeSize: 1024x1024
     finalSize: 16x16
     notes: Chinh phục icon (approved 2026-11-09 by Claude under the owner's delegation); magenta keyed out and box-reduced by docs/art-review/g3e/icons/make_assets.py; 16 px frame in the world atlas (src/render/imageArt.ts IMAGE_ICONS)
+  - id: card_art_clock_bell_tower
+    path: public/assets/art/ai-v1/cards/clock_bell_tower.png
+    category: ui
+    origin: custom
+    source: docs/art-review/g3e/cards/clock_bell_tower/source.png
+    creator: Project owner (OpenAI imagegen via Codex; prompt in docs/art-review/g3e/cards/clock_bell_tower/prompt.md)
+    license: project-owned
+    attribution: false
+    redistribute: true
+    evidence: docs/art-review/g3e/cards/sheet-clock.png
+    modified: true
+    nativeSize: 1024x768
+    finalSize: 96x72
+    notes: Card illustration of Tháp Chuông (clock_bell_tower) (approved 2026-11-09 by Claude under the owner's delegation); box-reduced by docs/art-review/g3e/cards/make_assets.py; full size (src/ui/cards/cardImage.ts)
+  - id: card_art_clock_bell_tower_48
+    path: public/assets/art/ai-v1/cards/clock_bell_tower-48.png
+    category: ui
+    origin: custom
+    source: docs/art-review/g3e/cards/clock_bell_tower/source.png
+    creator: Project owner (OpenAI imagegen via Codex; prompt in docs/art-review/g3e/cards/clock_bell_tower/prompt.md)
+    license: project-owned
+    attribution: false
+    redistribute: true
+    evidence: docs/art-review/g3e/cards/sheet-clock.png
+    modified: true
+    nativeSize: 1024x768
+    finalSize: 48x36
+    notes: Card illustration of Tháp Chuông (clock_bell_tower) (approved 2026-11-09 by Claude under the owner's delegation); box-reduced by docs/art-review/g3e/cards/make_assets.py; copy for picture windows under 96 px (src/ui/cards/cardImage.ts)
+  - id: card_art_clock_colossus
+    path: public/assets/art/ai-v1/cards/clock_colossus.png
+    category: ui
+    origin: custom
+    source: docs/art-review/g3e/cards/clock_colossus/source.png
+    creator: Project owner (OpenAI imagegen via Codex; prompt in docs/art-review/g3e/cards/clock_colossus/prompt.md)
+    license: project-owned
+    attribution: false
+    redistribute: true
+    evidence: docs/art-review/g3e/cards/sheet-clock.png
+    modified: true
+    nativeSize: 1024x768
+    finalSize: 96x72
+    notes: Card illustration of Lò Khổng Lồ Đồng (clock_colossus) (approved 2026-11-09 by Claude under the owner's delegation); box-reduced by docs/art-review/g3e/cards/make_assets.py; full size (src/ui/cards/cardImage.ts)
+  - id: card_art_clock_colossus_48
+    path: public/assets/art/ai-v1/cards/clock_colossus-48.png
+    category: ui
+    origin: custom
+    source: docs/art-review/g3e/cards/clock_colossus/source.png
+    creator: Project owner (OpenAI imagegen via Codex; prompt in docs/art-review/g3e/cards/clock_colossus/prompt.md)
+    license: project-owned
+    attribution: false
+    redistribute: true
+    evidence: docs/art-review/g3e/cards/sheet-clock.png
+    modified: true
+    nativeSize: 1024x768
+    finalSize: 48x36
+    notes: Card illustration of Lò Khổng Lồ Đồng (clock_colossus) (approved 2026-11-09 by Claude under the owner's delegation); box-reduced by docs/art-review/g3e/cards/make_assets.py; copy for picture windows under 96 px (src/ui/cards/cardImage.ts)
+  - id: card_art_clock_gear_tower
+    path: public/assets/art/ai-v1/cards/clock_gear_tower.png
+    category: ui
+    origin: custom
+    source: docs/art-review/g3e/cards/clock_gear_tower/source.png
+    creator: Project owner (OpenAI imagegen via Codex; prompt in docs/art-review/g3e/cards/clock_gear_tower/prompt.md)
+    license: project-owned
+    attribution: false
+    redistribute: true
+    evidence: docs/art-review/g3e/cards/sheet-clock.png
+    modified: true
+    nativeSize: 1024x768
+    finalSize: 96x72
+    notes: Card illustration of Tháp Bánh Răng (clock_gear_tower) (approved 2026-11-09 by Claude under the owner's delegation); box-reduced by docs/art-review/g3e/cards/make_assets.py; full size (src/ui/cards/cardImage.ts)
+  - id: card_art_clock_gear_tower_48
+    path: public/assets/art/ai-v1/cards/clock_gear_tower-48.png
+    category: ui
+    origin: custom
+    source: docs/art-review/g3e/cards/clock_gear_tower/source.png
+    creator: Project owner (OpenAI imagegen via Codex; prompt in docs/art-review/g3e/cards/clock_gear_tower/prompt.md)
+    license: project-owned
+    attribution: false
+    redistribute: true
+    evidence: docs/art-review/g3e/cards/sheet-clock.png
+    modified: true
+    nativeSize: 1024x768
+    finalSize: 48x36
+    notes: Card illustration of Tháp Bánh Răng (clock_gear_tower) (approved 2026-11-09 by Claude under the owner's delegation); box-reduced by docs/art-review/g3e/cards/make_assets.py; copy for picture windows under 96 px (src/ui/cards/cardImage.ts)
+  - id: card_art_clock_rewind
+    path: public/assets/art/ai-v1/cards/clock_rewind.png
+    category: ui
+    origin: custom
+    source: docs/art-review/g3e/cards/clock_rewind/source.png
+    creator: Project owner (OpenAI imagegen via Codex; prompt in docs/art-review/g3e/cards/clock_rewind/prompt.md)
+    license: project-owned
+    attribution: false
+    redistribute: true
+    evidence: docs/art-review/g3e/cards/sheet-clock.png
+    modified: true
+    nativeSize: 1448x1086
+    finalSize: 96x72
+    notes: Card illustration of Tua Ngược (clock_rewind) (approved 2026-11-09 by Claude under the owner's delegation); box-reduced by docs/art-review/g3e/cards/make_assets.py; full size (src/ui/cards/cardImage.ts)
+  - id: card_art_clock_rewind_48
+    path: public/assets/art/ai-v1/cards/clock_rewind-48.png
+    category: ui
+    origin: custom
+    source: docs/art-review/g3e/cards/clock_rewind/source.png
+    creator: Project owner (OpenAI imagegen via Codex; prompt in docs/art-review/g3e/cards/clock_rewind/prompt.md)
+    license: project-owned
+    attribution: false
+    redistribute: true
+    evidence: docs/art-review/g3e/cards/sheet-clock.png
+    modified: true
+    nativeSize: 1448x1086
+    finalSize: 48x36
+    notes: Card illustration of Tua Ngược (clock_rewind) (approved 2026-11-09 by Claude under the owner's delegation); box-reduced by docs/art-review/g3e/cards/make_assets.py; copy for picture windows under 96 px (src/ui/cards/cardImage.ts)
+  - id: card_art_clock_spiders
+    path: public/assets/art/ai-v1/cards/clock_spiders.png
+    category: ui
+    origin: custom
+    source: docs/art-review/g3e/cards/clock_spiders/source.png
+    creator: Project owner (OpenAI imagegen via Codex; prompt in docs/art-review/g3e/cards/clock_spiders/prompt.md)
+    license: project-owned
+    attribution: false
+    redistribute: true
+    evidence: docs/art-review/g3e/cards/sheet-clock.png
+    modified: true
+    nativeSize: 1024x768
+    finalSize: 96x72
+    notes: Card illustration of Ổ Nhện Cơ Khí (clock_spiders) (approved 2026-11-09 by Claude under the owner's delegation); box-reduced by docs/art-review/g3e/cards/make_assets.py; full size (src/ui/cards/cardImage.ts)
+  - id: card_art_clock_spiders_48
+    path: public/assets/art/ai-v1/cards/clock_spiders-48.png
+    category: ui
+    origin: custom
+    source: docs/art-review/g3e/cards/clock_spiders/source.png
+    creator: Project owner (OpenAI imagegen via Codex; prompt in docs/art-review/g3e/cards/clock_spiders/prompt.md)
+    license: project-owned
+    attribution: false
+    redistribute: true
+    evidence: docs/art-review/g3e/cards/sheet-clock.png
+    modified: true
+    nativeSize: 1024x768
+    finalSize: 48x36
+    notes: Card illustration of Ổ Nhện Cơ Khí (clock_spiders) (approved 2026-11-09 by Claude under the owner's delegation); box-reduced by docs/art-review/g3e/cards/make_assets.py; copy for picture windows under 96 px (src/ui/cards/cardImage.ts)
+  - id: card_art_clock_spring_workshop
+    path: public/assets/art/ai-v1/cards/clock_spring_workshop.png
+    category: ui
+    origin: custom
+    source: docs/art-review/g3e/cards/clock_spring_workshop/source.png
+    creator: Project owner (OpenAI imagegen via Codex; prompt in docs/art-review/g3e/cards/clock_spring_workshop/prompt.md)
+    license: project-owned
+    attribution: false
+    redistribute: true
+    evidence: docs/art-review/g3e/cards/sheet-clock.png
+    modified: true
+    nativeSize: 1024x768
+    finalSize: 96x72
+    notes: Card illustration of Xưởng Lò Xo (clock_spring_workshop) (approved 2026-11-09 by Claude under the owner's delegation); box-reduced by docs/art-review/g3e/cards/make_assets.py; full size (src/ui/cards/cardImage.ts)
+  - id: card_art_clock_spring_workshop_48
+    path: public/assets/art/ai-v1/cards/clock_spring_workshop-48.png
+    category: ui
+    origin: custom
+    source: docs/art-review/g3e/cards/clock_spring_workshop/source.png
+    creator: Project owner (OpenAI imagegen via Codex; prompt in docs/art-review/g3e/cards/clock_spring_workshop/prompt.md)
+    license: project-owned
+    attribution: false
+    redistribute: true
+    evidence: docs/art-review/g3e/cards/sheet-clock.png
+    modified: true
+    nativeSize: 1024x768
+    finalSize: 48x36
+    notes: Card illustration of Xưởng Lò Xo (clock_spring_workshop) (approved 2026-11-09 by Claude under the owner's delegation); box-reduced by docs/art-review/g3e/cards/make_assets.py; copy for picture windows under 96 px (src/ui/cards/cardImage.ts)
+  - id: card_art_clock_steam_cannon
+    path: public/assets/art/ai-v1/cards/clock_steam_cannon.png
+    category: ui
+    origin: custom
+    source: docs/art-review/g3e/cards/clock_steam_cannon/source.png
+    creator: Project owner (OpenAI imagegen via Codex; prompt in docs/art-review/g3e/cards/clock_steam_cannon/prompt.md)
+    license: project-owned
+    attribution: false
+    redistribute: true
+    evidence: docs/art-review/g3e/cards/sheet-clock.png
+    modified: true
+    nativeSize: 1024x768
+    finalSize: 96x72
+    notes: Card illustration of Pháo Hơi Nước (clock_steam_cannon) (approved 2026-11-09 by Claude under the owner's delegation); box-reduced by docs/art-review/g3e/cards/make_assets.py; full size (src/ui/cards/cardImage.ts)
+  - id: card_art_clock_steam_cannon_48
+    path: public/assets/art/ai-v1/cards/clock_steam_cannon-48.png
+    category: ui
+    origin: custom
+    source: docs/art-review/g3e/cards/clock_steam_cannon/source.png
+    creator: Project owner (OpenAI imagegen via Codex; prompt in docs/art-review/g3e/cards/clock_steam_cannon/prompt.md)
+    license: project-owned
+    attribution: false
+    redistribute: true
+    evidence: docs/art-review/g3e/cards/sheet-clock.png
+    modified: true
+    nativeSize: 1024x768
+    finalSize: 48x36
+    notes: Card illustration of Pháo Hơi Nước (clock_steam_cannon) (approved 2026-11-09 by Claude under the owner's delegation); box-reduced by docs/art-review/g3e/cards/make_assets.py; copy for picture windows under 96 px (src/ui/cards/cardImage.ts)
+  - id: card_art_clock_throne
+    path: public/assets/art/ai-v1/cards/clock_throne.png
+    category: ui
+    origin: custom
+    source: docs/art-review/g3e/cards/clock_throne/source.png
+    creator: Project owner (OpenAI imagegen via Codex; prompt in docs/art-review/g3e/cards/clock_throne/prompt.md)
+    license: project-owned
+    attribution: false
+    redistribute: true
+    evidence: docs/art-review/g3e/cards/sheet-clock.png
+    modified: true
+    nativeSize: 1448x1086
+    finalSize: 96x72
+    notes: Card illustration of Ngai Bánh Răng (clock_throne) (approved 2026-11-09 by Claude under the owner's delegation); box-reduced by docs/art-review/g3e/cards/make_assets.py; full size (src/ui/cards/cardImage.ts)
+  - id: card_art_clock_throne_48
+    path: public/assets/art/ai-v1/cards/clock_throne-48.png
+    category: ui
+    origin: custom
+    source: docs/art-review/g3e/cards/clock_throne/source.png
+    creator: Project owner (OpenAI imagegen via Codex; prompt in docs/art-review/g3e/cards/clock_throne/prompt.md)
+    license: project-owned
+    attribution: false
+    redistribute: true
+    evidence: docs/art-review/g3e/cards/sheet-clock.png
+    modified: true
+    nativeSize: 1448x1086
+    finalSize: 48x36
+    notes: Card illustration of Ngai Bánh Răng (clock_throne) (approved 2026-11-09 by Claude under the owner's delegation); box-reduced by docs/art-review/g3e/cards/make_assets.py; copy for picture windows under 96 px (src/ui/cards/cardImage.ts)
+  - id: card_art_clock_tick_rune
+    path: public/assets/art/ai-v1/cards/clock_tick_rune.png
+    category: ui
+    origin: custom
+    source: docs/art-review/g3e/cards/clock_tick_rune/source.png
+    creator: Project owner (OpenAI imagegen via Codex; prompt in docs/art-review/g3e/cards/clock_tick_rune/prompt.md)
+    license: project-owned
+    attribution: false
+    redistribute: true
+    evidence: docs/art-review/g3e/cards/sheet-clock.png
+    modified: true
+    nativeSize: 1448x1086
+    finalSize: 96x72
+    notes: Card illustration of Bùa Tích Tắc (clock_tick_rune) (approved 2026-11-09 by Claude under the owner's delegation); box-reduced by docs/art-review/g3e/cards/make_assets.py; full size (src/ui/cards/cardImage.ts)
+  - id: card_art_clock_tick_rune_48
+    path: public/assets/art/ai-v1/cards/clock_tick_rune-48.png
+    category: ui
+    origin: custom
+    source: docs/art-review/g3e/cards/clock_tick_rune/source.png
+    creator: Project owner (OpenAI imagegen via Codex; prompt in docs/art-review/g3e/cards/clock_tick_rune/prompt.md)
+    license: project-owned
+    attribution: false
+    redistribute: true
+    evidence: docs/art-review/g3e/cards/sheet-clock.png
+    modified: true
+    nativeSize: 1448x1086
+    finalSize: 48x36
+    notes: Card illustration of Bùa Tích Tắc (clock_tick_rune) (approved 2026-11-09 by Claude under the owner's delegation); box-reduced by docs/art-review/g3e/cards/make_assets.py; copy for picture windows under 96 px (src/ui/cards/cardImage.ts)
+  - id: card_art_clock_windup_soldiers
+    path: public/assets/art/ai-v1/cards/clock_windup_soldiers.png
+    category: ui
+    origin: custom
+    source: docs/art-review/g3e/cards/clock_windup_soldiers/source.png
+    creator: Project owner (OpenAI imagegen via Codex; prompt in docs/art-review/g3e/cards/clock_windup_soldiers/prompt.md)
+    license: project-owned
+    attribution: false
+    redistribute: true
+    evidence: docs/art-review/g3e/cards/sheet-clock.png
+    modified: true
+    nativeSize: 1024x768
+    finalSize: 96x72
+    notes: Card illustration of Xưởng Lính Thiếc (clock_windup_soldiers) (approved 2026-11-09 by Claude under the owner's delegation); box-reduced by docs/art-review/g3e/cards/make_assets.py; full size (src/ui/cards/cardImage.ts)
+  - id: card_art_clock_windup_soldiers_48
+    path: public/assets/art/ai-v1/cards/clock_windup_soldiers-48.png
+    category: ui
+    origin: custom
+    source: docs/art-review/g3e/cards/clock_windup_soldiers/source.png
+    creator: Project owner (OpenAI imagegen via Codex; prompt in docs/art-review/g3e/cards/clock_windup_soldiers/prompt.md)
+    license: project-owned
+    attribution: false
+    redistribute: true
+    evidence: docs/art-review/g3e/cards/sheet-clock.png
+    modified: true
+    nativeSize: 1024x768
+    finalSize: 48x36
+    notes: Card illustration of Xưởng Lính Thiếc (clock_windup_soldiers) (approved 2026-11-09 by Claude under the owner's delegation); box-reduced by docs/art-review/g3e/cards/make_assets.py; copy for picture windows under 96 px (src/ui/cards/cardImage.ts)
+  - id: card_art_forge_throne
+    path: public/assets/art/ai-v1/cards/forge_throne.png
+    category: ui
+    origin: custom
+    source: docs/art-review/g3e/cards/forge_throne/source.png
+    creator: Project owner (OpenAI imagegen via Codex; prompt in docs/art-review/g3e/cards/forge_throne/prompt.md)
+    license: project-owned
+    attribution: false
+    redistribute: true
+    evidence: docs/art-review/g3e/cards/sheet-forge.png
+    modified: true
+    nativeSize: 1448x1086
+    finalSize: 96x72
+    notes: Card illustration of Ngai Đe Sắt (forge_throne) (approved 2026-11-09 by Claude under the owner's delegation); box-reduced by docs/art-review/g3e/cards/make_assets.py; full size (src/ui/cards/cardImage.ts)
+  - id: card_art_forge_throne_48
+    path: public/assets/art/ai-v1/cards/forge_throne-48.png
+    category: ui
+    origin: custom
+    source: docs/art-review/g3e/cards/forge_throne/source.png
+    creator: Project owner (OpenAI imagegen via Codex; prompt in docs/art-review/g3e/cards/forge_throne/prompt.md)
+    license: project-owned
+    attribution: false
+    redistribute: true
+    evidence: docs/art-review/g3e/cards/sheet-forge.png
+    modified: true
+    nativeSize: 1448x1086
+    finalSize: 48x36
+    notes: Card illustration of Ngai Đe Sắt (forge_throne) (approved 2026-11-09 by Claude under the owner's delegation); box-reduced by docs/art-review/g3e/cards/make_assets.py; copy for picture windows under 96 px (src/ui/cards/cardImage.ts)
+  - id: card_art_grove_throne
+    path: public/assets/art/ai-v1/cards/grove_throne.png
+    category: ui
+    origin: custom
+    source: docs/art-review/g3e/cards/grove_throne/source.png
+    creator: Project owner (OpenAI imagegen via Codex; prompt in docs/art-review/g3e/cards/grove_throne/prompt.md)
+    license: project-owned
+    attribution: false
+    redistribute: true
+    evidence: docs/art-review/g3e/cards/sheet-grove.png
+    modified: true
+    nativeSize: 1448x1086
+    finalSize: 96x72
+    notes: Card illustration of Ngai Cổ Thụ (grove_throne) (approved 2026-11-09 by Claude under the owner's delegation); box-reduced by docs/art-review/g3e/cards/make_assets.py; full size (src/ui/cards/cardImage.ts)
+  - id: card_art_grove_throne_48
+    path: public/assets/art/ai-v1/cards/grove_throne-48.png
+    category: ui
+    origin: custom
+    source: docs/art-review/g3e/cards/grove_throne/source.png
+    creator: Project owner (OpenAI imagegen via Codex; prompt in docs/art-review/g3e/cards/grove_throne/prompt.md)
+    license: project-owned
+    attribution: false
+    redistribute: true
+    evidence: docs/art-review/g3e/cards/sheet-grove.png
+    modified: true
+    nativeSize: 1448x1086
+    finalSize: 48x36
+    notes: Card illustration of Ngai Cổ Thụ (grove_throne) (approved 2026-11-09 by Claude under the owner's delegation); box-reduced by docs/art-review/g3e/cards/make_assets.py; copy for picture windows under 96 px (src/ui/cards/cardImage.ts)
+  - id: card_art_moon_altar
+    path: public/assets/art/ai-v1/cards/moon_altar.png
+    category: ui
+    origin: custom
+    source: docs/art-review/g3e/cards/moon_altar/source.png
+    creator: Project owner (OpenAI imagegen via Codex; prompt in docs/art-review/g3e/cards/moon_altar/prompt.md)
+    license: project-owned
+    attribution: false
+    redistribute: true
+    evidence: docs/art-review/g3e/cards/sheet-moon.png
+    modified: true
+    nativeSize: 1024x768
+    finalSize: 96x72
+    notes: Card illustration of Đàn Tế (moon_altar) (approved 2026-11-09 by Claude under the owner's delegation); box-reduced by docs/art-review/g3e/cards/make_assets.py; full size (src/ui/cards/cardImage.ts)
+  - id: card_art_moon_altar_48
+    path: public/assets/art/ai-v1/cards/moon_altar-48.png
+    category: ui
+    origin: custom
+    source: docs/art-review/g3e/cards/moon_altar/source.png
+    creator: Project owner (OpenAI imagegen via Codex; prompt in docs/art-review/g3e/cards/moon_altar/prompt.md)
+    license: project-owned
+    attribution: false
+    redistribute: true
+    evidence: docs/art-review/g3e/cards/sheet-moon.png
+    modified: true
+    nativeSize: 1024x768
+    finalSize: 48x36
+    notes: Card illustration of Đàn Tế (moon_altar) (approved 2026-11-09 by Claude under the owner's delegation); box-reduced by docs/art-review/g3e/cards/make_assets.py; copy for picture windows under 96 px (src/ui/cards/cardImage.ts)
+  - id: card_art_moon_blood_moon_rune
+    path: public/assets/art/ai-v1/cards/moon_blood_moon_rune.png
+    category: ui
+    origin: custom
+    source: docs/art-review/g3e/cards/moon_blood_moon_rune/source.png
+    creator: Project owner (OpenAI imagegen via Codex; prompt in docs/art-review/g3e/cards/moon_blood_moon_rune/prompt.md)
+    license: project-owned
+    attribution: false
+    redistribute: true
+    evidence: docs/art-review/g3e/cards/sheet-moon.png
+    modified: true
+    nativeSize: 1448x1086
+    finalSize: 96x72
+    notes: Card illustration of Bùa Trăng Máu (moon_blood_moon_rune) (approved 2026-11-09 by Claude under the owner's delegation); box-reduced by docs/art-review/g3e/cards/make_assets.py; full size (src/ui/cards/cardImage.ts)
+  - id: card_art_moon_blood_moon_rune_48
+    path: public/assets/art/ai-v1/cards/moon_blood_moon_rune-48.png
+    category: ui
+    origin: custom
+    source: docs/art-review/g3e/cards/moon_blood_moon_rune/source.png
+    creator: Project owner (OpenAI imagegen via Codex; prompt in docs/art-review/g3e/cards/moon_blood_moon_rune/prompt.md)
+    license: project-owned
+    attribution: false
+    redistribute: true
+    evidence: docs/art-review/g3e/cards/sheet-moon.png
+    modified: true
+    nativeSize: 1448x1086
+    finalSize: 48x36
+    notes: Card illustration of Bùa Trăng Máu (moon_blood_moon_rune) (approved 2026-11-09 by Claude under the owner's delegation); box-reduced by docs/art-review/g3e/cards/make_assets.py; copy for picture windows under 96 px (src/ui/cards/cardImage.ts)
+  - id: card_art_moon_blood_pact
+    path: public/assets/art/ai-v1/cards/moon_blood_pact.png
+    category: ui
+    origin: custom
+    source: docs/art-review/g3e/cards/moon_blood_pact/source.png
+    creator: Project owner (OpenAI imagegen via Codex; prompt in docs/art-review/g3e/cards/moon_blood_pact/prompt.md)
+    license: project-owned
+    attribution: false
+    redistribute: true
+    evidence: docs/art-review/g3e/cards/sheet-moon.png
+    modified: true
+    nativeSize: 1448x1086
+    finalSize: 96x72
+    notes: Card illustration of Khế Ước Máu (moon_blood_pact) (approved 2026-11-09 by Claude under the owner's delegation); box-reduced by docs/art-review/g3e/cards/make_assets.py; full size (src/ui/cards/cardImage.ts)
+  - id: card_art_moon_blood_pact_48
+    path: public/assets/art/ai-v1/cards/moon_blood_pact-48.png
+    category: ui
+    origin: custom
+    source: docs/art-review/g3e/cards/moon_blood_pact/source.png
+    creator: Project owner (OpenAI imagegen via Codex; prompt in docs/art-review/g3e/cards/moon_blood_pact/prompt.md)
+    license: project-owned
+    attribution: false
+    redistribute: true
+    evidence: docs/art-review/g3e/cards/sheet-moon.png
+    modified: true
+    nativeSize: 1448x1086
+    finalSize: 48x36
+    notes: Card illustration of Khế Ước Máu (moon_blood_pact) (approved 2026-11-09 by Claude under the owner's delegation); box-reduced by docs/art-review/g3e/cards/make_assets.py; copy for picture windows under 96 px (src/ui/cards/cardImage.ts)
+  - id: card_art_moon_crypt
+    path: public/assets/art/ai-v1/cards/moon_crypt.png
+    category: ui
+    origin: custom
+    source: docs/art-review/g3e/cards/moon_crypt/source.png
+    creator: Project owner (OpenAI imagegen via Codex; prompt in docs/art-review/g3e/cards/moon_crypt/prompt.md)
+    license: project-owned
+    attribution: false
+    redistribute: true
+    evidence: docs/art-review/g3e/cards/sheet-moon.png
+    modified: true
+    nativeSize: 1024x768
+    finalSize: 96x72
+    notes: Card illustration of Hầm Mộ (moon_crypt) (approved 2026-11-09 by Claude under the owner's delegation); box-reduced by docs/art-review/g3e/cards/make_assets.py; full size (src/ui/cards/cardImage.ts)
+  - id: card_art_moon_crypt_48
+    path: public/assets/art/ai-v1/cards/moon_crypt-48.png
+    category: ui
+    origin: custom
+    source: docs/art-review/g3e/cards/moon_crypt/source.png
+    creator: Project owner (OpenAI imagegen via Codex; prompt in docs/art-review/g3e/cards/moon_crypt/prompt.md)
+    license: project-owned
+    attribution: false
+    redistribute: true
+    evidence: docs/art-review/g3e/cards/sheet-moon.png
+    modified: true
+    nativeSize: 1024x768
+    finalSize: 48x36
+    notes: Card illustration of Hầm Mộ (moon_crypt) (approved 2026-11-09 by Claude under the owner's delegation); box-reduced by docs/art-review/g3e/cards/make_assets.py; copy for picture windows under 96 px (src/ui/cards/cardImage.ts)
+  - id: card_art_moon_eclipse_pact
+    path: public/assets/art/ai-v1/cards/moon_eclipse_pact.png
+    category: ui
+    origin: custom
+    source: docs/art-review/g3e/cards/moon_eclipse_pact/source.png
+    creator: Project owner (OpenAI imagegen via Codex; prompt in docs/art-review/g3e/cards/moon_eclipse_pact/prompt.md)
+    license: project-owned
+    attribution: false
+    redistribute: true
+    evidence: docs/art-review/g3e/cards/sheet-moon.png
+    modified: true
+    nativeSize: 1448x1086
+    finalSize: 96x72
+    notes: Card illustration of Giao Ước Nguyệt Thực (moon_eclipse_pact) (approved 2026-11-09 by Claude under the owner's delegation); box-reduced by docs/art-review/g3e/cards/make_assets.py; full size (src/ui/cards/cardImage.ts)
+  - id: card_art_moon_eclipse_pact_48
+    path: public/assets/art/ai-v1/cards/moon_eclipse_pact-48.png
+    category: ui
+    origin: custom
+    source: docs/art-review/g3e/cards/moon_eclipse_pact/source.png
+    creator: Project owner (OpenAI imagegen via Codex; prompt in docs/art-review/g3e/cards/moon_eclipse_pact/prompt.md)
+    license: project-owned
+    attribution: false
+    redistribute: true
+    evidence: docs/art-review/g3e/cards/sheet-moon.png
+    modified: true
+    nativeSize: 1448x1086
+    finalSize: 48x36
+    notes: Card illustration of Giao Ước Nguyệt Thực (moon_eclipse_pact) (approved 2026-11-09 by Claude under the owner's delegation); box-reduced by docs/art-review/g3e/cards/make_assets.py; copy for picture windows under 96 px (src/ui/cards/cardImage.ts)
+  - id: card_art_moon_reaper_shrine
+    path: public/assets/art/ai-v1/cards/moon_reaper_shrine.png
+    category: ui
+    origin: custom
+    source: docs/art-review/g3e/cards/moon_reaper_shrine/source.png
+    creator: Project owner (OpenAI imagegen via Codex; prompt in docs/art-review/g3e/cards/moon_reaper_shrine/prompt.md)
+    license: project-owned
+    attribution: false
+    redistribute: true
+    evidence: docs/art-review/g3e/cards/sheet-moon.png
+    modified: true
+    nativeSize: 1024x768
+    finalSize: 96x72
+    notes: Card illustration of Điện Thần Chết (moon_reaper_shrine) (approved 2026-11-09 by Claude under the owner's delegation); box-reduced by docs/art-review/g3e/cards/make_assets.py; full size (src/ui/cards/cardImage.ts)
+  - id: card_art_moon_reaper_shrine_48
+    path: public/assets/art/ai-v1/cards/moon_reaper_shrine-48.png
+    category: ui
+    origin: custom
+    source: docs/art-review/g3e/cards/moon_reaper_shrine/source.png
+    creator: Project owner (OpenAI imagegen via Codex; prompt in docs/art-review/g3e/cards/moon_reaper_shrine/prompt.md)
+    license: project-owned
+    attribution: false
+    redistribute: true
+    evidence: docs/art-review/g3e/cards/sheet-moon.png
+    modified: true
+    nativeSize: 1024x768
+    finalSize: 48x36
+    notes: Card illustration of Điện Thần Chết (moon_reaper_shrine) (approved 2026-11-09 by Claude under the owner's delegation); box-reduced by docs/art-review/g3e/cards/make_assets.py; copy for picture windows under 96 px (src/ui/cards/cardImage.ts)
+  - id: card_art_moon_shadow_spire
+    path: public/assets/art/ai-v1/cards/moon_shadow_spire.png
+    category: ui
+    origin: custom
+    source: docs/art-review/g3e/cards/moon_shadow_spire/source.png
+    creator: Project owner (OpenAI imagegen via Codex; prompt in docs/art-review/g3e/cards/moon_shadow_spire/prompt.md)
+    license: project-owned
+    attribution: false
+    redistribute: true
+    evidence: docs/art-review/g3e/cards/sheet-moon.png
+    modified: true
+    nativeSize: 1024x768
+    finalSize: 96x72
+    notes: Card illustration of Tháp Bóng Đêm (moon_shadow_spire) (approved 2026-11-09 by Claude under the owner's delegation); box-reduced by docs/art-review/g3e/cards/make_assets.py; full size (src/ui/cards/cardImage.ts)
+  - id: card_art_moon_shadow_spire_48
+    path: public/assets/art/ai-v1/cards/moon_shadow_spire-48.png
+    category: ui
+    origin: custom
+    source: docs/art-review/g3e/cards/moon_shadow_spire/source.png
+    creator: Project owner (OpenAI imagegen via Codex; prompt in docs/art-review/g3e/cards/moon_shadow_spire/prompt.md)
+    license: project-owned
+    attribution: false
+    redistribute: true
+    evidence: docs/art-review/g3e/cards/sheet-moon.png
+    modified: true
+    nativeSize: 1024x768
+    finalSize: 48x36
+    notes: Card illustration of Tháp Bóng Đêm (moon_shadow_spire) (approved 2026-11-09 by Claude under the owner's delegation); box-reduced by docs/art-review/g3e/cards/make_assets.py; copy for picture windows under 96 px (src/ui/cards/cardImage.ts)
+  - id: card_art_moon_summoning_circle
+    path: public/assets/art/ai-v1/cards/moon_summoning_circle.png
+    category: ui
+    origin: custom
+    source: docs/art-review/g3e/cards/moon_summoning_circle/source.png
+    creator: Project owner (OpenAI imagegen via Codex; prompt in docs/art-review/g3e/cards/moon_summoning_circle/prompt.md)
+    license: project-owned
+    attribution: false
+    redistribute: true
+    evidence: docs/art-review/g3e/cards/sheet-moon.png
+    modified: true
+    nativeSize: 1024x768
+    finalSize: 96x72
+    notes: Card illustration of Vòng Triệu Hồi (moon_summoning_circle) (approved 2026-11-09 by Claude under the owner's delegation); box-reduced by docs/art-review/g3e/cards/make_assets.py; full size (src/ui/cards/cardImage.ts)
+  - id: card_art_moon_summoning_circle_48
+    path: public/assets/art/ai-v1/cards/moon_summoning_circle-48.png
+    category: ui
+    origin: custom
+    source: docs/art-review/g3e/cards/moon_summoning_circle/source.png
+    creator: Project owner (OpenAI imagegen via Codex; prompt in docs/art-review/g3e/cards/moon_summoning_circle/prompt.md)
+    license: project-owned
+    attribution: false
+    redistribute: true
+    evidence: docs/art-review/g3e/cards/sheet-moon.png
+    modified: true
+    nativeSize: 1024x768
+    finalSize: 48x36
+    notes: Card illustration of Vòng Triệu Hồi (moon_summoning_circle) (approved 2026-11-09 by Claude under the owner's delegation); box-reduced by docs/art-review/g3e/cards/make_assets.py; copy for picture windows under 96 px (src/ui/cards/cardImage.ts)
+  - id: card_art_moon_throne
+    path: public/assets/art/ai-v1/cards/moon_throne.png
+    category: ui
+    origin: custom
+    source: docs/art-review/g3e/cards/moon_throne/source.png
+    creator: Project owner (OpenAI imagegen via Codex; prompt in docs/art-review/g3e/cards/moon_throne/prompt.md)
+    license: project-owned
+    attribution: false
+    redistribute: true
+    evidence: docs/art-review/g3e/cards/sheet-moon.png
+    modified: true
+    nativeSize: 1448x1086
+    finalSize: 96x72
+    notes: Card illustration of Ngai Nguyệt Thực (moon_throne) (approved 2026-11-09 by Claude under the owner's delegation); box-reduced by docs/art-review/g3e/cards/make_assets.py; full size (src/ui/cards/cardImage.ts)
+  - id: card_art_moon_throne_48
+    path: public/assets/art/ai-v1/cards/moon_throne-48.png
+    category: ui
+    origin: custom
+    source: docs/art-review/g3e/cards/moon_throne/source.png
+    creator: Project owner (OpenAI imagegen via Codex; prompt in docs/art-review/g3e/cards/moon_throne/prompt.md)
+    license: project-owned
+    attribution: false
+    redistribute: true
+    evidence: docs/art-review/g3e/cards/sheet-moon.png
+    modified: true
+    nativeSize: 1448x1086
+    finalSize: 48x36
+    notes: Card illustration of Ngai Nguyệt Thực (moon_throne) (approved 2026-11-09 by Claude under the owner's delegation); box-reduced by docs/art-review/g3e/cards/make_assets.py; copy for picture windows under 96 px (src/ui/cards/cardImage.ts)
+  - id: card_art_moon_vampires
+    path: public/assets/art/ai-v1/cards/moon_vampires.png
+    category: ui
+    origin: custom
+    source: docs/art-review/g3e/cards/moon_vampires/source.png
+    creator: Project owner (OpenAI imagegen via Codex; prompt in docs/art-review/g3e/cards/moon_vampires/prompt.md)
+    license: project-owned
+    attribution: false
+    redistribute: true
+    evidence: docs/art-review/g3e/cards/sheet-moon.png
+    modified: true
+    nativeSize: 1024x768
+    finalSize: 96x72
+    notes: Card illustration of Lâu Đài Ma Cà Rồng (moon_vampires) (approved 2026-11-09 by Claude under the owner's delegation); box-reduced by docs/art-review/g3e/cards/make_assets.py; full size (src/ui/cards/cardImage.ts)
+  - id: card_art_moon_vampires_48
+    path: public/assets/art/ai-v1/cards/moon_vampires-48.png
+    category: ui
+    origin: custom
+    source: docs/art-review/g3e/cards/moon_vampires/source.png
+    creator: Project owner (OpenAI imagegen via Codex; prompt in docs/art-review/g3e/cards/moon_vampires/prompt.md)
+    license: project-owned
+    attribution: false
+    redistribute: true
+    evidence: docs/art-review/g3e/cards/sheet-moon.png
+    modified: true
+    nativeSize: 1024x768
+    finalSize: 48x36
+    notes: Card illustration of Lâu Đài Ma Cà Rồng (moon_vampires) (approved 2026-11-09 by Claude under the owner's delegation); box-reduced by docs/art-review/g3e/cards/make_assets.py; copy for picture windows under 96 px (src/ui/cards/cardImage.ts)
+  - id: card_art_neutral_archer_tower
+    path: public/assets/art/ai-v1/cards/neutral_archer_tower.png
+    category: ui
+    origin: custom
+    source: docs/art-review/g3e/cards/neutral_archer_tower/source.png
+    creator: Project owner (OpenAI imagegen via Codex; prompt in docs/art-review/g3e/cards/neutral_archer_tower/prompt.md)
+    license: project-owned
+    attribution: false
+    redistribute: true
+    evidence: docs/art-review/g3e/cards/sheet-neutral.png
+    modified: true
+    nativeSize: 1024x768
+    finalSize: 96x72
+    notes: Card illustration of Tháp Cung (neutral_archer_tower) (approved 2026-11-09 by Claude under the owner's delegation); box-reduced by docs/art-review/g3e/cards/make_assets.py; full size (src/ui/cards/cardImage.ts)
+  - id: card_art_neutral_archer_tower_48
+    path: public/assets/art/ai-v1/cards/neutral_archer_tower-48.png
+    category: ui
+    origin: custom
+    source: docs/art-review/g3e/cards/neutral_archer_tower/source.png
+    creator: Project owner (OpenAI imagegen via Codex; prompt in docs/art-review/g3e/cards/neutral_archer_tower/prompt.md)
+    license: project-owned
+    attribution: false
+    redistribute: true
+    evidence: docs/art-review/g3e/cards/sheet-neutral.png
+    modified: true
+    nativeSize: 1024x768
+    finalSize: 48x36
+    notes: Card illustration of Tháp Cung (neutral_archer_tower) (approved 2026-11-09 by Claude under the owner's delegation); box-reduced by docs/art-review/g3e/cards/make_assets.py; copy for picture windows under 96 px (src/ui/cards/cardImage.ts)
+  - id: card_art_neutral_barracks
+    path: public/assets/art/ai-v1/cards/neutral_barracks.png
+    category: ui
+    origin: custom
+    source: docs/art-review/g3e/cards/neutral_barracks/source.png
+    creator: Project owner (OpenAI imagegen via Codex; prompt in docs/art-review/g3e/cards/neutral_barracks/prompt.md)
+    license: project-owned
+    attribution: false
+    redistribute: true
+    evidence: docs/art-review/g3e/cards/sheet-neutral.png
+    modified: true
+    nativeSize: 1024x768
+    finalSize: 96x72
+    notes: Card illustration of Trại Lính (neutral_barracks) (approved 2026-11-09 by Claude under the owner's delegation); box-reduced by docs/art-review/g3e/cards/make_assets.py; full size (src/ui/cards/cardImage.ts)
+  - id: card_art_neutral_barracks_48
+    path: public/assets/art/ai-v1/cards/neutral_barracks-48.png
+    category: ui
+    origin: custom
+    source: docs/art-review/g3e/cards/neutral_barracks/source.png
+    creator: Project owner (OpenAI imagegen via Codex; prompt in docs/art-review/g3e/cards/neutral_barracks/prompt.md)
+    license: project-owned
+    attribution: false
+    redistribute: true
+    evidence: docs/art-review/g3e/cards/sheet-neutral.png
+    modified: true
+    nativeSize: 1024x768
+    finalSize: 48x36
+    notes: Card illustration of Trại Lính (neutral_barracks) (approved 2026-11-09 by Claude under the owner's delegation); box-reduced by docs/art-review/g3e/cards/make_assets.py; copy for picture windows under 96 px (src/ui/cards/cardImage.ts)
+  - id: card_art_neutral_clear_land
+    path: public/assets/art/ai-v1/cards/neutral_clear_land.png
+    category: ui
+    origin: custom
+    source: docs/art-review/g3e/cards/neutral_clear_land/source.png
+    creator: Project owner (OpenAI imagegen via Codex; prompt in docs/art-review/g3e/cards/neutral_clear_land/prompt.md)
+    license: project-owned
+    attribution: false
+    redistribute: true
+    evidence: docs/art-review/g3e/cards/sheet-neutral.png
+    modified: true
+    nativeSize: 1448x1086
+    finalSize: 96x72
+    notes: Card illustration of Khai Hoang (neutral_clear_land) (approved 2026-11-09 by Claude under the owner's delegation); box-reduced by docs/art-review/g3e/cards/make_assets.py; full size (src/ui/cards/cardImage.ts)
+  - id: card_art_neutral_clear_land_48
+    path: public/assets/art/ai-v1/cards/neutral_clear_land-48.png
+    category: ui
+    origin: custom
+    source: docs/art-review/g3e/cards/neutral_clear_land/source.png
+    creator: Project owner (OpenAI imagegen via Codex; prompt in docs/art-review/g3e/cards/neutral_clear_land/prompt.md)
+    license: project-owned
+    attribution: false
+    redistribute: true
+    evidence: docs/art-review/g3e/cards/sheet-neutral.png
+    modified: true
+    nativeSize: 1448x1086
+    finalSize: 48x36
+    notes: Card illustration of Khai Hoang (neutral_clear_land) (approved 2026-11-09 by Claude under the owner's delegation); box-reduced by docs/art-review/g3e/cards/make_assets.py; copy for picture windows under 96 px (src/ui/cards/cardImage.ts)
+  - id: card_art_neutral_demolish
+    path: public/assets/art/ai-v1/cards/neutral_demolish.png
+    category: ui
+    origin: custom
+    source: docs/art-review/g3e/cards/neutral_demolish/source.png
+    creator: Project owner (OpenAI imagegen via Codex; prompt in docs/art-review/g3e/cards/neutral_demolish/prompt.md)
+    license: project-owned
+    attribution: false
+    redistribute: true
+    evidence: docs/art-review/g3e/cards/sheet-neutral.png
+    modified: true
+    nativeSize: 1448x1086
+    finalSize: 96x72
+    notes: Card illustration of Dỡ Bỏ (neutral_demolish) (approved 2026-11-09 by Claude under the owner's delegation); box-reduced by docs/art-review/g3e/cards/make_assets.py; full size (src/ui/cards/cardImage.ts)
+  - id: card_art_neutral_demolish_48
+    path: public/assets/art/ai-v1/cards/neutral_demolish-48.png
+    category: ui
+    origin: custom
+    source: docs/art-review/g3e/cards/neutral_demolish/source.png
+    creator: Project owner (OpenAI imagegen via Codex; prompt in docs/art-review/g3e/cards/neutral_demolish/prompt.md)
+    license: project-owned
+    attribution: false
+    redistribute: true
+    evidence: docs/art-review/g3e/cards/sheet-neutral.png
+    modified: true
+    nativeSize: 1448x1086
+    finalSize: 48x36
+    notes: Card illustration of Dỡ Bỏ (neutral_demolish) (approved 2026-11-09 by Claude under the owner's delegation); box-reduced by docs/art-review/g3e/cards/make_assets.py; copy for picture windows under 96 px (src/ui/cards/cardImage.ts)
+  - id: card_art_neutral_duplicate
+    path: public/assets/art/ai-v1/cards/neutral_duplicate.png
+    category: ui
+    origin: custom
+    source: docs/art-review/g3e/cards/neutral_duplicate/source.png
+    creator: Project owner (OpenAI imagegen via Codex; prompt in docs/art-review/g3e/cards/neutral_duplicate/prompt.md)
+    license: project-owned
+    attribution: false
+    redistribute: true
+    evidence: docs/art-review/g3e/cards/sheet-neutral.png
+    modified: true
+    nativeSize: 1448x1086
+    finalSize: 96x72
+    notes: Card illustration of Nhân Bản (neutral_duplicate) (approved 2026-11-09 by Claude under the owner's delegation); box-reduced by docs/art-review/g3e/cards/make_assets.py; full size (src/ui/cards/cardImage.ts)
+  - id: card_art_neutral_duplicate_48
+    path: public/assets/art/ai-v1/cards/neutral_duplicate-48.png
+    category: ui
+    origin: custom
+    source: docs/art-review/g3e/cards/neutral_duplicate/source.png
+    creator: Project owner (OpenAI imagegen via Codex; prompt in docs/art-review/g3e/cards/neutral_duplicate/prompt.md)
+    license: project-owned
+    attribution: false
+    redistribute: true
+    evidence: docs/art-review/g3e/cards/sheet-neutral.png
+    modified: true
+    nativeSize: 1448x1086
+    finalSize: 48x36
+    notes: Card illustration of Nhân Bản (neutral_duplicate) (approved 2026-11-09 by Claude under the owner's delegation); box-reduced by docs/art-review/g3e/cards/make_assets.py; copy for picture windows under 96 px (src/ui/cards/cardImage.ts)
+  - id: card_art_neutral_fortify
+    path: public/assets/art/ai-v1/cards/neutral_fortify.png
+    category: ui
+    origin: custom
+    source: docs/art-review/g3e/cards/neutral_fortify/source.png
+    creator: Project owner (OpenAI imagegen via Codex; prompt in docs/art-review/g3e/cards/neutral_fortify/prompt.md)
+    license: project-owned
+    attribution: false
+    redistribute: true
+    evidence: docs/art-review/g3e/cards/sheet-neutral.png
+    modified: true
+    nativeSize: 1448x1086
+    finalSize: 96x72
+    notes: Card illustration of Bùa Vững Chãi (neutral_fortify) (approved 2026-11-09 by Claude under the owner's delegation); box-reduced by docs/art-review/g3e/cards/make_assets.py; full size (src/ui/cards/cardImage.ts)
+  - id: card_art_neutral_fortify_48
+    path: public/assets/art/ai-v1/cards/neutral_fortify-48.png
+    category: ui
+    origin: custom
+    source: docs/art-review/g3e/cards/neutral_fortify/source.png
+    creator: Project owner (OpenAI imagegen via Codex; prompt in docs/art-review/g3e/cards/neutral_fortify/prompt.md)
+    license: project-owned
+    attribution: false
+    redistribute: true
+    evidence: docs/art-review/g3e/cards/sheet-neutral.png
+    modified: true
+    nativeSize: 1448x1086
+    finalSize: 48x36
+    notes: Card illustration of Bùa Vững Chãi (neutral_fortify) (approved 2026-11-09 by Claude under the owner's delegation); box-reduced by docs/art-review/g3e/cards/make_assets.py; copy for picture windows under 96 px (src/ui/cards/cardImage.ts)
+  - id: card_art_neutral_mercenary_camp
+    path: public/assets/art/ai-v1/cards/neutral_mercenary_camp.png
+    category: ui
+    origin: custom
+    source: docs/art-review/g3e/cards/neutral_mercenary_camp/source.png
+    creator: Project owner (OpenAI imagegen via Codex; prompt in docs/art-review/g3e/cards/neutral_mercenary_camp/prompt.md)
+    license: project-owned
+    attribution: false
+    redistribute: true
+    evidence: docs/art-review/g3e/cards/sheet-neutral.png
+    modified: true
+    nativeSize: 1024x768
+    finalSize: 96x72
+    notes: Card illustration of Trại Đánh Thuê (neutral_mercenary_camp) (approved 2026-11-09 by Claude under the owner's delegation); box-reduced by docs/art-review/g3e/cards/make_assets.py; full size (src/ui/cards/cardImage.ts)
+  - id: card_art_neutral_mercenary_camp_48
+    path: public/assets/art/ai-v1/cards/neutral_mercenary_camp-48.png
+    category: ui
+    origin: custom
+    source: docs/art-review/g3e/cards/neutral_mercenary_camp/source.png
+    creator: Project owner (OpenAI imagegen via Codex; prompt in docs/art-review/g3e/cards/neutral_mercenary_camp/prompt.md)
+    license: project-owned
+    attribution: false
+    redistribute: true
+    evidence: docs/art-review/g3e/cards/sheet-neutral.png
+    modified: true
+    nativeSize: 1024x768
+    finalSize: 48x36
+    notes: Card illustration of Trại Đánh Thuê (neutral_mercenary_camp) (approved 2026-11-09 by Claude under the owner's delegation); box-reduced by docs/art-review/g3e/cards/make_assets.py; copy for picture windows under 96 px (src/ui/cards/cardImage.ts)
+  - id: card_art_neutral_move
+    path: public/assets/art/ai-v1/cards/neutral_move.png
+    category: ui
+    origin: custom
+    source: docs/art-review/g3e/cards/neutral_move/source.png
+    creator: Project owner (OpenAI imagegen via Codex; prompt in docs/art-review/g3e/cards/neutral_move/prompt.md)
+    license: project-owned
+    attribution: false
+    redistribute: true
+    evidence: docs/art-review/g3e/cards/sheet-neutral.png
+    modified: true
+    nativeSize: 1448x1086
+    finalSize: 96x72
+    notes: Card illustration of Dời Nhà (neutral_move) (approved 2026-11-09 by Claude under the owner's delegation); box-reduced by docs/art-review/g3e/cards/make_assets.py; full size (src/ui/cards/cardImage.ts)
+  - id: card_art_neutral_move_48
+    path: public/assets/art/ai-v1/cards/neutral_move-48.png
+    category: ui
+    origin: custom
+    source: docs/art-review/g3e/cards/neutral_move/source.png
+    creator: Project owner (OpenAI imagegen via Codex; prompt in docs/art-review/g3e/cards/neutral_move/prompt.md)
+    license: project-owned
+    attribution: false
+    redistribute: true
+    evidence: docs/art-review/g3e/cards/sheet-neutral.png
+    modified: true
+    nativeSize: 1448x1086
+    finalSize: 48x36
+    notes: Card illustration of Dời Nhà (neutral_move) (approved 2026-11-09 by Claude under the owner's delegation); box-reduced by docs/art-review/g3e/cards/make_assets.py; copy for picture windows under 96 px (src/ui/cards/cardImage.ts)
+  - id: card_art_neutral_promote
+    path: public/assets/art/ai-v1/cards/neutral_promote.png
+    category: ui
+    origin: custom
+    source: docs/art-review/g3e/cards/neutral_promote/source.png
+    creator: Project owner (OpenAI imagegen via Codex; prompt in docs/art-review/g3e/cards/neutral_promote/prompt.md)
+    license: project-owned
+    attribution: false
+    redistribute: true
+    evidence: docs/art-review/g3e/cards/sheet-neutral.png
+    modified: true
+    nativeSize: 1448x1086
+    finalSize: 96x72
+    notes: Card illustration of Thăng Cấp (neutral_promote) (approved 2026-11-09 by Claude under the owner's delegation); box-reduced by docs/art-review/g3e/cards/make_assets.py; full size (src/ui/cards/cardImage.ts)
+  - id: card_art_neutral_promote_48
+    path: public/assets/art/ai-v1/cards/neutral_promote-48.png
+    category: ui
+    origin: custom
+    source: docs/art-review/g3e/cards/neutral_promote/source.png
+    creator: Project owner (OpenAI imagegen via Codex; prompt in docs/art-review/g3e/cards/neutral_promote/prompt.md)
+    license: project-owned
+    attribution: false
+    redistribute: true
+    evidence: docs/art-review/g3e/cards/sheet-neutral.png
+    modified: true
+    nativeSize: 1448x1086
+    finalSize: 48x36
+    notes: Card illustration of Thăng Cấp (neutral_promote) (approved 2026-11-09 by Claude under the owner's delegation); box-reduced by docs/art-review/g3e/cards/make_assets.py; copy for picture windows under 96 px (src/ui/cards/cardImage.ts)
+  - id: card_art_neutral_royal_seal
+    path: public/assets/art/ai-v1/cards/neutral_royal_seal.png
+    category: ui
+    origin: custom
+    source: docs/art-review/g3e/cards/neutral_royal_seal/source.png
+    creator: Project owner (OpenAI imagegen via Codex; prompt in docs/art-review/g3e/cards/neutral_royal_seal/prompt.md)
+    license: project-owned
+    attribution: false
+    redistribute: true
+    evidence: docs/art-review/g3e/cards/sheet-neutral.png
+    modified: true
+    nativeSize: 1448x1086
+    finalSize: 96x72
+    notes: Card illustration of Ấn Triện (neutral_royal_seal) (approved 2026-11-09 by Claude under the owner's delegation); box-reduced by docs/art-review/g3e/cards/make_assets.py; full size (src/ui/cards/cardImage.ts)
+  - id: card_art_neutral_royal_seal_48
+    path: public/assets/art/ai-v1/cards/neutral_royal_seal-48.png
+    category: ui
+    origin: custom
+    source: docs/art-review/g3e/cards/neutral_royal_seal/source.png
+    creator: Project owner (OpenAI imagegen via Codex; prompt in docs/art-review/g3e/cards/neutral_royal_seal/prompt.md)
+    license: project-owned
+    attribution: false
+    redistribute: true
+    evidence: docs/art-review/g3e/cards/sheet-neutral.png
+    modified: true
+    nativeSize: 1448x1086
+    finalSize: 48x36
+    notes: Card illustration of Ấn Triện (neutral_royal_seal) (approved 2026-11-09 by Claude under the owner's delegation); box-reduced by docs/art-review/g3e/cards/make_assets.py; copy for picture windows under 96 px (src/ui/cards/cardImage.ts)
+  - id: card_art_neutral_sharpen
+    path: public/assets/art/ai-v1/cards/neutral_sharpen.png
+    category: ui
+    origin: custom
+    source: docs/art-review/g3e/cards/neutral_sharpen/source.png
+    creator: Project owner (OpenAI imagegen via Codex; prompt in docs/art-review/g3e/cards/neutral_sharpen/prompt.md)
+    license: project-owned
+    attribution: false
+    redistribute: true
+    evidence: docs/art-review/g3e/cards/sheet-neutral.png
+    modified: true
+    nativeSize: 1448x1086
+    finalSize: 96x72
+    notes: Card illustration of Bùa Sắc Bén (neutral_sharpen) (approved 2026-11-09 by Claude under the owner's delegation); box-reduced by docs/art-review/g3e/cards/make_assets.py; full size (src/ui/cards/cardImage.ts)
+  - id: card_art_neutral_sharpen_48
+    path: public/assets/art/ai-v1/cards/neutral_sharpen-48.png
+    category: ui
+    origin: custom
+    source: docs/art-review/g3e/cards/neutral_sharpen/source.png
+    creator: Project owner (OpenAI imagegen via Codex; prompt in docs/art-review/g3e/cards/neutral_sharpen/prompt.md)
+    license: project-owned
+    attribution: false
+    redistribute: true
+    evidence: docs/art-review/g3e/cards/sheet-neutral.png
+    modified: true
+    nativeSize: 1448x1086
+    finalSize: 48x36
+    notes: Card illustration of Bùa Sắc Bén (neutral_sharpen) (approved 2026-11-09 by Claude under the owner's delegation); box-reduced by docs/art-review/g3e/cards/make_assets.py; copy for picture windows under 96 px (src/ui/cards/cardImage.ts)
+  - id: card_art_neutral_well
+    path: public/assets/art/ai-v1/cards/neutral_well.png
+    category: ui
+    origin: custom
+    source: docs/art-review/g3e/cards/neutral_well/source.png
+    creator: Project owner (OpenAI imagegen via Codex; prompt in docs/art-review/g3e/cards/neutral_well/prompt.md)
+    license: project-owned
+    attribution: false
+    redistribute: true
+    evidence: docs/art-review/g3e/cards/sheet-neutral.png
+    modified: true
+    nativeSize: 1024x768
+    finalSize: 96x72
+    notes: Card illustration of Giếng Làng (neutral_well) (approved 2026-11-09 by Claude under the owner's delegation); box-reduced by docs/art-review/g3e/cards/make_assets.py; full size (src/ui/cards/cardImage.ts)
+  - id: card_art_neutral_well_48
+    path: public/assets/art/ai-v1/cards/neutral_well-48.png
+    category: ui
+    origin: custom
+    source: docs/art-review/g3e/cards/neutral_well/source.png
+    creator: Project owner (OpenAI imagegen via Codex; prompt in docs/art-review/g3e/cards/neutral_well/prompt.md)
+    license: project-owned
+    attribution: false
+    redistribute: true
+    evidence: docs/art-review/g3e/cards/sheet-neutral.png
+    modified: true
+    nativeSize: 1024x768
+    finalSize: 48x36
+    notes: Card illustration of Giếng Làng (neutral_well) (approved 2026-11-09 by Claude under the owner's delegation); box-reduced by docs/art-review/g3e/cards/make_assets.py; copy for picture windows under 96 px (src/ui/cards/cardImage.ts)
+  - id: card_art_nomad_bazaar
+    path: public/assets/art/ai-v1/cards/nomad_bazaar.png
+    category: ui
+    origin: custom
+    source: docs/art-review/g3e/cards/nomad_bazaar/source.png
+    creator: Project owner (OpenAI imagegen via Codex; prompt in docs/art-review/g3e/cards/nomad_bazaar/prompt.md)
+    license: project-owned
+    attribution: false
+    redistribute: true
+    evidence: docs/art-review/g3e/cards/sheet-nomad.png
+    modified: true
+    nativeSize: 1024x768
+    finalSize: 96x72
+    notes: Card illustration of Chợ Phiên (nomad_bazaar) (approved 2026-11-09 by Claude under the owner's delegation); box-reduced by docs/art-review/g3e/cards/make_assets.py; full size (src/ui/cards/cardImage.ts)
+  - id: card_art_nomad_bazaar_48
+    path: public/assets/art/ai-v1/cards/nomad_bazaar-48.png
+    category: ui
+    origin: custom
+    source: docs/art-review/g3e/cards/nomad_bazaar/source.png
+    creator: Project owner (OpenAI imagegen via Codex; prompt in docs/art-review/g3e/cards/nomad_bazaar/prompt.md)
+    license: project-owned
+    attribution: false
+    redistribute: true
+    evidence: docs/art-review/g3e/cards/sheet-nomad.png
+    modified: true
+    nativeSize: 1024x768
+    finalSize: 48x36
+    notes: Card illustration of Chợ Phiên (nomad_bazaar) (approved 2026-11-09 by Claude under the owner's delegation); box-reduced by docs/art-review/g3e/cards/make_assets.py; copy for picture windows under 96 px (src/ui/cards/cardImage.ts)
+  - id: card_art_nomad_caravan
+    path: public/assets/art/ai-v1/cards/nomad_caravan.png
+    category: ui
+    origin: custom
+    source: docs/art-review/g3e/cards/nomad_caravan/source.png
+    creator: Project owner (OpenAI imagegen via Codex; prompt in docs/art-review/g3e/cards/nomad_caravan/prompt.md)
+    license: project-owned
+    attribution: false
+    redistribute: true
+    evidence: docs/art-review/g3e/cards/sheet-nomad.png
+    modified: true
+    nativeSize: 1024x768
+    finalSize: 96x72
+    notes: Card illustration of Đoàn Lữ Hành (nomad_caravan) (approved 2026-11-09 by Claude under the owner's delegation); box-reduced by docs/art-review/g3e/cards/make_assets.py; full size (src/ui/cards/cardImage.ts)
+  - id: card_art_nomad_caravan_48
+    path: public/assets/art/ai-v1/cards/nomad_caravan-48.png
+    category: ui
+    origin: custom
+    source: docs/art-review/g3e/cards/nomad_caravan/source.png
+    creator: Project owner (OpenAI imagegen via Codex; prompt in docs/art-review/g3e/cards/nomad_caravan/prompt.md)
+    license: project-owned
+    attribution: false
+    redistribute: true
+    evidence: docs/art-review/g3e/cards/sheet-nomad.png
+    modified: true
+    nativeSize: 1024x768
+    finalSize: 48x36
+    notes: Card illustration of Đoàn Lữ Hành (nomad_caravan) (approved 2026-11-09 by Claude under the owner's delegation); box-reduced by docs/art-review/g3e/cards/make_assets.py; copy for picture windows under 96 px (src/ui/cards/cardImage.ts)
+  - id: card_art_nomad_horse_archers
+    path: public/assets/art/ai-v1/cards/nomad_horse_archers.png
+    category: ui
+    origin: custom
+    source: docs/art-review/g3e/cards/nomad_horse_archers/source.png
+    creator: Project owner (OpenAI imagegen via Codex; prompt in docs/art-review/g3e/cards/nomad_horse_archers/prompt.md)
+    license: project-owned
+    attribution: false
+    redistribute: true
+    evidence: docs/art-review/g3e/cards/sheet-nomad.png
+    modified: true
+    nativeSize: 1024x768
+    finalSize: 96x72
+    notes: Card illustration of Trại Cung Kỵ (nomad_horse_archers) (approved 2026-11-09 by Claude under the owner's delegation); box-reduced by docs/art-review/g3e/cards/make_assets.py; full size (src/ui/cards/cardImage.ts)
+  - id: card_art_nomad_horse_archers_48
+    path: public/assets/art/ai-v1/cards/nomad_horse_archers-48.png
+    category: ui
+    origin: custom
+    source: docs/art-review/g3e/cards/nomad_horse_archers/source.png
+    creator: Project owner (OpenAI imagegen via Codex; prompt in docs/art-review/g3e/cards/nomad_horse_archers/prompt.md)
+    license: project-owned
+    attribution: false
+    redistribute: true
+    evidence: docs/art-review/g3e/cards/sheet-nomad.png
+    modified: true
+    nativeSize: 1024x768
+    finalSize: 48x36
+    notes: Card illustration of Trại Cung Kỵ (nomad_horse_archers) (approved 2026-11-09 by Claude under the owner's delegation); box-reduced by docs/art-review/g3e/cards/make_assets.py; copy for picture windows under 96 px (src/ui/cards/cardImage.ts)
+  - id: card_art_nomad_khan_guard
+    path: public/assets/art/ai-v1/cards/nomad_khan_guard.png
+    category: ui
+    origin: custom
+    source: docs/art-review/g3e/cards/nomad_khan_guard/source.png
+    creator: Project owner (OpenAI imagegen via Codex; prompt in docs/art-review/g3e/cards/nomad_khan_guard/prompt.md)
+    license: project-owned
+    attribution: false
+    redistribute: true
+    evidence: docs/art-review/g3e/cards/sheet-nomad.png
+    modified: true
+    nativeSize: 1024x768
+    finalSize: 96x72
+    notes: Card illustration of Ngự Lâm Thiết Kỵ (nomad_khan_guard) (approved 2026-11-09 by Claude under the owner's delegation); box-reduced by docs/art-review/g3e/cards/make_assets.py; full size (src/ui/cards/cardImage.ts)
+  - id: card_art_nomad_khan_guard_48
+    path: public/assets/art/ai-v1/cards/nomad_khan_guard-48.png
+    category: ui
+    origin: custom
+    source: docs/art-review/g3e/cards/nomad_khan_guard/source.png
+    creator: Project owner (OpenAI imagegen via Codex; prompt in docs/art-review/g3e/cards/nomad_khan_guard/prompt.md)
+    license: project-owned
+    attribution: false
+    redistribute: true
+    evidence: docs/art-review/g3e/cards/sheet-nomad.png
+    modified: true
+    nativeSize: 1024x768
+    finalSize: 48x36
+    notes: Card illustration of Ngự Lâm Thiết Kỵ (nomad_khan_guard) (approved 2026-11-09 by Claude under the owner's delegation); box-reduced by docs/art-review/g3e/cards/make_assets.py; copy for picture windows under 96 px (src/ui/cards/cardImage.ts)
+  - id: card_art_nomad_relocate
+    path: public/assets/art/ai-v1/cards/nomad_relocate.png
+    category: ui
+    origin: custom
+    source: docs/art-review/g3e/cards/nomad_relocate/source.png
+    creator: Project owner (OpenAI imagegen via Codex; prompt in docs/art-review/g3e/cards/nomad_relocate/prompt.md)
+    license: project-owned
+    attribution: false
+    redistribute: true
+    evidence: docs/art-review/g3e/cards/sheet-nomad.png
+    modified: true
+    nativeSize: 1448x1086
+    finalSize: 96x72
+    notes: Card illustration of Nhổ Trại (nomad_relocate) (approved 2026-11-09 by Claude under the owner's delegation); box-reduced by docs/art-review/g3e/cards/make_assets.py; full size (src/ui/cards/cardImage.ts)
+  - id: card_art_nomad_relocate_48
+    path: public/assets/art/ai-v1/cards/nomad_relocate-48.png
+    category: ui
+    origin: custom
+    source: docs/art-review/g3e/cards/nomad_relocate/source.png
+    creator: Project owner (OpenAI imagegen via Codex; prompt in docs/art-review/g3e/cards/nomad_relocate/prompt.md)
+    license: project-owned
+    attribution: false
+    redistribute: true
+    evidence: docs/art-review/g3e/cards/sheet-nomad.png
+    modified: true
+    nativeSize: 1448x1086
+    finalSize: 48x36
+    notes: Card illustration of Nhổ Trại (nomad_relocate) (approved 2026-11-09 by Claude under the owner's delegation); box-reduced by docs/art-review/g3e/cards/make_assets.py; copy for picture windows under 96 px (src/ui/cards/cardImage.ts)
+  - id: card_art_nomad_riders
+    path: public/assets/art/ai-v1/cards/nomad_riders.png
+    category: ui
+    origin: custom
+    source: docs/art-review/g3e/cards/nomad_riders/source.png
+    creator: Project owner (OpenAI imagegen via Codex; prompt in docs/art-review/g3e/cards/nomad_riders/prompt.md)
+    license: project-owned
+    attribution: false
+    redistribute: true
+    evidence: docs/art-review/g3e/cards/sheet-nomad.png
+    modified: true
+    nativeSize: 1024x768
+    finalSize: 96x72
+    notes: Card illustration of Trại Kỵ Binh (nomad_riders) (approved 2026-11-09 by Claude under the owner's delegation); box-reduced by docs/art-review/g3e/cards/make_assets.py; full size (src/ui/cards/cardImage.ts)
+  - id: card_art_nomad_riders_48
+    path: public/assets/art/ai-v1/cards/nomad_riders-48.png
+    category: ui
+    origin: custom
+    source: docs/art-review/g3e/cards/nomad_riders/source.png
+    creator: Project owner (OpenAI imagegen via Codex; prompt in docs/art-review/g3e/cards/nomad_riders/prompt.md)
+    license: project-owned
+    attribution: false
+    redistribute: true
+    evidence: docs/art-review/g3e/cards/sheet-nomad.png
+    modified: true
+    nativeSize: 1024x768
+    finalSize: 48x36
+    notes: Card illustration of Trại Kỵ Binh (nomad_riders) (approved 2026-11-09 by Claude under the owner's delegation); box-reduced by docs/art-review/g3e/cards/make_assets.py; copy for picture windows under 96 px (src/ui/cards/cardImage.ts)
+  - id: card_art_nomad_stables
+    path: public/assets/art/ai-v1/cards/nomad_stables.png
+    category: ui
+    origin: custom
+    source: docs/art-review/g3e/cards/nomad_stables/source.png
+    creator: Project owner (OpenAI imagegen via Codex; prompt in docs/art-review/g3e/cards/nomad_stables/prompt.md)
+    license: project-owned
+    attribution: false
+    redistribute: true
+    evidence: docs/art-review/g3e/cards/sheet-nomad.png
+    modified: true
+    nativeSize: 1024x768
+    finalSize: 96x72
+    notes: Card illustration of Chuồng Ngựa (nomad_stables) (approved 2026-11-09 by Claude under the owner's delegation); box-reduced by docs/art-review/g3e/cards/make_assets.py; full size (src/ui/cards/cardImage.ts)
+  - id: card_art_nomad_stables_48
+    path: public/assets/art/ai-v1/cards/nomad_stables-48.png
+    category: ui
+    origin: custom
+    source: docs/art-review/g3e/cards/nomad_stables/source.png
+    creator: Project owner (OpenAI imagegen via Codex; prompt in docs/art-review/g3e/cards/nomad_stables/prompt.md)
+    license: project-owned
+    attribution: false
+    redistribute: true
+    evidence: docs/art-review/g3e/cards/sheet-nomad.png
+    modified: true
+    nativeSize: 1024x768
+    finalSize: 48x36
+    notes: Card illustration of Chuồng Ngựa (nomad_stables) (approved 2026-11-09 by Claude under the owner's delegation); box-reduced by docs/art-review/g3e/cards/make_assets.py; copy for picture windows under 96 px (src/ui/cards/cardImage.ts)
+  - id: card_art_nomad_throne
+    path: public/assets/art/ai-v1/cards/nomad_throne.png
+    category: ui
+    origin: custom
+    source: docs/art-review/g3e/cards/nomad_throne/source.png
+    creator: Project owner (OpenAI imagegen via Codex; prompt in docs/art-review/g3e/cards/nomad_throne/prompt.md)
+    license: project-owned
+    attribution: false
+    redistribute: true
+    evidence: docs/art-review/g3e/cards/sheet-nomad.png
+    modified: true
+    nativeSize: 1448x1086
+    finalSize: 96x72
+    notes: Card illustration of Ngai Lều Vàng (nomad_throne) (approved 2026-11-09 by Claude under the owner's delegation); box-reduced by docs/art-review/g3e/cards/make_assets.py; full size (src/ui/cards/cardImage.ts)
+  - id: card_art_nomad_throne_48
+    path: public/assets/art/ai-v1/cards/nomad_throne-48.png
+    category: ui
+    origin: custom
+    source: docs/art-review/g3e/cards/nomad_throne/source.png
+    creator: Project owner (OpenAI imagegen via Codex; prompt in docs/art-review/g3e/cards/nomad_throne/prompt.md)
+    license: project-owned
+    attribution: false
+    redistribute: true
+    evidence: docs/art-review/g3e/cards/sheet-nomad.png
+    modified: true
+    nativeSize: 1448x1086
+    finalSize: 48x36
+    notes: Card illustration of Ngai Lều Vàng (nomad_throne) (approved 2026-11-09 by Claude under the owner's delegation); box-reduced by docs/art-review/g3e/cards/make_assets.py; copy for picture windows under 96 px (src/ui/cards/cardImage.ts)
+  - id: card_art_nomad_watchtower
+    path: public/assets/art/ai-v1/cards/nomad_watchtower.png
+    category: ui
+    origin: custom
+    source: docs/art-review/g3e/cards/nomad_watchtower/source.png
+    creator: Project owner (OpenAI imagegen via Codex; prompt in docs/art-review/g3e/cards/nomad_watchtower/prompt.md)
+    license: project-owned
+    attribution: false
+    redistribute: true
+    evidence: docs/art-review/g3e/cards/sheet-nomad.png
+    modified: true
+    nativeSize: 1024x768
+    finalSize: 96x72
+    notes: Card illustration of Chòi Canh Thảo Nguyên (nomad_watchtower) (approved 2026-11-09 by Claude under the owner's delegation); box-reduced by docs/art-review/g3e/cards/make_assets.py; full size (src/ui/cards/cardImage.ts)
+  - id: card_art_nomad_watchtower_48
+    path: public/assets/art/ai-v1/cards/nomad_watchtower-48.png
+    category: ui
+    origin: custom
+    source: docs/art-review/g3e/cards/nomad_watchtower/source.png
+    creator: Project owner (OpenAI imagegen via Codex; prompt in docs/art-review/g3e/cards/nomad_watchtower/prompt.md)
+    license: project-owned
+    attribution: false
+    redistribute: true
+    evidence: docs/art-review/g3e/cards/sheet-nomad.png
+    modified: true
+    nativeSize: 1024x768
+    finalSize: 48x36
+    notes: Card illustration of Chòi Canh Thảo Nguyên (nomad_watchtower) (approved 2026-11-09 by Claude under the owner's delegation); box-reduced by docs/art-review/g3e/cards/make_assets.py; copy for picture windows under 96 px (src/ui/cards/cardImage.ts)
+  - id: card_art_nomad_wind_rune
+    path: public/assets/art/ai-v1/cards/nomad_wind_rune.png
+    category: ui
+    origin: custom
+    source: docs/art-review/g3e/cards/nomad_wind_rune/source.png
+    creator: Project owner (OpenAI imagegen via Codex; prompt in docs/art-review/g3e/cards/nomad_wind_rune/prompt.md)
+    license: project-owned
+    attribution: false
+    redistribute: true
+    evidence: docs/art-review/g3e/cards/sheet-nomad.png
+    modified: true
+    nativeSize: 1448x1086
+    finalSize: 96x72
+    notes: Card illustration of Bùa Gió Thảo Nguyên (nomad_wind_rune) (approved 2026-11-09 by Claude under the owner's delegation); box-reduced by docs/art-review/g3e/cards/make_assets.py; full size (src/ui/cards/cardImage.ts)
+  - id: card_art_nomad_wind_rune_48
+    path: public/assets/art/ai-v1/cards/nomad_wind_rune-48.png
+    category: ui
+    origin: custom
+    source: docs/art-review/g3e/cards/nomad_wind_rune/source.png
+    creator: Project owner (OpenAI imagegen via Codex; prompt in docs/art-review/g3e/cards/nomad_wind_rune/prompt.md)
+    license: project-owned
+    attribution: false
+    redistribute: true
+    evidence: docs/art-review/g3e/cards/sheet-nomad.png
+    modified: true
+    nativeSize: 1448x1086
+    finalSize: 48x36
+    notes: Card illustration of Bùa Gió Thảo Nguyên (nomad_wind_rune) (approved 2026-11-09 by Claude under the owner's delegation); box-reduced by docs/art-review/g3e/cards/make_assets.py; copy for picture windows under 96 px (src/ui/cards/cardImage.ts)
+  - id: card_art_tide_throne
+    path: public/assets/art/ai-v1/cards/tide_throne.png
+    category: ui
+    origin: custom
+    source: docs/art-review/g3e/cards/tide_throne/source.png
+    creator: Project owner (OpenAI imagegen via Codex; prompt in docs/art-review/g3e/cards/tide_throne/prompt.md)
+    license: project-owned
+    attribution: false
+    redistribute: true
+    evidence: docs/art-review/g3e/cards/sheet-tide.png
+    modified: true
+    nativeSize: 1448x1086
+    finalSize: 96x72
+    notes: Card illustration of Ngai San Hô (tide_throne) (approved 2026-11-09 by Claude under the owner's delegation); box-reduced by docs/art-review/g3e/cards/make_assets.py; full size (src/ui/cards/cardImage.ts)
+  - id: card_art_tide_throne_48
+    path: public/assets/art/ai-v1/cards/tide_throne-48.png
+    category: ui
+    origin: custom
+    source: docs/art-review/g3e/cards/tide_throne/source.png
+    creator: Project owner (OpenAI imagegen via Codex; prompt in docs/art-review/g3e/cards/tide_throne/prompt.md)
+    license: project-owned
+    attribution: false
+    redistribute: true
+    evidence: docs/art-review/g3e/cards/sheet-tide.png
+    modified: true
+    nativeSize: 1448x1086
+    finalSize: 48x36
+    notes: Card illustration of Ngai San Hô (tide_throne) (approved 2026-11-09 by Claude under the owner's delegation); box-reduced by docs/art-review/g3e/cards/make_assets.py; copy for picture windows under 96 px (src/ui/cards/cardImage.ts)
