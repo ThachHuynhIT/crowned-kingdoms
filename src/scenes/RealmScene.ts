@@ -50,6 +50,14 @@ import {
 import { realmCamera, realmCameraMix, type RealmPhase } from '../ui/realm/realmLayout';
 import { SCENES } from './keys';
 import { getAudio } from './audioRegistry';
+import { battleCues } from './audioCues';
+
+/** Strikers whose shot plays the cannon sound instead of the arrow (G5 Task 6). */
+const CANNON_LABELS: ReadonlySet<string> = new Set([
+  'tide_cannon',
+  'stone_catapult',
+  'clock_steam_cannon',
+]);
 import { STORAGE_WARNING_KEY, WARNING_EVENT, getSession } from './sessionRegistry';
 import type { RunEndData } from './RunEndScene';
 import type { RunEndTally } from '../ui/info/infoLines';
@@ -167,15 +175,22 @@ export class RealmScene extends Phaser.Scene {
     this.pinch = null;
     this.panning = false;
     this.refused = false;
-    const preview = import.meta.env.DEV && data !== undefined && 'preview' in data ? data.preview : null;
+    const preview =
+      import.meta.env.DEV && data !== undefined && 'preview' in data ? data.preview : null;
     const resume = data !== undefined && 'resume' in data ? data.resume : null;
-    const fresh = data !== undefined && 'seed' in data ? data : { seed: 1, kingId: 'wheat' as KingId, perk: null, difficulty: 0 };
+    const fresh =
+      data !== undefined && 'seed' in data
+        ? data
+        : { seed: 1, kingId: 'wheat' as KingId, perk: null, difficulty: 0 };
     const session = getSession(this);
     let initial: RunState;
     if (preview || resume) {
       initial = (preview?.state ?? resume)!; // resuming never re-checks the meta profile
     } else {
-      const start = freshRunRules('mode' in fresh ? fresh.mode : undefined, session ? session.meta() : null);
+      const start = freshRunRules(
+        'mode' in fresh ? fresh.mode : undefined,
+        session ? session.meta() : null,
+      );
       if (!start.ok) {
         this.refused = true;
         this.scene.start(SCENES.kingSelect, { notice: start.reason });
@@ -280,6 +295,16 @@ export class RealmScene extends Phaser.Scene {
       const events = drainEvents(runner.world);
       this.units.sync(runner.world, alpha, events);
       this.fx.sync(runner.world, events, alpha);
+      const world = runner.world;
+      const audio = getAudio(this);
+      if (audio && events.length > 0) {
+        const cues = battleCues(events, {
+          throneId: world.throneId,
+          shoots: (id) => world.projSpeed[id]! > 0,
+          isCannon: (id) => CANNON_LABELS.has(world.label[id]!),
+        });
+        for (const id of cues) audio.play(id);
+      }
       if (
         events.some((e) => e.type === 'boulder' && e.phase === 'impact') &&
         getSession(this)?.meta().settings.screenShake !== false
@@ -308,7 +333,9 @@ export class RealmScene extends Phaser.Scene {
     const state = this.controller.state;
     if (target.kind === 'plot') {
       const specs = buildingRanges(state, target.plot, CONTENT);
-      return specs.length === 0 ? range.hide() : range.show(structureFoot(target.plot, this.controller.state.mode), specs);
+      return specs.length === 0
+        ? range.hide()
+        : range.show(structureFoot(target.plot, this.controller.state.mode), specs);
     }
     const world = this.controller.runner?.world;
     const specs = world ? entityRanges(world, target.id) : [];
@@ -360,7 +387,8 @@ export class RealmScene extends Phaser.Scene {
     for (const wave of state.army?.waves ?? []) for (const u of wave.units) edges.add(u.edge);
     this.board?.setEdgeArrows([...edges].sort());
     // A finished move (or a new year) may leave no free move: stop picking.
-    if (this.freeMove && (!showFreeMove(state) || freeMovesLeft(state, CONTENT) === 0)) this.setFreeMove(null);
+    if (this.freeMove && (!showFreeMove(state) || freeMovesLeft(state, CONTENT) === 0))
+      this.setFreeMove(null);
     if (state.played) this.setPending(null);
     else this.refreshHighlights();
     if (reframe) this.placeCamera();
@@ -456,10 +484,19 @@ export class RealmScene extends Phaser.Scene {
     }
     const cardId = p ? state.hand[p.handIndex] : undefined;
     if (!p || cardId === undefined) {
-      board.setHighlights(this.pendingBuy === null ? new Map() : new Map([[this.pendingBuy, 'selected']]));
+      board.setHighlights(
+        this.pendingBuy === null ? new Map() : new Map([[this.pendingBuy, 'selected']]),
+      );
       return;
     }
-    board.setHighlights(plotHighlights(state.plots, CONTENT.card(cardId), p.targets, maxEnchantStacks(state, CONTENT)));
+    board.setHighlights(
+      plotHighlights(
+        state.plots,
+        CONTENT.card(cardId),
+        p.targets,
+        maxEnchantStacks(state, CONTENT),
+      ),
+    );
   }
 
   /** A click on `plot` while aiming: add it as the next target (replacing the last if full). */
@@ -471,7 +508,17 @@ export class RealmScene extends Phaser.Scene {
     const need = targetCount(card);
     const chosen = p.targets.slice(0, need - 1);
     const state = this.controller.state;
-    if (checkTargetStep(state.plots, card, chosen, plot, CONTENT, maxEnchantStacks(state, CONTENT)) !== null) return;
+    if (
+      checkTargetStep(
+        state.plots,
+        card,
+        chosen,
+        plot,
+        CONTENT,
+        maxEnchantStacks(state, CONTENT),
+      ) !== null
+    )
+      return;
     this.setPending({ handIndex: p.handIndex, targets: [...chosen, plot] });
   }
 
@@ -512,7 +559,11 @@ export class RealmScene extends Phaser.Scene {
     if (next === null && this.freeMove === null) return;
     this.freeMove = next;
     this.refreshHighlights();
-    this.bus.emit('ui:pending-free-move', { active: next !== null, from: next?.from ?? null, to: next?.to ?? null });
+    this.bus.emit('ui:pending-free-move', {
+      active: next !== null,
+      from: next?.from ?? null,
+      to: next?.to ?? null,
+    });
   }
 
   private confirm(): void {
@@ -552,7 +603,9 @@ export class RealmScene extends Phaser.Scene {
     this.pointers.set(pointer.id, { x: pointer.x, y: pointer.y });
     if (this.pointers.size === 2 && !this.mapBlocked) {
       // A second finger on the map: a pinch, never a click or a pan.
-      this.pinch = this.view ? { view: this.view, mid: this.midpoint(), sq: this.spreadSq() } : null;
+      this.pinch = this.view
+        ? { view: this.view, mid: this.midpoint(), sq: this.spreadSq() }
+        : null;
       this.down = null;
       this.panning = false;
       return;
@@ -570,7 +623,18 @@ export class RealmScene extends Phaser.Scene {
     if (this.pinch !== null) {
       // Free zoom (spec 2026-11-08 §4): the zoom follows the finger spread, the map follows the midpoint.
       const p = this.pinch;
-      this.applyView(pinchView(p.view, p.mid, this.midpoint(), p.sq, this.spreadSq(), this.screen(), this.phase(), this.controller.state.mode));
+      this.applyView(
+        pinchView(
+          p.view,
+          p.mid,
+          this.midpoint(),
+          p.sq,
+          this.spreadSq(),
+          this.screen(),
+          this.phase(),
+          this.controller.state.mode,
+        ),
+      );
       return;
     }
     const down = this.down;
@@ -583,14 +647,31 @@ export class RealmScene extends Phaser.Scene {
       // player drags to reach the side plots (clampView keeps the view on the map).
       this.panning = true;
     }
-    this.applyView(panBy(this.view, { x: pointer.x - last.x, y: pointer.y - last.y }, this.screen(), this.phase(), this.controller.state.mode));
+    this.applyView(
+      panBy(
+        this.view,
+        { x: pointer.x - last.x, y: pointer.y - last.y },
+        this.screen(),
+        this.phase(),
+        this.controller.state.mode,
+      ),
+    );
   }
 
   /** Mouse wheel: a smooth zoom in (up) or out (down), keeping the world point under the cursor (spec 2026-11-08 §4). */
   private onWheel(pointer: Phaser.Input.Pointer, _over: unknown, _dx: number, dy: number): void {
     if (this.mapBlocked || !this.view || dy === 0) return;
     const next = wheelZoom(this.view.zoom, dy);
-    this.applyView(zoomAt(this.view, { x: pointer.x, y: pointer.y }, next, this.screen(), this.phase(), this.controller.state.mode));
+    this.applyView(
+      zoomAt(
+        this.view,
+        { x: pointer.x, y: pointer.y },
+        next,
+        this.screen(),
+        this.phase(),
+        this.controller.state.mode,
+      ),
+    );
   }
 
   /** Midpoint of the two pointers on the map. */
@@ -644,7 +725,13 @@ export class RealmScene extends Phaser.Scene {
     if (plot !== null && state.plots[plot]?.unlocked === false) {
       if (aiming !== null) {
         // A tap has no hover or long-press: say why the aimed card cannot go on this plot.
-        const reason = plotIllegalReason(state.plots, aiming, this.pending?.targets ?? [], plot, maxEnchantStacks(state, CONTENT));
+        const reason = plotIllegalReason(
+          state.plots,
+          aiming,
+          this.pending?.targets ?? [],
+          plot,
+          maxEnchantStacks(state, CONTENT),
+        );
         if (reason !== null) {
           this.bus.emit('run:illegal', { reason });
           return;
@@ -687,7 +774,12 @@ export class RealmScene extends Phaser.Scene {
     this.cameraEase = null;
     const phase = this.phase();
     const other: RealmPhase = phase === 'battle' ? 'planning' : 'battle';
-    if (this.view && !easing && !isOverview(this.view, screen, other, this.controller.state.mode) && !isOverview(this.view, screen, phase, this.controller.state.mode)) {
+    if (
+      this.view &&
+      !easing &&
+      !isOverview(this.view, screen, other, this.controller.state.mode) &&
+      !isOverview(this.view, screen, phase, this.controller.state.mode)
+    ) {
       this.applyView(keepView(this.view, screen, phase, this.controller.state.mode));
       return;
     }
@@ -702,7 +794,15 @@ export class RealmScene extends Phaser.Scene {
       duration: CAMERA_EASE_MS,
       ease: 'Sine.easeInOut',
       onUpdate: (tween) => {
-        this.applyView(realmCameraMix(screen, 'planning', 'battle', tween.getValue() ?? 1, this.controller.state.mode));
+        this.applyView(
+          realmCameraMix(
+            screen,
+            'planning',
+            'battle',
+            tween.getValue() ?? 1,
+            this.controller.state.mode,
+          ),
+        );
       },
       onComplete: () => {
         this.applyView(target);
@@ -728,7 +828,10 @@ export class RealmScene extends Phaser.Scene {
     this.viewScreen = this.screen();
     const shown = snapView(view, this.viewScreen);
     this.drawView();
-    this.bus.emit('realm:view', { zoom: shown.zoom, scroll: { x: shown.scroll.x, y: shown.scroll.y } });
+    this.bus.emit('realm:view', {
+      zoom: shown.zoom,
+      scroll: { x: shown.scroll.x, y: shown.scroll.y },
+    });
   }
 
   /** Shake is a temporary screen translation; the player's view and view events stay unchanged. */
@@ -758,7 +861,15 @@ export class RealmScene extends Phaser.Scene {
       this.placeCamera();
       return;
     }
-    this.applyView(resizeView(this.view, this.viewScreen, this.screen(), this.phase(), this.controller.state.mode));
+    this.applyView(
+      resizeView(
+        this.view,
+        this.viewScreen,
+        this.screen(),
+        this.phase(),
+        this.controller.state.mode,
+      ),
+    );
   }
 
   private teardown(): void {
