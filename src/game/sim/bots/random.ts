@@ -137,6 +137,11 @@ export const randomBot: Bot = (state, content, rng) => {
       const count = cardOffer(state)?.cardIds.length ?? 0;
       return { type: 'pickOffer', index: count === 0 ? 0 : rng.int(0, count - 1) };
     }
+    case 'blessing': {
+      // Phúc lành Vô tận: bắt buộc chọn một trong ba.
+      const count = state.offers?.kind === 'blessing' ? state.offers.blessingIds.length : 1;
+      return { type: 'pickBlessing', index: rng.int(0, count - 1) };
+    }
     case 'yearEnd':
       return { type: 'advance' };
     default:

@@ -1,5 +1,5 @@
 import { describe, expect, it, vi } from 'vitest';
-import { RULES_G1 } from '../../data/rules';
+import { RULES_ENDLESS, RULES_G1 } from '../../data/rules';
 import { META_SAVE_FAILED_TEXT } from '../../data/save';
 import type { BattleResult, BattleSetup } from '../battle/types';
 import { CONTENT } from '../cards/registry';
@@ -11,7 +11,7 @@ import type { SessionPersistence, SettleOutcome } from '../save/types';
 import { runState } from '../testing/fixtures';
 import { RunController } from './RunController';
 import type { RunState } from './state';
-import { startYear } from './yearFlow';
+import { newRun, startYear } from './yearFlow';
 
 /** Records every checkpoint; with `hold` each one stays pending until `release()`. */
 class FakePersistence implements SessionPersistence {
@@ -311,5 +311,33 @@ describe('RunController at the end of a run (G4 meta)', () => {
     const breakdown = crownPoints(controller.state);
     expect(breakdown.total).toBeGreaterThan(0);
     expect(ended).toEqual([{ won: false, crownPoints: breakdown.total, breakdown, unlocks: [], credited: null }]);
+  });
+});
+
+describe('RunController with persistence: Endless blessing (spec 2026-11-09 §5)', () => {
+  it('checkpoints the picked blessing before announcing the state; a second pick is refused and not saved', async () => {
+    const base = newRun(5, 'wheat', CONTENT, RULES_ENDLESS);
+    const offered: RunState = {
+      ...base,
+      year: 30,
+      phase: 'blessing',
+      endless: { ...base.endless!, lastBlessingYear: 30 },
+      offers: { kind: 'blessing', blessingIds: ['harvest', 'might', 'survey'], year: 30 },
+      pendingOffers: [],
+    };
+    const p = new FakePersistence(true);
+    const { bus, controller, order } = setup(offered, p);
+    cmd(bus, { type: 'pickBlessing', index: 2 });
+    await tick();
+    expect(p.writes).toHaveLength(1);
+    expect(p.writes[0]!.endless!.blessingStacks).toEqual({ survey: 1 });
+    expect(order).not.toContain('state:yearEnd');
+    p.release();
+    await controller.whenIdle();
+    expect(order).toContain('state:yearEnd');
+    cmd(bus, { type: 'pickBlessing', index: 2 });
+    await controller.whenIdle();
+    expect(p.writes).toHaveLength(1);
+    expect(controller.state.endless!.blessingStacks).toEqual({ survey: 1 });
   });
 });

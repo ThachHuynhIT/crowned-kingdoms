@@ -66,7 +66,11 @@ export class QuestNoticeView {
     this.container.setPosition(r.x, r.y);
     this.box.resize(r.w, r.h);
     const inset = frameBorder(this.scene, 'tooltip') + 6;
-    this.head.setText(n.headline).setPosition(inset, inset - 2).setWordWrapWidth(r.w - 2 * inset);
-    this.sub.setText(`Nhiệm vụ ${n.active}/${n.capacity}`).setPosition(inset, r.h - inset - this.sub.height + 2);
+    this.head.setText(n.headline).setWordWrapWidth(r.w - 2 * inset);
+    this.sub.setText(`Nhiệm vụ ${n.active}/${n.capacity}`);
+    // Two lines share the box height evenly: the old fixed insets (2× border on desktop) made them overlap in 48 px.
+    const gap = Math.max(1, Math.floor((r.h - this.head.height - this.sub.height) / 3));
+    this.head.setPosition(inset, gap);
+    this.sub.setPosition(inset, Math.round(2 * gap + this.head.height));
   }
 }

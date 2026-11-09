@@ -7,7 +7,7 @@ export type MenuItemId = 'continue' | 'newRun' | 'crowns' | 'settings' | 'help';
 export interface MenuItem {
   readonly id: MenuItemId;
   readonly label: string;
-  /** Hidden until the feature exists (Cài đặt: G5). */
+  /** Hidden until the feature exists. */
   readonly visible: boolean;
 }
 
@@ -16,7 +16,7 @@ export const MENU_ITEMS: readonly MenuItem[] = [
   { id: 'continue', label: 'Tiếp tục', visible: true },
   { id: 'newRun', label: 'Ván mới', visible: true },
   { id: 'crowns', label: 'Vương Miện', visible: true },
-  { id: 'settings', label: 'Cài đặt', visible: false },
+  { id: 'settings', label: 'Cài đặt', visible: true },
   { id: 'help', label: 'Trợ giúp', visible: true },
 ];
 

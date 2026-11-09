@@ -7,6 +7,8 @@ The style rules are NOT written here: the prompt is built from the "Prompt mẫu
 (single source of truth) and the approved reference image is always attached. Generation refuses to run when either is
 missing (see tools/test_art_prompts.py). Prompts land in <group>/<id>/prompt.md (provenance); the AI source goes next to
 it as source.png. Groups are one king each (plan: playable kings first)."""
+import importlib.util
+import json
 import re
 import sys
 from pathlib import Path
@@ -294,6 +296,15 @@ GROUND_TEXTURES = [
     ('terrain_sand', 'river-bank SAND',
      'Warm pale golden sand matching the approved plots\' earth tones: two or three close sand tones, faint wind '
      'ripples, a few tiny pebbles and one or two very small shells, evenly spread; no water, no grass, no border.'),
+    # G5 (2026-11-09, plan missing-art-assets Task 7 step 3): the last two procedural terrains
+    ('terrain_path', 'packed-earth ROAD',
+     'A warm brown packed-earth dirt road matching the bare earth of the approved plots: two or three close brown tones, '
+     'faint cart-wheel ruts running in no fixed direction, a few tiny pebbles and specks of lighter dust, evenly '
+     'spread; no grass edge, no stones bigger than one cluster, no border.'),
+    ('terrain_flowers', 'MEADOW GRASS with small wildflowers',
+     'Short meadow grass matching the grass border of the approved plots (warm mid green with lighter and darker green '
+     'tufts), dotted with many tiny wildflowers, each one a single 1-to-2-cluster dot: cream white, butter yellow, soft '
+     'pink and a little lilac, evenly scattered, no flower bigger than two clusters; no path, no water, no border.'),
 ]
 
 TEXTURE_FOOTER = """
@@ -454,6 +465,252 @@ def main_polish_forest_set(only=None):
     print(path)
 
 
+# ---- G5 Task 11: one isometric sample per king and kind (plan 2026-11-09-g5-balance-polish, owner gate each) ------
+
+G5_DIR = 'docs/art-review/g5'
+# The approved isometric Wheat image of the same kind is attached next to the style and iso references.
+G5_WHEAT_REF = {
+    'building': 'public/assets/art/ai-v1/iso/wheat_throne.png',
+    'plot': 'public/assets/art/ai-v1/iso/plots/wheat_open.png',
+}
+
+_PLOT = ('The SAME diamond tile as the attached approved Wheat open plot (same size, same thin rim of short grass, the '
+         'same four TINY, LOW corner stakes only a few pixels tall, the same few pixels of earth thickness on the two '
+         'front edges), BARE EMPTY LAND waiting for a building: NO furrows, NO crops, NO building, NO props taller than '
+         'a pebble. Only the ground materials and the corner stakes change to this king\'s theme: ')
+
+G5_SAMPLES = [
+    ('grove', 'grove_throne', 'building', "Ngai Cổ Thụ (the Forest king's Elder Tree throne, the TALLEST building of the kingdom, up to 520 px tall, it shoots poison thorns), 2:1 isometric",
+     'A huge ancient oak growing out of a round mossy stone base: the trunk is the keep, with a wide arched wooden door '
+     'on the right (south-east) side between two thick roots; its broad leafy crown is seen from above, with a small '
+     'living-wood platform and a crown of antlers and leaves on top; green leaf banners with a blue trim hang from a '
+     'branch, glowing green thorn pods in the canopy, ferns and mushrooms at the roots.' + _B.replace(
+         ' ROOF: sits squarely on the walls, all four eave corners at the SAME height, every eave parallel to the wall top below it at the true 2:1 slope, left and right eave corners on the same screen row; no back corner raised.', '').replace(
+         'Theme: farm kingdom, warm bright wood, golden straw, clay tiles, gold and earth tones.',
+         'Theme: forest kingdom, living wood, moss, leaf greens, bark browns, a little gold.')),
+    ('grove', 'plot_grove_open', 'plot', 'one open (empty) building plot of the Forest king, a single flat 2:1 isometric ground tile',
+     _PLOT + 'dark loamy forest soil with a few fallen leaves, small moss patches and a twig or two; the corner '
+             'stakes are tiny mossy wooden stubs. Theme: forest kingdom, moss and leaf greens, bark browns.'),
+    ('tide', 'tide_throne', 'building', "Ngai San Hô (the Tide king's Coral throne, the TALLEST building of the kingdom, up to 520 px tall, it fires cannon), 2:1 isometric",
+     'A round sea-fort keep of pale coral stone and barnacled timber, its flat crenellated top seen from above with a '
+     'small brass cannon and a coral-and-pearl crown; sail-cloth banners with a blue trim, rope nets and a ship\'s '
+     'wheel on the wall, a wide arched door on the right (south-east) side, barrels and an anchor at the base.' + _B.replace(
+         'Theme: farm kingdom, warm bright wood, golden straw, clay tiles, gold and earth tones.',
+         'Theme: pirate sea kingdom, coral pinks, sea teal, weathered wood, brass.')),
+    ('tide', 'plot_tide_open', 'plot', 'one open (empty) building plot of the Tide king, a single flat 2:1 isometric ground tile',
+     _PLOT + 'damp packed sand with a few small shells, pebbles and a strand of seaweed; the corner stakes are tiny '
+             'weathered driftwood stubs. Theme: sea kingdom, sand, teal and weathered wood.'),
+    ('forge', 'forge_throne', 'building', "Ngai Đe Sắt (the Forge king's Anvil throne, the TALLEST building of the kingdom, up to 520 px tall), 2:1 isometric",
+     'A squat round keep of dark stone and riveted iron bands, its flat top seen from above with a giant anvil and a '
+     'glowing forge brazier on it, a chimney puffing a little smoke; red-orange banners with a blue trim, hammers '
+     'and tongs on a rack, a wide arched iron-bound door on the right (south-east) side, coal sacks and ingots at the base.' + _B.replace(
+         'Theme: farm kingdom, warm bright wood, golden straw, clay tiles, gold and earth tones.',
+         'Theme: smithing kingdom, dark stone, iron, ember orange glow, soot.')),
+    ('forge', 'plot_forge_open', 'plot', 'one open (empty) building plot of the Forge king, a single flat 2:1 isometric ground tile',
+     _PLOT + 'dark packed earth with scattered cinders, small iron scraps and a few ember-red specks; the corner '
+             'stakes are tiny iron pegs. Theme: smithing kingdom, soot, iron grey, ember orange.'),
+    ('clock', 'clock_throne', 'building', "Ngai Bánh Răng (the Clock king's Cogwheel throne, the TALLEST building of the kingdom, up to 520 px tall), 2:1 isometric",
+     'A round brass-and-stone clock tower keep, its top seen from above with a big turning cogwheel crown and a '
+     'clock face on the right (south-east) wall above a wide arched door; copper pipes, small gears and rivets on '
+     'the walls, blue-and-brass banners, a crate of springs at the base.' + _B.replace(
+         'Theme: farm kingdom, warm bright wood, golden straw, clay tiles, gold and earth tones.',
+         'Theme: clockwork kingdom, brass, copper, slate stone, steel blue.')),
+    ('clock', 'plot_clock_open', 'plot', 'one open (empty) building plot of the Clock king, a single flat 2:1 isometric ground tile',
+     _PLOT + 'packed grey gravel with a few lost small brass cogs and screws; the corner stakes are tiny brass bolts. '
+             'Theme: clockwork kingdom, slate grey, brass.'),
+    ('moon', 'moon_throne', 'building', "Ngai Nguyệt Thực (the Moon king's Eclipse throne, the TALLEST building of the kingdom, up to 520 px tall), 2:1 isometric",
+     'A slender round tower of pale moonstone with dark-violet tiles, its top seen from above as an open altar with a '
+     'floating dark eclipse disc ringed by a thin silver crescent; violet banners with a blue trim, candles and '
+     'small standing stones at the base, a wide arched door on the right (south-east) side. Mysterious but cute, not gory.' + _B.replace(
+         'Theme: farm kingdom, warm bright wood, golden straw, clay tiles, gold and earth tones.',
+         'Theme: moon kingdom, pale moonstone, deep violet, silver, candle gold.')),
+    ('moon', 'plot_moon_open', 'plot', 'one open (empty) building plot of the Moon king, a single flat 2:1 isometric ground tile',
+     _PLOT + 'cool grey-violet earth with a few pale stones, tiny silver-blue flowers and faint moss; the corner stakes '
+             'are tiny pale moonstone pegs. Theme: moon kingdom, violet, silver, pale stone.'),
+    ('nomad', 'nomad_throne', 'building', "Ngai Lều Vàng (the Nomad king's Golden Tent throne, the TALLEST building of the kingdom, up to 520 px tall), 2:1 isometric",
+     'A large round royal yurt-pavilion of golden felt on a wooden lattice, its domed roof seen from above with a '
+     'golden crown finial and a tall horse-tail standard; patterned rugs and red-and-gold banners with a blue trim, '
+     'the tent flap entrance on the right (south-east) side, saddles, a water skin and a hitching post at the base.' + _B.replace(
+         ' ROOF: sits squarely on the walls, all four eave corners at the SAME height, every eave parallel to the wall top below it at the true 2:1 slope, left and right eave corners on the same screen row; no back corner raised.',
+         ' ROOF: a round dome seen from above as a 2:1 ellipse, centred on the walls; no corner raised.').replace(
+         'Theme: farm kingdom, warm bright wood, golden straw, clay tiles, gold and earth tones.',
+         'Theme: steppe nomad kingdom, golden felt, red cloth, warm wood, leather.')),
+    ('nomad', 'plot_nomad_open', 'plot', 'one open (empty) building plot of the Nomad king, a single flat 2:1 isometric ground tile',
+     _PLOT + 'dry steppe ground of short tan grass and packed dust with a few hoof prints and small stones; the corner '
+             'stakes are tiny wooden pegs with a scrap of red cloth. Theme: steppe kingdom, tan, ochre, red.'),
+]
+
+
+# Stone and Arcane (missing-art plan Task 4, 2026-11-09): same pipeline, their own sample gate.
+G5_SAMPLES += [
+    ('stone', 'stone_throne', 'building', "Ngai Đá Phiến (the Stone king's slate throne keep, the TALLEST building of the kingdom, up to 520 px tall, it hurls rocks), 2:1 isometric",
+     'A massive round keep built of cool blue-grey slate blocks with carved glowing rune lines, its flat crenellated top seen '
+     'from above with a big boulder held in a stone cradle like a crown; slate-blue banners with a blue trim, a heavy '
+     'arched stone door on the right (south-east) side, cut stone blocks and a pickaxe at the base, a few blue crystals.' + _B.replace(
+         'Theme: farm kingdom, warm bright wood, golden straw, clay tiles, gold and earth tones.',
+         'Theme: mountain kingdom, cool slate blue-grey stone, glowing blue runes, crystals.')),
+    ('stone', 'plot_stone_open', 'plot', 'one open (empty) building plot of the Stone king, a single flat 2:1 isometric ground tile',
+     _PLOT + 'packed grey mountain gravel with a few slate chips and small pebbles, a tuft of hardy grass; the corner '
+             'stakes are tiny slate pegs. Theme: mountain kingdom, slate grey, cool stone.'),
+    ('arcane', 'arcane_throne', 'building', "Ngai Phép Thuật (the Arcane king's mage-tower throne, the TALLEST building of the kingdom, up to 520 px tall, it casts magic bolts), 2:1 isometric",
+     'A slender round mage tower of pale stone with deep indigo-violet tiles and gold trim, its top seen from above as an open '
+     'observatory platform with a large floating purple crystal ringed by a slowly turning golden rune circle; indigo '
+     'banners with a blue trim and star emblems, a wide arched door on the right (south-east) side, stacked books and a '
+     'scroll rack at the base.' + _B.replace(
+         'Theme: farm kingdom, warm bright wood, golden straw, clay tiles, gold and earth tones.',
+         'Theme: arcane kingdom, deep indigo and violet, pale stone, gold trim, glowing purple crystals.')),
+    ('arcane', 'plot_arcane_open', 'plot', 'one open (empty) building plot of the Arcane king, a single flat 2:1 isometric ground tile',
+     _PLOT + 'dark blue-grey earth with faint glowing violet rune specks, a few small purple crystal shards and short grass; '
+             'the corner stakes are tiny pale stone pegs with a violet gem. Theme: arcane kingdom, indigo, violet, pale stone.'),
+]
+
+
+def build_g5_prompt(out, kind, name, desc, template=None):
+    wheat = G5_WHEAT_REF[kind]
+    if not (ROOT / wheat).exists():
+        raise SystemExit(f'{wheat} is missing: refusing to draw without the approved Wheat image of the same kind')
+    extra = (f'\n\nẢNH WHEAT ĐÃ DUYỆT CÙNG LOẠI (đính kèm): `{wheat}` — giữ đúng góc nhìn isometric 2:1, cỡ, mật độ cụm '
+             'pixel, viền, ánh sáng trên-trái và độ hoàn thiện của ảnh này; chỉ đổi chủ đề, chất liệu và màu theo vua mới.\n')
+    return build_iso_set_prompt(out, kind, name, desc, template) + extra
+
+
+def main_g5_sample(only=None):
+    """`g5-iso-sample <id>`: exactly ONE sample per call (owner gate per king and kind), never a group."""
+    ids = [i for _, i, _, _, _ in G5_SAMPLES]
+    if not only or len(only) != 1 or only[0] not in ids:
+        raise SystemExit(f'g5-iso-sample needs exactly one id of {ids}')
+    template = iso_template()
+    for r in [REFERENCE, *ISO_REFS['building'].split(), *ISO_REFS['plot'].split()]:
+        if not (ROOT / r).exists():
+            raise SystemExit(f'{r} is missing: refusing to draw without the approved isometric reference')
+    runner = ['#!/bin/bash', f'cd "{ROOT.as_posix()}"']
+    for king, ident, kind, name, desc in G5_SAMPLES:
+        if ident != only[0]:
+            continue
+        d = ROOT / G5_DIR / king / ident
+        d.mkdir(parents=True, exist_ok=True)
+        out = (d / 'source.png').relative_to(ROOT).as_posix()
+        (d / 'prompt.md').write_text(build_g5_prompt(out, kind, name, desc, template), encoding='utf-8')
+        prompt = (d / 'prompt.md').relative_to(ROOT).as_posix()
+        images = ' '.join(f'-i {r}' for r in [REFERENCE, *ISO_REFS[kind].split(), G5_WHEAT_REF[kind]])
+        runner.append(f'codex exec --sandbox workspace-write -C "$PWD" {images} - < {prompt} > .superpowers/codex-g5-{ident}.out 2>&1')
+        runner.append(f'if [ -s {out} ]; then echo "{ident} ok" >> .superpowers/b-g5.log; else echo "{ident} MISSING" >> .superpowers/b-g5.log; fi')
+    (ROOT / '.superpowers').mkdir(exist_ok=True)
+    path = ROOT / f'.superpowers/b-g5-{only[0]}.sh'
+    path.write_text('\n'.join(runner) + '\n', encoding='utf-8', newline='\n')
+    print(path)
+
+
+# ---- G5 Task 12: the rest of a king's set, after its two samples were approved --------------------------------
+
+G5_KINGS = ['grove', 'tide', 'forge', 'clock', 'moon', 'nomad', 'stone', 'arcane']
+G5_BUILDING_KINDS = ('troop', 'tower', 'economy', 'support')
+G5_CARDS = ROOT / 'docs/art-review/g3e/cards/cards.json'
+G5_KIND = {
+    'troop': 'a building that trains soldiers of this kingdom (barracks, den, hall, workshop); no soldiers drawn',
+    'tower': 'a defensive tower or turret that shoots at enemies; its top and its weapon are clearly seen from above',
+    'economy': 'a productive building or resource site that earns gold',
+    'support': 'a supporting building that buffs, heals or summons; a clear magical or practical sign of its aura',
+}
+G5_THEME = {
+    'grove': 'forest kingdom, living wood, moss, leaf greens, bark browns, a little gold',
+    'tide': 'pirate sea kingdom, coral pinks, sea teal, weathered wood, brass',
+    'forge': 'smithing kingdom, dark stone, iron, ember orange glow, soot',
+    'clock': 'clockwork kingdom, brass, copper, slate stone, steel blue',
+    'moon': 'moon kingdom, pale moonstone, deep violet, silver, candle gold; mysterious but cute, never gory',
+    'nomad': 'steppe nomad kingdom, golden felt, red cloth, warm wood, leather',
+    'stone': 'mountain kingdom, cool slate blue-grey stone, glowing blue runes, crystals',
+    'arcane': 'arcane kingdom, deep indigo and violet, pale stone, gold trim, glowing purple crystals',
+}
+G5_PLOTS = {
+    'locked': ('one locked (unclaimed) plot of the {king} king, a single flat 2:1 isometric ground tile',
+               'wild unclaimed land in this kingdom\'s own wild ground (thicker, darker, overgrown), a small bush or a few '
+               'wild plants, no path, no building, no sign, no text.'),
+    'throne': ("the {king} king's throne plot, a single flat 2:1 isometric ground tile",
+               'a royal dais: large cut slabs in this kingdom\'s own stone laid along the two diagonal axes, a thin inlaid '
+               'border in the kingdom\'s colours with a little blue just inside the grass rim, and a small emblem of the '
+               'kingdom carved in the centre. Flat ground only, no building.'),
+    'built': ('one built plot of the {king} king (the ground under a building), a single flat 2:1 isometric ground tile',
+              'a courtyard PAVED WITH this kingdom\'s own stone or planks across the whole inside, small gravel in the '
+              'joints, a little moss. Flat ground only: no building, no props.'),
+}
+G5_PLOT_WHEAT = {s: f'public/assets/art/ai-v1/iso/plots/wheat_{s}.png' for s in G5_PLOTS}
+_FRONT_WORDS = re.compile(r'45-degree|45 degrees|front[- ]facing|front view|frontal', re.I)
+
+
+def _iso_hint(hint):
+    """The card-art hint without its sentences about the old front view (the iso rules come from _B)."""
+    clauses = re.split(r'(?<=[.;])\s+', hint or '')
+    return ' '.join(c for c in clauses if c and not _FRONT_WORDS.search(c)).strip()
+
+
+def g5_set(king):
+    """(ident, kind, name, desc, wheat_ref) for every building card and the three other plot skins of `king`."""
+    cards = json.loads(G5_CARDS.read_text(encoding='utf-8'))
+    spec = importlib.util.spec_from_file_location('card_prompts', ROOT / 'docs/art-review/g3e/cards/make_prompts.py')
+    cp = importlib.util.module_from_spec(spec)
+    spec.loader.exec_module(cp)
+    theme = G5_THEME[king]
+    items = []
+    for c in sorted((c for c in cards if c['owner'] == king and c['kind'] in G5_BUILDING_KINDS), key=lambda c: c['id']):
+        english = c['id'].split('_', 1)[1].replace('_', ' ')
+        hint = _iso_hint(cp.VISUAL.get(c['id'], ''))
+        if hint:
+            hint = ('Card description (written for the card picture; draw ONLY the building or site as a world sprite: '
+                    'no soldiers, animals or people standing in front of it, a creature only if it IS the building, e.g. '
+                    f'carved or grown into it): {hint} ')
+        desc = hint + f'It is "{c["nameVi"]}" ({english}), {G5_KIND[c["kind"]]}. What it does in the game: {c["summary"]}'
+        rules = _B.replace('Theme: farm kingdom, warm bright wood, golden straw, clay tiles, gold and earth tones.', f'Theme: {theme}.')
+        items.append((c['id'], 'building', f'{c["nameVi"]} ({english}, {c["kind"]} building of the {king} king), 2:1 isometric',
+                      desc + rules, G5_WHEAT_REF['building']))
+    for state, (name, desc) in G5_PLOTS.items():
+        items.append((f'plot_{king}_{state}', 'plot', name.format(king=king.capitalize()),
+                      'The SAME diamond tile as the attached approved open plot of this king (same size, same rim, the same '
+                      'four TINY, LOW corner stakes, the same few pixels of earth thickness), but the inside is ' + desc +
+                      f' Theme: {theme}.', G5_PLOT_WHEAT[state]))
+    return items
+
+
+def g5_approved_samples(king):
+    """The two approved samples of `king`; refuses unless its sample-review.md says ĐÃ DUYỆT."""
+    review = ROOT / G5_DIR / king / 'sample-review.md'
+    if not review.exists() or 'ĐÃ DUYỆT' not in review.read_text(encoding='utf-8'):
+        raise SystemExit(f'{king}: the samples are not approved ({review.relative_to(ROOT).as_posix()})')
+    refs = [f'{G5_DIR}/{king}/{king}_throne/source.png', f'{G5_DIR}/{king}/plot_{king}_open/source.png']
+    for r in refs:
+        if not (ROOT / r).exists():
+            raise SystemExit(f'{r} is missing')
+    return refs
+
+
+def main_g5_set(only=None):
+    """`g5-iso-set <king> [<id> ...]`: the rest of one king's set with its approved samples attached."""
+    if not only or only[0] not in G5_KINGS:
+        raise SystemExit(f'g5-iso-set needs a king of {G5_KINGS}')
+    king, ids = only[0], set(only[1:])
+    samples = g5_approved_samples(king)
+    template = iso_template()
+    runner = ['#!/bin/bash', f'cd "{ROOT.as_posix()}"']
+    for ident, kind, name, desc, wheat in g5_set(king):
+        if ids and ident not in ids:
+            continue
+        d = ROOT / G5_DIR / king / ident
+        d.mkdir(parents=True, exist_ok=True)
+        out = (d / 'source.png').relative_to(ROOT).as_posix()
+        extra = (f'\n\nẢNH WHEAT ĐÃ DUYỆT CÙNG LOẠI (đính kèm): `{wheat}`; HAI MẪU ĐÃ DUYỆT CỦA VUA NÀY (đính kèm): '
+                 f'{", ".join(f"`{s}`" for s in samples)} — giữ đúng góc nhìn isometric 2:1, cỡ, mật độ cụm pixel, viền, '
+                 'ánh sáng trên-trái, bảng màu và chất liệu của các mẫu này; mọi công trình của vua này phải trông cùng một bộ.\n')
+        (d / 'prompt.md').write_text(build_iso_set_prompt(out, kind, name, desc, template) + extra, encoding='utf-8')
+        prompt = (d / 'prompt.md').relative_to(ROOT).as_posix()
+        images = ' '.join(f'-i {r}' for r in [REFERENCE, *ISO_REFS[kind].split(), wheat, *samples])
+        runner.append(f'codex exec --sandbox workspace-write -C "$PWD" {images} - < {prompt} > .superpowers/codex-g5-{ident}.out 2>&1')
+        runner.append(f'if [ -s {out} ]; then echo "{ident} ok" >> .superpowers/b-g5-set.log; else echo "{ident} MISSING" >> .superpowers/b-g5-set.log; fi')
+    (ROOT / '.superpowers').mkdir(exist_ok=True)
+    path = ROOT / f'.superpowers/b-g5-set-{king}.sh'
+    path.write_text('\n'.join(runner) + '\n', encoding='utf-8', newline='\n')
+    print(path)
+
+
 def build_prompt(out, name, desc, theme, template=None):
     template = template or style_template()
     body = template.replace('[building and function]', f'{name}').replace(
@@ -476,6 +733,12 @@ def main(group, only=None):
         return
     if group == 'polish-forest-set':
         main_polish_forest_set(only)
+        return
+    if group == 'g5-iso-sample':
+        main_g5_sample(only)
+        return
+    if group == 'g5-iso-set':
+        main_g5_set(only)
         return
     cfg = GROUPS[group]
     template = style_template()

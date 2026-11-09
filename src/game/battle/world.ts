@@ -5,6 +5,8 @@
  */
 import { BATTLE, INTERVENTION, SPAWN_OFFSETS } from '../../data/battle';
 import { BUILDING_FOOT_OFFSET } from '../../data/boardGeometry';
+import type { RunMode } from '../../data/rules';
+import { plotCoords } from '../run/boardGeometry';
 import { clampNorthY, spawnMaxY } from './bounds';
 import { deploymentPosition } from './deployment';
 import { edgePositions, portalPositions } from './spawnLayout';
@@ -33,6 +35,8 @@ export const DMG_FIRE = 1;
 export const DMG_MAGIC = 2;
 const DMG_CODE: Record<DamageType, number> = { physical: 0, fire: 1, magic: 2 };
 export const dmgTypeCode = (t: DamageType): number => DMG_CODE[t];
+/** Damage type of a `DMG_*` code (for presentation events). */
+export const DMG_NAME: readonly DamageType[] = ['physical', 'fire', 'magic'];
 
 /** Mã `targeting` trong mảng typed. */
 export const TARGET_NEAREST = 0;
@@ -371,9 +375,15 @@ export class BattleWorld {
 
   /** Biên nam của đơn vị (y lớn nhất): đủ chứa mọi hàng xuất quân; suy ra từ setup, không lưu. */
   maxY: number;
+  /**
+   * Hình học bàn của riêng trận này (spec 2026-11-09 §4), suy từ `setup.geometry` (vắng = thường); không
+   * đọc session hay RunState, không băm.
+   */
+  readonly geometry: RunMode;
 
   constructor(setup: BattleSetup) {
     this.setup = setup;
+    this.geometry = setup.geometry === 'endless' ? 'endless' : 'normal';
     this.maxY = spawnMaxY(setup);
     this.autoFire = setup.autoFire ?? false;
     if (setup.intervention) {
@@ -437,10 +447,9 @@ export const heal = (w: BattleWorld, id: number, amount: number): void => {
   w.hp[id] = Math.min(w.maxHp[id]!, w.hp[id]! + amount);
 };
 
-/** Tâm ô `plot` (hàng × 5 + cột) trong toạ độ thế giới (§8.2). */
-export const plotCenter = (plot: number): { x: number; y: number } => {
-  const col = plot % 5;
-  const row = Math.floor(plot / 5);
+/** Tâm ô `plot` của bàn `mode` trong toạ độ thế giới (§8.2); hàng/cột theo hệ bàn trong (`plotCoords`). */
+export const plotCenter = (plot: number, mode: RunMode = 'normal'): { x: number; y: number } => {
+  const { row, col } = plotCoords(plot, mode);
   const half = BATTLE.plot / 2;
   return {
     x: BATTLE.boardOrigin + BATTLE.plot * col + half,
@@ -452,8 +461,8 @@ export const plotCenter = (plot: number): { x: number; y: number } => {
  * Chân (vị trí) của công trình hay Ngai đứng trên ô `plot`: tâm ô lệch `BUILDING_FOOT_OFFSET` về phía
  * (hiện là 0: nhà đứng giữa ô, chủ dự án chốt 06/11/2026). Renderer neo sprite đúng điểm này.
  */
-export const structureFoot = (plot: number): { x: number; y: number } => {
-  const c = plotCenter(plot);
+export const structureFoot = (plot: number, mode: RunMode = 'normal'): { x: number; y: number } => {
+  const c = plotCenter(plot, mode);
   return { x: c.x + BUILDING_FOOT_OFFSET.x, y: c.y + BUILDING_FOOT_OFFSET.y };
 };
 
@@ -522,7 +531,7 @@ const place = (w: BattleWorld, id: number, x: number, y: number): void => {
 const addStructure = (w: BattleWorld, s: StructureSetup, isThrone: boolean): number => {
   const id = w.addEntity();
   if (id < 0) return id;
-  const c = structureFoot(s.plot);
+  const c = structureFoot(s.plot, w.geometry);
   place(w, id, c.x, c.y);
   w.homeX[id] = c.x;
   w.homeY[id] = c.y;
@@ -610,9 +619,9 @@ export const addUnit = (
 ): number => {
   const id = w.addEntity();
   if (id < 0) return id;
-  place(w, id, x, clampNorthY(y, stats.radius));
+  place(w, id, x, clampNorthY(y, stats.radius, w.geometry));
   w.homeX[id] = homeX;
-  w.homeY[id] = clampNorthY(homeY, stats.radius);
+  w.homeY[id] = clampNorthY(homeY, stats.radius, w.geometry);
   w.team[id] = team;
   w.kind[id] = KIND_UNIT;
   w.hp[id] = stats.hp;
@@ -716,7 +725,7 @@ export const createBattle = (setup: BattleSetup): BattleWorld => {
         w.capped += 1;
         continue;
       }
-      const p = deploymentPosition(s.plot, k, s.spawn.count, s.spawn.stats.radius);
+      const p = deploymentPosition(s.plot, k, s.spawn.count, s.spawn.stats.radius, w.geometry);
       const id = addUnit(w, s.spawn.stats, TEAM_ALLY, p.x, p.y, p.x, p.y, s.uid);
       if (id < 0) w.capped += 1;
       else w.playerUnits += 1;
@@ -731,7 +740,7 @@ export const createBattle = (setup: BattleSetup): BattleWorld => {
         w.capped += 1;
         continue;
       }
-      const p = deploymentPosition(s.plot, k, start.count, start.stats.radius);
+      const p = deploymentPosition(s.plot, k, start.count, start.stats.radius, w.geometry);
       const id = addUnit(w, start.stats, TEAM_ALLY, p.x, p.y, p.x, p.y, s.uid);
       if (id < 0) w.capped += 1;
       else w.playerUnits += 1;
@@ -745,7 +754,7 @@ export const createBattle = (setup: BattleSetup): BattleWorld => {
         w.capped += 1;
         continue;
       }
-      const p = deploymentPosition(setup.throne.plot, k, at.count, at.stats.radius);
+      const p = deploymentPosition(setup.throne.plot, k, at.count, at.stats.radius, w.geometry);
       const id = addUnit(w, at.stats, TEAM_ALLY, p.x, p.y, p.x, p.y, setup.throne.uid);
       if (id < 0) w.capped += 1;
       else w.playerUnits += 1;

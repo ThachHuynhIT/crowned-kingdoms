@@ -237,7 +237,7 @@ describe('G1 behaviour is unchanged for level-1 plain buildings', () => {
   it('keeps the shipped numbers', () => {
     const s = buildBattleSetup(board([[6, bld(1, 'wheat_scarecrow')]]), CONTENT);
     expect(s.structures[0]!.attack!.dmg).toBe(6);
-    expect(s.throne.hp).toBe(300);
+    expect(s.throne.hp).toBe(430);
   });
 });
 

@@ -1,5 +1,13 @@
 /** Phiên chơi của trình duyệt: kho lưu + cầu checkpoint + đọc ván + hồ sơ meta (G4). `src/game` không import file này. */
-import { META_MEMORY_ONLY_TEXT, META_READ_ONLY_TEXT, UNLOCK_REFUSED_TEXT, UNLOCK_SAVE_FAILED_TEXT } from '../data/save';
+import {
+  META_MEMORY_ONLY_TEXT,
+  META_READ_ONLY_TEXT,
+  SETTINGS_INVALID_TEXT,
+  SETTINGS_SAVE_FAILED_TEXT,
+  UNLOCK_REFUSED_TEXT,
+  UNLOCK_SAVE_FAILED_TEXT,
+} from '../data/save';
+import { type AudioSettings, VOLUME_MAX, VOLUME_MIN } from '../data/settings';
 import type { CardId, KingId } from '../data/types';
 import type { Content } from '../game/cards/registry';
 import { decodeMeta, type MetaProfile, settleRun, unlockCard, unlockKing } from '../game/meta';
@@ -33,6 +41,18 @@ export interface GameSession {
   /** Xong sau khi hồ sơ đã lưu. */
   unlockKing(king: KingId): Promise<UnlockResult>;
   unlockCard(card: CardId): Promise<UnlockResult>;
+  /**
+   * Đổi cài đặt (spec G5 §4): xếp cùng hàng đợi hồ sơ, tính từ hồ sơ mới nhất, chỉ công bố sau khi ghi xong.
+   * Giá trị sai (không hữu hạn, ngoài 0–100, rung không phải bật/tắt) → notAllowed; hồ sơ mới hơn → readOnly;
+   * ghi hỏng → saveFailed và giữ giá trị cũ.
+   */
+  updateSettings(patch: Partial<AudioSettings>): Promise<UnlockResult>;
+  /**
+   * Bỏ ván đang chơi: chờ mọi checkpoint đã xếp hàng rồi xoá chỉ kho run (không chấm điểm, không đụng meta).
+   * `persistent` = kho trình duyệt xác nhận vẫn ghi đĩa sau khi xoá; false = chỉ chắc chắn trong phiên này
+   * (bản trên thiết bị có thể còn khi tải lại). Xoá hỏng → reject.
+   */
+  discardRun(): Promise<{ persistent: boolean }>;
 }
 
 /** Dựng phiên trên một kho có sẵn: đọc hồ sơ meta đúng một lần, không ghi gì khi mở. */
@@ -94,6 +114,41 @@ export async function openSession(store: SaveStore & { isPersistent?: () => bool
       return { ok: true, profile: structuredClone(profile) };
     });
 
+  const validVolume = (v: unknown): v is number =>
+    typeof v === 'number' && Number.isFinite(v) && v >= VOLUME_MIN && v <= VOLUME_MAX;
+
+  const updateSettings = (patch: Partial<AudioSettings>): Promise<UnlockResult> =>
+    queued(async (): Promise<UnlockResult> => {
+      if (readOnly) return { ok: false, reason: 'readOnly', message: META_READ_ONLY_TEXT };
+      const settings = { ...profile.settings };
+      for (const key of ['master', 'music', 'sfx'] as const) {
+        if (!(key in patch)) continue;
+        const v = patch[key];
+        if (!validVolume(v)) return { ok: false, reason: 'notAllowed', message: SETTINGS_INVALID_TEXT };
+        // Stored volumes are integers (decodeMeta repairs anything else).
+        settings[key] = Math.round(v);
+      }
+      if ('screenShake' in patch) {
+        if (typeof patch.screenShake !== 'boolean') {
+          return { ok: false, reason: 'notAllowed', message: SETTINGS_INVALID_TEXT };
+        }
+        settings.screenShake = patch.screenShake;
+      }
+      try {
+        await commit({ ...profile, settings });
+      } catch {
+        return { ok: false, reason: 'saveFailed', message: SETTINGS_SAVE_FAILED_TEXT };
+      }
+      return { ok: true, profile: structuredClone(profile) };
+    });
+
+  const discardRun = async (): Promise<{ persistent: boolean }> => {
+    await coordinator.flush();
+    await coordinator.clearRun();
+    // A store without the probe (tests, memory) makes no claim beyond this session.
+    return { persistent: store.isPersistent?.() === true };
+  };
+
   return {
     store,
     persistence: {
@@ -111,6 +166,8 @@ export async function openSession(store: SaveStore & { isPersistent?: () => bool
     settleRun: settle,
     unlockKing: (king) => unlock((p) => unlockKing(p, king)),
     unlockCard: (card) => unlock((p) => unlockCard(p, card)),
+    updateSettings,
+    discardRun,
   };
 }
 

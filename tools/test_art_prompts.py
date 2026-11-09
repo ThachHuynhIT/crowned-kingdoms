@@ -152,8 +152,10 @@ class GroundTexturePromptGateTest(unittest.TestCase):
         self.assertIn('STRAIGHT FROM ABOVE', t)
         self.assertIn('[subject]', t)
 
-    def test_water_and_sand_prompts_read_the_doc_and_carry_the_references(self):
-        self.assertEqual([i for i, _, _ in mp.GROUND_TEXTURES], ['terrain_water', 'terrain_sand'])
+    def test_every_texture_prompt_reads_the_doc_and_carries_the_references(self):
+        self.assertEqual(
+            [i for i, _, _ in mp.GROUND_TEXTURES], ['terrain_water', 'terrain_sand', 'terrain_path', 'terrain_flowers']
+        )
         for ident, name, desc in mp.GROUND_TEXTURES:
             p = mp.build_texture_prompt(f'x/{ident}/source.png', name, desc)
             self.assertIn('docs/ART_STYLE.md', p, ident)
@@ -167,9 +169,9 @@ class GroundTexturePromptGateTest(unittest.TestCase):
     def test_runner_attaches_every_reference(self):
         mp.main('terrain-textures')
         runner = (ROOT / '.superpowers/b-textures.sh').read_text(encoding='utf-8')
-        self.assertEqual(runner.count('codex exec'), 2)
+        self.assertEqual(runner.count('codex exec'), 4)
         for r in [mp.REFERENCE, *mp.TEXTURE_REFS]:
-            self.assertEqual(runner.count(f'-i {r}'), 2)
+            self.assertEqual(runner.count(f'-i {r}'), 4)
 
 
 class PolishSamplePromptGateTest(unittest.TestCase):
@@ -220,6 +222,93 @@ class PolishSamplePromptGateTest(unittest.TestCase):
             self.assertIn('#000000', p, ident)
 
 
+class G5SamplePromptGateTest(unittest.TestCase):
+    """G5 (plan 2026-11-09): one isometric sample per new king and kind, each its own owner gate."""
+
+    def test_six_kings_two_kinds_one_sample_each(self):
+        kings = ['grove', 'tide', 'forge', 'clock', 'moon', 'nomad', 'stone', 'arcane']
+        self.assertEqual(sorted({k for k, _, _, _, _ in mp.G5_SAMPLES}), sorted(kings))
+        for king in kings:
+            kinds = sorted(kind for k, _, kind, _, _ in mp.G5_SAMPLES if k == king)
+            self.assertEqual(kinds, ['building', 'plot'], king)
+
+    def test_exactly_one_id_per_call(self):
+        with self.assertRaises(SystemExit):
+            mp.main('g5-iso-sample')
+        with self.assertRaises(SystemExit):
+            mp.main('g5-iso-sample', ['grove_throne', 'plot_grove_open'])
+        with self.assertRaises(SystemExit):
+            mp.main('g5-iso-sample', ['wheat_throne'])
+
+    def test_prompt_reads_the_doc_and_names_every_reference(self):
+        t = mp.iso_template()
+        for king, ident, kind, name, desc in mp.G5_SAMPLES:
+            p = mp.build_g5_prompt(f'x/{ident}/source.png', kind, name, desc, t)
+            self.assertIn('docs/ART_STYLE.md', p, ident)
+            self.assertIn('BẮT BUỘC TRƯỚC KHI VẼ', p, ident)
+            self.assertIn('ISOMETRIC view, classic 2:1 pixel-art isometric', p, ident)
+            self.assertIn(mp.REFERENCE, p, ident)
+            for r in mp.ISO_REFS[kind].split():
+                self.assertIn(r, p, ident)
+            self.assertIn(mp.G5_WHEAT_REF[kind], p, ident)
+            self.assertIn('#000000', p, ident)
+            self.assertNotIn('[subject]', p, ident)
+            self.assertNotIn('farm kingdom', p, ident)
+            if kind == 'building':
+                self.assertIn('RIGHT', p, ident)
+            else:
+                self.assertIn('NO furrows', p, ident)
+
+    def test_runner_attaches_style_iso_and_wheat_refs_once(self):
+        for ident in ['grove_throne', 'plot_grove_open']:
+            mp.main('g5-iso-sample', [ident])
+            runner = (ROOT / f'.superpowers/b-g5-{ident}.sh').read_text(encoding='utf-8')
+            self.assertEqual(runner.count('codex exec'), 1)
+            kind = 'building' if ident.endswith('throne') else 'plot'
+            for r in [mp.REFERENCE, *mp.ISO_REFS[kind].split(), mp.G5_WHEAT_REF[kind]]:
+                self.assertEqual(runner.count(f'-i {r}'), 1, (ident, r))
+
+
+class G5SetPromptGateTest(unittest.TestCase):
+    """G5: a king's remaining set is drawn only after its samples are approved, with them attached."""
+
+    def test_set_covers_building_cards_and_three_plot_skins(self):
+        items = mp.g5_set('grove')
+        kinds = [k for _, k, _, _, _ in items]
+        self.assertEqual(kinds.count('plot'), 3)
+        self.assertGreaterEqual(kinds.count('building'), 6)
+        self.assertEqual(sorted(i for i, k, _, _, _ in items if k == 'plot'), ['plot_grove_built', 'plot_grove_locked', 'plot_grove_throne'])
+        for ident, kind, name, desc, wheat in items:
+            self.assertNotIn('farm kingdom', desc, ident)
+            self.assertNotRegex(desc, r'45-degree|front facing', ident)
+            self.assertTrue((ROOT / wheat).exists(), wheat)
+
+    def test_refused_until_the_samples_are_approved(self):
+        old_dir = mp.G5_DIR
+        try:
+            with tempfile.TemporaryDirectory(dir=ROOT / '.superpowers') as d:
+                mp.G5_DIR = Path(d).relative_to(ROOT).as_posix()
+                with self.assertRaises(SystemExit):
+                    mp.main('g5-iso-set', ['grove'])
+        finally:
+            mp.G5_DIR = old_dir
+        with self.assertRaises(SystemExit):
+            mp.main('g5-iso-set', ['wheat'])
+
+    def test_runner_attaches_style_iso_wheat_and_both_samples(self):
+        mp.main('g5-iso-set', ['grove'])
+        runner = (ROOT / '.superpowers/b-g5-set-grove.sh').read_text(encoding='utf-8')
+        n = len(mp.g5_set('grove'))
+        self.assertEqual(runner.count('codex exec'), n)
+        self.assertEqual(runner.count(f'-i {mp.REFERENCE}'), n)
+        self.assertEqual(runner.count('-i docs/art-review/g5/grove/grove_throne/source.png'), n)
+        self.assertEqual(runner.count('-i docs/art-review/g5/grove/plot_grove_open/source.png'), n)
+        p = (ROOT / 'docs/art-review/g5/grove/grove_bear_cave/prompt.md').read_text(encoding='utf-8')
+        self.assertIn('docs/ART_STYLE.md', p)
+        self.assertIn('ISOMETRIC view, classic 2:1 pixel-art isometric', p)
+        self.assertIn('#000000', p)
+
+
 pspec = importlib.util.spec_from_file_location('portrait_prompts', ROOT / 'docs/art-review/g3e/portraits/make_prompts.py')
 pp = importlib.util.module_from_spec(pspec)
 pspec.loader.exec_module(pp)
@@ -268,7 +357,7 @@ cspec.loader.exec_module(cp)
 class CardPromptGateTest(unittest.TestCase):
     def test_catalogue_is_the_whole_registry(self):
         cards = cp.load_cards()
-        self.assertEqual(len(cards), 94)
+        self.assertEqual(len(cards), 102)  # 9 thrones + 81 king cards + 12 neutral (G4 meta cards included), tools/dumpCards.ts
         self.assertEqual(sorted({c['kind'] for c in cards.values()}), ['economy', 'enchantment', 'support', 'throne', 'tome', 'tower', 'troop'])
 
     def test_every_card_prompt_points_at_the_doc_and_carries_the_reference(self):

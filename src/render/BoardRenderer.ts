@@ -4,9 +4,11 @@ import { toCss } from '../data/palette';
 import { UI_PALETTE } from '../data/uiPalette';
 import type { CardId } from '../data/types';
 import type { Edge } from '../game/battle/types';
-import { plotCenter, structureFoot } from '../game/battle/world';
+import type { RunMode } from '../data/rules';
+import { geometryFor, isPlotId } from '../game/run/boardGeometry';
+import { boardPlotCenter as plotCenter, plotAtWorld } from './endlessBoardModel';
 import type { Content } from '../game/cards/registry';
-import { unlockCost } from '../data/run';
+import { plotPurchasePrice } from '../game/run/endlessBlessings';
 import { THRONE_PLOT, adjacentToUnlocked } from '../game/run/board';
 import type { RunState } from '../game/run/state';
 import { FONT_UI } from '../ui/theme';
@@ -14,8 +16,6 @@ import { ISO } from '../core/iso';
 import { SPRITES_KEY, buildingFrame, imageFrameScale, kingPlotFrame, plotFrame } from './atlas';
 import { ISO_SPRITE_SCALE, insetPoly, iso, isoQuad, strokePoly } from './isoView';
 
-const SIZE = 5;
-const PLOTS = SIZE * SIZE;
 /** Ground layer: plots sit on the field (depth 0), under every y-sorted sprite. */
 const PLOT_DEPTH = 1;
 const HIGHLIGHT_DEPTH = 2;
@@ -47,20 +47,23 @@ const HIGHLIGHT_COLOR: Readonly<Record<PlotHighlight, number>> = {
 export const BUILDING_FOOT_DY = 16;
 
 /** Where a building on `plot` is drawn (camera space): its projected structure foot, lowered by `BUILDING_FOOT_DY`. */
-export const buildingFoot = (plot: number): { x: number; y: number } => {
-  const f = iso(structureFoot(plot));
+export const buildingFoot = (plot: number, mode: RunMode = 'normal'): { x: number; y: number } => {
+  const f = iso(plotCenter(plot, mode));
   return { x: f.x, y: f.y + BUILDING_FOOT_DY };
 };
 
 /** The projected diamond of `plot`: top, right, bottom, left corners. */
-const plotDiamond = (plot: number) => {
-  const c = plotCenter(plot);
+const plotDiamond = (plot: number, mode: RunMode) => {
+  const c = plotCenter(plot, mode);
   const half = BATTLE.plot / 2;
   return isoQuad(c.x - half, c.y - half, BATTLE.plot, BATTLE.plot);
 };
 
 /** Foot y of a building standing on `plot`. */
-export const buildingFootY = (plot: number): number => buildingFoot(plot).y;
+export const buildingFootY = (
+  plot: number,
+  mode: RunMode = 'normal',
+): number => buildingFoot(plot, mode).y;
 
 /**
  * The 5x5 board outside battle, isometric (spec 2026-11-06): plot diamonds, buildings standing
@@ -82,11 +85,11 @@ export class BoardRenderer {
   private readonly prices: Phaser.GameObjects.Text[] = [];
   private buildingsVisible = true;
 
-  constructor(scene: Phaser.Scene, content: Content) {
+  constructor(scene: Phaser.Scene, content: Content, private readonly mode: RunMode = 'normal') {
     this.scene = scene;
     this.content = content;
-    for (let p = 0; p < PLOTS; p++) {
-      const c = iso(plotCenter(p));
+    for (let p = 0; p < geometryFor(this.mode).plotCount; p++) {
+      const c = iso(plotCenter(p, this.mode));
       this.plots.push(
         scene.add.image(c.x, c.y, SPRITES_KEY, plotFrame('locked')).setDepth(PLOT_DEPTH),
       );
@@ -101,7 +104,7 @@ export class BoardRenderer {
   /** Redraw plots and buildings from the run state. */
   render(state: RunState): void {
     const throneId = this.throneCard(state);
-    for (let p = 0; p < PLOTS; p++) {
+    for (let p = 0; p < geometryFor(this.mode).plotCount; p++) {
       const plot = state.plots[p];
       // A plot with a building on it is a paved yard (owner, 2026-11-06).
       const ground = p === THRONE_PLOT ? 'throne' : !plot?.unlocked ? 'locked' : plot.building ? 'built' : 'open';
@@ -130,8 +133,8 @@ export class BoardRenderer {
     g.clear();
     const plots = [...map.keys()].sort((a, b) => a - b);
     for (const p of plots) {
-      if (p < 0 || p >= PLOTS) continue;
-      const d = plotDiamond(p);
+      if (!isPlotId(p, this.mode)) continue;
+      const d = plotDiamond(p, this.mode);
       g.lineStyle(2, HIGHLIGHT_COLOR[map.get(p) ?? 'bad'], 1);
       strokePoly(g, insetPoly(d, 0.03));
       if (map.get(p) === 'levelUp') {
@@ -151,8 +154,8 @@ export class BoardRenderer {
   setEdgeArrows(edges: readonly Edge[]): void {
     const g = this.arrows;
     g.clear();
-    const lo = BATTLE.boardOrigin;
-    const hi = BATTLE.boardOrigin + BATTLE.plot * SIZE;
+    const lo = geometryFor(this.mode).boardMin;
+    const hi = geometryFor(this.mode).boardMax;
     const mid = (lo + hi) / 2;
     const h = ARROW_HALF;
     // Tip just south of the board's south edge (world), drawn upright on screen, pointing back at the board.
@@ -171,12 +174,9 @@ export class BoardRenderer {
     g.strokeTriangle(...tri);
   }
 
-  /** Plot index (row × 5 + col) under a world point, null outside the board. */
+  /** Plot id under a world point, null outside the board. */
   plotAt(worldX: number, worldY: number): number | null {
-    const col = Math.floor((worldX - BATTLE.boardOrigin) / BATTLE.plot);
-    const row = Math.floor((worldY - BATTLE.boardOrigin) / BATTLE.plot);
-    if (col < 0 || col >= SIZE || row < 0 || row >= SIZE) return null;
-    return row * SIZE + col;
+    return plotAtWorld(worldX, worldY, this.mode);
   }
 
   destroy(): void {
@@ -196,11 +196,11 @@ export class BoardRenderer {
   private drawMarks(state: RunState): void {
     const g = this.marks;
     g.clear();
-    for (let p = 0; p < PLOTS; p++) {
+    for (let p = 0; p < geometryFor(this.mode).plotCount; p++) {
       const b = state.plots[p]?.building;
       if (!b) continue;
       // Pips sit on the diamond's lower-left edge (level) and upper-left edge (enchantments).
-      const c = iso(plotCenter(p));
+      const c = iso(plotCenter(p, this.mode));
       const left = c.x - ISO.plotW / 4;
       const level = p === THRONE_PLOT ? state.throneLevel : b.level;
       const stacks = b.enchants.reduce((n, e) => n + e.stacks, 0);
@@ -217,9 +217,8 @@ export class BoardRenderer {
 
   /** Gold price on each locked plot that touches an open plot (spec §3.11). */
   private drawPrices(state: RunState): void {
-    const price = unlockCost(state.purchasedPlots);
     let used = 0;
-    for (let p = 0; p < PLOTS; p++) {
+    for (let p = 0; p < geometryFor(this.mode).plotCount; p++) {
       const plot = state.plots[p];
       if (!plot || plot.unlocked || !adjacentToUnlocked(state.plots, p)) continue;
       let text = this.prices[used];
@@ -231,8 +230,8 @@ export class BoardRenderer {
           .setDepth(MARK_DEPTH + 1);
         this.prices.push(text);
       }
-      const c = iso(plotCenter(p));
-      text.setText(`${price}`).setPosition(c.x, c.y).setData('on', true).setVisible(this.buildingsVisible);
+      const c = iso(plotCenter(p, this.mode));
+      text.setText(`${plotPurchasePrice(state, p)}`).setPosition(c.x, c.y).setData('on', true).setVisible(this.buildingsVisible);
       used++;
     }
     for (let i = used; i < this.prices.length; i++) this.prices[i]!.setData('on', false).setVisible(false);
@@ -257,7 +256,7 @@ export class BoardRenderer {
       return;
     }
     if (img === null) {
-      const foot = buildingFoot(plot);
+      const foot = buildingFoot(plot, this.mode);
       img = this.scene.add
         .image(foot.x, foot.y, SPRITES_KEY, buildingFrame(cardId))
         .setOrigin(0.5, 1)

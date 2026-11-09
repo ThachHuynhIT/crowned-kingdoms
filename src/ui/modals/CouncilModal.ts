@@ -3,6 +3,7 @@ import type { EventBus } from '../../core/events';
 import { DECREES, decreeText } from '../../data/decrees';
 import { UI_PALETTE } from '../../data/uiPalette';
 import { CONTENT } from '../../game/cards/registry';
+import { geometryFor } from '../../game/run/boardGeometry';
 import type { GameEvents } from '../../game/events';
 import type { CouncilSelection, RunCommand, RunState } from '../../game/run/state';
 import { SPRITES_KEY, iconFrame } from '../../render/atlas';
@@ -205,11 +206,28 @@ export class CouncilModal {
       return;
     }
     this.header(a, `Chọn ${sub.limit} ô khoá để mở (${sub.picked.length}/${sub.limit})`);
-    const side0 = councilPlotSide(a.h);
-    const side = 5 * side0 + 4 * CELL_GAP;
+    const g = geometryFor(this.state.mode);
+    const endless = this.state.mode === 'endless';
+    const side0 = endless ? 44 : councilPlotSide(a.h);
+    const cols = endless ? Math.max(1, Math.min(g.side, Math.floor((body.w + CELL_GAP) / (side0 + CELL_GAP)))) : g.side;
+    const rows = endless ? Math.max(1, Math.min(g.side, Math.floor((body.h - CHIP_H - CHIP_GAP) / (side0 + CELL_GAP)))) : g.side;
+    const colPages = Math.ceil(g.side / cols);
+    const pages = colPages * Math.ceil(g.side / rows);
+    this.page = Math.min(this.page, pages - 1);
+    const colStart = (this.page % colPages) * cols;
+    const rowStart = Math.floor(this.page / colPages) * rows;
+    const side = cols * side0 + (cols - 1) * CELL_GAP;
     const x0 = Math.round(body.x + (body.w - side) / 2);
-    for (let plot = 0; plot < 25; plot++) {
-      const r = { x: x0 + (plot % 5) * (side0 + CELL_GAP), y: body.y + Math.floor(plot / 5) * (side0 + CELL_GAP), w: side0, h: side0 };
+    const offset = endless ? 1 : 0;
+    for (let plot = 0; plot < g.plotCount; plot++) {
+      const cellCoords = g.plotCells[plot]!;
+      const col = cellCoords.col + offset - colStart;
+      const row = cellCoords.row + offset - rowStart;
+      if (col < 0 || col >= cols || row < 0 || row >= rows) continue;
+      const r = {
+        x: x0 + col * (side0 + CELL_GAP), y: body.y + row * (side0 + CELL_GAP),
+        w: side0, h: side0,
+      };
       const state = this.state.plots[plot]!;
       const picked = sub.picked.includes(plot);
       const eligible = sub.eligible.includes(plot);
@@ -222,6 +240,24 @@ export class CouncilModal {
         });
       }
       if (picked) this.add(addUiText(this.scene, r.x + r.w / 2, r.y + r.h / 2, String(sub.picked.indexOf(plot) + 1), 16).setOrigin(0.5));
+    }
+    if (pages > 1) {
+      const y = body.y + rows * (side0 + CELL_GAP) + CHIP_H / 2;
+      const go = (delta: number): void => {
+        this.page = Math.max(0, Math.min(pages - 1, this.page + delta));
+        this.layout();
+      };
+      const prev = createButton(this.scene, body.x + 22, y, '‹', {
+        width: 44, height: CHIP_H, fontSize: 20, onClick: () => go(-1),
+      });
+      const next = createButton(this.scene, body.x + body.w - 22, y, '›', {
+        width: 44, height: CHIP_H, fontSize: 20, onClick: () => go(1),
+      });
+      prev.setEnabled(this.page > 0);
+      next.setEnabled(this.page < pages - 1);
+      this.root.add([prev.container, next.container]);
+      this.area.push({ destroy: () => prev.container.destroy() }, { destroy: () => next.container.destroy() });
+      this.add(addUiText(this.scene, body.x + body.w / 2, y, `${this.page + 1}/${pages}`, 13).setOrigin(0.5));
     }
   }
 

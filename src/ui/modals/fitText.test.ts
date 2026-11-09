@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest';
-import { largestFitting } from './fitText';
+import { fitTextWidth, largestFitting } from './fitText';
 
 describe('largestFitting', () => {
   it('returns the largest size that fits', () => {
@@ -13,5 +13,16 @@ describe('largestFitting', () => {
 
   it('copes with a range given the wrong way round', () => {
     expect(largestFitting(10, 12, () => true)).toBe(12);
+  });
+});
+
+describe('fitTextWidth', () => {
+  it('shrinks a text until it fits its width, never below min', () => {
+    let size = 0;
+    const text = { setFontSize: (s: number) => (size = s), get width() { return size * 10; } };
+    expect(fitTextWidth(text, 18, 11, 150)).toBe(15);
+    expect(size).toBe(15);
+    expect(fitTextWidth(text, 18, 11, 50)).toBe(11);
+    expect(fitTextWidth(text, 18, 11, 500)).toBe(18);
   });
 });

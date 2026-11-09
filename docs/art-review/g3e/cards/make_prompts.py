@@ -17,6 +17,8 @@ D = ROOT / 'docs/art-review/g3e/cards'
 STYLE_DOC = 'docs/ART_STYLE.md'
 REFERENCE = 'docs/art-review/style-references/harvester-house-front-approved.png'
 CATALOG = D / 'cards.json'
+# an approved card picture of the same kind, attached to every card prompt (ART_STYLE: approved image of the same kind)
+CARD_REFERENCE = 'docs/art-review/style-references/card-art-approved.png'
 
 # The building prompts use the "Prompt mẫu dùng lại" block of docs/ART_STYLE.md word for word (the mandatory frame
 # says not to retype it): reuse the building tool's extractor instead of copying the text here.
@@ -134,6 +136,55 @@ VISUAL = {
 }
 
 
+# G5 (2026-11-09): cards that had no picture yet (Clock, Moon, Nomad, neutral, the new thrones).
+VISUAL.update({
+    'clock_bell_tower': 'a slender brass-and-stone clock bell tower with a big bronze bell visible in its open top, gears on the side, ripples of sound around the bell; the top of the tower clearly visible.',
+    'clock_colossus': 'a big brass workshop hall with a huge furnace door, a giant brass automaton half-assembled on a gantry in front of it, steam and gears; the colossus is the clear subject.',
+    'clock_gear_tower': 'a squat brass turret built around a large spinning cogwheel, a small repeating gun on top, copper pipes; the top and the gun clearly visible.',
+    'clock_rewind': 'the SUBJECT is an ornate brass pocket watch floating open, its hands spinning backwards with a glowing blue trail curling counter-clockwise; one iconic object, no building, no people.',
+    'clock_spiders': 'a small brass workshop with a round porthole door, three little clockwork spiders crawling out of it, scattered gears and springs; the spiders are the subject.',
+    'clock_spring_workshop': 'a cosy workshop with a blue slate roof and a big coiled spring hanging as a sign, crates of springs and gears at the door, a crank on the wall.',
+    'clock_steam_cannon': 'a heavy brass steam cannon on a riveted stone base, a pressure boiler behind it puffing steam, a stack of cannonballs; the cannon clearly visible.',
+    'clock_throne': 'the SUBJECT is a throne of polished brass with a big cogwheel backrest and a clock face set in it, gear ornaments, a gear-emblem banner behind it, standing on a stone dais; front facing, seen from the 45-degree downward view.',
+    'clock_tick_rune': 'the SUBJECT is a round brass rune medallion with a ticking second hand on it, small glowing blue tick marks around its rim; one iconic charm, no building, no people.',
+    'clock_windup_soldiers': 'a toy-like tin barracks painted blue and gold with a giant wind-up key on its roof, two little tin soldiers with keys in their backs marching out of the door.',
+    'forge_throne': 'the SUBJECT is a throne forged from dark iron with a giant anvil as its seat back, glowing ember-red seams, hammers crossed above it and a red banner, standing on a stone dais; front facing, seen from the 45-degree downward view.',
+    'grove_throne': 'the SUBJECT is a throne grown from a living ancient tree, its backrest a curved trunk with a leafy crown and antlers, roots for legs, moss and flowers, a leaf banner; front facing, seen from the 45-degree downward view.',
+    'moon_altar': 'a moonstone altar shrine with violet candles and a silver crescent on top, small offering bowls on its steps, a faint violet glow; mysterious but cute, not gory.',
+    'moon_blood_moon_rune': 'the SUBJECT is a crimson moon rune disc with a crescent carved in it, glowing red-violet light drifting like mist from its rim; one iconic charm, no building, no people, not gory.',
+    'moon_blood_pact': 'the SUBJECT is a rolled violet contract scroll sealed with a crescent wax seal, a small silver dagger crossed over it and a few gold coins; one iconic object, no building, no people, not gory.',
+    'moon_crypt': 'a small stone crypt with a violet tiled roof and a crescent over the door, three cute skeletons peeking out of the open door, candles on the steps; not scary.',
+    'moon_eclipse_pact': 'the SUBJECT is a dark eclipse disc ringed by a thin silver crescent floating above an open book of pacts, a single fading heart-shaped light leaving it; one iconic object, no building, no people.',
+    'moon_reaper_shrine': 'a tall moonstone shrine with a hooded reaper statue holding a crescent scythe in an arched niche, violet banners, candles; mysterious but cute.',
+    'moon_shadow_spire': 'a slender dark moonstone spire with a floating violet crystal on top, small cute shadow ghosts circling it; the top of the spire clearly visible.',
+    'moon_summoning_circle': 'a glowing violet summoning circle on a moonstone floor ringed by candles and small standing stones, a small cute ghost rising from its centre.',
+    'moon_throne': 'the SUBJECT is a pale moonstone throne with a crescent-moon backrest and a dark eclipse disc above it, violet cushions, candles, a crescent banner, standing on a stone dais; front facing, seen from the 45-degree downward view.',
+    'moon_vampires': 'a small elegant gothic manor with violet roofs and pointed towers, lit arched windows, bats circling the towers, a red carpet at the door; charming, not scary.',
+    'neutral_archer_tower': 'a sturdy wooden archer tower on a stone base with a shingled roof, a bow and arrow slits, a quiver rack; the top of the tower clearly visible.',
+    'neutral_barracks': 'a plain timber barracks with a shingled roof, a weapon rack of spears and shields by the door, a blue pennant, a training dummy.',
+    'neutral_clear_land': 'the SUBJECT is a patch of wild land being cleared: an axe stuck in a stump, a pile of cut brush and a fresh square of tilled earth with a little marker stake; one iconic scene, no building, no people.',
+    'neutral_demolish': 'the SUBJECT is a big wooden mallet striking a small cracked wooden house that falls apart into planks and a puff of dust, a few gold coins bouncing out; one iconic scene, no people.',
+    'neutral_duplicate': 'the SUBJECT is a small house and its glowing translucent copy beside it, linked by a shimmering blue mirror light; one iconic scene, no people.',
+    'neutral_fortify': 'the SUBJECT is a round steel shield with an iron rivet ring and a stone-brick emblem, glowing golden lines of strength around it; one iconic charm, no building, no people.',
+    'neutral_mercenary_camp': 'a canvas tent camp with a striped awning, a signboard with a coin symbol, a weapon rack and a chest of gold coins at the entrance.',
+    'neutral_move': 'the SUBJECT is a small house lifted on wooden rollers with ropes, a dotted arrow showing it moving to a new spot; one iconic scene, no people.',
+    'neutral_promote': 'the SUBJECT is a small golden star badge with an upward arrow rising above a little house, sparkles around it; one iconic object, no people.',
+    'neutral_royal_seal': 'the SUBJECT is a heavy golden royal seal stamping a crown emblem in red wax on a parchment, a small glow; one iconic object, no people.',
+    'neutral_sharpen': 'the SUBJECT is a sword blade on a round whetstone with bright sparks flying, a gleaming edge; one iconic object, no people.',
+    'neutral_well': 'a small stone village well with a wooden roof, a rope and bucket, a few gold coins glinting in the bucket.',
+    'nomad_bazaar': 'a colourful steppe market stall of golden felt and red cloth with rugs, pots, spices and sacks laid out under its awning.',
+    'nomad_caravan': 'a loaded caravan wagon with a golden felt cover, bundles, barrels and rugs tied on, a small horse beside it.',
+    'nomad_horse_archers': 'a round golden felt yurt-barracks with a rack of short recurve bows and quivers, a horse tied at the post beside it.',
+    'nomad_khan_guard': 'a large red-and-gold guard yurt with a spiked horse-tail standard, lamellar armour and glaives on a rack by the entrance.',
+    'nomad_relocate': 'the SUBJECT is a folded felt yurt being packed onto a horse with ropes and poles, a dotted trail across the steppe to a new spot; one iconic scene, no people.',
+    'nomad_riders': 'a wooden stable-barracks with a red felt roof and a horse-head carving, two saddled horses at the rail, sabres on the wall.',
+    'nomad_stables': 'a long open stable with a golden felt roof, horses peeking out of the stalls, hay bales and a water trough.',
+    'nomad_throne': 'the SUBJECT is a low throne of golden felt cushions and carved wood under a small round canopy with a golden crown finial, rugs and a horse-tail standard, standing on a raised wooden dais; front facing, seen from the 45-degree downward view.',
+    'nomad_watchtower': 'a tall wooden steppe watchtower wrapped in red felt with a small platform on top, flags fluttering, a bow and a horn at the top; the top clearly visible.',
+    'nomad_wind_rune': 'the SUBJECT is a carved bone rune charm tied with a red ribbon, swirling streaks of steppe wind and grass blades whirling around it; one iconic charm, no building, no people.',
+    'tide_throne': 'the SUBJECT is a throne carved from pink coral and pearl with a seashell backrest, an anchor and a small brass cannon beside it, a sea-teal banner, standing on a stone dais; front facing, seen from the 45-degree downward view.',
+})
+
 def load_cards():
     return {c['id']: c for c in json.loads(CATALOG.read_text(encoding='utf-8'))}
 
@@ -165,7 +216,7 @@ def main(only):
         out = (d / 'source.png').relative_to(ROOT).as_posix()
         (d / 'prompt.md').write_text(build_prompt(out, card), encoding='utf-8')
         prompt = (d / 'prompt.md').relative_to(ROOT).as_posix()
-        images = f'-i {REFERENCE}'
+        images = f'-i {REFERENCE} -i {CARD_REFERENCE}'
         portrait = f"docs/art-review/g3e/portraits/{card['owner']}/source.png"
         if card['owner'] != 'neutral' and (ROOT / portrait).exists():
             images += f' -i {portrait}'

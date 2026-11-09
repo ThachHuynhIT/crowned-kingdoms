@@ -153,3 +153,32 @@ describe('lockedPlotTap', () => {
     expect(lockedPlotTap(state(), 6, clearLand)).toEqual({ kind: 'ignore' }); // open plot is not a target
   });
 });
+
+describe('Endless target hints and prices', () => {
+  it('targets all 49 plots and moves across the inner/outer seam', () => {
+    const plots = initialPlots('endless');
+    plots[0] = { unlocked: true, building: bld(1) };
+    plots[32] = { unlocked: true, building: null };
+    expect(plotHighlights(plots, clearLand, []).size).toBe(49);
+    expect(plotHighlights(plots, clearLand, []).get(48)).toBe('good');
+    expect(plotIllegalReason(plots, move, [0], 32)).toBeNull();
+    expect(plotHighlights(plots, move, [0]).get(32)).toBe('good');
+  });
+
+  it('shows the shared discounted outer price and the unchanged inner price', () => {
+    const plots = initialPlots('endless');
+    plots[0] = { unlocked: true, building: null };
+    const state = {
+      mode: 'endless' as const,
+      plots,
+      purchasedPlots: 1,
+      endless: {
+        blessingStacks: { survey: 1 }, lastBlessingYear: 30,
+        modifierId: null, modifierStartYear: 0,
+      },
+    };
+    expect(lockedPlotTap(state, 32, null)).toEqual({ kind: 'buy', price: 19 });
+    expect(lockedPlotTap(state, 1, null)).toEqual({ kind: 'buy', price: 5 });
+    expect(lockedPlotTap(state, 48, clearLand)).toEqual({ kind: 'target' });
+  });
+});

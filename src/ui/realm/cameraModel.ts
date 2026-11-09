@@ -1,5 +1,8 @@
 import { project, unproject } from '../../core/iso';
 import { BATTLE } from '../../data/battle';
+import type { RunMode } from '../../data/rules';
+import { geometryFor, plotCoords } from '../../game/run/boardGeometry';
+import { plotAtWorld } from '../../render/endlessBoardModel';
 import type { Point, Rect, Size } from '../hud/layout';
 import { ZOOM_MAX, cameraScroll, overviewZoom, realmCamera, screenToWorld, type RealmPhase } from './realmLayout';
 
@@ -37,11 +40,19 @@ export const MAP_BOUNDS = {
 const WHEEL_RATE = 0.001;
 const WHEEL_MAX = 100;
 
-export const overviewView = (screen: Size, phase: RealmPhase): CameraView => realmCamera(screen, phase);
+export const overviewView = (
+  screen: Size,
+  phase: RealmPhase,
+  mode: RunMode = 'normal',
+): CameraView => realmCamera(screen, phase, mode);
 
 /** The free zoom range of a phase: from its overview zoom to `ZOOM_MAX` (spec 2026-11-08 §4). */
-export const zoomLimits = (screen: Size, phase: RealmPhase): { min: number; max: number } => {
-  const min = overviewZoom(screen, phase);
+export const zoomLimits = (
+  screen: Size,
+  phase: RealmPhase,
+  mode: RunMode = 'normal',
+): { min: number; max: number } => {
+  const min = overviewZoom(screen, phase, 3, mode);
   return { min, max: Math.max(min, ZOOM_MAX) };
 };
 
@@ -79,7 +90,8 @@ const CENTRE_BOUNDS = { x0: WORLD_BOUNDS.x0, y0: BATTLE.wallY, x1: WORLD_BOUNDS.
  * slides the screen centre sideways, along its screen row, onto the part of that row inside `CENTRE_BOUNDS`
  * (on the field, south of the wall), as far as the rect still allows. Sideways only, so the rect clamp holds.
  */
-export const clampView = (view: CameraView, screen: Size): CameraView => {
+export const clampView = (view: CameraView, screen: Size, mode: RunMode = 'normal'): CameraView => {
+  const centreBounds = { ...CENTRE_BOUNDS, y0: geometryFor(mode).wallY };
   const rect = clampRect(view, screen);
   const hx = screen.w / 2;
   const cx = rect.scroll.x + hx;
@@ -90,8 +102,8 @@ export const clampView = (view: CameraView, screen: Size): CameraView => {
     ? [cx, cx]
     : [MAP_BOUNDS.x0 + hw, MAP_BOUNDS.x1 - hw];
   // World (x, y) = (cy − cx/2, cy + cx/2): each CENTRE_BOUNDS side is a bound on cx for this row.
-  const lo = Math.max(bx0, 2 * (CENTRE_BOUNDS.y0 - cy), 2 * (cy - CENTRE_BOUNDS.x1));
-  const hi = Math.min(bx1, 2 * (CENTRE_BOUNDS.y1 - cy), 2 * (cy - CENTRE_BOUNDS.x0));
+  const lo = Math.max(bx0, 2 * (centreBounds.y0 - cy), 2 * (cy - centreBounds.x1));
+  const hi = Math.min(bx1, 2 * (centreBounds.y1 - cy), 2 * (cy - centreBounds.x0));
   if (lo > hi) return rect; // this row never crosses the field (a view taller than the map): keep the rect clamp
   return { zoom: rect.zoom, scroll: { x: Math.min(hi, Math.max(lo, cx)) - hx, y: rect.scroll.y } };
 };
@@ -117,11 +129,18 @@ const clampRect = (view: CameraView, screen: Size): CameraView => {
  * Zoom to `next`, clamped to the phase's free range (spec 2026-11-08 §4), keeping the world point under `p` still
  * unless the map edge clamp wins. Reaching the overview zoom does not snap the view back to the overview centre.
  */
-export const zoomAt = (view: CameraView, p: Point, next: number, screen: Size, phase: RealmPhase): CameraView => {
-  const { min, max } = zoomLimits(screen, phase);
+export const zoomAt = (
+  view: CameraView,
+  p: Point,
+  next: number,
+  screen: Size,
+  phase: RealmPhase,
+  mode: RunMode = 'normal',
+): CameraView => {
+  const { min, max } = zoomLimits(screen, phase, mode);
   const zoom = Math.min(max, Math.max(min, Number.isFinite(next) ? next : view.zoom));
   const world = screenToWorld(p, view.scroll, screen, view.zoom);
-  return clampView({ zoom, scroll: cameraScroll(world, p, screen, zoom) }, screen);
+  return clampView({ zoom, scroll: cameraScroll(world, p, screen, zoom) }, screen, mode);
 };
 
 /**
@@ -137,16 +156,22 @@ export const pinchView = (
   nowSq: number,
   screen: Size,
   phase: RealmPhase,
+  mode: RunMode = 'normal',
 ): CameraView => {
-  const { min, max } = zoomLimits(screen, phase);
+  const { min, max } = zoomLimits(screen, phase, mode);
   const zoom = Math.min(max, Math.max(min, pinchZoom(start.zoom, startSq, nowSq)));
   const anchor = screenToWorld(startMid, start.scroll, screen, start.zoom);
-  return clampView({ zoom, scroll: cameraScroll(anchor, nowMid, screen, zoom) }, screen);
+  return clampView({ zoom, scroll: cameraScroll(anchor, nowMid, screen, zoom) }, screen, mode);
 };
 
 /** True when `view` is the phase's overview camera (the player has not zoomed or panned it). */
-export const isOverview = (view: CameraView, screen: Size, phase: RealmPhase): boolean => {
-  const o = overviewView(screen, phase);
+export const isOverview = (
+  view: CameraView,
+  screen: Size,
+  phase: RealmPhase,
+  mode: RunMode = 'normal',
+): boolean => {
+  const o = overviewView(screen, phase, mode);
   const near = (a: number, b: number): boolean => Math.abs(a - b) < 1e-6;
   return near(view.zoom, o.zoom) && near(view.scroll.x, o.scroll.x) && near(view.scroll.y, o.scroll.y);
 };
@@ -155,37 +180,55 @@ export const isOverview = (view: CameraView, screen: Size, phase: RealmPhase): b
  * A hand-set view carried into another phase (spec 2026-11-08 §4): same screen-centre world point, the zoom raised
  * to the new phase's overview zoom if it was below it, kept inside the map.
  */
-export const keepView = (view: CameraView, screen: Size, phase: RealmPhase): CameraView => {
-  const { min, max } = zoomLimits(screen, phase);
+export const keepView = (
+  view: CameraView,
+  screen: Size,
+  phase: RealmPhase,
+  mode: RunMode = 'normal',
+): CameraView => {
+  const { min, max } = zoomLimits(screen, phase, mode);
   const zoom = Math.min(max, Math.max(min, view.zoom));
   const mid = { x: screen.w / 2, y: screen.h / 2 };
   const centre = screenToWorld(mid, view.scroll, screen, view.zoom);
-  return clampView({ zoom, scroll: cameraScroll(centre, mid, screen, zoom) }, screen);
+  return clampView({ zoom, scroll: cameraScroll(centre, mid, screen, zoom) }, screen, mode);
 };
 
 /**
  * Drag the map by a screen delta (the world follows the finger), at any zoom step: the isometric
  * board is wider than a phone even at the overview step.
  */
-export const panBy = (view: CameraView, delta: Point, screen: Size, _phase: RealmPhase): CameraView => {
+export const panBy = (
+  view: CameraView,
+  delta: Point,
+  screen: Size,
+  _phase: RealmPhase,
+  mode: RunMode = 'normal',
+): CameraView => {
   return clampView(
     { zoom: view.zoom, scroll: { x: view.scroll.x - delta.x / view.zoom, y: view.scroll.y - delta.y / view.zoom } },
     screen,
+    mode,
   );
 };
 
 /** After a resize: the overview stays the overview; a zoomed view keeps the world point at the screen centre. */
-export const resizeView = (view: CameraView, from: Size, to: Size, phase: RealmPhase): CameraView => {
-  const base = overviewView(to, phase);
-  if (view.zoom <= overviewView(from, phase).zoom || view.zoom <= base.zoom) return base;
+export const resizeView = (
+  view: CameraView,
+  from: Size,
+  to: Size,
+  phase: RealmPhase,
+  mode: RunMode = 'normal',
+): CameraView => {
+  const base = overviewView(to, phase, mode);
+  if (view.zoom <= overviewView(from, phase, mode).zoom || view.zoom <= base.zoom) return base;
   const centre = screenToWorld({ x: from.w / 2, y: from.h / 2 }, view.scroll, from, view.zoom);
-  return clampView({ zoom: view.zoom, scroll: cameraScroll(centre, { x: to.w / 2, y: to.h / 2 }, to, view.zoom) }, to);
+  return clampView({ zoom: view.zoom, scroll: cameraScroll(centre, { x: to.w / 2, y: to.h / 2 }, to, view.zoom) }, to, mode);
 };
 
 /**
  * World point under screen point `p` (camera, then the inverse isometric projection) for battle aim: the field, plus
  * the strip south of it down to the clamp line, so the enemy portal (spec 2026-11-08 §3) can be aimed at; null
- * elsewhere. Card placement does not use this: it goes through `plotAtView` (25 plots only).
+ * elsewhere. Card placement does not use this: it goes through `plotAtView` (the run geometry).
  */
 export const worldAtView = (view: CameraView, screen: Size, p: Point): Point | null => {
   const w = unproject(screenToWorld(p, view.scroll, screen, view.zoom));
@@ -193,15 +236,16 @@ export const worldAtView = (view: CameraView, screen: Size, p: Point): Point | n
   return w;
 };
 
-const SIDE = 5;
 
 /** Plot whose diamond holds screen point `p` through the live view, null off the board. */
-export const plotAtView = (view: CameraView, screen: Size, p: Point): number | null => {
+export const plotAtView = (
+  view: CameraView,
+  screen: Size,
+  p: Point,
+  mode: RunMode = 'normal',
+): number | null => {
   const w = unproject(screenToWorld(p, view.scroll, screen, view.zoom));
-  const col = Math.floor((w.x - BATTLE.boardOrigin) / BATTLE.plot);
-  const row = Math.floor((w.y - BATTLE.boardOrigin) / BATTLE.plot);
-  if (col < 0 || col >= SIDE || row < 0 || row >= SIDE) return null;
-  return row * SIDE + col;
+  return plotAtWorld(w.x, w.y, mode);
 };
 
 /** World point `w` on screen through the live view (isometric projection, then the camera). */
@@ -213,9 +257,13 @@ export const worldToScreen = (view: CameraView, screen: Size, w: Point): Point =
 };
 
 /** Screen bounding box of `plot`'s diamond through the live view. */
-export const plotRectAtView = (view: CameraView, screen: Size, plot: number): Rect => {
-  const col = plot % SIDE;
-  const row = Math.floor(plot / SIDE);
+export const plotRectAtView = (
+  view: CameraView,
+  screen: Size,
+  plot: number,
+  mode: RunMode = 'normal',
+): Rect => {
+  const { col, row } = plotCoords(plot, mode);
   const x0 = BATTLE.boardOrigin + col * BATTLE.plot;
   const y0 = BATTLE.boardOrigin + row * BATTLE.plot;
   const corners = [

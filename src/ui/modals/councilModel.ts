@@ -12,16 +12,17 @@ import { adjacentToUnlocked, unlockPlot } from '../../game/run/board';
 import { MAX_PURGE, councilComplete, expandTarget, rarePool } from '../../game/run/council';
 import type { CouncilSelection, OfferState, PlotState, QuestState, RunCommand, RunState } from '../../game/run/state';
 
-export type ModalKind = 'council' | 'quest' | 'cards';
+export type ModalKind = 'council' | 'quest' | 'cards' | 'blessing';
 
 type CouncilOffer = Extract<OfferState, { kind: 'council' }>;
 
-/** Which modal the state needs: the council, a quest offer, a card picker, or none. */
+/** Which modal the state needs: the council, a quest offer, a card picker, an Endless blessing, or none. */
 export const modalKind = (state: RunState): ModalKind | null => {
   const offer = state.offers;
   if (offer === null) return null;
   if (state.phase === 'council' && offer.kind === 'council') return 'council';
   if (state.phase === 'quest' && offer.kind === 'quest') return 'quest';
+  if (state.phase === 'blessing' && offer.kind === 'blessing') return 'blessing';
   if ((state.phase === 'reward' || state.phase === 'conquest') && 'cardIds' in offer) return 'cards';
   return null;
 };

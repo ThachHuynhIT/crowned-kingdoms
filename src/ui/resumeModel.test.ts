@@ -1,7 +1,24 @@
 import { describe, expect, it } from 'vitest';
 import { INCOMPATIBLE_RUN_TEXT } from '../data/save';
 import { runState } from '../game/testing/fixtures';
-import { LoadGuard, resumeTarget } from './resumeModel';
+import { RULES_ENDLESS, RULES_FULL } from '../data/rules';
+import { CONTENT } from '../game/cards/registry';
+import { newRun } from '../game/run/yearFlow';
+import { LoadGuard, continueLabel, resumeCaption, resumeTarget } from './resumeModel';
+
+describe('resumeCaption', () => {
+  it('reads the mode and year from the saved state', () => {
+    const endless = { ...newRun(3, 'wheat', CONTENT, RULES_ENDLESS), year: 41 };
+    expect(resumeCaption(endless)).toBe('Vô tận · Năm 41');
+    const normal = { ...newRun(3, 'wheat', CONTENT, RULES_FULL), year: 12 };
+    expect(resumeCaption(normal)).toBe('30 năm · Năm 12');
+  });
+
+  it('the Continue label carries it on a second line, plain before a save loads', () => {
+    expect(continueLabel(null)).toBe('Tiếp tục');
+    expect(continueLabel({ ...newRun(3, 'wheat', CONTENT, RULES_ENDLESS), year: 1_000_000 })).toBe('Tiếp tục\nVô tận · Năm 1000000');
+  });
+});
 
 describe('resumeTarget', () => {
   it('enables Continue with the run for a valid save', () => {

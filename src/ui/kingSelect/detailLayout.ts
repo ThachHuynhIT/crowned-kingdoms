@@ -27,6 +27,10 @@ export interface KingDetailLayout {
   play: Rect;
   seed: Rect;
   reroll: Rect;
+  /** The run-mode toggle: "30 năm" then "Vô tận" (spec 2026-11-09 §2). */
+  modes: readonly Rect[];
+  /** Why Vô tận is locked: right of the toggle on desktop, under it on phones. */
+  modeNote: Rect;
 }
 
 const CARD_DESKTOP = { w: 84, h: 132, gap: 8 } as const;
@@ -34,6 +38,9 @@ const CARD_PHONE = { w: 72, h: 112, gap: 6 } as const;
 /** Native size of the king card art (see `KING_CARD_NATIVE`), times the screen scale. */
 const KING_CARD = { w: 66, h: 96 } as const;
 const GRID = 3;
+const MODE_BUTTON = { w: 120, h: 44 } as const;
+const MODE_GAP = 8;
+const MODE_NOTE_W = 300;
 
 const gridCards = (x: number, y: number, c: { w: number; h: number; gap: number }): Rect[] =>
   Array.from({ length: GRID * GRID }, (_, i) => ({
@@ -61,6 +68,9 @@ export const detailLayout = (screen: Size, inset: number): KingDetailLayout => {
     const seedRowW = 300 + 8 + 120;
     const seedX = Math.round((w - seedRowW) / 2);
     const back = { x: margin, y: margin, w: 120, h: 48 };
+    const modeY = seedY + 44 + 12;
+    const modeRowW = 2 * MODE_BUTTON.w + MODE_GAP + 12 + MODE_NOTE_W;
+    const modeX = Math.round((w - modeRowW) / 2);
     return {
       desktop,
       title: { x: back.x + back.w + margin, y: 20, w: Math.max(0, w - 2 * (back.x + back.w + margin)), h: 44 },
@@ -75,6 +85,11 @@ export const detailLayout = (screen: Size, inset: number): KingDetailLayout => {
       play: { x: x0 + totalW - 168, y: footerY, w: 168, h: 56 },
       seed: { x: seedX, y: seedY, w: 300, h: 44 },
       reroll: { x: seedX + 308, y: seedY, w: 120, h: 44 },
+      modes: [
+        { x: modeX, y: modeY, w: MODE_BUTTON.w, h: MODE_BUTTON.h },
+        { x: modeX + MODE_BUTTON.w + MODE_GAP, y: modeY, w: MODE_BUTTON.w, h: MODE_BUTTON.h },
+      ],
+      modeNote: { x: modeX + 2 * MODE_BUTTON.w + MODE_GAP + 12, y: modeY, w: MODE_NOTE_W, h: MODE_BUTTON.h },
     };
   }
 
@@ -90,6 +105,10 @@ export const detailLayout = (screen: Size, inset: number): KingDetailLayout => {
   const rowW = w - 2 * margin;
   const back = { x: margin, y: margin, w: 96, h: 48 };
   const nextX = margin + rowW - 44;
+  // Phones: the toggle stacks in the column left of the king card, the locked reason under it.
+  const portraitX = Math.round((w - portraitW) / 2);
+  const modeW = Math.min(MODE_BUTTON.w, portraitX - 8 - margin);
+  const noteY = portraitY + 2 * (MODE_BUTTON.h + MODE_GAP);
   return {
     desktop,
     title: { x: back.x + back.w + margin, y: 14, w: Math.max(0, w - 2 * (back.x + back.w + margin)), h: 40 },
@@ -109,6 +128,11 @@ export const detailLayout = (screen: Size, inset: number): KingDetailLayout => {
     play: { x: margin, y: playY, w: rowW, h: 56 },
     seed: { x: margin, y: seedY, w: rowW - 8 - 120, h: 44 },
     reroll: { x: margin + rowW - 120, y: seedY, w: 120, h: 44 },
+    modes: [
+      { x: margin, y: portraitY, w: modeW, h: MODE_BUTTON.h },
+      { x: margin, y: portraitY + MODE_BUTTON.h + MODE_GAP, w: modeW, h: MODE_BUTTON.h },
+    ],
+    modeNote: { x: margin, y: noteY, w: modeW, h: portraitY + portraitH - noteY },
   };
 };
 

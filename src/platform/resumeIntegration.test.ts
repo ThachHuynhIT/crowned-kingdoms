@@ -200,6 +200,24 @@ describe('resume_matrix', () => {
     expect(await again.store.loadMeta()).toEqual({ crowns: 3 });
   });
 
+  it('discarding mid-run after the controller settles leaves no run and the same profile (G5 §4)', async () => {
+    const disk = new IDBFactory();
+    const session = await reload(disk);
+    await session.updateSettings({ music: 40, screenShake: false });
+    const profile = session.meta();
+    const sample = SAMPLES.find((s) => s.label === 'planning before play')!;
+    const controller = new RunController(createGameBus(), CONTENT, sample.state, session.persistence);
+    // Several checkpoints still queued when the player asks to discard.
+    void session.persistence.checkpoint(sample.state);
+    void session.persistence.checkpoint(sample.state);
+    await controller.whenIdle();
+    controller.dispose();
+    expect(await session.discardRun()).toEqual({ persistent: true });
+    const again = await reload(disk);
+    expect(await again.load()).toEqual({ kind: 'empty' });
+    expect(again.meta()).toEqual(profile);
+  });
+
   it('a content set with extra ids still loads; one missing a used card is refused and cleared', async () => {
     const sample = SAMPLES.find((s) => s.label === 'reward')!;
     const disk = new IDBFactory();
@@ -225,7 +243,7 @@ describe('resume_matrix', () => {
 });
 
 describe('resume_matrix with G4 kings and perks', () => {
-  it("a run with perk 'stone_p1' reloaded mid-battle restarts with the throne at 650 HP on tick 0", async () => {
+  it("a run with perk 'stone_p1' reloaded mid-battle restarts with the throne at 470 HP on tick 0", async () => {
     let state = newRun(5, 'stone', CONTENT, RULES_FULL, { perk: 'stone_p1' });
     const rng = new Rng(9);
     for (let i = 0; i < 200 && state.phase !== 'battle'; i++) {
@@ -247,8 +265,8 @@ describe('resume_matrix with G4 kings and perks', () => {
     await controller.whenIdle();
     const world = controller.runner!.world;
     expect(world.tick).toBe(0);
-    expect(world.hp[world.throneId]).toBe(650);
-    expect(world.maxHp[world.throneId]).toBe(650);
+    expect(world.hp[world.throneId]).toBe(470);
+    expect(world.maxHp[world.throneId]).toBe(470);
   });
 
   it('a Nomad run that used its free move this year still has used it after a reload', async () => {

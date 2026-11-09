@@ -17,11 +17,27 @@ Game đổi thể loại từ colony sim sang **roguelite xây vương quốc + 
 
 **G0 ✔ · G1 ✔ · G2 ✔ · G3 ✔ · G4 ✔** — G3 chơi được trong trình duyệt: "Tiếp tục" hoặc "Ván mới" → Chọn vua (Lúa Mì / Đá Núi / Phép Thuật) → ván 30 năm (lịch 6 vua địch, Liên Quân, hội đồng 5 lần, nhiệm vụ, 3 boss ở năm 10/20/30, chinh phục 6 vua), lưu ván IndexedDB, bố cục desktop 1280×720 và mobile 375×812. Tiếp theo: **G5** (cân bằng, âm thanh, juice, mobile, đóng gói).
 
+**G5 (đang làm, nhánh `g5-balance-polish`, plan `docs/superpowers/plans/2026-11-09-g5-balance-polish.md`, 09/11/2026):**
+- **P1 công cụ cân bằng:** xong. Bot `greedy`, lệnh `npm run balance`, CSV trong `tools/out/`.
+- **P2 cân bằng:** xong. Chín vua thắng 44,8–55,6%, chênh lệch 10,8 điểm (500 ván/vua, Gai 0); 2 mạng đầu ván và máu Ngai mới từng vua; báo cáo `docs/balance/2026-11-09-g5-balance-report.md`.
+- **P3 âm thanh, Cài đặt:** xong. Âm thanh và nhạc sinh bằng code, AudioManager, màn Cài đặt (âm lượng, rung, xoá ván); âm thanh trận theo sự kiện trận (`scenes/audioCues.ts`).
+- **P4 juice:** xong. Thẻ bay từ tay xuống ô (`cardFlyModel`), vàng nổi, lính chớp sáng khi trúng đòn.
+- **P5:** xong phần làm được trên máy. PWA chơi offline; safe-area (`index.html`); đo khung hình trên desktop và khi bóp CPU 4× (`docs/balance/2026-11-09-g5-performance.md`); trận ép chạm trần thực thể, lính và đạn (`stress.test.ts`). Chưa đo trên điện thoại thật.
+- **P6 art:**
+  - Art isometric cho cả 9 vua (Ngai, công trình, 4 kiểu ô); lính của cả 9 vua và lính đánh thuê (6 tư thế, hai phe); Thổ Phỉ, quân triệu hồi, 3 boss.
+  - Tranh cho cả 102 thẻ, 14 icon trong game, huy hiệu 9 vua.
+  - Nền menu chính bằng tranh; texture đường đất và cỏ hoa cho mặt đất.
+  - Giữ vẽ bằng code, có lý do ghi trong `docs/art-review/g5/`: FX trận (cỡ 4–16 px) và 90 khung giao diện theo vua.
+- **P7 nghiệm thu:** `docs/balance/2026-11-09-g5-acceptance.md`; chỉ còn đo fps trên điện thoại thật.
+- **Plan tiếp theo:**
+  - Chế độ Vô tận: `docs/superpowers/plans/2026-11-09-endless-mode.md`. Đã gộp vào nhánh G5: E1 (luật, dữ liệu, save v7, meta v2), E2 (hình học trận và vẽ bàn 7×7), E4 (chạy không giao diện, bot greedy sống qua năm 40). E3 (giao diện: chọn chế độ, bảng phúc lành, lịch chia trang, điểm sống sót) và test tải lại ở các năm 30–41 cũng đã xong.
+  - Toàn bộ asset còn thiếu: `docs/superpowers/plans/2026-11-09-missing-art-assets.md`.
+
 **G4 (kings và meta, nhánh `g4-kings-meta`, plan `docs/superpowers/plans/2026-11-09-g4-kings-and-meta.md`):** chơi được đủ 9 vua (Lúa Mì, Đá Núi, Phép Thuật, Rừng Xanh, Thuỷ Triều, Lò Rèn, Đồng Hồ, Ánh Trăng, Du Mục), mỗi vua một Ngai, bị động và 3 perk (27 perk), hai thẻ trung lập meta (Nhân Bản, Ấn Triện), lệnh dời trại miễn phí của Du Mục. Meta (`src/game/meta/`): Điểm Vương Miện `round((số năm + 3 × vua chinh phục + 5 × boss + 20 nếu thắng) × (1 + 0,2 × Gai))`, thông thạo từng vua (perk mở ở 10/30/60), mở vua (25/25/40/40/60/80, Du Mục cần thêm ≥ 1 thắng), mở thẻ trung lập (15/20), độ khó Gai 0–5; hồ sơ meta lưu IndexedDB (store `meta`), không bao giờ bị xoá; `RunState` v6 (migrator 5 → 6). `KingSelectScene` có khoá, perk và Gai; `RunEndScene` hiện bảng điểm; `CrownsScene` hiện điểm, thông thạo và mở khoá.
 
 **Kiểm "Done khi" G4:** 9 vua chơi được (`kings.*.test.ts`, `perkCoverage.test.ts`, `cardCoverage.test.ts`); Du Mục khoá đúng điều kiện và điểm khớp công thức (`unlocks.test.ts`, `crowns.test.ts`); mở khoá còn sau khi tải lại (`src/platform/resumeIntegration.test.ts`, `codec.test.ts`); headless 9 vua × 3 seed, ván 30 năm thật, deterministic (`fullRun.test.ts`, 27 ván); gate đầy đủ xanh (179 file, 2275 test); mỗi task có kiểm trình duyệt ở 1280×720 và 375×812 (ảnh trong thư mục SDD của PR), console không lỗi.
 
-**G4 còn lại (không chặn G5):** art của 6 vua mới vẫn sinh bằng code (chưa có art isometric); cân bằng là việc của G5; theo dõi: ghi cuối ván nguyên tử (kết thúc ván và ghi meta trong một giao dịch, hiện có khe vài mili-giây có thể tính điểm hai lần), cờ `credited` cho ván đã tính điểm rồi (màn cuối ván hiện đủ điểm dù không được cộng), `hasPlayableCard` chưa tính các từ chối theo trạng thái (Hiệp Ước Nhật Thực ở 1 mạng, Ấn Triện ở Ngai cấp 5), khoá vua hiện ẩn danh "Vua của ?" (chủ dự án chưa quyết).
+**G4 còn lại:** đã xử lý trong G5: cuối ván ghi hồ sơ meta và xoá ván trong một giao dịch (`SaveCoordinator.endRun`), cờ `credited` trên sự kiện `run:ended` (màn cuối ván nói rõ khi điểm không được cộng), `hasPlayableCard` tính các từ chối theo trạng thái (`stateRefusal`). Còn để chủ dự án quyết: khoá vua hiện ẩn danh "Vua của ?".
 
 **Bàn cờ isometric (PR #13, spec `docs/superpowers/specs/2026-11-06-iso-board-redesign-design.md`):** Ngai dời về ô 2 (hàng sau, giữa, tựa núi), chín ô giữa mở sẵn; save 4 → 5. Ô 64 px, sân 768 px, nhà đứng giữa ô, mỗi ô có khu tập kết trước cửa; chỉ lính mình đi xuyên nhà mình; tầm công trình +50%; một con đường duy nhất. Zoom tự do từ mức tổng quan của pha đó (bàn cờ chiếm 65% bề ngang màn hình desktop, 33/32 trên điện thoại) tới 3× (bánh xe, chụm hai ngón), kéo để pan ở mọi mức zoom. Góc nhìn isometric 2:1 (ô = hình thoi 128×64 ở zoom 1), địch vào từ bên phải màn hình; mô phỏng vẫn trên lưới vuông. Bộ art isometric của Lúa Mì (8 công trình, 4 kiểu ô, vách núi), sông và bãi cát có texture liền mạch, 15 vật trang trí hoang dã rải theo seed. Còn lại: lính vẫn vẽ nhìn thẳng, các vua khác chưa có art isometric.
 

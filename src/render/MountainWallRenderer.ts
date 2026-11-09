@@ -1,3 +1,5 @@
+import type { RunMode } from '../data/rules';
+import { geometryFor } from '../game/run/boardGeometry';
 import type Phaser from 'phaser';
 import { BATTLE } from '../data/battle';
 import type { KingId } from '../data/types';
@@ -8,17 +10,17 @@ import { layoutWall } from './mountainWallModel';
 export const WALL_EXTENT = 1024;
 
 /**
- * The mountain wall behind the castle: pieces laid along the north edge at `BATTLE.wallY`, drawn above
+ * The mountain wall behind the castle: pieces laid along the north edge at the mode descriptor wallY, drawn above
  * the field and below every plot and sprite. Textures are shared and never removed here; nothing is
  * animated, so there is no per-frame update.
  */
 export class MountainWallRenderer {
   private images: Phaser.GameObjects.Image[] = [];
 
-  constructor(scene: Phaser.Scene, seed: number, kingId?: KingId) {
+  constructor(scene: Phaser.Scene, seed: number, kingId?: KingId, mode: RunMode = 'normal') {
     const assets = ensureMountainWallTextures(scene.textures, kingId);
     const byId = new Map(assets.map((a) => [a.id, a]));
-    for (const p of layoutWall(-WALL_EXTENT, BATTLE.field + WALL_EXTENT, BATTLE.wallY, seed, assets)) {
+    for (const p of layoutWall(-WALL_EXTENT, BATTLE.field + WALL_EXTENT, geometryFor(mode).wallY, seed, assets)) {
       const asset = byId.get(p.assetId)!;
       const k = asset.imageScale;
       for (const part of asset.parts) {

@@ -1,7 +1,7 @@
 /** Dựng BattleSetup từ RunState (spec §5.3: G1 = cấp 1; §3.6: cấp địch). Thuần, không sửa đầu vào. */
 import { formationRowsFor } from '../battle/bounds';
 import { EMBER_TICKS, ENEMY_LEVEL_STAT, WAVES } from '../../data/battle';
-import { BOSSES } from '../../data/bosses';
+import { BOSSES, BOSS_RULES } from '../../data/bosses';
 import { SOUL_HARVEST_UNIT } from '../../data/kings/moon';
 import { BOSS_SUMMON_UNITS } from '../../data/raiders';
 import { RUN } from '../../data/run';
@@ -29,6 +29,8 @@ import type {
 } from '../battle/types';
 import { THRONE_PLOT } from './board';
 import { foeSpeedMult, interventionStats } from './decrees';
+import { activeModifier } from './endlessModifiers';
+import { endlessBossScale } from './endlessRules';
 import { collectStatSheet, finalStat, type StatSheet } from './modifiers';
 import { perkBattleMods, perkCooldownPct, perkSoulCost } from './perks';
 import type { RunState } from './state';
@@ -438,6 +440,32 @@ const bossSetup = (
   return { id: def.id, ordinal: def.ordinal, spawnTick: WAVES.spawnTick[1], edge: bossEdge(army), stats, summons, mirror };
 };
 
+/**
+ * Vô tận (spec 2026-11-09 §3, §6): bản sao chỉ số địch nhân HP / sát thương (cả khiên, bỏng và quân
+ * sinh khi chết). Áp một lần khi dựng trận; ván thường không gọi.
+ */
+const scaleFoe = (stats: UnitStats, hpMult: number, dmgMult: number): UnitStats => ({
+  ...stats,
+  hp: stats.hp * hpMult,
+  shield: stats.shield * hpMult,
+  dmg: stats.dmg * dmgMult,
+  ...(stats.onHit ? { onHit: stats.onHit.map((h) => ('dps' in h ? { ...h, dps: h.dps * dmgMult } : h)) } : {}),
+  deathSpawn: stats.deathSpawn ? { ...stats.deathSpawn, stats: scaleFoe(stats.deathSpawn.stats, hpMult, dmgMult) } : null,
+});
+
+/** Boss, quân triệu hồi và Bóng Gương: hệ số boss theo chu kỳ, rồi biến thể (spec 2026-11-09 §3). */
+const scaleBoss = (boss: BossSetup, scale: number, hpMult: number, dmgMult: number): BossSetup => {
+  const summons: Record<string, UnitStats> = {};
+  for (const id of Object.keys(boss.summons).sort()) summons[id] = scaleFoe(boss.summons[id]!, scale * hpMult, scale * dmgMult);
+  return {
+    ...boss,
+    stats: scaleFoe(boss.stats, scale * hpMult, scale * dmgMult),
+    summons,
+    mirror: boss.mirror ? { ...boss.mirror, stats: scaleFoe(boss.mirror.stats, scale * hpMult, scale * dmgMult) } : null,
+    specialDamage: { mud: BOSS_RULES.bog.mudDmg * scale * dmgMult },
+  };
+};
+
 export function buildBattleSetup(state: RunState, content: Content): BattleSetup {
   const army = state.army;
   if (army === null) throw new Error('buildBattleSetup: state.army is null');
@@ -459,19 +487,28 @@ export function buildBattleSetup(state: RunState, content: Content): BattleSetup
   const banner = bannerDef?.effects ?? [];
   const speedScale = foeSpeedMult(state);
   const extraEdges = banner.reduce((sum, e) => (e.type === 'extraEdge' ? sum + e.count : sum), 0);
+  // Vô tận: biến thể thập niên lên mọi kẻ địch (đã tính trong ngân sách thì không nhân lại).
+  const mod = state.mode === 'endless' ? activeModifier(state) : null;
+  const foeHp = 1 + (mod?.foeHpPct ?? 0) / 100;
+  const foeDmg = 1 + (mod?.foeDmgPct ?? 0) / 100;
+  const foe = (stats: UnitStats): UnitStats => (mod === null ? stats : scaleFoe(stats, foeHp, foeDmg));
   const waves: WaveSetup[] = army.waves.map((w) => ({
     spawnTick: w.spawnTick,
     spawns: w.units.map((s) => {
       const def = content.unit(s.unit);
       return {
-        stats: unitStats(def, mult, def.tags.includes('siege'), content, banner, speedScale),
+        stats: foe(unitStats(def, mult, def.tags.includes('siege'), content, banner, speedScale)),
         edge: 'S' as const, // mọi đợt tiến từ phía trước, kể cả army cũ lưu N/E/W
       };
     }),
     formationRows: formationRowsFor(state.year, extraEdges, w.units.length),
   }));
 
-  const boss = bossSetup(state, army, content, structures, speedScale);
+  const rawBoss = bossSetup(state, army, content, structures, speedScale);
+  const boss =
+    rawBoss !== undefined && state.mode === 'endless'
+      ? scaleBoss(rawBoss, endlessBossScale(state.year), foeHp, foeDmg)
+      : rawBoss;
   const cooldownPct = perkCooldownPct(state, content);
   const perk = perkBattleMods(state, content);
 
@@ -488,5 +525,7 @@ export function buildBattleSetup(state: RunState, content: Content): BattleSetup
       ? { intervention: interventionStats(state, cooldownPct) }
       : {}),
     ...(Object.keys(perk).length > 0 ? { perk } : {}),
+    // Vô tận: trận dùng bàn 49 ô (spec 2026-11-09 §4); ván thường không có trường này.
+    ...(state.mode === 'endless' ? { geometry: 'endless' as const } : {}),
   };
 }

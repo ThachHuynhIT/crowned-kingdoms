@@ -3,6 +3,7 @@ import { toCss } from '../data/palette';
 import { UI_PALETTE } from '../data/uiPalette';
 import type { RunState } from '../game/run/state';
 import { UI_KEY, addPixelTexture } from '../render/atlas';
+import { imageArtKey, menuImageLayers } from '../render/imageArt';
 import { HILL_LAYERS, MENU_SKY_H, menuPixelScale, paintHills, paintSky } from '../render/uiArt';
 import { resolveShortcut, shortcutFlags } from '../ui/input/shortcuts';
 import { MENU_BUTTON, layoutMenu, visibleMenuItems, type MenuItemId } from '../ui/menuLayout';
@@ -17,10 +18,12 @@ import {
   type Button,
   type UiBox,
 } from '../ui/theme';
-import { LoadGuard, resumeTarget } from '../ui/resumeModel';
+import { LoadGuard, continueLabel, resumeTarget } from '../ui/resumeModel';
 import { SCENES } from './keys';
 import type { RealmData } from './RealmScene';
 import { getSession, takeStorageWarning } from './sessionRegistry';
+import { getAudio } from './audioRegistry';
+import { openSettings } from './SettingsScene';
 
 const TITLE = 'Crowned Kingdoms';
 const SUBTITLE = 'Một vương quốc nhỏ, chín ngai vàng';
@@ -35,14 +38,14 @@ export const newRunSeed = (): number => (Date.now() ^ Math.floor(Math.random() *
 
 /**
  * What each §10.2 button does. The list and order live in `MENU_ITEMS` (hidden ones, e.g.
- * "Cài đặt" until G5, are not drawn). "Tiếp tục" starts disabled and is enabled once a valid
+ * unfinished features, are not drawn). "Tiếp tục" starts disabled and is enabled once a valid
  * saved run has loaded; "Ván mới" opens the king select; "Vương Miện" the Crowns screen.
  */
 const MENU_ACTIONS: Record<MenuItemId, (scene: MainMenuScene) => void> = {
   continue: (scene) => scene.resume(),
   newRun: (scene) => scene.scene.start(SCENES.kingSelect),
   crowns: (scene) => scene.scene.start(SCENES.crowns),
-  settings: () => undefined,
+  settings: (scene) => openSettings(scene),
   help: (scene) => openHelp(scene, null, null),
 };
 
@@ -50,6 +53,8 @@ export class MainMenuScene extends Phaser.Scene {
   private pix = 2;
   private sky!: Phaser.GameObjects.TileSprite;
   private hills: Phaser.GameObjects.TileSprite[] = [];
+  /** Drift speed of each entry of `hills` (screen px per second). */
+  private parallax: number[] = [];
   private fireflies: Phaser.GameObjects.Image[] = [];
   private logo!: UiBox;
   private title!: Phaser.GameObjects.Text;
@@ -75,11 +80,22 @@ export class MainMenuScene extends Phaser.Scene {
 
     // Dithered dusk sky, three drifting hill silhouettes, fireflies.
     addPixelTexture(this.textures, SKY_KEY, paintSky());
-    HILL_LAYERS.forEach((_, i) => addPixelTexture(this.textures, hillKey(i), paintHills(i)));
     this.sky = this.add.tileSprite(0, 0, 4, MENU_SKY_H, SKY_KEY).setOrigin(0, 0);
-    this.hills = HILL_LAYERS.map((layer, i) =>
-      this.add.tileSprite(0, 0, 4, layer.height, hillKey(i)).setOrigin(0, 1),
-    );
+    // Picture strips (G5) when they all loaded, else the painted hill silhouettes.
+    const pictures = menuImageLayers((file) => this.textures.exists(imageArtKey(file)));
+    if (pictures !== null) {
+      this.parallax = pictures.map((layer) => layer.parallax);
+      this.hills = pictures.map((layer) => {
+        const key = imageArtKey(layer.file);
+        return this.add.tileSprite(0, 0, 4, this.textures.getFrame(key).height, key).setOrigin(0, 1);
+      });
+    } else {
+      HILL_LAYERS.forEach((_, i) => addPixelTexture(this.textures, hillKey(i), paintHills(i)));
+      this.parallax = [...PARALLAX];
+      this.hills = HILL_LAYERS.map((layer, i) =>
+        this.add.tileSprite(0, 0, 4, layer.height, hillKey(i)).setOrigin(0, 1),
+      );
+    }
     this.createFireflies();
 
     // Logo board.
@@ -98,7 +114,10 @@ export class MainMenuScene extends Phaser.Scene {
         width: MENU_BUTTON.w,
         height: MENU_BUTTON.h,
         fontSize: 18,
-        onClick: () => MENU_ACTIONS[item.id](this),
+        onClick: () => {
+          getAudio(this)?.play('ui_click');
+          MENU_ACTIONS[item.id](this);
+        },
       });
       button.setEnabled(item.id !== 'continue'); // enabled once a saved run loads
       return button;
@@ -112,15 +131,24 @@ export class MainMenuScene extends Phaser.Scene {
       .setAlign('center');
     this.saved = null;
     this.loadSaved(this.guard.begin());
+    this.events.on(Phaser.Scenes.Events.RESUME, this.onResume, this);
 
     this.layout();
     this.scale.on(Phaser.Scale.Events.RESIZE, this.layout, this);
     this.input.keyboard?.on(Phaser.Input.Keyboard.Events.ANY_KEY_DOWN, this.onKey, this);
     this.events.once(Phaser.Scenes.Events.SHUTDOWN, () => {
+      this.events.off(Phaser.Scenes.Events.RESUME, this.onResume, this);
       this.input.keyboard?.off(Phaser.Input.Keyboard.Events.ANY_KEY_DOWN, this.onKey, this);
       this.guard.invalidate();
       this.scale.off(Phaser.Scale.Events.RESIZE, this.layout, this);
     });
+  }
+
+  private onResume(): void {
+    this.saved = null;
+    this.buttons[0]?.setEnabled(false);
+    this.buttons[0]?.setLabel(continueLabel(null));
+    this.loadSaved(this.guard.begin());
   }
 
   private onKey(event: KeyboardEvent): void {
@@ -138,6 +166,8 @@ export class MainMenuScene extends Phaser.Scene {
       const target = resumeTarget(result);
       this.saved = target.state;
       this.buttons[0]?.setEnabled(target.enabled);
+      // One save slot: "Tiếp tục" says which run it holds (mode and year, from the state).
+      this.buttons[0]?.setLabel(continueLabel(target.state));
       if (target.warning !== null) this.showNotice(target.warning);
     });
   }
@@ -156,7 +186,7 @@ export class MainMenuScene extends Phaser.Scene {
 
   update(_time: number, delta: number): void {
     this.hills.forEach((hill, i) => {
-      hill.tilePositionX += ((PARALLAX[i] ?? 0) * delta) / 1000 / this.pix;
+      hill.tilePositionX += ((this.parallax[i] ?? 0) * delta) / 1000 / this.pix;
     });
   }
 
@@ -166,9 +196,7 @@ export class MainMenuScene extends Phaser.Scene {
     this.pix = menuPixelScale(height);
     const texW = Math.ceil(width / this.pix) + 1;
     this.sky.setSize(texW, MENU_SKY_H).setScale(this.pix);
-    this.hills.forEach((hill, i) =>
-      hill.setSize(texW, HILL_LAYERS[i]!.height).setScale(this.pix).setPosition(0, height),
-    );
+    for (const hill of this.hills) hill.setSize(texW, hill.height).setScale(this.pix).setPosition(0, height);
     for (const fly of this.fireflies) fly.setScale(this.pix);
 
     // Logo board size from its text (title size: same clamp as before).

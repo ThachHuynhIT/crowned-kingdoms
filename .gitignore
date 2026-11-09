@@ -5,3 +5,4 @@ dist
 coverage
 .vite
 .playwright-mcp/
+tools/out/

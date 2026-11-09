@@ -1,7 +1,7 @@
 import type { CardId, KingId } from './types';
 
 /** Phiên bản hồ sơ meta (spec §9.2). */
-export const META_SAVE_VERSION = 1;
+export const META_SAVE_VERSION = 2;
 
 /** Ba vua mở sẵn. */
 export const STARTING_KINGS: readonly KingId[] = ['arcane', 'stone', 'wheat'];

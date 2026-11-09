@@ -1,10 +1,13 @@
 /** Biên thế giới của trận: tường núi phía bắc và biên nam đủ chứa mọi hàng xuất quân. */
 import { BATTLE } from '../../data/battle';
+import type { RunMode } from '../../data/rules';
+import { geometryFor } from '../run/boardGeometry';
 import { portalPositions, rowCapacity } from './spawnLayout';
 import type { BattleSetup } from './types';
 
-/** Đơn vị bán kính `radius` không bao giờ vượt lên bắc đường chân tường (`BATTLE.wallY`). */
-export const clampNorthY = (y: number, radius: number): number => Math.max(BATTLE.wallY + radius, y);
+/** Đơn vị bán kính `radius` không bao giờ vượt lên bắc đường chân tường của bàn `mode` (thường 176, Vô tận 112). */
+export const clampNorthY = (y: number, radius: number, mode: RunMode = 'normal'): number =>
+  Math.max(geometryFor(mode).wallY + radius, y);
 
 /** Biên nam: ít nhất field + fieldClampMargin; lớn hơn nếu một ô cổng (quân xuất từ mép nam) nằm xa hơn. */
 export const spawnMaxY = (setup: BattleSetup): number => {

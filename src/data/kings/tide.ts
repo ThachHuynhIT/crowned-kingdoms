@@ -179,7 +179,7 @@ export const TIDE: KingDef = {
     tags: [],
     textVi:
       'Ngai của Vua Thuỷ Triều: pháo nổ lan, đẩy lùi kẻ địch. Chiến Lợi Phẩm: mỗi 10 địch bị hạ trong trận +1 vàng (tối đa 3 vàng mỗi trận, hơn khi lên cấp).',
-    hp: 300,
+    hp: 470,
     armor: 0,
     attack: { dmg: 12, type: 'physical', range: cells(1.6875), interval: 16, projectileSpeed: 12, splash: cells(0.3125), onHit: [{ type: 'knockback', px: 16 }] },
     // Chiến Lợi Phẩm: mỗi 10 địch bị hạ trong trận (bởi bất kỳ ai) +1 vàng, tối đa theo cấp Ngai.

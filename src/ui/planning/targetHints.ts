@@ -73,7 +73,7 @@ export type LockedPlotTap =
  * target; anything else (open plot, no open neighbour, another card aimed) is ignored.
  */
 export const lockedPlotTap = (
-  state: Pick<RunState, 'plots' | 'purchasedPlots'>,
+  state: Pick<RunState, 'plots' | 'purchasedPlots'> & Partial<Pick<RunState, 'mode' | 'endless'>>,
   plot: number,
   aiming: CardDef | null,
 ): LockedPlotTap => {
@@ -82,5 +82,5 @@ export const lockedPlotTap = (
   if (aiming !== null) {
     return aiming.kind === 'tome' && aiming.target === 'lockedPlot' ? { kind: 'target' } : { kind: 'ignore' };
   }
-  return adjacentToUnlocked(state.plots, plot) ? { kind: 'buy', price: lockedPlotPrice(state) } : { kind: 'ignore' };
+  return adjacentToUnlocked(state.plots, plot) ? { kind: 'buy', price: lockedPlotPrice(state, plot) } : { kind: 'ignore' };
 };

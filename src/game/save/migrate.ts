@@ -1,5 +1,5 @@
 /**
- * Nâng cấp RunState đã lưu lên phiên bản hiện tại (thuần, không sửa đầu vào): state 3 → 4 → 5 → 6.
+ * Nâng cấp RunState đã lưu lên phiên bản hiện tại (thuần, không sửa đầu vào): state 3 → 4 → 5 → 6 → 7.
  * State 1 và 2 chưa từng có định dạng trên đĩa; phiên bản khác được trả nguyên để `decodeRun` từ chối.
  */
 import { hashSeed } from '../../core/random';
@@ -79,11 +79,22 @@ const v4to5 = (raw: Loose): Loose => {
 /** State 5 → 6 (G4): chưa có perk, thẻ meta nào, và chưa dùng lượt dời miễn phí. */
 const v5to6 = (raw: Loose): Loose => ({ ...raw, version: 6, perk: null, unlockedCards: [], freeMovesUsed: 0 });
 
+/**
+ * State 6 → 7 (Vô tận, spec 2026-11-09 §8): mọi save cũ là ván thường; thêm luồng RNG `blessing`
+ * trung tính (không ván thường nào dùng). Không đổi bàn, quân, luật, bộ bài hay RNG cũ.
+ */
+const v6to7 = (raw: Loose): Loose => {
+  const seed = typeof raw.seed === 'number' ? raw.seed : 0;
+  const rng = isObject(raw.rng) ? raw.rng : {};
+  return { ...raw, version: 7, mode: 'normal', endless: null, rng: { ...rng, blessing: hashSeed(`${seed}:blessing`) } };
+};
+
 export function migrateRunState(raw: unknown): unknown {
   if (!isObject(raw)) return raw;
   let out = raw;
   if (out.version === 3) out = v3to4(out);
   if (out.version === 4) out = v4to5(out);
   if (out.version === 5) out = v5to6(out);
+  if (out.version === 6) out = v6to7(out);
   return out;
 }

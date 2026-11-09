@@ -1,5 +1,6 @@
 import Phaser from 'phaser';
 import { toCss } from '../data/palette';
+import type { RunMode } from '../data/rules';
 import type { KingId, PerkId } from '../data/types';
 import type { KingTheme } from '../data/uiPalette';
 import { CONTENT } from '../game/cards/registry';
@@ -12,6 +13,7 @@ import { kingChoices, nextIndex, swipeTarget, unlockLabel, type KingChoice } fro
 import { difficultyChoices, type DifficultyOption } from '../ui/kingSelect/difficulty';
 import { detailLayout } from '../ui/kingSelect/detailLayout';
 import { KingPortraitView } from '../ui/kingSelect/KingPortraitView';
+import { modeChoices, pickRunMode } from '../ui/kingSelect/modeModel';
 import { kingTheme, lockedTheme } from '../ui/kingSelect/kingTheme';
 import { PerkDialog } from '../ui/kingSelect/PerkDialog';
 import { perkButtonCaption, perkOptions, togglePerk } from '../ui/kingSelect/perkModel';
@@ -30,6 +32,11 @@ import { getSession } from './sessionRegistry';
 let lastKing: KingId = 'wheat';
 
 type Mode = 'carousel' | 'detail';
+
+/** Launch data: a notice to show once (e.g. the realm refused to start a locked Endless run). */
+export interface KingSelectData {
+  notice?: string;
+}
 
 const PAD = 6;
 /** Draw order of the unlock button (above every carousel card) and of the perk dialog. */
@@ -97,14 +104,20 @@ export class KingSelectScene extends Phaser.Scene {
   private unlocking = false;
   private points!: Phaser.GameObjects.Text;
   private toasts!: ToastStack;
+  /** The run mode to start (spec 2026-11-09 §2): "30 năm" every visit; not the carousel/detail `mode`. */
+  private runMode: RunMode = 'normal';
+  private modeButtons: Button[] = [];
+  private modeNote!: Phaser.GameObjects.Text;
 
   constructor() {
     super(SCENES.kingSelect);
   }
 
-  create(): void {
+  create(data: KingSelectData = {}): void {
     // Scene instances are reused: reset every per-visit field first.
     this.profile = getSession(this)?.meta() ?? defaultProfile();
+    this.runMode = 'normal';
+    this.modeButtons = [];
     this.choices = kingChoices(CONTENT, this.profile);
     this.selected = Math.max(0, this.choices.findIndex((c) => c.id === lastKing && c.playable));
     this.mode = 'carousel';
@@ -127,6 +140,7 @@ export class KingSelectScene extends Phaser.Scene {
     this.note = themedText(this, '', 16, theme.light, theme.bgDark).setOrigin(0.5, 0);
     this.points = themedText(this, '', 16, theme.light, theme.bgDark).setOrigin(1, 0.5);
     this.toasts = new ToastStack(this, DIALOG_DEPTH + 50);
+    this.modeNote = themedText(this, '', 13, theme.light, theme.bgDark).setOrigin(0, 0.5);
 
     this.back = createButton(this, 0, 0, '‹ Quay lại', {
       width: 120,
@@ -194,6 +208,23 @@ export class KingSelectScene extends Phaser.Scene {
       tooltip: { host: this.tooltip, content: () => textContent(['Đổi seed', 'Một seed khác cho ván khác.']) },
     });
 
+    this.modeButtons = modeChoices(this.profile).map((choice) =>
+      createButton(this, 0, 0, choice.labelVi, {
+        width: 120,
+        height: 44,
+        fontSize: 15,
+        onClick: () => this.setRunMode(choice.id),
+        tooltip: {
+          host: this.tooltip,
+          content: () => {
+            const c = modeChoices(this.profile).find((m) => m.id === choice.id)!;
+            const about = c.id === 'normal' ? 'Ván 30 năm, có ba boss và chiến thắng cuối lịch.' : 'Bàn 7×7, phúc lành và biến thể; chơi đến khi hết mạng.';
+            return textContent([c.labelVi, about, ...(c.reasonVi ? [c.reasonVi] : [])]);
+          },
+        },
+      }),
+    );
+
     this.input.keyboard?.on(Phaser.Input.Keyboard.Events.ANY_KEY_DOWN, this.onKey, this);
     this.input.on(Phaser.Input.Events.POINTER_DOWN, this.onDown, this);
     this.input.on(Phaser.Input.Events.POINTER_UP, this.onUp, this);
@@ -201,9 +232,17 @@ export class KingSelectScene extends Phaser.Scene {
     this.events.once(Phaser.Scenes.Events.SHUTDOWN, this.teardown, this);
 
     this.refresh();
+    if (data.notice) this.toasts.push(data.notice);
   }
 
   // ---- state ---------------------------------------------------------------------------------
+
+  /** A tap on "30 năm" / "Vô tận": a locked mode changes nothing; king, perk, Gai and seed stay. */
+  private setRunMode(wanted: RunMode): void {
+    if (this.mode !== 'detail' || this.starting || this.perkDialog) return;
+    this.runMode = pickRunMode(this.profile, this.runMode, wanted);
+    this.refresh();
+  }
 
   private choice(): KingChoice {
     return this.choices[this.selected]!;
@@ -352,7 +391,7 @@ export class KingSelectScene extends Phaser.Scene {
     this.starting = true;
     lastKing = c.id;
     const difficulty = this.difficulties()[this.difficulty]?.thorn ?? 0;
-    const data: RealmData = { seed: this.seed, kingId: c.id, perk: this.perk, difficulty };
+    const data: RealmData = { seed: this.seed, kingId: c.id, perk: this.perk, difficulty, mode: this.runMode };
     this.scene.start(SCENES.realm, data);
   }
 
@@ -362,7 +401,7 @@ export class KingSelectScene extends Phaser.Scene {
     const theme = this.theme();
     const skin = this.skin();
     this.cameras.main.setBackgroundColor(toCss(theme.bgDark));
-    for (const t of [this.title, this.namePrefix, this.nameTitle, this.note, this.diffCaption, this.diffLabel, this.perkName, this.points]) {
+    for (const t of [this.title, this.namePrefix, this.nameTitle, this.note, this.diffCaption, this.diffLabel, this.perkName, this.points, this.modeNote]) {
       t.setShadow(2, 2, toCss(theme.bgDark), 0, false, true);
     }
     this.title.setColor(toCss(theme.light));
@@ -375,7 +414,14 @@ export class KingSelectScene extends Phaser.Scene {
     this.perkName.setText(c.playable ? perkButtonCaption(CONTENT, c.id, this.perk) : '').setColor(toCss(theme.light));
     this.points.setText(`Điểm Vương Miện: ${this.profile.crownPoints}`).setColor(toCss(theme.light));
     this.unlock.setLabel(c.unlockCost === null ? '' : unlockLabel(c.unlockCost));
-    for (const b of [this.back, this.previous, this.next, this.perks, this.diffPrev, this.diffNext, this.play, this.reroll, this.unlock]) b.setSkin(skin);
+    for (const b of [this.back, this.previous, this.next, this.perks, this.diffPrev, this.diffNext, this.play, this.reroll, this.unlock, ...this.modeButtons]) b.setSkin(skin);
+    const modes = modeChoices(this.profile);
+    this.modeButtons.forEach((b, i) => {
+      const m = modes[i]!;
+      b.setEnabled(m.enabled);
+      b.setActive(m.id === this.runMode);
+    });
+    this.modeNote.setText(modes.find((m) => m.reasonVi !== null)?.reasonVi ?? '').setColor(toCss(theme.light));
     this.perks.setActive(this.perk !== null);
     this.seedBox.setSkin(skin);
     this.seedText.setText(`Seed: ${this.seed}`);
@@ -459,7 +505,13 @@ export class KingSelectScene extends Phaser.Scene {
       view.container.setVisible(detail);
       if (detail) view.setPosition(dl.cards[i]!.x, dl.cards[i]!.y);
     });
-    for (const b of [this.perks, this.diffPrev, this.diffNext, this.play, this.reroll]) b.setVisible(detail);
+    for (const b of [this.perks, this.diffPrev, this.diffNext, this.play, this.reroll, ...this.modeButtons]) b.setVisible(detail);
+    this.modeButtons.forEach((b, i) => this.place(b, dl.modes[i]!));
+    this.modeNote
+      .setVisible(detail)
+      .setFontSize(dl.desktop ? 14 : 12)
+      .setWordWrapWidth(dl.modeNote.w)
+      .setPosition(dl.modeNote.x, dl.modeNote.y + (dl.desktop ? dl.modeNote.h / 2 : this.modeNote.height / 2));
     this.place(this.perks, dl.perks);
     this.perkName.setVisible(detail).setWordWrapWidth(dl.perkName.w).setPosition(dl.perkName.x, dl.perkName.y + dl.perkName.h);
     this.perkDialog?.layout();

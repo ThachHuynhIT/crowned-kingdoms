@@ -803,3 +803,15 @@ describe('overviewZoom: the farthest zoom-out, like the owner reference picture 
     expect(lay.allyStatus.y + lay.allyStatus.h).toBeLessThanOrEqual(lay.hand[0]!.y);
   });
 });
+
+describe('Endless overview', () => {
+  it('fits 896 projected px on desktop and keeps phone touch zoom', () => {
+    expect(overviewZoom(DESKTOP, 'planning', 3, 'endless')).toBeCloseTo(414 / 448, 12);
+    expect(overviewZoom(DESKTOP, 'battle', 3, 'endless')).toBeCloseTo(832 / 896, 12);
+    for (const phase of ['planning', 'battle'] as const)
+      expect(overviewZoom(MOBILE, phase, 3, 'endless')).toBe(33 / 32);
+    const board = planningLayout(DESKTOP, 3, 'endless').board;
+    expect(board.w).toBeCloseTo(828, 12);
+    expect(board.h).toBeCloseTo(414, 12);
+  });
+});

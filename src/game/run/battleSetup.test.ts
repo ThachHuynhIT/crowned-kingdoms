@@ -24,6 +24,8 @@ function makeState(army: ArmyPlan | null): RunState {
   return {
     version: 1,
     rules: RULES_G1,
+    mode: 'normal',
+    endless: null,
     seed: 42,
     kingId: 'wheat',
     year: 1,
@@ -58,7 +60,7 @@ function makeState(army: ArmyPlan | null): RunState {
     unlockedCards: [],
     freeMovesUsed: 0,
     yearStartPendingDraw: false,
-    rng: { draw: 1, reward: 2, calendar: 3, council: 4, quest: 5 },
+    rng: { draw: 1, reward: 2, calendar: 3, council: 4, quest: 5, blessing: 6 },
     stats: { kills: 0, battlesWon: 0, battlesLost: 0, goldEarned: 0, conquered: 0, bossesWon: 0, bossesDefeated: [], completedYears: 0 },
     nextUid: 6,
     won: null,
@@ -113,7 +115,7 @@ describe('buildBattleSetup', () => {
   });
 
   it('maps the throne', () => {
-    expect(setup.throne.hp).toBe(300);
+    expect(setup.throne.hp).toBe(430);
     expect(setup.throne.plot).toBe(THRONE_PLOT);
     expect(setup.throne.uid).toBe(0);
     expect(setup.throne.kind).toBe('throne');

@@ -24,6 +24,7 @@ import { buildingInfoModel, plotOfEntity, unitInfoModel } from '../ui/info/inspe
 import { battleControls } from '../ui/info/inspectionReserved';
 import { resolveShortcut, shortcutFlags, shortcutLabel } from '../ui/input/shortcuts';
 import { openHelp } from './helpLauncher';
+import { openSettings } from './SettingsScene';
 import { bossReadout, type BossReadout } from '../ui/battle/battleReadout';
 import { DRAG_SLOP, GAP, MARGIN, textContent, type Point, type Rect } from '../ui/hud/layout';
 import { ENEMY_ARMY_TOOLTIP, armyHealth, healthText, throneHealth } from '../ui/hud/armyHealth';
@@ -32,8 +33,9 @@ import { kingTheme } from '../ui/kingSelect/kingTheme';
 import { CalendarModal } from '../ui/modals/CalendarModal';
 import { CalendarStrip } from '../ui/planning/CalendarStrip';
 import { allyStatusText, foeStatusText } from '../ui/planning/statusText';
-import { calendarCells } from '../ui/realm/calendarModel';
+import { calendarCells, yearLabel } from '../ui/realm/calendarModel';
 import { RESULT_BUTTON, centredPanel, resultLayout } from '../ui/modals/modalLayout';
+import { fitTextWidth } from '../ui/modals/fitText';
 import { createOverlay, fitOverlay } from '../ui/modals/overlay';
 import { ScoutPanel, tickClock } from '../ui/planning/ScoutPanel';
 import {
@@ -148,6 +150,7 @@ export class BattleHudScene extends Phaser.Scene {
   private autoBtn!: Button;
   private wavesBtn!: Button;
   private helpBtn!: Button;
+  private settingsBtn!: Button;
   private scoutModal: {
     root: Phaser.GameObjects.Container;
     overlay: Phaser.GameObjects.Rectangle;
@@ -201,7 +204,7 @@ export class BattleHudScene extends Phaser.Scene {
     this.inspected = null;
     this.hoveredId = null;
     this.lay = this.currentLayout();
-    this.view = overviewView(this.screen(), 'battle');
+    this.view = overviewView(this.screen(), 'battle', this.controller.state.mode);
 
     this.tooltip = new Tooltip(this);
     this.toasts = new ToastStack(this, TOAST_DEPTH);
@@ -310,6 +313,13 @@ export class BattleHudScene extends Phaser.Scene {
       fontSize: 22,
       onClick: () => this.bus.emit('ui:help', { open: true }),
       tooltip: tip([`Trợ giúp (${shortcutLabel('help')})`, 'Thẻ bài, cơ chế, phím tắt...']),
+    });
+    this.settingsBtn = createButton(this, 0, 0, '⚙', {
+      width: 48,
+      height: 48,
+      fontSize: 22,
+      onClick: () => openSettings(this, this.bus, this.controller.runner?.clock.speed),
+      tooltip: tip(['Cài đặt']),
     });
     this.cooldown = this.add.graphics();
     this.cooldownText = addUiText(this, 0, 0, '', 22, UI_PALETTE.creamLight)
@@ -427,7 +437,8 @@ export class BattleHudScene extends Phaser.Scene {
   }
 
   private showYear(state: RunState): void {
-    this.yearText.setText(`NĂM ${state.year} / ${state.rules.years}`);
+    this.yearText.setText(yearLabel(state));
+    fitTextWidth(this.yearText, isDesktop(this.scale.width) ? 18 : 15, 11, this.lay.year.w);
     this.calendar.setCells(calendarCells(state, 5));
   }
 
@@ -529,7 +540,7 @@ export class BattleHudScene extends Phaser.Scene {
 
   private showInfo(world: BattleWorld, id: number, anchor: Point): void {
     const state = this.controller.state;
-    const reserved = battleControls(battleLayout(this.screen()));
+    const reserved = battleControls(battleLayout(this.screen(), this.controller.state.mode));
     if (world.kind[id] === KIND_UNIT) {
       const unit = unitInfoModel(world, id, state, CONTENT);
       if (unit) this.info.showUnit(unit, anchor, this.screen(), reserved);
@@ -850,7 +861,7 @@ export class BattleHudScene extends Phaser.Scene {
   }
 
   private currentLayout(): BattleLayout {
-    return battleLayout(this.screen());
+    return battleLayout(this.screen(), this.controller.state.mode);
   }
 
   private layout(): void {
@@ -872,7 +883,7 @@ export class BattleHudScene extends Phaser.Scene {
     this.clockText.setPosition(c.x + c.w / 2, c.y + c.h / 2);
     this.clockText.setFontSize(desktop ? 20 : 16);
     this.yearText.setPosition(l.year.x + l.year.w / 2, l.year.y + l.year.h / 2);
-    this.yearText.setFontSize(desktop ? 18 : 15);
+    fitTextWidth(this.yearText, desktop ? 18 : 15, 11, l.year.w);
     this.calendar.layout(l.calendar, l.calendarLinks);
     this.allyBar.layout(l.allyStatus);
     this.foeBar.layout(l.foeStatus);
@@ -895,6 +906,10 @@ export class BattleHudScene extends Phaser.Scene {
     const wv = l.waves;
     this.wavesBtn.container.setPosition(wv.x + wv.w / 2, wv.y + wv.h / 2);
     this.helpBtn.container.setPosition(l.help.x + l.help.w / 2, l.help.y + l.help.h / 2);
+    this.settingsBtn.container.setPosition(
+      l.help.x + 24,
+      desktop ? l.help.y + l.help.h + 32 : l.bossStatus.y + l.bossStatus.h + 32,
+    );
     this.layoutScout();
     this.info.layout(this.screen(), battleControls(l));
 

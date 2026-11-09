@@ -55,7 +55,8 @@ export interface GameEvents {
    * screen points to plots and world points through it. View-only: never saved, never a command.
    */
   'realm:view': { zoom: number; scroll: { x: number; y: number } };
-  'ui:open-modal': { modal: 'scout' | 'calendar' | 'deck' };
+  /** `endless`: the Endless "Phúc lành & Biến thể" panel (it may open over the blessing offer). */
+  'ui:open-modal': { modal: 'scout' | 'calendar' | 'deck' | 'endless' };
   'ui:close-modal': Record<string, never>;
 }
 

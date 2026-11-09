@@ -58,7 +58,7 @@ Các màu semantic và kích thước khung bên dưới mô tả skin hiện h�
 
 Khung thẻ theo độ hiếm (thêm vào texture `ui` từ G1): thường = viền `wood`; vừa = viền đôi `woodLight`; hiếm = viền trong `gold`; đang chọn = viền ngoài `select` 2 px.
 
-**Menu chính:** trời 4 dải `UI_PALETTE.sky` nối bằng dither 2×2, 3 lớp đồi/cây silhouette (`woodDark` → `text` → `outline`, xa → gần) trôi parallax 4/8/16 px/s, cỡ pixel nguyên `menuPixelScale`.
+**Menu chính:** trời 4 dải `UI_PALETTE.sky` nối bằng dither 2×2, 3 lớp đồi/cây silhouette (`woodDark` → `text` → `outline`, xa → gần) trôi parallax 4/8/16 px/s, cỡ pixel nguyên `menuPixelScale`. Từ G5 (09/11/2026) hai dải tranh đã duyệt thay ba lớp đồi: núi xa có lâu đài nhỏ và miền quê (cối xay gió, ruộng, hàng rào), trôi 4 và 10 px/s (`MENU_IMAGE_LAYERS`, `docs/art-review/g5/menu/`); thiếu file thì về ba lớp vẽ bằng code.
 
 ## Quy tắc vẽ
 

@@ -106,6 +106,8 @@ export const createPanel = (
     resize: (nextW, nextH) => {
       w = nextW;
       h = nextH;
+      // A scale 'resize' listener can still fire after its scene shut down and destroyed the slice: skip it.
+      if (!image.scene) return;
       const scale = uiScale(scene);
       image.setSize(w / scale, h / scale).setScale(scale);
     },

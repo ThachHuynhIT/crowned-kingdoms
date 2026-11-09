@@ -15,6 +15,8 @@
       content="Crowned Kingdoms — roguelite xây vương quốc nhỏ và tự động đánh."
     />
     <title>Crowned Kingdoms</title>
+    <link rel="manifest" href="./manifest.webmanifest" />
+    <link rel="apple-touch-icon" href="./icons/crown-192.png" />
     <link
       rel="icon"
       href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 8 8' shape-rendering='crispEdges'%3E%3Crect width='8' height='8' fill='%232a1a14'/%3E%3Crect x='1' y='2' width='1' height='3' fill='%23f6c445'/%3E%3Crect x='3' y='1' width='2' height='4' fill='%23f6c445'/%3E%3Crect x='6' y='2' width='1' height='3' fill='%23f6c445'/%3E%3Crect x='1' y='5' width='6' height='2' fill='%23f6c445'/%3E%3Crect x='3' y='5' width='2' height='1' fill='%23d04a3a'/%3E%3C/svg%3E"
@@ -37,7 +39,11 @@
       }
       #game {
         position: fixed;
-        inset: 0;
+        /* G5: keep the game out of the notch and the home indicator (0 on screens without them). */
+        top: env(safe-area-inset-top, 0px);
+        right: env(safe-area-inset-right, 0px);
+        bottom: env(safe-area-inset-bottom, 0px);
+        left: env(safe-area-inset-left, 0px);
       }
       #game canvas {
         display: block;

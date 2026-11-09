@@ -17,7 +17,9 @@ export interface CardImageRef {
  * narrower than a 96×72 illustration); the smallest copy when none fits.
  */
 export const pickCardImage = (area: { w: number; h: number }, ref: CardImageRef): CardImageRef =>
-  (ref.w <= area.w && ref.h <= area.h) || ref.small === undefined ? ref : pickCardImage(area, ref.small);
+  (ref.w <= area.w && ref.h <= area.h) || ref.small === undefined
+    ? ref
+    : pickCardImage(area, ref.small);
 
 /**
  * The picture of `cardId`: the new vertical art when one is registered in `vertical`, else the
@@ -28,7 +30,12 @@ export const resolveCardImage = (
   cardId: CardId,
   vertical: Readonly<Partial<Record<CardId, CardImageRef>>>,
 ): CardImageRef =>
-  vertical[cardId] ?? { key: SPRITES_KEY, frame: cardArtFrame(cardId), w: CARD_ART.w, h: CARD_ART.h };
+  vertical[cardId] ?? {
+    key: SPRITES_KEY,
+    frame: cardArtFrame(cardId),
+    w: CARD_ART.w,
+    h: CARD_ART.h,
+  };
 
 /** Folder of the 96×72 card illustrations (and their `-48` copies), made by docs/art-review/g3e/cards/make_assets.py. */
 export const CARD_ART_DIR = 'assets/art/ai-v1/cards/';
@@ -45,6 +52,99 @@ const ILLUSTRATED: readonly CardId[] = [
   'wheat_militia',
   'wheat_reapers',
   'wheat_scarecrow',
+  // G5 (2026-11-09, approved by Claude under the owner's delegation; docs/art-review/g3e/cards/review-g5.md)
+  'arcane_apprentices',
+  'arcane_archmage',
+  'arcane_frost_mages',
+  'arcane_haste_rune',
+  'arcane_library',
+  'arcane_mage_tower',
+  'arcane_mirror',
+  'arcane_spark_rune',
+  'arcane_throne',
+  'arcane_ward',
+  'clock_bell_tower',
+  'clock_colossus',
+  'clock_gear_tower',
+  'clock_rewind',
+  'clock_spiders',
+  'clock_spring_workshop',
+  'clock_steam_cannon',
+  'clock_throne',
+  'clock_tick_rune',
+  'clock_windup_soldiers',
+  'forge_armory',
+  'forge_blast_furnace',
+  'forge_bombardiers',
+  'forge_ember_rune',
+  'forge_flame_tower',
+  'forge_iron_drake',
+  'forge_master_hammer',
+  'forge_smithy',
+  'forge_swordsmen',
+  'forge_throne',
+  'grove_bear_cave',
+  'grove_deep_roots',
+  'grove_sapling',
+  'grove_spirit_stags',
+  'grove_spring',
+  'grove_spring_rain',
+  'grove_thorn_tower',
+  'grove_throne',
+  'grove_treant',
+  'grove_wolf_den',
+  'moon_altar',
+  'moon_blood_moon_rune',
+  'moon_blood_pact',
+  'moon_crypt',
+  'moon_eclipse_pact',
+  'moon_reaper_shrine',
+  'moon_shadow_spire',
+  'moon_summoning_circle',
+  'moon_throne',
+  'moon_vampires',
+  'neutral_archer_tower',
+  'neutral_barracks',
+  'neutral_clear_land',
+  'neutral_demolish',
+  'neutral_duplicate',
+  'neutral_fortify',
+  'neutral_mercenary_camp',
+  'neutral_move',
+  'neutral_promote',
+  'neutral_royal_seal',
+  'neutral_sharpen',
+  'neutral_well',
+  'nomad_bazaar',
+  'nomad_caravan',
+  'nomad_horse_archers',
+  'nomad_khan_guard',
+  'nomad_relocate',
+  'nomad_riders',
+  'nomad_stables',
+  'nomad_throne',
+  'nomad_watchtower',
+  'nomad_wind_rune',
+  'stone_catapult',
+  'stone_crystal',
+  'stone_golem_forge',
+  'stone_miners',
+  'stone_mountain_heart',
+  'stone_quarry',
+  'stone_rune_carving',
+  'stone_stoneskin',
+  'stone_throne',
+  'stone_wall',
+  'tide_cannon',
+  'tide_harbor',
+  'tide_hookmen',
+  'tide_kraken',
+  'tide_pirates',
+  'tide_privateers',
+  'tide_throne',
+  'tide_treasure',
+  'tide_undertow_rune',
+  'tide_wave_tower',
 ];
 
 const illustration = (id: CardId): CardImageRef => ({
@@ -56,9 +156,8 @@ const illustration = (id: CardId): CardImageRef => ({
 });
 
 /** New card pictures by card id; the other cards keep the 32×24 atlas picture. */
-export const VERTICAL_CARD_ART: Readonly<Partial<Record<CardId, CardImageRef>>> = Object.fromEntries(
-  ILLUSTRATED.map((id) => [id, illustration(id)]),
-);
+export const VERTICAL_CARD_ART: Readonly<Partial<Record<CardId, CardImageRef>>> =
+  Object.fromEntries(ILLUSTRATED.map((id) => [id, illustration(id)]));
 
 /** Every illustration file to load (texture key and URL), both sizes. */
 export const CARD_ART_FILES: readonly { key: string; url: string }[] = ILLUSTRATED.flatMap((id) => [

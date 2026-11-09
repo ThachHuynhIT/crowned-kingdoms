@@ -2,8 +2,9 @@
  * Giải mã hồ sơ meta (spec §9.2). Meta không bao giờ bị xoá: hàm này không ném lỗi và luôn trả hồ sơ dùng
  * được, sửa từng trường hỏng về mặc định thay vì bỏ cả hồ sơ.
  */
-import { CARD_UNLOCK, META_SAVE_VERSION, SETTLED_RUNS_KEPT, STARTING_KINGS } from '../../data/meta';
+import { CARD_UNLOCK, DEFAULT_VOLUME, META_SAVE_VERSION, SETTLED_RUNS_KEPT, STARTING_KINGS } from '../../data/meta';
 import { RUN } from '../../data/run';
+import { DEFAULT_SCREEN_SHAKE } from '../../data/settings';
 import { ALL_KINGS } from '../../data/rules';
 import type { CardId, KingId } from '../../data/types';
 import { defaultProfile, type MetaProfile, perKing } from './profile';
@@ -60,7 +61,7 @@ export const decodeMeta = (raw: unknown): DecodeMetaResult => {
 
   const set = sub(src.settings);
   const volume = (v: unknown): number =>
-    fix(v as number, Number.isInteger(v) && (v as number) >= 0 && (v as number) <= 100, 100);
+    fix(v as number, Number.isInteger(v) && (v as number) >= 0 && (v as number) <= 100, DEFAULT_VOLUME);
 
   const runsRaw = Array.isArray(src.settledRuns) ? src.settledRuns : (fix(0, false, 0), []);
   const runs = runsRaw.filter((r): r is string => typeof r === 'string');
@@ -74,8 +75,22 @@ export const decodeMeta = (raw: unknown): DecodeMetaResult => {
     unlockedCards: [...cards].sort(),
     wins: perKingCount(src.wins),
     highestDifficultyWon: highest,
-    settings: { master: volume(set.master), music: volume(set.music), sfx: volume(set.sfx) },
+    settings: {
+      master: volume(set.master),
+      music: volume(set.music),
+      sfx: volume(set.sfx),
+      // Added in G5 without a version bump: a v1 profile without it is not "repaired", it just gets the default.
+      screenShake:
+        set.screenShake === undefined
+          ? DEFAULT_SCREEN_SHAKE
+          : fix(set.screenShake as boolean, typeof set.screenShake === 'boolean', DEFAULT_SCREEN_SHAKE),
+    },
     settledRuns: runs.slice(-SETTLED_RUNS_KEPT),
+    // Vô tận (spec 2026-11-09 §2): thiếu = chưa mở (không suy từ số lần thắng); sai kiểu thì sửa riêng về false.
+    endlessUnlocked:
+      src.endlessUnlocked === undefined
+        ? false
+        : fix(src.endlessUnlocked as boolean, typeof src.endlessUnlocked === 'boolean', false),
   };
   // Callers must never write a 'newer' profile back: it would downgrade the version and drop unknown fields.
   if (newer) return { kind: 'newer', profile };

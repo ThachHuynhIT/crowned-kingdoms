@@ -76,7 +76,7 @@ describe('G1 content integrity', () => {
 
   it('matches the throne stats', () => {
     expect(WHEAT.throne.id).toBe('wheat_throne');
-    expect(WHEAT.throne.hp).toBe(300);
+    expect(WHEAT.throne.hp).toBe(430);
     expect(WHEAT.throne.armor).toBe(0);
     expect(WHEAT.throne.attack).toEqual({
       dmg: 8,

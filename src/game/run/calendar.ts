@@ -47,8 +47,17 @@ export function slotMultFor(slot: CalendarSlot): number {
 /** Kẻ tấn công từng năm 1..`rules.years`. */
 export function calendarFor(rules: Rules): readonly CalendarSlot[] {
   if (rules.calendar === 'short') return SHORT.slice(0, rules.years);
-  if (rules.calendar === 'full') return FULL_CALENDAR.slice(0, rules.years);
+  if (rules.calendar === 'full' || rules.calendar === 'endless') return FULL_CALENDAR.slice(0, rules.years);
   return Array.from({ length: rules.years }, () => N);
+}
+
+/**
+ * Kẻ tấn công năm `year` (spec 2026-11-09 §3): Vô tận lặp mẫu 30 năm `FULL_CALENDAR[(year−1) % 30]`
+ * mà không cấp phát theo số năm; các lịch khác như `calendarFor`, ngoài lịch là Thổ Phỉ.
+ */
+export function calendarSlotAt(rules: Rules, year: number): CalendarSlot {
+  if (rules.calendar === 'endless') return FULL_CALENDAR[(Math.max(1, Math.floor(year)) - 1) % FULL_CALENDAR.length]!;
+  return calendarFor(rules)[year - 1] ?? N;
 }
 
 /**

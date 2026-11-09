@@ -2,7 +2,7 @@ import type { CardId } from './types';
 
 /** Hằng số ván (spec §3.1); giá trị tinh chỉnh ban đầu. */
 export const RUN = {
-  startLives: 3,
+  startLives: 2,
   maxLives: 4, // chỉ vượt 3 nhờ sắc lệnh/perk
   startGold: 5,
   taxPerYear: 3, // thu nhập cố định đầu mỗi năm

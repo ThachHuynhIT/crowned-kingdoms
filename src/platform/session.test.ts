@@ -1,10 +1,12 @@
-import { IDBFactory } from 'fake-indexeddb';
+import { META_SAVE_VERSION } from '../data/meta';
+import { IDBFactory, IDBObjectStore } from 'fake-indexeddb';
 import { describe, expect, it, vi } from 'vitest';
 import {
   INCOMPATIBLE_RUN_TEXT,
   META_READ_ONLY_TEXT,
   META_MEMORY_ONLY_TEXT,
   META_SAVE_FAILED_TEXT,
+  SETTINGS_SAVE_FAILED_TEXT,
   STORAGE_WARNING_TEXT,
   UNLOCK_SAVE_FAILED_TEXT,
 } from '../data/save';
@@ -252,5 +254,115 @@ describe('session settle on a store that is not persistent', () => {
     const out = await s.settleRun(fakeRun({ years: 10, conquered: 2, bosses: 1, won: false }));
     expect(out.credited).toBe(true);
     expect(out.unlocks).not.toContain(META_MEMORY_ONLY_TEXT);
+  });
+});
+
+describe('session settings and discard (G5 §4)', () => {
+  it('updateSettings saves, then publishes, and survives a reload', async () => {
+    const disk = new IDBFactory();
+    const s = await createSession(disk, () => undefined, CONTENT);
+    const r = await s.updateSettings({ music: 30, screenShake: false });
+    expect(r).toMatchObject({ ok: true });
+    expect(s.meta().settings).toEqual({ master: 100, music: 30, sfx: 100, screenShake: false });
+    const again = await createSession(disk, () => undefined, CONTENT);
+    expect(again.meta().settings).toEqual({ master: 100, music: 30, sfx: 100, screenShake: false });
+  });
+
+  it('a newer profile refuses settings and never writes', async () => {
+    const store = new LoggingStore();
+    await store.saveMeta({ ...defaultProfile(), version: META_SAVE_VERSION + 1 });
+    store.log = [];
+    const s = await openSession(store, CONTENT);
+    expect(await s.updateSettings({ master: 10 })).toMatchObject({ ok: false, reason: 'readOnly' });
+    expect(store.log).toEqual([]);
+    expect(s.meta().settings.master).toBe(100);
+  });
+
+  it('a failed write answers saveFailed and keeps the previous settings in memory', async () => {
+    const store = new LoggingStore();
+    const s = await openSession(store, CONTENT);
+    store.failMeta = true;
+    expect(await s.updateSettings({ sfx: 40 })).toEqual({
+      ok: false,
+      reason: 'saveFailed',
+      message: SETTINGS_SAVE_FAILED_TEXT,
+    });
+    expect(s.meta().settings.sfx).toBe(100);
+  });
+
+  it('rejects non-finite or out-of-range values without writing', async () => {
+    const store = new LoggingStore();
+    const s = await openSession(store, CONTENT);
+    for (const patch of [{ master: Number.NaN }, { music: 101 }, { sfx: -1 }, { screenShake: 'x' as never }]) {
+      expect(await s.updateSettings(patch)).toMatchObject({ ok: false, reason: 'notAllowed' });
+    }
+    expect(store.log).toEqual([]);
+  });
+
+  it('concurrent settings, unlock and settle keep every field', async () => {
+    const disk = new IDBFactory();
+    const s = await createSession(disk, () => undefined, CONTENT);
+    const run = fakeRun({ years: 30, conquered: 4, bosses: 3, won: true });
+    await Promise.all([
+      s.updateSettings({ master: 40 }),
+      s.settleRun(run),
+      s.updateSettings({ music: 60 }),
+      s.unlockKing('grove'),
+      s.updateSettings({ sfx: 20, screenShake: false }),
+    ]);
+    const p = s.meta();
+    expect(p.settings).toEqual({ master: 40, music: 60, sfx: 20, screenShake: false });
+    expect(p.unlockedKings).toContain('grove');
+    expect(p.settledRuns.length).toBe(1);
+    const reloaded = (await createSession(disk, () => undefined, CONTENT)).meta();
+    expect(reloaded).toEqual(p);
+  });
+
+  it('discardRun waits for a pending checkpoint, then clears only the run', async () => {
+    const disk = new IDBFactory();
+    const s = await createSession(disk, () => undefined, CONTENT);
+    await s.updateSettings({ master: 70 });
+    const before = s.meta();
+    const pending = s.persistence.checkpoint(runState());
+    const out = await s.discardRun();
+    await pending;
+    expect(out).toEqual({ persistent: true });
+    const again = await createSession(disk, () => undefined, CONTENT);
+    expect(await again.load()).toEqual({ kind: 'empty' });
+    expect(again.meta()).toEqual(before);
+  });
+
+  it('discardRun never settles or touches the profile; a store without a probe promises only this session', async () => {
+    const store = new LoggingStore();
+    const s = await openSession(store, CONTENT);
+    await s.persistence.checkpoint(runState());
+    store.log = [];
+    expect(await s.discardRun()).toEqual({ persistent: false });
+    expect(store.log).toEqual(['clearRun']);
+    expect(await store.loadRun()).toBeNull();
+  });
+
+  it('a disk that fails to delete reports persistent=false; a new session may still see the run', async () => {
+    const disk = new IDBFactory();
+    const warnings: string[] = [];
+    const first = await createSession(disk, (t) => warnings.push(t), CONTENT);
+    await first.persistence.checkpoint(runState());
+    const deleteSpy = vi.spyOn(IDBObjectStore.prototype, 'delete').mockImplementation(() => {
+      throw new Error('disk error');
+    });
+    try {
+      expect(await first.discardRun()).toEqual({ persistent: false });
+    } finally {
+      deleteSpy.mockRestore();
+    }
+    expect(warnings).toEqual([STORAGE_WARNING_TEXT]);
+    expect(await first.load()).toEqual({ kind: 'empty' });
+    // The disk delete failed: a fresh session on the same browser can still find the old run.
+    const second = await createSession(disk, () => undefined, CONTENT);
+    expect((await second.load()).kind).toBe('ok');
+    // Settings still work in this session, in memory only, with no second warning.
+    expect(await first.updateSettings({ master: 10 })).toMatchObject({ ok: true });
+    expect(first.meta().settings.master).toBe(10);
+    expect(warnings).toEqual([STORAGE_WARNING_TEXT]);
   });
 });

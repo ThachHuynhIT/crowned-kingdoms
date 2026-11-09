@@ -2,6 +2,9 @@
 import { TICKS_PER_SECOND } from '../../core/SimClock';
 import type { BattleWorld } from '../../game/battle/world';
 import type { RunState } from '../../game/run/state';
+import { ENDLESS_SCORED_BOSSES_CAP, ENDLESS_SCORED_YEARS_CAP } from '../../data/endless';
+import { hasFullCalendar } from '../../data/rules';
+import { endlessSurvivalScore } from '../../game/run/endlessRules';
 import { UI_PALETTE } from '../../data/uiPalette';
 import { META_MEMORY_ONLY_TEXT, META_READ_ONLY_TEXT, META_SAVE_FAILED_TEXT, RUN_ALREADY_SCORED_TEXT } from '../../data/save';
 import type { CrownBreakdown } from '../../game/meta';
@@ -95,13 +98,19 @@ export const placeInfoBox = (anchor: Point, size: Size, screen: Size): Point => 
  */
 export const runSummary = (state: RunState): string[] => {
   const s = state.stats;
+  const endless = state.mode === 'endless';
+  // Endless (spec 2026-11-09 §7): years survived and the year it ended, no "/ 30"; real stats, not capped.
+  const head = endless
+    ? [`Sống sót: ${endlessSurvivalScore(state)} năm`, ...(state.phase === 'ended' ? [`Kết thúc ở năm ${state.year}`] : [])]
+    : [`Năm hoàn thành: ${s.completedYears} / ${state.rules.years}`];
   const lines = [
-    `Năm hoàn thành: ${s.completedYears} / ${state.rules.years}`,
+    ...head,
     `Trận thắng: ${s.battlesWon} · Trận thua: ${s.battlesLost}`,
     `Địch đã hạ: ${s.kills}`,
     `Vua đã chinh phục: ${s.conquered} / ${state.enemyKings.length || 2}`,
   ];
-  if (state.rules.calendar === 'full') lines.push(`Boss đã hạ: ${s.bossesDefeated.length} / 3`);
+  if (endless) lines.push(`Boss đã hạ: ${s.bossesWon}`);
+  else if (hasFullCalendar(state.rules)) lines.push(`Boss đã hạ: ${s.bossesDefeated.length} / 3`);
   lines.push(`Vàng kiếm được: ${s.goldEarned}`);
   if (s.bossesDefeated.includes('boss_crownless_king')) lines.push('Vương Miện Vàng: đã hạ Vua Không Ngai!');
   return lines;
@@ -133,11 +142,18 @@ const WARNINGS: readonly string[] = [META_SAVE_FAILED_TEXT, META_READ_ONLY_TEXT,
 export const crownTally = (state: RunState, tally: RunEndTally): TallyLine[] => {
   const b = tally.breakdown;
   const plain = (text: string): TallyLine => ({ text, tone: 'plain' });
-  const lines: TallyLine[] = [
-    plain(`Năm hoàn thành × 1: +${b.years}`),
-    plain(`Chinh phục × 3: +${b.conquests}`),
-    plain(`Boss × 5: +${b.bosses}`),
-  ];
+  const endless = state.mode === 'endless';
+  const lines: TallyLine[] = endless
+    ? [
+        plain(`Năm tính điểm: ${b.years} (tối đa ${ENDLESS_SCORED_YEARS_CAP})`),
+        plain(`Chinh phục × 3: +${b.conquests}`),
+        plain(`Boss × 5: +${b.bosses} (tối đa ${ENDLESS_SCORED_BOSSES_CAP} boss)`),
+      ]
+    : [
+        plain(`Năm hoàn thành × 1: +${b.years}`),
+        plain(`Chinh phục × 3: +${b.conquests}`),
+        plain(`Boss × 5: +${b.bosses}`),
+      ];
   if (b.victory > 0) lines.push(plain(`Thắng ván: +${b.victory}`));
   if (state.difficulty > 0) lines.push(plain(`Gai ${state.difficulty}: ×${decimalVi(b.multiplier)}`));
   lines.push({ text: `Tổng: ${b.total} điểm Vương Miện`, tone: 'total' });

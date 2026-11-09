@@ -5,9 +5,9 @@
  * Chỉ dùng + − × ÷, Math.sqrt/ceil/floor.
  */
 import { DEPLOY_BOX } from '../../data/boardGeometry';
+import type { RunMode } from '../../data/rules';
+import { isPlotId } from '../run/boardGeometry';
 import { plotCenter } from './world';
-
-const PLOTS = 25;
 
 /** Vị trí thứ `index` trong `count` lính thân bán kính `radius`, quanh tâm ô (cx, cy). */
 export const deploySlot = (
@@ -39,14 +39,15 @@ export const deploySlot = (
   };
 };
 
-/** Vị trí thứ `index` trong `count` lính của khu tập kết ô `plot`. */
+/** Vị trí thứ `index` trong `count` lính của khu tập kết ô `plot` trên bàn `mode`. */
 export const deploymentPosition = (
   plot: number,
   index: number,
   count: number,
   radius: number,
+  mode: RunMode = 'normal',
 ): { x: number; y: number } => {
-  if (!Number.isInteger(plot) || plot < 0 || plot >= PLOTS) throw new RangeError(`deploy plot ${plot}`);
-  const c = plotCenter(plot);
+  if (!isPlotId(plot, mode)) throw new RangeError(`deploy plot ${plot}`);
+  const c = plotCenter(plot, mode);
   return deploySlot(c.x, c.y, index, count, radius);
 };

@@ -195,6 +195,11 @@ export interface BossSetup {
   summons: Readonly<Record<string, UnitStats>>;
   /** Lính của Bóng Gương: loại của công trình lính cấp cao nhất; null nếu không có công trình lính. */
   mirror: { stats: UnitStats; count: number } | null;
+  /**
+   * Sát thương kỹ năng riêng đã giải sẵn (Vô tận: gốc × hệ số boss × biến thể, spec 2026-11-09 §3).
+   * Vắng ở ván thường: trận dùng số gốc của `BOSS_RULES`.
+   */
+  specialDamage?: { mud: number };
 }
 
 export interface WaveSetup {
@@ -220,6 +225,11 @@ export interface BattleSetup {
   intervention?: { dmgPct: number; radius: number; cooldownTicks: number };
   /** Mod trận của perk (dữ liệu thuần, không tham chiếu RunState); vắng khi perk không đổi gì trong trận. */
   perk?: PerkBattleMods;
+  /**
+   * Hình học bàn của trận (spec 2026-11-09 §4): `'endless'` = bàn 49 ô, tường 112; vắng = bàn thường.
+   * Chỉ ván Vô tận đặt trường này, nên setup và băm của trận thường giữ nguyên từng byte.
+   */
+  geometry?: 'endless';
 }
 
 /** Phần perk mà trận đọc (spec §6.6, §6.9): giá trị hiệu lực, trường vắng = số gốc. */
@@ -235,7 +245,8 @@ export interface PerkBattleMods {
 /** Sự kiện cho render, rút ra bằng drainEvents. */
 export type BattleEvent =
   | { type: 'spawn'; id: number }
-  | { type: 'hit'; id: number; dmg: number }
+  /** `sourceId` = striking entity (−1: none, e.g. a damage-over-time tick); `dmgType` for sounds and FX only. */
+  | { type: 'hit'; id: number; dmg: number; sourceId: number; dmgType: DamageType }
   | { type: 'death'; id: number }
   | { type: 'boulder'; phase: 'drop' | 'impact'; x: number; y: number }
   | { type: 'waveSpawned'; index: number; edges: readonly Edge[] }

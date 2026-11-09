@@ -1,6 +1,9 @@
 import type Phaser from 'phaser';
 import { INTERVENTION } from '../data/battle';
 import { PALETTE } from '../data/palette';
+import { DEATH_POP_POOL, FLOAT_MS, FLOAT_POOL, FLOAT_RISE_PX } from '../data/juice';
+import { FONT_UI } from '../ui/theme';
+import { deathPopFrame, deathPopPuffs, showsFloatingDamage } from './juiceModel';
 import type { BattleEvent } from '../game/battle/types';
 import type { BattleWorld } from '../game/battle/world';
 import { ISO_SPRITE_SCALE, iso } from './isoView';
@@ -43,7 +46,14 @@ export class FxRenderer {
   /** Pulse bursts and shield bubbles, pooled separately from the hit sparks. */
   private readonly bursts: Phaser.GameObjects.Image[] = [];
   private readonly rings: Ring[] = [];
+  private readonly damageTexts: {
+    text: Phaser.GameObjects.Text;
+    start: number;
+    y: number;
+  }[] = [];
   private readonly ringGfx: Phaser.GameObjects.Graphics;
+  /** Death pops (spec §11.5): four discrete frames of square puffs, real time, drawn with the rings. */
+  private readonly pops: { x: number; y: number; start: number }[] = [];
 
   constructor(scene: Phaser.Scene) {
     this.scene = scene;
@@ -54,15 +64,43 @@ export class FxRenderer {
     const a = Math.min(1, Math.max(0, alpha));
     const now = this.scene.time.now;
     for (const e of events) {
-      if (e.type === 'hit') this.spark(world, e.id);
-      else if (e.type === 'boulder' && e.phase === 'impact')
-        this.rings.push({ x: e.x, y: e.y, start: now, radius: INTERVENTION.radius, color: PALETTE.cream });
+      if (e.type === 'hit') {
+        this.spark(world, e.id);
+        if (showsFloatingDamage(e.dmg)) this.floatDamage(world, e.id, e.dmg, now);
+      } else if (e.type === 'boulder' && e.phase === 'impact')
+        this.rings.push({
+          x: e.x,
+          y: e.y,
+          start: now,
+          radius: INTERVENTION.radius,
+          color: PALETTE.cream,
+        });
       else if (e.type === 'pulse' || e.type === 'revive') this.pulse(world, e.id, now);
       else if (e.type === 'shield') this.bubble(world, e.id);
+      else if (e.type === 'death' && e.id >= 0 && e.id < world.count) {
+        const p = iso({ x: world.x[e.id]!, y: world.y[e.id]! });
+        this.pops.push({
+          x: Math.round(p.x),
+          y: Math.round(p.y - world.radius[e.id]!),
+          start: now,
+        });
+        if (this.pops.length > DEATH_POP_POOL) this.pops.shift();
+      }
     }
     this.syncProjectiles(world, a);
     this.syncBoulders(world, a);
+  }
+
+  /** Damage numbers, rings and death pops finish in real time even after the runner has ended. */
+  updateDamage(): void {
+    const now = this.scene.time.now;
     this.drawRings(now);
+    for (const slot of this.damageTexts) {
+      if (!slot.text.visible) continue;
+      const t = Math.min(1, Math.max(0, (now - slot.start) / FLOAT_MS));
+      slot.text.setY(Math.round(slot.y - FLOAT_RISE_PX * t)).setAlpha(1 - t);
+      if (t >= 1) slot.text.setVisible(false);
+    }
   }
 
   destroy(): void {
@@ -74,6 +112,9 @@ export class FxRenderer {
       list.length = 0;
     }
     this.rings.length = 0;
+    this.pops.length = 0;
+    for (const slot of this.damageTexts) slot.text.destroy();
+    this.damageTexts.length = 0;
     this.ringGfx.destroy();
   }
 
@@ -100,7 +141,11 @@ export class FxRenderer {
       const back = d > 0 ? backDist / d : 0;
       const at = iso({ x: p.px[k]! - dx * back, y: p.py[k]! - dy * back });
       // The arrow frame follows the flight on screen (projected direction), never a rotated sprite.
-      const img = this.image(this.projectiles, used, fxFrame(`arrow_${arrowDir(dy - dx, (dx + dy) / 2)}`));
+      const img = this.image(
+        this.projectiles,
+        used,
+        fxFrame(`arrow_${arrowDir(dy - dx, (dx + dy) / 2)}`),
+      );
       img.setPosition(Math.round(at.x), Math.round(at.y - FLIGHT_H)).setDepth(at.y);
       used += 1;
     }
@@ -162,6 +207,34 @@ export class FxRenderer {
     });
   }
 
+  private floatDamage(world: BattleWorld, id: number, dmg: number, now: number): void {
+    if (id < 0 || id >= world.count) return;
+    let slot = this.damageTexts.find((s) => !s.text.visible || now - s.start >= FLOAT_MS);
+    if (!slot) {
+      if (this.damageTexts.length >= FLOAT_POOL) return;
+      const text = this.scene.add
+        .text(0, 0, '', {
+          fontFamily: FONT_UI,
+          fontSize: '16px',
+          color: '#ffffff',
+          stroke: '#201820',
+          strokeThickness: 2,
+        })
+        .setOrigin(0.5, 1)
+        .setDepth(RING_DEPTH + 1);
+      slot = { text, start: now, y: 0 };
+      this.damageTexts.push(slot);
+    }
+    const at = iso({ x: world.x[id]!, y: world.y[id]! });
+    slot.start = now;
+    slot.y = Math.round(at.y - world.radius[id]!);
+    slot.text
+      .setText(`${Math.round(dmg)}`)
+      .setPosition(Math.round(at.x), slot.y)
+      .setAlpha(1)
+      .setVisible(true);
+  }
+
   /** A structure's pulse: a gold burst on it and a ring growing to the pulse radius. */
   private pulse(world: BattleWorld, id: number, now: number): void {
     if (id < 0 || id >= world.count) return;
@@ -179,7 +252,14 @@ export class FxRenderer {
   }
 
   /** Fade-out of one pooled fx frame at (x, y) with the given depth. */
-  private burst(frame: string, x: number, y: number, depth: number, alpha: number, ms: number): void {
+  private burst(
+    frame: string,
+    x: number,
+    y: number,
+    depth: number,
+    alpha: number,
+    ms: number,
+  ): void {
     let img = this.bursts.find((b) => !b.visible && b.frame.name === fxFrame(frame));
     if (img === undefined) {
       img = this.scene.add.image(0, 0, SPRITES_KEY, fxFrame(frame));
@@ -188,7 +268,12 @@ export class FxRenderer {
     const b = img;
     this.scene.tweens.killTweensOf(b);
     b.setPosition(Math.round(x), Math.round(y)).setDepth(depth).setAlpha(alpha).setVisible(true);
-    this.scene.tweens.add({ targets: b, alpha: 0, duration: ms, onComplete: () => b.setVisible(false) });
+    this.scene.tweens.add({
+      targets: b,
+      alpha: 0,
+      duration: ms,
+      onComplete: () => b.setVisible(false),
+    });
   }
 
   private drawRings(now: number): void {
@@ -205,6 +290,17 @@ export class FxRenderer {
       // A world circle on the isometric ground: an ellipse r·√2 wide, r/√2 tall (radius in world px).
       const r = 4 + (ring.radius - 4) * t;
       g.strokeEllipse(ring.x, ring.y, 2 * r * Math.SQRT2, (2 * r) / Math.SQRT2);
+    }
+    for (let i = this.pops.length - 1; i >= 0; i--) {
+      const pop = this.pops[i]!;
+      const frame = deathPopFrame(now - pop.start);
+      if (frame === null) {
+        this.pops.splice(i, 1);
+        continue;
+      }
+      g.fillStyle(PALETTE.cream, 1);
+      for (const p of deathPopPuffs(frame))
+        g.fillRect(pop.x + p.dx - (p.size >> 1), pop.y + p.dy - (p.size >> 1), p.size, p.size);
     }
   }
 

@@ -3,6 +3,8 @@
  * nhiệm vụ cuối năm rồi kết thúc ván / sang năm mới. Thuần, không sửa đầu vào.
  */
 import type { Content } from '../cards/registry';
+import { hasFullCalendar } from '../../data/rules';
+import { isFinalYear } from './endlessRules';
 import { closeOffer } from './flow';
 import { settleQuests } from './quests';
 import type { RunState } from './state';
@@ -15,7 +17,7 @@ import { startYear } from './yearFlow';
 export function finishYear(state: RunState, content: Content): RunState {
   const settled = settleQuests(state, null, 'yearEnd', content);
   if (settled.offers !== null) return settled;
-  if (settled.lives <= 0 || settled.year >= settled.rules.years) {
+  if (settled.lives <= 0 || isFinalYear(settled)) {
     return {
       ...settled,
       phase: 'ended',
@@ -35,6 +37,6 @@ export function finishYear(state: RunState, content: Content): RunState {
 export function advanceAfterBattle(state: RunState, content: Content): RunState {
   const next = closeOffer(state);
   if (next.offers !== null) return next;
-  if (state.rules.calendar !== 'full' || state.year >= state.rules.years) return finishYear(next, content);
+  if (!hasFullCalendar(state.rules) || isFinalYear(state)) return finishYear(next, content);
   return next;
 }

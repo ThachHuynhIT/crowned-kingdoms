@@ -16,7 +16,7 @@ const stacksOf = (b: BuildingState): number => b.enchants.reduce((n, e) => n + e
  * không tính vào giới hạn stack (chỉ phép gắn mới kiểm giới hạn).
  */
 export const libraryVirtualStacks: StatHandler = (ctx, params) => {
-  if (!neighbours(ctx.source.plot).includes(ctx.target.plot)) return [];
+  if (!neighbours(ctx.source.plot, ctx.state.mode).includes(ctx.target.plot)) return [];
   const first = ctx.target.building.enchants[0];
   if (!first) return [];
   const card = ctx.content.card(first.cardId);

@@ -1,3 +1,5 @@
+import type { RunMode } from '../data/rules';
+import { geometryFor } from '../game/run/boardGeometry';
 import { FIELD_DECOR } from '../data/fieldDecoration';
 import type { DecorAsset } from './decorationModel';
 import { pixelHash } from './pixel';
@@ -15,12 +17,21 @@ export interface ForestPlacement {
  * dropped when its footprint would reach the wall gap (`y + radius > y1`). Deterministic: `pixelHash` with the
  * forest's own salt and the run seed (never a run RNG stream); assets sorted by id first. Drawing only.
  */
-export const layoutForest = (seed: number, assets: readonly DecorAsset[]): readonly ForestPlacement[] => {
+export const layoutForest = (
+  seed: number,
+  assets: readonly DecorAsset[],
+  mode: RunMode = 'normal',
+): readonly ForestPlacement[] => {
   const pool = [...assets].sort((a, b) => (a.id < b.id ? -1 : a.id > b.id ? 1 : 0));
   const pines = pool.filter((a) => a.id.startsWith('forest_pine'));
   const rocks = pool.filter((a) => a.id.startsWith('forest_rock'));
   if (pines.length === 0 && rocks.length === 0) return [];
-  const f = FIELD_DECOR.forest;
+  const shift = geometryFor(mode).wallY - geometryFor('normal').wallY;
+  const f = {
+    ...FIELD_DECOR.forest,
+    y0: FIELD_DECOR.forest.y0 + shift,
+    y1: FIELD_DECOR.forest.y1 + shift,
+  };
   const out: ForestPlacement[] = [];
   const cols = Math.floor((f.x1 - f.x0) / f.grid);
   const rows = Math.floor((f.y1 - f.y0) / f.grid);

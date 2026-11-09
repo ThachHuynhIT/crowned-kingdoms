@@ -1,3 +1,4 @@
+import type { RunMode } from '../data/rules';
 import type Phaser from 'phaser';
 import type { KingId } from '../data/types';
 import { project } from '../core/iso';
@@ -28,9 +29,9 @@ export class FieldRenderer {
   private portal: EnemyPortalRenderer | null;
   private forest: ForestRenderer | null;
 
-  constructor(scene: Phaser.Scene, seed: number, kingId?: KingId) {
+  constructor(scene: Phaser.Scene, seed: number, kingId?: KingId, mode: RunMode = 'normal') {
     this.textures = scene.textures;
-    this.key = ensureFieldTexture(scene.textures, seed);
+    this.key = ensureFieldTexture(scene.textures, seed, mode);
     // The ground tile repeats every (pw × ph) on screen; its pixel (pw/2, 0) is the grass grid origin, so the
     // TileSprite starts a whole number of periods left/up of it: the grass beyond the field lines up with the field's.
     const groundKey = ensureGroundTexture(scene.textures);
@@ -60,10 +61,10 @@ export class FieldRenderer {
       .setDepth(0.01);
     // Isometric cliff drawn in code until the isometric wall art (Task 11); the king skin waits for it.
     void kingId;
-    this.wall = new IsoWallRenderer(scene, seed);
-    this.decor = new DecorationRenderer(scene, seed);
-    this.portal = new EnemyPortalRenderer(scene);
-    this.forest = new ForestRenderer(scene, seed, this.wall.lift);
+    this.wall = new IsoWallRenderer(scene, seed, mode);
+    this.decor = new DecorationRenderer(scene, seed, mode);
+    this.portal = new EnemyPortalRenderer(scene, mode);
+    this.forest = new ForestRenderer(scene, seed, this.wall.lift, mode);
   }
 
   /** Destroys the images, then removes the `field-<seed>` texture (nothing else uses it). */

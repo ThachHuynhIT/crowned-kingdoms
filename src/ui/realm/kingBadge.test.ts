@@ -14,7 +14,12 @@ describe('kingBadge', () => {
     expect(kingBadge('wheat', 10)).toEqual({ key: 'badge-wheat-16', size: 16 });
   });
 
-  it('kings without a badge keep their colour square', () => {
-    expect(kingBadge('stone', 40)).toBeNull();
+  it('all nine kings have a badge in two sizes (G5, 2026-11-09); raiders keep their colour square', () => {
+    const keys = KING_BADGE_FILES.map((f) => f.key);
+    for (const king of ['wheat', 'stone', 'arcane', 'grove', 'tide', 'forge', 'clock', 'moon', 'nomad'] as const) {
+      expect(kingBadge(king, 40)).toEqual({ key: `badge-${king}-32`, size: 32 });
+      expect(keys).toContain(`badge-${king}-16`);
+    }
+    expect(kingBadge('raiders' as never, 40)).toBeNull();
   });
 });

@@ -1,3 +1,4 @@
+import type { RunMode } from '../data/rules';
 import type Phaser from 'phaser';
 import { layoutDecorations } from './decorationModel';
 import { DECOR_APPROVED, DECOR_CATALOG, decorFile, imageArtKey } from './imageArt';
@@ -11,9 +12,9 @@ import { iso } from './isoView';
 export class DecorationRenderer {
   private images: Phaser.GameObjects.Image[] = [];
 
-  constructor(scene: Phaser.Scene, seed: number) {
+  constructor(scene: Phaser.Scene, seed: number, mode: RunMode = 'normal') {
     const approved = DECOR_CATALOG.filter((a) => DECOR_APPROVED.includes(a.id) && scene.textures.exists(imageArtKey(decorFile(a.id))));
-    for (const p of layoutDecorations(seed, approved)) {
+    for (const p of layoutDecorations(seed, approved, mode)) {
       const at = iso(p);
       this.images.push(
         scene.add.image(Math.round(at.x), Math.round(at.y), imageArtKey(decorFile(p.assetId))).setOrigin(0.5, 1).setDepth(at.y),

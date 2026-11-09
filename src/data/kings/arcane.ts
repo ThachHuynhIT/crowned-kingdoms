@@ -37,7 +37,7 @@ export const ARCANE: KingDef = {
     rarity: 'common',
     tags: [],
     textVi: 'Ngai của Vua Phép Thuật: bắn phép vào kẻ địch. Hòa Âm: công trình có từ 2 stack Bùa trở lên nhận +{pct}% máu và sát thương.',
-    hp: 280,
+    hp: 378,
     armor: 0,
     attack: { dmg: 10, type: 'magic', range: cells(1.875), interval: 12, projectileSpeed: 16 },
     passive: [{ type: 'custom', id: 'arcane_harmony', params: { pct: [10, 12, 15, 18, 20] } }],

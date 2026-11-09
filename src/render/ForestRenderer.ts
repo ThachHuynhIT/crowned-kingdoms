@@ -1,3 +1,4 @@
+import type { RunMode } from '../data/rules';
 import type Phaser from 'phaser';
 import { layoutForest } from './forestModel';
 import { FOREST_APPROVED, FOREST_CATALOG, forestFile, imageArtKey } from './imageArt';
@@ -16,9 +17,9 @@ const DEPTH_SPAN = 0.1;
 export class ForestRenderer {
   private images: Phaser.GameObjects.Image[] = [];
 
-  constructor(scene: Phaser.Scene, seed: number, lift: number) {
+  constructor(scene: Phaser.Scene, seed: number, lift: number, mode: RunMode = 'normal') {
     const approved = FOREST_CATALOG.filter((a) => FOREST_APPROVED.includes(a.id) && scene.textures.exists(imageArtKey(forestFile(a.id))));
-    const placed = layoutForest(seed, approved);
+    const placed = layoutForest(seed, approved, mode);
     const feet = placed.map((p) => iso(p));
     const ys = feet.map((f) => f.y);
     const lo = Math.min(...ys, 0);
