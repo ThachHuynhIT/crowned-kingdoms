@@ -1,5 +1,7 @@
 import type Phaser from 'phaser';
 import { BATTLE } from '../data/battle';
+import type { RunMode } from '../data/rules';
+import { fieldTextureKey } from './endlessBoardModel';
 import { PALETTE } from '../data/palette';
 import type { CardDef, CardId, UnitId } from '../data/types';
 import type { Content } from '../game/cards/registry';
@@ -67,7 +69,7 @@ export const iconFrame = (id: IconId): string => `icon_${id}`;
 /** `arrow_<dir>`, `boulder`, `boulder_shadow`, `spark`. */
 export const fxFrame = (name: string): string => `fx_${name}`;
 /** Texture key of the painted battle field for `seed`. */
-export const fieldKey = (seed: number): string => `field-${seed}`;
+export const fieldKey = fieldTextureKey;
 
 /** UI frames (nine-slice sources) and decorations, named as in uiArt.ts. */
 export const UI_KEY = 'ui';
@@ -342,9 +344,13 @@ export const groundTextureScale = (textures: Phaser.Textures.TextureManager): nu
 export const ensureFieldTexture = (
   textures: Phaser.Textures.TextureManager,
   seed: number,
+  mode: RunMode = 'normal',
 ): string => {
-  const key = fieldKey(seed);
+  const key = fieldKey(seed, mode);
   // The square field laid onto the isometric ground (spec 2026-11-06): a diamond, top corner = world (0, 0).
-  if (!textures.exists(key)) addPixelTexture(textures, key, squareToIso(paintField(seed, grassArt(textures) ?? undefined, groundTextures(textures))));
+  if (!textures.exists(key)) {
+    const field = paintField(seed, grassArt(textures) ?? undefined, groundTextures(textures), mode);
+    addPixelTexture(textures, key, squareToIso(field));
+  }
   return key;
 };

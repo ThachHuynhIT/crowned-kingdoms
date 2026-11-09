@@ -39,7 +39,7 @@ export const freeMoveLabel = (left: number, desktop: boolean, picking: boolean):
  * about the plot itself (no building, the throne, locked, no move left…).
  */
 export const sourceIllegal = (state: RunState, content: Content, plot: number): IllegalReason | null => {
-  const around = neighbours(plot);
+  const around = neighbours(plot, state.mode);
   if (around.some((to) => freeMoveIllegal(state, content, plot, to) === null)) return null;
   const open = around.find((n) => n !== THRONE_PLOT && state.plots[n]?.unlocked === true);
   return freeMoveIllegal(state, content, plot, open ?? around[0] ?? plot);

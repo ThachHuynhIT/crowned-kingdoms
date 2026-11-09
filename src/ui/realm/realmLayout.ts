@@ -1,6 +1,7 @@
 import { project, unproject } from '../../core/iso';
 import { BATTLE } from '../../data/battle';
-import { plotCol, plotRow } from '../../game/run/board';
+import type { RunMode } from '../../data/rules';
+import { geometryFor, plotAtCell, plotCoords } from '../../game/run/boardGeometry';
 import { CARD_LIFT, GAP, MARGIN, SPEED_GAP, type Point, type Rect, type Size } from '../hud/layout';
 import { calendarStripLayout } from '../planning/calendarStripLayout';
 
@@ -29,13 +30,12 @@ const DESK_TOP_HUD = 104;
 const DESK_HAND_GAP = 16;
 const DESK_BATTLE_BOTTOM = 72;
 /** The board is 5×5 plots (spec §4.1, `src/game/run/board.ts`). */
-const BOARD_SIDE = 5;
 /**
  * The board on screen at zoom 1 (isometric, spec 2026-11-06): a diamond 128×64 per plot, so the
  * whole 5×5 board is a diamond 640 wide and 320 tall. Layout rects hold its bounding box.
  */
-const ISO_BOARD_W = 2 * BOARD_SIDE * BATTLE.plot;
-const ISO_BOARD_H = BOARD_SIDE * BATTLE.plot;
+const boardWidth = (mode: RunMode): number => 2 * geometryFor(mode).side * BATTLE.plot;
+const boardHeight = (mode: RunMode): number => geometryFor(mode).side * BATTLE.plot;
 
 /**
  * The overview (farthest) zoom of a phase (spec 2026-11-08 §4), a free (fractional) zoom. Desktop: the board is
@@ -43,19 +43,32 @@ const ISO_BOARD_H = BOARD_SIDE * BATTLE.plot;
  * (planning) or the bottom bars (battle), and never past `ZOOM_MAX`. Phone: `PLANNING_ZOOM` in both phases
  * (touch targets first; the player drags to the side plots).
  */
-export const overviewZoom = (screen: Size, phase: RealmPhase, handSize = 3): number => {
+export const overviewZoom = (
+  screen: Size,
+  phase: RealmPhase,
+  handSize = 3,
+  mode: RunMode = 'normal',
+): number => {
   if (!isDesktop(screen.w)) return PLANNING_ZOOM;
   const bottom =
     phase === 'planning' ? handRow(screen, DESK.card, handSize)[0]!.y - DESK_HAND_GAP : screen.h - DESK_BATTLE_BOTTOM;
   const room = Math.max(1, bottom - DESK_TOP_HUD);
-  return Math.max(0.25, Math.min((OVERVIEW_BOARD_SHARE * screen.w) / ISO_BOARD_W, room / ISO_BOARD_H, ZOOM_MAX));
+  return Math.max(0.25, Math.min((OVERVIEW_BOARD_SHARE * screen.w) / boardWidth(mode), room / boardHeight(mode), ZOOM_MAX));
 };
 
 /** Battle overview zoom (§10.7, spec 2026-11-08 §4). */
-export const battleZoom = (width: number, height: number): number => overviewZoom({ w: width, h: height }, 'battle');
+export const battleZoom = (
+  width: number,
+  height: number,
+  mode: RunMode = 'normal',
+): number => overviewZoom({ w: width, h: height }, 'battle', 3, mode);
 
 /** Planning overview zoom (§10.4, spec 2026-11-08 §4); the camera eases to the battle one when a battle starts. */
-export const planningZoom = (screen: Size, handSize = 3): number => overviewZoom(screen, 'planning', handSize);
+export const planningZoom = (
+  screen: Size,
+  handSize = 3,
+  mode: RunMode = 'normal',
+): number => overviewZoom(screen, 'planning', handSize, mode);
 
 const BUTTON = 48;
 const BUTTON_GAP = 8;
@@ -218,11 +231,11 @@ const DECREE_PANEL_W = 260;
 /** Help button next to the gold box (same height); 52 wide, so it is a comfortable touch target too. */
 const helpRect = (gold: Rect): Rect => ({ x: gold.x + gold.w + GAP, y: gold.y, w: 52, h: gold.h });
 
-const desktopLayout = (screen: Size, handSize: number): PlanningLayout => {
+const desktopLayout = (screen: Size, handSize: number, mode: RunMode): PlanningLayout => {
   const { w, h } = screen;
-  const zoom = planningZoom(screen, handSize);
-  const boardW = ISO_BOARD_W * zoom;
-  const boardH = ISO_BOARD_H * zoom;
+  const zoom = planningZoom(screen, handSize, mode);
+  const boardW = boardWidth(mode) * zoom;
+  const boardH = boardHeight(mode) * zoom;
   const lives = { x: MARGIN, y: MARGIN, w: DESK.top.lives, h: DESK.top.h };
   const gold = { x: lives.x + lives.w + GAP, y: MARGIN, w: DESK.top.gold, h: DESK.top.h };
   const wide =
@@ -272,7 +285,7 @@ const desktopLayout = (screen: Size, handSize: number): PlanningLayout => {
   const allyW = Math.max(0, Math.min(STATUS_W, sell.x - GAP - MARGIN));
   const foeX = deck.x + deck.w + GAP;
   const foeW = Math.max(0, Math.min(STATUS_W, w - MARGIN - foeX));
-  const centre = plotRectOf(board, Math.floor((BOARD_SIDE * BOARD_SIDE) / 2));
+  const centre = plotRectOf(board, 12, mode);
   return {
     desktop: true,
     zoom,
@@ -310,10 +323,10 @@ const desktopLayout = (screen: Size, handSize: number): PlanningLayout => {
   };
 };
 
-const mobileLayout = (screen: Size, handSize: number): PlanningLayout => {
+const mobileLayout = (screen: Size, handSize: number, mode: RunMode): PlanningLayout => {
   const { w } = screen;
-  const boardW = ISO_BOARD_W * PLANNING_ZOOM;
-  const boardH = ISO_BOARD_H * PLANNING_ZOOM;
+  const boardW = boardWidth(mode) * PLANNING_ZOOM;
+  const boardH = boardHeight(mode) * PLANNING_ZOOM;
   const lives = { x: MARGIN, y: MARGIN, w: PHONE.top.lives, h: PHONE.top.h };
   const gold = { x: lives.x + lives.w + GAP, y: MARGIN, w: PHONE.top.gold, h: PHONE.top.h };
   const help = helpRect(gold);
@@ -374,18 +387,24 @@ const mobileLayout = (screen: Size, handSize: number): PlanningLayout => {
 };
 
 /** §10.4. */
-export const planningLayout = (screen: Size, handSize = 3): PlanningLayout =>
-  isDesktop(screen.w) ? desktopLayout(screen, handSize) : mobileLayout(screen, handSize);
+export const planningLayout = (
+  screen: Size,
+  handSize = 3,
+  mode: RunMode = 'normal',
+): PlanningLayout =>
+  isDesktop(screen.w) ? desktopLayout(screen, handSize, mode) : mobileLayout(screen, handSize, mode);
 
 /**
  * Bounding box of `plot`'s diamond inside the board box `board` (isometric, src/core/iso.ts: plot 0
  * is the top corner, rows (world south) run down-right, columns (world east) down-left).
  */
-const plotRectOf = (board: Rect, plot: number): Rect => {
-  const cw = board.w / BOARD_SIDE;
-  const ch = board.h / BOARD_SIDE;
-  const col = plotCol(plot);
-  const row = plotRow(plot);
+const plotRectOf = (board: Rect, plot: number, mode: RunMode = 'normal'): Rect => {
+  const cw = board.w / geometryFor(mode).side;
+  const ch = board.h / geometryFor(mode).side;
+  const cell = plotCoords(plot, mode);
+  const offset = mode === 'endless' ? 1 : 0;
+  const col = cell.col + offset;
+  const row = cell.row + offset;
   return {
     x: board.x + board.w / 2 + ((row - col) * cw) / 2 - cw / 2,
     y: board.y + ((col + row) * ch) / 2,
@@ -395,18 +414,26 @@ const plotRectOf = (board: Rect, plot: number): Rect => {
 };
 
 /** Screen bounding box of `plot`'s diamond at the overview camera of the planning layout. */
-export const plotScreenRect = (layout: PlanningLayout, plot: number): Rect => plotRectOf(layout.board, plot);
+export const plotScreenRect = (
+  layout: PlanningLayout,
+  plot: number,
+  mode: RunMode = 'normal',
+): Rect => plotRectOf(layout.board, plot, mode);
 
 /** Plot whose diamond holds a screen point at the overview camera (inverse of plotScreenRect), null off the board. */
-export const plotAtScreen = (layout: PlanningLayout, p: Point): number | null => {
-  const cw = layout.board.w / BOARD_SIDE;
-  const ch = layout.board.h / BOARD_SIDE;
+export const plotAtScreen = (
+  layout: PlanningLayout,
+  p: Point,
+  mode: RunMode = 'normal',
+): number | null => {
+  const cw = layout.board.w / geometryFor(mode).side;
+  const ch = layout.board.h / geometryFor(mode).side;
   const dx = p.x - (layout.board.x + layout.board.w / 2);
   const dy = p.y - layout.board.y;
   const col = Math.floor(dy / ch - dx / cw);
   const row = Math.floor(dy / ch + dx / cw);
-  if (col < 0 || col >= BOARD_SIDE || row < 0 || row >= BOARD_SIDE) return null;
-  return row * BOARD_SIDE + col;
+  const offset = mode === 'endless' ? 1 : 0;
+  return plotAtCell(row - offset, col - offset, mode);
 };
 
 /** ✓/✕ for a chosen plot: beside it on desktop, the row above the board on mobile. */
@@ -463,10 +490,10 @@ const HP_BAR = { desktop: { w: 300, h: 44 }, phone: { h: 40 } } as const;
  * narrow desktop window has no room beside the strip; two rows of two bottom-right on phones).
  * Bottom corners: the throne's bar with Can Thiệp and Tự bắn above it (left), the enemy bar (right).
  */
-export const battleLayout = (screen: Size): BattleLayout => {
+export const battleLayout = (screen: Size, mode: RunMode = 'normal'): BattleLayout => {
   const { w, h } = screen;
   const desktop = isDesktop(w);
-  const plan = planningLayout(screen);
+  const plan = planningLayout(screen, 3, mode);
   const { lives, gold, help, calendar, calendarLinks } = plan;
   const speedW = 4 * BUTTON + 3 * SPEED_GAP;
 
@@ -546,13 +573,16 @@ export const screenToWorld = (p: Point, scroll: Point, screen: Size, zoom: numbe
  * spans boardOrigin … +5 plots) through the isometric projection; not the throne, which sits on the back row.
  */
 const BOARD_CENTRE: Point = project({
-  x: BATTLE.boardOrigin + (BOARD_SIDE * BATTLE.plot) / 2,
-  y: BATTLE.boardOrigin + (BOARD_SIDE * BATTLE.plot) / 2,
+  x: (geometryFor('normal').boardMin + geometryFor('normal').boardMax) / 2,
+  y: (geometryFor('normal').boardMin + geometryFor('normal').boardMax) / 2,
 });
 
 /** §10.7 battle camera: zoom `battleZoom`, the board centre at the screen centre. */
-export const battleCamera = (screen: Size): { zoom: number; scroll: Point } => {
-  const zoom = battleZoom(screen.w, screen.h);
+export const battleCamera = (
+  screen: Size,
+  mode: RunMode = 'normal',
+): { zoom: number; scroll: Point } => {
+  const zoom = battleZoom(screen.w, screen.h, mode);
   const scroll = cameraScroll(
     BOARD_CENTRE,
     { x: screen.w / 2, y: screen.h / 2 },
@@ -563,8 +593,8 @@ export const battleCamera = (screen: Size): { zoom: number; scroll: Point } => {
 };
 
 /** World point under screen point `p` in the battle view (through the isometric projection), null outside the field. */
-export const battleWorldAt = (p: Point, screen: Size): Point | null => {
-  const { zoom, scroll } = battleCamera(screen);
+export const battleWorldAt = (p: Point, screen: Size, mode: RunMode = 'normal'): Point | null => {
+  const { zoom, scroll } = battleCamera(screen, mode);
   const w = unproject(screenToWorld(p, scroll, screen, zoom));
   if (w.x < 0 || w.x > BATTLE.field || w.y < 0 || w.y > BATTLE.field) return null;
   return w;
@@ -579,19 +609,27 @@ export const battleWorldAt = (p: Point, screen: Size): Point | null => {
 export type RealmPhase = 'planning' | 'battle';
 
 /** Zoom and the screen point where the throne/board centre sits in `phase`. */
-const anchorOf = (screen: Size, phase: RealmPhase): { zoom: number; point: Point } => {
+const anchorOf = (
+  screen: Size,
+  phase: RealmPhase,
+  mode: RunMode,
+): { zoom: number; point: Point } => {
   if (phase === 'battle') {
-    return { zoom: battleZoom(screen.w, screen.h), point: { x: screen.w / 2, y: screen.h / 2 } };
+    return { zoom: battleZoom(screen.w, screen.h, mode), point: { x: screen.w / 2, y: screen.h / 2 } };
   }
-  const board = planningLayout(screen).board;
+  const board = planningLayout(screen, 3, mode).board;
   return {
-    zoom: planningZoom(screen),
+    zoom: planningZoom(screen, 3, mode),
     point: { x: board.x + board.w / 2, y: board.y + board.h / 2 },
   };
 };
 
-export const realmCamera = (screen: Size, phase: RealmPhase): { zoom: number; scroll: Point } => {
-  const a = anchorOf(screen, phase);
+export const realmCamera = (
+  screen: Size,
+  phase: RealmPhase,
+  mode: RunMode = 'normal',
+): { zoom: number; scroll: Point } => {
+  const a = anchorOf(screen, phase, mode);
   return { zoom: a.zoom, scroll: cameraScroll(BOARD_CENTRE, a.point, screen, a.zoom) };
 };
 
@@ -601,9 +639,10 @@ export const realmCameraMix = (
   from: RealmPhase,
   to: RealmPhase,
   k: number,
+  mode: RunMode = 'normal',
 ): { zoom: number; scroll: Point } => {
-  const a = anchorOf(screen, from);
-  const b = anchorOf(screen, to);
+  const a = anchorOf(screen, from, mode);
+  const b = anchorOf(screen, to, mode);
   const zoom = a.zoom + (b.zoom - a.zoom) * k;
   const point = {
     x: a.point.x + (b.point.x - a.point.x) * k,

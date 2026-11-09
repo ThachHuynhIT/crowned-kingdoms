@@ -186,8 +186,8 @@ export class RealmScene extends Phaser.Scene {
       preview ? preview.persistence : session?.persistence,
     );
     this.cameras.main.setBackgroundColor(PALETTE.grass);
-    this.field = new FieldRenderer(this, seed, initial.kingId);
-    this.board = new BoardRenderer(this, CONTENT);
+    this.field = new FieldRenderer(this, seed, initial.kingId, initial.mode);
+    this.board = new BoardRenderer(this, CONTENT, initial.mode);
     this.units = new UnitRenderer(this);
     this.fx = new FxRenderer(this);
     this.range = new RangeRenderer(this);
@@ -294,7 +294,7 @@ export class RealmScene extends Phaser.Scene {
     const state = this.controller.state;
     if (target.kind === 'plot') {
       const specs = buildingRanges(state, target.plot, CONTENT);
-      return specs.length === 0 ? range.hide() : range.show(structureFoot(target.plot), specs);
+      return specs.length === 0 ? range.hide() : range.show(structureFoot(target.plot, this.controller.state.mode), specs);
     }
     const world = this.controller.runner?.world;
     const specs = world ? entityRanges(world, target.id) : [];
@@ -478,7 +478,7 @@ export class RealmScene extends Phaser.Scene {
     this.refreshHighlights();
     this.bus.emit('ui:pending-buy', {
       plot,
-      price: lockedPlotPrice(this.controller.state),
+      price: lockedPlotPrice(this.controller.state, plot ?? 0),
     });
   }
 
@@ -511,7 +511,7 @@ export class RealmScene extends Phaser.Scene {
     }
     if (this.pendingBuy !== null) {
       const plot = this.pendingBuy;
-      if (this.controller.state.gold < lockedPlotPrice(this.controller.state)) {
+      if (this.controller.state.gold < lockedPlotPrice(this.controller.state, plot)) {
         // Keep the offer open: the HUD says why instead of the game rejecting a command.
         this.bus.emit('run:illegal', { reason: 'notEnoughGold' });
         return;
@@ -556,7 +556,7 @@ export class RealmScene extends Phaser.Scene {
     if (this.pinch !== null) {
       // Free zoom (spec 2026-11-08 §4): the zoom follows the finger spread, the map follows the midpoint.
       const p = this.pinch;
-      this.applyView(pinchView(p.view, p.mid, this.midpoint(), p.sq, this.spreadSq(), this.screen(), this.phase()));
+      this.applyView(pinchView(p.view, p.mid, this.midpoint(), p.sq, this.spreadSq(), this.screen(), this.phase(), this.controller.state.mode));
       return;
     }
     const down = this.down;
@@ -569,14 +569,14 @@ export class RealmScene extends Phaser.Scene {
       // player drags to reach the side plots (clampView keeps the view on the map).
       this.panning = true;
     }
-    this.applyView(panBy(this.view, { x: pointer.x - last.x, y: pointer.y - last.y }, this.screen(), this.phase()));
+    this.applyView(panBy(this.view, { x: pointer.x - last.x, y: pointer.y - last.y }, this.screen(), this.phase(), this.controller.state.mode));
   }
 
   /** Mouse wheel: a smooth zoom in (up) or out (down), keeping the world point under the cursor (spec 2026-11-08 §4). */
   private onWheel(pointer: Phaser.Input.Pointer, _over: unknown, _dx: number, dy: number): void {
     if (this.mapBlocked || !this.view || dy === 0) return;
     const next = wheelZoom(this.view.zoom, dy);
-    this.applyView(zoomAt(this.view, { x: pointer.x, y: pointer.y }, next, this.screen(), this.phase()));
+    this.applyView(zoomAt(this.view, { x: pointer.x, y: pointer.y }, next, this.screen(), this.phase(), this.controller.state.mode));
   }
 
   /** Midpoint of the two pointers on the map. */
@@ -673,12 +673,12 @@ export class RealmScene extends Phaser.Scene {
     this.cameraEase = null;
     const phase = this.phase();
     const other: RealmPhase = phase === 'battle' ? 'planning' : 'battle';
-    if (this.view && !easing && !isOverview(this.view, screen, other) && !isOverview(this.view, screen, phase)) {
-      this.applyView(keepView(this.view, screen, phase));
+    if (this.view && !easing && !isOverview(this.view, screen, other, this.controller.state.mode) && !isOverview(this.view, screen, phase, this.controller.state.mode)) {
+      this.applyView(keepView(this.view, screen, phase, this.controller.state.mode));
       return;
     }
-    const target = realmCamera(screen, phase);
-    if (!ease || realmCamera(screen, 'planning').zoom === target.zoom) {
+    const target = realmCamera(screen, phase, this.controller.state.mode);
+    if (!ease || realmCamera(screen, 'planning', this.controller.state.mode).zoom === target.zoom) {
       this.applyView(target);
       return;
     }
@@ -688,7 +688,7 @@ export class RealmScene extends Phaser.Scene {
       duration: CAMERA_EASE_MS,
       ease: 'Sine.easeInOut',
       onUpdate: (tween) => {
-        this.applyView(realmCameraMix(screen, 'planning', 'battle', tween.getValue() ?? 1));
+        this.applyView(realmCameraMix(screen, 'planning', 'battle', tween.getValue() ?? 1, this.controller.state.mode));
       },
       onComplete: () => {
         this.applyView(target);
@@ -744,7 +744,7 @@ export class RealmScene extends Phaser.Scene {
       this.placeCamera();
       return;
     }
-    this.applyView(resizeView(this.view, this.viewScreen, this.screen(), this.phase()));
+    this.applyView(resizeView(this.view, this.viewScreen, this.screen(), this.phase(), this.controller.state.mode));
   }
 
   private teardown(): void {

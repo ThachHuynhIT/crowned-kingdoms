@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest';
-import { RULES_FULL } from '../../data/rules';
+import { RULES_ENDLESS, RULES_FULL } from '../../data/rules';
 import { freeMoveIllegal } from '../../game/cards/custom/nomad';
 import { CONTENT } from '../../game/cards/registry';
 import { THRONE_PLOT } from '../../game/run/board';
@@ -173,5 +173,21 @@ describe('texts', () => {
     expect(freeMoveReasonText('notAdjacent')).not.toBe(illegalText('notAdjacent'));
     expect(freeMoveReasonText('locked')).toBe(illegalText('locked'));
     expect(freeMoveReasonText('throne')).not.toBe(illegalText('throne')); // "cannot place on the throne" reads wrong for a move
+  });
+});
+
+describe('Endless free relocation', () => {
+  it('finds the outer neighbour of an inner building and all 49 highlights', () => {
+    let state = newRun(3, 'nomad', CONTENT, RULES_ENDLESS);
+    state = withBuilding(state, 0, 'wheat_militia', 1);
+    state.plots[32] = { unlocked: true, building: null };
+    // Isolate the outer destination so a normal-only neighbour scan cannot accept the source.
+    state.plots[1] = { unlocked: false, building: null };
+    state.plots[5] = { unlocked: false, building: null };
+    expect(sourceIllegal(state, CONTENT, 0)).toBeNull();
+    expect(tapFreeMove(state, CONTENT, { from: 0, to: null }, 32))
+      .toEqual({ next: { from: 0, to: 32 } });
+    expect(freeMoveHighlights(state, CONTENT, START_FREE_MOVE).size).toBe(49);
+    expect(freeMoveHighlights(state, CONTENT, { from: 0, to: null }).get(32)).toBe('good');
   });
 });

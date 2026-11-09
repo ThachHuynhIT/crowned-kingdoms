@@ -1,5 +1,6 @@
+import type { RunMode } from '../data/rules';
+import { geometryFor } from '../game/run/boardGeometry';
 import type Phaser from 'phaser';
-import { ENEMY_PORTAL } from '../data/battle';
 import { ensurePortalTexture } from './atlas';
 import { PORTAL_APPROVED, PORTAL_ART, imageArtKey } from './imageArt';
 import { iso } from './isoView';
@@ -14,8 +15,8 @@ import { PORTAL_FOOT_Y, PORTAL_SIZE } from './portalArt';
 export class EnemyPortalRenderer {
   private image: Phaser.GameObjects.Image | null;
 
-  constructor(scene: Phaser.Scene) {
-    const at = iso(ENEMY_PORTAL);
+  constructor(scene: Phaser.Scene, mode: RunMode = 'normal') {
+    const at = iso(geometryFor(mode).portal);
     const art = imageArtKey(PORTAL_ART.file);
     const useArt = PORTAL_APPROVED && scene.textures.exists(art);
     this.image = useArt

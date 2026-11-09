@@ -1,3 +1,5 @@
+import type { RunMode } from '../data/rules';
+import { geometryFor } from '../game/run/boardGeometry';
 import type Phaser from 'phaser';
 import { project } from '../core/iso';
 import { BATTLE } from '../data/battle';
@@ -23,7 +25,7 @@ const fillPoly = (g: Phaser.GameObjects.Graphics, pts: readonly { x: number; y: 
 
 /**
  * The mountain wall behind the castle in the isometric view (spec 2026-11-06, P3). The world's
- * north edge (y = `BATTLE.wallY`) runs along a 2:1 diagonal on screen, which the horizontal wall
+ * north edge (the mode descriptor wallY) runs along a 2:1 diagonal on screen, which the horizontal wall
  * pictures cannot follow, so until the isometric wall art exists (Task 11) the cliff is drawn in
  * code: a stone face standing on the projected wall line, a lit top lip, deterministic rock
  * blocks, and the mountain top behind it. Nothing moves; there is no per-frame update.
@@ -35,11 +37,11 @@ export class IsoWallRenderer {
   /** How far the cliff top stands above its foot on screen (zoom 1): where the plateau behind it begins. */
   private top = ISO_WALL_HEIGHT;
 
-  constructor(scene: Phaser.Scene, seed: number) {
+  constructor(scene: Phaser.Scene, seed: number, mode: RunMode = 'normal') {
     const g = scene.add.graphics().setDepth(DEPTH);
     this.g = g;
-    const p = project({ x: -ISO_WALL_EXTENT, y: BATTLE.wallY });
-    const q = project({ x: BATTLE.field + ISO_WALL_EXTENT, y: BATTLE.wallY });
+    const p = project({ x: -ISO_WALL_EXTENT, y: geometryFor(mode).wallY });
+    const q = project({ x: BATTLE.field + ISO_WALL_EXTENT, y: geometryFor(mode).wallY });
     // a = the left end on screen, b = the right end (the line's direction depends on the projection)
     const [a, b] = p.x <= q.x ? [p, q] : [q, p];
     const key = imageArtKey(WALL_FILE);

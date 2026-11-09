@@ -1,5 +1,6 @@
+import { geometryFor } from '../../game/run/boardGeometry';
 import { describe, expect, it } from 'vitest';
-import { ISO, unproject } from '../../core/iso';
+import { ISO, project, unproject } from '../../core/iso';
 import { BATTLE, ENEMY_PORTAL } from '../../data/battle';
 import type { Size } from '../hud/layout';
 import {
@@ -244,5 +245,42 @@ describe('camera model (spec 06/11/2026, P2 zoom)', () => {
         expect(plotAtView(centred, DESKTOP, { x: r.x + r.w / 2, y: r.y + r.h / 2 })).toBe(plot);
       }
     }
+  });
+});
+
+describe('Endless live camera geometry', () => {
+  for (const mode of ['normal', 'endless'] as const) {
+    for (const screen of [DESKTOP, MOBILE]) {
+      it(`${mode}: every centre picks correctly at overview and zoom 3 (${screen.w})`, () => {
+        const base = overviewView(screen, 'planning', mode);
+        for (const zoom of [base.zoom, 3]) {
+          const view = snapView({ ...base, zoom }, screen);
+          for (let plot = 0; plot < (mode === 'endless' ? 49 : 25); plot++) {
+            const cell = geometryFor(mode).plotCells[plot]!;
+            const world = { x: 224 + (cell.col + 0.5) * 64, y: 224 + (cell.row + 0.5) * 64 };
+            const p = worldToScreen(view, screen, world);
+            expect(plotAtView(view, screen, p, mode)).toBe(plot);
+            const r = plotRectAtView(view, screen, plot, mode);
+            expect(r.x + r.w / 2).toBeCloseTo(p.x, 9);
+            expect(r.y + r.h / 2).toBeCloseTo(p.y, 9);
+          }
+        }
+      });
+    }
+  }
+
+  it('clamps the centre at the Endless wall and preserves mode through resize', () => {
+    const screen = { w: 100, h: 100 };
+    const p = project({ x: 384, y: 112 });
+    const start = { zoom: 3, scroll: { x: p.x - 50, y: p.y - 50 } };
+    const endless = clampView(start, screen, 'endless');
+    const centre = unproject(screenToWorld({ x: 50, y: 50 }, endless.scroll, screen, 3));
+    expect(centre.y).toBeCloseTo(112, 9);
+    const normal = clampView(start, screen);
+    expect(unproject(screenToWorld({ x: 50, y: 50 }, normal.scroll, screen, 3)).y)
+      .toBeGreaterThanOrEqual(176);
+    expect(resizeView(overviewView(DESKTOP, 'planning', 'endless'), DESKTOP, MOBILE, 'planning', 'endless'))
+      .toEqual(overviewView(MOBILE, 'planning', 'endless'));
+    expect(zoomLimits(DESKTOP, 'planning', 'endless').max).toBe(3);
   });
 });

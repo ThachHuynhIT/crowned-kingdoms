@@ -186,7 +186,9 @@ export class PlanningHudScene extends Phaser.Scene {
     this.plotTimer = null;
     this.hoveredPlot = null;
     this.lay = this.currentLayout();
-    this.view = overviewView({ w: this.scale.width, h: this.scale.height }, 'planning');
+    this.view = overviewView(
+      { w: this.scale.width, h: this.scale.height }, 'planning', this.controller.state.mode,
+    );
 
     this.tooltip = new Tooltip(this);
     this.toasts = new ToastStack(this, MODAL_DEPTH + 50);
@@ -781,12 +783,16 @@ export class PlanningHudScene extends Phaser.Scene {
 
   /** Plot under a screen point through the live realm camera (zoom and pan), null off the board. */
   private plotAt(p: { x: number; y: number }): number | null {
-    return plotAtView(this.view, { w: this.scale.width, h: this.scale.height }, p);
+    return plotAtView(
+      this.view, { w: this.scale.width, h: this.scale.height }, p, this.controller.state.mode,
+    );
   }
 
   /** Screen rect of a plot through the live realm camera. */
   private plotRect(plot: number): { x: number; y: number; w: number; h: number } {
-    return plotRectAtView(this.view, { w: this.scale.width, h: this.scale.height }, plot);
+    return plotRectAtView(
+      this.view, { w: this.scale.width, h: this.scale.height }, plot, this.controller.state.mode,
+    );
   }
 
   private stopPlotTimer(): void {
@@ -917,7 +923,11 @@ export class PlanningHudScene extends Phaser.Scene {
   }
 
   private currentLayout(): PlanningLayout {
-    return planningLayout({ w: this.scale.width, h: this.scale.height }, handLimit(this.controller.state));
+    return planningLayout(
+      { w: this.scale.width, h: this.scale.height },
+      handLimit(this.controller.state),
+      this.controller.state.mode,
+    );
   }
 
   private layout(): void {

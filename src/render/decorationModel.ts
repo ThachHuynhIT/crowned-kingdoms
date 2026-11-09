@@ -1,3 +1,5 @@
+import type { RunMode } from '../data/rules';
+import { geometryFor } from '../game/run/boardGeometry';
 import { BATTLE } from '../data/battle';
 import { FIELD_DECOR } from '../data/fieldDecoration';
 import { FIELD_TERRAINS, fieldTerrainAt, generateField } from './fieldArt';
@@ -27,7 +29,11 @@ const PATH = FIELD_TERRAINS.indexOf('path');
  * sorted by id first, and every placement is tried a bounded number of times (a crowded field just gets fewer
  * objects). Decoration is drawing only: the battle never sees it.
  */
-export const layoutDecorations = (seed: number, assets: readonly DecorAsset[]): readonly DecorPlacement[] => {
+export const layoutDecorations = (
+  seed: number,
+  assets: readonly DecorAsset[],
+  mode: RunMode = 'normal',
+): readonly DecorPlacement[] => {
   const pool = [...assets].sort((a, b) => (a.id < b.id ? -1 : a.id > b.id ? 1 : 0));
   const tall = pool.filter((a) => a.tall);
   const low = pool.filter((a) => !a.tall);
@@ -67,10 +73,10 @@ export const layoutDecorations = (seed: number, assets: readonly DecorAsset[]): 
   }
 
   // Low: inside the field, in the two side bands only, off the board (with a pad), the road and the water.
-  const field = generateField(seed);
+  const field = generateField(seed, mode);
   const cfg = FIELD_DECOR.low;
-  const lo = BATTLE.boardOrigin - cfg.boardPad;
-  const hi = BATTLE.boardOrigin + 5 * BATTLE.plot + cfg.boardPad;
+  const lo = geometryFor(mode).boardMin - cfg.boardPad;
+  const hi = geometryFor(mode).boardMax + cfg.boardPad;
   for (let i = 0, placed = 0; low.length > 0 && placed < cfg.count && i < cfg.attempts; i++) {
     const a = low[Math.floor(h(i, 11) * low.length)]!;
     const r = a.radius;

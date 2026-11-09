@@ -1,4 +1,5 @@
-import { RUN, unlockCost } from '../../data/run';
+import { RUN } from '../../data/run';
+import { plotPurchasePrice } from '../../game/run/endlessBlessings';
 import type { Rules } from '../../data/rules';
 import type { BossId, KingId } from '../../data/types';
 import { calendarFor, type CalendarSlot } from '../../game/run/calendar';
@@ -65,8 +66,11 @@ export const fullCalendar = (rules: Rules, enemyKings: readonly KingId[]): Calen
   calendarFor(rules).map((slot, i) => cell(slot, i + 1, rules, enemyKings, false));
 
 /** Gold price of the next locked plot (spec §3.11). */
-export const lockedPlotPrice = (state: Pick<RunState, 'purchasedPlots'>): number =>
-  unlockCost(state.purchasedPlots);
+export const lockedPlotPrice = (
+  state: Pick<RunState, 'purchasedPlots'> & Partial<Pick<RunState, 'mode' | 'endless'>>,
+  plot = 0,
+): number =>
+  plotPurchasePrice({ ...state, mode: state.mode ?? 'normal', endless: state.endless ?? null }, plot);
 
 /** Why a play / purchase is refused (§4.4), in Vietnamese. */
 export const illegalText = (reason: IllegalReason): string => ILLEGAL_TEXT[reason];

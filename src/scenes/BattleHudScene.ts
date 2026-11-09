@@ -203,7 +203,7 @@ export class BattleHudScene extends Phaser.Scene {
     this.inspected = null;
     this.hoveredId = null;
     this.lay = this.currentLayout();
-    this.view = overviewView(this.screen(), 'battle');
+    this.view = overviewView(this.screen(), 'battle', this.controller.state.mode);
 
     this.tooltip = new Tooltip(this);
     this.toasts = new ToastStack(this, TOAST_DEPTH);
@@ -538,7 +538,7 @@ export class BattleHudScene extends Phaser.Scene {
 
   private showInfo(world: BattleWorld, id: number, anchor: Point): void {
     const state = this.controller.state;
-    const reserved = battleControls(battleLayout(this.screen()));
+    const reserved = battleControls(battleLayout(this.screen(), this.controller.state.mode));
     if (world.kind[id] === KIND_UNIT) {
       const unit = unitInfoModel(world, id, state, CONTENT);
       if (unit) this.info.showUnit(unit, anchor, this.screen(), reserved);
@@ -859,7 +859,7 @@ export class BattleHudScene extends Phaser.Scene {
   }
 
   private currentLayout(): BattleLayout {
-    return battleLayout(this.screen());
+    return battleLayout(this.screen(), this.controller.state.mode);
   }
 
   private layout(): void {
