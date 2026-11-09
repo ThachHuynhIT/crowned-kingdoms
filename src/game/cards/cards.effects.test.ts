@@ -265,7 +265,7 @@ describe('Stone King (spec §6.4)', () => {
     expect(ids('uncommon')).toEqual(['stone_wall', 'stone_crystal', 'stone_miners'].sort());
     expect(ids('rare')).toEqual(['stone_rune_carving', 'stone_mountain_heart'].sort());
     for (const c of stone.cards) expect(c.id.startsWith('stone_')).toBe(true);
-    expect(stone.throne).toMatchObject({ id: 'stone_throne', hp: 140, armor: 0.2 });
+    expect(stone.throne).toMatchObject({ id: 'stone_throne', hp: 115, armor: 0.2 });
     expect(stone.throne.attack).toMatchObject({ dmg: 12, type: 'physical', range: 84, interval: 14, projectileSpeed: 6 * SPEC_MOVE_SCALE }); // 56 × 1,5
   });
 

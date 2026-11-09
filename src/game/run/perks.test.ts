@@ -126,9 +126,9 @@ describe('wheat perks', () => {
 });
 
 describe('stone perks', () => {
-  it("'stone_p1' Nền Móng Vững: throne +200 HP flat (140 → 340)", () => {
-    expect(setupOf(run('stone')).throne.hp).toBe(140);
-    expect(setupOf(run('stone', 'stone_p1')).throne.hp).toBe(340);
+  it("'stone_p1' Nền Móng Vững: throne +200 HP flat (115 → 315)", () => {
+    expect(setupOf(run('stone')).throne.hp).toBe(115);
+    expect(setupOf(run('stone', 'stone_p1')).throne.hp).toBe(315);
   });
 
   it("'stone_p2' Đá Gọi Đá: a level-1 Tháp Ném Đá on plot 7", () => {
@@ -141,7 +141,7 @@ describe('stone perks', () => {
       return plot === THRONE_PLOT ? setup.throne.hp : setup.structures.find((x) => x.plot === plot)!.hp;
     };
     expect(hp('stone_p3', 8)).toBeCloseTo(hp(null, 8) * 1.3);
-    expect(hp('stone_p3', THRONE_PLOT)).toBeCloseTo(140 * 1.3);
+    expect(hp('stone_p3', THRONE_PLOT)).toBeCloseTo(115 * 1.3);
   });
 });
 
