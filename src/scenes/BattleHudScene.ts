@@ -33,8 +33,9 @@ import { kingTheme } from '../ui/kingSelect/kingTheme';
 import { CalendarModal } from '../ui/modals/CalendarModal';
 import { CalendarStrip } from '../ui/planning/CalendarStrip';
 import { allyStatusText, foeStatusText } from '../ui/planning/statusText';
-import { calendarCells } from '../ui/realm/calendarModel';
+import { calendarCells, yearLabel } from '../ui/realm/calendarModel';
 import { RESULT_BUTTON, centredPanel, resultLayout } from '../ui/modals/modalLayout';
+import { fitTextWidth } from '../ui/modals/fitText';
 import { createOverlay, fitOverlay } from '../ui/modals/overlay';
 import { ScoutPanel, tickClock } from '../ui/planning/ScoutPanel';
 import {
@@ -436,7 +437,8 @@ export class BattleHudScene extends Phaser.Scene {
   }
 
   private showYear(state: RunState): void {
-    this.yearText.setText(`NĂM ${state.year} / ${state.rules.years}`);
+    this.yearText.setText(yearLabel(state));
+    fitTextWidth(this.yearText, isDesktop(this.scale.width) ? 18 : 15, 11, this.lay.year.w);
     this.calendar.setCells(calendarCells(state, 5));
   }
 
@@ -881,7 +883,7 @@ export class BattleHudScene extends Phaser.Scene {
     this.clockText.setPosition(c.x + c.w / 2, c.y + c.h / 2);
     this.clockText.setFontSize(desktop ? 20 : 16);
     this.yearText.setPosition(l.year.x + l.year.w / 2, l.year.y + l.year.h / 2);
-    this.yearText.setFontSize(desktop ? 18 : 15);
+    fitTextWidth(this.yearText, desktop ? 18 : 15, 11, l.year.w);
     this.calendar.layout(l.calendar, l.calendarLinks);
     this.allyBar.layout(l.allyStatus);
     this.foeBar.layout(l.foeStatus);

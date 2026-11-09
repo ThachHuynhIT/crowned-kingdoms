@@ -1,5 +1,6 @@
 import type Phaser from 'phaser';
 import { BOSSES } from '../../data/bosses';
+import { ENDLESS_MODIFIERS, ENDLESS_MODIFIER_SPAN } from '../../data/endless';
 import { PALETTE } from '../../data/palette';
 import { RUN } from '../../data/run';
 import { UI_PALETTE } from '../../data/uiPalette';
@@ -10,6 +11,7 @@ import type { KingId } from '../../data/types';
 import type { CalendarCell } from '../realm/calendarModel';
 import { kingBadge } from '../realm/kingBadge';
 import { questCalendarLabel } from './questNotice';
+import { modifierEffectText } from '../modals/blessingModel';
 import {
   addUiText,
   bindPress,
@@ -39,6 +41,12 @@ export const calendarCellText = (cell: CalendarCell, content: Content): string[]
     lines.push(`${content.enemyKing(cell.attacker).nameVi} tấn công (lần ${cell.attack}/3).`);
   }
   if (cell.council) lines.push('Sau trận: Hội Đồng Hoàng Gia.');
+  if (cell.blessing) lines.push('Sau trận: chọn một Phúc lành.');
+  const mod = cell.modifier ? ENDLESS_MODIFIERS.find((m) => m.id === cell.modifier!.id) : undefined;
+  if (cell.modifier && mod) {
+    const end = cell.modifier.startYear + ENDLESS_MODIFIER_SPAN - 1;
+    lines.push(`Biến thể ${mod.name} (năm ${cell.modifier.startYear}–${end}): ${modifierEffectText(mod)}`);
+  }
   if (cell.quest) {
     lines.push(`Đầu năm: Sứ giả có thể mang nhiệm vụ (nếu bạn đang có dưới ${RUN.maxActiveQuests} nhiệm vụ).`);
   }
@@ -167,7 +175,7 @@ export class CalendarCellView {
     if (!tex.exists(SPRITES_KEY)) return;
     const atlas = tex.get(SPRITES_KEY);
     let x = w - 3;
-    for (const [on, icon] of [[cell.council, 'crown']] as const) {
+    for (const [on, icon] of [[cell.council, 'crown'], [cell.blessing === true, 'enchant']] as const) {
       if (!on || !atlas.has(iconFrame(icon))) continue;
       this.add(this.scene.add.image(x, 3, SPRITES_KEY, iconFrame(icon)).setOrigin(1, 0).setScale(0.75));
       x -= 13;

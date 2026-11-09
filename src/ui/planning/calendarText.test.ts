@@ -1,9 +1,11 @@
 import { describe, expect, it } from 'vitest';
 import { RUN } from '../../data/run';
-import { RULES_FULL } from '../../data/rules';
+import { ENDLESS_MODIFIERS } from '../../data/endless';
+import { RULES_ENDLESS, RULES_FULL } from '../../data/rules';
+import { modifierAt } from '../../game/run/endlessModifiers';
 import type { KingId } from '../../data/types';
 import { CONTENT } from '../../game/cards/registry';
-import { fullCalendar } from '../realm/calendarModel';
+import { calendarCells, fullCalendar } from '../realm/calendarModel';
 import { calendarCellText } from './CalendarStrip';
 
 const kings: KingId[] = ['grove', 'tide', 'forge', 'clock', 'moon', 'nomad'];
@@ -43,5 +45,20 @@ describe('calendar_has_readable_messenger', () => {
       expect(lines).toContain(String(RUN.maxActiveQuests));
     }
     for (const y of RUN.councilYears.filter((c) => c < 30)) expect(text(y).join(' ')).toContain('Sau trận');
+  });
+});
+
+describe('calendarCellText in Endless (spec 2026-11-09 §7)', () => {
+  const endless = { year: 30, rules: RULES_ENDLESS, enemyKings: kings, enemies: {}, seed: 7 };
+  it('adds the blessing line on its years and names the decade modifier from 31', () => {
+    const [y30, y31] = calendarCells(endless, 2);
+    expect(calendarCellText(y30!, CONTENT)).toContain('Sau trận: chọn một Phúc lành.');
+    expect(calendarCellText(y30!, CONTENT).some((l) => l.startsWith('Biến thể'))).toBe(false);
+    const mod = ENDLESS_MODIFIERS.find((m) => m.id === modifierAt(7, 31)!.id)!;
+    expect(calendarCellText(y31!, CONTENT).some((l) => l.startsWith(`Biến thể ${mod.name} (năm 31–40)`))).toBe(true);
+  });
+
+  it('a normal cell has neither line', () => {
+    expect(text(30).some((l) => l.includes('Phúc lành') || l.startsWith('Biến thể'))).toBe(false);
   });
 });

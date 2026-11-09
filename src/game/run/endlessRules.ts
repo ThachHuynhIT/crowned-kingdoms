@@ -55,3 +55,10 @@ export function isCouncilYear(state: Pick<RunState, 'mode' | 'year' | 'rules'>):
     (RUN.councilYears as readonly number[]).includes(state.year)
   );
 }
+
+/**
+ * Năm sống sót của Vô tận (spec 2026-11-09 §3): khi ván đã kết thúc (mất mạng cuối ở trận năm N,
+ * trận đó vẫn tăng `completedYears`) là `completedYears − 1`; ván còn chạy là số năm đã hoàn thành.
+ */
+export const endlessSurvivalScore = (state: Pick<RunState, 'phase' | 'stats'>): number =>
+  state.phase === 'ended' ? Math.max(0, state.stats.completedYears - 1) : state.stats.completedYears;

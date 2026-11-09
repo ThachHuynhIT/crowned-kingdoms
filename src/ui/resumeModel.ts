@@ -9,6 +9,17 @@ export interface ResumeTarget {
   warning: string | null;
 }
 
+/**
+ * What the saved run is, for the "Tiếp tục" button (spec 2026-11-09 §7): its mode and year from the
+ * state itself — "Vô tận · Năm 41", "30 năm · Năm 12".
+ */
+export const resumeCaption = (state: Pick<RunState, 'mode' | 'year' | 'rules'>): string =>
+  state.mode === 'endless' ? `Vô tận · Năm ${state.year}` : `${state.rules.years} năm · Năm ${state.year}`;
+
+/** The "Tiếp tục" label: with the saved run's caption on a second line once one has loaded. */
+export const continueLabel = (state: Pick<RunState, 'mode' | 'year' | 'rules'> | null): string =>
+  state === null ? 'Tiếp tục' : `Tiếp tục\n${resumeCaption(state)}`;
+
 export const resumeTarget = (result: LoadRunResult): ResumeTarget => {
   switch (result.kind) {
     case 'ok':

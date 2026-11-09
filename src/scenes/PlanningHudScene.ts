@@ -21,6 +21,7 @@ import { LONG_PRESS_MS, MARGIN, textContent, type TooltipContent } from '../ui/h
 import { CalendarModal } from '../ui/modals/CalendarModal';
 import { DeckModal } from '../ui/modals/DeckModal';
 import { CLOSE_BUTTON, centredPanel } from '../ui/modals/modalLayout';
+import { fitTextWidth } from '../ui/modals/fitText';
 import { createOverlay, fitOverlay } from '../ui/modals/overlay';
 import { offerHeadingFor } from '../ui/modals/offerModel';
 import { BlessingModal } from '../ui/modals/BlessingModal';
@@ -55,9 +56,10 @@ import {
   showFreeMove,
   type FreeMovePick,
 } from '../ui/planning/freeMoveModel';
-import { calendarCells, illegalText } from '../ui/realm/calendarModel';
+import { calendarCells, illegalText, yearLabel } from '../ui/realm/calendarModel';
 import {
   centerHand,
+  isDesktop,
   confirmFor,
   planningLayout,
   type PlanningLayout,
@@ -375,7 +377,8 @@ export class PlanningHudScene extends Phaser.Scene {
     this.refreshModals(state);
     this.livesText.setText(`× ${state.lives}`);
     this.goldText.setText(`${state.gold}`);
-    this.yearText.setText(`NĂM ${state.year} / ${state.rules.years}`);
+    this.yearText.setText(yearLabel(state));
+    fitTextWidth(this.yearText, isDesktop(this.scale.width) ? 18 : 15, 11, this.lay.year.w);
     this.allyText.setText(allyStatusText(state.kingId, CONTENT));
     this.foeText.setText(foeStatusText(calendarCells(state, 1)[0], CONTENT));
     this.calendar.setCells(calendarCells(state, 5));
@@ -1015,7 +1018,7 @@ export class PlanningHudScene extends Phaser.Scene {
     this.livesIcon?.setPosition(iconX, midY);
     this.livesText.setPosition(iconX + (this.livesIcon ? 36 : 0), midY);
     this.yearText.setPosition(l.year.x + l.year.w / 2, l.year.y + l.year.h / 2);
-    this.yearText.setFontSize(l.desktop ? 18 : 15);
+    fitTextWidth(this.yearText, l.desktop ? 18 : 15, 11, l.year.w);
     const statusSize = l.desktop ? 15 : 13;
     this.allyText.setFontSize(statusSize).setPosition(l.allyStatus.x + 4, l.allyStatus.y + l.allyStatus.h / 2).setVisible(l.allyStatus.w >= 100);
     this.foeText.setFontSize(statusSize).setPosition(l.foeStatus.x + l.foeStatus.w - 4, l.foeStatus.y + l.foeStatus.h / 2).setVisible(l.foeStatus.w >= 100);

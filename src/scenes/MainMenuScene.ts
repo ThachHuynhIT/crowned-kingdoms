@@ -17,7 +17,7 @@ import {
   type Button,
   type UiBox,
 } from '../ui/theme';
-import { LoadGuard, resumeTarget } from '../ui/resumeModel';
+import { LoadGuard, continueLabel, resumeTarget } from '../ui/resumeModel';
 import { SCENES } from './keys';
 import type { RealmData } from './RealmScene';
 import { getSession, takeStorageWarning } from './sessionRegistry';
@@ -133,6 +133,7 @@ export class MainMenuScene extends Phaser.Scene {
   private onResume(): void {
     this.saved = null;
     this.buttons[0]?.setEnabled(false);
+    this.buttons[0]?.setLabel(continueLabel(null));
     this.loadSaved(this.guard.begin());
   }
 
@@ -151,6 +152,8 @@ export class MainMenuScene extends Phaser.Scene {
       const target = resumeTarget(result);
       this.saved = target.state;
       this.buttons[0]?.setEnabled(target.enabled);
+      // One save slot: "Tiếp tục" says which run it holds (mode and year, from the state).
+      this.buttons[0]?.setLabel(continueLabel(target.state));
       if (target.warning !== null) this.showNotice(target.warning);
     });
   }

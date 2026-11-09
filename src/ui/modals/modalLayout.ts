@@ -270,10 +270,17 @@ export interface CalendarModalLayout {
   close: Rect;
   /** Every year, row-major (5 columns up to 15 years, 6 beyond). */
   cells: readonly Rect[];
+  /** Endless pages (only with `pager`): ‹ and › (44×44) either side of the page label under the grid. */
+  pager: { prev: Rect; label: Rect; next: Rect } | null;
 }
 
-/** Whole-run calendar (§10.4 "L"): one cell per year, 5 columns for up to 15 years, 6 beyond. */
-export const calendarModalLayout = (screen: Size, inset: number, years = 15): CalendarModalLayout => {
+const PAGER_H = 44;
+
+/**
+ * Whole-run calendar (§10.4 "L"): one cell per year, 5 columns for up to 15 years, 6 beyond. With
+ * `pager` (Endless, spec 2026-11-09 §7) a row of page buttons follows the grid.
+ */
+export const calendarModalLayout = (screen: Size, inset: number, years = 15, pager = false): CalendarModalLayout => {
   const desktop = isDesktop(screen.w);
   const cols = years > 15 ? 6 : 5;
   const rows = Math.ceil(years / cols);
@@ -282,7 +289,7 @@ export const calendarModalLayout = (screen: Size, inset: number, years = 15): Ca
   const gridW = cols * cell + (cols - 1) * gap;
   const gridH = rows * cell + (rows - 1) * gap;
   const w = gridW + 2 * inset;
-  const h = inset + CLOSE_BUTTON + GAP_ABOVE_CARDS + gridH + inset;
+  const h = inset + CLOSE_BUTTON + GAP_ABOVE_CARDS + gridH + (pager ? GAP_ABOVE_CARDS + PAGER_H : 0) + inset;
   const panel = centredPanel(screen, w, h);
   const innerX = panel.x + inset;
   const innerW = panel.w - 2 * inset;
@@ -301,7 +308,15 @@ export const calendarModalLayout = (screen: Size, inset: number, years = 15): Ca
     w: cell,
     h: cell,
   }));
-  return { panel, title, close, cells };
+  const py = y0 + gridH + GAP_ABOVE_CARDS;
+  const pagerRects = pager
+    ? {
+        prev: { x: x0, y: py, w: PAGER_H, h: PAGER_H },
+        label: { x: x0 + PAGER_H + 8, y: py, w: Math.max(0, gridW - 2 * PAGER_H - 16), h: PAGER_H },
+        next: { x: x0 + gridW - PAGER_H, y: py, w: PAGER_H, h: PAGER_H },
+      }
+    : null;
+  return { panel, title, close, cells, pager: pagerRects };
 };
 
 export interface DeckModalLayout {

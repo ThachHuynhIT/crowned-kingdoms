@@ -4,7 +4,8 @@ import { createBattle, spawnWave, type BattleWorld } from '../../game/battle/wor
 import type { RunState } from '../../game/run/state';
 import { battleSetup, structure, unitStats } from '../../game/testing/fixtures';
 import { UI_PALETTE } from '../../data/uiPalette';
-import { RULES_FULL } from '../../data/rules';
+import { RULES_ENDLESS, RULES_FULL } from '../../data/rules';
+import { endlessSurvivalScore } from '../../game/run/endlessRules';
 import { bossWorld } from '../../game/battle/bossKit';
 import { addDot } from '../../game/battle/statuses';
 import { runState, withBuilding } from '../../game/testing/fixtures';
@@ -299,5 +300,62 @@ describe('model lines', () => {
     expect(lines).toContain('Tuổi: 7 năm (thêm 2)');
     expect(lines).toContain('Bùa: Mài ×2');
     expect(lines).toContain('Máu: 225 → 262.5');
+  });
+});
+
+describe('Endless run end (spec 2026-11-09 §3, §7, §8)', () => {
+  const endless = (over: Partial<RunState> = {}, stats: Partial<RunState['stats']> = {}): RunState => {
+    const s = runState({ rules: RULES_ENDLESS, mode: 'endless', phase: 'ended', won: false, year: 31, ...over });
+    return { ...s, stats: { ...s.stats, completedYears: 31, battlesWon: 25, battlesLost: 6, conquered: 2, bossesWon: 4, ...stats } };
+  };
+  const tallyOf = (state: RunState, unlocks: string[] = [], credited: boolean | null = true) => {
+    const breakdown = crownPoints(state);
+    return { crownPoints: breakdown.total, breakdown, unlocks, credited };
+  };
+
+  it('survival = completed years − 1 once the last life is gone (31 → 30, 1 → 0)', () => {
+    expect(endlessSurvivalScore(endless())).toBe(30);
+    expect(endlessSurvivalScore(endless({ year: 1 }, { completedYears: 1 }))).toBe(0);
+  });
+
+  it('a run still going (year 40, lives left) is not an ended score: the years completed so far', () => {
+    expect(endlessSurvivalScore(endless({ phase: 'planning', year: 40 }, { completedYears: 39 }))).toBe(39);
+  });
+
+  it('the summary says years survived and the year it ended, with no "/ 30" and the real boss count', () => {
+    const lines = runSummary(endless());
+    expect(lines[0]).toBe('Sống sót: 30 năm');
+    expect(lines[1]).toBe('Kết thúc ở năm 31');
+    expect(lines.join('|')).not.toContain('/ 30');
+    expect(lines).toContain('Boss đã hạ: 4');
+  });
+
+  it('keeps a very large year readable', () => {
+    const lines = runSummary(endless({ year: 1_000_000 }, { completedYears: 1_000_000 }));
+    expect(lines.slice(0, 2)).toEqual(['Sống sót: 999999 năm', 'Kết thúc ở năm 1000000']);
+  });
+
+  it('the tally names the capped scored years and bosses; real stats are not cut', () => {
+    const state = endless({}, { completedYears: 100, bossesWon: 10, conquered: 6 });
+    const texts = crownTally(state, tallyOf(state)).map((l) => l.text);
+    expect(texts).toEqual([
+      'Năm tính điểm: 60 (tối đa 60)',
+      'Chinh phục × 3: +18',
+      'Boss × 5: +15 (tối đa 3 boss)',
+      'Tổng: 93 điểm Vương Miện',
+    ]);
+    expect(runSummary(state)).toContain('Boss đã hạ: 10');
+  });
+
+  it('credited=false never claims the points were added', () => {
+    const state = endless();
+    const texts = crownTally(state, tallyOf(state, [META_READ_ONLY_TEXT], false)).map((l) => l.text);
+    expect(texts.at(-1)).toBe(META_READ_ONLY_TEXT);
+    expect(texts.join('|')).not.toMatch(/đã cộng/i);
+  });
+
+  it('normal runs keep the old first line', () => {
+    const s = runState({ rules: RULES_FULL });
+    expect(runSummary({ ...s, stats: { ...s.stats, completedYears: 12 } })[0]).toBe('Năm hoàn thành: 12 / 30');
   });
 });

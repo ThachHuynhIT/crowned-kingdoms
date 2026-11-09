@@ -437,3 +437,30 @@ describe('visibleRewardCards', () => {
     expect(visibleRewardCards(end)).toEqual([false, false, true, true]);
   });
 });
+
+describe('calendarModalLayout with pages (Endless)', () => {
+  for (const [name, screen] of [
+    ['desktop', DESKTOP],
+    ['mobile', MOBILE],
+  ] as const) {
+    it(`fits 30 cells and a ‹ page › row with 44 px buttons (${name})`, () => {
+      const inset = 12;
+      const l = calendarModalLayout(screen, inset, 30, true);
+      expect(contains({ x: 0, y: 0, ...screen }, l.panel)).toBe(true);
+      expect(l.cells).toHaveLength(30);
+      const p = l.pager!;
+      for (const r of [p.prev, p.next]) {
+        expect(r.w).toBeGreaterThanOrEqual(44);
+        expect(r.h).toBeGreaterThanOrEqual(44);
+      }
+      const parts = [l.title, l.close, ...l.cells, p.prev, p.label, p.next];
+      for (const r of parts) expect(contains(l.panel, r)).toBe(true);
+      for (let i = 0; i < parts.length; i++)
+        for (let j = i + 1; j < parts.length; j++) expect(overlaps(parts[i]!, parts[j]!)).toBe(false);
+    });
+  }
+
+  it('has no pager row without pages', () => {
+    expect(calendarModalLayout(DESKTOP, 12, 30).pager).toBeNull();
+  });
+});

@@ -1,6 +1,7 @@
 /** Báo trước sứ giả (nhiệm vụ) cho HUD lên kế hoạch (thuần, không gieo RNG, không ghi state). */
 import { QUESTS } from '../../data/quests';
 import { RUN } from '../../data/run';
+import { hasFullCalendar } from '../../data/rules';
 import type { RunState } from '../../game/run/state';
 
 export interface QuestNotice {
@@ -29,7 +30,7 @@ export const questCalendarLabel = (year: number): string | null =>
 
 export const questNotice = (state: RunState): QuestNotice => {
   const active = state.quests.filter((q) => q.status === 'active').length;
-  if (state.rules.calendar !== 'full') return EMPTY(active);
+  if (!hasFullCalendar(state.rules)) return EMPTY(active);
   const capacity = RUN.maxActiveQuests;
   const base = { active, capacity };
   if (state.phase === 'quest') {
