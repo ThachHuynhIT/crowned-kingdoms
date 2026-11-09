@@ -147,7 +147,7 @@ describe('the nine Nomad King cards (spec 6.11)', () => {
       for (const level of [1, 5] as Level[]) {
         const a = at(withBuilding(runState(), 22, 'nomad_watchtower', level), 22).attack!;
         // a plot on the edge has 3 neighbours, none open and empty at the start except those unlocked
-        expect([a.range, a.interval, a.projectileSpeed]).toEqual([144 + TOWER_RANGE[level - 1]!, 12, 9 * SPEC_MOVE_SCALE]);
+        expect([a.range, a.interval, a.projectileSpeed]).toEqual([(144 + TOWER_RANGE[level - 1]!) * 3, 12, 9 * SPEC_MOVE_SCALE]);
         expect(a.dmg).toBeGreaterThanOrEqual(7 * TOWER_STD[level - 1]!);
       }
     });

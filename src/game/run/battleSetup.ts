@@ -11,7 +11,7 @@ import {
   STRUCT_HP,
   STRUCT_STD,
   THRONE_STD,
-  TOWER_RANGE,
+  towerRange,
   TOWER_STD,
   TROOP_STD,
   levelMult,
@@ -335,7 +335,7 @@ export const structureFor = (state: RunState, plot: number, content: Content): S
     armor,
     attack:
       towerFx && towerFx.type === 'tower'
-        ? attackStats(towerFx.attack, levelMult(TOWER_STD, level), TOWER_RANGE[level - 1]!, sheet)
+        ? attackStats({ ...towerFx.attack, range: towerRange(towerFx.attack, level) }, levelMult(TOWER_STD, level), 0, sheet)
         : null,
     targeting: towerFx && towerFx.type === 'tower' ? towerFx.targeting : 'closestToThrone',
     spawn,

@@ -25,7 +25,7 @@ describe('describeCard', () => {
 
   it('fills tower stats and slow', () => {
     expect(describeCard(CONTENT.card('wheat_scarecrow'), 1).lines[0]).toBe(
-      'Bắn 6 sát thương, tầm 108; trúng: chậm 20%.',
+      'Bắn 6 sát thương, tầm 324; trúng: chậm 20%.',
     );
   });
 });

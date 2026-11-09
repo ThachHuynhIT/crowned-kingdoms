@@ -74,14 +74,14 @@ describe('the nine Clock King cards (spec 6.9)', () => {
       for (const level of [1, 5] as Level[]) {
         const s = at(withBuilding(runState(), 6, 'clock_gear_tower', level), 6);
         expect(s.attack!.dmg).toBeCloseTo(5 * TOWER_STD[level - 1]!);
-        expect([s.attack!.range, s.attack!.interval, s.attack!.projectileSpeed]).toEqual([108 + TOWER_RANGE[level - 1]!, 10, 8 * SPEC_MOVE_SCALE]);
+        expect([s.attack!.range, s.attack!.interval, s.attack!.projectileSpeed]).toEqual([(108 + TOWER_RANGE[level - 1]!) * 3, 10, 8 * SPEC_MOVE_SCALE]);
         expect(s.rampAs).toEqual({ pps: 2, cap: 100 });
       }
     });
 
     it('steam cannon: 30 physical, splash 18, range 104, every 40, +1.5%/s up to +90%', () => {
       const s = at(withBuilding(runState(), 6, 'clock_steam_cannon', 1), 6);
-      expect(s.attack).toMatchObject({ dmg: 30, splash: 36, range: 156, interval: 40, projectileSpeed: 5 * SPEC_MOVE_SCALE });
+      expect(s.attack).toMatchObject({ dmg: 30, splash: 36, range: 156 * 3, interval: 40, projectileSpeed: 5 * SPEC_MOVE_SCALE });
       expect(s.rampAs).toEqual({ pps: 1.5, cap: 90 });
     });
 

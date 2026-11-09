@@ -301,10 +301,10 @@ describe('Stone King (spec §6.4)', () => {
 
   it('Tháp Ném Đá throws splash shells with a minimum range', () => {
     const a = structureAt(setupOf([[6, bld(1, 'stone_catapult')]]), 6).attack!;
-    expect(a).toMatchObject({ dmg: 14, range: 144, minRange: 48, interval: 25, projectileSpeed: 5 * SPEC_MOVE_SCALE, splash: 32 });
+    expect(a).toMatchObject({ dmg: 14, range: 144 * 3, minRange: 48, interval: 25, projectileSpeed: 5 * SPEC_MOVE_SCALE, splash: 32 });
     const l5 = structureAt(setupOf([[6, bld(1, 'stone_catapult', 5)]]), 6).attack!;
     expect(l5.dmg).toBeCloseTo(14 * 2.4, 9);
-    expect(l5.range).toBe(144 + 24);
+    expect(l5.range).toBe((144 + 24) * 3);
   });
 
   it('Xưởng Người Đá spawns 1/1/2/2/3 golems', () => {
@@ -353,7 +353,7 @@ describe('Stone King (spec §6.4)', () => {
     expect(a).toMatchObject({
       dmg: 4,
       dmgType: 'magic',
-      range: 96, // 64 × 1,5
+      range: 96 * 3, // 64 × 1,5, ×3 (2026-11-09)
       interval: 3,
       projectileSpeed: 0,
       rampPctPerHit: 20,
@@ -445,7 +445,7 @@ describe('Arcane King (spec §6.5)', () => {
     expect(a).toMatchObject({
       dmg: 9,
       dmgType: 'magic',
-      range: 120, // 80 × 1,5
+      range: 120 * 3, // 80 × 1,5, ×3 (2026-11-09)
       interval: 14,
       projectileSpeed: 8 * SPEC_MOVE_SCALE,
       chain: { count: 1, radius: 64, falloff: 0.6 },
@@ -585,7 +585,7 @@ describe('tooltips at the viewed level (spec §5.6)', () => {
 
   it('a tower shows damage and range scaled by level', () => {
     const line = describeCard(CONTENT.card('wheat_scarecrow'), 3).lines[0]!;
-    expect(line).toContain('tầm 120'); // 108 + 12
+    expect(line).toContain('tầm 360'); // (108 + 12) × 3
     expect(line).toContain(`${Math.round(6 * 1.7)} sát`);
   });
 });

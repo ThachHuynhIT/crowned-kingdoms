@@ -115,13 +115,13 @@ describe('level scaling (spec §5.2)', () => {
     }
   });
 
-  it('scales tower damage by TOWER_STD and adds TOWER_RANGE', () => {
+  it('scales tower damage by TOWER_STD and adds TOWER_RANGE, then triples the range', () => {
     const t5 = at(setupOf([[6, bld(1, 'neutral_archer_tower', 5)]]), 6).attack!;
     expect(t5.dmg).toBeCloseTo(7 * 2.4, 9);
-    expect(t5.range).toBe(88 + 24); // test card keeps 88; TOWER_RANGE L5 is +24
+    expect(t5.range).toBe((88 + 24) * 3); // test card keeps 88; TOWER_RANGE L5 is +24; ×3 (2026-11-09)
     const t1 = at(setupOf([[6, bld(1, 'neutral_archer_tower', 1)]]), 6).attack!;
     expect(t1.dmg).toBe(7);
-    expect(t1.range).toBe(88);
+    expect(t1.range).toBe(88 * 3);
   });
 
   it('scales structure HP by STRUCT_STD, except cards with their own table', () => {

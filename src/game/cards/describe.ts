@@ -1,4 +1,4 @@
-import { PULSE_RADIUS_BONUS, TOWER_RANGE, TOWER_STD } from '../../data/scaling';
+import { PULSE_RADIUS_BONUS, TOWER_RANGE, TOWER_STD, towerRange } from '../../data/scaling';
 import type { AttackSpec, CardDef, EffectDef, Level, Scalar } from '../../data/types';
 
 /** Nội dung mô tả thẻ; cùng hình dạng với TooltipContent nhưng game không import ui. */
@@ -16,10 +16,13 @@ export function resolvePlaceholders(text: string, values: Readonly<Record<string
   });
 }
 
-/** `level` scales a tower / pulse attack like the battle does (TOWER_STD damage, TOWER_RANGE range). */
-function attackValues(attack: AttackSpec, level?: Level): Record<string, number> {
+/**
+ * `level` scales a tower / pulse attack like the battle does (TOWER_STD damage). Only a tower shot (`tower`) gets
+ * `towerRange` (×3 since 2026-11-09); other attacks keep base + TOWER_RANGE.
+ */
+function attackValues(attack: AttackSpec, level?: Level, tower = false): Record<string, number> {
   const dmg = level === undefined ? attack.dmg : Math.round(attack.dmg * TOWER_STD[level - 1]!);
-  const range = level === undefined ? attack.range : attack.range + TOWER_RANGE[level - 1]!;
+  const range = tower ? towerRange(attack, level ?? 1) : level === undefined ? attack.range : attack.range + TOWER_RANGE[level - 1]!;
   const out: Record<string, number> = { dmg, range };
   const slow = attack.onHit?.find((h) => h.type === 'slow');
   if (slow) out.slowPct = slow.pct;
@@ -40,7 +43,7 @@ function effectValues(effects: readonly EffectDef[], level: Level): Record<strin
       if (e.stat === 'unitCount') out.count = scalarAt(e.value, level);
       else if (e.mode === 'pct') out.pct = scalarAt(e.value, level);
     }
-    else if (e.type === 'tower') Object.assign(out, attackValues(e.attack, level));
+    else if (e.type === 'tower') Object.assign(out, attackValues(e.attack, level, true));
     else if (e.type === 'shieldPulse') {
       out.amount = scalarAt(e.amount, level);
       out.radius = e.radius;

@@ -146,7 +146,7 @@ describe('the nine Grove King cards (spec 6.6)', () => {
     it('shoots 5 physical at range 64 every 8 ticks with a poison onHit', () => {
       for (const level of LEVELS) {
         const a = at(withBuilding(runState(), 6, 'grove_thorn_tower', level), 6).attack!;
-        expect([a.range, a.interval, a.projectileSpeed]).toEqual([96 + TOWER_RANGE[level - 1]!, 8, 8 * SPEC_MOVE_SCALE]);
+        expect([a.range, a.interval, a.projectileSpeed]).toEqual([(96 + TOWER_RANGE[level - 1]!) * 3, 8, 8 * SPEC_MOVE_SCALE]);
         expect(a.onHit).toEqual([{ type: 'poison', dps: 2, ticks: 30, maxStacks: 3 }]);
       }
       expect(at(withBuilding(runState(), 6, 'grove_thorn_tower', 1), 6).attack!.dmg).toBe(5);

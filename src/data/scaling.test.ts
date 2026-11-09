@@ -5,9 +5,11 @@ import {
   THRONE_STD,
   PULSE_RADIUS_BONUS,
   TOWER_RANGE,
+  TOWER_RANGE_MULT,
   TOWER_STD,
   TROOP_STD,
   levelMult,
+  towerRange,
 } from './scaling';
 
 describe('level scaling profiles (spec §5.2)', () => {
@@ -29,5 +31,21 @@ describe('level scaling profiles (spec §5.2)', () => {
 
   it('keeps the default structure HP per kind', () => {
     expect(STRUCT_HP).toEqual({ troop: 150, tower: 220, economy: 120, support: 160 });
+  });
+});
+
+describe('towerRange (x3, owner 2026-11-09)', () => {
+  const bow = { dmg: 8, type: 'physical' as const, range: 108, interval: 10, projectileSpeed: 16 };
+  it('triples the base range plus the level bonus', () => {
+    expect(towerRange(bow, 1)).toBe(108 * TOWER_RANGE_MULT);
+    expect(towerRange(bow, 5)).toBe((108 + TOWER_RANGE[4]!) * TOWER_RANGE_MULT);
+    expect(TOWER_RANGE_MULT).toBe(3);
+  });
+  it('keeps the old range for a tower that pushes units back', () => {
+    const cannon = { ...bow, onHit: [{ type: 'knockback' as const, px: 32 }] };
+    expect(towerRange(cannon, 3)).toBe(108 + TOWER_RANGE[2]!);
+  });
+  it('keeps the old range for a fire cone', () => {
+    expect(towerRange({ ...bow, range: 60, cone: { range: 60, halfAngleCos: 0.9 } }, 1)).toBe(60);
   });
 });

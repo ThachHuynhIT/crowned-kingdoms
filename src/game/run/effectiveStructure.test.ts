@@ -12,10 +12,10 @@ const tower = (level: 1 | 2 | 3 | 4 | 5 = 5): RunState =>
   withBuilding(runState(), 6, 'neutral_archer_tower', level);
 
 describe('shared effective structure stats', () => {
-  it('shared_ranges_and_edge_semantics: L5 tower is 132 + 24, the royal archers decree adds 18', () => {
-    expect(structureFor(tower(), 6, CONTENT).attack!.range).toBe(156);
+  it('shared_ranges_and_edge_semantics: L5 tower is (132 + 24) × 3, the royal archers decree adds 18', () => {
+    expect(structureFor(tower(), 6, CONTENT).attack!.range).toBe(156 * 3);
     const decreed = withDecree(tower(), 'decree_royal_archers' as DecreeId);
-    expect(structureFor(decreed, 6, CONTENT).attack!.range).toBe(174);
+    expect(structureFor(decreed, 6, CONTENT).attack!.range).toBe(156 * 3 + 18);
   });
 
   it('structureFor equals the structure of the same plot in buildBattleSetup, throne included', () => {
