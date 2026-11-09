@@ -11230,3 +11230,183 @@ assets:
     finalSize: 74x57
     anchor: feet
     notes: Boss boss_hornet_queen foe recolour, pose 5 (attack 1); reduced and outlined by docs/art-review/g3e/units/make_poses.py --export (approved 2026-11-09 by Claude under the owner's delegation); drawn at scale 0.5 (src/render/imageArt.ts)
+  - id: world_ai_v1_boss_crownless_king_0
+    path: public/assets/art/ai-v1/boss_crownless_king_0.png
+    category: unit
+    origin: custom
+    source: docs/art-review/g3e/units/boss_crownless_king/poses-source.png
+    creator: Project owner (OpenAI imagegen via Codex; prompt in docs/art-review/g3e/units/boss_crownless_king/poses-prompt.md)
+    license: project-owned
+    attribution: false
+    redistribute: true
+    evidence: docs/art-review/g3e/units/boss_crownless_king/poses/
+    modified: true
+    nativeSize: 1536x1024
+    finalSize: 72x66
+    anchor: feet
+    notes: Boss boss_crownless_king pose 0 (idle 0); second drawing (the first was rejected), reduced and outlined by docs/art-review/g3e/units/make_poses.py --export (approved 2026-11-09 by Claude under the owner's delegation); drawn at scale 0.5 (src/render/imageArt.ts)
+  - id: world_ai_v1_boss_crownless_king_1
+    path: public/assets/art/ai-v1/boss_crownless_king_1.png
+    category: unit
+    origin: custom
+    source: docs/art-review/g3e/units/boss_crownless_king/poses-source.png
+    creator: Project owner (OpenAI imagegen via Codex; prompt in docs/art-review/g3e/units/boss_crownless_king/poses-prompt.md)
+    license: project-owned
+    attribution: false
+    redistribute: true
+    evidence: docs/art-review/g3e/units/boss_crownless_king/poses/
+    modified: true
+    nativeSize: 1536x1024
+    finalSize: 72x66
+    anchor: feet
+    notes: Boss boss_crownless_king pose 1 (idle 1); second drawing (the first was rejected), reduced and outlined by docs/art-review/g3e/units/make_poses.py --export (approved 2026-11-09 by Claude under the owner's delegation); drawn at scale 0.5 (src/render/imageArt.ts)
+  - id: world_ai_v1_boss_crownless_king_2
+    path: public/assets/art/ai-v1/boss_crownless_king_2.png
+    category: unit
+    origin: custom
+    source: docs/art-review/g3e/units/boss_crownless_king/poses-source.png
+    creator: Project owner (OpenAI imagegen via Codex; prompt in docs/art-review/g3e/units/boss_crownless_king/poses-prompt.md)
+    license: project-owned
+    attribution: false
+    redistribute: true
+    evidence: docs/art-review/g3e/units/boss_crownless_king/poses/
+    modified: true
+    nativeSize: 1536x1024
+    finalSize: 72x66
+    anchor: feet
+    notes: Boss boss_crownless_king pose 2 (walk 0); second drawing (the first was rejected), reduced and outlined by docs/art-review/g3e/units/make_poses.py --export (approved 2026-11-09 by Claude under the owner's delegation); drawn at scale 0.5 (src/render/imageArt.ts)
+  - id: world_ai_v1_boss_crownless_king_3
+    path: public/assets/art/ai-v1/boss_crownless_king_3.png
+    category: unit
+    origin: custom
+    source: docs/art-review/g3e/units/boss_crownless_king/poses-source.png
+    creator: Project owner (OpenAI imagegen via Codex; prompt in docs/art-review/g3e/units/boss_crownless_king/poses-prompt.md)
+    license: project-owned
+    attribution: false
+    redistribute: true
+    evidence: docs/art-review/g3e/units/boss_crownless_king/poses/
+    modified: true
+    nativeSize: 1536x1024
+    finalSize: 72x66
+    anchor: feet
+    notes: Boss boss_crownless_king pose 3 (walk 1); second drawing (the first was rejected), reduced and outlined by docs/art-review/g3e/units/make_poses.py --export (approved 2026-11-09 by Claude under the owner's delegation); drawn at scale 0.5 (src/render/imageArt.ts)
+  - id: world_ai_v1_boss_crownless_king_4
+    path: public/assets/art/ai-v1/boss_crownless_king_4.png
+    category: unit
+    origin: custom
+    source: docs/art-review/g3e/units/boss_crownless_king/poses-source.png
+    creator: Project owner (OpenAI imagegen via Codex; prompt in docs/art-review/g3e/units/boss_crownless_king/poses-prompt.md)
+    license: project-owned
+    attribution: false
+    redistribute: true
+    evidence: docs/art-review/g3e/units/boss_crownless_king/poses/
+    modified: true
+    nativeSize: 1536x1024
+    finalSize: 72x66
+    anchor: feet
+    notes: Boss boss_crownless_king pose 4 (attack 0); second drawing (the first was rejected), reduced and outlined by docs/art-review/g3e/units/make_poses.py --export (approved 2026-11-09 by Claude under the owner's delegation); drawn at scale 0.5 (src/render/imageArt.ts)
+  - id: world_ai_v1_boss_crownless_king_5
+    path: public/assets/art/ai-v1/boss_crownless_king_5.png
+    category: unit
+    origin: custom
+    source: docs/art-review/g3e/units/boss_crownless_king/poses-source.png
+    creator: Project owner (OpenAI imagegen via Codex; prompt in docs/art-review/g3e/units/boss_crownless_king/poses-prompt.md)
+    license: project-owned
+    attribution: false
+    redistribute: true
+    evidence: docs/art-review/g3e/units/boss_crownless_king/poses/
+    modified: true
+    nativeSize: 1536x1024
+    finalSize: 72x66
+    anchor: feet
+    notes: Boss boss_crownless_king pose 5 (attack 1); second drawing (the first was rejected), reduced and outlined by docs/art-review/g3e/units/make_poses.py --export (approved 2026-11-09 by Claude under the owner's delegation); drawn at scale 0.5 (src/render/imageArt.ts)
+  - id: world_ai_v1_boss_crownless_king_foe_0
+    path: public/assets/art/ai-v1/boss_crownless_king_foe_0.png
+    category: unit
+    origin: custom
+    source: docs/art-review/g3e/units/boss_crownless_king/poses-source.png
+    creator: Project owner (OpenAI imagegen via Codex; prompt in docs/art-review/g3e/units/boss_crownless_king/poses-prompt.md)
+    license: project-owned
+    attribution: false
+    redistribute: true
+    evidence: docs/art-review/g3e/units/boss_crownless_king/poses/
+    modified: true
+    nativeSize: 1536x1024
+    finalSize: 72x66
+    anchor: feet
+    notes: Boss boss_crownless_king foe recolour, pose 0 (idle 0); second drawing (the first was rejected), reduced and outlined by docs/art-review/g3e/units/make_poses.py --export (approved 2026-11-09 by Claude under the owner's delegation); drawn at scale 0.5 (src/render/imageArt.ts)
+  - id: world_ai_v1_boss_crownless_king_foe_1
+    path: public/assets/art/ai-v1/boss_crownless_king_foe_1.png
+    category: unit
+    origin: custom
+    source: docs/art-review/g3e/units/boss_crownless_king/poses-source.png
+    creator: Project owner (OpenAI imagegen via Codex; prompt in docs/art-review/g3e/units/boss_crownless_king/poses-prompt.md)
+    license: project-owned
+    attribution: false
+    redistribute: true
+    evidence: docs/art-review/g3e/units/boss_crownless_king/poses/
+    modified: true
+    nativeSize: 1536x1024
+    finalSize: 72x66
+    anchor: feet
+    notes: Boss boss_crownless_king foe recolour, pose 1 (idle 1); second drawing (the first was rejected), reduced and outlined by docs/art-review/g3e/units/make_poses.py --export (approved 2026-11-09 by Claude under the owner's delegation); drawn at scale 0.5 (src/render/imageArt.ts)
+  - id: world_ai_v1_boss_crownless_king_foe_2
+    path: public/assets/art/ai-v1/boss_crownless_king_foe_2.png
+    category: unit
+    origin: custom
+    source: docs/art-review/g3e/units/boss_crownless_king/poses-source.png
+    creator: Project owner (OpenAI imagegen via Codex; prompt in docs/art-review/g3e/units/boss_crownless_king/poses-prompt.md)
+    license: project-owned
+    attribution: false
+    redistribute: true
+    evidence: docs/art-review/g3e/units/boss_crownless_king/poses/
+    modified: true
+    nativeSize: 1536x1024
+    finalSize: 72x66
+    anchor: feet
+    notes: Boss boss_crownless_king foe recolour, pose 2 (walk 0); second drawing (the first was rejected), reduced and outlined by docs/art-review/g3e/units/make_poses.py --export (approved 2026-11-09 by Claude under the owner's delegation); drawn at scale 0.5 (src/render/imageArt.ts)
+  - id: world_ai_v1_boss_crownless_king_foe_3
+    path: public/assets/art/ai-v1/boss_crownless_king_foe_3.png
+    category: unit
+    origin: custom
+    source: docs/art-review/g3e/units/boss_crownless_king/poses-source.png
+    creator: Project owner (OpenAI imagegen via Codex; prompt in docs/art-review/g3e/units/boss_crownless_king/poses-prompt.md)
+    license: project-owned
+    attribution: false
+    redistribute: true
+    evidence: docs/art-review/g3e/units/boss_crownless_king/poses/
+    modified: true
+    nativeSize: 1536x1024
+    finalSize: 72x66
+    anchor: feet
+    notes: Boss boss_crownless_king foe recolour, pose 3 (walk 1); second drawing (the first was rejected), reduced and outlined by docs/art-review/g3e/units/make_poses.py --export (approved 2026-11-09 by Claude under the owner's delegation); drawn at scale 0.5 (src/render/imageArt.ts)
+  - id: world_ai_v1_boss_crownless_king_foe_4
+    path: public/assets/art/ai-v1/boss_crownless_king_foe_4.png
+    category: unit
+    origin: custom
+    source: docs/art-review/g3e/units/boss_crownless_king/poses-source.png
+    creator: Project owner (OpenAI imagegen via Codex; prompt in docs/art-review/g3e/units/boss_crownless_king/poses-prompt.md)
+    license: project-owned
+    attribution: false
+    redistribute: true
+    evidence: docs/art-review/g3e/units/boss_crownless_king/poses/
+    modified: true
+    nativeSize: 1536x1024
+    finalSize: 72x66
+    anchor: feet
+    notes: Boss boss_crownless_king foe recolour, pose 4 (attack 0); second drawing (the first was rejected), reduced and outlined by docs/art-review/g3e/units/make_poses.py --export (approved 2026-11-09 by Claude under the owner's delegation); drawn at scale 0.5 (src/render/imageArt.ts)
+  - id: world_ai_v1_boss_crownless_king_foe_5
+    path: public/assets/art/ai-v1/boss_crownless_king_foe_5.png
+    category: unit
+    origin: custom
+    source: docs/art-review/g3e/units/boss_crownless_king/poses-source.png
+    creator: Project owner (OpenAI imagegen via Codex; prompt in docs/art-review/g3e/units/boss_crownless_king/poses-prompt.md)
+    license: project-owned
+    attribution: false
+    redistribute: true
+    evidence: docs/art-review/g3e/units/boss_crownless_king/poses/
+    modified: true
+    nativeSize: 1536x1024
+    finalSize: 72x66
+    anchor: feet
+    notes: Boss boss_crownless_king foe recolour, pose 5 (attack 1); second drawing (the first was rejected), reduced and outlined by docs/art-review/g3e/units/make_poses.py --export (approved 2026-11-09 by Claude under the owner's delegation); drawn at scale 0.5 (src/render/imageArt.ts)

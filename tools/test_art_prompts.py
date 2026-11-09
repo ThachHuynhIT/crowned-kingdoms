@@ -355,7 +355,7 @@ cspec.loader.exec_module(cp)
 class CardPromptGateTest(unittest.TestCase):
     def test_catalogue_is_the_whole_registry(self):
         cards = cp.load_cards()
-        self.assertEqual(len(cards), 94)
+        self.assertEqual(len(cards), 102)  # 9 thrones + 81 king cards + 12 neutral (G4 meta cards included), tools/dumpCards.ts
         self.assertEqual(sorted({c['kind'] for c in cards.values()}), ['economy', 'enchantment', 'support', 'throne', 'tome', 'tower', 'troop'])
 
     def test_every_card_prompt_points_at_the_doc_and_carries_the_reference(self):

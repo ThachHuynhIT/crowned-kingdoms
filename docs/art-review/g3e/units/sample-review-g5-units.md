@@ -17,3 +17,5 @@ Claude kiểm 12 lính (lính lên dây, nhện máy, xạ thủ bánh răng, ng
 Claude kiểm 9 mẫu đứng yên (thổ phỉ, cung thủ thổ phỉ, kỵ sĩ lợn rừng, yêu tinh khổng lồ, ếch, ong bắp cày, Ông Kẹ Đầm Lầy, Nữ Hoàng Ong Bắp Cày, Vua Không Ngai): đạt. Bảng tư thế: 8 đạt và đã đưa vào game. **Vua Không Ngai bị loại** (`poses-source-rejected-v1.png`): khung 2 lệch lên, các khung 4–6 dính mảnh áo choàng của ô bên cạnh. Lượt vẽ lại thất bại vì Codex hết hạn mức (tới 11/11/2026 14:36); boss này giữ art vẽ bằng code.
 
 **Trạng thái:** 8 loại ĐÃ DUYỆT 09/11/2026 — Claude duyệt theo uỷ quyền của chủ dự án; Vua Không Ngai chờ vẽ lại.
+
+**Cập nhật 09/11/2026 (chiều):** Vua Không Ngai vẽ lại lần 2 khi Codex có hạn mức lại (thêm yêu cầu mỗi tư thế nằm trọn trong ô); 6 khung sạch, không dính ô bên. ĐÃ DUYỆT và đưa vào game.
