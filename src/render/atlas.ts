@@ -45,7 +45,7 @@ import {
   paintUiFrame,
   type UiFrame,
 } from './uiArt';
-import { UI_KIT_FILES, UI_KIT_FRAME, activateUiKitFrames, kitTextureKey } from './uiKit';
+import { UI_KIT_FILES, UI_KIT_FRAME, UI_KIT_RECOLOR, activateUiKitFrames, kitTextureKey, recolorKit } from './uiKit';
 import { UNIT_FRAME_COUNT, paintUnit, unitCloth, type UnitAnim, type UnitTeam } from './unitArt';
 
 /**
@@ -132,7 +132,7 @@ export const buildUiTexture = (textures: Phaser.Textures.TextureManager): void =
       );
       if (art && art.width === UI_KIT_FRAME.w && art.height === UI_KIT_FRAME.h) {
         kitFrames.push(id);
-        return art;
+        return recolorKit(art, UI_KIT_RECOLOR[id]);
       }
     }
     return paintUiFrame(id);
