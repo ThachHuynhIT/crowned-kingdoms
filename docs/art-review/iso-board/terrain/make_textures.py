@@ -16,7 +16,7 @@ from PIL import Image
 ROOT = Path(__file__).resolve().parents[4]
 D = Path(__file__).resolve().parent
 OUT = ROOT / 'public/assets/art/ai-v1/iso/terrain'
-IDS = {'terrain_water': 'water', 'terrain_sand': 'sand'}
+IDS = {'terrain_water': 'water', 'terrain_sand': 'sand', 'terrain_path': 'path', 'terrain_flowers': 'flowers'}
 FACTOR = 8
 
 
@@ -72,7 +72,8 @@ def main() -> None:
     if '--publish' in sys.argv:
         OUT.mkdir(parents=True, exist_ok=True)
         for ident, name in IDS.items():
-            shutil.copy(D / ident / 'texture.png', OUT / f'{name}.png')
+            if name in tiles:
+                shutil.copy(D / ident / 'texture.png', OUT / f'{name}.png')
         print('published to', OUT)
 
 

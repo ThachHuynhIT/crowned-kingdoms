@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest';
-import { FIELD_TERRAINS, generateField, paintField } from './fieldArt';
+import { FIELD_TERRAINS, ROAD_TAIL, generateField, paintField, paintRoadTail } from './fieldArt';
 import { GRASS_FILES, IMAGE_ART_FILES, IMAGE_ART_SCALE, IMAGE_BUILDINGS, IMAGE_PLOTS, IMAGE_UNITS, MENU_IMAGE_LAYERS, POSES, WALL_FILE, menuImageLayers, unitPoseFile } from './imageArt';
 import { PixelCanvas, upscale } from './pixel';
 
@@ -123,6 +123,33 @@ describe('paintField with ground textures (river and sand join up, 2026-11-06)',
     let holes = 0;
     for (let i = 3; i < textured.data.length; i += 4) if (textured.data[i] !== 255) holes++;
     expect(holes).toBe(0);
+  });
+
+  it('fills road and flower cells from their textures at their world position (G5)', () => {
+    const f = paintField(4, grass, { water, sand, path: tex(0xc0), flowers: tex(0xd0) });
+    for (const tag of [0xc0, 0xd0]) {
+      let textured = 0;
+      for (let py = 0; py < f.height; py++)
+        for (let px = 0; px < f.width; px++) {
+          const i = (py * f.width + px) * 4;
+          if (f.data[i] !== tag) continue;
+          expect([f.data[i + 1], f.data[i + 2]]).toEqual([px % 40, py % 24]);
+          textured++;
+        }
+      expect(textured, tag.toString(16)).toBeGreaterThan(500);
+    }
+  });
+
+  it('the road tail reads the road texture at its world position, so it continues the road', () => {
+    const path = tex(0xc0);
+    const tail = paintRoadTail(2, path);
+    for (const [x, y] of [[0, 0], [17, 5], [40, 33], [63, 63]] as const) {
+      const i = (y * tail.width + x) * 4;
+      const wx = ROAD_TAIL.x * 2 + x;
+      const wy = ROAD_TAIL.y * 2 + y;
+      expect([tail.data[i], tail.data[i + 1], tail.data[i + 2]]).toEqual([0xc0, wx % 40, wy % 24]);
+    }
+    expect(paintRoadTail(2).data).not.toEqual(tail.data);
   });
 });
 

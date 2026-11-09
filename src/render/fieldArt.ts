@@ -149,11 +149,17 @@ export const paintFieldTile = (terrain: number, mask: number, seed: number): Pix
  * The whole 768x768 field: 48x48 data cells blended through the dual grid. The 49x49 display
  * tiles are drawn half a tile up-left so the picture is cropped to the data grid.
  */
-/** Optional seamless ground textures (art px, density 2) that colour the water and sand tiles. */
+/** Optional seamless ground textures (art px, density 2) that colour the water, sand, road and flower tiles. */
 export interface GroundTextures {
   readonly water?: PixelCanvas;
   readonly sand?: PixelCanvas;
+  readonly path?: PixelCanvas;
+  readonly flowers?: PixelCanvas;
 }
+
+/** The texture of terrain `t`, if one was given (grass has its own tile art). */
+const textureOf = (t: number, textures: GroundTextures | undefined): PixelCanvas | undefined =>
+  t === WATER ? textures?.water : t === SAND ? textures?.sand : t === PATH ? textures?.path : t === FLOWERS ? textures?.flowers : undefined;
 
 /**
  * Recolour the opaque pixels of `tile` (drawn at art position ox, oy) from `tex` sampled at the same absolute
@@ -204,7 +210,7 @@ export const paintField = (
         const tileSeed = seed + tx * 7919 + ty * 104729;
         const ox = (tx * TILE - TILE / 2) * k;
         const oy = (ty * TILE - TILE / 2) * k;
-        const tex = k === 2 ? (t === WATER ? textures?.water : t === SAND ? textures?.sand : undefined) : undefined;
+        const tex = k === 2 ? textureOf(t, textures) : undefined;
         const tile =
           k === 2 && grass && t === 0 && mask === 15
             ? grass[Math.floor(pixelHash(tx, ty, seed) * grass.length)]!
@@ -223,12 +229,16 @@ export const paintField = (
  * portal. Path tiles at density `k`, drawn square (laid onto the iso ground with `squareToIso`).
  */
 export const ROAD_TAIL = { x: ROAD_COLS[0] * TILE, y: FIELD, size: 2 * TILE } as const;
-export const paintRoadTail = (k: 1 | 2): PixelCanvas => {
+export const paintRoadTail = (k: 1 | 2, path?: PixelCanvas): PixelCanvas => {
   const c = new PixelCanvas(ROAD_TAIL.size * k, ROAD_TAIL.size * k);
   for (let j = 0; j < 2; j++)
     for (let i = 0; i < 2; i++) {
       const t = paintFieldTile(PATH, 15, 9100 + i * 7 + j * 13);
-      c.blit(k === 2 ? upscale(t, 2) : t, i * TILE * k, j * TILE * k);
+      const tile = k === 2 ? upscale(t, 2) : t;
+      // The road texture is read at the same world position as on the field, so the tail continues the road.
+      const ox = (ROAD_TAIL.x + i * TILE) * k;
+      const oy = (ROAD_TAIL.y + j * TILE) * k;
+      c.blit(k === 2 && path ? textureTile(tile, path, ox, oy) : tile, i * TILE * k, j * TILE * k);
     }
   return c;
 };

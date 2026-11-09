@@ -152,8 +152,10 @@ class GroundTexturePromptGateTest(unittest.TestCase):
         self.assertIn('STRAIGHT FROM ABOVE', t)
         self.assertIn('[subject]', t)
 
-    def test_water_and_sand_prompts_read_the_doc_and_carry_the_references(self):
-        self.assertEqual([i for i, _, _ in mp.GROUND_TEXTURES], ['terrain_water', 'terrain_sand'])
+    def test_every_texture_prompt_reads_the_doc_and_carries_the_references(self):
+        self.assertEqual(
+            [i for i, _, _ in mp.GROUND_TEXTURES], ['terrain_water', 'terrain_sand', 'terrain_path', 'terrain_flowers']
+        )
         for ident, name, desc in mp.GROUND_TEXTURES:
             p = mp.build_texture_prompt(f'x/{ident}/source.png', name, desc)
             self.assertIn('docs/ART_STYLE.md', p, ident)
@@ -167,9 +169,9 @@ class GroundTexturePromptGateTest(unittest.TestCase):
     def test_runner_attaches_every_reference(self):
         mp.main('terrain-textures')
         runner = (ROOT / '.superpowers/b-textures.sh').read_text(encoding='utf-8')
-        self.assertEqual(runner.count('codex exec'), 2)
+        self.assertEqual(runner.count('codex exec'), 4)
         for r in [mp.REFERENCE, *mp.TEXTURE_REFS]:
-            self.assertEqual(runner.count(f'-i {r}'), 2)
+            self.assertEqual(runner.count(f'-i {r}'), 4)
 
 
 class PolishSamplePromptGateTest(unittest.TestCase):

@@ -274,9 +274,9 @@ export const grassArt = (textures: Phaser.Textures.TextureManager): PixelCanvas[
   return tiles.every((t) => t !== null) ? (tiles as PixelCanvas[]) : null;
 };
 
-/** The approved, loaded river and sand textures (a missing one keeps the generated look). */
+/** The approved, loaded ground textures (a missing one keeps the generated look). */
 export const groundTextures = (textures: Phaser.Textures.TextureManager): GroundTextures => {
-  const out: { water?: PixelCanvas; sand?: PixelCanvas } = {};
+  const out: { -readonly [K in keyof GroundTextures]: GroundTextures[K] } = {};
   for (const t of GROUND_TEXTURES_APPROVED) {
     const art = imageFile(textures, GROUND_TEXTURE_FILES[t]);
     if (art) out[t] = art;
@@ -348,7 +348,7 @@ export const ensureRoadTailTexture = (textures: Phaser.Textures.TextureManager):
     addPixelTexture(
       textures,
       ROAD_TAIL_KEY,
-      squareToIso(paintRoadTail(grassArt(textures) ? 2 : 1)),
+      squareToIso(paintRoadTail(grassArt(textures) ? 2 : 1, groundTextures(textures).path)),
     );
   return ROAD_TAIL_KEY;
 };

@@ -14630,3 +14630,31 @@ assets:
     nativeSize: 1536x1024
     finalSize: 256x90
     notes: Main-menu parallax strip "Đồi quê" (approved 2026-11-09 by Claude under the owner's delegation); magenta keyed out, bottom band box-reduced by docs/art-review/g5/menu/make_assets.py; repeats left-to-right (src/render/imageArt.ts MENU_IMAGE_LAYERS)
+  - id: terrain_path
+    path: public/assets/art/ai-v1/iso/terrain/path.png
+    category: terrain
+    origin: custom
+    source: docs/art-review/iso-board/terrain/terrain_path/source.png
+    creator: Project owner (OpenAI imagegen via Codex; prompt in docs/art-review/iso-board/terrain/terrain_path/prompt.md)
+    license: project-owned
+    attribution: false
+    redistribute: true
+    evidence: docs/art-review/iso-board/terrain/sheet.png
+    modified: true
+    nativeSize: 1024x1024
+    finalSize: 128x128
+    notes: Seamless ground texture "Đường đất" (approved 2026-11-09 by Claude under the owner's delegation); box-reduced 8x by docs/art-review/iso-board/terrain/make_textures.py; colours the path cells of the field (src/render/fieldArt.ts) and the road tail
+  - id: terrain_flowers
+    path: public/assets/art/ai-v1/iso/terrain/flowers.png
+    category: terrain
+    origin: custom
+    source: docs/art-review/iso-board/terrain/terrain_flowers/source.png
+    creator: Project owner (OpenAI imagegen via Codex; prompt in docs/art-review/iso-board/terrain/terrain_flowers/prompt.md)
+    license: project-owned
+    attribution: false
+    redistribute: true
+    evidence: docs/art-review/iso-board/terrain/sheet.png
+    modified: true
+    nativeSize: 1024x1024
+    finalSize: 128x128
+    notes: Seamless ground texture "Cỏ hoa" (approved 2026-11-09 by Claude under the owner's delegation); box-reduced 8x by docs/art-review/iso-board/terrain/make_textures.py; colours the flowers cells of the field (src/render/fieldArt.ts)

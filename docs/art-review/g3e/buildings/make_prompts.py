@@ -296,6 +296,15 @@ GROUND_TEXTURES = [
     ('terrain_sand', 'river-bank SAND',
      'Warm pale golden sand matching the approved plots\' earth tones: two or three close sand tones, faint wind '
      'ripples, a few tiny pebbles and one or two very small shells, evenly spread; no water, no grass, no border.'),
+    # G5 (2026-11-09, plan missing-art-assets Task 7 step 3): the last two procedural terrains
+    ('terrain_path', 'packed-earth ROAD',
+     'A warm brown packed-earth dirt road matching the bare earth of the approved plots: two or three close brown tones, '
+     'faint cart-wheel ruts running in no fixed direction, a few tiny pebbles and specks of lighter dust, evenly '
+     'spread; no grass edge, no stones bigger than one cluster, no border.'),
+    ('terrain_flowers', 'MEADOW GRASS with small wildflowers',
+     'Short meadow grass matching the grass border of the approved plots (warm mid green with lighter and darker green '
+     'tufts), dotted with many tiny wildflowers, each one a single 1-to-2-cluster dot: cream white, butter yellow, soft '
+     'pink and a little lilac, evenly scattered, no flower bigger than two clusters; no path, no water, no border.'),
 ]
 
 TEXTURE_FOOTER = """
