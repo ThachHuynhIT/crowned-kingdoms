@@ -559,7 +559,7 @@ describe('rewards', () => {
               hand: [],
               played: true,
               year,
-              rng: { draw: seed, reward: seed * 7919, calendar: 1, council: 2, quest: 3 },
+              rng: { draw: seed, reward: seed * 7919, calendar: 1, council: 2, quest: 3, blessing: 4 },
             }),
             { type: 'battleResult', result: result(true) },
             CONTENT,

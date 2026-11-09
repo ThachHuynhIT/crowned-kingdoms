@@ -14,7 +14,7 @@ export const masterHammer: TomeHandler = (state, _content, _params, target) => {
   if (target.kind !== 'plot') return 'badTarget';
   let plots = levelUpBuilding(state.plots, target.plot, 1);
   let pick = -1;
-  for (const n of neighbours(target.plot)) {
+  for (const n of neighbours(target.plot, state.mode)) {
     const b = plots[n]!.building;
     if (n === THRONE_PLOT || b === null || b.level >= RUN.maxLevel) continue;
     if (pick < 0 || b.level < plots[pick]!.building!.level) pick = n;

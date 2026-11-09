@@ -18,6 +18,7 @@ import type {
 import { CUSTOM_STAT_HANDLERS } from '../cards/custom';
 import type { StatCtx, StatHandler } from '../cards/custom/types';
 import type { Content } from '../cards/registry';
+import { endlessStatBonuses } from './endlessModifiers';
 import { THRONE_PLOT, neighbours } from './board';
 import { decree } from './decrees';
 import { perkEffects } from './perks';
@@ -89,10 +90,10 @@ const effectsOf = (card: CardDef): readonly EffectDef[] => {
 const levelOf = (state: RunState, plot: number, b: BuildingState): Level =>
   plot === THRONE_PLOT ? state.throneLevel : b.level;
 
-/** Ngai trước, rồi plot 0..24 (bỏ Ngai). */
-const sourcePlots = (): number[] => {
+/** Ngai trước, rồi các ô theo id tăng dần (bỏ Ngai). */
+const sourcePlots = (count: number): number[] => {
   const out = [THRONE_PLOT];
-  for (let plot = 0; plot < 25; plot++) if (plot !== THRONE_PLOT) out.push(plot);
+  for (let plot = 0; plot < count; plot++) if (plot !== THRONE_PLOT) out.push(plot);
   return out;
 };
 
@@ -124,7 +125,7 @@ export function collectStatSheet(
           e.scope === 'self'
             ? srcPlot === plot
             : e.scope === 'neighbours'
-              ? neighbours(srcPlot).includes(plot)
+              ? neighbours(srcPlot, state.mode).includes(plot)
               : true;
         if (related && matches(e.filter, targetCard, unit, targetLevel)) {
           add(sheet, e.stat, e.mode, resolve(e.value, level));
@@ -156,7 +157,7 @@ export function collectStatSheet(
       }
     }
   }
-  for (const srcPlot of sourcePlots()) {
+  for (const srcPlot of sourcePlots(state.plots.length)) {
     // (c)(d)
     const src = state.plots[srcPlot]!.building;
     if (src === null || srcPlot === plot) continue;
@@ -176,6 +177,17 @@ export function collectStatSheet(
   }
   for (const [stat, value] of Object.entries(target.permanent) as [StatKey, number][]) {
     add(sheet, stat, 'pct', value); // (g)
+  }
+  // Vô tận (spec 2026-11-09 §5, §6): phúc lành và biến thể cộng % vào sheet trước `finalStat`.
+  if (state.endless !== null) {
+    const groups: ('unit' | 'tower' | 'structure')[] = ['structure'];
+    if (targetCard.kind === 'troop') groups.push('unit');
+    else if (targetCard.kind === 'tower') groups.push('tower');
+    for (const group of groups) {
+      for (const [stat, value] of Object.entries(endlessStatBonuses(state, group)) as [StatKey, number][]) {
+        add(sheet, stat, 'pct', value);
+      }
+    }
   }
   // Tua Ngược: số giây lên dây trước vĩnh viễn nằm trong `counters.prewind` của công trình.
   if ((target.counters.prewind ?? 0) > 0) add(sheet, 'prewind', 'flat', target.counters.prewind!);

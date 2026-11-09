@@ -8,6 +8,7 @@ import { DECREES, DECREE_RULES } from '../../data/decrees';
 import { RUN } from '../../data/run';
 import type { CardId } from '../../data/types';
 import type { Content } from '../cards/registry';
+import { maxLivesForRun } from './endlessBlessings';
 import { adjacentToUnlocked, attachEnchant, raiseThrone, unlockPlot } from './board';
 import { decree } from './decrees';
 import { maxEnchantStacks } from './perks';
@@ -16,7 +17,6 @@ import type { CouncilSelection, IllegalReason, OfferState, PlotState, RunState }
 
 type CouncilOffer = Extract<OfferState, { kind: 'council' }>;
 
-const PLOTS = 25;
 const PICKS = DECREE_RULES.choices;
 const MAX_EXPAND = DECREE_RULES.expand;
 /** Giữ tên cũ cho các nơi đã import. */
@@ -35,6 +35,8 @@ const withOffer = (state: RunState, offer: CouncilOffer): RunState => ({ ...stat
 /** Xếp bước hội đồng với 3 sắc lệnh chưa có, bốc bằng `Rng(stream 'council')` (Fisher–Yates). */
 export function rollCouncil(state: RunState): RunState {
   const pool = DECREES.map((d) => d.id).filter((id) => !state.decrees.includes(id));
+  // Đã có mọi sắc lệnh (chỉ xảy ra ở Vô tận): không mở hội đồng (spec 2026-11-09 §3).
+  if (pool.length === 0) return state;
   const rng = new Rng(state.rng.council);
   for (let i = pool.length - 1; i > 0; i--) {
     const j = rng.int(0, i);
@@ -86,7 +88,7 @@ function validate(
     if (!only('plots') || sel.plots.length > expandTarget(state)) return null;
     let plots: readonly PlotState[] = state.plots;
     for (const plot of sel.plots) {
-      if (!Number.isInteger(plot) || plot < 0 || plot >= PLOTS) return null;
+      if (!Number.isInteger(plot) || plot < 0 || plot >= state.plots.length) return null;
       if (plots[plot]!.unlocked || !adjacentToUnlocked(plots, plot)) return null;
       plots = unlockPlot(plots, plot);
       out.plots.push(plot);
@@ -166,7 +168,7 @@ function apply(s: RunState, action: string, sel: CouncilSelection, content: Cont
       earn(TREASURY_GOLD);
       break;
     case 'amnesty':
-      if (s.lives < RUN.maxLives) s.lives += 1;
+      if (s.lives < maxLivesForRun(s)) s.lives += 1;
       else earn(AMNESTY_GOLD);
       break;
     case 'runeFestival': {

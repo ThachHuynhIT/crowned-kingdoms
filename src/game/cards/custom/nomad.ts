@@ -14,7 +14,7 @@ const CARAVAN_MAX_PER_YEAR = 3;
 /** Chợ Phiên: +1 vàng cho mỗi loại công trình (lính / tháp / kinh tế / hỗ trợ) khác nhau ở lân cận. */
 export const bazaarKinds: IncomeHandler = (ctx) => {
   const seen = new Set<BuildingKind>();
-  for (const n of neighbours(ctx.source.plot)) {
+  for (const n of neighbours(ctx.source.plot, ctx.state.mode)) {
     const b = ctx.state.plots[n]?.building;
     if (b === null || b === undefined) continue;
     const kind = ctx.content.card(b.cardId).kind as BuildingKind;
@@ -27,7 +27,7 @@ export const bazaarKinds: IncomeHandler = (ctx) => {
 export const watchtowerOpen: StatHandler = (ctx, params) => {
   if (ctx.source.plot !== ctx.target.plot) return [];
   const pct = typeof params.pct === 'number' ? params.pct : 0;
-  const open = neighbours(ctx.source.plot).filter((n) => {
+  const open = neighbours(ctx.source.plot, ctx.state.mode).filter((n) => {
     const p = ctx.state.plots[n]!;
     return p.unlocked && p.building === null;
   }).length;
@@ -59,7 +59,7 @@ export function freeMoveIllegal(state: RunState, content: Content, from: number,
   if (from === THRONE_PLOT || to === THRONE_PLOT) return 'throne';
   if (!state.plots[from]!.unlocked || !state.plots[to]!.unlocked) return 'locked';
   if (state.plots[from]!.building === null) return 'noBuilding';
-  if (!neighbours(from).includes(to)) return 'notAdjacent';
+  if (!neighbours(from, state.mode).includes(to)) return 'notAdjacent';
   return null;
 }
 

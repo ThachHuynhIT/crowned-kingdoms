@@ -19,7 +19,15 @@ export interface MetaProfile {
   settings: AudioSettings;
   /** Khoá các ván đã chấm điểm, tối đa 20 mục gần nhất. */
   settledRuns: string[];
+  /**
+   * Vô tận đã mở (spec 2026-11-09 §2): chỉ bật khi chấm một ván thường 30 năm thắng trọn 30 năm. Hồ sơ cũ
+   * thiếu trường này được đọc là `false` (không có bằng chứng loại ván của các lần thắng cũ).
+   */
+  endlessUnlocked: boolean;
 }
+
+/** Chế độ Vô tận đã mở cho hồ sơ này chưa. */
+export const isEndlessUnlocked = (profile: Pick<MetaProfile, 'endlessUnlocked'>): boolean => profile.endlessUnlocked === true;
 
 export const perKing = (value: number): Record<KingId, number> => {
   const out = {} as Record<KingId, number>;
@@ -37,4 +45,5 @@ export const defaultProfile = (): MetaProfile => ({
   highestDifficultyWon: -1,
   settings: { master: DEFAULT_VOLUME, music: DEFAULT_VOLUME, sfx: DEFAULT_VOLUME, screenShake: DEFAULT_SCREEN_SHAKE },
   settledRuns: [],
+  endlessUnlocked: false,
 });

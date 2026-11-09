@@ -7,11 +7,22 @@
 import { hashSeed } from '../../core/random';
 import { BOSSES } from '../../data/bosses';
 import { DECREES } from '../../data/decrees';
+import {
+  ENDLESS_BLESSING_EVERY,
+  ENDLESS_BLESSING_FIRST_YEAR,
+  ENDLESS_BLESSINGS,
+  ENDLESS_BLESSING_IDS,
+  ENDLESS_BLESSING_PICKS,
+} from '../../data/endless';
 import { QUESTS } from '../../data/quests';
+import { modeForRules, type RunMode, type Rules } from '../../data/rules';
 import { RUN } from '../../data/run';
 import { INCOMPATIBLE_RUN_TEXT, SAVE_FORMAT_VERSION } from '../../data/save';
 import type { Content } from '../cards/registry';
 import { THRONE_PLOT } from '../run/board';
+import { geometryFor } from '../run/boardGeometry';
+import { maxLivesForRun } from '../run/endlessBlessings';
+import { modifierAt } from '../run/endlessModifiers';
 import { maxEnchantStacks } from '../run/perks';
 import type { RunPhase, RunState } from '../run/state';
 import { RUN_SAVE_VERSION } from '../run/state';
@@ -49,11 +60,10 @@ const arr = (v: unknown, what: string): unknown[] => {
   return v as unknown[];
 };
 
-const PHASES: readonly RunPhase[] = ['planning', 'battle', 'reward', 'conquest', 'council', 'quest', 'yearEnd', 'ended'];
-const CALENDARS = ['raiders', 'short', 'full'];
-const OFFER_PHASE: Record<string, RunPhase> = { reward: 'reward', questReward: 'reward', conquest: 'conquest', council: 'council', quest: 'quest' };
+const PHASES: readonly RunPhase[] = ['planning', 'battle', 'reward', 'conquest', 'council', 'quest', 'yearEnd', 'blessing', 'ended'];
+const CALENDARS = ['raiders', 'short', 'full', 'endless'];
+const OFFER_PHASE: Record<string, RunPhase> = { reward: 'reward', questReward: 'reward', conquest: 'conquest', council: 'council', quest: 'quest', blessing: 'blessing' };
 const EDGES = ['N', 'E', 'S', 'W'];
-const PLOTS = 25;
 
 /** Mọi số trong cây phải hữu hạn (JSON không giữ NaN / Infinity, nhưng dữ liệu hỏng có thể có). */
 const allFinite = (v: unknown): boolean => {
@@ -62,6 +72,31 @@ const allFinite = (v: unknown): boolean => {
   if (isObject(v)) return Object.values(v).every(allFinite);
   return true;
 };
+
+/** Trạng thái Vô tận: `null` ở ván thường; ở Vô tận đúng id, số nguyên không âm (spec 2026-11-09 §8). */
+function validateEndless(v: unknown, mode: RunMode, seed: number, year: number): void {
+  if (mode === 'normal') {
+    ensure(v === null, 'endless state in normal run');
+    return;
+  }
+  ensure(isObject(v), 'endless state');
+  const e = v as Loose;
+  ensure(isObject(e.blessingStacks), 'blessing stacks');
+  for (const [id, n] of Object.entries(e.blessingStacks as Loose)) {
+    const def = ENDLESS_BLESSINGS.find((b) => b.id === id);
+    ensure(def !== undefined && isInt(n) && (n as number) >= 1 && (n as number) <= def.maxStacks, 'blessing stack');
+  }
+  // Mốc đã tạo offer: 0 hoặc 30, 35, … không vượt năm hiện tại.
+  const last = e.lastBlessingYear;
+  ensure(
+    last === 0 ||
+      (isInt(last) && last >= ENDLESS_BLESSING_FIRST_YEAR && last % ENDLESS_BLESSING_EVERY === 0 && last <= year),
+    'lastBlessingYear',
+  );
+  // Biến thể phải đúng khối thập niên của năm hiện tại (hàm thuần theo seed).
+  const m = modifierAt(seed, year);
+  ensure(e.modifierId === (m?.id ?? null) && e.modifierStartYear === (m?.startYear ?? 0), 'modifier block');
+}
 
 /** Kiểm cấu trúc và tham chiếu của một RunState phiên bản hiện tại; ném `Invalid` nếu có gì sai. */
 function validate(raw: unknown, content: Content): asserts raw is RunState {
@@ -91,9 +126,16 @@ function validate(raw: unknown, content: Content): asserts raw is RunState {
   ensure(typeof rules.autoStart === 'boolean', 'rules');
   ensure(typeof s.seed === 'number', 'seed');
   ensure(typeof s.kingId === 'string' && playable.has(s.kingId), 'unknown king');
-  ensure(inRange(s.year, 1, rules.years as number), 'year out of range');
+  // Chế độ khớp luật (spec 2026-11-09 §8); Vô tận không có năm cuối, chỉ cần số nguyên an toàn ≥ 1.
+  const mode = modeForRules(rules as unknown as Rules);
+  ensure(s.mode === mode, 'mode');
+  if (mode === 'endless') ensure(Number.isSafeInteger(s.year) && (s.year as number) >= 1, 'year out of range');
+  else ensure(inRange(s.year, 1, rules.years as number), 'year out of range');
+  ensure(typeof s.seed === 'number', 'seed');
+  validateEndless(s.endless, mode, s.seed as number, s.year as number);
   ensure(typeof s.phase === 'string' && PHASES.includes(s.phase as RunPhase), 'phase');
-  ensure(inRange(s.lives, 0, RUN.maxLives), 'lives');
+  // Trần mạng theo chế độ (Vô tận: + Phúc thọ, tối đa 6), kiểm sau khi stack đã hợp lệ.
+  ensure(inRange(s.lives, 0, maxLivesForRun(s as unknown as Pick<RunState, 'mode' | 'endless'>)), 'lives');
   ensure(inRange(s.throneLevel, 1, RUN.maxLevel), 'throne level');
   ensure(isInt(s.gold) && (s.gold as number) >= 0, 'gold');
   for (const key of ['rerollsThisYear', 'paidRerollsThisYear', 'purchasedPlots', 'freeRerollsLeft', 'freeMovesUsed', 'difficulty', 'nextUid', 'interventionDmgPct'] as const) {
@@ -110,7 +152,7 @@ function validate(raw: unknown, content: Content): asserts raw is RunState {
 
   // Bàn cờ.
   const plots = arr(s.plots, 'plots');
-  ensure(plots.length === PLOTS, 'plot count');
+  ensure(plots.length === geometryFor(mode).plotCount, 'plot count');
   const uids = new Set<number>();
   let maxUid = -1;
   plots.forEach((p, i) => {
@@ -142,7 +184,7 @@ function validate(raw: unknown, content: Content): asserts raw is RunState {
   ensure(throne !== null && isObject(throne), 'throne missing');
   ensure((plots[THRONE_PLOT] as Loose).unlocked === true, 'throne plot locked');
   ensure((s.nextUid as number) > maxUid, 'nextUid');
-  ensure(isObject(s.rng) && (['draw', 'reward', 'calendar', 'council', 'quest'] as const).every((k) => isUint32((s.rng as Loose)[k])), 'rng');
+  ensure(isObject(s.rng) && (['draw', 'reward', 'calendar', 'council', 'quest', 'blessing'] as const).every((k) => isUint32((s.rng as Loose)[k])), 'rng');
 
   // Bộ bài: tay + rút + bỏ phải đúng bằng bộ bài.
   const deck = cardList(s.deck, 'deck');
@@ -187,11 +229,28 @@ function validate(raw: unknown, content: Content): asserts raw is RunState {
       ensure(offer.selected === null || (typeof offer.selected === 'string' && (offer.decreeIds as string[]).includes(offer.selected)), 'selected decree');
       const sel = offer.selection;
       ensure(isObject(sel), 'selection');
-      ensure(arr((sel as Loose).plots, 'sel plots').every((p) => inRange(p, 0, PLOTS - 1)), 'selection plots');
+      ensure(arr((sel as Loose).plots, 'sel plots').every((p) => inRange(p, 0, plots.length - 1)), 'selection plots');
       ensure(arr((sel as Loose).deckIndices, 'sel deck').every((i) => inRange(i, 0, deck.length)), 'selection deck');
       ensure((sel as Loose).cardId === null || (typeof (sel as Loose).cardId === 'string' && cards.has((sel as Loose).cardId as string)), 'selection card');
     } else if (offer.kind === 'quest') {
       ensure(typeof offer.questId === 'string' && quests.has(offer.questId), 'unknown quest');
+    } else if (offer.kind === 'blessing') {
+      // Vô tận: đúng 3 id phúc lành khác nhau, mốc năm là bội 5 từ 30, không vượt năm hiện tại.
+      ensure(mode === 'endless', 'blessing offer in normal run');
+      const ids = arr(offer.blessingIds, 'blessingIds');
+      ensure(
+        ids.length === ENDLESS_BLESSING_PICKS &&
+          new Set(ids).size === ids.length &&
+          ids.every((id) => (ENDLESS_BLESSING_IDS as readonly unknown[]).includes(id)),
+        'blessing ids',
+      );
+      ensure(
+        isInt(offer.year) &&
+          (offer.year as number) >= ENDLESS_BLESSING_FIRST_YEAR &&
+          (offer.year as number) % ENDLESS_BLESSING_EVERY === 0 &&
+          (offer.year as number) <= (s.year as number),
+        'blessing year',
+      );
     } else {
       cardList(offer.cardIds, 'offer');
       if (offer.king !== undefined) ensure(typeof offer.king === 'string' && kings.has(offer.king), 'offer king');
@@ -226,7 +285,7 @@ function validate(raw: unknown, content: Content): asserts raw is RunState {
   // Pha khớp với dữ liệu đi kèm.
   const phase = s.phase as RunPhase;
   if (phase === 'battle') ensure(s.army !== null, 'battle without an army');
-  if (phase in { reward: 1, conquest: 1, council: 1, quest: 1 }) {
+  if (phase in { reward: 1, conquest: 1, council: 1, quest: 1, blessing: 1 }) {
     ensure(current !== null && OFFER_PHASE[current.kind as string] === phase, 'phase does not match the open offer');
   } else {
     ensure(s.offers === null, 'offer outside an offer phase');
