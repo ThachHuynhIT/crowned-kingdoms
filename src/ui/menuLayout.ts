@@ -2,7 +2,7 @@ import type { Point, Size } from './hud/layout';
 
 /** Main menu buttons (spec §10.2). */
 export const MENU_BUTTON = { w: 200, h: 52, gap: 12 } as const;
-export type MenuItemId = 'continue' | 'newRun' | 'crowns' | 'settings' | 'help';
+export type MenuItemId = 'continue' | 'newRun' | 'saves' | 'crowns' | 'settings' | 'help';
 
 export interface MenuItem {
   readonly id: MenuItemId;
@@ -15,6 +15,7 @@ export interface MenuItem {
 export const MENU_ITEMS: readonly MenuItem[] = [
   { id: 'continue', label: 'Tiếp tục', visible: true },
   { id: 'newRun', label: 'Ván mới', visible: true },
+  { id: 'saves', label: 'Tải ván', visible: true },
   { id: 'crowns', label: 'Vương Miện', visible: true },
   { id: 'settings', label: 'Cài đặt', visible: true },
   { id: 'help', label: 'Trợ giúp', visible: true },

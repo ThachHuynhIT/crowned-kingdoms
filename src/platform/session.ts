@@ -1,5 +1,9 @@
 /** Phiên chơi của trình duyệt: kho lưu + cầu checkpoint + đọc ván + hồ sơ meta (G4). `src/game` không import file này. */
 import {
+  MAX_SAVE_SLOTS,
+  SLOT_BROKEN_TEXT,
+  SLOT_SAVE_FAILED_TEXT,
+  SLOTS_FULL_TEXT,
   META_MEMORY_ONLY_TEXT,
   META_READ_ONLY_TEXT,
   SETTINGS_INVALID_TEXT,
@@ -12,7 +16,8 @@ import type { CardId, KingId } from '../data/types';
 import type { Content } from '../game/cards/registry';
 import { decodeMeta, type MetaProfile, settleRun, unlockCard, unlockKing } from '../game/meta';
 import type { RunState } from '../game/run/state';
-import { decodeRun } from '../game/save/codec';
+import { decodeRun, encodeRun } from '../game/save/codec';
+import { cleanSlotName, makeSlot, nextSlotId, readSlot, slotSummaries, summaryOf, type SlotStore, type SlotSummary } from '../game/save/slots';
 import { SaveCoordinator } from '../game/save/SaveCoordinator';
 import type { LoadRunResult, SaveStore, SessionPersistence, SettleOutcome } from '../game/save/types';
 import { createSaveStore } from './storage/createSaveStore';
@@ -22,8 +27,11 @@ export type UnlockResult =
   | { ok: true; profile: MetaProfile }
   | { ok: false; reason: 'readOnly' | 'notAllowed' | 'saveFailed'; message: string };
 
+/** Kết quả một thao tác trên bản lưu có tên. */
+export type SlotResult = { ok: true; slot: SlotSummary } | { ok: false; message: string };
+
 export interface GameSession {
-  store: SaveStore;
+  store: SaveStore & SlotStore;
   /** Checkpoint ván + `settle` (chấm điểm cuối ván vào hồ sơ) cho RunController. */
   persistence: SessionPersistence;
   /** Đọc và kiểm ván đã lưu; ván không dùng được bị xoá (không đụng meta) trước khi trả kết quả. */
@@ -53,10 +61,26 @@ export interface GameSession {
    * (bản trên thiết bị có thể còn khi tải lại). Xoá hỏng → reject.
    */
   discardRun(): Promise<{ persistent: boolean }>;
+  /** Bản lưu có tên (2026-11-09), mới nhất trước; bản hỏng hình bị bỏ qua. */
+  listSlots(): Promise<SlotSummary[]>;
+  /** Lưu `state` thành một bản mới tên `name` (đã làm sạch); rỗng, đủ MAX_SAVE_SLOTS hay ghi hỏng → ok false. */
+  saveSlot(state: RunState, name: string): Promise<SlotResult>;
+  /** Đổi tên một bản lưu. */
+  renameSlot(id: string, name: string): Promise<SlotResult>;
+  deleteSlot(id: string): Promise<void>;
+  /**
+   * Mở một bản lưu: kiểm ván bên trong như `load`; dùng được thì nó thành ván đang chơi (ghi đè bản tự lưu, sau mọi
+   * checkpoint đang chờ). Bản lưu vẫn còn. Không có → empty; hỏng → incompatible.
+   */
+  loadSlot(id: string): Promise<LoadRunResult>;
 }
 
 /** Dựng phiên trên một kho có sẵn: đọc hồ sơ meta đúng một lần, không ghi gì khi mở. */
-export async function openSession(store: SaveStore & { isPersistent?: () => boolean }, content: Content): Promise<GameSession> {
+export async function openSession(
+  store: SaveStore & SlotStore & { isPersistent?: () => boolean },
+  content: Content,
+  now: () => number = () => Date.now(),
+): Promise<GameSession> {
   const raw = await store.loadMeta();
   // A store with no profile answers null (IndexedDB, memory): that is a first launch, not a broken profile.
   const decoded = decodeMeta(raw === null ? undefined : raw);
@@ -149,8 +173,54 @@ export async function openSession(store: SaveStore & { isPersistent?: () => bool
     return { persistent: store.isPersistent?.() === true };
   };
 
+  const slotFailed: SlotResult = { ok: false, message: SLOT_SAVE_FAILED_TEXT };
+
+  const saveSlot = async (state: RunState, rawName: string): Promise<SlotResult> => {
+    const name = cleanSlotName(rawName);
+    if (name === null) return slotFailed;
+    const used = slotSummaries(await store.listSlots()).map((x) => x.id);
+    const id = nextSlotId(used);
+    if (id === null || used.length >= MAX_SAVE_SLOTS) return { ok: false, message: SLOTS_FULL_TEXT };
+    const record = makeSlot(id, name, now(), state, encodeRun(state, content));
+    try {
+      await store.saveSlot(id, record);
+    } catch {
+      return slotFailed;
+    }
+    return { ok: true, slot: summaryOf(record) };
+  };
+
+  const renameSlot = async (id: string, rawName: string): Promise<SlotResult> => {
+    const name = cleanSlotName(rawName);
+    const record = readSlot(await store.loadSlot(id));
+    if (name === null || record === null) return slotFailed;
+    try {
+      await store.saveSlot(id, { ...record, name });
+    } catch {
+      return slotFailed;
+    }
+    return { ok: true, slot: summaryOf({ ...record, name }) };
+  };
+
+  const loadSlot = async (id: string): Promise<LoadRunResult> => {
+    const raw = await store.loadSlot(id);
+    if (raw === null || raw === undefined) return { kind: 'empty' };
+    const record = readSlot(raw);
+    if (record === null) return { kind: 'incompatible', message: SLOT_BROKEN_TEXT };
+    const result = decodeRun(record.save, content);
+    if (result.kind !== 'ok') return result.kind === 'empty' ? { kind: 'incompatible', message: SLOT_BROKEN_TEXT } : result;
+    // The slot becomes the run being played: written after every queued checkpoint, like any other.
+    await coordinator.checkpoint(result.state);
+    return result;
+  };
+
   return {
     store,
+    listSlots: async () => slotSummaries(await store.listSlots()),
+    saveSlot,
+    renameSlot,
+    deleteSlot: (id) => store.deleteSlot(id),
+    loadSlot,
     persistence: {
       checkpoint: (state) => coordinator.checkpoint(state),
       flush: () => coordinator.flush(),
@@ -175,8 +245,9 @@ export async function createSession(
   factory: IDBFactory | null,
   onWarning: (text: string) => void,
   content: Content,
+  now?: () => number,
 ): Promise<GameSession> {
-  return openSession(await createSaveStore({ factory, onWarning }), content);
+  return openSession(await createSaveStore({ factory, onWarning }), content, now);
 }
 
 /** The browser's IndexedDB, or null when it is missing or access is denied. */

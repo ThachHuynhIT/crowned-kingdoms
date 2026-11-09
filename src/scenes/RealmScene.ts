@@ -102,6 +102,11 @@ const CAMERA_EASE_MS = 400;
 export class RealmScene extends Phaser.Scene {
   private bus!: EventBus<GameEvents>;
   private controller!: RunController;
+
+  /** The run as it stands now (read by Settings to save it into a named slot), null before a run starts. */
+  currentRunState(): RunState | null {
+    return this.controller?.state ?? null;
+  }
   private field: FieldRenderer | null = null;
   private board: BoardRenderer | null = null;
   private units: UnitRenderer | null = null;

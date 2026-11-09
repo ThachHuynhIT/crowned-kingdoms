@@ -11,6 +11,7 @@ import { PlanningHudScene } from './scenes/PlanningHudScene';
 import { PreloadScene } from './scenes/PreloadScene';
 import { RealmScene } from './scenes/RealmScene';
 import { RunEndScene } from './scenes/RunEndScene';
+import { SavesScene } from './scenes/SavesScene';
 import { SettingsScene } from './scenes/SettingsScene';
 
 const game = new Phaser.Game({
@@ -44,6 +45,7 @@ const game = new Phaser.Game({
     RunEndScene,
     HelpScene,
     SettingsScene,
+    SavesScene,
   ],
 });
 

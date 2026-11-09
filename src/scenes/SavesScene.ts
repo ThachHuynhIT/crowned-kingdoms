@@ -1,0 +1,176 @@
+/**
+ * "Tải ván" (2026-11-09): bản tự lưu (ván đang chơi) ở trên cùng, rồi các bản lưu có tên, mới nhất trước. Mỗi hàng:
+ * Mở · Đổi tên · Xoá (bản tự lưu chỉ có Mở). Mọi thao tác qua phiên (`src/platform/session.ts`); tên gõ qua hộp
+ * thoại của trình duyệt; xoá cần bấm hai lần. Sau mỗi thao tác màn hình dựng lại từ đĩa.
+ */
+import Phaser from 'phaser';
+import { toCss } from '../data/palette';
+import { AUTOSAVE_NAME } from '../data/save';
+import { UI_PALETTE } from '../data/uiPalette';
+import { ALL_KINGS } from '../data/rules';
+import type { KingId } from '../data/types';
+import { CONTENT } from '../game/cards/registry';
+import type { RunState } from '../game/run/state';
+import type { SlotSummary } from '../game/save/slots';
+import { fitName, savesLayout, type SavesLayout } from '../ui/saves/savesLayout';
+import { addUiText, createButton, createPanel, type Button, type UiBox } from '../ui/theme';
+import type { Rect } from '../ui/hud/layout';
+import { SCENES } from './keys';
+import type { RealmData } from './RealmScene';
+import { getSession } from './sessionRegistry';
+
+interface Row {
+  /** Null for the autosave row. */
+  slot: SlotSummary | null;
+  bg: UiBox;
+  name: Phaser.GameObjects.Text;
+  detail: Phaser.GameObjects.Text;
+  open: Button;
+  rename: Button | null;
+  remove: Button | null;
+}
+
+const when = (ms: number): string =>
+  new Date(ms).toLocaleString('vi-VN', { day: '2-digit', month: '2-digit', year: 'numeric', hour: '2-digit', minute: '2-digit' });
+
+export class SavesScene extends Phaser.Scene {
+  private panel!: UiBox;
+  private title!: Phaser.GameObjects.Text;
+  private message!: Phaser.GameObjects.Text;
+  private back!: Button;
+  private rows: Row[] = [];
+  private autosave: RunState | null = null;
+  private armedDelete: string | null = null;
+  private busy = false;
+  private notice = '';
+
+  constructor() {
+    super(SCENES.saves);
+  }
+
+  create(data?: { notice?: string }): void {
+    // Scene instances are reused: reset every per-visit field first.
+    this.rows = [];
+    this.autosave = null;
+    this.armedDelete = null;
+    this.busy = false;
+    this.notice = data?.notice ?? '';
+    this.cameras.main.setBackgroundColor(toCss(UI_PALETTE.sky[3]));
+    this.panel = createPanel(this, 'panel', 200, 200);
+    this.title = addUiText(this, 0, 0, 'Tải ván', 24).setFontStyle('bold').setOrigin(0.5);
+    this.message = addUiText(this, 0, 0, this.notice, 14).setOrigin(0.5);
+    this.back = createButton(this, 0, 0, 'Về menu', { onClick: () => this.scene.start(SCENES.mainMenu) });
+    this.input.keyboard?.on('keydown-ESC', () => this.scene.start(SCENES.mainMenu));
+    this.scale.on(Phaser.Scale.Events.RESIZE, this.layout, this);
+    this.events.once(Phaser.Scenes.Events.SHUTDOWN, () => this.scale.off(Phaser.Scale.Events.RESIZE, this.layout, this));
+    this.message.setText(this.notice || 'Đang đọc các bản lưu…');
+    this.layout();
+    void this.readSaves();
+  }
+
+  private async readSaves(): Promise<void> {
+    const session = getSession(this);
+    if (!session) {
+      this.message.setText('Trình duyệt này không lưu được tiến trình.');
+      return;
+    }
+    const [current, slots] = await Promise.all([session.load(), session.listSlots()]);
+    if (!this.scene.isActive()) return;
+    this.autosave = current.kind === 'ok' ? current.state : null;
+    if (this.autosave) this.rows.push(this.makeRow(null, AUTOSAVE_NAME, this.detailOf(this.autosave.kingId, this.autosave.year)));
+    for (const slot of slots) this.rows.push(this.makeRow(slot, slot.name, `${this.detailOf(slot.kingId, slot.year)} · ${when(slot.savedAt)}`));
+    this.message.setText(this.notice || (this.rows.length === 0 ? 'Chưa có bản lưu nào.' : ''));
+    this.layout();
+  }
+
+  private detailOf(kingId: string, year: number): string {
+    const known = (ALL_KINGS as readonly string[]).includes(kingId);
+    return `${known ? CONTENT.king(kingId as KingId).nameVi : kingId} · Năm ${year}`;
+  }
+
+  private makeRow(slot: SlotSummary | null, name: string, detail: string): Row {
+    const bg = createPanel(this, 'tooltip', 100, 44);
+    const id = slot?.id ?? null;
+    return {
+      slot,
+      bg,
+      name: addUiText(this, 0, 0, name, 15).setOrigin(0, 0.5).setFontStyle('bold'),
+      detail: addUiText(this, 0, 0, detail, 12).setOrigin(0, 0.5),
+      open: createButton(this, 0, 0, 'Mở', { onClick: () => void this.open(id) }),
+      rename: slot ? createButton(this, 0, 0, 'Tên', { onClick: () => void this.rename(slot) }) : null,
+      remove: slot ? createButton(this, 0, 0, 'Xoá', { onClick: () => void this.remove(slot) }) : null,
+    };
+  }
+
+  private async open(id: string | null): Promise<void> {
+    const session = getSession(this);
+    if (this.busy || !session) return;
+    if (id === null) {
+      if (!this.autosave) return;
+      const data: RealmData = { resume: this.autosave };
+      this.scene.start(SCENES.realm, data);
+      return;
+    }
+    this.busy = true;
+    const result = await session.loadSlot(id);
+    this.busy = false;
+    if (result.kind === 'ok') {
+      const data: RealmData = { resume: result.state };
+      this.scene.start(SCENES.realm, data);
+    } else this.message.setText(result.kind === 'incompatible' ? result.message : 'Không tìm thấy bản lưu này.');
+  }
+
+  private async rename(slot: SlotSummary): Promise<void> {
+    const session = getSession(this);
+    if (this.busy || !session) return;
+    const name = window.prompt('Tên mới của bản lưu', slot.name);
+    if (name === null) return;
+    this.busy = true;
+    const result = await session.renameSlot(slot.id, name);
+    this.scene.restart({ notice: result.ok ? `Đã đổi tên thành "${result.slot.name}".` : result.message });
+  }
+
+  private async remove(slot: SlotSummary): Promise<void> {
+    const session = getSession(this);
+    if (this.busy || !session) return;
+    if (this.armedDelete !== slot.id) {
+      // First press only arms the button; a second press on the same row deletes.
+      this.armedDelete = slot.id;
+      for (const row of this.rows) row.remove?.setLabel(row.slot?.id === slot.id ? 'Chắc?' : 'Xoá');
+      this.message.setText(`Bấm "Chắc?" lần nữa để xoá "${slot.name}".`);
+      return;
+    }
+    this.busy = true;
+    await session.deleteSlot(slot.id);
+    this.scene.restart({ notice: `Đã xoá "${slot.name}".` });
+  }
+
+  private layout(): void {
+    const l: SavesLayout = savesLayout({ w: this.scale.width, h: this.scale.height }, this.rows.length);
+    this.panel.resize(l.panel.w, l.panel.h);
+    this.panel.image.setPosition(l.panel.x, l.panel.y);
+    const centre = (r: Rect): [number, number] => [r.x + r.w / 2, r.y + r.h / 2];
+    this.title.setPosition(...centre(l.title));
+    this.message.setPosition(...centre(l.message)).setWordWrapWidth(l.message.w);
+    const place = (b: Button | null, r: Rect): void => {
+      if (!b) return;
+      b.resize(r.w, r.h);
+      b.container.setPosition(...centre(r));
+    };
+    place(this.back, l.back);
+    this.rows.forEach((row, i) => {
+      const r = l.rows[i];
+      const shown = r !== undefined;
+      for (const o of [row.bg.image, row.name, row.detail]) o.setVisible(shown);
+      for (const b of [row.open, row.rename, row.remove]) b?.setVisible(shown);
+      if (!r) return;
+      row.bg.resize(r.row.w, r.row.h);
+      row.bg.image.setPosition(r.row.x, r.row.y);
+      row.name.setText(fitName(row.slot?.name ?? AUTOSAVE_NAME, l.nameChars)).setPosition(r.text.x, r.text.y + 14);
+      row.detail.setPosition(r.text.x, r.text.y + 31);
+      place(row.open, r.open);
+      place(row.rename, r.rename);
+      place(row.remove, r.remove);
+    });
+  }
+}

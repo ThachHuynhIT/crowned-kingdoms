@@ -36,13 +36,25 @@ export const formationSlots = (mode: RunMode, ranged: number, melee: number): { 
   return { ranged: rows(ranged, mid, y0), melee: rows(melee, mid, meleeY0) };
 };
 
-export const leashBox = (mode: RunMode): { x0: number; x1: number; y0: number; y1: number } => {
+interface Box {
+  readonly x0: number;
+  readonly x1: number;
+  readonly y0: number;
+  readonly y1: number;
+}
+
+const boxFor = (mode: RunMode): Box => {
   const g = geometryFor(mode);
   const reach = BATTLE.allyLeashPlots * BATTLE.plot;
   return { x0: g.boardMin - reach, x1: g.boardMax + reach, y0: g.boardMin - reach, y1: g.boardMax + reach };
 };
 
+/** Tính sẵn cho mỗi chế độ: chọn mục tiêu gọi `insideLeash` cho mọi cặp lính–địch mỗi lần chọn lại. */
+const LEASH: Readonly<Record<RunMode, Box>> = { normal: boxFor('normal'), endless: boxFor('endless') };
+
+export const leashBox = (mode: RunMode): Box => LEASH[mode];
+
 export const insideLeash = (mode: RunMode, x: number, y: number): boolean => {
-  const b = leashBox(mode);
+  const b = LEASH[mode];
   return x >= b.x0 && x <= b.x1 && y >= b.y0 && y <= b.y1;
 };

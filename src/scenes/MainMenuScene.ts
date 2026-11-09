@@ -44,6 +44,7 @@ export const newRunSeed = (): number => (Date.now() ^ Math.floor(Math.random() *
 const MENU_ACTIONS: Record<MenuItemId, (scene: MainMenuScene) => void> = {
   continue: (scene) => scene.resume(),
   newRun: (scene) => scene.scene.start(SCENES.kingSelect),
+  saves: (scene) => scene.scene.start(SCENES.saves),
   crowns: (scene) => scene.scene.start(SCENES.crowns),
   settings: (scene) => openSettings(scene),
   help: (scene) => openHelp(scene, null, null),

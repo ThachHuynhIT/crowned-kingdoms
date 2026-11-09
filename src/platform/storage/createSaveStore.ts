@@ -5,6 +5,7 @@
  */
 import { STORAGE_WARNING_TEXT } from '../../data/save';
 import { MemorySaveStore } from '../../game/save/MemorySaveStore';
+import type { SlotStore } from '../../game/save/slots';
 import type { SaveEnvelope, SaveStore } from '../../game/save/types';
 import { openIdbSaveStore } from './idbSaveStore';
 
@@ -14,14 +15,14 @@ export interface SaveStoreOptions {
 }
 
 /** The browser store: a `SaveStore` that also says whether writes still reach the disk. */
-export interface PersistenceAwareStore extends SaveStore {
+export interface PersistenceAwareStore extends SaveStore, SlotStore {
   /** False when IndexedDB never opened or the store has fallen back to memory (data lives until the tab closes). */
   isPersistent(): boolean;
 }
 
 export async function createSaveStore(options: SaveStoreOptions): Promise<PersistenceAwareStore> {
   const mirror = new MemorySaveStore();
-  let disk: SaveStore | null = null;
+  let disk: (SaveStore & SlotStore) | null = null;
   let warned = false;
 
   const fallBack = (): void => {
@@ -42,7 +43,7 @@ export async function createSaveStore(options: SaveStoreOptions): Promise<Persis
   }
 
   /** Chạy trên đĩa nếu còn; lỗi thì bỏ đĩa và trả `undefined` để người gọi dùng bản RAM. */
-  const onDisk = async <T>(op: (s: SaveStore) => Promise<T>): Promise<{ value: T } | null> => {
+  const onDisk = async <T>(op: (s: SaveStore & SlotStore) => Promise<T>): Promise<{ value: T } | null> => {
     if (!disk) return null;
     try {
       return { value: await op(disk) };
@@ -82,6 +83,25 @@ export async function createSaveStore(options: SaveStoreOptions): Promise<Persis
     async endRun(profile) {
       await mirror.endRun(profile);
       await onDisk((s) => s.endRun(profile));
+    },
+    // Bản lưu có tên: đĩa là nguồn khi còn; RAM giữ bản sao để vẫn dùng được trong phiên nếu đĩa hỏng.
+    async listSlots() {
+      const r = await onDisk((s) => s.listSlots());
+      if (!r) return mirror.listSlots();
+      return r.value;
+    },
+    async loadSlot(id) {
+      const r = await onDisk((s) => s.loadSlot(id));
+      if (!r) return mirror.loadSlot(id);
+      return r.value;
+    },
+    async saveSlot(id, record) {
+      await mirror.saveSlot(id, record);
+      await onDisk((s) => s.saveSlot(id, record));
+    },
+    async deleteSlot(id) {
+      await mirror.deleteSlot(id);
+      await onDisk((s) => s.deleteSlot(id));
     },
   };
 }

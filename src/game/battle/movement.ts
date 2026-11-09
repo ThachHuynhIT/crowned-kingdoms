@@ -78,8 +78,14 @@ const segmentEntry = (ax: number, ay: number, bx: number, by: number, cx: number
  * (mục tiêu của nó): công trình đầu tiên chặn đường thẳng thì đi tới góc của khối đó (đã nới theo bán kính lính) cho
  * tổng đường ngắn nhất, trong các góc tới được bằng đường thẳng. Không bị chặn thì là chính (gx, gy). Bay thì bỏ qua.
  */
-const detour = (w: BattleWorld, i: number, px: number, py: number, gx: number, gy: number, skip: number): [number, number] => {
-  if (w.flying[i] === 1) return [gx, gy];
+/** Kết quả của `detour` (không cấp phát mảng mỗi lần gọi). */
+let wayX = 0;
+let wayY = 0;
+
+const detour = (w: BattleWorld, i: number, px: number, py: number, gx: number, gy: number, skip: number): boolean => {
+  wayX = gx;
+  wayY = gy;
+  if (w.flying[i] === 1) return false;
   const r = w.radius[i]!;
   let block = -1;
   let blockT = 2;
@@ -92,7 +98,7 @@ const detour = (w: BattleWorld, i: number, px: number, py: number, gx: number, g
       blockT = t;
     }
   }
-  if (block < 0) return [gx, gy];
+  if (block < 0) return false;
   const cx = w.x[block]!;
   const cy = w.y[block]!;
   const h = w.radius[block]! + r;
@@ -111,7 +117,6 @@ const detour = (w: BattleWorld, i: number, px: number, py: number, gx: number, g
   for (let round = 0; round < 3; round++)
     for (let k = 0; k < 4; k++)
       cornerCost[k] = Math.min(cornerCost[k]!, side + cornerCost[(k + 1) % 4]!, side + cornerCost[(k + 3) % 4]!);
-  let best: [number, number] = [gx, gy];
   let bestLen = Infinity;
   for (let k = 0; k < 4; k++) {
     const ax = cornerX[k]! - px;
@@ -121,11 +126,12 @@ const detour = (w: BattleWorld, i: number, px: number, py: number, gx: number, g
     if (segmentEntry(px, py, cornerX[k]!, cornerY[k]!, cx, cy, h) >= 0) continue; // góc bên kia khối
     const len = near + cornerCost[k]!;
     if (len < bestLen) {
-      best = [cornerX[k]!, cornerY[k]!];
+      wayX = cornerX[k]!;
+      wayY = cornerY[k]!;
       bestLen = len;
     }
   }
-  return best;
+  return bestLen < Infinity;
 };
 
 /** Đi tối đa `step` về (tx, ty) từ (px, py), không vượt quá. */
@@ -162,12 +168,11 @@ const steer = (w: BattleWorld, i: number, rage: boolean): void => {
     const gap = d - w.radius[i]! - w.radius[t]! - w.range[i]!;
     if (gap <= 0) engaged[i] = 1;
     if (gap <= 0 || step <= 0) return; // đã trong tầm (d > 0 khi gap > 0)
-    const [wx, wy] = detour(w, i, px, py, w.prevX[t]!, w.prevY[t]!, t);
-    if (wx === w.prevX[t] && wy === w.prevY[t]) {
+    if (!detour(w, i, px, py, w.prevX[t]!, w.prevY[t]!, t)) {
       const len = Math.min(step, gap);
       w.x[i] = px + (dx / d) * len;
       w.y[i] = py + (dy / d) * len;
-    } else stepToward(w, i, px, py, wx, wy, step);
+    } else stepToward(w, i, px, py, wayX, wayY, step);
     return;
   }
   const dx = w.homeX[i]! - px;
@@ -179,8 +184,8 @@ const steer = (w: BattleWorld, i: number, rage: boolean): void => {
     return;
   }
   if (step <= 0) return;
-  const [wx, wy] = detour(w, i, px, py, w.homeX[i]!, w.homeY[i]!, -1);
-  stepToward(w, i, px, py, wx, wy, step);
+  detour(w, i, px, py, w.homeX[i]!, w.homeY[i]!, -1);
+  stepToward(w, i, px, py, wayX, wayY, step);
 };
 
 export const moveEntities = (world: BattleWorld): void => {

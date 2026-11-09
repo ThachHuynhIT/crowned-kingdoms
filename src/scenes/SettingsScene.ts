@@ -2,6 +2,9 @@ import Phaser from 'phaser';
 import type { EventBus } from '../core/events';
 import type { GameSpeed } from '../core/SimClock';
 import { DISCARD_MEMORY_ONLY_TEXT, SETTINGS_SAVE_FAILED_TEXT } from '../data/save';
+import { CONTENT } from '../game/cards/registry';
+import { defaultSlotName } from '../game/save/slots';
+import type { RealmScene } from './RealmScene';
 import type { AudioSettings } from '../data/settings';
 import type { GameEvents } from '../game/events';
 import { defaultProfile } from '../game/meta';
@@ -70,6 +73,8 @@ export class SettingsScene extends Phaser.Scene {
   }[] = [];
   private shake!: Button;
   private discard!: Button;
+  /** In a run (not the main menu): save the run into a named slot (2026-11-09). */
+  private saveSlot!: Button;
   private confirm!: Button;
   private cancel!: Button;
   private close!: Button;
@@ -130,6 +135,7 @@ export class SettingsScene extends Phaser.Scene {
       this.showMessage(DISCARD_WARNING);
       this.refresh();
     });
+    this.saveSlot = this.button('Lưu ván…', () => void this.saveNamed());
     this.confirm = this.button('Xác nhận xoá', () => void this.discardSaved());
     this.cancel = this.button('Huỷ', () => {
       this.confirming = false;
@@ -219,6 +225,28 @@ export class SettingsScene extends Phaser.Scene {
     }
   }
 
+  /** Save the run being played into a new named slot; the name comes from a browser prompt (default: king and year). */
+  private async saveNamed(): Promise<void> {
+    const session = getSession(this);
+    const state = (this.scene.get(SCENES.realm) as RealmScene | null)?.currentRunState() ?? null;
+    if (this.busy || !session || !state) return;
+    const name = window.prompt('Tên bản lưu', defaultSlotName(CONTENT.king(state.kingId).nameVi, state.year));
+    if (name === null) return;
+    const visit = this.visit;
+    this.busy = true;
+    this.refresh();
+    try {
+      const result = await session.saveSlot(state, name);
+      if (visit !== this.visit) return;
+      this.showMessage(result.ok ? `Đã lưu "${result.slot.name}".` : result.message);
+    } finally {
+      if (visit === this.visit) {
+        this.busy = false;
+        this.refresh();
+      }
+    }
+  }
+
   private showMessage(text: string): void {
     this.message.setContent(text ? textContent([text]) : null);
     this.layout();
@@ -236,6 +264,8 @@ export class SettingsScene extends Phaser.Scene {
     this.shake.setEnabled(writable);
     const menu = this.launch.owner === SCENES.mainMenu;
     this.discard.setVisible(menu);
+    this.saveSlot.setVisible(!menu);
+    this.saveSlot.setEnabled(!this.busy && !!getSession(this));
     this.discard.setEnabled(this.saved && !this.busy && !this.confirming);
     this.confirm.setVisible(menu && this.confirming);
     this.cancel.setVisible(menu && this.confirming);
@@ -267,6 +297,7 @@ export class SettingsScene extends Phaser.Scene {
     });
     button(this.shake, l.shake);
     button(this.discard, l.discard);
+    button(this.saveSlot, l.discard); // same spot: the discard button only shows on the main menu
     button(this.confirm, l.confirm);
     button(this.cancel, l.cancel);
     button(this.close, l.close);
