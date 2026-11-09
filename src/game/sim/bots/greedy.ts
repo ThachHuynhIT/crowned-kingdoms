@@ -9,7 +9,8 @@
  * (lives are not power; without this rule it spent every life on Eclipse Pact and Moon won 2.8%).
  */
 import { canStartBattle } from '../../run/turn';
-import { GREEDY_MAX_REROLLS } from '../../../data/balance';
+import { GREEDY_MAX_REROLLS, GREEDY_MAX_SHOP_PURCHASES, GREEDY_SHOP_RESERVE } from '../../../data/balance';
+import { buyCardIllegal, shopPrice } from '../../run/shop';
 import { ENDLESS_BLESSINGS } from '../../../data/endless';
 import { unlockCost } from '../../../data/run';
 import type { CardDef, CardId } from '../../../data/types';
@@ -129,12 +130,21 @@ const legal = (state: RunState, command: RunCommand, content: Content): boolean 
 
 const planning = (state: RunState, content: Content): RunCommand => {
   if (!state.autoFire) return { type: 'setAutoFire', on: true };
+  // The battle starts by itself at the hand target (10/11/2026): mirror that so bot-driven loops match headless.
+  if (canStartBattle(state)) return { type: 'startBattle' };
   const move = bestFreeMove(state, content);
   if (move !== null) return move.command;
   const play = bestPlay(state, content);
   if (play !== null) return play.command;
   const buy = enablingPlot(state, content);
   if (buy !== null) return buy;
+  // Nothing worth playing: buy a card (bounded per year, a gold reserve kept), then try to play it.
+  if (
+    state.shopPurchasesThisYear < GREEDY_MAX_SHOP_PURCHASES &&
+    buyCardIllegal(state, content) === null &&
+    state.gold - shopPrice(state) >= GREEDY_SHOP_RESERVE
+  )
+    return { type: 'buyCard' };
   const reroll: RunCommand = { type: 'reroll' };
   if (
     state.rerollsThisYear < GREEDY_MAX_REROLLS &&

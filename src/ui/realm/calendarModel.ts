@@ -140,4 +140,5 @@ const ILLEGAL_TEXT: Record<IllegalReason, string> = {
   lastLife: 'Không thể: bạn chỉ còn 1 mạng.',
   noFreeMove: 'Năm nay đã hết lượt dời miễn phí.',
   wrongKing: 'Chỉ Vua Du Mục được dời miễn phí.',
+  noShopCards: 'Không còn thẻ nào để mua.',
 };

@@ -109,7 +109,7 @@ describe('answering', () => {
   const offered = (over: Partial<RunState> = {}): RunState => startYear(before(3, over), CONTENT);
   const id = (s: RunState): QuestId => (s.offers as { questId: QuestId }).questId;
 
-  it('accept records the quest with deadline offeredYear + duration - 1, then draws the hand', () => {
+  it('accept records the quest with deadline offeredYear + duration - 1, then draws the year cards on top of the kept hand', () => {
     const s = offered();
     const qid = id(s);
     const next = run(s, { type: 'answerQuest', accept: true });
@@ -127,7 +127,7 @@ describe('answering', () => {
     expect(next.offers).toBeNull();
     expect(next.phase).toBe('planning');
     expect(next.yearStartPendingDraw).toBe(false);
-    expect(next.hand).toHaveLength(RUN.handSize);
+    expect(next.hand).toHaveLength(s.hand.length + RUN.yearDraw);
   });
 
   it('declined_not_reoffered: decline still marks the quest as offered and draws', () => {
@@ -142,9 +142,11 @@ describe('answering', () => {
     expect((later.offers as { questId: QuestId }).questId).not.toBe(qid);
   });
 
-  it('refills to the decree hand limit after the answer', () => {
+  it('draws the extra decree card on top of the year draw after the answer', () => {
     const s = offered({ decrees: ['decree_fourth_hand'] });
-    expect(run(s, { type: 'answerQuest', accept: false }).hand).toHaveLength(DECREE_RULES.hand);
+    expect(run(s, { type: 'answerQuest', accept: false }).hand).toHaveLength(
+      s.hand.length + RUN.yearDraw + DECREE_RULES.hand,
+    );
   });
 
   it('answers only while a quest is on offer', () => {

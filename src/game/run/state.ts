@@ -4,7 +4,7 @@ import type { RunMode, Rules } from '../../data/rules';
 import type { BossId, CardId, DecreeId, KingId, Level, PerkId, QuestId, StatKey } from '../../data/types';
 import type { ArmyPlan, BattleResult } from '../battle/types';
 
-export const RUN_SAVE_VERSION = 7;
+export const RUN_SAVE_VERSION = 8;
 
 export interface BuildingState {
   uid: number;
@@ -38,7 +38,7 @@ export type RunPhase =
   | 'yearEnd'
   | 'blessing'
   | 'ended';
-export type RngStream = 'draw' | 'reward' | 'calendar' | 'council' | 'quest' | 'blessing';
+export type RngStream = 'draw' | 'reward' | 'calendar' | 'council' | 'quest' | 'blessing' | 'shop';
 
 /** Trạng thái riêng của Vô tận (spec 2026-11-09 §5, §6); ván thường giữ `null`. */
 export interface EndlessState {
@@ -127,6 +127,8 @@ export interface RunState {
   rerollsThisYear: number;
   /** Số lần đổi bài ĐÃ TRẢ phí trong năm (giá lần kế); `rerollsThisYear` đếm cả lần miễn phí. */
   paidRerollsThisYear: number;
+  /** Số lần Mua thẻ trong năm (giá lần kế, 10/11/2026); về 0 đầu năm. */
+  shopPurchasesThisYear: number;
   /** Số ô đã MUA bằng vàng (giá ô kế tiếp, spec §3.11). */
   purchasedPlots: number;
   /** Uid công trình không trả được phí duy trì năm nay; tính lại mỗi `startYear`. */
@@ -181,7 +183,8 @@ export type IllegalReason =
   | 'badTarget'
   | 'lastLife'
   | 'noFreeMove'
-  | 'wrongKing';
+  | 'wrongKing'
+  | 'noShopCards';
 
 export type PlayTarget =
   | { kind: 'none' }
@@ -194,6 +197,8 @@ export type RunCommand =
   | { type: 'discard'; handIndex: number }
   /** Bỏ cả tay và rút lại, trả `rerollCost` vàng. */
   | { type: 'reroll' }
+  /** Mua một thẻ ngẫu nhiên của vua mình vào tay và bộ bài (10/11/2026). */
+  | { type: 'buyCard' }
   /** Mua một ô khoá kề ô đã mở bằng vàng (spec §3.11). */
   | { type: 'unlockPlot'; plot: number }
   /** Lều Di Động (Vua Du Mục): dời/đổi chỗ công trình sang ô kề, miễn phí, không cần chơi thẻ. */

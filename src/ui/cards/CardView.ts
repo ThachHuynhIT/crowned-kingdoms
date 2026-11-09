@@ -6,7 +6,7 @@ import type { Content } from '../../game/cards/registry';
 import { SPRITES_KEY, iconFrame } from '../../render/atlas';
 import type { IconId } from '../../render/iconArt';
 import type { UiFrame } from '../../render/uiArt';
-import { CARD_LIFT, DRAG_SLOP, type Size, type TooltipContent } from '../hud/layout';
+import { CARD_LIFT, DRAG_SLOP, type Rect, type Size, type TooltipContent } from '../hud/layout';
 import { skinFrame, type UiSkin } from '../skin';
 import { VERTICAL_CARD_ART, pickCardImage, resolveCardImage } from './cardImage';
 import { cardLayout, fitArt, type CardDensity } from './cardLayout';
@@ -71,7 +71,13 @@ export class CardView {
   private dropHandler: ((x: number, y: number) => void) | null = null;
   private dragFrom: { id: number } | null = null;
   private dragging = false;
-  private readonly onResize = (): void => this.render();
+  private clip: Rect | null = null;
+  private clipGraphics: Phaser.GameObjects.Graphics | null = null;
+  private readonly clipMasks = new WeakMap<Phaser.GameObjects.GameObject, Phaser.Filters.Mask>();
+  private scrolling = false;
+  private scrollLastX = 0;
+  private scrollHandler: ((delta: number) => void) | null = null;
+  private readonly onResize = (): void => { this.render(); this.applyClip(); };
 
   constructor(
     private readonly scene: Phaser.Scene,
@@ -88,17 +94,21 @@ export class CardView {
     });
     this.box.image.on('pointerdown', (pointer: Phaser.Input.Pointer) => {
       if (this.dropHandler) this.dragFrom = { id: pointer.id };
+      this.scrolling = false;
+      this.scrollLastX = pointer.x;
     });
     scene.input.on('pointermove', this.onDragMove);
     scene.input.on('pointerup', this.onDragEnd);
     // Borders switch between 1× and 2× when the viewport crosses 600 px.
     scene.scale.on('resize', this.onResize);
     this.container.once('destroy', () => {
+      this.clipGraphics?.destroy();
       scene.scale.off('resize', this.onResize);
       scene.input.off('pointermove', this.onDragMove);
       scene.input.off('pointerup', this.onDragEnd);
     });
     this.render();
+    this.applyClip();
   }
 
   /** `badge`: a short green line under the picture ("Lên cấp 2"), or null. */
@@ -107,6 +117,7 @@ export class CardView {
     this.badge = opts.badge ?? null;
     this.press.cancel();
     this.render();
+    this.applyClip();
   }
 
   /** Paint the frame in a king's colours (`null`: the neutral wood frame). */
@@ -114,12 +125,14 @@ export class CardView {
     this.skin = king ?? 'neutral';
     this.box.setSkin(this.skin);
     this.render();
+    this.applyClip();
   }
 
   setSelected(selected: boolean): void {
     if (selected === this.selected) return;
     this.selected = selected;
     this.render();
+    this.applyClip();
     this.place();
   }
 
@@ -137,6 +150,7 @@ export class CardView {
   resize(size: Size): void {
     this.size = size;
     this.render();
+    this.applyClip();
   }
 
   onClick(handler: () => void): void {
@@ -153,14 +167,60 @@ export class CardView {
     this.container.destroy();
   }
 
+  setWindow(viewport: Rect | null): void {
+    this.clip = viewport;
+    this.applyClip();
+  }
+
+  private applyClip(): void {
+    const viewport = this.clip;
+    const clipping = viewport !== null && !(this.dragging && !this.scrolling);
+    const left = clipping ? Math.max(0, viewport.x - this.base.x) : 0;
+    const right = clipping ? Math.min(this.size.w, viewport.x + viewport.w - this.base.x) : this.size.w;
+    this.container.setVisible(this.def !== null && right > left);
+    if (this.box.image.input) {
+      const hit = this.box.image.input.hitArea as Phaser.Geom.Rectangle;
+      hit.setTo(left, 0, Math.max(0, right - left), this.size.h);
+    }
+    const partial = clipping && (left > 0 || right < this.size.w);
+    if (partial && !this.clipGraphics) {
+      this.clipGraphics = this.scene.add.graphics().removeFromDisplayList();
+    }
+    if (partial && viewport) {
+      this.clipGraphics!.clear().fillStyle(0xffffff).fillRect(viewport.x, viewport.y - CARD_LIFT, viewport.w, viewport.h + CARD_LIFT);
+    }
+    for (const child of [this.box.image, ...this.parts]) {
+      let mask = this.clipMasks.get(child);
+      if (partial && !mask) {
+        const filters = (child as Phaser.GameObjects.Image | Phaser.GameObjects.Text).filters;
+        mask = filters?.external.addMask(this.clipGraphics!, false, this.scene.cameras.main);
+        if (mask) this.clipMasks.set(child, mask);
+      }
+      mask?.setActive(partial);
+    }
+  }
+
+  onScroll(handler: ((delta: number) => void) | null): void {
+    this.scrollHandler = handler;
+  }
+
   private readonly onDragMove = (pointer: Phaser.Input.Pointer): void => {
     const from = this.dragFrom;
     if (!from || from.id !== pointer.id || !pointer.isDown) return;
     if (!this.dragging) {
       if (pointer.getDistance() <= DRAG_SLOP) return;
+      this.scrolling = this.scrollHandler !== null && Math.abs(pointer.x - pointer.downX) > Math.abs(pointer.y - pointer.downY);
       this.dragging = true;
       this.press.cancel();
-      this.container.setDepth(DRAG_DEPTH).setAlpha(DRAG_ALPHA);
+      if (!this.scrolling) {
+        this.applyClip();
+        this.container.setDepth(DRAG_DEPTH).setAlpha(DRAG_ALPHA);
+      }
+    }
+    if (this.scrolling) {
+      this.scrollHandler?.(this.scrollLastX - pointer.x);
+      this.scrollLastX = pointer.x;
+      return;
     }
     this.container.setPosition(Math.round(pointer.x - this.size.w / 2), Math.round(pointer.y - this.size.h / 2));
   };
@@ -173,7 +233,9 @@ export class CardView {
     this.dragging = false;
     this.container.setDepth(0).setAlpha(this.dimmed ? DIMMED_ALPHA : 1);
     this.place();
-    this.dropHandler?.(pointer.x, pointer.y);
+    this.applyClip();
+    if (!this.scrolling) this.dropHandler?.(pointer.x, pointer.y);
+    this.scrolling = false;
   };
 
   private place(): void {

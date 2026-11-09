@@ -68,6 +68,7 @@ describe('lockedPlotPrice and illegalText', () => {
       lastLife: true,
       noFreeMove: true,
       wrongKing: true,
+      noShopCards: true,
       locked: true,
       throne: true,
       occupied: true,

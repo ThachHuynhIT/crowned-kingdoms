@@ -1,3 +1,7 @@
+import type { CardId } from '../data/types';
+import { KIND_UNIT } from '../game/battle/world';
+import { BUILDING_FOOT_DY } from './BoardRenderer';
+import { projectileVisualHeight } from './projectileModel';
 import type Phaser from 'phaser';
 import { INTERVENTION } from '../data/battle';
 import { PALETTE } from '../data/palette';
@@ -7,11 +11,10 @@ import { deathPopFrame, deathPopPuffs, showsFloatingDamage } from './juiceModel'
 import type { BattleEvent } from '../game/battle/types';
 import type { BattleWorld } from '../game/battle/world';
 import { ISO_SPRITE_SCALE, iso } from './isoView';
-import { SPRITES_KEY, fxFrame, imageFrameScale } from './atlas';
+import { SPRITES_KEY, buildingFrame, fxFrame, imageFrameScale } from './atlas';
 import { arrowDir } from './fxArt';
 
-/** Projectiles fly this many px above the ground point they track. */
-const FLIGHT_H = 6;
+
 /** The royal boulder starts this many px above its landing point. */
 const BOULDER_DROP_H = 96;
 /** Ground shadows sit above plots (depth 1–2) and under every y-sorted sprite. */
@@ -139,14 +142,26 @@ export class FxRenderer {
       const travelled = Math.sqrt(sx * sx + sy * sy);
       const backDist = Math.min(p.speed[k]! * (1 - a), travelled);
       const back = d > 0 ? backDist / d : 0;
-      const at = iso({ x: p.px[k]! - dx * back, y: p.py[k]! - dy * back });
+      const point = { x: p.px[k]! - dx * back, y: p.py[k]! - dy * back };
+      const at = iso(point);
+      const structure = world.kind[src] !== KIND_UNIT;
+      const frame = buildingFrame(world.label[src]! as CardId);
+      const texture = this.scene.textures.get(SPRITES_KEY);
+      const height = structure && texture.has(frame)
+        ? texture.get(frame).height * imageFrameScale(frame) * ISO_SPRITE_SCALE : 0;
+      const fromX = point.x - world.x[src]!;
+      const fromY = point.y - world.y[src]!;
+      const toX = world.x[t]! - point.x;
+      const toY = world.y[t]! - point.y;
+      const offset = projectileVisualHeight(height, Math.sqrt(fromX * fromX + fromY * fromY),
+        Math.sqrt(toX * toX + toY * toY), structure, structure ? BUILDING_FOOT_DY : 0);
       // The arrow frame follows the flight on screen (projected direction), never a rotated sprite.
       const img = this.image(
         this.projectiles,
         used,
-        fxFrame(`arrow_${arrowDir(dy - dx, (dx + dy) / 2)}`),
+        fxFrame(`arrow_${arrowDir(dy - dx, (dx + dy) / 2 + offset - 6)}`),
       );
-      img.setPosition(Math.round(at.x), Math.round(at.y - FLIGHT_H)).setDepth(at.y);
+      img.setPosition(Math.round(at.x), Math.round(at.y - offset)).setDepth(at.y);
       used += 1;
     }
     for (let i = used; i < this.projectiles.length; i++) this.projectiles[i]!.setVisible(false);

@@ -23,12 +23,13 @@ import { blessingTotal, pickBlessing, plotPurchasePrice, rollBlessingOffer } fro
 import { activeModifier } from './endlessModifiers';
 import { isCouncilYear, isFinalYear } from './endlessRules';
 import { enactDecree, rollCouncil, selectDecree, setCouncilSelection } from './council';
-import { handLimit, rerollPrice, rewardCount } from './decrees';
+import { rerollPrice, rewardCount } from './decrees';
 import { refillHand } from './deck';
 import { cardOffer, enqueueOffers } from './flow';
 import { maxEnchantStacks, perkLossGold, placedAgeBonus } from './perks';
 import { stateRefusal } from './playable';
 import { canStartBattle } from './turn';
+import { buyCardIllegal, shopPool, shopPrice } from './shop';
 import { answerQuest, recordQuestCommand, settleQuests } from './quests';
 import { neutralRewardPool, rollConquestCards, rollOffers } from './rewards';
 import type { IllegalReason, RunCommand, RunState } from './state';
@@ -171,7 +172,8 @@ function applyBase(input: RunState, cmd: RunCommand, content: Content): CommandR
       const cost = rerollPrice(state);
       if (state.gold < cost) return fail('notEnoughGold');
       const rng = new Rng(state.rng.draw);
-      const piles = refillHand([], state.drawPile, [...state.discardPile, ...state.hand], rng, handLimit(state));
+      // Đổi bài: rút lại đúng số lá đang cầm (10/11/2026), không bù lên.
+      const piles = refillHand([], state.drawPile, [...state.discardPile, ...state.hand], rng, state.hand.length);
       state.hand = piles.hand;
       state.drawPile = piles.drawPile;
       state.discardPile = piles.discardPile;
@@ -180,6 +182,20 @@ function applyBase(input: RunState, cmd: RunCommand, content: Content): CommandR
       else state.paidRerollsThisYear += 1;
       state.rerollsThisYear += 1;
       state.rng.draw = rng.getState();
+      return { state, events };
+    }
+
+    case 'buyCard': {
+      const illegal = buyCardIllegal(state, content);
+      if (illegal !== null) return fail(illegal);
+      const pool = shopPool(state, content);
+      const rng = new Rng(state.rng.shop);
+      const cardId = rng.pick(pool);
+      state.gold -= shopPrice(state);
+      state.shopPurchasesThisYear += 1;
+      state.deck.push(cardId);
+      state.hand.push(cardId);
+      state.rng.shop = rng.getState();
       return { state, events };
     }
 

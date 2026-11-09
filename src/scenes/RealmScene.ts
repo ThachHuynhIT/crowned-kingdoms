@@ -1,3 +1,4 @@
+import { handWindow } from '../ui/planning/handLayoutModel';
 import Phaser from 'phaser';
 import { SHAKE_MS } from '../data/juice';
 import { shakeOffset } from '../render/juiceModel';
@@ -619,7 +620,15 @@ export class RealmScene extends Phaser.Scene {
 
   // ---- input -----------------------------------------------------------------------------
 
+  private inHand(pointer: Phaser.Input.Pointer): boolean {
+    if (this.scale.width < 768 || this.controller.state.phase !== 'planning') return false;
+    const { viewport } = handWindow(this.screen(), this.controller.state.hand.length, 0);
+    return pointer.x >= viewport.x && pointer.x <= viewport.x + viewport.w &&
+      pointer.y >= viewport.y - 12 && pointer.y <= viewport.y + viewport.h;
+  }
+
   private onPointerDown(pointer: Phaser.Input.Pointer): void {
+    if (this.inHand(pointer)) return;
     this.pointers.set(pointer.id, { x: pointer.x, y: pointer.y });
     if (this.pointers.size === 2 && !this.mapBlocked) {
       // A second finger on the map: a pinch, never a click or a pan.
@@ -638,6 +647,7 @@ export class RealmScene extends Phaser.Scene {
   private onPointerMove(pointer: Phaser.Input.Pointer): void {
     const last = this.pointers.get(pointer.id);
     if (!last || !pointer.isDown) return;
+    if (this.inHand(pointer)) return;
     this.pointers.set(pointer.id, { x: pointer.x, y: pointer.y });
     if (this.mapBlocked || !this.view) return;
     if (this.pinch !== null) {
@@ -680,7 +690,7 @@ export class RealmScene extends Phaser.Scene {
 
   /** Mouse wheel: a smooth zoom in (up) or out (down), keeping the world point under the cursor (spec 2026-11-08 §4). */
   private onWheel(pointer: Phaser.Input.Pointer, _over: unknown, _dx: number, dy: number): void {
-    if (this.mapBlocked || !this.view || dy === 0) return;
+    if (this.mapBlocked || !this.view || dy === 0 || this.inHand(pointer)) return;
     const next = wheelZoom(this.view.zoom, dy);
     this.applyView(
       zoomAt(

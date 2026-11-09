@@ -6,8 +6,12 @@ export const RUN = {
   maxLives: 4, // chỉ vượt 3 nhờ sắc lệnh/perk
   startGold: 5,
   taxPerYear: 3, // thu nhập cố định đầu mỗi năm
-  handSize: 5, // rút cho đủ số lá này đầu năm (chủ dự án 10/11/2026: trước là 3)
-  battleHandMax: 2, // nút Ra trận chỉ mở khi tay còn ≤ số lá này
+  handSize: 5, // số lá năm 1; cũng là số lá tối thiểu Thanh Lọc phải giữ lại
+  yearDraw: 1, // từ năm 2 mỗi năm rút thêm chừng này lá, giữ bài cũ (chủ dự án 10/11/2026)
+  bonusYearDraw: 2, // năm hội đồng và năm ngay sau trận boss rút chừng này lá
+  battleHandMax: 2, // chơi/bán tới khi tay còn đúng chừng này lá thì trận tự bắt đầu
+  shopBaseGold: 5, // Mua thẻ: giá lần đầu trong năm (10/11/2026)
+  shopStepGold: 3, // mỗi lần mua thêm trong năm đắt thêm chừng này (đề xuất, chủ dự án duyệt sau)
   skipPlayGold: 2, // bán/bỏ một thẻ thay cho việc chơi thẻ
   skipRewardGold: 3, // bỏ qua thẻ thưởng
   conquestGold: 5,

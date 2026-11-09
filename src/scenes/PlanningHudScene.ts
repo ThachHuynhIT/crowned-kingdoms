@@ -1,3 +1,5 @@
+import { handWindow } from '../ui/planning/handLayoutModel';
+import { shopPrice, buyCardIllegal } from '../game/run/shop';
 import Phaser from 'phaser';
 import type { EventBus } from '../core/events';
 import { toCss } from '../data/palette';
@@ -33,7 +35,6 @@ import { RewardModal } from '../ui/modals/RewardModal';
 import { modalKind } from '../ui/modals/councilModel';
 import { DecreeQuestPanel } from '../ui/planning/DecreeQuestPanel';
 import { EndlessPanel } from '../ui/planning/EndlessPanel';
-import { handLimit } from '../game/run/decrees';
 import { InspectionView } from '../ui/info/InspectionView';
 import { buildingInfoModel } from '../ui/info/inspectionModel';
 import { QuestNoticeView } from '../ui/planning/QuestNoticeView';
@@ -46,7 +47,7 @@ import { CalendarStrip } from '../ui/planning/CalendarStrip';
 import { allyStatusText, foeStatusText } from '../ui/planning/statusText';
 import { HandView } from '../ui/planning/HandView';
 import { ScoutPanel } from '../ui/planning/ScoutPanel';
-import { canFight } from '../ui/planning/fightRule';
+import { planningHint } from '../ui/planning/fightRule';
 import { dropOutcome, plotIllegalReason } from '../ui/planning/targetHints';
 import {
   freeMoveHint,
@@ -61,7 +62,6 @@ import {
 import { calendarCells, illegalText, yearLabel } from '../ui/realm/calendarModel';
 import {
   centerHand,
-  handWithFight,
   isDesktop,
   confirmFor,
   planningLayout,
@@ -80,6 +80,8 @@ import {
 import { SCENES } from './keys';
 import type { RealmHudData } from './RealmScene';
 
+/** Hand row slots: room for the year-1 hand, more when bought cards make the hand longer (10/11/2026). */
+const handSlots = (state: RunState): number => Math.max(RUN.handSize, state.hand.length);
 /** How long a rejected command's reason stays in the hint box. */
 const ILLEGAL_MS = 2000;
 const PLOT_TIP = 'plot';
@@ -103,8 +105,8 @@ interface ScoutModal {
 }
 
 /**
- * Planning HUD over RealmScene (§10.4): lives, year, scout report, the hand, Bỏ bài /
- * Ra trận, ✓/✕ for the aimed card, the play hint and the reward modal (§10.6). It only
+ * Planning HUD over RealmScene (§10.4): lives, year, scout report, hand, shop, sell,
+ * ✓/✕ for the aimed card, the play hint and the reward modal (§10.6). It only
  * reads `controller.state` and sends intents on the bus; board clicks are RealmScene's.
  */
 export class PlanningHudScene extends Phaser.Scene {
@@ -143,13 +145,14 @@ export class PlanningHudScene extends Phaser.Scene {
   private actionSize = { w: 0, h: 0 };
   private calendarModal: CalendarModal | null = null;
   private deckModal: DeckModal | null = null;
-  /** Cards currently in hand (1–3 after a play): the row is centred on this many. */
+  /** Cards currently in hand, including purchased copies. */
   private handCount = 0;
   /** Info box of a tapped building (§10.7), and the plot it describes. */
   private info!: InspectionView;
   private inspected: number | null = null;
   private hoveredPlot: number | null = null;
-  private fight!: Button;
+  private shopBtn!: Button;
+  private handScroll = 0;
   private confirmBtn!: Button;
   private cancelBtn!: Button;
   private hint!: ContentBox;
@@ -179,6 +182,7 @@ export class PlanningHudScene extends Phaser.Scene {
   private view: CameraView = { zoom: 1, scroll: { x: 0, y: 0 } };
 
   create(data: RealmHudData): void {
+    this.handScroll = 0;
     // Scene instances are reused: reset every per-launch field first.
     this.bus = data.bus;
     this.controller = data.controller;
@@ -295,12 +299,25 @@ export class PlanningHudScene extends Phaser.Scene {
       onClick: () => openSettings(this, this.bus),
       tooltip: tip(['Cài đặt']),
     });
-    this.fight = createButton(this, 0, 0, 'Ra trận', {
-      width: this.lay.fight.w,
-      height: this.lay.fight.h,
-      fontSize: 20,
-      onClick: () => this.command('startBattle'),
-      tooltip: tip(['Ra trận (Enter)']),
+    this.shopBtn = createButton(this, 0, 0, 'Mua thẻ', {
+      width: this.lay.shop.w,
+      height: this.lay.shop.h,
+      fontSize: 13,
+      onClick: () => {
+        if (this.modalOpen()) return;
+        const reason = buyCardIllegal(this.controller.state, CONTENT);
+        if (reason) this.flashIllegal(reason);
+        else this.bus.emit('ui:command', { command: { type: 'buyCard' } });
+      },
+      onDisabledClick: () => {
+        if (this.modalOpen()) return;
+        const reason = buyCardIllegal(this.controller.state, CONTENT);
+        if (reason) this.flashIllegal(reason);
+      },
+      tooltip: { host: this.tooltip, content: () => {
+        const reason = buyCardIllegal(this.controller.state, CONTENT);
+        return textContent([reason ? this.reasonText(reason) : 'Mua thêm một thẻ của vua.']);
+      } },
     });
     this.confirmBtn = createButton(this, 0, 0, '✓\nĐặt', {
       width: 48,
@@ -362,6 +379,7 @@ export class PlanningHudScene extends Phaser.Scene {
     this.input.on(Phaser.Input.Events.POINTER_MOVE, this.onPointerMove, this);
     this.input.on(Phaser.Input.Events.POINTER_DOWN, this.onPointerDown, this);
     this.input.on(Phaser.Input.Events.POINTER_UP, this.onPointerUp, this);
+    this.input.on('wheel', this.onHandWheel, this);
     this.scale.on(Phaser.Scale.Events.RESIZE, this.layout, this);
     this.events.once(Phaser.Scenes.Events.SHUTDOWN, this.teardown, this);
 
@@ -380,7 +398,7 @@ export class PlanningHudScene extends Phaser.Scene {
       this.freeMoveBtn,
       this.scoutBtn,
       this.helpBtn,
-      this.fight,
+      this.shopBtn,
       this.confirmBtn,
       this.cancelBtn,
     ])
@@ -391,21 +409,36 @@ export class PlanningHudScene extends Phaser.Scene {
 
   // ---- state → widgets ---------------------------------------------------------------------
 
-  /** The cards in hand and, beside them, the "Ra trận" button (it may show with up to two cards left). */
-  private placeHandAndFight(): void {
+  /** Keep desktop cards at full size inside the scrolling hand window. */
+  private placeHand(): void {
     const screen = { w: this.scale.width, h: this.scale.height };
-    if (!this.fight.container.visible) {
+    if (!this.lay.desktop) {
+      this.hand.onScroll(null);
       this.hand.layout(centerHand(this.lay.hand, this.handCount));
       return;
     }
-    const { cards, fight } = handWithFight(screen, this.lay.hand, this.handCount, this.lay.fight);
-    this.hand.layout(cards);
-    this.fight.container.setPosition(fight.x + fight.w / 2, fight.y + fight.h / 2);
+    const window = handWindow(screen, this.handCount, this.handScroll);
+    this.handScroll = Math.min(window.scrollMax, Math.max(0, this.handScroll));
+    this.hand.onScroll(window.scrollMax > 0 ? (delta) => {
+      if (this.modalOpen()) return;
+      this.handScroll += delta;
+      this.placeHand();
+    } : null);
+    this.hand.layout(window.cards, window.viewport);
   }
 
+  private onHandWheel(pointer: Phaser.Input.Pointer, _over: unknown, dx: number, dy: number): void {
+    if (!this.lay.desktop || this.modalOpen() || this.controller.state.phase !== 'planning') return;
+    const { viewport } = handWindow({ w: this.scale.width, h: this.scale.height }, this.handCount, this.handScroll);
+    if (pointer.x < viewport.x || pointer.x > viewport.x + viewport.w || pointer.y < viewport.y - 12 || pointer.y > viewport.y + viewport.h) return;
+    this.handScroll += dx || dy;
+    this.placeHand();
+  }
   /** A card-sized panel flies from hand slot `index` to `plot` in CARD_FLY_MS, shrinking and fading (juice §11.5). */
   private flyCard(index: number, handSize: number, plot: number): void {
-    const slots = centerHand(this.lay.hand, handSize);
+    const slots = this.lay.desktop
+      ? handWindow({ w: this.scale.width, h: this.scale.height }, handSize, this.handScroll).cards
+      : centerHand(this.lay.hand, handSize);
     const from = slots[Math.min(Math.max(0, index), slots.length - 1)];
     if (!from) return;
     const to = this.plotRect(plot);
@@ -462,7 +495,7 @@ export class PlanningHudScene extends Phaser.Scene {
       const plot = playedPlot(flyFrom, state);
       if (plot !== null) this.flyCard(this.pending.handIndex ?? 0, flyFrom.hand.length, plot);
     }
-    if (this.lay.hand.length !== handLimit(state)) this.layout(); // a decree changed the hand size
+    if (this.lay.hand.length !== handSlots(state)) this.layout(); // a bought card grew the hand row
     this.decreePanel.setState(state);
     this.endlessPanel.setState(state);
     this.questNotice.setState(state);
@@ -498,10 +531,12 @@ export class PlanningHudScene extends Phaser.Scene {
     this.sellBtn.setVisible(choosing && state.hand.length > 0);
     this.rerollBtn.setVisible(choosing && !state.played);
     this.deckBtn.setVisible(planning);
-    this.fight.setVisible(canFight(state));
+    this.shopBtn.setVisible(planning);
+    this.shopBtn.setLabel(`Mua thẻ · ${shopPrice(state)} vàng`);
+    this.shopBtn.setEnabled(buyCardIllegal(state, CONTENT) === null);
     this.refreshActions(state);
     this.handCount = state.hand.length;
-    this.placeHandAndFight();
+    this.placeHand();
 
     const offers = state.phase === 'reward' || state.phase === 'conquest' ? cardOffer(state) : null;
     // The reward step is followed by a conquest step: a new offer replaces the open modal.
@@ -642,6 +677,7 @@ export class PlanningHudScene extends Phaser.Scene {
   private refreshPending(): void {
     const p = this.pending;
     this.hand.setSelected(p.handIndex);
+    this.placeHand();
     this.refreshActions(this.controller.state);
     const buy = this.buy;
     const moved = this.freeMoveDone();
@@ -697,7 +733,7 @@ export class PlanningHudScene extends Phaser.Scene {
     }
     const p = this.pending;
     const cardId = p.handIndex === null ? undefined : state.hand[p.handIndex];
-    if (cardId === undefined) return null;
+    if (cardId === undefined) return state.phase === 'planning' ? { lines: [[{ text: planningHint(state) }]] } : null;
     const card = CONTENT.card(cardId);
     const two = targetCount(card) === 2;
     let line: string;
@@ -781,10 +817,6 @@ export class PlanningHudScene extends Phaser.Scene {
       return;
     }
     this.bus.emit('ui:drop-card', { handIndex: index, plot });
-  }
-
-  private command(type: 'startBattle'): void {
-    this.bus.emit('ui:command', { command: { type } });
   }
 
   /** Bỏ lá đang chọn thay cho việc chơi thẻ (nút Bỏ bài / phím S); không chọn gì thì không làm gì. */
@@ -905,7 +937,7 @@ export class PlanningHudScene extends Phaser.Scene {
         if (this.buy && state.gold < this.buy.price) this.flashIllegal('notEnoughGold');
         else if (this.pending.ready || this.buy || this.freeMoveDone())
           this.bus.emit('ui:confirm-play', {});
-        else if (canFight(state)) this.command('startBattle');
+
         break;
       case 'cancel':
         if (this.pending.handIndex !== null || this.buy || this.freeMove)
@@ -1165,7 +1197,7 @@ export class PlanningHudScene extends Phaser.Scene {
   private currentLayout(): PlanningLayout {
     return planningLayout(
       { w: this.scale.width, h: this.scale.height },
-      handLimit(this.controller.state),
+      handSlots(this.controller.state),
       this.controller.state.mode,
     );
   }
@@ -1222,7 +1254,7 @@ export class PlanningHudScene extends Phaser.Scene {
         l.scoutButton.y + l.scoutButton.h / 2,
       );
     }
-    this.placeHandAndFight();
+    this.placeHand();
     if (this.actionSize.w !== l.sell.w || this.actionSize.h !== l.sell.h)
       this.createActionButtons();
     for (const [button, r] of [
@@ -1232,6 +1264,8 @@ export class PlanningHudScene extends Phaser.Scene {
     ] as const) {
       button.container.setPosition(r.x + r.w / 2, r.y + r.h / 2);
     }
+    this.shopBtn.resize(l.shop.w, l.shop.h);
+    this.shopBtn.container.setPosition(l.shop.x + l.shop.w / 2, l.shop.y + l.shop.h / 2);
     this.freeMoveBtn.resize(l.freeMove.w, l.freeMove.h);
     this.freeMoveBtn.container.setPosition(
       l.freeMove.x + l.freeMove.w / 2,
@@ -1260,6 +1294,7 @@ export class PlanningHudScene extends Phaser.Scene {
     this.input.off(Phaser.Input.Events.POINTER_MOVE, this.onPointerMove, this);
     this.input.off(Phaser.Input.Events.POINTER_DOWN, this.onPointerDown, this);
     this.input.off(Phaser.Input.Events.POINTER_UP, this.onPointerUp, this);
+    this.input.off('wheel', this.onHandWheel, this);
     this.scale.off(Phaser.Scale.Events.RESIZE, this.layout, this);
     this.illegalTimer?.remove(false);
     this.stopPlotTimer();

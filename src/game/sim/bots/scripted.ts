@@ -46,6 +46,8 @@ const firstTarget = (state: RunState, card: CardDef, content: Content): PlayTarg
 
 const planning = (state: RunState, content: Content): RunCommand => {
   if (!state.autoFire) return { type: 'setAutoFire', on: true };
+  // The battle starts by itself at the hand target (10/11/2026): mirror that so bot-driven loops match headless.
+  if (canStartBattle(state)) return { type: 'startBattle' };
   let best: { handIndex: number; target: PlayTarget; group: number } | null = null;
   state.hand.forEach((cardId, handIndex) => {
     const card = content.card(cardId);

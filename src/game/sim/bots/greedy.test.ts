@@ -1,9 +1,10 @@
 import { describe, expect, it } from 'vitest';
 import { Rng, hashSeed } from '../../../core/random';
-import { GREEDY_MAX_REROLLS } from '../../../data/balance';
+import { GREEDY_MAX_REROLLS, GREEDY_MAX_SHOP_PURCHASES } from '../../../data/balance';
 import { ALL_KINGS, RULES_FULL } from '../../../data/rules';
 import { CONTENT } from '../../cards/registry';
 import { applyCommand } from '../../run/commands';
+import { THRONE_PLOT } from '../../run/board';
 import { newRun } from '../../run/yearFlow';
 import {
   attackStats,
@@ -86,13 +87,35 @@ describe('greedyBot', () => {
   });
 
   it('rerolls at most GREEDY_MAX_REROLLS times a year, and only when nothing can be played', () => {
-    const base = { ...newRun(1, 'wheat', CONTENT, RULES_FULL), autoFire: true, gold: 999 };
-    const empty = { ...base, hand: [] as typeof base.hand };
-    expect(greedyBot({ ...empty, rerollsThisYear: 0 }, CONTENT, rng()).type).toBe('reroll');
-    expect(
-      greedyBot({ ...empty, rerollsThisYear: GREEDY_MAX_REROLLS }, CONTENT, rng()).type,
-    ).not.toBe('reroll');
+    const base = {
+      ...newRun(1, 'wheat', CONTENT, RULES_FULL),
+      autoFire: true,
+      gold: 999,
+      shopPurchasesThisYear: GREEDY_MAX_SHOP_PURCHASES, // the shop is used up, so reroll is the next idea
+    };
+    // Every plot open and built on: the three building cards in hand have no target.
+    const stuck = {
+      ...base,
+      hand: ['wheat_militia', 'neutral_barracks', 'neutral_archer_tower'] as typeof base.hand,
+      plots: base.plots.map((p, i) => ({
+        ...p,
+        unlocked: true,
+        building:
+          i === THRONE_PLOT
+            ? p.building
+            : { uid: i + 10, cardId: 'wheat_scarecrow' as const, level: 1 as const, enchants: [], placedYear: 1, permanent: {}, ageBonus: 0, counters: {}, movedYear: null },
+      })),
+    };
+    expect(greedyBot({ ...stuck, rerollsThisYear: 0 }, CONTENT, rng()).type).toBe('reroll');
+    // Out of rerolls: sell down to the battle hand instead.
+    expect(greedyBot({ ...stuck, rerollsThisYear: GREEDY_MAX_REROLLS }, CONTENT, rng()).type).toBe('discard');
     expect(greedyBot(base, CONTENT, rng()).type).not.toBe('reroll');
+  });
+
+  it('starts the battle first once the hand is down to its target, as the controller does', () => {
+    const base = { ...newRun(1, 'wheat', CONTENT, RULES_FULL), autoFire: true, gold: 999 };
+    expect(greedyBot({ ...base, hand: [] }, CONTENT, rng())).toEqual({ type: 'startBattle' });
+    expect(greedyBot({ ...base, hand: base.hand.slice(0, 2) }, CONTENT, rng())).toEqual({ type: 'startBattle' });
   });
 });
 

@@ -32,9 +32,12 @@ class FakePersistence implements SessionPersistence {
   }
 }
 
-/** Ba lá trên tay: bán một lá là tay còn `RUN.battleHandMax` lá, đủ để Ra trận. */
+/** Ba lá trên tay: bán một lá là tay còn `RUN.battleHandMax` lá, trận tự bắt đầu (10/11/2026). */
 const THREE: RunState['hand'] = ['wheat_militia', 'neutral_barracks', 'neutral_move'];
-const manual = (): RunState => runState({ rules: { ...RULES_G1, autoStart: false }, hand: [...THREE] });
+/** Bốn lá: bán một lá vẫn còn trên ngưỡng, ván ở lại pha chuẩn bị. */
+const FOUR: RunState['hand'] = [...THREE, 'neutral_clear_land'];
+const planningState = (): RunState => runState({ rules: RULES_G1, hand: [...FOUR] });
+const nearBattle = (): RunState => runState({ rules: RULES_G1, hand: [...THREE] });
 const tick = (): Promise<void> => new Promise((r) => setTimeout(r, 0));
 
 const setup = (initial: RunState, persistence: SessionPersistence) => {
@@ -53,7 +56,7 @@ const cmd = (bus: ReturnType<typeof createGameBus>, command: Parameters<typeof b
 describe('RunController with persistence', () => {
   it('checkpoints every successful planning command once, and an illegal one never', async () => {
     const p = new FakePersistence();
-    const { bus, controller } = setup(manual(), p);
+    const { bus, controller } = setup(planningState(), p);
     cmd(bus, { type: 'discard', handIndex: 0 });
     await controller.whenIdle();
     expect(p.writes).toHaveLength(1);
@@ -68,7 +71,7 @@ describe('RunController with persistence', () => {
 
   it('checkpointInitial writes the starting state once; kickoff of a planning state writes nothing more', async () => {
     const p = new FakePersistence();
-    const { controller } = setup(manual(), p);
+    const { controller } = setup(planningState(), p);
     await controller.checkpointInitial();
     controller.kickoff();
     await controller.whenIdle();
@@ -78,13 +81,14 @@ describe('RunController with persistence', () => {
 
   it('writes the battle entry before tick 0: no runner and no battle:started until the write completes', async () => {
     const p = new FakePersistence(true);
-    const { bus, controller, order } = setup(manual(), p);
-    cmd(bus, { type: 'discard', handIndex: 0 });
+    const { bus, controller, order } = setup(nearBattle(), p);
+    cmd(bus, { type: 'discard', handIndex: 0 }); // the hand reaches its target: the battle starts by itself
     await tick();
+    expect(p.writes).toHaveLength(1);
+    expect(p.writes[0]!.phase).toBe('planning');
     p.release();
-    await controller.whenIdle();
-    cmd(bus, { type: 'startBattle' });
     await tick();
+    expect(p.writes).toHaveLength(2);
     expect(p.writes.at(-1)!.phase).toBe('battle');
     expect(controller.runner).toBeNull();
     controller.update(500); // no runner yet: nothing may tick
@@ -98,9 +102,8 @@ describe('RunController with persistence', () => {
 
   it('writes the battle result before the new phase is announced, and not on ticks, speed, intervene or auto-fire', async () => {
     const p = new FakePersistence();
-    const { bus, controller, order } = setup(manual(), p);
-    cmd(bus, { type: 'discard', handIndex: 0 });
-    cmd(bus, { type: 'startBattle' });
+    const { bus, controller, order } = setup(nearBattle(), p);
+    cmd(bus, { type: 'discard', handIndex: 0 }); // the battle starts by itself
     await controller.whenIdle();
     const afterEntry = p.writes.length;
     bus.emit('ui:set-speed', { speed: 2 });
@@ -120,7 +123,7 @@ describe('RunController with persistence', () => {
 
   it('two quick commands apply and write in order without losing state', async () => {
     const p = new FakePersistence(true);
-    const { bus, controller } = setup(manual(), p);
+    const { bus, controller } = setup(planningState(), p);
     const hand = controller.state.hand.length;
     cmd(bus, { type: 'discard', handIndex: 0 });
     cmd(bus, { type: 'setAutoFire', on: true });
@@ -139,7 +142,7 @@ describe('RunController with persistence', () => {
 
   it('clones: a later command does not change an earlier written snapshot', async () => {
     const p = new FakePersistence();
-    const { bus, controller } = setup(manual(), p);
+    const { bus, controller } = setup(planningState(), p);
     cmd(bus, { type: 'discard', handIndex: 0 });
     cmd(bus, { type: 'setAutoFire', on: true });
     await controller.whenIdle();
@@ -149,7 +152,7 @@ describe('RunController with persistence', () => {
   it('dispose stops new input but a write already queued still completes', async () => {
     const store = new MemorySaveStore();
     const persistence = new SaveCoordinator(store, CONTENT);
-    const { bus, controller } = setup(manual(), persistence);
+    const { bus, controller } = setup(planningState(), persistence);
     cmd(bus, { type: 'discard', handIndex: 0 });
     controller.dispose();
     cmd(bus, { type: 'setAutoFire', on: true }); // ignored: no listener, no write
@@ -161,11 +164,10 @@ describe('RunController with persistence', () => {
 
   it('a loaded battle restarts from tick 0 with the same setup, builds one runner and writes nothing', async () => {
     const first = new FakePersistence();
-    const a = setup(manual(), first);
+    const a = setup(nearBattle(), first);
     const firstSetups: BattleSetup[] = [];
     a.bus.on('battle:started', ({ setup: s }) => firstSetups.push(s));
-    cmd(a.bus, { type: 'discard', handIndex: 0 });
-    cmd(a.bus, { type: 'startBattle' });
+    cmd(a.bus, { type: 'discard', handIndex: 0 }); // the battle starts by itself
     await a.controller.whenIdle();
     for (let i = 0; i < 5; i++) a.controller.update(100); // mid-battle
     const saved = first.writes.at(-1)!; // what the disk holds: the entry state
@@ -186,9 +188,8 @@ describe('RunController with persistence', () => {
 
   it('a loaded result modal does not roll, draw or pay again', async () => {
     const p = new FakePersistence();
-    const { bus, controller } = setup(manual(), p);
-    cmd(bus, { type: 'discard', handIndex: 0 });
-    cmd(bus, { type: 'startBattle' });
+    const { bus, controller } = setup(nearBattle(), p);
+    cmd(bus, { type: 'discard', handIndex: 0 }); // the battle starts by itself
     await controller.whenIdle();
     let ended = 0;
     bus.on('battle:ended', () => (ended += 1));
@@ -215,7 +216,7 @@ describe('RunController without persistence', () => {
 describe('a throwing listener', () => {
   it('does not stop later commands from being applied and saved', async () => {
     const p = new FakePersistence();
-    const { bus, controller } = setup(manual(), p);
+    const { bus, controller } = setup(planningState(), p);
     const err = vi.spyOn(console, 'error').mockImplementation(() => undefined);
     const off = bus.on('run:state', () => {
       throw new Error('hud blew up');

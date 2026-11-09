@@ -200,6 +200,7 @@ function validate(raw: unknown, content: Content): asserts raw is RunState {
   for (const key of [
     'rerollsThisYear',
     'paidRerollsThisYear',
+    'shopPurchasesThisYear',
     'purchasedPlots',
     'freeRerollsLeft',
     'freeMovesUsed',
@@ -265,7 +266,7 @@ function validate(raw: unknown, content: Content): asserts raw is RunState {
   ensure((s.nextUid as number) > maxUid, 'nextUid');
   ensure(
     isObject(s.rng) &&
-      (['draw', 'reward', 'calendar', 'council', 'quest', 'blessing'] as const).every((k) =>
+      (['draw', 'reward', 'calendar', 'council', 'quest', 'blessing', 'shop'] as const).every((k) =>
         isUint32((s.rng as Loose)[k]),
       ),
     'rng',

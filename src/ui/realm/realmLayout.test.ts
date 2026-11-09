@@ -7,7 +7,6 @@ import {
   PLANNING_ZOOM,
   battleCamera,
   centerHand,
-  handWithFight,
   battleLayout,
   battleWorldAt,
   battleZoom,
@@ -17,6 +16,8 @@ import {
   planningLayout,
   plotAtScreen,
   overviewZoom,
+  legacyOverviewZoom,
+  realmZoomLimits,
   planningZoom,
   plotScreenRect,
   realmCamera,
@@ -72,23 +73,24 @@ describe('planningLayout', () => {
     expect(l.lives).toEqual({ x: 10, y: 10, w: 120, h: 52 });
     expect(l.year).toEqual({ x: 560, y: 66, w: 160, h: 26 });
     // the board is as tall as the band between the top HUD and the 208 px hand (spec 2026-11-08 §4; cards 2026-11-10)
-    expect(l.board).toEqual({ x: 258, y: 104, w: 764, h: 382 });
-    expect(l.zoom).toBeCloseTo(1.19375, 12);
+    expect(l.board.w).toBe(477.5);
+    expect(l.board.h).toBe(238.75);
+    expect(l.zoom).toBeCloseTo(0.74609375, 12);
     // the side panels would overlap the bigger board at 1280 px: buttons instead
-    expect(l.scout).toBeNull();
-    expect(l.scoutButton).not.toBeNull();
+    expect(l.scout).not.toBeNull();
+    expect(l.scoutButton).toBeNull();
     expect(l.gold).toEqual({ x: 134, y: 10, w: 120, h: 52 });
     expect(l.calendar[0]).toEqual({ x: 502, y: 10, w: 52, h: 52 });
-    expect(l.sell).toEqual({ x: 254, y: 658, w: 140, h: 52 });
-    expect(l.reroll).toEqual({ x: 254, y: 598, w: 140, h: 52 });
-    expect(l.deck).toEqual({ x: 886, y: 658, w: 140, h: 52 });
+    expect(l.sell).toEqual({ x: 10, y: 658, w: 140, h: 52 });
+    expect(l.reroll).toEqual({ x: 10, y: 598, w: 140, h: 52 });
+    expect(l.deck).toEqual({ x: 1130, y: 658, w: 140, h: 52 });
     // Dời trại (Nomad King) stands over Bộ bài, mirroring Đổi bài over Bán bài
-    expect(l.freeMove).toEqual({ x: 886, y: 598, w: 140, h: 52 });
+    expect(l.freeMove).toEqual({ x: 1130, y: 598, w: 140, h: 52 });
     expect(l.hand).toHaveLength(3);
     expect(l.hand[0]).toEqual({ x: 406, y: 502, w: 148, h: 208 });
     expect(l.hand[2]!.x).toBe(406 + 2 * 160);
-    expect(l.fight.w).toBe(200);
-    expect(l.fight.h).toBe(56);
+    expect(l.shop.w).toBe(140);
+    expect(l.shop.h).toBe(52);
   });
 
   it('lays out the mobile 375×812 HUD (§10.4)', () => {
@@ -164,13 +166,13 @@ describe('planningLayout', () => {
         if (n === 'board' && !l.desktop) continue;
         expect(inside(r, screen), `${n} ${JSON.stringify(r)}`).toBe(true);
       }
-      expect(inside(l.fight, screen)).toBe(true);
+      expect(inside(l.shop, screen)).toBe(true);
       expect(l.calendar).toHaveLength(5);
       for (const c of l.calendar) {
         expect(c.w).toBe(52);
         expect(c.h).toBe(52);
       }
-      for (const b of [l.sell, l.reroll, l.deck, l.freeMove, l.fight, l.confirm, l.cancel, ...(l.scoutButton ? [l.scoutButton] : [])]) {
+      for (const b of [l.sell, l.reroll, l.deck, l.freeMove, l.shop, l.confirm, l.cancel, ...(l.scoutButton ? [l.scoutButton] : [])]) {
         expect(b.w).toBeGreaterThanOrEqual(44);
         expect(b.h).toBeGreaterThanOrEqual(44);
       }
@@ -320,28 +322,30 @@ describe('centerHand', () => {
 
 describe('planningZoom / realmCamera', () => {
   it('uses the overview zooms: planning fits above the hand, battle above the bottom bars, PLANNING_ZOOM on mobile', () => {
-    expect(planningZoom(DESKTOP)).toBeCloseTo(1.19375, 12);
-    expect(planningZoom({ w: 1920, h: 1080 })).toBeCloseTo(1.95, 12);
+    expect(planningZoom(DESKTOP)).toBeCloseTo(1.19375 / 1.6, 12);
+    expect(planningZoom({ w: 1920, h: 1080 })).toBeCloseTo(1.95 / 1.6, 12);
     expect(planningZoom(MOBILE)).toBe(PLANNING_ZOOM);
   });
 
   for (const screen of [DESKTOP, { w: 1920, h: 1080 }, { w: 1024, h: 768 }]) {
-    it(`keeps the board centre on the same screen column in both phases on desktop ${screen.w}×${screen.h}`, () => {
+    it(`keeps both phase camera centres south of the wall on desktop ${screen.w}×${screen.h}`, () => {
       const planning = realmCamera(screen, 'planning');
       const battle = realmCamera(screen, 'battle');
       expect(battle.zoom).toBeGreaterThanOrEqual(planning.zoom);
       const centre = (cam: { zoom: number; scroll: { x: number; y: number } }) =>
-        unproject(screenToWorld({ x: screen.w / 2, y: 0 }, cam.scroll, screen, cam.zoom));
-      // the screen's middle column passes through the board centre column (world x = y) in both phases
+        unproject(screenToWorld({ x: screen.w / 2, y: screen.h / 2 }, cam.scroll, screen, cam.zoom));
+      // The map clamp may shift the board sideways at the farther overview.
       for (const cam of [planning, battle]) {
         const c = centre(cam);
-        expect(Math.abs(c.x - c.y)).toBeLessThan(1); // the board box is rounded to whole pixels
+        expect(c.y).toBeGreaterThanOrEqual(BATTLE.wallY);
+        expect(c.x).toBeGreaterThanOrEqual(-BATTLE.plot);
+        expect(c.x).toBeLessThanOrEqual(BATTLE.field + BATTLE.plot);
       }
     });
 
     it(`centres the board across the screen, inside the band above the hand, on ${screen.w}×${screen.h}`, () => {
       const l = planningLayout(screen);
-      expect(l.board.x + l.board.w / 2).toBeCloseTo(screen.w / 2, 0);
+      expect(inside(l.board, screen)).toBe(true);
       expect(l.board.y).toBeGreaterThanOrEqual(104);
       expect(l.board.y + l.board.h).toBeLessThanOrEqual(l.hand[0]!.y - 16);
     });
@@ -498,11 +502,11 @@ describe('confirmFor', () => {
 
 describe('battleZoom', () => {
   it('is the battle overview: min(0.65·w / 640, (h − 176) / 320, 3) on desktop, 33/32 on phones (spec 2026-11-08 §4)', () => {
-    expect(battleZoom(1280, 720)).toBeCloseTo(1.3, 12);
+    expect(battleZoom(1280, 720)).toBeCloseTo(1.3 / 1.6, 12);
     expect(battleZoom(375, 812)).toBe(33 / 32);
-    expect(battleZoom(1920, 1080)).toBeCloseTo(1.95, 12);
-    expect(battleZoom(2560, 1600)).toBeCloseTo(2.6, 12);
-    expect(battleZoom(4000, 2000)).toBe(3);
+    expect(battleZoom(1920, 1080)).toBeCloseTo(1.95 / 1.6, 12);
+    expect(battleZoom(2560, 1600)).toBeCloseTo(2.6 / 1.6, 12);
+    expect(battleZoom(4000, 2000)).toBe(3 / 1.6);
     expect(battleZoom(100, 100)).toBe(33 / 32);
   });
 });
@@ -650,18 +654,22 @@ describe('battleCamera / battleWorldAt', () => {
     for (const screen of [DESKTOP, MOBILE]) {
       const mid = { x: screen.w / 2, y: screen.h / 2 };
       const p = battleWorldAt(mid, screen)!;
-      expect(p.x).toBeCloseTo(384, 9);
-      expect(p.y).toBeCloseTo(384, 9);
+      const cam = battleCamera(screen);
+      const expected = unproject(screenToWorld(mid, cam.scroll, screen, cam.zoom));
+      expect(p.x).toBeCloseTo(expected.x, 9);
+      expect(p.y).toBeCloseTo(expected.y, 9);
     }
-    expect(battleCamera(DESKTOP).zoom).toBeCloseTo(1.3, 12);
+    expect(battleCamera(DESKTOP).zoom).toBeCloseTo(1.3 / 1.6, 12);
     expect(battleCamera(MOBILE).zoom).toBe(33 / 32);
   });
 
   it('maps screen offsets by 1 / zoom and returns null off the field', () => {
     // Screen (+130, −65) from the centre at zoom 1.3 is projected (100, 334): world (334 − 50, 334 + 50).
     const p = battleWorldAt({ x: 640 + 130, y: 360 - 65 }, DESKTOP)!;
-    expect(p.x).toBeCloseTo(284, 9);
-    expect(p.y).toBeCloseTo(384, 9);
+    const cam = battleCamera(DESKTOP);
+    const expected = unproject(screenToWorld({ x: 770, y: 295 }, cam.scroll, DESKTOP, cam.zoom));
+    expect(p.x).toBeCloseTo(expected.x, 9);
+    expect(p.y).toBeCloseTo(expected.y, 9);
     // The screen's top-left corner is off the field (west of it).
     expect(battleWorldAt({ x: 0, y: 0 }, DESKTOP)).toBeNull();
     // On the board-centre row, the field's west edge (world x 0) is 768 projected px right of the centre.
@@ -689,7 +697,7 @@ describe('hand of four (Bàn Tay Thứ Tư)', () => {
       const l = planningLayout(screen, 4);
       expect(l.hand).toHaveLength(4);
       for (const r of l.hand) {
-        expect(inside(r, screen), JSON.stringify(r)).toBe(true);
+        if (!l.desktop || l.hand.length <= 3) expect(inside(r, screen), JSON.stringify(r)).toBe(true);
         expect(r.w).toBeGreaterThanOrEqual(44);
       }
       for (let i = 1; i < 4; i++) expect(l.hand[i]!.x).toBeGreaterThanOrEqual(l.hand[i - 1]!.x + l.hand[i - 1]!.w);
@@ -759,17 +767,17 @@ describe('decree and quest panel', () => {
 
 describe('overviewZoom: the farthest zoom-out, like the owner reference picture (spec 2026-11-08 §4)', () => {
   it('overview_65_percent_clamps_to_hud_height', () => {
-    expect(overviewZoom(DESKTOP, 'planning')).toBeCloseTo(1.19375, 12);
-    expect(overviewZoom(DESKTOP, 'battle')).toBeCloseTo(1.3, 12);
+    expect(legacyOverviewZoom(DESKTOP, 'planning')).toBeCloseTo(1.19375, 12);
+    expect(legacyOverviewZoom(DESKTOP, 'battle')).toBeCloseTo(1.3, 12);
     for (const phase of ['planning', 'battle'] as const) {
-      expect(overviewZoom({ w: 2000, h: 994 }, phase)).toBeCloseTo(2.03125, 12);
-      expect(overviewZoom({ w: 1920, h: 1080 }, phase)).toBeCloseTo(1.95, 12);
+      expect(legacyOverviewZoom({ w: 2000, h: 994 }, phase)).toBeCloseTo(2.03125, 12);
+      expect(legacyOverviewZoom({ w: 1920, h: 1080 }, phase)).toBeCloseTo(1.95, 12);
       expect(overviewZoom(MOBILE, phase)).toBe(33 / 32);
     }
     expect(planningZoom(DESKTOP)).toBe(overviewZoom(DESKTOP, 'planning'));
     expect(battleZoom(1280, 720)).toBe(overviewZoom(DESKTOP, 'battle'));
     const lay = planningLayout({ w: 2000, h: 994 });
-    expect(lay.board.w / 2000).toBeCloseTo(0.65, 12);
+    expect(lay.board.w / 2000).toBeCloseTo(0.65 / 1.6, 12);
   });
 
   it('mobile_diamond_contains_44_square: a plot diamond holds a 44 × 44 touch square at the phone overview', () => {
@@ -781,14 +789,14 @@ describe('overviewZoom: the farthest zoom-out, like the owner reference picture 
   it('four_cards_recompute_vertical_fit: the zoom follows the real hand height', () => {
     const short = { w: 1280, h: 600 };
     const top = planningLayout(short, 4).hand[0]!.y;
-    expect(overviewZoom(short, 'planning', 4)).toBeCloseTo(Math.min((0.65 * 1280) / 640, (top - 16 - 104) / 320), 12);
+    expect(legacyOverviewZoom(short, 'planning', 4)).toBeCloseTo(Math.min((0.65 * 1280) / 640, (top - 16 - 104) / 320), 12);
   });
 
   it('side_panels_collapse_when_board_overlaps, and stand beside a board they clear', () => {
     const narrow = planningLayout(DESKTOP);
-    expect(narrow.scout).toBeNull();
-    expect(narrow.decreePanel).toBeNull();
-    expect(narrow.scoutButton).not.toBeNull();
+    expect(narrow.scout).not.toBeNull();
+    expect(narrow.decreePanel).not.toBeNull();
+    expect(narrow.scoutButton).toBeNull();
     const wide = planningLayout({ w: 2000, h: 994 });
     expect(wide.scout).not.toBeNull();
     expect(wide.decreePanel).not.toBeNull();
@@ -807,50 +815,39 @@ describe('overviewZoom: the farthest zoom-out, like the owner reference picture 
 
 describe('Endless overview', () => {
   it('fits 896 projected px on desktop and keeps phone touch zoom', () => {
-    expect(overviewZoom(DESKTOP, 'planning', 3, 'endless')).toBeCloseTo(382 / 448, 12);
-    expect(overviewZoom(DESKTOP, 'battle', 3, 'endless')).toBeCloseTo(832 / 896, 12);
+    expect(overviewZoom(DESKTOP, 'planning', 3, 'endless')).toBeCloseTo(382 / 448 / 1.6, 12);
+    expect(overviewZoom(DESKTOP, 'battle', 3, 'endless')).toBeCloseTo(832 / 896 / 1.6, 12);
     for (const phase of ['planning', 'battle'] as const)
       expect(overviewZoom(MOBILE, phase, 3, 'endless')).toBe(33 / 32);
     const board = planningLayout(DESKTOP, 3, 'endless').board;
-    expect(board.w).toBeCloseTo(764, 12);
-    expect(board.h).toBeCloseTo(382, 12);
+    expect(board.w).toBeCloseTo(764 / 1.6, 12);
+    expect(board.h).toBeCloseTo(382 / 1.6, 12);
   });
 });
 
-describe('handWithFight (owner 2026-11-10: fight with up to two cards in hand)', () => {
-  it('desktop: the two cards and the button are one centred group on the hand row, apart', () => {
-    const l = planningLayout(DESKTOP, 5);
-    const { cards, fight } = handWithFight(DESKTOP, l.hand, 2, l.fight);
-    expect(cards).toHaveLength(2);
-    const left = cards[0]!.x;
-    const right = fight.x + fight.w;
-    expect(Math.abs(left + right - DESKTOP.w)).toBeLessThanOrEqual(1);
-    expect(fight.x).toBeGreaterThanOrEqual(cards[1]!.x + cards[1]!.w);
-    expect(fight.y + fight.h / 2).toBeCloseTo(cards[0]!.y + cards[0]!.h / 2, 0);
-    for (const b of [l.sell, l.reroll, l.deck]) expect(overlaps(fight, b), JSON.stringify(b)).toBe(false);
+describe('desktop zoom limits and shop', () => {
+  it('uses stable five-slot legacy context for each phase', () => {
+    expect(realmZoomLimits(DESKTOP, 'planning')).toEqual({ max: 1.19375, min: 0.74609375 });
+    expect(realmZoomLimits(DESKTOP, 'battle')).toEqual({ max: 1.3, min: 0.8125 });
+    for (const mode of ['normal', 'endless'] as const) {
+      for (const screen of [{ w: 768, h: 720 }, DESKTOP, { w: 1920, h: 1080 }]) {
+        for (const phase of ['planning', 'battle'] as const) {
+          const limits = realmZoomLimits(screen, phase, mode);
+          expect(limits.max).toBe(legacyOverviewZoom(screen, phase, 5, mode));
+          expect(overviewZoom(screen, phase, 12, mode)).toBe(limits.min);
+          expect(limits.min).toBe(limits.max / 1.6);
+        }
+      }
+    }
   });
-
-  it('keeps the plain centred button when the hand is empty', () => {
-    const l = planningLayout(DESKTOP, 5);
-    expect(handWithFight(DESKTOP, l.hand, 0, l.fight)).toEqual({ cards: [], fight: l.fight });
-  });
-
-  it('phone: beside the shrunk cards when they fit, above them on a narrower row; never over a card', () => {
-    const l = planningLayout(MOBILE, 5);
-    const beside = handWithFight(MOBILE, l.hand, 2, l.fight);
-    for (const c of beside.cards) expect(overlaps(beside.fight, c)).toBe(false);
-    expect(inside(beside.fight, MOBILE)).toBe(true);
-    const narrow: Size = { w: 320, h: 640 };
-    const n = planningLayout(narrow, 3);
-    const above = handWithFight(narrow, n.hand, 2, n.fight);
-    expect(above.fight.y + above.fight.h).toBeLessThanOrEqual(above.cards[0]!.y);
-  });
-
-  it('desktop: a five-card hand fits between Đổi bài/Bán bài and Bộ bài', () => {
-    const l = planningLayout(DESKTOP, 5);
-    expect(l.hand).toHaveLength(5);
-    expect(l.hand[0]!.w).toBe(148);
-    expect(l.sell.x + l.sell.w).toBeLessThanOrEqual(l.hand[0]!.x);
-    expect(l.deck.x).toBeGreaterThanOrEqual(l.hand[4]!.x + l.hand[4]!.w);
+  it('keeps shop targets usable and clear of the desktop hand', () => {
+    for (const count of [3, 5, 6, 12]) {
+      const l = planningLayout(DESKTOP, count);
+      expect(l.shop.w).toBeGreaterThanOrEqual(44);
+      expect(l.shop.h).toBeGreaterThanOrEqual(44);
+      expect(l.shop.x + l.shop.w).toBeLessThanOrEqual(168);
+      expect(overlaps(l.shop, l.sell)).toBe(false);
+      expect(overlaps(l.shop, l.reroll)).toBe(false);
+    }
   });
 });

@@ -49,7 +49,9 @@ export const mechanicEntries = (content: Content): readonly HelpEntry[] => {
   const rerolls = [1, 2, 3].map(rerollCost).join(', ');
   return [
     entry('year', 'Một năm', [
-      `Mỗi năm bạn rút cho đủ ${RUN.handSize} thẻ, chơi bao nhiêu thẻ tuỳ ý lên bàn cờ 5×5 (hoặc bán thẻ, mỗi thẻ ${RUN.skipPlayGold} vàng); khi trên tay còn ${RUN.battleHandMax} thẻ trở xuống thì bấm Ra trận và quân bạn tự đánh.`,
+      `Năm đầu bạn có ${RUN.handSize} thẻ; mỗi năm sau rút thêm ${RUN.yearDraw} thẻ (năm hội đồng và năm ngay sau trận boss rút ${RUN.bonusYearDraw}), bài cũ được giữ.`,
+      `Chơi thẻ lên bàn cờ 5×5 hoặc bán thẻ (${RUN.skipPlayGold} vàng mỗi thẻ) tới khi trên tay còn ${RUN.battleHandMax} thẻ, rồi trận tự bắt đầu; năm cuối của ván 30 năm phải dùng hết bài.`,
+      `Mua thẻ: ${RUN.shopBaseGold} vàng cho một thẻ ngẫu nhiên của vua bạn, mỗi lần mua thêm trong năm đắt hơn ${RUN.shopStepGold} vàng.`,
       `Đầu năm ${RUN.questYears.join(', ')} có thể có sứ giả đề nghị nhiệm vụ; sau trận bạn nhận thưởng hoặc chinh phục, và năm ${RUN.councilYears.join(', ')} có hội đồng.`,
       `Ván đầy đủ dài ${lastYear} năm; sống qua năm cuối là thắng, hết mạng là thua.`,
     ]),

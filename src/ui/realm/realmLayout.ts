@@ -1,4 +1,7 @@
+import { clampView } from './cameraBounds';
 import { project, unproject } from '../../core/iso';
+import { RUN } from '../../data/run';
+import { handWindow } from '../planning/handLayoutModel';
 import { BATTLE } from '../../data/battle';
 import type { RunMode } from '../../data/rules';
 import { geometryFor, plotAtCell, plotCoords } from '../../game/run/boardGeometry';
@@ -43,7 +46,7 @@ const boardHeight = (mode: RunMode): number => geometryFor(mode).side * BATTLE.p
  * (planning) or the bottom bars (battle), and never past `ZOOM_MAX`. Phone: `PLANNING_ZOOM` in both phases
  * (touch targets first; the player drags to the side plots).
  */
-export const overviewZoom = (
+export const legacyOverviewZoom = (
   screen: Size,
   phase: RealmPhase,
   handSize = 3,
@@ -56,6 +59,15 @@ export const overviewZoom = (
   return Math.max(0.25, Math.min((OVERVIEW_BOARD_SHARE * screen.w) / boardWidth(mode), room / boardHeight(mode), ZOOM_MAX));
 };
 
+/** The hand context of the camera is fixed even after purchases. */
+export const realmZoomLimits = (screen: Size, phase: RealmPhase, mode: RunMode = 'normal'): { min: number; max: number } => {
+  if (!isDesktop(screen.w)) return { min: PLANNING_ZOOM, max: ZOOM_MAX };
+  const max = legacyOverviewZoom(screen, phase, RUN.handSize, mode);
+  return { min: max / 1.6, max };
+};
+
+export const overviewZoom = (screen: Size, phase: RealmPhase, _handSize: number = RUN.handSize, mode: RunMode = 'normal'): number =>
+  realmZoomLimits(screen, phase, mode).min;
 /** Battle overview zoom (§10.7, spec 2026-11-08 §4). */
 export const battleZoom = (
   width: number,
@@ -96,12 +108,12 @@ const PHONE = {
   card: { w: 108, h: 162, gap: 8 },
 } as const;
 
-const FIGHT = { w: 200, h: 56 } as const;
+const SHOP = { w: 200, h: 56 } as const;
 /** The year label under the strip, and the two status rows at the bottom corners. */
 const YEAR_LABEL_H = 26;
 const STATUS_H = 44;
 const STATUS_H_PHONE = 40;
-const STATUS_W = 240;
+
 /** Height of the desktop play-hint box (one or two lines of 13 px text in a tooltip frame). */
 const HINT_H = 48;
 const HAND_BOTTOM = 10;
@@ -137,7 +149,7 @@ export interface PlanningLayout {
   deck: Rect;
   /** "Dời trại (N)", the Nomad King's free relocation (shown only for him): over "Bộ bài" on desktop, right of ✓/✕ on a phone. */
   freeMove: Rect;
-  fight: Rect;
+  shop: Rect;
   /** Default ✓/✕ spot: the row above the board on mobile, beside the centre plot on desktop. */
   confirm: Rect;
   cancel: Rect;
@@ -178,48 +190,6 @@ export const centerHand = (slots: readonly Rect[], count: number): Rect[] => {
   const right = used[n - 1]!.x + used[n - 1]!.w;
   const shift = Math.round(rowCentre - (left + right) / 2);
   return used.map((r) => ({ ...r, x: r.x + shift }));
-};
-
-/**
- * The cards left in hand and the "Ra trận" button together (owner 2026-11-10: the battle can start
- * with up to two cards in hand). Cards + gap + button are centred on the row as one group; where
- * that group is wider than the screen (phones) the button stands above the cards instead. With no
- * card the button is `fight`, centred on the row.
- */
-export const handWithFight = (
-  screen: Size,
-  slots: readonly Rect[],
-  count: number,
-  fight: Rect,
-): { cards: Rect[]; fight: Rect } => {
-  const cards = centerHand(slots, count);
-  if (cards.length === 0) return { cards, fight };
-  const first = slots[0]!;
-  const last = slots[slots.length - 1]!;
-  const rowCentre = (first.x + last.x + last.w) / 2;
-  const cardsW = cards[cards.length - 1]!.x + cards[cards.length - 1]!.w - cards[0]!.x;
-  const groupW = cardsW + GAP + fight.w;
-  if (groupW <= screen.w - 2 * MARGIN) {
-    const x0 = Math.round(rowCentre - groupW / 2);
-    const shift = x0 - cards[0]!.x;
-    const row = cards[0]!;
-    return {
-      cards: cards.map((r) => ({ ...r, x: r.x + shift })),
-      fight: { ...fight, x: x0 + cardsW + GAP, y: Math.round(row.y + (row.h - fight.h) / 2) },
-    };
-  }
-  return { cards, fight: { ...fight, y: cards[0]!.y - CARD_LIFT - GAP - fight.h } };
-};
-
-/** The 200×56 "Ra trận" button, centred on the hand row it replaces. */
-const fightOver = (screen: Size, hand: readonly Rect[]): Rect => {
-  const row = hand[0] ?? { x: 0, y: screen.h - FIGHT.h - HAND_BOTTOM, w: 0, h: FIGHT.h };
-  return {
-    x: Math.round((screen.w - FIGHT.w) / 2),
-    y: Math.round(row.y + (row.h - FIGHT.h) / 2),
-    w: FIGHT.w,
-    h: FIGHT.h,
-  };
 };
 
 /** Mobile ✓/✕: a centred pair in the gap above the board (✕ left, ✓ right). */
@@ -279,9 +249,9 @@ const desktopLayout = (screen: Size, handSize: number, mode: RunMode): PlanningL
   const stripX = Math.max(Math.round((w - stripW) / 2), helpEnd + GAP);
   const strip = calendarStripLayout({ x: stripX, y: MARGIN, w: stripW, h: CELL }, CALENDAR_CELLS);
   const calendar = strip.cells;
-  const hand = handRow(screen, DESK.card, handSize);
+  const hand = handWindow(screen, Math.max(1, handSize), 0).cards;
   const first = hand[0]!;
-  const last = hand[hand.length - 1]!;
+
   // The year label sits under the strip; on a short window (the 320 px board would not fit between
   // it and the hand) it moves beside the strip, on the top row.
   const underY = MARGIN + CELL + GAP;
@@ -294,12 +264,19 @@ const desktopLayout = (screen: Size, handSize: number, mode: RunMode): PlanningL
   const bandTop = Math.max(DESK_TOP_HUD, year.y + year.h + GAP / 2);
   const bandBottom = first.y - DESK_HAND_GAP;
   const centreY = Math.max(bandTop + boardH / 2, (bandTop + bandBottom) / 2);
-  const board = {
+  let board = {
     x: Math.round(w / 2 - boardW / 2),
     y: Math.round(centreY - boardH / 2),
     w: boardW,
     h: boardH,
   };
+  const view = clampView({ zoom, scroll: cameraScroll(BOARD_CENTRE,
+    { x: board.x + board.w / 2, y: board.y + board.h / 2 }, screen, zoom) }, screen, mode);
+  const centre = {
+    x: (BOARD_CENTRE.x - view.scroll.x - w / 2) * zoom + w / 2,
+    y: (BOARD_CENTRE.y - view.scroll.y - h / 2) * zoom + h / 2,
+  };
+  board = { ...board, x: centre.x - boardW / 2, y: centre.y - boardH / 2 };
   // Ends above a lifted selected card too, so a narrow desktop window never overlaps the hand.
   const scoutBottom = Math.min(DESK.scout.bottom, first.y - CARD_LIFT - GAP);
   const scout = wide
@@ -309,15 +286,15 @@ const desktopLayout = (screen: Size, handSize: number, mode: RunMode): PlanningL
   const scoutButton = wide ? null : { x: w - MARGIN - CELL, y: MARGIN, w: CELL, h: CELL };
   const bottomY = h - HAND_BOTTOM - DESK.button.h;
   // Left of the hand: "Đổi bài" over "Bán bài". Right of it: "Bộ bài".
-  const left = first.x - DESK.card.gap - DESK.button.w;
+  const left = MARGIN;
   const sell = { x: left, y: bottomY, w: DESK.button.w, h: DESK.button.h };
   const reroll = { ...sell, y: bottomY - GAP * 2 - DESK.button.h };
-  const deck = { x: last.x + last.w + DESK.card.gap, y: bottomY, w: DESK.button.w, h: DESK.button.h };
-  const statusY = h - HAND_BOTTOM - STATUS_H;
-  const allyW = Math.max(0, Math.min(STATUS_W, sell.x - GAP - MARGIN));
-  const foeX = deck.x + deck.w + GAP;
-  const foeW = Math.max(0, Math.min(STATUS_W, w - MARGIN - foeX));
-  const centre = plotRectOf(board, 12, mode);
+  const deck = { x: w - MARGIN - DESK.button.w, y: bottomY, w: DESK.button.w, h: DESK.button.h };
+  const statusY = reroll.y - GAP * 2 - DESK.button.h - GAP - STATUS_H;
+  const allyW = DESK.button.w;
+  const foeX = deck.x;
+  const foeW = DESK.button.w;
+  const centrePlot = plotRectOf(board, 12, mode);
   return {
     desktop: true,
     zoom,
@@ -341,8 +318,8 @@ const desktopLayout = (screen: Size, handSize: number, mode: RunMode): PlanningL
     sell,
     deck,
     freeMove: { ...deck, y: reroll.y },
-    fight: fightOver(screen, hand),
-    ...besidePlot(centre, screen),
+    shop: { ...sell, y: reroll.y - GAP * 2 - DESK.button.h },
+    ...besidePlot(centrePlot, screen),
     // The play hint sits in the empty top-left corner of the board box, beside the diamond's top corner: the diamond is
     // 2·d wide on each side at depth d, so a box HINT_H tall clears it by GAP (spec 2026-11-08 §4: the board now fills
     // the band, there is no row above it).
@@ -407,7 +384,7 @@ const mobileLayout = (screen: Size, handSize: number, mode: RunMode): PlanningLa
     sell,
     deck,
     freeMove: { x: w - MARGIN - b.w, y: pair.confirm.y, w: b.w, h: b.h },
-    fight: fightOver(screen, hand),
+    shop: { x: Math.round((w - SHOP.w) / 2), y: hand[0]!.y - CARD_LIFT - GAP - SHOP.h, ...SHOP },
     ...pair,
     hint: {
       x: MARGIN,
@@ -621,7 +598,7 @@ export const battleCamera = (
     screen,
     zoom,
   );
-  return { zoom, scroll };
+  return isDesktop(screen.w) ? clampView({ zoom, scroll }, screen, mode) : { zoom, scroll };
 };
 
 /** World point under screen point `p` in the battle view (through the isometric projection), null outside the field. */
@@ -662,7 +639,8 @@ export const realmCamera = (
   mode: RunMode = 'normal',
 ): { zoom: number; scroll: Point } => {
   const a = anchorOf(screen, phase, mode);
-  return { zoom: a.zoom, scroll: cameraScroll(BOARD_CENTRE, a.point, screen, a.zoom) };
+  const view = { zoom: a.zoom, scroll: cameraScroll(BOARD_CENTRE, a.point, screen, a.zoom) };
+  return isDesktop(screen.w) ? clampView(view, screen, mode) : view;
 };
 
 /** The camera `k` (0..1) of the way from `from` to `to`: zoom and the throne's screen point ease linearly. */
@@ -680,5 +658,6 @@ export const realmCameraMix = (
     x: a.point.x + (b.point.x - a.point.x) * k,
     y: a.point.y + (b.point.y - a.point.y) * k,
   };
-  return { zoom, scroll: cameraScroll(BOARD_CENTRE, point, screen, zoom) };
+  const view = { zoom, scroll: cameraScroll(BOARD_CENTRE, point, screen, zoom) };
+  return isDesktop(screen.w) ? clampView(view, screen, mode) : view;
 };

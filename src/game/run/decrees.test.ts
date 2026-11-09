@@ -9,8 +9,9 @@ import { CONTENT } from '../cards/registry';
 import { applyCommand } from './commands';
 import {
   decree,
-  handLimit,
   interventionStats,
+  isBonusDrawYear,
+  yearDrawCount,
   rerollPrice,
   rewardCount,
 } from './decrees';
@@ -76,7 +77,7 @@ describe('decree catalog', () => {
 
   it('carries the runtime numbers of spec 7.1/7.4 in data', () => {
     expect(DECREE_RULES).toMatchObject({
-      hand: 6,
+      hand: 1,
       freeReroll: 1,
       reward: 4,
       boulderDmgPct: 50,
@@ -144,11 +145,29 @@ describe('harvest tax', () => {
 });
 
 describe('hand limit, reward count and rerolls', () => {
-  it('fourth_hand: refill 6 cards', () => {
-    expect(handLimit(withBoard())).toBe(5);
-    expect(handLimit(withBoard(['decree_fourth_hand']))).toBe(6);
-    const next = startYear({ ...withBoard(['decree_fourth_hand']), year: 1, hand: [] }, CONTENT);
-    expect(next.hand).toHaveLength(6);
+  it('first_year_has_five_cards, then one a year, two in council and post-boss years (10/11/2026)', () => {
+    const draws = [1, 2, 4, 5, 6, 10, 11, 12, 15, 20, 21, 25, 29, 30, 31].map((year) => yearDrawCount({ year, decrees: [] }));
+    expect(draws).toEqual([5, 1, 1, 2, 1, 2, 2, 1, 2, 2, 2, 2, 1, 1, 1]);
+  });
+
+  it('overlapping_bonus_is_not_additive and the last boss year gives no bonus', () => {
+    expect(isBonusDrawYear(11, [5, 11], [10, 20, 30])).toBe(true);
+    expect(yearDrawCount({ year: 11, decrees: [] })).toBe(2);
+    expect(isBonusDrawYear(31, [5], [10, 20, 30])).toBe(false);
+  });
+
+  it('fourth_hand_adds_one_to_annual_draw', () => {
+    expect(yearDrawCount({ year: 2, decrees: ['decree_fourth_hand'] })).toBe(2);
+    expect(yearDrawCount({ year: 5, decrees: ['decree_fourth_hand'] })).toBe(3);
+    expect(yearDrawCount({ year: 1, decrees: ['decree_fourth_hand'] })).toBe(6);
+  });
+
+  it('draw_one_keeps_the_carried_cards: a year starts with the kept hand plus one card', () => {
+    const kept = withBoard(['decree_fourth_hand']);
+    const s = { ...withBoard(), year: 2, hand: kept.deck.slice(0, 2), drawPile: kept.deck.slice(2), discardPile: [] };
+    const next = startYear(s, CONTENT);
+    expect(next.hand.slice(0, 2)).toEqual(s.hand);
+    expect(next.hand).toHaveLength(3);
   });
 
   it('trade: reward offers 4 unique cards', () => {

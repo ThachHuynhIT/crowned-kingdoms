@@ -42,6 +42,7 @@ export function startYear(input: RunState, content: Content): RunState {
     rerollsThisYear: 0,
     freeMovesUsed: 0,
     paidRerollsThisYear: 0,
+    shopPurchasesThisYear: 0,
     freeRerollsLeft: freeRerollsPerYear(state) + perkFreeRerolls(state, content) + blessingTotal(state, 'freeRerolls'),
     idleUids: income.idleUids,
     gold: state.gold + interest + tax + income.delta,
@@ -116,6 +117,7 @@ export function newRun(
     rerollsThisYear: 0,
     freeMovesUsed: 0,
     paidRerollsThisYear: 0,
+    shopPurchasesThisYear: 0,
     purchasedPlots: 0,
     idleUids: [],
     enemyKings,
@@ -141,6 +143,7 @@ export function newRun(
       council: hashSeed(`${seed}:council`),
       quest: hashSeed(`${seed}:quest`),
       blessing: hashSeed(`${seed}:blessing`),
+      shop: hashSeed(`${seed}:shop`),
     },
     stats: {
       kills: 0,

@@ -25,7 +25,7 @@ const runBattle = (bus: ReturnType<typeof createGameBus>, controller: RunControl
   return ended;
 };
 
-/** Bán lá đầu tay cho tới khi tay còn ≤ `RUN.battleHandMax` (luật G1 tự vào trận lúc đó). */
+/** Bán lá đầu tay cho tới khi tay còn ≤ `RUN.battleHandMax` (mọi luật tự vào trận lúc đó). */
 const sellDown = (bus: ReturnType<typeof createGameBus>, controller: RunController): void => {
   while (controller.state.phase === 'planning' && controller.state.hand.length > RUN.battleHandMax) {
     bus.emit('ui:command', { command: { type: 'discard', handIndex: 0 } });
@@ -45,7 +45,7 @@ describe('RunController auto-start', () => {
     expect(controller.state.phase).toBe('planning'); // one sale is not enough with a full hand
   });
 
-  it('starts the battle right after the last needed sale when rules.autoStart is on', () => {
+  it('starts the battle right after the last needed sale', () => {
     const { bus, controller } = setup();
     const started: number[] = [];
     bus.on('battle:started', (p) => started.push(p.setup.year));
@@ -55,7 +55,7 @@ describe('RunController auto-start', () => {
     expect(controller.runner).not.toBeNull();
   });
 
-  it('waits for startBattle when rules.autoStart is off', () => {
+  it('starts the battle by itself at the hand target even when the old rules.autoStart flag is off', () => {
     const bus = createGameBus();
     const controller = new RunController(
       bus,
@@ -68,12 +68,10 @@ describe('RunController auto-start', () => {
       bus.emit('ui:command', { command: { type: 'discard', handIndex: 0 } });
     }
     expect(controller.state.hand.length).toBe(RUN.battleHandMax);
-    expect(started).toEqual([]);
-    expect(controller.state.phase).toBe('planning');
-    controller.kickoff();
-    expect(started).toEqual([]);
-    bus.emit('ui:command', { command: { type: 'startBattle' } });
     expect(started).toEqual([1]);
+    expect(controller.state.phase).toBe('battle');
+    controller.kickoff();
+    expect(started).toEqual([1]); // no second start
   });
 
   it('kickoff starts a battle once when the hand is small enough', () => {

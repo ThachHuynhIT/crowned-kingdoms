@@ -19,11 +19,22 @@ import { buildBattleSetup } from '../game/run/battleSetup';
 import { applyCommand } from '../game/run/commands';
 import { RunController } from '../game/run/RunController';
 import type { RunCommand, RunState } from '../game/run/state';
+import { canStartBattle } from '../game/run/turn';
 import { randomBot } from '../game/sim/bots/random';
 import { scriptedBot } from '../game/sim/bots/scripted';
 import { contentWith, fakeKing, fullRunFixture, unitStats, withBuilding } from '../game/testing/fixtures';
 import { newRun } from '../game/run/yearFlow';
 import { contentHash, decodeRun, encodeRun } from '../game/save/codec';
+
+/** What the controller ends at after `cmd`: the command, then the battle that starts by itself at the hand target (2026-11-10). */
+const afterCommand = (state: RunState, cmd: RunCommand): RunState => {
+  const first = applyCommand(state, cmd, CONTENT);
+  if ('error' in first) throw new Error(first.error);
+  if (!canStartBattle(first.state)) return first.state;
+  const started = applyCommand(first.state, { type: 'startBattle' }, CONTENT);
+  if ('error' in started) throw new Error(started.error);
+  return started.state;
+};
 
 interface Sample {
   label: string;
@@ -154,13 +165,12 @@ describe('resume_matrix', () => {
       const controller = new RunController(bus, CONTENT, loaded.state, second.persistence);
       bus.emit('ui:command', { command: sample.next });
       await controller.whenIdle();
-      const expected = applyCommand(sample.state, sample.next, CONTENT);
-      if ('error' in expected) throw new Error(expected.error);
-      expect(controller.state).toEqual(expected.state);
+      const expected = afterCommand(sample.state, sample.next);
+      expect(controller.state).toEqual(expected);
       // The step after the reload was written too, and reads back as the same state.
       const third = await reload(disk);
       const after = await third.load();
-      expect(after).toEqual({ kind: 'ok', state: expected.state });
+      expect(after).toEqual({ kind: 'ok', state: expected });
     }, 60_000);
   }
 

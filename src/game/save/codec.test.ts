@@ -113,7 +113,7 @@ describe('roundtrip', () => {
     s.hand.push('neutral_move' as CardId);
     expect(e.state.gold).not.toBe(s.gold);
     expect(e.state.hand).not.toContain('neutral_move');
-    expect(e).toMatchObject({ formatVersion: SAVE_FORMAT_VERSION, version: 7 });
+    expect(e).toMatchObject({ formatVersion: SAVE_FORMAT_VERSION, version: 8 });
   });
 
   it('decoding copies: changes to the result do not reach the raw data', () => {
@@ -142,9 +142,9 @@ describe('empty and unusable data', () => {
     });
   });
 
-  it('unknown_versions: state 1, 2, a future 8, an unknown format and a version that disagrees', () => {
+  it('unknown_versions: state 1, 2, a future 9, an unknown format and a version that disagrees', () => {
     const e = env(runState());
-    for (const version of [1, 2, 8, 99]) {
+    for (const version of [1, 2, 9, 99]) {
       expect(
         incompatible({ ...e, version, state: { ...e.state, version } }),
         `state ${version}`,

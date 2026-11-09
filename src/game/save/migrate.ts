@@ -1,5 +1,5 @@
 /**
- * Nâng cấp RunState đã lưu lên phiên bản hiện tại (thuần, không sửa đầu vào): state 3 → 4 → 5 → 6 → 7.
+ * Nâng cấp RunState đã lưu lên phiên bản hiện tại (thuần, không sửa đầu vào): state 3 → 4 → 5 → 6 → 7 → 8.
  * State 1 và 2 chưa từng có định dạng trên đĩa; phiên bản khác được trả nguyên để `decodeRun` từ chối.
  */
 import { hashSeed } from '../../core/random';
@@ -89,6 +89,16 @@ const v6to7 = (raw: Loose): Loose => {
   return { ...raw, version: 7, mode: 'normal', endless: null, rng: { ...rng, blessing: hashSeed(`${seed}:blessing`) } };
 };
 
+/**
+ * State 7 → 8 (Mua thẻ, spec 2026-11-10 §4): chưa mua lần nào trong năm, thêm luồng RNG `shop`.
+ * Giữ nguyên tay, chồng bài, `played`, pha và các bước đang chờ: không rút lại giữa năm.
+ */
+const v7to8 = (raw: Loose): Loose => {
+  const seed = typeof raw.seed === 'number' ? raw.seed : 0;
+  const rng = isObject(raw.rng) ? raw.rng : {};
+  return { ...raw, version: 8, shopPurchasesThisYear: 0, rng: { ...rng, shop: hashSeed(`${seed}:shop`) } };
+};
+
 export function migrateRunState(raw: unknown): unknown {
   if (!isObject(raw)) return raw;
   let out = raw;
@@ -96,5 +106,6 @@ export function migrateRunState(raw: unknown): unknown {
   if (out.version === 4) out = v4to5(out);
   if (out.version === 5) out = v5to6(out);
   if (out.version === 6) out = v6to7(out);
+  if (out.version === 7) out = v7to8(out);
   return out;
 }

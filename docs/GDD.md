@@ -5,7 +5,7 @@
 
 ## Elevator pitch
 
-Bạn là vua của một vương quốc nhỏ trên bàn cờ 5×5. Mỗi năm rút 3 thẻ, chơi 1 thẻ — dựng trại lính, tháp cung, ruộng lúa, gắn bùa — rồi xem quân mình **tự động đánh** với đạo quân của một vua láng giềng trong 30–60 giây trên cánh đồng quanh vương quốc. Sống qua năm 30 là thắng; mất hết 3 mạng là thua.
+Bạn là vua của một vương quốc nhỏ trên bàn cờ 5×5. Năm đầu có 5 thẻ, mỗi năm sau rút thêm 1 (2 ở năm hội đồng và năm sau boss); chơi hoặc bán thẻ — dựng trại lính, tháp cung, ruộng lúa, gắn bùa, hoặc mua thêm thẻ bằng vàng — tới khi trên tay còn 2 lá, rồi quân mình **tự động đánh** với đạo quân của một vua láng giềng trên cánh đồng quanh vương quốc, tới khi một bên thua (quá 5 phút là thua). Sống qua năm 30 là thắng; hết mạng là thua.
 
 **Thể loại:** roguelite xây vương quốc + tự động đánh · 2D pixel art · fantasy ấm áp, dễ thương (lính chibi, đồng lúa, giao diện gỗ + giấy kem kiểu Stardew Valley) · web-first, PWA. Tên: Crowned Kingdoms (trước đây _Chín Vương Miện_ / _Nine Crowns_); repo và package `crowned-kingdoms`.
 
@@ -49,4 +49,4 @@ Bạn là vua của một vương quốc nhỏ trên bàn cờ 5×5. Mỗi năm 
 
 ## Trạng thái
 
-G0 đến G4 xong: "Tiếp tục", "Ván mới" hoặc "Vương Miện" → chọn 1 trong 9 vua (vua mới mở bằng Điểm Vương Miện; chọn tối đa 1 perk đã mở và độ khó Gai 0–5), ván 30 năm (rút 3 thẻ, chơi hoặc bán 1 thẻ lên bàn 5×5, vàng để đổi bài và mua ô, cấp và Bùa, lịch với sáu vua địch, Liên Quân và cờ hiệu, chinh phục vua sau lần tấn công thứ 3 và nhận thẻ của họ, hội đồng với 18 sắc lệnh, 13 nhiệm vụ, 3 boss, trận tự động + Can Thiệp), lưu ván IndexedDB, headless + bot `random` và `scripted`. Cuối ván tính Điểm Vương Miện, thông thạo và mở khoá (lưu IndexedDB). G5 (đang làm, PR #15): cân bằng chín vua 45–56% với bot greedy, âm thanh và nhạc sinh bằng code, màn Cài đặt, hiệu ứng trận, PWA chơi offline, art isometric và lính bằng ảnh cho cả 9 vua; chế độ Vô tận đang làm giao diện. Xem [ROADMAP.md](ROADMAP.md).
+G0 đến G4 xong: "Tiếp tục", "Ván mới" hoặc "Vương Miện" → chọn 1 trong 9 vua (vua mới mở bằng Điểm Vương Miện; chọn tối đa 1 perk đã mở và độ khó Gai 0–5), ván 30 năm (luật 10/11/2026: rút 1 thẻ mỗi năm, chơi hoặc bán tới khi còn 2 thẻ, mua thẻ bằng vàng; trước đó: rút 3 thẻ, chơi hoặc bán 1 thẻ lên bàn 5×5, vàng để đổi bài và mua ô, cấp và Bùa, lịch với sáu vua địch, Liên Quân và cờ hiệu, chinh phục vua sau lần tấn công thứ 3 và nhận thẻ của họ, hội đồng với 18 sắc lệnh, 13 nhiệm vụ, 3 boss, trận tự động + Can Thiệp), lưu ván IndexedDB, headless + bot `random` và `scripted`. Cuối ván tính Điểm Vương Miện, thông thạo và mở khoá (lưu IndexedDB). G5 (đang làm, PR #15): cân bằng chín vua 45–56% với bot greedy, âm thanh và nhạc sinh bằng code, màn Cài đặt, hiệu ứng trận, PWA chơi offline, art isometric và lính bằng ảnh cho cả 9 vua; chế độ Vô tận đang làm giao diện. Xem [ROADMAP.md](ROADMAP.md).

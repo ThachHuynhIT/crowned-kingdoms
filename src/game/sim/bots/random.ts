@@ -95,8 +95,8 @@ const councilCommand = (state: RunState, content: Content, rng: Rng): RunCommand
 export const randomBot: Bot = (state, content, rng) => {
   switch (state.phase) {
     case 'planning': {
-      // Tay đã ≤ 2 lá: nửa số lần ra trận luôn, nửa còn lại chơi tiếp (chủ dự án 10/11/2026).
-      if (canStartBattle(state) && (state.hand.length === 0 || rng.int(1, 2) === 1)) return { type: 'startBattle' };
+      // Tay tới ngưỡng: trận tự bắt đầu (10/11/2026).
+      if (canStartBattle(state)) return { type: 'startBattle' };
       // Các lệnh phụ (không dùng lượt): đổi bài, mua ô.
       const cost = rerollPrice(state);
       if (!state.played && state.rerollsThisYear < MAX_REROLLS && state.gold >= cost && rng.int(1, ONE_IN_REROLL) === 1) {

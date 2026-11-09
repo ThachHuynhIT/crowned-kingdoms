@@ -1,10 +1,12 @@
+import { clampView, type CameraView } from './cameraBounds';
+export { clampView, MAP_BOUNDS, type CameraView } from './cameraBounds';
 import { project, unproject } from '../../core/iso';
 import { BATTLE, ENEMY_PORTAL } from '../../data/battle';
 import type { RunMode } from '../../data/rules';
-import { geometryFor, plotCoords } from '../../game/run/boardGeometry';
+import { plotCoords } from '../../game/run/boardGeometry';
 import { plotAtWorld } from '../../render/endlessBoardModel';
 import type { Point, Rect, Size } from '../hud/layout';
-import { ZOOM_MAX, cameraScroll, overviewZoom, realmCamera, screenToWorld, type RealmPhase } from './realmLayout';
+import { ZOOM_MAX, cameraScroll, realmZoomLimits, realmCamera, screenToWorld, type RealmPhase } from './realmLayout';
 
 /**
  * The realm camera with zoom and pan (spec 06/11/2026, P2). Pure maths: RealmScene owns the
@@ -13,29 +15,9 @@ import { ZOOM_MAX, cameraScroll, overviewZoom, realmCamera, screenToWorld, type 
  * overview zoom (`overviewZoom`, the camera of `realmCamera`) up to `ZOOM_MAX`; the view pans at any zoom and stays
  * inside the map (`clampView`). `snapView` gives the pixel-snapped view that is actually drawn.
  */
-export interface CameraView {
-  readonly zoom: number;
-  readonly scroll: Point;
-}
+
 
 export { ZOOM_MAX };
-
-/** The world area the camera may show: the field with the spawn rows south and a margin east/west. */
-const WORLD_BOUNDS = {
-  x0: -BATTLE.plot,
-  y0: 0,
-  x1: BATTLE.field + BATTLE.plot,
-  // past the enemy portal (y 916 since 2026-11-09) by one plot, so its mouth and the foes in front of it stay in view
-  y1: Math.max(BATTLE.field + BATTLE.plot + BATTLE.spawnOutside + BATTLE.spawnRowGap, ENEMY_PORTAL.y + BATTLE.plot),
-} as const;
-
-/** `WORLD_BOUNDS` as the camera sees it: the bounding box of its isometric diamond (camera space, x' = y − x). */
-export const MAP_BOUNDS = {
-  x0: WORLD_BOUNDS.y0 - WORLD_BOUNDS.x1,
-  y0: (WORLD_BOUNDS.x0 + WORLD_BOUNDS.y0) / 2,
-  x1: WORLD_BOUNDS.y1 - WORLD_BOUNDS.x0,
-  y1: (WORLD_BOUNDS.x1 + WORLD_BOUNDS.y1) / 2,
-} as const;
 
 /** Wheel: the zoom changes by `WHEEL_RATE` of the wheel delta, at most `WHEEL_MAX` per event (spec 2026-11-08 §4). */
 const WHEEL_RATE = 0.001;
@@ -53,8 +35,7 @@ export const zoomLimits = (
   phase: RealmPhase,
   mode: RunMode = 'normal',
 ): { min: number; max: number } => {
-  const min = overviewZoom(screen, phase, 3, mode);
-  return { min, max: Math.max(min, ZOOM_MAX) };
+  return realmZoomLimits(screen, phase, mode);
 };
 
 /** Zoom after one wheel event of delta `dy` (up = negative = in): a ratio, at most ±10% per event. */
@@ -78,52 +59,6 @@ export const snapView = (view: CameraView, screen: Size): CameraView => {
     return ((1 - z) * half - Math.round(t)) / z;
   };
   return { zoom: z, scroll: { x: axis(view.scroll.x, screen.w / 2), y: axis(view.scroll.y, screen.h / 2) } };
-};
-
-/**
- * Where the screen centre may sit, in world px: on the map, and never north of the mountain wall. `MAP_BOUNDS`
- * alone is the diamond's bounding box, whose north-west corner is empty sky past the cliff.
- */
-const CENTRE_BOUNDS = { x0: WORLD_BOUNDS.x0, y0: BATTLE.wallY, x1: WORLD_BOUNDS.x1, y1: WORLD_BOUNDS.y1 } as const;
-
-/**
- * Keeps the shown world rect inside `MAP_BOUNDS` (a view wider or taller than the map is centred on it), then
- * slides the screen centre sideways, along its screen row, onto the part of that row inside `CENTRE_BOUNDS`
- * (on the field, south of the wall), as far as the rect still allows. Sideways only, so the rect clamp holds.
- */
-export const clampView = (view: CameraView, screen: Size, mode: RunMode = 'normal'): CameraView => {
-  const centreBounds = { ...CENTRE_BOUNDS, y0: geometryFor(mode).wallY };
-  const rect = clampRect(view, screen);
-  const hx = screen.w / 2;
-  const cx = rect.scroll.x + hx;
-  const cy = rect.scroll.y + screen.h / 2;
-  // The centre's allowed screen x from the rect: [x0 + hw, x1 − hw], a single point when the view is wider.
-  const hw = hx / view.zoom;
-  const [bx0, bx1] = 2 * hw >= MAP_BOUNDS.x1 - MAP_BOUNDS.x0
-    ? [cx, cx]
-    : [MAP_BOUNDS.x0 + hw, MAP_BOUNDS.x1 - hw];
-  // World (x, y) = (cy − cx/2, cy + cx/2): each CENTRE_BOUNDS side is a bound on cx for this row.
-  const lo = Math.max(bx0, 2 * (centreBounds.y0 - cy), 2 * (cy - centreBounds.x1));
-  const hi = Math.min(bx1, 2 * (centreBounds.y1 - cy), 2 * (cy - centreBounds.x0));
-  if (lo > hi) return rect; // this row never crosses the field (a view taller than the map): keep the rect clamp
-  return { zoom: rect.zoom, scroll: { x: Math.min(hi, Math.max(lo, cx)) - hx, y: rect.scroll.y } };
-};
-
-const clampRect = (view: CameraView, screen: Size): CameraView => {
-  const axis = (scroll: number, half: number, size: number, lo: number, hi: number): number => {
-    // The shown span is [scroll + half − half/zoom, … + size/zoom].
-    const span = size / view.zoom;
-    const left = scroll + half - half / view.zoom;
-    const fixed = span >= hi - lo ? (lo + hi) / 2 - span / 2 : Math.min(hi - span, Math.max(lo, left));
-    return fixed - half + half / view.zoom;
-  };
-  return {
-    zoom: view.zoom,
-    scroll: {
-      x: axis(view.scroll.x, screen.w / 2, screen.w, MAP_BOUNDS.x0, MAP_BOUNDS.x1),
-      y: axis(view.scroll.y, screen.h / 2, screen.h, MAP_BOUNDS.y0, MAP_BOUNDS.y1),
-    },
-  };
 };
 
 /**
@@ -221,9 +156,11 @@ export const resizeView = (
   mode: RunMode = 'normal',
 ): CameraView => {
   const base = overviewView(to, phase, mode);
-  if (view.zoom <= overviewView(from, phase, mode).zoom || view.zoom <= base.zoom) return base;
+  if (isOverview(view, from, phase, mode)) return base;
   const centre = screenToWorld({ x: from.w / 2, y: from.h / 2 }, view.scroll, from, view.zoom);
-  return clampView({ zoom: view.zoom, scroll: cameraScroll(centre, { x: to.w / 2, y: to.h / 2 }, to, view.zoom) }, to, mode);
+  const { min, max } = zoomLimits(to, phase, mode);
+  const zoom = Math.min(max, Math.max(min, view.zoom));
+  return clampView({ zoom, scroll: cameraScroll(centre, { x: to.w / 2, y: to.h / 2 }, to, zoom) }, to, mode);
 };
 
 /**

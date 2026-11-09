@@ -169,8 +169,8 @@ export class RunController {
     this.bus.emit('battle:started', { setup });
   }
 
-  /** Luật G1 (`autoStart`): vào trận ngay khi tay còn ≤ `RUN.battleHandMax` lá. */
+  /** Trận luôn tự bắt đầu khi tay tới ngưỡng (10/11/2026), mọi luật; cờ `rules.autoStart` cũ không còn quyết định. */
   private shouldAutoStart(): boolean {
-    return this.current.rules.autoStart && canStartBattle(this.current);
+    return this.active === null && canStartBattle(this.current);
   }
 }

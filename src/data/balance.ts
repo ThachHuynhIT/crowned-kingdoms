@@ -5,6 +5,10 @@
 
 /** The greedy bot rerolls at most this many times a year, and only when no card can be played. */
 export const GREEDY_MAX_REROLLS = 2;
+/** The greedy bot buys at most this many cards a year (Mua thẻ, 2026-11-10), only when nothing in hand can be played… */
+export const GREEDY_MAX_SHOP_PURCHASES = 2;
+/** … and only while it keeps at least this much gold after paying. */
+export const GREEDY_SHOP_RESERVE = 4;
 
 /** Runs per king of the acceptance cohort (seeds 1…N). */
 export const BALANCE_RUNS = 500;
