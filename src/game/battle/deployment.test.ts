@@ -1,3 +1,4 @@
+import { NORMAL_GEOMETRY } from '../../data/boardGeometry';
 import { describe, expect, it } from 'vitest';
 import { BUILDING_FOOT_OFFSET, DEPLOY_BOX, PLOT } from '../../data/boardGeometry';
 import { battleSetup, structure, throneSetup, unitStats } from '../testing/fixtures';
@@ -62,7 +63,7 @@ describe('battles deploy into the boxes', () => {
   const unitsOf = (w: ReturnType<typeof createBattle>, uid: number) =>
     Array.from({ length: w.count }, (_, i) => i).filter((i) => w.kind[i] === KIND_UNIT && w.sourceUid[i] === uid);
 
-  it('starts barracks troops, start summons and the Ngai mercenaries in their own boxes, home = slot', () => {
+  it('starts barracks troops, start summons and the Ngai mercenaries in their own boxes; home = a formation slot', () => {
     const w = createBattle(
       battleSetup({
         throne: throneSetup({ plot: 2, spawnAtThrone: troops(3) }),
@@ -74,7 +75,8 @@ describe('battles deploy into the boxes', () => {
       expect(ids).toHaveLength(count);
       ids.forEach((id, k) => {
         const slot = deploymentPosition(plot, k, count, 4);
-        expect([w.x[id], w.y[id], w.homeX[id], w.homeY[id]]).toEqual([slot.x, slot.y, slot.x, slot.y]);
+        expect([w.x[id], w.y[id]]).toEqual([slot.x, slot.y]);
+        expect(w.homeY[id]).toBeGreaterThan(NORMAL_GEOMETRY.boardMax); // 2026-11-09: they line up in front of the board
       });
     }
   });

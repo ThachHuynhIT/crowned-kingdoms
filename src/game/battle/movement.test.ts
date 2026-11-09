@@ -1,4 +1,5 @@
 import { describe, expect, it } from 'vitest';
+import { NORMAL_GEOMETRY } from '../../data/boardGeometry';
 import { BATTLE } from '../../data/battle';
 import { battleSetup, structure, unitStats } from '../testing/fixtures';
 import { moveEntities } from './movement';
@@ -153,22 +154,22 @@ describe('moveEntities — separation, knockback, clamp', () => {
     expect(Number.isNaN(w.x[a])).toBe(false);
   });
 
-  it('never moves structures or the throne; they push units out fully', () => {
-    // Foes are pushed out; our own troops walk through our buildings (spec 06/11/2026).
+  it('never moves structures or the throne; they push every unit out of their square footprint fully', () => {
+    // 2026-11-09: nobody walks through a building, our troops included; footprint half-side = radius 18.
     const s = structureFoot(0); // id 1
     const t = structureFoot(12); // the fixture throne
     const w = world([structure(0)]);
     const u = unit(w, TEAM_FOE, s.x + 2, s.y, { speed: 0 });
-    const v = unit(w, TEAM_FOE, t.x, t.y - 12, { speed: 0 }); // overlaps throne (r 14)
+    const v = unit(w, TEAM_FOE, t.x, t.y - 12, { speed: 0 }); // inside the throne footprint
     const ally = unit(w, TEAM_ALLY, t.x + 2, t.y, { speed: 0 });
     moveEntities(w);
     expect(w.x[1]).toBe(s.x);
     expect(w.y[1]).toBe(s.y);
     expect(w.x[0]).toBe(t.x);
     expect(w.y[0]).toBe(t.y);
-    expect(w.x[u]).toBeCloseTo(s.x + 16, 12);
-    expect(w.y[v]).toBeCloseTo(t.y - 18, 12);
-    expect([w.x[ally], w.y[ally]]).toEqual([t.x + 2, t.y]);
+    expect(w.x[u]).toBeCloseTo(s.x + BATTLE.structureRadius + 4, 12);
+    expect(w.y[v]).toBeCloseTo(t.y - BATTLE.throneRadius - 4, 12);
+    expect([w.x[ally], w.y[ally]]).toEqual([t.x + BATTLE.throneRadius + 4, t.y]);
   });
 
   it('dead entities neither move nor push', () => {
@@ -252,5 +253,44 @@ describe('moveEntities — stun', () => {
     w.stunTicks[a] = 0;
     moveEntities(w);
     expect(w.x[a]).toBeCloseTo(21, 12);
+  });
+});
+
+describe('moveEntities — walking round buildings (2026-11-09)', () => {
+  const inside = (w: BattleWorld, u: number, s: number): boolean =>
+    Math.abs(w.x[u]! - w.x[s]!) < w.radius[s]! + w.radius[u]! - 0.5 &&
+    Math.abs(w.y[u]! - w.y[s]!) < w.radius[s]! + w.radius[u]! - 0.5;
+
+  for (const team of [TEAM_ALLY, TEAM_FOE]) {
+    it(`a ${team === TEAM_ALLY ? 'unit of ours' : 'foe'} whose straight line crosses a building goes round it and arrives`, () => {
+      const s = structureFoot(12); // id 1, the middle plot
+      const w = world([structure(12)]);
+      const goal = { x: s.x + 3, y: s.y + 60 };
+      const u = addUnit(w, unitStats({ speed: 1 }), team, s.x - 2, s.y - 60, goal.x, goal.y, -1);
+      for (let t = 0; t < 400; t++) {
+        moveEntities(w);
+        expect(inside(w, u, 1), `tick ${t}`).toBe(false);
+      }
+      expect(Math.abs(w.x[u]! - goal.x) + Math.abs(w.y[u]! - goal.y)).toBeLessThan(1);
+    });
+  }
+
+  it('a flying unit flies straight over', () => {
+    const s = structureFoot(12);
+    const w = world([structure(12)]);
+    const u = addUnit(w, unitStats({ speed: 1, tags: ['flying'] }), TEAM_FOE, s.x, s.y - 60, s.x, s.y + 60, -1);
+    for (let t = 0; t < 60; t++) moveEntities(w);
+    expect(w.x[u]).toBeCloseTo(s.x, 9);
+  });
+
+  it('keeps our units inside the board plus allyLeashPlots plots', () => {
+    const w = world();
+    const far = NORMAL_GEOMETRY.boardMax + BATTLE.allyLeashPlots * BATTLE.plot;
+    const u = addUnit(w, unitStats({ speed: 4 }), TEAM_ALLY, far - 2, 400, far + 200, 400, -1);
+    for (let t = 0; t < 20; t++) moveEntities(w);
+    expect(w.x[u]).toBe(far);
+    const f = addUnit(w, unitStats({ speed: 4 }), TEAM_FOE, far - 2, 300, far + 200, 300, -1);
+    for (let t = 0; t < 20; t++) moveEntities(w);
+    expect(w.x[f]).toBeGreaterThan(far + 20); // foes are not leashed
   });
 });

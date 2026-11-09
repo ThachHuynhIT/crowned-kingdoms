@@ -46,8 +46,9 @@ export const BATTLE = {
   field: FIELD,
   plot: PLOT,
   boardOrigin: BOARD_ORIGIN,
-  structureRadius: 12,
-  throneRadius: 14,
+  /** Nửa cạnh khối chặn vuông của công trình / Ngai giữa ô 64 px (2026-11-09: công trình không chiếm cả ô). */
+  structureRadius: 18,
+  throneRadius: 18,
   retargetTicks: 5,
   tauntRadiusDefault: cells(1.25),
   flyingHitMinRange: 24, // đòn có tầm ≥ 24 (và tháp, pulse, can thiệp) mới đánh được đơn vị bay
@@ -57,6 +58,17 @@ export const BATTLE = {
   /** Cuồng Nộ: đòn của địch vào công trình (không phải Ngai) thêm % này — địch vẫn phải phá hết nhà trước (2026-11-09). */
   rageStructureDmgPct: 100,
   playerUnitCap: 160,
+  /** Lính phe mình không ra quá mép bàn cờ + số ô này ở mỗi phía (2026-11-09). */
+  allyLeashPlots: 4,
+  /** Tầm đánh ≤ số này là cận chiến (đứng hàng trước đội hình). */
+  meleeMaxRange: 8,
+  /** Đội hình khi rảnh trước bàn cờ: hàng đầu cách mép nam bàn `formationMargin`, mỗi hàng `formationPerRow` lính. */
+  formationMargin: 14,
+  formationPerRow: 24,
+  formationSpacing: 12,
+  formationRowGap: 12,
+  /** Khoảng trống giữa khối bắn xa và khối cận chiến. */
+  formationBandGap: 6,
   bossSummonCap: 40,
   entityCap: 512,
   projectileCap: 400,

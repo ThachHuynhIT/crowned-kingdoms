@@ -7,6 +7,7 @@ import { BATTLE, INTERVENTION, SPAWN_OFFSETS } from '../../data/battle';
 import { BUILDING_FOOT_OFFSET } from '../../data/boardGeometry';
 import type { RunMode } from '../../data/rules';
 import { plotCoords } from '../run/boardGeometry';
+import { formationSlots, isRanged, type Slot } from './formation';
 import { clampNorthY, spawnMaxY } from './bounds';
 import { deploymentPosition } from './deployment';
 import { edgePositions, portalPositions } from './spawnLayout';
@@ -760,7 +761,29 @@ export const createBattle = (setup: BattleSetup): BattleWorld => {
       else w.playerUnits += 1;
     }
   }
+  assignFormation(w);
   return w;
+};
+
+/**
+ * Điểm về của mọi lính phe mình đầu trận là một ô đội hình trước bàn cờ (2026-11-09), không còn là cửa nhà:
+ * bắn xa sát bàn, cận chiến đứng trước, mỗi nhóm theo id tăng dần. Lính sinh giữa trận giữ điểm về riêng của nó.
+ */
+const assignFormation = (w: BattleWorld): void => {
+  const ranged: number[] = [];
+  const melee: number[] = [];
+  for (let i = 0; i < w.count; i++) {
+    if (w.kind[i] !== KIND_UNIT || w.team[i] !== TEAM_ALLY) continue;
+    (isRanged(w.range[i]!) ? ranged : melee).push(i);
+  }
+  const slots = formationSlots(w.geometry, ranged.length, melee.length);
+  const put = (ids: number[], at: readonly Slot[]): void =>
+    ids.forEach((id, k) => {
+      w.homeX[id] = at[k]!.x;
+      w.homeY[id] = at[k]!.y;
+    });
+  put(ranged, slots.ranged);
+  put(melee, slots.melee);
 };
 
 /**

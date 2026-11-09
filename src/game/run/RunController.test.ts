@@ -136,9 +136,9 @@ describe('RunController', () => {
   });
 
   it('losing the last life emits run:ended { won: false } after run:state', () => {
-    // Phụ thuộc vào bố trí này: năm 5, 1 mạng, bàn trống — Ngai một mình không thể thắng.
+    // Phụ thuộc vào bố trí này: năm 9, 1 mạng, bàn trống — Ngai một mình không thể thắng (năm 5 đã sát nút từ 2026-11-09).
     // Cân bằng lại đạo quân năm 5 hoặc chỉ số Ngai có thể làm test này hỏng.
-    const { bus, controller } = setup(startYear(runState({ lives: 1, year: 4 }), CONTENT));
+    const { bus, controller } = setup(startYear(runState({ lives: 1, year: 8 }), CONTENT));
     const order: string[] = [];
     const ended: { won: boolean; crownPoints: number; unlocks: string[] }[] = [];
     bus.on('run:state', () => order.push('state'));

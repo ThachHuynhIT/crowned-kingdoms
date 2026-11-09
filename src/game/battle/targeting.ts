@@ -3,6 +3,7 @@
  * phân xử bằng id nhỏ hơn (so sánh chặt `<` khi duyệt tăng dần). Không dùng Rng.
  */
 import { BATTLE } from '../../data/battle';
+import { insideLeash } from './formation';
 import {
   KIND_STRUCTURE,
   KIND_UNIT,
@@ -34,7 +35,8 @@ export const canHit = (world: BattleWorld, attacker: number, victim: number): bo
 export const inRange = (world: BattleWorld, attacker: number, victim: number): boolean => {
   if (!canHit(world, attacker, victim)) return false;
   const d = edgeDistance(world, attacker, victim);
-  return d <= world.range[attacker]! && d >= world.minRange[attacker]!;
+  const min = world.minRange[attacker]!;
+  return d <= world.range[attacker]! && (min <= 0 || d >= min); // chồng lên nhau (mép âm) vẫn là trong tầm
 };
 
 /** Cuồng Nộ (§8.8): từ rageTick trở đi. */
@@ -48,6 +50,7 @@ const nearestFoe = (w: BattleWorld, self: number): number => {
   let bestD = 0;
   for (let j = 0; j < w.count; j++) {
     if (w.alive[j] === 0 || w.team[j] !== TEAM_FOE || !canHit(w, self, j)) continue;
+    if (!insideLeash(w.geometry, w.x[j]!, w.y[j]!)) continue; // lính phe mình không đuổi ra ngoài vùng của mình
     const dx = w.x[j]! - sx;
     const dy = w.y[j]! - sy;
     const d = dx * dx + dy * dy;

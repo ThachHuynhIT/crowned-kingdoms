@@ -21,7 +21,7 @@ describe('board geometry (64 px plots, spec 06/11/2026)', () => {
 
   it('doubles every per-tick displacement cap, keeps bodies and the anti-air threshold', () => {
     expect([BATTLE.separationPushMax, BATTLE.separationPushCross]).toEqual([2, 0.4]);
-    expect([BATTLE.structureRadius, BATTLE.throneRadius]).toEqual([12, 14]);
+    expect([BATTLE.structureRadius, BATTLE.throneRadius]).toEqual([18, 18]); // square footprints, 2026-11-09
     expect(BATTLE.flyingHitMinRange).toBe(24);
     expect(BATTLE.tauntRadiusDefault).toBe(cells(1.25));
     expect([INTERVENTION.radius, INTERVENTION.knockback]).toEqual([48, 24]);
