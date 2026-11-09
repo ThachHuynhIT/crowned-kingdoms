@@ -35,6 +35,8 @@ export const DMG_FIRE = 1;
 export const DMG_MAGIC = 2;
 const DMG_CODE: Record<DamageType, number> = { physical: 0, fire: 1, magic: 2 };
 export const dmgTypeCode = (t: DamageType): number => DMG_CODE[t];
+/** Damage type of a `DMG_*` code (for presentation events). */
+export const DMG_NAME: readonly DamageType[] = ['physical', 'fire', 'magic'];
 
 /** Mã `targeting` trong mảng typed. */
 export const TARGET_NEAREST = 0;

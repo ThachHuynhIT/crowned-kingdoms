@@ -10,6 +10,7 @@ import { mitigate } from './damage';
 import { BOSS_RULES } from '../../data/bosses';
 import { allowsFoeStructureTarget, canHit, edgeDistance, inRange, pickShotTarget, pickShotTargets } from './targeting';
 import {
+  DMG_NAME,
   DMG_FIRE,
   DMG_MAGIC,
   KIND_UNIT,
@@ -380,7 +381,7 @@ export const applyDamagePhase = (world: BattleWorld): void => {
     const absorbed = Math.min(world.shield[v]!, dmg);
     world.shield[v] = world.shield[v]! - absorbed;
     world.hp[v] = world.hp[v]! - (dmg - absorbed);
-    world.events.push({ type: 'hit', id: v, dmg });
+    world.events.push({ type: 'hit', id: v, dmg, sourceId: q.sourceId, dmgType: DMG_NAME[q.type]! });
     if (world.hp[v]! <= 0) {
       world.killerUid[v] = q.sourceUid;
       world.killerId[v] = q.sourceId;

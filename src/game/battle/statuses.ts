@@ -45,7 +45,7 @@ const damage = (w: BattleWorld, victim: number, raw: number, fire: boolean, key:
   const absorbed = Math.min(w.shield[victim]!, dmg);
   w.shield[victim] = w.shield[victim]! - absorbed;
   w.hp[victim] = w.hp[victim]! - (dmg - absorbed);
-  w.events.push({ type: 'hit', id: victim, dmg });
+  w.events.push({ type: 'hit', id: victim, dmg, sourceId: -1, dmgType: fire ? 'fire' : 'magic' });
   if (w.hp[victim]! <= 0 && w.killerUid[victim]! < 0) w.killerUid[victim] = key < FOE_KEY_BASE ? key : -1;
   if (victim === w.bossId) afterBossDamage(w, victim);
 };

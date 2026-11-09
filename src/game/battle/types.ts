@@ -245,7 +245,8 @@ export interface PerkBattleMods {
 /** Sự kiện cho render, rút ra bằng drainEvents. */
 export type BattleEvent =
   | { type: 'spawn'; id: number }
-  | { type: 'hit'; id: number; dmg: number }
+  /** `sourceId` = striking entity (−1: none, e.g. a damage-over-time tick); `dmgType` for sounds and FX only. */
+  | { type: 'hit'; id: number; dmg: number; sourceId: number; dmgType: DamageType }
   | { type: 'death'; id: number }
   | { type: 'boulder'; phase: 'drop' | 'impact'; x: number; y: number }
   | { type: 'waveSpawned'; index: number; edges: readonly Edge[] }

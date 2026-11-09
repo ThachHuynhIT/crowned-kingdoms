@@ -122,7 +122,7 @@ describe('instant melee damage', () => {
     expect(w.hp[g]).toBeCloseTo(45 - 6.3, 10);
     expect(w.damageQueue).toEqual([]);
     const hits = drainEvents(w).filter((e) => e.type === 'hit');
-    expect(hits).toContainEqual({ type: 'hit', id: f, dmg: 7 });
+    expect(hits).toContainEqual({ type: 'hit', id: f, dmg: 7, sourceId: a, dmgType: 'physical' });
   });
 
   it('does not attack a target out of range', () => {
@@ -302,10 +302,10 @@ describe('damage queue order', () => {
     applyDamagePhase(w);
     const hits = drainEvents(w).filter((e) => e.type === 'hit');
     expect(hits).toEqual([
-      { type: 'hit', id: g, dmg: 3 },
-      { type: 'hit', id: f, dmg: 2 },
-      { type: 'hit', id: f, dmg: 4 },
-      { type: 'hit', id: g, dmg: 1 },
+      { type: 'hit', id: g, dmg: 3, sourceId: 3, dmgType: 'physical' },
+      { type: 'hit', id: f, dmg: 2, sourceId: 7, dmgType: 'physical' },
+      { type: 'hit', id: f, dmg: 4, sourceId: 7, dmgType: 'physical' },
+      { type: 'hit', id: g, dmg: 1, sourceId: 7, dmgType: 'physical' },
     ]);
   });
 });
@@ -601,7 +601,7 @@ describe('shields', () => {
     const { w, f } = hitFor(30, 20);
     expect(w.hp[f]).toBe(100);
     expect(w.shield[f]).toBe(10);
-    expect(drainEvents(w)).toContainEqual({ type: 'hit', id: f, dmg: 20 });
+    expect(drainEvents(w)).toContainEqual({ type: 'hit', id: f, dmg: 20, sourceId: -1, dmgType: 'physical' });
   });
 
   it('lets only the excess through a bigger hit', () => {
