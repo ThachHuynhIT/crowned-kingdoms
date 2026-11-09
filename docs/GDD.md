@@ -30,7 +30,16 @@ Bạn là vua của một vương quốc nhỏ trên bàn cờ 5×5. Mỗi năm 
 ## Thắng / Thua
 
 - **Thua trận:** Ngai về 0 máu → mất 1 mạng. **Thua ván:** hết mạng.
-- **Thắng ván:** sống qua năm 30 (thắng boss 3 = "Vương Miện Vàng").
+- **Thắng ván:** sống qua năm 30 (thắng boss 3 = "Vương Miện Vàng"). Ván bắt đầu với **2 mạng** (cân bằng G5).
+
+## Chế độ Vô tận (spec `2026-11-09-endless-mode-design.md`)
+
+- Mở sau ván 30 năm đầu tiên thắng được. Chọn ở trang chi tiết vua ("30 năm" / "Vô tận"); vẫn chọn vua, perk và Gai như thường.
+- Bàn 7×7: thêm một vòng 24 ô ngoài, khoá lúc đầu, mua bằng vàng (20 + 2 × số ô đã mua). Ngai giữ chỗ cũ.
+- Không có năm cuối: lịch 30 năm lặp lại (boss ở năm 40/50/60…, mạnh dần mỗi chu kỳ 30 năm), ván chỉ hết khi hết mạng. Điểm = số năm sống sót.
+- Phúc lành: ở năm 30 và mỗi 5 năm sau, chọn 1 trong 3 phúc lành vĩnh viễn (12 loại: thuế, vàng thắng trận, máu/sát thương/tốc độ lính, tháp, công trình, mạng, lãi, đổi bài, giá ô).
+- Biến thể theo thập niên từ năm 31: Tinh nhuệ, Hai lưỡi, Khó mùa, Công thành (đổi mỗi 10 năm).
+- Điểm Vương Miện: tính tối đa 60 năm và 3 boss.
 
 ## Nguyên tắc kỹ thuật
 
@@ -40,4 +49,4 @@ Bạn là vua của một vương quốc nhỏ trên bàn cờ 5×5. Mỗi năm 
 
 ## Trạng thái
 
-G0 đến G4 xong: "Tiếp tục", "Ván mới" hoặc "Vương Miện" → chọn 1 trong 9 vua (vua mới mở bằng Điểm Vương Miện; chọn tối đa 1 perk đã mở và độ khó Gai 0–5), ván 30 năm (rút 3 thẻ, chơi hoặc bán 1 thẻ lên bàn 5×5, vàng để đổi bài và mua ô, cấp và Bùa, lịch với sáu vua địch, Liên Quân và cờ hiệu, chinh phục vua sau lần tấn công thứ 3 và nhận thẻ của họ, hội đồng với 18 sắc lệnh, 13 nhiệm vụ, 3 boss, trận tự động + Can Thiệp), lưu ván IndexedDB, headless + bot `random` và `scripted`. Cuối ván tính Điểm Vương Miện, thông thạo và mở khoá (lưu IndexedDB). Tiếp theo: G5 (cân bằng, âm thanh, juice, đóng gói). Xem [ROADMAP.md](ROADMAP.md).
+G0 đến G4 xong: "Tiếp tục", "Ván mới" hoặc "Vương Miện" → chọn 1 trong 9 vua (vua mới mở bằng Điểm Vương Miện; chọn tối đa 1 perk đã mở và độ khó Gai 0–5), ván 30 năm (rút 3 thẻ, chơi hoặc bán 1 thẻ lên bàn 5×5, vàng để đổi bài và mua ô, cấp và Bùa, lịch với sáu vua địch, Liên Quân và cờ hiệu, chinh phục vua sau lần tấn công thứ 3 và nhận thẻ của họ, hội đồng với 18 sắc lệnh, 13 nhiệm vụ, 3 boss, trận tự động + Can Thiệp), lưu ván IndexedDB, headless + bot `random` và `scripted`. Cuối ván tính Điểm Vương Miện, thông thạo và mở khoá (lưu IndexedDB). G5 (đang làm, PR #15): cân bằng chín vua 45–56% với bot greedy, âm thanh và nhạc sinh bằng code, màn Cài đặt, hiệu ứng trận, PWA chơi offline, art isometric và lính bằng ảnh cho cả 9 vua; chế độ Vô tận đang làm giao diện. Xem [ROADMAP.md](ROADMAP.md).

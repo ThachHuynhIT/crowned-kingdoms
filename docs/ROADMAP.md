@@ -33,7 +33,7 @@ Game đổi thể loại từ colony sim sang **roguelite xây vương quốc + 
   - Còn: Thổ Phỉ, quân triệu hồi của boss, boss, tranh thẻ, icon, FX (plan asset còn thiếu).
 - **P7 nghiệm thu:** chưa làm.
 - **Plan tiếp theo:**
-  - Chế độ Vô tận: `docs/superpowers/plans/2026-11-09-endless-mode.md`. E1 (luật, dữ liệu, save v7) nằm trên nhánh `endless-e1`; khi gộp vào G5 phải ghi lại baseline của `endlessCompatibility.test.ts`. Còn E2–E4.
+  - Chế độ Vô tận: `docs/superpowers/plans/2026-11-09-endless-mode.md`. Đã gộp vào nhánh G5: E1 (luật, dữ liệu, save v7, meta v2), E2 (hình học trận và vẽ bàn 7×7), E4 (chạy không giao diện, bot greedy sống qua năm 40). E3 (giao diện) đang làm.
   - Toàn bộ asset còn thiếu: `docs/superpowers/plans/2026-11-09-missing-art-assets.md`.
 
 **G4 (kings và meta, nhánh `g4-kings-meta`, plan `docs/superpowers/plans/2026-11-09-g4-kings-and-meta.md`):** chơi được đủ 9 vua (Lúa Mì, Đá Núi, Phép Thuật, Rừng Xanh, Thuỷ Triều, Lò Rèn, Đồng Hồ, Ánh Trăng, Du Mục), mỗi vua một Ngai, bị động và 3 perk (27 perk), hai thẻ trung lập meta (Nhân Bản, Ấn Triện), lệnh dời trại miễn phí của Du Mục. Meta (`src/game/meta/`): Điểm Vương Miện `round((số năm + 3 × vua chinh phục + 5 × boss + 20 nếu thắng) × (1 + 0,2 × Gai))`, thông thạo từng vua (perk mở ở 10/30/60), mở vua (25/25/40/40/60/80, Du Mục cần thêm ≥ 1 thắng), mở thẻ trung lập (15/20), độ khó Gai 0–5; hồ sơ meta lưu IndexedDB (store `meta`), không bao giờ bị xoá; `RunState` v6 (migrator 5 → 6). `KingSelectScene` có khoá, perk và Gai; `RunEndScene` hiện bảng điểm; `CrownsScene` hiện điểm, thông thạo và mở khoá.
