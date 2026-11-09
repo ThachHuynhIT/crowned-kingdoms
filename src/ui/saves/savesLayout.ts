@@ -6,7 +6,9 @@ import type { Rect, Size } from '../hud/layout';
 
 export const SAVES_ROW_H = 44;
 const ROW_GAP = 4;
+/** Row buttons: narrower on a phone (still ≥ 44 px) so the name and detail have room. */
 const BUTTON_W = 64;
+const BUTTON_W_NARROW = 52;
 const BUTTON_GAP = 6;
 const TOP = 56;
 const BOTTOM = 96;
@@ -33,6 +35,9 @@ export interface SavesLayout {
   perPage: number;
   /** Số chữ tối đa của tên trên một hàng (điện thoại hẹp hơn). */
   nameChars: number;
+  /** Số chữ tối đa của dòng chi tiết; `narrow` = dòng gọn cho điện thoại. */
+  detailChars: number;
+  narrow: boolean;
 }
 
 /** Bố cục cho `count` hàng; hàng không vừa màn hình sang trang sau (tối đa 11: bản tự lưu + 10). */
@@ -45,12 +50,13 @@ export const savesLayout = (screen: Size, count: number): SavesLayout => {
   const y = Math.round((screen.h - h) / 2);
   const innerX = x + 16;
   const innerW = w - 32;
+  const bw = screen.w >= 768 ? BUTTON_W : BUTTON_W_NARROW;
   const rows = Array.from({ length: n }, (_, i): SaveRowLayout => {
     const top = y + TOP + i * (SAVES_ROW_H + ROW_GAP);
     const button = (k: number): Rect => ({
-      x: innerX + innerW - (3 - k) * BUTTON_W - (2 - k) * BUTTON_GAP,
+      x: innerX + innerW - (3 - k) * bw - (2 - k) * BUTTON_GAP,
       y: top + (SAVES_ROW_H - 44) / 2,
-      w: BUTTON_W,
+      w: bw,
       h: 44,
     });
     const open = button(0);
@@ -73,9 +79,30 @@ export const savesLayout = (screen: Size, count: number): SavesLayout => {
     next: { x: innerX + innerW - PAGE_W, y: bottom + 40, w: PAGE_W, h: 48 },
     perPage: Math.max(1, fit),
     nameChars: screen.w >= 768 ? 40 : 18,
+    detailChars: screen.w >= 768 ? 64 : 24,
+    narrow: screen.w < 768,
   };
 };
 
 /** Tên rút gọn cho vừa hàng, thêm "…" khi bị cắt. */
 export const fitName = (name: string, chars: number): string =>
   name.length <= chars ? name : `${name.slice(0, Math.max(1, chars - 1))}…`;
+
+const two = (n: number): string => String(n).padStart(2, '0');
+
+/**
+ * Dòng chi tiết dưới tên bản lưu: vua, năm và lúc lưu (`savedAt` null = bản tự lưu). Trên điện thoại (`narrow`) gọn hơn:
+ * bỏ chữ "Vua", "N" thay "Năm", chỉ ngày/tháng, để không chạy xuống dưới các nút.
+ */
+export const slotDetail = (kingName: string, year: number, savedAt: number | null, narrow: boolean): string => {
+  const d = savedAt === null ? null : new Date(savedAt);
+  if (narrow) {
+    const king = kingName.replace(/^Vua\s+/, '');
+    const at = d ? ` · ${two(d.getDate())}/${two(d.getMonth() + 1)}` : '';
+    return `${king} · N${year}${at}`;
+  }
+  const at = d
+    ? ` · ${two(d.getHours())}:${two(d.getMinutes())} ${two(d.getDate())}/${two(d.getMonth() + 1)}/${d.getFullYear()}`
+    : '';
+  return `${kingName} · Năm ${year}${at}`;
+};

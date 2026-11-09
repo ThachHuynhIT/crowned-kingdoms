@@ -12,7 +12,7 @@ import type { KingId } from '../data/types';
 import { CONTENT } from '../game/cards/registry';
 import type { RunState } from '../game/run/state';
 import type { SlotSummary } from '../game/save/slots';
-import { fitName, savesLayout, type SavesLayout } from '../ui/saves/savesLayout';
+import { fitName, savesLayout, slotDetail, type SavesLayout } from '../ui/saves/savesLayout';
 import { addUiText, createButton, createPanel, type Button, type UiBox } from '../ui/theme';
 import type { Rect } from '../ui/hud/layout';
 import { SCENES } from './keys';
@@ -25,13 +25,22 @@ interface Row {
   bg: UiBox;
   name: Phaser.GameObjects.Text;
   detail: Phaser.GameObjects.Text;
+  /** What the detail line says; laid out per screen width by `slotDetail`. */
+  info: { king: string; year: number; savedAt: number | null };
   open: Button;
   rename: Button | null;
   remove: Button | null;
 }
 
-const when = (ms: number): string =>
-  new Date(ms).toLocaleString('vi-VN', { day: '2-digit', month: '2-digit', year: 'numeric', hour: '2-digit', minute: '2-digit' });
+/** `text` on `obj`, shortened with "…" until its measured width fits `maxW` (glyph widths vary, so count is not enough). */
+const fitText = (obj: Phaser.GameObjects.Text, text: string, maxW: number): void => {
+  obj.setText(text);
+  let n = text.length;
+  while (obj.width > maxW && n > 2) {
+    n -= 1;
+    obj.setText(`${text.slice(0, n - 1)}…`);
+  }
+};
 
 export class SavesScene extends Phaser.Scene {
   private panel!: UiBox;
@@ -87,25 +96,25 @@ export class SavesScene extends Phaser.Scene {
     const [current, slots] = await Promise.all([session.load(), session.listSlots()]);
     if (visit !== this.visit || !this.scene.isActive()) return;
     this.autosave = current.kind === 'ok' ? current.state : null;
-    if (this.autosave) this.rows.push(this.makeRow(null, AUTOSAVE_NAME, this.detailOf(this.autosave.kingId, this.autosave.year)));
-    for (const slot of slots) this.rows.push(this.makeRow(slot, slot.name, `${this.detailOf(slot.kingId, slot.year)} · ${when(slot.savedAt)}`));
+    if (this.autosave) this.rows.push(this.makeRow(null, AUTOSAVE_NAME, { king: this.kingName(this.autosave.kingId), year: this.autosave.year, savedAt: null }));
+    for (const slot of slots) this.rows.push(this.makeRow(slot, slot.name, { king: this.kingName(slot.kingId), year: slot.year, savedAt: slot.savedAt }));
     this.message.setText(this.notice || (this.rows.length === 0 ? 'Chưa có bản lưu nào.' : ''));
     this.layout();
   }
 
-  private detailOf(kingId: string, year: number): string {
-    const known = (ALL_KINGS as readonly string[]).includes(kingId);
-    return `${known ? CONTENT.king(kingId as KingId).nameVi : kingId} · Năm ${year}`;
+  private kingName(kingId: string): string {
+    return (ALL_KINGS as readonly string[]).includes(kingId) ? CONTENT.king(kingId as KingId).nameVi : kingId;
   }
 
-  private makeRow(slot: SlotSummary | null, name: string, detail: string): Row {
+  private makeRow(slot: SlotSummary | null, name: string, info: Row['info']): Row {
     const bg = createPanel(this, 'tooltip', 100, 44);
     const id = slot?.id ?? null;
     return {
       slot,
       bg,
       name: addUiText(this, 0, 0, name, 15).setOrigin(0, 0.5).setFontStyle('bold'),
-      detail: addUiText(this, 0, 0, detail, 12).setOrigin(0, 0.5),
+      info,
+      detail: addUiText(this, 0, 0, '', 12).setOrigin(0, 0.5),
       open: createButton(this, 0, 0, 'Mở', { onClick: () => void this.open(id) }),
       rename: slot ? createButton(this, 0, 0, 'Tên', { onClick: () => void this.rename(slot) }) : null,
       remove: slot ? createButton(this, 0, 0, 'Xoá', { onClick: () => void this.remove(slot) }) : null,
@@ -213,7 +222,9 @@ export class SavesScene extends Phaser.Scene {
       if (!r) return;
       row.bg.resize(r.row.w, r.row.h);
       row.bg.image.setPosition(r.row.x, r.row.y);
-      row.name.setText(fitName(row.slot?.name ?? AUTOSAVE_NAME, l.nameChars)).setPosition(r.text.x, r.text.y + 14);
+      fitText(row.name, fitName(row.slot?.name ?? AUTOSAVE_NAME, l.nameChars), r.text.w - 4);
+      row.name.setPosition(r.text.x, r.text.y + 14);
+      fitText(row.detail, fitName(slotDetail(row.info.king, row.info.year, row.info.savedAt, l.narrow), l.detailChars), r.text.w - 4);
       row.detail.setPosition(r.text.x, r.text.y + 31);
       place(row.open, r.open);
       place(row.rename, r.rename);

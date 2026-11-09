@@ -1,6 +1,6 @@
 import { describe, expect, it } from 'vitest';
 import type { Rect } from '../hud/layout';
-import { fitName, savesLayout } from './savesLayout';
+import { fitName, savesLayout, slotDetail } from './savesLayout';
 
 const DESKTOP = { w: 1280, h: 720 };
 const MOBILE = { w: 375, h: 812 };
@@ -39,5 +39,13 @@ describe('saves screen layout (2026-11-09)', () => {
   it('shortens a long name with an ellipsis', () => {
     expect(fitName('Ván ngắn', 18)).toBe('Ván ngắn');
     expect(fitName('Một cái tên rất là dài dòng', 10)).toBe('Một cái t…');
+  });
+
+  it('the detail line is short on a phone, full on a desktop, and fits its chars', () => {
+    const at = new Date(2026, 10, 9, 18, 7).getTime();
+    expect(slotDetail('Vua Rừng Xanh', 1, at, false)).toBe('Vua Rừng Xanh · Năm 1 · 18:07 09/11/2026');
+    expect(slotDetail('Vua Rừng Xanh', 1, at, true)).toBe('Rừng Xanh · N1 · 09/11');
+    expect(slotDetail('Vua Đá Núi', 12, null, true)).toBe('Đá Núi · N12');
+    expect(slotDetail('Vua Rừng Xanh', 30, at, true).length).toBeLessThanOrEqual(savesLayout(MOBILE, 3).detailChars);
   });
 });
