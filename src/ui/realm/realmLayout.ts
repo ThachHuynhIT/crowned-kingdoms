@@ -320,13 +320,11 @@ const desktopLayout = (screen: Size, handSize: number, mode: RunMode): PlanningL
     freeMove: { ...deck, y: reroll.y },
     shop: { ...sell, y: reroll.y - GAP * 2 - DESK.button.h },
     ...besidePlot(centrePlot, screen),
-    // The play hint sits in the empty top-left corner of the board box, beside the diamond's top corner: the diamond is
-    // 2·d wide on each side at depth d, so a box HINT_H tall clears it by GAP (spec 2026-11-08 §4: the board now fills
-    // the band, there is no row above it).
+    // The shared hint belongs in the top HUD band, above the board.
     hint: {
-      x: board.x,
-      y: board.y,
-      w: Math.max(0, Math.round(board.w / 2 - (board.w / board.h) * HINT_H - GAP)),
+      x: Math.round(w / 2 - 240),
+      y: year.y + year.h + GAP,
+      w: 480,
       h: HINT_H,
     },
   };

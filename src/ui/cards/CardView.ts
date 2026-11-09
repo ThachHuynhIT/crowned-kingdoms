@@ -72,8 +72,6 @@ export class CardView {
   private dragFrom: { id: number } | null = null;
   private dragging = false;
   private clip: Rect | null = null;
-  private clipGraphics: Phaser.GameObjects.Graphics | null = null;
-  private readonly clipMasks = new WeakMap<Phaser.GameObjects.GameObject, Phaser.Filters.Mask>();
   private scrolling = false;
   private scrollLastX = 0;
   private scrollHandler: ((delta: number) => void) | null = null;
@@ -102,7 +100,6 @@ export class CardView {
     // Borders switch between 1× and 2× when the viewport crosses 600 px.
     scene.scale.on('resize', this.onResize);
     this.container.once('destroy', () => {
-      this.clipGraphics?.destroy();
       scene.scale.off('resize', this.onResize);
       scene.input.off('pointermove', this.onDragMove);
       scene.input.off('pointerup', this.onDragEnd);
@@ -175,29 +172,13 @@ export class CardView {
   private applyClip(): void {
     const viewport = this.clip;
     const clipping = viewport !== null && !(this.dragging && !this.scrolling);
-    const left = clipping ? Math.max(0, viewport.x - this.base.x) : 0;
-    const right = clipping ? Math.min(this.size.w, viewport.x + viewport.w - this.base.x) : this.size.w;
-    this.container.setVisible(this.def !== null && right > left);
-    if (this.box.image.input) {
-      const hit = this.box.image.input.hitArea as Phaser.Geom.Rectangle;
-      hit.setTo(left, 0, Math.max(0, right - left), this.size.h);
-    }
-    const partial = clipping && (left > 0 || right < this.size.w);
-    if (partial && !this.clipGraphics) {
-      this.clipGraphics = this.scene.add.graphics().removeFromDisplayList();
-    }
-    if (partial && viewport) {
-      this.clipGraphics!.clear().fillStyle(0xffffff).fillRect(viewport.x, viewport.y - CARD_LIFT, viewport.w, viewport.h + CARD_LIFT);
-    }
-    for (const child of [this.box.image, ...this.parts]) {
-      let mask = this.clipMasks.get(child);
-      if (partial && !mask) {
-        const filters = (child as Phaser.GameObjects.Image | Phaser.GameObjects.Text).filters;
-        mask = filters?.external.addMask(this.clipGraphics!, false, this.scene.cameras.main);
-        if (mask) this.clipMasks.set(child, mask);
-      }
-      mask?.setActive(partial);
-    }
+    // Whole cards only: renderer filters must not decide whether HUD buttons are covered.
+    const visible = this.def !== null && (!clipping || (
+      this.base.x >= viewport.x && this.base.x + this.size.w <= viewport.x + viewport.w
+    ));
+    this.container.setVisible(visible);
+    if (this.box.image.input) this.box.image.input.enabled = visible;
+    if (!visible) this.press.cancel();
   }
 
   onScroll(handler: ((delta: number) => void) | null): void {

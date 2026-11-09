@@ -75,7 +75,7 @@ export class HandView {
       card.resize({ w: r.w, h: r.h });
       card.setPosition(r.x, r.y);
       card.setWindow(viewport ?? null);
-      card.container.setVisible(i < this.handCount && (!viewport || (r.x + r.w > viewport.x && r.x < viewport.x + viewport.w)));
+      if (i >= this.handCount) card.container.setVisible(false);
     });
   }
 

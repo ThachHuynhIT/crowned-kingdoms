@@ -1,4 +1,4 @@
-import { handWindow } from '../ui/planning/handLayoutModel';
+import { HAND_STEP, handWindow } from '../ui/planning/handLayoutModel';
 import { shopPrice, buyCardIllegal } from '../game/run/shop';
 import Phaser from 'phaser';
 import type { EventBus } from '../core/events';
@@ -429,9 +429,9 @@ export class PlanningHudScene extends Phaser.Scene {
 
   private onHandWheel(pointer: Phaser.Input.Pointer, _over: unknown, dx: number, dy: number): void {
     if (!this.lay.desktop || this.modalOpen() || this.controller.state.phase !== 'planning') return;
-    const { viewport } = handWindow({ w: this.scale.width, h: this.scale.height }, this.handCount, this.handScroll);
+    const { viewport, scroll } = handWindow({ w: this.scale.width, h: this.scale.height }, this.handCount, this.handScroll);
     if (pointer.x < viewport.x || pointer.x > viewport.x + viewport.w || pointer.y < viewport.y - 12 || pointer.y > viewport.y + viewport.h) return;
-    this.handScroll += dx || dy;
+    this.handScroll = scroll + Math.sign(dx || dy) * HAND_STEP;
     this.placeHand();
   }
   /** A card-sized panel flies from hand slot `index` to `plot` in CARD_FLY_MS, shrinking and fading (juice §11.5). */
