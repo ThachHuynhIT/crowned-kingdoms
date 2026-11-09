@@ -5,7 +5,7 @@
  */
 import { MUSIC_CROSSFADE_MS, type MusicId } from '../data/music';
 import type { AudioSettings } from '../data/settings';
-import { DEFAULT_SCREEN_SHAKE, VOLUME_MAX } from '../data/settings';
+import { DEFAULT_SCREEN_SHAKE, MASTER_OUTPUT, VOLUME_MAX } from '../data/settings';
 import { SFX, SFX_IDS, SFX_MAX_VOICES, type SfxId } from '../data/sfx';
 import { DEFAULT_VOLUME } from '../data/meta';
 import { type LoopHandle, type LoopTimers, scheduleLoop } from './music';
@@ -192,7 +192,7 @@ export class AudioManager {
 
   private applyVolumes(): void {
     if (!this.master || !this.musicBus || !this.sfxBus) return;
-    this.master.gain.value = this.settings.master / VOLUME_MAX;
+    this.master.gain.value = (this.settings.master / VOLUME_MAX) * MASTER_OUTPUT;
     this.musicBus.gain.value = this.settings.music / VOLUME_MAX;
     this.sfxBus.gain.value = this.settings.sfx / VOLUME_MAX;
   }
