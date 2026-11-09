@@ -1,4 +1,5 @@
 /** Bot chơi ngẫu nhiên hợp lệ (spec §13.3): dùng cho headless/cân bằng, luôn sinh lệnh hợp lệ. */
+import { canStartBattle } from '../../run/turn';
 import type { Rng } from '../../../core/random';
 import { decree } from '../../run/decrees';
 import { QUESTS } from '../../../data/quests';
@@ -94,10 +95,11 @@ const councilCommand = (state: RunState, content: Content, rng: Rng): RunCommand
 export const randomBot: Bot = (state, content, rng) => {
   switch (state.phase) {
     case 'planning': {
-      if (state.played) return { type: 'startBattle' };
+      // Tay đã ≤ 2 lá: nửa số lần ra trận luôn, nửa còn lại chơi tiếp (chủ dự án 10/11/2026).
+      if (canStartBattle(state) && (state.hand.length === 0 || rng.int(1, 2) === 1)) return { type: 'startBattle' };
       // Các lệnh phụ (không dùng lượt): đổi bài, mua ô.
       const cost = rerollPrice(state);
-      if (state.rerollsThisYear < MAX_REROLLS && state.gold >= cost && rng.int(1, ONE_IN_REROLL) === 1) {
+      if (!state.played && state.rerollsThisYear < MAX_REROLLS && state.gold >= cost && rng.int(1, ONE_IN_REROLL) === 1) {
         return { type: 'reroll' };
       }
       if (state.gold >= unlockCost(state.purchasedPlots) && rng.int(1, ONE_IN_BUY) === 1) {
@@ -114,9 +116,8 @@ export const randomBot: Bot = (state, content, rng) => {
         return { type: 'discard', handIndex: rng.int(0, state.hand.length - 1) };
       }
       if (options.length > 0) return rng.pick(options);
-      // Không lá nào chơi được: ra trận nếu luật cho (startBattle tự hỏi hasPlayableCard), không thì bỏ lá đầu tay.
-      const start: RunCommand = { type: 'startBattle' };
-      return 'error' in applyCommand(state, start, content) ? { type: 'discard', handIndex: 0 } : start;
+      // Không lá nào chơi được: ra trận nếu tay đã ≤ 2 lá, không thì bán lá đầu tay.
+      return canStartBattle(state) ? { type: 'startBattle' } : { type: 'discard', handIndex: 0 };
     }
     case 'quest': {
       const fee = state.offers?.kind === 'quest' ? QUESTS.find((q) => q.id === (state.offers as { questId: string }).questId)!.acceptGold : 0;

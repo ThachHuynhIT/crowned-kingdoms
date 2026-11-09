@@ -1,5 +1,6 @@
 import { describe, expect, it } from 'vitest';
 import { QUESTS, QUEST_RULES } from '../../data/quests';
+import { DECREE_RULES } from '../../data/decrees';
 import { RUN } from '../../data/run';
 import type { Rules } from '../../data/rules';
 import type { CardId, QuestId } from '../../data/types';
@@ -126,7 +127,7 @@ describe('answering', () => {
     expect(next.offers).toBeNull();
     expect(next.phase).toBe('planning');
     expect(next.yearStartPendingDraw).toBe(false);
-    expect(next.hand).toHaveLength(3);
+    expect(next.hand).toHaveLength(RUN.handSize);
   });
 
   it('declined_not_reoffered: decline still marks the quest as offered and draws', () => {
@@ -143,7 +144,7 @@ describe('answering', () => {
 
   it('refills to the decree hand limit after the answer', () => {
     const s = offered({ decrees: ['decree_fourth_hand'] });
-    expect(run(s, { type: 'answerQuest', accept: false }).hand).toHaveLength(4);
+    expect(run(s, { type: 'answerQuest', accept: false }).hand).toHaveLength(DECREE_RULES.hand);
   });
 
   it('answers only while a quest is on offer', () => {

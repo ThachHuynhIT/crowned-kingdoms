@@ -58,7 +58,12 @@ export const BATTLE = {
   tauntRadiusDefault: cells(1.25),
   flyingHitMinRange: 24, // đòn có tầm ≥ 24 (và tháp, pulse, can thiệp) mới đánh được đơn vị bay
   rageTick: 600,
-  hardLimitTick: 900,
+  /** Trần an toàn (chủ dự án 10/11/2026): tới tick này trận chưa xong thì tính THUA; hết giờ không còn là thắng. */
+  hardLimitTick: 3000,
+  /** Từ rageTick, cứ chừng này tick địch thêm một bậc Cuồng Nộ (bậc 1 ngay ở rageTick). */
+  rageStackTicks: 300,
+  /** Mỗi bậc Cuồng Nộ: mọi đòn của địch +% này, cộng dồn. */
+  rageStackDmgPct: 25,
   rageSpeedPct: 50,
   /** Cuồng Nộ: đòn của địch vào công trình (không phải Ngai) thêm % này — địch vẫn phải phá hết nhà trước (2026-11-09). */
   rageStructureDmgPct: 100,

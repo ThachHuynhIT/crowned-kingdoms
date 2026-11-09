@@ -119,6 +119,6 @@ describe('startYear draws within the same call (no held-back draw outside the qu
     const next = startYear(before(2), content);
     expect(next.yearStartPendingDraw).toBe(false);
     expect(next.phase).toBe('planning');
-    expect(next.hand).toHaveLength(3);
+    expect(next.hand).toHaveLength(RUN.handSize);
   });
 });

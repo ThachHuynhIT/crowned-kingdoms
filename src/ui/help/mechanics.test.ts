@@ -1,4 +1,5 @@
 import { afterEach, describe, expect, it, vi } from 'vitest';
+import { TICKS_PER_SECOND } from '../../core/SimClock';
 import { BATTLE } from '../../data/battle';
 import { RUN } from '../../data/run';
 import { CONTENT } from '../../game/cards/registry';
@@ -39,7 +40,8 @@ describe('mechanicEntries', () => {
     expect(all).toContain(RUN.councilYears.join(', '));
     expect(all).toContain(RUN.questYears.join(', '));
     expect(all).toContain(RUN.bossYears.join(', '));
-    expect(all).toContain(`${BATTLE.hardLimitTick} tick`);
+    expect(all).toContain(`${BATTLE.hardLimitTick / TICKS_PER_SECOND} giây`);
+    expect(all).toContain(`${BATTLE.rageStackDmgPct}%`);
   });
 
   it('southern_attack: says enemies come only from the front and the north wall has no way through', () => {

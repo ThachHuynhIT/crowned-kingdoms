@@ -168,12 +168,13 @@ describe('timeout_vs_kill (battle level)', () => {
     };
   };
 
-  it('at the 900-tick limit with the Ngai alive and the boss alive the battle is won with no boss kill', () => {
+  it('at the hardLimitTick limit with the Ngai alive and the boss alive the battle is lost with no boss kill', () => {
     const w = bossWorld(1, [], { x: 40, y: 40 }, quietBoss(), { throne: throneSetup({ attack: null, hp: 5000 }) });
-    for (let i = 0; i < 905 && !w.ended; i++) stepBattle(w, []);
+    for (let i = 0; i < BATTLE.hardLimitTick + 5 && !w.ended; i++) stepBattle(w, []);
     expect(w.ended).toBe(true);
     const r = battleResult(w)!;
-    expect(r.won).toBe(true);
+    expect(r.won).toBe(false);
+    expect(r.ticks).toBe(BATTLE.hardLimitTick);
     expect(r.bossDefeated).toBeUndefined();
   });
 

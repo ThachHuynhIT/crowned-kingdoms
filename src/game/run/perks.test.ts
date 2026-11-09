@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest';
-import { INTERVENTION } from '../../data/battle';
+import { BATTLE, INTERVENTION } from '../../data/battle';
 import { RULES_FULL } from '../../data/rules';
 import { RUN, battleGold, rerollCost } from '../../data/run';
 import type { CardId, KingDef, KingId, PerkId } from '../../data/types';
@@ -281,8 +281,10 @@ describe('clock perks', () => {
     expect(run('clock', 'clock_p2').plots[7]!.building).toMatchObject({ cardId: 'clock_gear_tower', level: 1, placedYear: 1 });
   });
 
-  it("'clock_p3' Giờ Vàng: rage and the hard limit come 150 ticks later (900 → 1050)", () => {
-    expect(perkBattleMods(run('clock', 'clock_p3'), CONTENT)).toEqual({ rageTick: 750, hardLimitTick: 1050 });
+  it("'clock_p3' Giờ Vàng: rage and the hard limit come 150 ticks later (3000 → 3150)", () => {
+    const late = { rageTick: BATTLE.rageTick + 150, hardLimitTick: BATTLE.hardLimitTick + 150 };
+    expect(late).toEqual({ rageTick: 750, hardLimitTick: 3150 });
+    expect(perkBattleMods(run('clock', 'clock_p3'), CONTENT)).toEqual(late);
     // A foe that never dies and never hurts the throne: the battle runs to the hard limit.
     const immortal = (perk: BattleSetup['perk']) =>
       fixtureSetup({
@@ -290,9 +292,9 @@ describe('clock perks', () => {
         waves: [{ spawnTick: 0, spawns: [{ stats: unitStats({ hp: 1e9, dmg: 0, speed: 0 }), edge: 'S' }], formationRows: 1 }],
         ...(perk ? { perk } : {}),
       });
-    expect(simulateBattle(immortal(undefined)).ticks).toBe(900);
-    expect(simulateBattle(immortal({ rageTick: 750, hardLimitTick: 1050 })).ticks).toBe(1050);
-    const raged = createBattle(immortal({ rageTick: 750, hardLimitTick: 1050 }));
+    expect(simulateBattle(immortal(undefined)).ticks).toBe(BATTLE.hardLimitTick);
+    expect(simulateBattle(immortal(late)).ticks).toBe(late.hardLimitTick);
+    const raged = createBattle(immortal(late));
     const seen: number[] = [];
     for (let i = 0; i < 800; i++) {
       stepBattle(raged, []);

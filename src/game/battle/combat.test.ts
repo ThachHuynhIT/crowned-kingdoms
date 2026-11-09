@@ -766,13 +766,16 @@ describe('rage breaks structures faster (2026-11-09)', () => {
     return 1000 - w.hp[1]!;
   };
 
+  /** Bậc Cuồng Nộ đầu tiên (10/11/2026): mọi đòn của địch +rageStackDmgPct% từ rageTick. */
+  const stack1 = 1 + BATTLE.rageStackDmgPct / 100;
+
   it(`a foe's hit on a structure deals +${BATTLE.rageStructureDmgPct}% from rageTick on`, () => {
     expect(hitStructure(BATTLE.rageTick - 1, TEAM_FOE)).toBeCloseTo(10);
-    expect(hitStructure(BATTLE.rageTick, TEAM_FOE)).toBeCloseTo(10 * (1 + BATTLE.rageStructureDmgPct / 100));
+    expect(hitStructure(BATTLE.rageTick, TEAM_FOE)).toBeCloseTo(10 * (1 + BATTLE.rageStructureDmgPct / 100) * stack1);
     expect(BATTLE.rageStructureDmgPct).toBeGreaterThan(0);
   });
 
-  it('only foes, only on structures: our units and the throne take normal damage', () => {
+  it('only foes, only on structures: our hits are normal, the throne only takes the rage stack', () => {
     expect(hitStructure(BATTLE.rageTick, TEAM_ALLY)).toBeCloseTo(10);
     const w = world();
     const foe = unit(w, TEAM_FOE, 0, 0);
@@ -780,6 +783,24 @@ describe('rage breaks structures faster (2026-11-09)', () => {
     const before = w.hp[w.throneId]!;
     queueDamage(w, w.throneId, 10, DMG_PHYSICAL, -1, undefined, foe);
     applyDamagePhase(w);
-    expect(before - w.hp[w.throneId]!).toBeCloseTo(10);
+    expect(before - w.hp[w.throneId]!).toBeCloseTo(10 * stack1);
+  });
+
+  it(`every foe hit gains +${BATTLE.rageStackDmgPct}% per rage stack, a new stack every rageStackTicks`, () => {
+    const hitThrone = (tick: number, team: number): number => {
+      const w = world();
+      const src = unit(w, team, 0, 0);
+      w.tick = tick;
+      const before = w.hp[w.throneId]!;
+      queueDamage(w, w.throneId, 10, DMG_PHYSICAL, -1, undefined, src);
+      applyDamagePhase(w);
+      return before - w.hp[w.throneId]!;
+    };
+    const pct = BATTLE.rageStackDmgPct / 100;
+    expect(hitThrone(BATTLE.rageTick - 1, TEAM_FOE)).toBeCloseTo(10);
+    expect(hitThrone(BATTLE.rageTick + BATTLE.rageStackTicks - 1, TEAM_FOE)).toBeCloseTo(10 * (1 + pct));
+    expect(hitThrone(BATTLE.rageTick + BATTLE.rageStackTicks, TEAM_FOE)).toBeCloseTo(10 * (1 + 2 * pct));
+    expect(hitThrone(BATTLE.rageTick + 2 * BATTLE.rageStackTicks, TEAM_FOE)).toBeCloseTo(10 * (1 + 3 * pct));
+    expect(hitThrone(BATTLE.rageTick + 2 * BATTLE.rageStackTicks, TEAM_ALLY)).toBeCloseTo(10);
   });
 });

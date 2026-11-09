@@ -6,7 +6,8 @@ export const RUN = {
   maxLives: 4, // chỉ vượt 3 nhờ sắc lệnh/perk
   startGold: 5,
   taxPerYear: 3, // thu nhập cố định đầu mỗi năm
-  handSize: 3,
+  handSize: 5, // rút cho đủ số lá này đầu năm (chủ dự án 10/11/2026: trước là 3)
+  battleHandMax: 2, // nút Ra trận chỉ mở khi tay còn ≤ số lá này
   skipPlayGold: 2, // bán/bỏ một thẻ thay cho việc chơi thẻ
   skipRewardGold: 3, // bỏ qua thẻ thưởng
   conquestGold: 5,

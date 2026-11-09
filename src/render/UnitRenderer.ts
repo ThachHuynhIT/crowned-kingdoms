@@ -24,6 +24,8 @@ interface Slot {
   facingLeft: boolean;
   dead: boolean;
   flashFrames: number;
+  /** Has lost HP at least once this battle: buildings and the throne show their bar only from then on (owner 2026-11-10). */
+  wounded: boolean;
   tint: { colors: [number, number, number, number]; mode: number } | null;
 }
 
@@ -81,7 +83,8 @@ export class UnitRenderer {
       const sprite = slot.sprite;
       sprite.setPosition(Math.round(p.x), Math.round(foot)).setDepth(foot);
       if (isUnit) this.animate(world, id, slot, now);
-      this.drawBar(world, id, sprite, isUnit);
+      if (world.hp[id]! < world.maxHp[id]!) slot.wounded = true;
+      if (isUnit || slot.wounded) this.drawBar(world, id, sprite, isUnit);
       if (isUnit && world.stunTicks[id]! > 0) this.showStun(sprite);
     }
     for (let i = this.starsUsed; i < this.stars.length; i++) this.stars[i]!.setVisible(false);
@@ -120,6 +123,7 @@ export class UnitRenderer {
       frame,
       facingLeft: world.team[id] !== TEAM_ALLY,
       dead: false,
+      wounded: false,
       flashFrames: 0,
       tint: null,
     };

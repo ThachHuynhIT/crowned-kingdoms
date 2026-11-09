@@ -3,23 +3,22 @@ import { RULES_G1, RULES_G2 } from '../../data/rules';
 import { runState } from '../../game/testing/fixtures';
 import { canFight } from './fightRule';
 
-describe('canFight', () => {
-  it('shows Ra trận once the year action is done (manual start)', () => {
-    expect(canFight(runState({ rules: RULES_G2, played: true }))).toBe(true);
+describe('canFight (owner 2026-11-10: Ra trận once the hand is down to two cards)', () => {
+  it('shows Ra trận with two cards left, even if they could still be played', () => {
+    expect(canFight(runState({ rules: RULES_G2, hand: ['wheat_militia', 'wheat_field'] }))).toBe(true);
   });
 
-  it('does not cover a hand the player can still act on', () => {
-    const s = runState({ rules: RULES_G2, played: false });
-    expect(s.hand.length).toBeGreaterThan(0);
-    expect(canFight(s)).toBe(false); // even when no card is playable: it can still be sold
+  it('hides it while three or more cards are in hand, played or not', () => {
+    const s = runState({ rules: RULES_G2, played: true, hand: ['wheat_militia', 'wheat_field', 'wheat_field'] });
+    expect(canFight(s)).toBe(false);
   });
 
-  it('shows Ra trận when the hand is empty and nothing was played', () => {
+  it('shows Ra trận when the hand is empty', () => {
     expect(canFight(runState({ rules: RULES_G2, played: false, hand: [] }))).toBe(true);
   });
 
   it('never shows it when battles start automatically, or outside planning', () => {
-    expect(canFight(runState({ rules: RULES_G1, played: true }))).toBe(false);
-    expect(canFight(runState({ rules: RULES_G2, played: true, phase: 'battle' }))).toBe(false);
+    expect(canFight(runState({ rules: RULES_G1, hand: [] }))).toBe(false);
+    expect(canFight(runState({ rules: RULES_G2, hand: [], phase: 'battle' }))).toBe(false);
   });
 });

@@ -106,11 +106,11 @@ describe('newRun', () => {
     expect(s.plots[THRONE_PLOT]!.building!.cardId).toBe('wheat_throne');
     expect(s.plots[THRONE_PLOT]!.building!.uid).toBe(0);
     expect(s.deck).toEqual([...START_DECK_G1]);
-    expect(s.hand).toHaveLength(3);
+    expect(s.hand).toHaveLength(RUN.handSize);
     for (const c of s.hand) expect(s.deck).toContain(c);
     expect(sorted([...s.hand, ...s.drawPile, ...s.discardPile])).toEqual(sorted(s.deck));
     expect(s.discardPile).toEqual([]);
-    expect(s.drawPile).toHaveLength(s.deck.length - 3);
+    expect(s.drawPile).toHaveLength(s.deck.length - RUN.handSize);
     expect(s.played).toBe(false);
     expect(s.nextUid).toBe(1);
     expect(s.won).toBeNull();
@@ -199,12 +199,21 @@ describe('play / discard', () => {
     expect(r.state.plots).toEqual(s.plots);
   });
 
-  it('discard rejects a bad index, a second action and a wrong phase', () => {
+  it('play and discard can be used again and again in the same year', () => {
+    let s = runState({ hand, gold: 0 });
+    s = ok(applyCommand(s, play(0, plot(6)), CONTENT)).state;
+    s = ok(applyCommand(s, play(0, plot(7)), CONTENT)).state;
+    expect(s.played).toBe(true);
+    s = ok(applyCommand(s, { type: 'discard', handIndex: 0 }, CONTENT)).state;
+    expect(s.hand).toEqual([]);
+    expect(s.gold).toBe(RUN.skipPlayGold);
+    expect(s.plots[6]!.building!.cardId).toBe('wheat_militia');
+    expect(s.plots[7]!.building!.cardId).toBe('neutral_barracks');
+  });
+
+  it('discard rejects a bad index and a wrong phase', () => {
     expect(errorOf(runState({ hand }), { type: 'discard', handIndex: 3 })).toBe('badTarget');
     expect(errorOf(runState({ hand }), { type: 'discard', handIndex: -1 })).toBe('badTarget');
-    expect(errorOf(runState({ hand, played: true }), { type: 'discard', handIndex: 0 })).toBe(
-      'alreadyPlayed',
-    );
     expect(errorOf(runState({ hand, phase: 'reward' }), { type: 'discard', handIndex: 0 })).toBe(
       'wrongPhase',
     );
@@ -214,10 +223,9 @@ describe('play / discard', () => {
 describe('errors', () => {
   const hand: CardId[] = ['wheat_militia', 'neutral_barracks', 'neutral_move'];
 
-  it('phase and played errors', () => {
-    expect(errorOf(runState({ hand: [], played: true }), play(0, plot(6)))).toBe('alreadyPlayed');
+  it('phase and hand-size errors', () => {
     expect(errorOf(runState({ hand, phase: 'battle' }), play(0, plot(6)))).toBe('wrongPhase');
-    expect(errorOf(runState({ hand }), { type: 'startBattle' })).toBe('notPlayed');
+    expect(errorOf(runState({ hand }), { type: 'startBattle' })).toBe('handTooBig');
     expect(errorOf(runState({ hand }), { type: 'pickOffer', index: 0 })).toBe('wrongPhase');
     expect(errorOf(runState({ hand }), { type: 'advance' })).toBe('wrongPhase');
     expect(errorOf(runState({ hand }), { type: 'battleResult', result: result(true) })).toBe(
@@ -282,9 +290,9 @@ describe('gold', () => {
       expect(s.gold).toBe(before - cost);
     }
     expect(s.rerollsThisYear).toBe(3);
-    expect(s.hand).toHaveLength(3);
+    expect(s.hand).toHaveLength(RUN.handSize);
     expect(sorted([...s.hand, ...s.drawPile, ...s.discardPile])).toEqual(sorted(s.deck));
-    expect(oldHand).toHaveLength(3);
+    expect(oldHand).toHaveLength(RUN.handSize);
     expect(rerollCost(s.rerollsThisYear + 1)).toBe(8);
   });
 
@@ -371,13 +379,20 @@ describe('startBattle legality and auto-fire setting', () => {
     return { ...s, plots: s.plots.map((p) => ({ ...p, unlocked: true })) };
   };
 
-  it('is allowed without an action when no card in hand has a target', () => {
+  it('is allowed without an action once the hand holds at most battleHandMax cards', () => {
     const r = ok(applyCommand(allOpen(), { type: 'startBattle' }, CONTENT));
     expect(r.state.phase).toBe('battle');
+    const two = runState({ hand: ['wheat_militia', 'neutral_barracks'] });
+    expect(two.hand.length).toBe(RUN.battleHandMax);
+    expect(ok(applyCommand(two, { type: 'startBattle' }, CONTENT)).state.phase).toBe('battle');
   });
 
-  it('still needs an action while some card in hand is playable', () => {
-    expect(errorOf(runState({ hand: ['wheat_militia'] }), { type: 'startBattle' })).toBe('notPlayed');
+  it('is refused with handTooBig while the hand holds more than battleHandMax cards', () => {
+    const three = runState({ hand: ['wheat_militia', 'neutral_barracks', 'neutral_move'] });
+    expect(errorOf(three, { type: 'startBattle' })).toBe('handTooBig');
+    expect(errorOf({ ...three, played: true }, { type: 'startBattle' })).toBe('handTooBig');
+    const sold = ok(applyCommand(three, { type: 'discard', handIndex: 2 }, CONTENT)).state;
+    expect(ok(applyCommand(sold, { type: 'startBattle' }, CONTENT)).state.phase).toBe('battle');
   });
 
   it('setAutoFire flips the flag in any phase except ended and survives the next year', () => {
@@ -419,7 +434,7 @@ describe('a hand with no playable card', () => {
     return {
       ...s,
       plots,
-      drawPile: ['neutral_clear_land', 'neutral_move', 'wheat_scarecrow'],
+      drawPile: ['neutral_clear_land', 'neutral_move', 'wheat_scarecrow', 'neutral_clear_land', 'neutral_move'],
       discardPile: [],
     };
   };
@@ -427,7 +442,9 @@ describe('a hand with no playable card', () => {
   it('is recycled into the discard pile at the next year so other cards can reach the hand', () => {
     const s = stuck();
     const next = ok(applyCommand(s, { type: 'advance' }, CONTENT)).state;
-    expect(sorted(next.hand)).toEqual(sorted(['neutral_clear_land', 'neutral_move', 'wheat_scarecrow']));
+    expect(sorted(next.hand)).toEqual(
+      sorted(['neutral_clear_land', 'neutral_move', 'wheat_scarecrow', 'neutral_clear_land', 'neutral_move']),
+    );
     expect(sorted(next.discardPile)).toEqual(
       sorted(['wheat_militia', 'neutral_barracks', 'neutral_archer_tower']),
     );
@@ -474,7 +491,7 @@ describe('battle flow', () => {
     const n = ok(applyCommand(r.state, { type: 'advance' }, CONTENT));
     expect(n.state.year).toBe(s.year + 1);
     expect(n.state.phase).toBe('planning');
-    expect(n.state.hand).toHaveLength(3);
+    expect(n.state.hand).toHaveLength(RUN.handSize);
     expect(n.state.played).toBe(false);
     expect(n.state.army).toEqual(
       composeArmy(roster, armyBudget(2, SLOT_MULT.raiders), 2, s.seed),
@@ -543,7 +560,7 @@ describe('rewards', () => {
       const chosen = cardOffer(s)!.cardIds[index]!;
       const next = ok(applyCommand(s, { type: 'pickOffer', index }, CONTENT)).state;
       expect(next.hand).toContain(chosen);
-      expect(next.hand).toHaveLength(3);
+      expect(next.hand).toHaveLength(RUN.handSize);
       expect(sorted([...next.hand, ...next.drawPile, ...next.discardPile])).toEqual(sorted(next.deck));
     }
   });
@@ -589,7 +606,7 @@ describe('full run', () => {
     };
     for (let guard = 0; guard < 100 && s.phase !== 'ended'; guard++) {
       if (s.phase === 'planning') {
-        step({ type: 'discard', handIndex: 0 });
+        while (s.hand.length > RUN.battleHandMax) step({ type: 'discard', handIndex: 0 });
         step({ type: 'startBattle' });
       } else if (s.phase === 'battle') {
         step({ type: 'battleResult', result: result(true) });
@@ -651,7 +668,7 @@ describe('rng persistence', () => {
 
   it('next hand equals refillHand from the persisted state', () => {
     const ye = lostBattle();
-    const expected = refillHand(ye.hand, ye.drawPile, ye.discardPile, new Rng(ye.rng.draw), 3);
+    const expected = refillHand(ye.hand, ye.drawPile, ye.discardPile, new Rng(ye.rng.draw), RUN.handSize);
     const adv = ok(applyCommand(ye, { type: 'advance' }, CONTENT)).state;
     expect(adv.hand).toEqual(expected.hand);
     expect(adv.drawPile).toEqual(expected.drawPile);
@@ -665,7 +682,7 @@ describe('rng persistence', () => {
     s = ok(applyCommand(s, { type: 'battleResult', result: result(false) }, CONTENT)).state;
     const next = ok(applyCommand(s, { type: 'advance' }, CONTENT)).state;
     expect(next.hand.slice(0, 2)).toEqual(['neutral_barracks', 'neutral_move']);
-    expect(next.hand).toHaveLength(3);
+    expect(next.hand).toHaveLength(RUN.handSize);
   });
 });
 

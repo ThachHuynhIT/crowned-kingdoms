@@ -16,7 +16,7 @@ export interface DecreeDef {
 
 /** Các giá trị thường trực không phải `EffectDef` (spec §7.1, §7.4). */
 export const DECREE_RULES = {
-  hand: 4, // Bàn Tay Thứ Tư
+  hand: RUN.handSize + 1, // Bàn Tay Thứ Tư
   freeReroll: 1, // Phường Hội Thương Nhân: lần đổi bài miễn phí mỗi năm
   reward: 4, // Giao Thương: số thẻ thưởng
   boulderDmgPct: 50, // Đá Tảng Lớn: +% sát thương

@@ -112,6 +112,8 @@ export class RealmScene extends Phaser.Scene {
   private units: UnitRenderer | null = null;
   private fx: FxRenderer | null = null;
   private pending: PendingPlay | null = null;
+  /** Year and hand of the last state shown: a change drops the card being aimed. */
+  private handKey = '';
   /** A locked plot waiting for ✓ to be bought. */
   private pendingBuy: number | null = null;
   /** The Nomad King's free relocation being picked (null = none). */
@@ -161,6 +163,7 @@ export class RealmScene extends Phaser.Scene {
   create(data: RealmData | undefined): void {
     // Scene instances are reused: reset every per-run field first.
     this.pending = null;
+    this.handKey = '';
     this.pendingBuy = null;
     this.freeMove = null;
     this.inBattle = false;
@@ -403,8 +406,12 @@ export class RealmScene extends Phaser.Scene {
     // A finished move (or a new year) may leave no free move: stop picking.
     if (this.freeMove && (!showFreeMove(state) || freeMovesLeft(state, CONTENT) === 0))
       this.setFreeMove(null);
-    if (state.played) this.setPending(null);
-    else this.refreshHighlights();
+    // A played or sold card shifts the hand: any card being aimed is dropped (owner 2026-11-10: many cards a year).
+    const handKey = `${state.year}:${state.hand.join(',')}`;
+    if (handKey !== this.handKey) {
+      this.handKey = handKey;
+      this.setPending(null);
+    } else this.refreshHighlights();
     if (reframe) this.placeCamera();
   }
 
@@ -465,7 +472,6 @@ export class RealmScene extends Phaser.Scene {
     const ok =
       handIndex !== null &&
       state.phase === 'planning' &&
-      !state.played &&
       state.hand[handIndex] !== undefined;
     this.setPending(ok ? { handIndex, targets: [] } : null);
   }

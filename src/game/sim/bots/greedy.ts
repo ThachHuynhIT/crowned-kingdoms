@@ -8,6 +8,7 @@
  * splash): a stated limit of the heuristic, not something the rules bend to. It never plays a card that costs a life
  * (lives are not power; without this rule it spent every life on Eclipse Pact and Moon won 2.8%).
  */
+import { canStartBattle } from '../../run/turn';
 import { GREEDY_MAX_REROLLS } from '../../../data/balance';
 import { ENDLESS_BLESSINGS } from '../../../data/endless';
 import { unlockCost } from '../../../data/run';
@@ -128,7 +129,6 @@ const legal = (state: RunState, command: RunCommand, content: Content): boolean 
 
 const planning = (state: RunState, content: Content): RunCommand => {
   if (!state.autoFire) return { type: 'setAutoFire', on: true };
-  if (state.played) return { type: 'startBattle' };
   const move = bestFreeMove(state, content);
   if (move !== null) return move.command;
   const play = bestPlay(state, content);
@@ -142,10 +142,9 @@ const planning = (state: RunState, content: Content): RunCommand => {
     legal(state, reroll, content)
   )
     return reroll;
-  const start: RunCommand = { type: 'startBattle' };
-  if (state.hand.length > 0 && !legal(state, start, content))
-    return { type: 'discard', handIndex: 0 };
-  return start;
+  // Nothing worth playing: sell down to the battle hand (owner 2026-11-10), then fight.
+  if (!canStartBattle(state)) return { type: 'discard', handIndex: 0 };
+  return { type: 'startBattle' };
 };
 
 /** Value of taking `cardId` now: the best play gain it would have on the current board (0 when unplayable). */

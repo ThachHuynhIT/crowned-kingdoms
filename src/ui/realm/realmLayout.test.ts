@@ -7,6 +7,7 @@ import {
   PLANNING_ZOOM,
   battleCamera,
   centerHand,
+  handWithFight,
   battleLayout,
   battleWorldAt,
   battleZoom,
@@ -813,5 +814,43 @@ describe('Endless overview', () => {
     const board = planningLayout(DESKTOP, 3, 'endless').board;
     expect(board.w).toBeCloseTo(764, 12);
     expect(board.h).toBeCloseTo(382, 12);
+  });
+});
+
+describe('handWithFight (owner 2026-11-10: fight with up to two cards in hand)', () => {
+  it('desktop: the two cards and the button are one centred group on the hand row, apart', () => {
+    const l = planningLayout(DESKTOP, 5);
+    const { cards, fight } = handWithFight(DESKTOP, l.hand, 2, l.fight);
+    expect(cards).toHaveLength(2);
+    const left = cards[0]!.x;
+    const right = fight.x + fight.w;
+    expect(Math.abs(left + right - DESKTOP.w)).toBeLessThanOrEqual(1);
+    expect(fight.x).toBeGreaterThanOrEqual(cards[1]!.x + cards[1]!.w);
+    expect(fight.y + fight.h / 2).toBeCloseTo(cards[0]!.y + cards[0]!.h / 2, 0);
+    for (const b of [l.sell, l.reroll, l.deck]) expect(overlaps(fight, b), JSON.stringify(b)).toBe(false);
+  });
+
+  it('keeps the plain centred button when the hand is empty', () => {
+    const l = planningLayout(DESKTOP, 5);
+    expect(handWithFight(DESKTOP, l.hand, 0, l.fight)).toEqual({ cards: [], fight: l.fight });
+  });
+
+  it('phone: beside the shrunk cards when they fit, above them on a narrower row; never over a card', () => {
+    const l = planningLayout(MOBILE, 5);
+    const beside = handWithFight(MOBILE, l.hand, 2, l.fight);
+    for (const c of beside.cards) expect(overlaps(beside.fight, c)).toBe(false);
+    expect(inside(beside.fight, MOBILE)).toBe(true);
+    const narrow: Size = { w: 320, h: 640 };
+    const n = planningLayout(narrow, 3);
+    const above = handWithFight(narrow, n.hand, 2, n.fight);
+    expect(above.fight.y + above.fight.h).toBeLessThanOrEqual(above.cards[0]!.y);
+  });
+
+  it('desktop: a five-card hand fits between Đổi bài/Bán bài and Bộ bài', () => {
+    const l = planningLayout(DESKTOP, 5);
+    expect(l.hand).toHaveLength(5);
+    expect(l.hand[0]!.w).toBe(148);
+    expect(l.sell.x + l.sell.w).toBeLessThanOrEqual(l.hand[0]!.x);
+    expect(l.deck.x).toBeGreaterThanOrEqual(l.hand[4]!.x + l.hand[4]!.w);
   });
 });

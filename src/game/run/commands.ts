@@ -27,7 +27,8 @@ import { handLimit, rerollPrice, rewardCount } from './decrees';
 import { refillHand } from './deck';
 import { cardOffer, enqueueOffers } from './flow';
 import { maxEnchantStacks, perkLossGold, placedAgeBonus } from './perks';
-import { hasPlayableCard, stateRefusal } from './playable';
+import { stateRefusal } from './playable';
+import { canStartBattle } from './turn';
 import { answerQuest, recordQuestCommand, settleQuests } from './quests';
 import { neutralRewardPool, rollConquestCards, rollOffers } from './rewards';
 import type { IllegalReason, RunCommand, RunState } from './state';
@@ -67,7 +68,6 @@ function applyBase(input: RunState, cmd: RunCommand, content: Content): CommandR
   switch (cmd.type) {
     case 'play': {
       if (state.phase !== 'planning') return fail('wrongPhase');
-      if (state.played) return fail('alreadyPlayed');
       const cardId = state.hand[cmd.handIndex];
       if (!Number.isInteger(cmd.handIndex) || cardId === undefined) return fail('badTarget');
       const card = content.card(cardId);
@@ -154,7 +154,6 @@ function applyBase(input: RunState, cmd: RunCommand, content: Content): CommandR
 
     case 'discard': {
       if (state.phase !== 'planning') return fail('wrongPhase');
-      if (state.played) return fail('alreadyPlayed');
       const { handIndex } = cmd;
       const sold = Number.isInteger(handIndex) ? state.hand[handIndex] : undefined;
       if (sold === undefined) return fail('badTarget');
@@ -218,7 +217,7 @@ function applyBase(input: RunState, cmd: RunCommand, content: Content): CommandR
 
     case 'startBattle':
       if (state.phase !== 'planning') return fail('wrongPhase');
-      if (!state.played && hasPlayableCard(state, content)) return fail('notPlayed');
+      if (!canStartBattle(state)) return fail('handTooBig');
       state.phase = 'battle';
       return { state, events };
 

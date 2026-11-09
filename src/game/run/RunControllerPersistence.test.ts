@@ -1,5 +1,6 @@
 import { describe, expect, it, vi } from 'vitest';
 import { RULES_ENDLESS, RULES_G1 } from '../../data/rules';
+import { RUN } from '../../data/run';
 import { META_SAVE_FAILED_TEXT } from '../../data/save';
 import type { BattleResult, BattleSetup } from '../battle/types';
 import { CONTENT } from '../cards/registry';
@@ -31,7 +32,9 @@ class FakePersistence implements SessionPersistence {
   }
 }
 
-const manual = (): RunState => runState({ rules: { ...RULES_G1, autoStart: false } });
+/** Ba lá trên tay: bán một lá là tay còn `RUN.battleHandMax` lá, đủ để Ra trận. */
+const THREE: RunState['hand'] = ['wheat_militia', 'neutral_barracks', 'neutral_move'];
+const manual = (): RunState => runState({ rules: { ...RULES_G1, autoStart: false }, hand: [...THREE] });
 const tick = (): Promise<void> => new Promise((r) => setTimeout(r, 0));
 
 const setup = (initial: RunState, persistence: SessionPersistence) => {
@@ -106,7 +109,7 @@ describe('RunController with persistence', () => {
     bus.emit('ui:intervene', { x: 100, y: 100 });
     let ended = 0;
     bus.on('battle:ended', () => (ended += 1));
-    for (let i = 0; i < 2000 && ended === 0; i++) controller.update(100);
+    for (let i = 0; i < 4000 && ended === 0; i++) controller.update(100);
     expect(ended).toBe(1);
     expect(p.writes.length).toBe(afterEntry); // ticks/speed/intervene/toggle wrote nothing
     await controller.whenIdle();
@@ -189,7 +192,7 @@ describe('RunController with persistence', () => {
     await controller.whenIdle();
     let ended = 0;
     bus.on('battle:ended', () => (ended += 1));
-    for (let i = 0; i < 2000 && ended === 0; i++) controller.update(100);
+    for (let i = 0; i < 4000 && ended === 0; i++) controller.update(100);
     await controller.whenIdle();
     const saved = p.writes.at(-1)!;
     const reload = setup(structuredClone(saved), new FakePersistence());
@@ -202,7 +205,7 @@ describe('RunController with persistence', () => {
 describe('RunController without persistence', () => {
   it('stays synchronous: the state and the battle are there right after the command', () => {
     const bus = createGameBus();
-    const controller = new RunController(bus, CONTENT, runState());
+    const controller = new RunController(bus, CONTENT, runState({ hand: [...THREE] }));
     bus.emit('ui:command', { command: { type: 'discard', handIndex: 0 } });
     expect(controller.state.phase).toBe('battle');
     expect(controller.runner).not.toBeNull();
@@ -243,6 +246,10 @@ describe('RunController at the end of a run (G4 meta)', () => {
   };
   /** Year 5 with one life left: the next lost battle ends the run. */
   const lastLife = (): RunState => startYear(runState({ lives: 1, year: 4 }), CONTENT);
+  /** Sells down to `RUN.battleHandMax` cards: under G1 auto-start the battle then begins. */
+  const sellDown = (bus: ReturnType<typeof createGameBus>, hand: number): void => {
+    for (let i = hand; i > RUN.battleHandMax; i--) cmd(bus, { type: 'discard', handIndex: 0 });
+  };
 
   /** Logs settle and checkpoint calls in order; `settle` can be made to fail. */
   class SettlingPersistence implements SessionPersistence {
@@ -272,7 +279,7 @@ describe('RunController at the end of a run (G4 meta)', () => {
       order.push('ended');
       ended.push(e);
     });
-    cmd(bus, { type: 'discard', handIndex: 0 }); // G1 auto-start: the battle begins
+    sellDown(bus, controller.state.hand.length); // G1 auto-start: the battle begins
     await controller.whenIdle();
     expect(controller.runner).not.toBeNull();
     bus.emit('battle:ended', { result: loss });

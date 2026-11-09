@@ -180,6 +180,37 @@ export const centerHand = (slots: readonly Rect[], count: number): Rect[] => {
   return used.map((r) => ({ ...r, x: r.x + shift }));
 };
 
+/**
+ * The cards left in hand and the "Ra trận" button together (owner 2026-11-10: the battle can start
+ * with up to two cards in hand). Cards + gap + button are centred on the row as one group; where
+ * that group is wider than the screen (phones) the button stands above the cards instead. With no
+ * card the button is `fight`, centred on the row.
+ */
+export const handWithFight = (
+  screen: Size,
+  slots: readonly Rect[],
+  count: number,
+  fight: Rect,
+): { cards: Rect[]; fight: Rect } => {
+  const cards = centerHand(slots, count);
+  if (cards.length === 0) return { cards, fight };
+  const first = slots[0]!;
+  const last = slots[slots.length - 1]!;
+  const rowCentre = (first.x + last.x + last.w) / 2;
+  const cardsW = cards[cards.length - 1]!.x + cards[cards.length - 1]!.w - cards[0]!.x;
+  const groupW = cardsW + GAP + fight.w;
+  if (groupW <= screen.w - 2 * MARGIN) {
+    const x0 = Math.round(rowCentre - groupW / 2);
+    const shift = x0 - cards[0]!.x;
+    const row = cards[0]!;
+    return {
+      cards: cards.map((r) => ({ ...r, x: r.x + shift })),
+      fight: { ...fight, x: x0 + cardsW + GAP, y: Math.round(row.y + (row.h - fight.h) / 2) },
+    };
+  }
+  return { cards, fight: { ...fight, y: cards[0]!.y - CARD_LIFT - GAP - fight.h } };
+};
+
 /** The 200×56 "Ra trận" button, centred on the hand row it replaces. */
 const fightOver = (screen: Size, hand: readonly Rect[]): Rect => {
   const row = hand[0] ?? { x: 0, y: screen.h - FIGHT.h - HAND_BOTTOM, w: 0, h: FIGHT.h };

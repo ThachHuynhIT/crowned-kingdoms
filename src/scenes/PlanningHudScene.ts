@@ -61,6 +61,7 @@ import {
 import { calendarCells, illegalText, yearLabel } from '../ui/realm/calendarModel';
 import {
   centerHand,
+  handWithFight,
   isDesktop,
   confirmFor,
   planningLayout,
@@ -249,7 +250,7 @@ export class PlanningHudScene extends Phaser.Scene {
     this.scout = new ScoutPanel(this, CONTENT, () =>
       this.bus.emit('ui:open-modal', { modal: 'scout' }),
     );
-    this.hand = new HandView(this, CONTENT, this.tooltip, 4);
+    this.hand = new HandView(this, CONTENT, this.tooltip, 6);
     this.decreePanel = new DecreeQuestPanel(this, this.bus, this.controller.state);
     this.endlessPanel = new EndlessPanel(
       this,
@@ -390,6 +391,18 @@ export class PlanningHudScene extends Phaser.Scene {
 
   // ---- state → widgets ---------------------------------------------------------------------
 
+  /** The cards in hand and, beside them, the "Ra trận" button (it may show with up to two cards left). */
+  private placeHandAndFight(): void {
+    const screen = { w: this.scale.width, h: this.scale.height };
+    if (!this.fight.container.visible) {
+      this.hand.layout(centerHand(this.lay.hand, this.handCount));
+      return;
+    }
+    const { cards, fight } = handWithFight(screen, this.lay.hand, this.handCount, this.lay.fight);
+    this.hand.layout(cards);
+    this.fight.container.setPosition(fight.x + fight.w / 2, fight.y + fight.h / 2);
+  }
+
   /** A card-sized panel flies from hand slot `index` to `plot` in CARD_FLY_MS, shrinking and fading (juice §11.5). */
   private flyCard(index: number, handSize: number, plot: number): void {
     const slots = centerHand(this.lay.hand, handSize);
@@ -472,7 +485,8 @@ export class PlanningHudScene extends Phaser.Scene {
     }
 
     const planning = state.phase === 'planning';
-    const choosing = planning && !state.played;
+    // Any number of cards may be played or sold each year (owner 2026-11-10); rerolls only before the first.
+    const choosing = planning;
     this.hand.setHand(
       choosing ? state.hand : [],
       state.hand.map((id) => !canPlayCard(state, CONTENT, id)),
@@ -481,13 +495,13 @@ export class PlanningHudScene extends Phaser.Scene {
         return cardBadge(card, willLevelUpTo(state.plots, card));
       }),
     );
-    this.sellBtn.setVisible(choosing);
-    this.rerollBtn.setVisible(choosing);
+    this.sellBtn.setVisible(choosing && state.hand.length > 0);
+    this.rerollBtn.setVisible(choosing && !state.played);
     this.deckBtn.setVisible(planning);
     this.fight.setVisible(canFight(state));
     this.refreshActions(state);
     this.handCount = state.hand.length;
-    this.hand.layout(centerHand(this.lay.hand, this.handCount));
+    this.placeHandAndFight();
 
     const offers = state.phase === 'reward' || state.phase === 'conquest' ? cardOffer(state) : null;
     // The reward step is followed by a conquest step: a new offer replaces the open modal.
@@ -742,7 +756,7 @@ export class PlanningHudScene extends Phaser.Scene {
 
   private selectCard(index: number): void {
     const state = this.controller.state;
-    if (state.phase !== 'planning' || state.played || state.hand[index] === undefined) return;
+    if (state.phase !== 'planning' || state.hand[index] === undefined) return;
     const next = this.pending.handIndex === index ? null : index;
     this.bus.emit('ui:select-card', { handIndex: next });
   }
@@ -751,7 +765,7 @@ export class PlanningHudScene extends Phaser.Scene {
   private dropCard(index: number, x: number, y: number): void {
     const state = this.controller.state;
     const cardId = state.hand[index];
-    if (state.phase !== 'planning' || state.played || cardId === undefined) return;
+    if (state.phase !== 'planning' || cardId === undefined) return;
     if (this.modalOpen()) return;
     const plot = this.plotAt({ x, y });
     if (plot === null) return; // released off the board: the card just returns to the hand
@@ -885,7 +899,7 @@ export class PlanningHudScene extends Phaser.Scene {
         this.selectCard(Number(action.slice(-1)) - 1);
         break;
       case 'sell':
-        if (!state.played) this.sell();
+        this.sell();
         break;
       case 'confirm':
         if (this.buy && state.gold < this.buy.price) this.flashIllegal('notEnoughGold');
@@ -1208,7 +1222,7 @@ export class PlanningHudScene extends Phaser.Scene {
         l.scoutButton.y + l.scoutButton.h / 2,
       );
     }
-    this.hand.layout(centerHand(l.hand, this.handCount));
+    this.placeHandAndFight();
     if (this.actionSize.w !== l.sell.w || this.actionSize.h !== l.sell.h)
       this.createActionButtons();
     for (const [button, r] of [
@@ -1224,7 +1238,6 @@ export class PlanningHudScene extends Phaser.Scene {
       l.freeMove.y + l.freeMove.h / 2,
     );
     this.refreshActions(this.controller.state);
-    this.fight.container.setPosition(l.fight.x + l.fight.w / 2, l.fight.y + l.fight.h / 2);
     this.hint.setMaxWidth(l.hint.w);
     this.hint.refresh();
     this.tooltip.refresh();

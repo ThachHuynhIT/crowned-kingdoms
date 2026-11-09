@@ -1,7 +1,7 @@
 /**
  * Baseline của chế độ thường trước Endless (spec 2026-11-09 §8, plan E1 Task 1 Step 1). Các literal dưới
  * đây ghi lần đầu trên commit 43ad681 TRƯỚC khi sửa mã Endless, rồi ghi lại trên commit 3652e5a (cân bằng G5 `75a1448`:
- * 2 mạng, máu Ngai mới; vẫn KHÔNG có mã Endless) khi gộp `endless-e1` vào G5, rồi ghi lại khi đổi luật trận (2026-11-09, nhánh `battle-field-rework`: địch phá hết công trình rồi mới tới Ngai, rồi tầm tháp ×3, rồi công trình chặn đường + đội hình + giới hạn đi xa, rồi cổng xa 1,5 lần, rồi cân bằng lại `docs/balance/2026-11-09-battle-rework-balance.md`; vẫn KHÔNG có mã Endless); không được ghi lại để test xanh. Nếu dữ liệu cân bằng thay đổi có chủ
+ * 2 mạng, máu Ngai mới; vẫn KHÔNG có mã Endless) khi gộp `endless-e1` vào G5, rồi ghi lại khi đổi luật trận (2026-11-09, nhánh `battle-field-rework`: địch phá hết công trình rồi mới tới Ngai, rồi tầm tháp ×3, rồi công trình chặn đường + đội hình + giới hạn đi xa, rồi cổng xa 1,5 lần, rồi cân bằng lại `docs/balance/2026-11-09-battle-rework-balance.md`; vẫn KHÔNG có mã Endless), rồi ghi lại khi đổi luật lượt và độ dài trận (2026-11-10, spec `2026-11-10-hand-and-battle-length-design.md`: tay 5 lá, chơi/bán nhiều lá rồi Ra trận khi tay ≤ 2, hết giờ là thua ở tick 3000, Cuồng Nộ cộng dồn; bot chơi nhiều lá; vẫn KHÔNG có mã Endless); không được ghi lại để test xanh. Nếu dữ liệu cân bằng thay đổi có chủ
  * đích (thuế, mạng, máu Ngai…), ghi lại baseline ở một commit riêng KHÔNG chứa thay đổi Endless.
  *
  * Gameplay projection bỏ đúng các trường schema mới của RunState v7 (`version`, `mode`, `endless`,
@@ -54,9 +54,9 @@ function trace(seed: number, kingId: KingId): Trace {
 }
 
 const BASELINE: Record<string, Trace> = {
-  'wheat:1': { commands: 13, commandHash: 1581954539, setupHash: 3562917155, stateHash: 952251615 },
-  'stone:2': { commands: 40, commandHash: 2034665688, setupHash: 4019163375, stateHash: 173118232 },
-  'arcane:3': { commands: 20, commandHash: 435318769, setupHash: 701781265, stateHash: 1112322572 },
+  'wheat:1': { commands: 24, commandHash: 1462201559, setupHash: 1339456872, stateHash: 543916779 },
+  'stone:2': { commands: 89, commandHash: 2091120544, setupHash: 1200637243, stateHash: 3570692797 },
+  'arcane:3': { commands: 91, commandHash: 540384451, setupHash: 1334585612, stateHash: 4218329032 },
 };
 
 describe('normal 30-year baseline is unchanged by Endless', () => {

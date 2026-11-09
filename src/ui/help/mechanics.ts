@@ -49,7 +49,7 @@ export const mechanicEntries = (content: Content): readonly HelpEntry[] => {
   const rerolls = [1, 2, 3].map(rerollCost).join(', ');
   return [
     entry('year', 'Một năm', [
-      `Mỗi năm bạn rút ${RUN.handSize} thẻ và chơi một thẻ lên bàn cờ 5×5 (hoặc bán thẻ lấy ${RUN.skipPlayGold} vàng), rồi quân bạn tự đánh một trận.`,
+      `Mỗi năm bạn rút cho đủ ${RUN.handSize} thẻ, chơi bao nhiêu thẻ tuỳ ý lên bàn cờ 5×5 (hoặc bán thẻ, mỗi thẻ ${RUN.skipPlayGold} vàng); khi trên tay còn ${RUN.battleHandMax} thẻ trở xuống thì bấm Ra trận và quân bạn tự đánh.`,
       `Đầu năm ${RUN.questYears.join(', ')} có thể có sứ giả đề nghị nhiệm vụ; sau trận bạn nhận thưởng hoặc chinh phục, và năm ${RUN.councilYears.join(', ')} có hội đồng.`,
       `Ván đầy đủ dài ${lastYear} năm; sống qua năm cuối là thắng, hết mạng là thua.`,
     ]),
@@ -87,7 +87,7 @@ export const mechanicEntries = (content: Content): readonly HelpEntry[] => {
     ]),
     entry('boss', 'Boss', [
       `Boss xuất hiện ở các năm ${RUN.bossYears.join(', ')}.`,
-      `Hết ${BATTLE.hardLimitTick} tick mà Ngai còn sống là thắng trận, nhưng chỉ hạ được boss mới tính boss đã thắng.`,
+      'Trận boss chỉ thắng khi hạ được boss và mọi địch còn lại.',
     ]),
     entry('save', 'Lưu ván và tải lại', [
       'Ván được lưu tự động sau mỗi hành động ngoài trận và khi vào/ra trận.',
@@ -95,8 +95,10 @@ export const mechanicEntries = (content: Content): readonly HelpEntry[] => {
     ]),
     entry('result', 'Thắng và thua', [
       `Ngai về 0 máu là thua trận và mất 1 mạng (bắt đầu ${RUN.startLives} mạng); hết mạng là thua ván.`,
-      `Hết ${BATTLE.hardLimitTick} tick (${seconds(BATTLE.hardLimitTick)} giây) mà Ngai còn sống là thắng trận.`,
-      `Vương Miện Vàng chỉ có khi bạn thật sự hạ được boss cuối (năm ${lastYear}), không chỉ sống sót đến hết giờ.`,
+      'Hạ hết mọi đợt địch là thắng trận; sống sót không còn đủ để thắng.',
+      `Từ giây ${seconds(BATTLE.rageTick)} địch Cuồng Nộ, rồi cứ ${seconds(BATTLE.rageStackTicks)} giây đòn của địch mạnh thêm ${BATTLE.rageStackDmgPct}%.`,
+      `Quá ${seconds(BATTLE.hardLimitTick)} giây mà trận chưa xong thì tính thua.`,
+      `Vương Miện Vàng chỉ có khi bạn hạ được boss cuối (năm ${lastYear}).`,
     ]),
     entry('rewards', 'Thẻ thưởng', [
       `Thẻ thưởng cho ${REWARD.choices} lựa chọn (sắc lệnh Giao Thương tăng lên ${DECREE_RULES.reward}).`,

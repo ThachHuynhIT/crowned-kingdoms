@@ -38,7 +38,7 @@ describe('board geometry (64 px plots, spec 06/11/2026)', () => {
     expect(BATTLE.flyingHitMinRange).toBe(24);
     expect(BATTLE.tauntRadiusDefault).toBe(cells(1.25));
     expect([INTERVENTION.radius, INTERVENTION.knockback]).toEqual([48, 24]);
-    expect([BATTLE.rageTick, BATTLE.hardLimitTick, BATTLE.rageSpeedPct]).toEqual([600, 900, 50]);
+    expect([BATTLE.rageTick, BATTLE.hardLimitTick, BATTLE.rageSpeedPct]).toEqual([600, 3000, 50]);
   });
 
   it('raises tower range by level by 50% and keeps the pulse bonus in plots', () => {

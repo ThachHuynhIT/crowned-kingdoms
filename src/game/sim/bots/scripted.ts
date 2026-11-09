@@ -5,6 +5,7 @@
  * Chơi: bật Tự bắn một lần; ưu tiên lính / tháp (chơi hoặc nâng cấp), rồi kinh tế / hỗ trợ, rồi bùa / sách,
  * mỗi nhóm theo handIndex rồi ô; hết nước đi thì bán lá đầu tay, tay trống thì ra trận.
  */
+import { canStartBattle } from '../../run/turn';
 import { QUESTS } from '../../../data/quests';
 import type { CardDef } from '../../../data/types';
 import type { Content } from '../../cards/registry';
@@ -45,7 +46,6 @@ const firstTarget = (state: RunState, card: CardDef, content: Content): PlayTarg
 
 const planning = (state: RunState, content: Content): RunCommand => {
   if (!state.autoFire) return { type: 'setAutoFire', on: true };
-  if (state.played) return { type: 'startBattle' };
   let best: { handIndex: number; target: PlayTarget; group: number } | null = null;
   state.hand.forEach((cardId, handIndex) => {
     const card = content.card(cardId);
@@ -58,7 +58,7 @@ const planning = (state: RunState, content: Content): RunCommand => {
     const { handIndex, target } = best as { handIndex: number; target: PlayTarget };
     return { type: 'play', handIndex, target };
   }
-  return state.hand.length > 0 ? { type: 'discard', handIndex: 0 } : { type: 'startBattle' };
+  return canStartBattle(state) ? { type: 'startBattle' } : { type: 'discard', handIndex: 0 };
 };
 
 const PREFERRED_DECREES = ['decree_mobilize', 'decree_royal_armory'] as const;

@@ -9,7 +9,7 @@ import { crownPoints } from '../meta/crowns';
 import type { SessionPersistence, SettleOutcome } from '../save/types';
 import { buildBattleSetup } from './battleSetup';
 import { applyCommand } from './commands';
-import { hasPlayableCard } from './playable';
+import { canStartBattle } from './turn';
 import type { RunCommand, RunState } from './state';
 
 /** Điểm tính tại chỗ khi không có hồ sơ để chấm (hoặc chấm hỏng: không được cộng). */
@@ -169,13 +169,8 @@ export class RunController {
     this.bus.emit('battle:started', { setup });
   }
 
-  /** Luật G1 (`autoStart`): đã chơi/bán thẻ, hoặc không lá nào trên tay có mục tiêu. */
+  /** Luật G1 (`autoStart`): vào trận ngay khi tay còn ≤ `RUN.battleHandMax` lá. */
   private shouldAutoStart(): boolean {
-    const s = this.current;
-    return (
-      s.rules.autoStart &&
-      s.phase === 'planning' &&
-      (s.played || !hasPlayableCard(s, this.content))
-    );
+    return this.current.rules.autoStart && canStartBattle(this.current);
   }
 }

@@ -76,7 +76,7 @@ describe('decree catalog', () => {
 
   it('carries the runtime numbers of spec 7.1/7.4 in data', () => {
     expect(DECREE_RULES).toMatchObject({
-      hand: 4,
+      hand: 6,
       freeReroll: 1,
       reward: 4,
       boulderDmgPct: 50,
@@ -144,11 +144,11 @@ describe('harvest tax', () => {
 });
 
 describe('hand limit, reward count and rerolls', () => {
-  it('fourth_hand: refill 4 cards', () => {
-    expect(handLimit(withBoard())).toBe(3);
-    expect(handLimit(withBoard(['decree_fourth_hand']))).toBe(4);
+  it('fourth_hand: refill 6 cards', () => {
+    expect(handLimit(withBoard())).toBe(5);
+    expect(handLimit(withBoard(['decree_fourth_hand']))).toBe(6);
     const next = startYear({ ...withBoard(['decree_fourth_hand']), year: 1, hand: [] }, CONTENT);
-    expect(next.hand).toHaveLength(4);
+    expect(next.hand).toHaveLength(6);
   });
 
   it('trade: reward offers 4 unique cards', () => {

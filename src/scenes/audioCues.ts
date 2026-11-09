@@ -47,7 +47,8 @@ export function battleCues(events: readonly BattleEvent[], world: CueWorld): Sfx
 export function transitionCues(before: RunState, after: RunState): SfxId[] {
   if (before === after) return [];
   const out: SfxId[] = [];
-  if (after.played && !before.played) out.push('card_play');
+  // A card left the hand in the same year: played or sold (any number per year since 2026-11-10).
+  if (after.year === before.year && after.phase === 'planning' && after.hand.length < before.hand.length) out.push('card_play');
   if (after.hand.length > before.hand.length) out.push('card_draw');
   if (after.rerollsThisYear > before.rerollsThisYear) out.push('reroll');
   if (after.gold > before.gold) out.push('coin');

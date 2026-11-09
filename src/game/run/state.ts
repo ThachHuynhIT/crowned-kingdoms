@@ -173,7 +173,7 @@ export type IllegalReason =
   | 'notAdjacent'
   | 'wrongPhase'
   | 'alreadyPlayed'
-  | 'notPlayed'
+  | 'handTooBig'
   | 'notEnoughGold'
   | 'maxLevel'
   | 'wrongKind'

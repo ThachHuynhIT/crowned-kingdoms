@@ -151,7 +151,7 @@ describe('end of battle', () => {
     expect(events.filter((e) => e.type === 'ended')).toEqual([{ type: 'ended', won: false }]);
   });
 
-  it('at hardLimitTick with the throne alive and foes left → won; rage once at rageTick', () => {
+  it('at hardLimitTick with the throne alive and foes left → lost; rage once at rageTick', () => {
     const setup = battleSetup({
       throne: throneSetup({ attack: null }),
       waves: [wave(2, 0, { speed: 0 })],
@@ -168,9 +168,9 @@ describe('end of battle', () => {
     }
     expect(rageAt).toBe(BATTLE.rageTick);
     expect(events.filter((e) => e.type === 'rage')).toHaveLength(1);
-    expect(events.filter((e) => e.type === 'ended')).toEqual([{ type: 'ended', won: true }]);
+    expect(events.filter((e) => e.type === 'ended')).toEqual([{ type: 'ended', won: false }]);
     const r = battleResult(w)!;
-    expect(r.won).toBe(true);
+    expect(r.won).toBe(false);
     expect(r.ticks).toBe(BATTLE.hardLimitTick);
     expect(w.alive[1]).toBe(1);
   });

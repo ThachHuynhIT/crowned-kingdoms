@@ -76,7 +76,7 @@ describe('lockedPlotPrice and illegalText', () => {
       notAdjacent: true,
       wrongPhase: true,
       alreadyPlayed: true,
-      notPlayed: true,
+      handTooBig: true,
       notEnoughGold: true,
       maxLevel: true,
       wrongKind: true,
