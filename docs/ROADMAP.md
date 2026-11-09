@@ -27,24 +27,26 @@ Tất cả là cảm nhận trên PC (desktop ≥ 768 px). Bố cục điện th
 2. ✔ Thẻ vua nhỏ còn khoảng 1/2 trên PC (giữa ×3 = 198×288, hai bên ×2), vẽ ở tỉ lệ nguyên; chân dung thêm bản 144×216 để nét ở ×3.
 3. ✔ Màn sau khi chọn vua: cả khối nằm giữa màn theo hai chiều, 9 lá 116×180 xếp 5 + 4.
 
+**Âm thanh:** ✔ to bằng 1/4 mức gốc (10/11/2026). **Đạn công trình:** ✔ bay ra từ khoảng 80% chiều cao công trình.
+
 **Thẻ bài và lượt chơi**
 4. ✔ Tranh gần kín bề ngang thẻ; trên PC lá bài to hơn: bài trên tay 148×208 (tranh 128×96 mới, thu nhỏ từ ảnh gốc đã duyệt), Bộ bài 116×180, phần thưởng 212×280 (tranh ×2). Bàn cờ ở pha chuẩn bị nhỏ đi một chút (zoom 1,29 → 1,19) để nhường chỗ cho tay bài.
-5. Cầm được hơn 3 lá trên tay, chơi được hơn 1 lá mỗi năm. Trận chỉ bắt đầu khi trên tay còn 2 lá hoặc ít hơn. Đây là đổi luật: cần sửa `RunState` (có thể bump save version + migrator) và cân bằng lại.
+5. ✔ (thay bằng luật 10/11/2026, spec `2026-11-10-draw-one-and-shop-design.md`) Năm 1 có 5 lá, mỗi năm sau rút 1 lá (2 ở năm 5, 10, 11, 15, 20, 21, 25), bài cũ giữ lại; chơi hoặc bán tới khi còn 2 lá thì trận tự bắt đầu (năm 30: 0 lá); Mua thẻ bằng vàng (5, 8, 11…); save v8.
 
 **Bàn cờ và camera**
 6. Cây và đá trang trí bên ngoài bàn cờ: bỏ viền, rải dày hơn cho map sinh động.
-7. Zoom:
+7. ✔ Zoom (10/11/2026: zoom out xa hơn 60%, zoom in tối đa = mức xa nhất cũ, kéo ngang hẹp 40%):
    - zoom out nhỏ nhất rộng thêm 30–40%;
    - zoom in tối đa bằng mức zoom out lớn nhất hiện nay;
    - vùng kéo sang trái/phải hẹp lại 40%.
 
 **Trận**
-8. Công trình chỉ hiện thanh máu khi đã bị đánh.
-9. Bỏ giới hạn 1 phút 30 (900 tick) mỗi trận, trận đánh tới khi một bên thua. Cần một trần an toàn chống trận kéo dài mãi (ví dụ trận hoà khi hai bên không còn gây sát thương), rồi cân bằng lại.
+8. ✔ Công trình chỉ hiện thanh máu khi đã bị đánh.
+9. ✔ Trận không thắng vì hết giờ; Cuồng Nộ từ 60 giây, mỗi 60 giây +20% sát thương địch; quá 5 phút là thua. **Cân bằng chưa đạt**: `docs/balance/2026-11-10-draw-one-balance.md` (27–83% mỗi vua, độ khó dồn vào boss năm 20).
 10. Can thiệp của mỗi vua có hiệu ứng và hình dạng riêng (hiện cả 9 vua chung đá tảng). Art theo `docs/ART_STYLE.md`, vẽ thử một mẫu trước.
 
 **Cân bằng**
-11. Vua Phép Thuật yếu vì không có lính cận chiến chịu đòn: xem lại thẻ và luật của vua này, rồi chạy lại `npm run balance`.
+11. Vua Phép Thuật yếu vì không có lính cận chiến chịu đòn: xem lại thẻ và luật của vua này, rồi chạy lại `npm run balance`. (Đo nhanh 10/11: Phép Thuật 57%, giờ không còn là vua yếu nhất; yếu nhất là Thuỷ Triều, Lúa Mì, Ánh Trăng.)
 12. Tham khảo wiki 9 Kings (thẻ, cấp, sự kiện, vua, perk, Merchant, cấu trúc một ván) để rà luật và cân bằng. Ranh giới: chỉ lấy ý tưởng cơ chế chung của thể loại, ví dụ:
     - vua thuần phép vẫn cần một lớp chịu đòn;
     - nhịp sự kiện trong ván;
