@@ -3,7 +3,8 @@ import { BATTLE } from '../data/battle';
 import type { RunMode } from '../data/rules';
 import { fieldTextureKey } from './endlessBoardModel';
 import { PALETTE } from '../data/palette';
-import type { CardDef, CardId, UnitId } from '../data/types';
+import type { CardDef, CardId, KingId, UnitId } from '../data/types';
+import { KING_THEMES } from '../data/uiPalette';
 import type { Content } from '../game/cards/registry';
 import { paintBuilding, paintThrone } from './buildingArt';
 import { paintCardArt } from './cardArt';
@@ -41,11 +42,23 @@ import {
   UI_DECOR_IDS,
   UI_FRAME_IDS,
   UI_THEMED_FRAME_IDS,
+  baseFrame,
   paintUiDecor,
   paintUiFrame,
+  type AnyUiFrame,
   type UiFrame,
 } from './uiArt';
-import { UI_KIT_FILES, UI_KIT_FRAME, UI_KIT_RECOLOR, activateUiKitFrames, kitTextureKey, recolorKit } from './uiKit';
+import {
+  KIT_COLOURS,
+  UI_KIT_FILES,
+  UI_KIT_FRAME,
+  activateUiKitFrames,
+  kitStatePal,
+  kitSwaps,
+  kitTextureKey,
+  recolorKit,
+  themeKitPal,
+} from './uiKit';
 import { UNIT_FRAME_COUNT, paintUnit, unitCloth, type UnitAnim, type UnitTeam } from './unitArt';
 
 /**
@@ -120,26 +133,31 @@ export const addPixelTexture = (
  */
 export const buildUiTexture = (textures: Phaser.Textures.TextureManager): void => {
   if (textures.exists(UI_KEY)) return;
-  const kitFrames: UiFrame[] = [];
-  const frameArt = (id: UiFrame): PixelCanvas => {
+  const kitFrames: AnyUiFrame[] = [];
+  /** The loaded kit tile of base frame `id`, or null (missing, wrong size): the frame stays generated. */
+  const kitArt = (id: UiFrame): PixelCanvas | null => {
     const key = kitTextureKey(id);
-    if (UI_KIT_FILES[id] && textures.exists(key)) {
-      const art = imageToPixelCanvas(
-        textures.get(key).getSourceImage() as CanvasImageSource & {
-          width: number;
-          height: number;
-        },
-      );
-      if (art && art.width === UI_KIT_FRAME.w && art.height === UI_KIT_FRAME.h) {
-        kitFrames.push(id);
-        return recolorKit(art, UI_KIT_RECOLOR[id]);
-      }
-    }
-    return paintUiFrame(id);
+    if (!UI_KIT_FILES[id] || !textures.exists(key)) return null;
+    const art = imageToPixelCanvas(
+      textures.get(key).getSourceImage() as CanvasImageSource & {
+        width: number;
+        height: number;
+      },
+    );
+    return art && art.width === UI_KIT_FRAME.w && art.height === UI_KIT_FRAME.h ? art : null;
+  };
+  const frameArt = (id: AnyUiFrame): PixelCanvas => {
+    const base = baseFrame(id);
+    const art = kitArt(base);
+    if (art === null) return paintUiFrame(id);
+    const at = id.indexOf('@');
+    const pal = at >= 0 ? themeKitPal(KING_THEMES[id.slice(at + 1) as KingId]) : KIT_COLOURS;
+    kitFrames.push(id);
+    return recolorKit(art, kitSwaps(kitStatePal(base, pal)));
   };
   const sprites: { name: string; art: PixelCanvas }[] = [
     ...UI_FRAME_IDS.map((id) => ({ name: id, art: frameArt(id) })),
-    ...UI_THEMED_FRAME_IDS.map((id) => ({ name: id, art: paintUiFrame(id) })),
+    ...UI_THEMED_FRAME_IDS.map((id) => ({ name: id, art: frameArt(id) })),
     ...UI_DECOR_IDS.map((id) => ({ name: id, art: paintUiDecor(id) })),
   ];
   const width = 128;

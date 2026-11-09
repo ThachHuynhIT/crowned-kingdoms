@@ -1,4 +1,4 @@
-import { UI_PALETTE } from '../data/uiPalette';
+import { UI_PALETTE, type KingTheme } from '../data/uiPalette';
 import { PixelCanvas } from './pixel';
 import { UI_FRAMES, baseFrame, type AnyUiFrame, type UiFrame, type UiFrameDef } from './uiArt';
 
@@ -7,7 +7,7 @@ import { UI_FRAMES, baseFrame, type AnyUiFrame, type UiFrame, type UiFrameDef } 
  * frames; docs/assets.manifest.yml, docs/licenses/kenney-ui-pack-pixel-adventure/) laid over the generated UI frames:
  * one 16×16 tile with a 1 px dark outline, a 2 px wood ring, a 1 px shadow and a cream centre (square corners,
  * nine-slice 4). Every state of a frame group (button states, card rarities) is that same tile with some colours
- * swapped (`UI_KIT_RECOLOR`), so frames that swap into each other keep one size and slice. Frames not listed (hotbar
+ * swapped (`kitStatePal`; a king's frames start from `themeKitPal`), so frames that swap into each other keep one size and slice. Frames not listed (hotbar
  * slots, bars) stay generated. A frame only counts as kit art once its PNG has really been loaded and blitted into the
  * `ui` atlas (`activateUiKitFrames`), so a missing file falls back to the generated frame.
  */
@@ -35,21 +35,49 @@ export const UI_KIT_FILES: Readonly<Partial<Record<UiFrame, string>>> = {
 /** The tile's colours (exact RGB). */
 export const KIT_COLOURS = { outline: 0x6d4b27, ring: 0xc58747, shadow: 0xa3703a, cream: 0xfff1d2 } as const;
 
-/** Colour swaps [from, to] that turn the plain tile into each state (ART_STYLE: rare gold, selected red). */
-export const UI_KIT_RECOLOR: Readonly<Partial<Record<UiFrame, readonly (readonly [number, number])[]>>> = {
-  buttonHover: [
-    [KIT_COLOURS.cream, 0xfffaee],
-    [KIT_COLOURS.ring, 0xd99c5a],
-  ],
-  buttonDown: [
-    [KIT_COLOURS.cream, 0xead6ad],
-    [KIT_COLOURS.ring, KIT_COLOURS.shadow],
-  ],
-  buttonActive: [[KIT_COLOURS.ring, UI_PALETTE.gold]],
-  cardUncommon: [[KIT_COLOURS.ring, UI_PALETTE.good]],
-  cardRare: [[KIT_COLOURS.ring, UI_PALETTE.gold]],
-  cardSelected: [[KIT_COLOURS.ring, UI_PALETTE.select]],
+/** The four colour roles of the tile, as painted for one frame state. */
+export interface KitPal {
+  readonly outline: number;
+  readonly ring: number;
+  readonly shadow: number;
+  readonly cream: number;
+}
+
+const mix = (a: number, b: number, t: number): number => {
+  const ch = (shift: number): number => Math.round(((a >> shift) & 255) * (1 - t) + ((b >> shift) & 255) * t);
+  return (ch(16) << 16) | (ch(8) << 8) | ch(0);
 };
+
+/** A king's frames: the tile in that king's theme (dark outline, bright ring, paper centre), 2026-11-09. */
+export const themeKitPal = (t: KingTheme): KitPal => ({
+  outline: t.bgDark,
+  ring: mix(t.bgMid, t.accent, 0.6),
+  shadow: t.bgMid,
+  cream: t.panel,
+});
+
+/** The colours of `frame`'s state on base colours `p` (ART_STYLE: rare gold, selected red). */
+export const kitStatePal = (frame: UiFrame, p: KitPal): KitPal => {
+  switch (frame) {
+    case 'buttonHover':
+      return { ...p, cream: mix(p.cream, 0xffffff, 0.6), ring: mix(p.ring, 0xffffff, 0.2) };
+    case 'buttonDown':
+      return { ...p, cream: mix(p.cream, p.shadow, 0.2), ring: p.shadow };
+    case 'buttonActive':
+    case 'cardRare':
+      return { ...p, ring: UI_PALETTE.gold };
+    case 'cardUncommon':
+      return { ...p, ring: UI_PALETTE.good };
+    case 'cardSelected':
+      return { ...p, ring: UI_PALETTE.select };
+    default:
+      return p;
+  }
+};
+
+/** Swaps that paint the plain tile in `pal`. */
+export const kitSwaps = (pal: KitPal): readonly (readonly [number, number])[] =>
+  (['outline', 'ring', 'shadow', 'cream'] as const).map((role) => [KIT_COLOURS[role], pal[role]] as const);
 
 /** `art` with every pixel of an exact `from` colour changed to `to` (alpha kept). */
 export const recolorKit = (art: PixelCanvas, swaps: readonly (readonly [number, number])[] = []): PixelCanvas => {
@@ -68,14 +96,14 @@ export const recolorKit = (art: PixelCanvas, swaps: readonly (readonly [number, 
 
 export const kitTextureKey = (frame: UiFrame): string => `ui-kit-${frame}`;
 
-const active = new Set<UiFrame>();
+const active = new Set<AnyUiFrame>();
 
-export const activateUiKitFrames = (frames: readonly UiFrame[]): void => {
+export const activateUiKitFrames = (frames: readonly AnyUiFrame[]): void => {
   for (const f of frames) active.add(f);
 };
 
 export const resetUiKitFrames = (): void => active.clear();
 
-/** Size, slice and border of `frame` as actually painted in the atlas; king frames (`base@king`) are always generated. */
+/** Size, slice and border of `frame` as actually painted in the atlas (king frames too, since 2026-11-09). */
 export const uiFrameDef = (frame: AnyUiFrame): UiFrameDef =>
-  active.has(frame as UiFrame) ? UI_KIT_FRAME : UI_FRAMES[baseFrame(frame)];
+  active.has(frame) ? UI_KIT_FRAME : UI_FRAMES[baseFrame(frame)];
