@@ -1,16 +1,16 @@
 import { describe, expect, it } from 'vitest';
 import { ALL_KINGS } from '../data/rules';
 import { KING_CARD_WINDOW } from './kingCardArt';
-import { PORTRAIT_ASSETS, PORTRAIT_DIR, portraitPlacement, portraitTextureKey } from './portraitAssets';
+import { PORTRAIT_ASSETS, PORTRAIT_DIR, pickPortraitCopy, portraitPlacement, portraitTextureKey } from './portraitAssets';
 
 describe('PORTRAIT_ASSETS', () => {
-  it('lists all nine kings with 96×144 pictures, unique files and unique texture keys', () => {
+  it('lists all nine kings with 96×144 pictures (and 144×216 copies), unique files and unique texture keys', () => {
     expect(Object.keys(PORTRAIT_ASSETS).sort()).toEqual([...ALL_KINGS].sort());
     const files = ALL_KINGS.map((k) => PORTRAIT_ASSETS[k].file);
     expect(new Set(files).size).toBe(9);
     expect(new Set(ALL_KINGS.map(portraitTextureKey)).size).toBe(9);
     for (const k of ALL_KINGS) {
-      expect(PORTRAIT_ASSETS[k]).toEqual({ file: `${k}.png`, width: 96, height: 144 });
+      expect(PORTRAIT_ASSETS[k]).toEqual({ file: `${k}.png`, width: 96, height: 144, large: { file: `${k}-144.png`, width: 144, height: 216 } });
     }
   });
 
@@ -41,5 +41,15 @@ describe('portraitPlacement', () => {
     const p = portraitPlacement(win, 4.9, { w: 96, h: 144 });
     expect(p.scale).toBeCloseTo(2.45, 5);
     expect(Number.isInteger(p.x) && Number.isInteger(p.y)).toBe(true);
+  });
+});
+
+describe('pickPortraitCopy (2026-11-10)', () => {
+  it('uses the 144-px copy only where it is shown at a whole scale and the 96-px one is not', () => {
+    expect(pickPortraitCopy(3)).toBe('large');
+    expect(pickPortraitCopy(2)).toBe('normal');
+    expect(pickPortraitCopy(4)).toBe('normal');
+    expect(pickPortraitCopy(6)).toBe('normal');
+    expect(pickPortraitCopy(2.4)).toBe('normal');
   });
 });

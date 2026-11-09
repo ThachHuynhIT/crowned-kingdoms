@@ -76,7 +76,8 @@ const BUTTON_GAP = 8;
 const DESK = {
   top: { lives: 120, gold: 120, year: 160, h: 52 },
   scout: { w: 260, y: 92, bottom: 520 },
-  card: { w: 120, h: 176, gap: 12 },
+  /** 128 px picture window (2026-11-10): the 128×96 card picture fills the card's width. */
+  card: { w: 148, h: 208, gap: 12 },
   button: { w: 140, h: 52 },
 } as const;
 

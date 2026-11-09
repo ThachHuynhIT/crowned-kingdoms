@@ -3,6 +3,7 @@ import type { CardId } from '../../data/types';
 import { UI_PALETTE } from '../../data/uiPalette';
 import type { Content } from '../../game/cards/registry';
 import { CardView } from '../cards/CardView';
+import { cardLayout } from '../cards/cardLayout';
 import { textContent } from '../hud/layout';
 import {
   addUiText,
@@ -15,9 +16,12 @@ import {
 } from '../theme';
 import { DECK_TABS, deckEntries, type DeckEntry, type DeckTab } from './deckModel';
 import type { UiSkin } from '../skin';
-import { CLOSE_BUTTON, DECK_CARD, deckModalLayout, type DeckModalLayout } from './modalLayout';
+import { CLOSE_BUTTON, deckCardSize, deckModalLayout, type DeckModalLayout } from './modalLayout';
 import { snapScroll } from '../hud/layout';
 import { createOverlay, fitOverlay } from './overlay';
+
+/** CardView's padding inside its frame. */
+const CARD_PAD = 2;
 
 const PAD_DESKTOP = 12;
 const PAD_MOBILE = 4;
@@ -147,7 +151,7 @@ export class DeckModal {
     }
     this.cards.length = 0;
     for (const entry of this.entries) {
-      const view = new CardView(this.scene, this.content, { w: DECK_CARD.w, h: DECK_CARD.h }, this.tooltip);
+      const view = new CardView(this.scene, this.content, deckCardSize({ w: this.scene.scale.width, h: this.scene.scale.height }), this.tooltip);
       if (this.skin !== 'neutral') view.setTheme(this.skin);
       view.setCard(entry.cardId);
       const badge = addUiText(this.scene, 0, 0, `×${entry.count}`, 14, UI_PALETTE.creamLight)
@@ -193,8 +197,11 @@ export class DeckModal {
       c.view.container.setVisible(on);
       c.badge.setVisible(on);
       if (!on) return;
+      if (c.view.container.width !== r.w || c.view.container.height !== r.h) c.view.resize({ w: r.w, h: r.h });
       c.view.setPosition(r.x, r.y);
-      c.badge.setPosition(r.x + r.w - 4, r.y + r.h - 3);
+      // On the picture's lower right corner, clear of the description (cards 2026-11-10 are full-text).
+      const art = cardLayout({ w: r.w, h: r.h }, frameBorder(this.scene, 'card') + CARD_PAD, r.w >= 100 ? 'full' : 'compact').art;
+      c.badge.setPosition(r.x + art.x + art.w - 2, r.y + art.y + art.h - 1);
     });
   }
 }

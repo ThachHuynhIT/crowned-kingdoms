@@ -3,9 +3,10 @@ import type { Rect } from '../hud/layout';
 /**
  * Pure layout of the king carousel: the selected card in the middle (full size, brightest,
  * in front), the neighbours smaller, dimmer and lower, five cards visible at most. The
- * `rect` is the carousel area; from 768 px wide it uses the desktop drops (24 / 48 px), below
- * it the phone ones (16 / 32 px) and sizes the cards so the ±1 cards peek out beside the
- * centre card. Cards of 2:3, whole pixels, even heights (so drops are exact).
+ * `rect` is the carousel area. From 768 px wide (owner 2026-11-10) the cards are drawn at whole
+ * scales of the 66×96 card: the middle one ×3 (×4 in tall areas), the others one scale less,
+ * 20 / 40 px lower. Below that the phone sizes: 2:3 cards sized so the ±1 cards peek out beside
+ * the centre card, 16 / 32 px lower, whole pixels, even heights.
  */
 export interface CarouselSlot {
   /** Index into the list of kings. */
@@ -31,9 +32,50 @@ const STEP = [0, 0.78, 1.39] as const;
 const SPAN_DESKTOP = 3.4;
 const SPAN_PHONE = 2.36;
 
+/** King card art size (`KING_CARD_NATIVE`). */
+const CARD_NATIVE = { w: 66, h: 96 } as const;
+/** Desktop (owner 2026-11-10): about half the old size, drawn at whole scales so the pixels stay sharp. */
+const DESK_DROP = [0, 20, 40] as const;
+const DESK_BRIGHTNESS = [1, 0.7, 0.45] as const;
+
+/** Card scale of the middle card on desktop: 3 (198×288) up to a 800 px tall area, 4 above. */
+export const desktopCentreScale = (areaH: number): number => (areaH >= 800 ? 4 : 3);
+
+const desktopSlots = (rect: Rect, selectedIndex: number, count: number): readonly CarouselSlot[] => {
+  const s0 = desktopCentreScale(rect.h);
+  const s1 = s0 - 1;
+  const w0 = CARD_NATIVE.w * s0;
+  const h0 = CARD_NATIVE.h * s0;
+  const w1 = CARD_NATIVE.w * s1;
+  const h1 = CARD_NATIVE.h * s1;
+  const cx = Math.round(rect.x + rect.w / 2);
+  const top = rect.y + Math.floor((rect.h - DESK_DROP[2] - h0) / 2);
+  // Neighbours tuck under the middle card a little, the outer ones under the neighbours.
+  const step1 = Math.round(w0 / 2 + w1 * 0.3);
+  const step2 = step1 + Math.round(w1 * 0.72);
+  return Array.from({ length: count }, (_, index) => {
+    const offset = index - selectedIndex;
+    const k = Math.min(2, Math.abs(offset));
+    const w = k === 0 ? w0 : w1;
+    const h = k === 0 ? h0 : h1;
+    const midX = cx + Math.sign(offset) * (k === 0 ? 0 : k === 1 ? step1 : step2);
+    const slotRect = { x: Math.round(midX - w / 2), y: top + DESK_DROP[k]! + Math.round((h0 - h) / 2), w, h };
+    const inside = Math.max(0, Math.min(slotRect.x + w, rect.x + rect.w) - Math.max(slotRect.x, rect.x));
+    return {
+      index,
+      rect: slotRect,
+      scale: k === 0 ? 1 : s1 / s0,
+      brightness: DESK_BRIGHTNESS[k]!,
+      depth: 100 - 10 * Math.abs(offset),
+      visible: Math.abs(offset) <= 2 && inside >= MIN_VISIBLE,
+    };
+  });
+};
+
 export const carouselSlots = (rect: Rect, selectedIndex: number, count: number): readonly CarouselSlot[] => {
   if (count <= 0) return [];
   const desktop = rect.w >= DESKTOP_FROM;
+  if (desktop) return desktopSlots(rect, selectedIndex, count);
   const drop = desktop ? [0, 24, 48] : [0, 16, 32];
   const maxDrop = drop[2]!;
   const widthCap = Math.floor((rect.w / (desktop ? SPAN_DESKTOP : SPAN_PHONE)) * 1.5);

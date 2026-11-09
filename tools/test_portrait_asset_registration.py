@@ -18,6 +18,13 @@ class PortraitRegistrationTest(unittest.TestCase):
             approved = ROOT / f'docs/art-review/g3e/portraits/native/{king}.png'
             self.assertEqual(shipped.read_bytes(), approved.read_bytes(), king)
 
+    def test_nine_144x216_copies_exist_and_are_registered(self):
+        manifest = (ROOT / 'docs/assets.manifest.yml').read_text(encoding='utf-8')
+        for king in KINGS:
+            self.assertEqual(Image.open(DIR / f'{king}-144.png').size, (144, 216), king)
+            self.assertIn(f'path: public/assets/art/ai-v1/portraits/{king}-144.png', manifest, king)
+            self.assertIn(f'id: portrait_king_{king}_144', manifest, king)
+
     def test_every_portrait_is_in_the_manifest_as_a_custom_asset(self):
         manifest = (ROOT / 'docs/assets.manifest.yml').read_text(encoding='utf-8')
         for king in KINGS:

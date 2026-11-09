@@ -4,9 +4,11 @@ import { isDesktop } from '../realm/realmLayout';
 
 /**
  * Pure layout of the king detail screen (after choosing a king): title and back on top, the
- * king's nine cards in a 3×3 grid, the big king card, the action row (Đặc quyền · Độ khó ‹ ›
- * · Chơi) and the seed row. Desktop (width ≥ 768) puts the grid left of the king card and needs
- * about 650 px of height; phones stack the small king card, grid, seed row and the actions.
+ * king's nine cards, the big king card, the action row (Đặc quyền · Độ khó ‹ › · Chơi), the
+ * seed row and the run-mode row. Desktop (width ≥ 768) puts the cards left of the king card and
+ * centres the whole block under the title, both ways (owner 2026-11-10): big 116×180 cards in
+ * rows of 5 + 4, or 3 × 3 where 5 columns do not fit, or the small 84×132 cards on short
+ * screens. Phones stack the small king card, a 3×3 grid, the seed row and the actions.
  * Rects are logical screen px; no button is ever shrunk below 44×44.
  */
 export interface KingDetailLayout {
@@ -33,22 +35,54 @@ export interface KingDetailLayout {
   modeNote: Rect;
 }
 
-const CARD_DESKTOP = { w: 84, h: 132, gap: 8 } as const;
-const CARD_PHONE = { w: 72, h: 112, gap: 6 } as const;
+interface GridSpec {
+  w: number;
+  h: number;
+  gap: number;
+  cols: number;
+}
+
+/** Desktop card grids, first one that fits the screen wins. */
+const DESKTOP_GRIDS: readonly GridSpec[] = [
+  { w: 116, h: 180, gap: 10, cols: 5 },
+  { w: 116, h: 180, gap: 10, cols: 3 },
+  { w: 84, h: 132, gap: 8, cols: 3 },
+];
+const CARD_PHONE = { w: 72, h: 112, gap: 6, cols: 3 } as const;
 /** Native size of the king card art (see `KING_CARD_NATIVE`), times the screen scale. */
 const KING_CARD = { w: 66, h: 96 } as const;
-const GRID = 3;
+const CARD_COUNT = 9;
 const MODE_BUTTON = { w: 120, h: 44 } as const;
 const MODE_GAP = 8;
 const MODE_NOTE_W = 300;
+/** Bottom of the title row on desktop; the block is centred in the room below it. */
+const DESK_TITLE_BOTTOM = 64;
+const PORTRAIT_GAP = 48;
+/** Grid/king card → footer (24, the perk caption sits in it) → seed row → mode row. */
+const DESK_BELOW = 24 + 56 + 12 + 44 + 12 + 44;
+/** The action row needs Đặc quyền · ‹ Độ khó › (388 px), a gap and Chơi (168 px). */
+const FOOTER_MIN_W = 388 + 8 + 168;
 
-const gridCards = (x: number, y: number, c: { w: number; h: number; gap: number }): Rect[] =>
-  Array.from({ length: GRID * GRID }, (_, i) => ({
-    x: x + (i % GRID) * (c.w + c.gap),
-    y: y + Math.floor(i / GRID) * (c.h + c.gap),
-    w: c.w,
-    h: c.h,
-  }));
+const gridSize = (g: GridSpec): { w: number; h: number } => {
+  const rows = Math.ceil(CARD_COUNT / g.cols);
+  return { w: g.cols * g.w + (g.cols - 1) * g.gap, h: rows * g.h + (rows - 1) * g.gap };
+};
+
+/** Cards row by row; a short last row is centred under the full ones. */
+const gridCards = (x: number, y: number, g: GridSpec): Rect[] => {
+  const full = gridSize(g).w;
+  return Array.from({ length: CARD_COUNT }, (_, i) => {
+    const row = Math.floor(i / g.cols);
+    const inRow = Math.min(g.cols, CARD_COUNT - row * g.cols);
+    const rowW = inRow * g.w + (inRow - 1) * g.gap;
+    return {
+      x: x + Math.round((full - rowW) / 2) + (i % g.cols) * (g.w + g.gap),
+      y: y + row * (g.h + g.gap),
+      w: g.w,
+      h: g.h,
+    };
+  });
+};
 
 export const detailLayout = (screen: Size, inset: number): KingDetailLayout => {
   const { w } = screen;
@@ -56,14 +90,23 @@ export const detailLayout = (screen: Size, inset: number): KingDetailLayout => {
   const desktop = isDesktop(w);
 
   if (desktop) {
-    const gridW = GRID * CARD_DESKTOP.w + (GRID - 1) * CARD_DESKTOP.gap;
-    const gridH = GRID * CARD_DESKTOP.h + (GRID - 1) * CARD_DESKTOP.gap;
     const portraitW = KING_CARD.w * 4;
     const portraitH = KING_CARD.h * 4;
-    const totalW = gridW + 48 + portraitW;
+    const room = screen.h - DESK_TITLE_BOTTOM - margin;
+    const blockOf = (g: GridSpec): { g: GridSpec; w: number; h: number; gridW: number; gridH: number } => {
+      const size = gridSize(g);
+      const totalW = Math.max(size.w + PORTRAIT_GAP + portraitW, FOOTER_MIN_W);
+      return { g, w: totalW, h: Math.max(size.h, portraitH) + DESK_BELOW, gridW: size.w, gridH: size.h };
+    };
+    const options = DESKTOP_GRIDS.map(blockOf);
+    const block = options.find((b) => b.w <= w - 2 * margin && b.h <= room) ?? options[options.length - 1]!;
+    const { gridW, gridH } = block;
+    const upperH = Math.max(gridH, portraitH);
+    const totalW = block.w;
     const x0 = Math.round((w - totalW) / 2);
-    const top = 86;
-    const footerY = top + gridH + 24;
+    const top = DESK_TITLE_BOTTOM + Math.max(0, Math.floor((room + margin - block.h) / 2));
+    const gridY = top + Math.round((upperH - gridH) / 2);
+    const footerY = top + upperH + 24;
     const seedY = footerY + 56 + 12;
     const seedRowW = 300 + 8 + 120;
     const seedX = Math.round((w - seedRowW) / 2);
@@ -75,8 +118,8 @@ export const detailLayout = (screen: Size, inset: number): KingDetailLayout => {
       desktop,
       title: { x: back.x + back.w + margin, y: 20, w: Math.max(0, w - 2 * (back.x + back.w + margin)), h: 44 },
       back,
-      cards: gridCards(x0, top, CARD_DESKTOP),
-      portrait: { x: x0 + gridW + 48, y: top + Math.round((gridH - portraitH) / 2), w: portraitW, h: portraitH },
+      cards: gridCards(x0, gridY, block.g),
+      portrait: { x: x0 + gridW + PORTRAIT_GAP, y: top + Math.round((upperH - portraitH) / 2), w: portraitW, h: portraitH },
       perks: { x: x0, y: footerY, w: 140, h: 56 },
       perkName: { x: x0, y: footerY - 22, w: 388, h: 20 },
       previous: { x: x0 + 148, y: footerY, w: 44, h: 56 },
@@ -93,8 +136,7 @@ export const detailLayout = (screen: Size, inset: number): KingDetailLayout => {
     };
   }
 
-  const gridW = GRID * CARD_PHONE.w + (GRID - 1) * CARD_PHONE.gap;
-  const gridH = GRID * CARD_PHONE.h + (GRID - 1) * CARD_PHONE.gap;
+  const { w: gridW, h: gridH } = gridSize(CARD_PHONE);
   const portraitW = KING_CARD.w * 2;
   const portraitH = KING_CARD.h * 2;
   const portraitY = 64;

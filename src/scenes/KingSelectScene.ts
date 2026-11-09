@@ -8,7 +8,7 @@ import { defaultProfile, type MetaProfile } from '../game/meta';
 import { buildSpritesTexture } from '../render/atlas';
 import { CardView } from '../ui/cards/CardView';
 import { textContent } from '../ui/hud/layout';
-import { carouselScreen, carouselSlots, unlockButtonRect } from '../ui/kingSelect/carouselLayout';
+import { carouselScreen, carouselSlots, unlockButtonRect, type CarouselSlot } from '../ui/kingSelect/carouselLayout';
 import { kingChoices, nextIndex, swipeTarget, unlockLabel, type KingChoice } from '../ui/kingSelect/carouselModel';
 import { difficultyChoices, type DifficultyOption } from '../ui/kingSelect/difficulty';
 import { detailLayout } from '../ui/kingSelect/detailLayout';
@@ -32,6 +32,9 @@ import { getSession } from './sessionRegistry';
 let lastKing: KingId = 'wheat';
 
 type Mode = 'carousel' | 'detail';
+
+/** How long the king cards take to glide to their new slots. */
+const SLIDE_MS = 240;
 
 /** Launch data: a notice to show once (e.g. the realm refused to start a locked Endless run). */
 export interface KingSelectData {
@@ -83,6 +86,7 @@ export class KingSelectScene extends Phaser.Scene {
   private next!: Button;
   private views: KingPortraitView[] = [];
   private detailView!: KingPortraitView;
+  private slideTween: Phaser.Tweens.Tween | null = null;
   private grid: CardView[] = [];
   private perks!: Button;
   private diffPrev!: Button;
@@ -118,6 +122,7 @@ export class KingSelectScene extends Phaser.Scene {
     this.profile = getSession(this)?.meta() ?? defaultProfile();
     this.runMode = 'normal';
     this.modeButtons = [];
+    this.slideTween = null;
     this.choices = kingChoices(CONTENT, this.profile);
     this.selected = Math.max(0, this.choices.findIndex((c) => c.id === lastKing && c.playable));
     this.mode = 'carousel';
@@ -286,9 +291,44 @@ export class KingSelectScene extends Phaser.Scene {
 
   private select(index: number): void {
     if (index === this.selected || this.choices[index] === undefined) return;
+    const area = carouselScreen({ w: this.scale.width, h: this.scale.height }).area;
+    const from = carouselSlots(area, this.selected, this.choices.length);
     this.selected = index;
     this.perk = null; // perks belong to one king
     this.refresh();
+    if (this.mode === 'carousel') this.slide(from, carouselSlots(area, index, this.choices.length));
+  }
+
+  /** The cards glide from their old slots to the new ones (owner 2026-11-10: "lướt qua trái phải"). */
+  private slide(from: readonly CarouselSlot[], to: readonly CarouselSlot[]): void {
+    this.slideTween?.remove();
+    const lerp = (a: number, b: number, t: number): number => Math.round(a + (b - a) * t);
+    const step = (t: number): void => {
+      if (this.mode !== 'carousel') return;
+      this.views.forEach((view, i) => {
+        const a = from[i];
+        const b = to[i];
+        if (!a || !b) return;
+        view.setVisible(a.visible || b.visible);
+        view.layout({ x: lerp(a.rect.x, b.rect.x, t), y: lerp(a.rect.y, b.rect.y, t), w: lerp(a.rect.w, b.rect.w, t), h: lerp(a.rect.h, b.rect.h, t) }, true);
+        view.setBrightness(a.brightness + (b.brightness - a.brightness) * t);
+        // the card coming to the middle rises above the one leaving it halfway through
+        view.setDepth(t < 0.5 ? a.depth : b.depth);
+      });
+    };
+    const progress = { t: 0 };
+    step(0);
+    this.slideTween = this.tweens.add({
+      targets: progress,
+      t: 1,
+      duration: SLIDE_MS,
+      ease: 'Cubic.easeOut',
+      onUpdate: () => step(progress.t),
+      onComplete: () => {
+        this.slideTween = null;
+        this.layout();
+      },
+    });
   }
 
   private difficulties(): readonly DifficultyOption[] {
@@ -503,7 +543,10 @@ export class KingSelectScene extends Phaser.Scene {
     this.detailView.setDepth(10);
     this.grid.forEach((view, i) => {
       view.container.setVisible(detail);
-      if (detail) view.setPosition(dl.cards[i]!.x, dl.cards[i]!.y);
+      if (!detail) return;
+      const r = dl.cards[i]!;
+      if (view.container.width !== r.w || view.container.height !== r.h) view.resize({ w: r.w, h: r.h });
+      view.setPosition(r.x, r.y);
     });
     for (const b of [this.perks, this.diffPrev, this.diffNext, this.play, this.reroll, ...this.modeButtons]) b.setVisible(detail);
     this.modeButtons.forEach((b, i) => this.place(b, dl.modes[i]!));

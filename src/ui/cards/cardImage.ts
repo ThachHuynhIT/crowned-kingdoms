@@ -1,6 +1,7 @@
 import type { CardId } from '../../data/types';
 import { SPRITES_KEY, cardArtFrame } from '../../render/atlas';
 import { CARD_ART } from '../../render/cardArt';
+import { MAX_ART_SCALE } from './cardLayout';
 
 /** A card picture: texture key, frame name and native size in px. */
 export interface CardImageRef {
@@ -8,18 +9,31 @@ export interface CardImageRef {
   frame: string;
   w: number;
   h: number;
-  /** A smaller copy for picture windows narrower than `w` (cards never scale by a fraction). */
+  /** A smaller copy for narrower picture windows (cards never scale by a fraction). */
   small?: CardImageRef;
 }
 
+/** Width a picture shows at in `area`: its largest whole scale (1..MAX_ART_SCALE) that fits, 0 if none fits. */
+const shownWidth = (area: { w: number; h: number }, ref: CardImageRef): number =>
+  ref.w * Math.min(MAX_ART_SCALE, Math.floor(area.w / ref.w), Math.floor(area.h / ref.h));
+
 /**
- * The largest copy of `ref` that fits `area` at scale 1 (the picture window of small cards is
- * narrower than a 96×72 illustration); the smallest copy when none fits.
+ * The copy of `ref` that shows widest in `area` at a whole scale (cards never scale by a fraction):
+ * the 128×96 picture in a big window, the 96×72 one doubled in a 192 px window, the 48×36 one in
+ * small cards. On a tie the bigger (sharper) copy wins; the smallest copy when none fits.
  */
-export const pickCardImage = (area: { w: number; h: number }, ref: CardImageRef): CardImageRef =>
-  (ref.w <= area.w && ref.h <= area.h) || ref.small === undefined
-    ? ref
-    : pickCardImage(area, ref.small);
+export const pickCardImage = (area: { w: number; h: number }, ref: CardImageRef): CardImageRef => {
+  let best = ref;
+  let bestW = shownWidth(area, ref);
+  for (let r = ref.small; r !== undefined; r = r.small) {
+    const w = shownWidth(area, r);
+    if (w > bestW || (bestW === 0 && w === 0)) {
+      best = r;
+      bestW = w;
+    }
+  }
+  return best;
+};
 
 /**
  * The picture of `cardId`: the new vertical art when one is registered in `vertical`, else the
@@ -37,7 +51,7 @@ export const resolveCardImage = (
     h: CARD_ART.h,
   };
 
-/** Folder of the 96×72 card illustrations (and their `-48` copies), made by docs/art-review/g3e/cards/make_assets.py. */
+/** Folder of the 96×72 card illustrations (and their `-48` and `-128` copies), made by docs/art-review/g3e/cards/make_assets.py. */
 export const CARD_ART_DIR = 'assets/art/ai-v1/cards/';
 
 /** Cards with a new illustration (approved 2026-10-29): the whole Wheat king set, wired 2026-11-06. */
@@ -148,19 +162,26 @@ const ILLUSTRATED: readonly CardId[] = [
 ];
 
 const illustration = (id: CardId): CardImageRef => ({
-  key: `cardart-${id}`,
+  key: `cardart-${id}-128`,
   frame: '__BASE',
-  w: 96,
-  h: 72,
-  small: { key: `cardart-${id}-48`, frame: '__BASE', w: 48, h: 36 },
+  w: 128,
+  h: 96,
+  small: {
+    key: `cardart-${id}`,
+    frame: '__BASE',
+    w: 96,
+    h: 72,
+    small: { key: `cardart-${id}-48`, frame: '__BASE', w: 48, h: 36 },
+  },
 });
 
 /** New card pictures by card id; the other cards keep the 32×24 atlas picture. */
 export const VERTICAL_CARD_ART: Readonly<Partial<Record<CardId, CardImageRef>>> =
   Object.fromEntries(ILLUSTRATED.map((id) => [id, illustration(id)]));
 
-/** Every illustration file to load (texture key and URL), both sizes. */
+/** Every illustration file to load (texture key and URL), all three sizes. */
 export const CARD_ART_FILES: readonly { key: string; url: string }[] = ILLUSTRATED.flatMap((id) => [
   { key: `cardart-${id}`, url: `${CARD_ART_DIR}${id}.png` },
   { key: `cardart-${id}-48`, url: `${CARD_ART_DIR}${id}-48.png` },
+  { key: `cardart-${id}-128`, url: `${CARD_ART_DIR}${id}-128.png` },
 ]);

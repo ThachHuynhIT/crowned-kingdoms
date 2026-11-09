@@ -6,7 +6,7 @@ import { addPixelTexture, imageFile } from '../../render/atlas';
 import { kingCardFile } from '../../render/imageArt';
 import { KING_CARD_NATIVE, KING_CARD_WINDOW, paintKingCard } from '../../render/kingCardArt';
 import { paintPortrait, PORTRAIT_SIZE } from '../../render/portraitArt';
-import { PORTRAIT_ASSETS, portraitPlacement, portraitTextureKey } from '../../render/portraitAssets';
+import { PORTRAIT_ASSETS, pickPortraitCopy, portraitLargeTextureKey, portraitPlacement, portraitTextureKey } from '../../render/portraitAssets';
 import type { Rect, TooltipContent } from '../hud/layout';
 import type { TooltipHost } from '../theme';
 import type { KingChoice } from './carouselModel';
@@ -134,8 +134,20 @@ export class KingPortraitView {
     const scale = this.exact ? this.rect.w / KING_CARD_NATIVE.w : Math.max(1, Math.floor(this.rect.w / KING_CARD_NATIVE.w));
     this.card.setPosition(this.rect.x, this.rect.y).setScale(scale);
     if (!this.portrait) return;
+    this.pickPortraitTexture(scale);
     const at = portraitPlacement(KING_CARD_WINDOW, scale, this.portraitArt);
     this.portrait.setPosition(this.rect.x + at.x, this.rect.y + at.y).setScale(at.scale);
+  }
+
+  /** The approved portrait in the copy that is sharp at this card scale (only while it is at rest on a whole scale). */
+  private pickPortraitTexture(scale: number): void {
+    const c = this.choice;
+    if (!this.portrait || !c || !c.playable || !this.scene.textures.exists(portraitTextureKey(c.id))) return;
+    const large = pickPortraitCopy(scale) === 'large' && this.scene.textures.exists(portraitLargeTextureKey(c.id));
+    const asset = PORTRAIT_ASSETS[c.id];
+    const key = large ? portraitLargeTextureKey(c.id) : portraitTextureKey(c.id);
+    if (this.portrait.texture.key !== key) this.portrait.setTexture(key);
+    this.portraitArt = large ? { w: asset.large.width, h: asset.large.height } : { w: asset.width, h: asset.height };
   }
 
   private tooltipContent(): TooltipContent | null {

@@ -12,16 +12,40 @@ const overlaps = (a: Rect, b: Rect): boolean =>
 const inside = (r: Rect, s: Size): boolean => r.x >= 0 && r.y >= 0 && r.x + r.w <= s.w && r.y + r.h <= s.h;
 
 describe('detailLayout', () => {
-  it('detail_desktop_grid_left_portrait_right: nine 84×132 cards in 3×3 left of a 264×384 king card', () => {
+  it('detail_desktop_grid_left_portrait_right: nine 116×180 cards in rows of 5 + 4 left of a 264×384 king card', () => {
     const l = detailLayout(DESKTOP, 6);
     expect(l.desktop).toBe(true);
     expect(l.cards).toHaveLength(9);
-    for (const c of l.cards) expect([c.w, c.h]).toEqual([84, 132]);
-    expect(l.cards[1]!.x).toBe(l.cards[0]!.x + 84 + 8);
-    expect(l.cards[3]!.y).toBe(l.cards[0]!.y + 132 + 8);
-    expect(l.cards[8]).toEqual({ x: l.cards[0]!.x + 2 * 92, y: l.cards[0]!.y + 2 * 140, w: 84, h: 132 });
+    for (const c of l.cards) expect([c.w, c.h]).toEqual([116, 180]);
+    expect(l.cards[1]!.x).toBe(l.cards[0]!.x + 116 + 10);
+    expect(l.cards[4]!.y).toBe(l.cards[0]!.y);
+    expect(l.cards[5]!.y).toBe(l.cards[0]!.y + 180 + 10);
+    // the short second row is centred under the first
+    const rowMid = (a: Rect, b: Rect): number => (a.x + b.x + b.w) / 2;
+    expect(rowMid(l.cards[5]!, l.cards[8]!)).toBe(rowMid(l.cards[0]!, l.cards[4]!));
     expect([l.portrait.w, l.portrait.h]).toEqual([264, 384]);
-    expect(l.portrait.x).toBeGreaterThan(l.cards[2]!.x + 84);
+    expect(l.portrait.x).toBeGreaterThan(l.cards[4]!.x + 116);
+  });
+
+  it('desktop: the whole block (cards, king card, buttons) is centred on the screen both ways', () => {
+    for (const screen of [DESKTOP, { w: 1920, h: 1080 }]) {
+      const l = detailLayout(screen, 6);
+      const parts = [l.portrait, l.perks, l.play, l.seed, l.reroll, ...l.modes, l.modeNote, ...l.cards];
+      const left = Math.min(...parts.map((r) => r.x));
+      const right = Math.max(...parts.map((r) => r.x + r.w));
+      const top = Math.min(...parts.map((r) => r.y), l.perkName.y);
+      const bottom = Math.max(...parts.map((r) => r.y + r.h));
+      expect(Math.abs(left + right - screen.w), 'horizontal').toBeLessThanOrEqual(2);
+      // vertically centred in the room under the title
+      const below = l.title.y + l.title.h;
+      expect(Math.abs(top - below - (screen.h - bottom)), 'vertical').toBeLessThanOrEqual(12);
+    }
+  });
+
+  it('desktop: falls back to a 3×3 grid where 5 columns do not fit (768 px tablet)', () => {
+    const l = detailLayout(TABLET, 6);
+    expect(new Set(l.cards.map((c) => c.x)).size).toBe(3);
+    for (const c of l.cards) expect([c.w, c.h]).toEqual([116, 180]);
   });
 
   it('detail_mobile_grid_stays_3_by_3: the small king card sits above a 3×3 grid of 72×112 cards', () => {

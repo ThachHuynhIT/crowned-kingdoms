@@ -70,22 +70,22 @@ describe('planningLayout', () => {
     expect(l.desktop).toBe(true);
     expect(l.lives).toEqual({ x: 10, y: 10, w: 120, h: 52 });
     expect(l.year).toEqual({ x: 560, y: 66, w: 160, h: 26 });
-    // the board is 65% of the width, as tall as the band between the top HUD and the hand (spec 2026-11-08 §4)
-    expect(l.board).toEqual({ x: 226, y: 104, w: 828, h: 414 });
-    expect(l.zoom).toBeCloseTo(1.29375, 12);
+    // the board is as tall as the band between the top HUD and the 208 px hand (spec 2026-11-08 §4; cards 2026-11-10)
+    expect(l.board).toEqual({ x: 258, y: 104, w: 764, h: 382 });
+    expect(l.zoom).toBeCloseTo(1.19375, 12);
     // the side panels would overlap the bigger board at 1280 px: buttons instead
     expect(l.scout).toBeNull();
     expect(l.scoutButton).not.toBeNull();
     expect(l.gold).toEqual({ x: 134, y: 10, w: 120, h: 52 });
     expect(l.calendar[0]).toEqual({ x: 502, y: 10, w: 52, h: 52 });
-    expect(l.sell).toEqual({ x: 296, y: 658, w: 140, h: 52 });
-    expect(l.reroll).toEqual({ x: 296, y: 598, w: 140, h: 52 });
-    expect(l.deck).toEqual({ x: 844, y: 658, w: 140, h: 52 });
+    expect(l.sell).toEqual({ x: 254, y: 658, w: 140, h: 52 });
+    expect(l.reroll).toEqual({ x: 254, y: 598, w: 140, h: 52 });
+    expect(l.deck).toEqual({ x: 886, y: 658, w: 140, h: 52 });
     // Dời trại (Nomad King) stands over Bộ bài, mirroring Đổi bài over Bán bài
-    expect(l.freeMove).toEqual({ x: 844, y: 598, w: 140, h: 52 });
+    expect(l.freeMove).toEqual({ x: 886, y: 598, w: 140, h: 52 });
     expect(l.hand).toHaveLength(3);
-    expect(l.hand[0]).toEqual({ x: 448, y: 534, w: 120, h: 176 });
-    expect(l.hand[2]!.x).toBe(448 + 2 * 132);
+    expect(l.hand[0]).toEqual({ x: 406, y: 502, w: 148, h: 208 });
+    expect(l.hand[2]!.x).toBe(406 + 2 * 160);
     expect(l.fight.w).toBe(200);
     expect(l.fight.h).toBe(56);
   });
@@ -319,7 +319,7 @@ describe('centerHand', () => {
 
 describe('planningZoom / realmCamera', () => {
   it('uses the overview zooms: planning fits above the hand, battle above the bottom bars, PLANNING_ZOOM on mobile', () => {
-    expect(planningZoom(DESKTOP)).toBeCloseTo(1.29375, 12);
+    expect(planningZoom(DESKTOP)).toBeCloseTo(1.19375, 12);
     expect(planningZoom({ w: 1920, h: 1080 })).toBeCloseTo(1.95, 12);
     expect(planningZoom(MOBILE)).toBe(PLANNING_ZOOM);
   });
@@ -758,7 +758,7 @@ describe('decree and quest panel', () => {
 
 describe('overviewZoom: the farthest zoom-out, like the owner reference picture (spec 2026-11-08 §4)', () => {
   it('overview_65_percent_clamps_to_hud_height', () => {
-    expect(overviewZoom(DESKTOP, 'planning')).toBeCloseTo(1.29375, 12);
+    expect(overviewZoom(DESKTOP, 'planning')).toBeCloseTo(1.19375, 12);
     expect(overviewZoom(DESKTOP, 'battle')).toBeCloseTo(1.3, 12);
     for (const phase of ['planning', 'battle'] as const) {
       expect(overviewZoom({ w: 2000, h: 994 }, phase)).toBeCloseTo(2.03125, 12);
@@ -806,12 +806,12 @@ describe('overviewZoom: the farthest zoom-out, like the owner reference picture 
 
 describe('Endless overview', () => {
   it('fits 896 projected px on desktop and keeps phone touch zoom', () => {
-    expect(overviewZoom(DESKTOP, 'planning', 3, 'endless')).toBeCloseTo(414 / 448, 12);
+    expect(overviewZoom(DESKTOP, 'planning', 3, 'endless')).toBeCloseTo(382 / 448, 12);
     expect(overviewZoom(DESKTOP, 'battle', 3, 'endless')).toBeCloseTo(832 / 896, 12);
     for (const phase of ['planning', 'battle'] as const)
       expect(overviewZoom(MOBILE, phase, 3, 'endless')).toBe(33 / 32);
     const board = planningLayout(DESKTOP, 3, 'endless').board;
-    expect(board.w).toBeCloseTo(828, 12);
-    expect(board.h).toBeCloseTo(414, 12);
+    expect(board.w).toBeCloseTo(764, 12);
+    expect(board.h).toBeCloseTo(382, 12);
   });
 });

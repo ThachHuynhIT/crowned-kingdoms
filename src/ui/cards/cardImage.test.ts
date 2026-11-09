@@ -7,28 +7,40 @@ const WHEAT = ['throne', 'field', 'fertilizer', 'windmill', 'harvest_festival', 
 
 describe('pickCardImage', () => {
   const small: CardImageRef = { key: 's', frame: '__BASE', w: 48, h: 36 };
-  const big: CardImageRef = { key: 'b', frame: '__BASE', w: 96, h: 72, small };
+  const mid: CardImageRef = { key: 'm', frame: '__BASE', w: 96, h: 72, small };
+  const big: CardImageRef = { key: 'b', frame: '__BASE', w: 128, h: 96, small: mid };
 
   it('keeps the full picture when it fits at scale 1', () => {
-    expect(pickCardImage({ w: 112, h: 84 }, big)).toBe(big);
+    expect(pickCardImage({ w: 112, h: 84 }, mid)).toBe(mid);
   });
 
   it('falls back to the smaller picture instead of scaling by a fraction', () => {
-    expect(pickCardImage({ w: 88, h: 66 }, big)).toBe(small);
+    expect(pickCardImage({ w: 88, h: 66 }, mid)).toBe(small);
   });
 
   it('keeps the only picture there is', () => {
     expect(pickCardImage({ w: 10, h: 10 }, small)).toBe(small);
   });
+
+  it('picks the copy that shows widest at a whole scale: 128 in a 136 px window, 96 x2 in a 192 px one', () => {
+    expect(pickCardImage({ w: 136, h: 102 }, big)).toBe(big);
+    expect(pickCardImage({ w: 192, h: 144 }, big)).toBe(mid);
+    expect(pickCardImage({ w: 100, h: 75 }, big)).toBe(mid);
+  });
+
+  it('prefers the sharper (bigger native) copy when two show equally wide', () => {
+    expect(pickCardImage({ w: 96, h: 72 }, big)).toBe(mid);
+  });
 });
 
 describe('Wheat card art (approved 2026-10-29, wired 2026-11-06)', () => {
-  it('every Wheat card has a 96×72 picture with a 48×36 fallback, both loaded', () => {
+  it('every Wheat card has a 128×96 picture with 96×72 and 48×36 copies, all loaded', () => {
     for (const card of WHEAT) {
       const ref = VERTICAL_CARD_ART[`wheat_${card}`];
-      expect(ref, card).toMatchObject({ w: 96, h: 72, small: { w: 48, h: 36 } });
+      expect(ref, card).toMatchObject({ w: 128, h: 96, small: { w: 96, h: 72, small: { w: 48, h: 36 } } });
       expect(CARD_ART_FILES.map((f) => f.key)).toContain(ref!.key);
       expect(CARD_ART_FILES.map((f) => f.key)).toContain(ref!.small!.key);
+      expect(CARD_ART_FILES.map((f) => f.key)).toContain(ref!.small!.small!.key);
     }
     expect(new Set(CARD_ART_FILES.map((f) => f.key)).size).toBe(CARD_ART_FILES.length);
   });

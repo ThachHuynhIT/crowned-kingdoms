@@ -23,12 +23,12 @@ Chơi được trong trình duyệt:
 Tất cả là cảm nhận trên PC (desktop ≥ 768 px). Bố cục điện thoại giữ nguyên cho tới khi chủ dự án bảo làm (xem "Để sau"). Mỗi việc đổi hành vi đi theo quy trình: brainstorming → spec + plan → TDD → kiểm trình duyệt.
 
 **Chọn vua**
-1. Các vua lướt qua lại (slide trái/phải) thay vì đứng cả hàng.
-2. Thẻ vua nhỏ còn khoảng 1/2 trên PC, hình nét hơn.
-3. Bước xem bộ bài sau khi chọn vua: căn giữa màn hình theo cả hai chiều và to hơn.
+1. ✔ Các vua trượt mượt sang trái/phải khi bấm ‹ › (0,24 giây).
+2. ✔ Thẻ vua nhỏ còn khoảng 1/2 trên PC (giữa ×3 = 198×288, hai bên ×2), vẽ ở tỉ lệ nguyên; chân dung thêm bản 144×216 để nét ở ×3.
+3. ✔ Màn sau khi chọn vua: cả khối nằm giữa màn theo hai chiều, 9 lá 116×180 xếp 5 + 4.
 
 **Thẻ bài và lượt chơi**
-4. Tranh trên thẻ to gần hết bề ngang thẻ; bản thân lá bài cũng to hơn.
+4. ✔ Tranh gần kín bề ngang thẻ; trên PC lá bài to hơn: bài trên tay 148×208 (tranh 128×96 mới, thu nhỏ từ ảnh gốc đã duyệt), Bộ bài 116×180, phần thưởng 212×280 (tranh ×2). Bàn cờ ở pha chuẩn bị nhỏ đi một chút (zoom 1,29 → 1,19) để nhường chỗ cho tay bài.
 5. Cầm được hơn 3 lá trên tay, chơi được hơn 1 lá mỗi năm. Trận chỉ bắt đầu khi trên tay còn 2 lá hoặc ít hơn. Đây là đổi luật: cần sửa `RunState` (có thể bump save version + migrator) và cân bằng lại.
 
 **Bàn cờ và camera**
