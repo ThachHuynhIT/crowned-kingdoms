@@ -6,3 +6,6 @@ coverage
 .vite
 .playwright-mcp/
 tools/out/
+
+# Python bytecode from the art-review scripts
+__pycache__/
