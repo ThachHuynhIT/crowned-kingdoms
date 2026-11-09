@@ -1,6 +1,6 @@
 import { describe, expect, it } from 'vitest';
 import { FIELD_TERRAINS, generateField, paintField } from './fieldArt';
-import { GRASS_FILES, IMAGE_ART_FILES, IMAGE_ART_SCALE, IMAGE_BUILDINGS, IMAGE_PLOTS, IMAGE_UNITS, POSES, WALL_FILE, unitPoseFile } from './imageArt';
+import { GRASS_FILES, IMAGE_ART_FILES, IMAGE_ART_SCALE, IMAGE_BUILDINGS, IMAGE_PLOTS, IMAGE_UNITS, MENU_IMAGE_LAYERS, POSES, WALL_FILE, menuImageLayers, unitPoseFile } from './imageArt';
 import { PixelCanvas, upscale } from './pixel';
 
 describe('image art mapping', () => {
@@ -123,5 +123,18 @@ describe('paintField with ground textures (river and sand join up, 2026-11-06)',
     let holes = 0;
     for (let i = 3; i < textured.data.length; i += 4) if (textured.data[i] !== 255) holes++;
     expect(holes).toBe(0);
+  });
+});
+
+describe('menu picture strips (G5)', () => {
+  it('uses the pictures only when every strip loaded', () => {
+    expect(menuImageLayers(() => true)).toBe(MENU_IMAGE_LAYERS);
+    expect(menuImageLayers((file) => file !== 'menu/hills_far')).toBeNull();
+  });
+
+  it('loads every strip with the rest of the image art, far drifting slower than near', () => {
+    for (const layer of MENU_IMAGE_LAYERS) expect(IMAGE_ART_FILES).toContain(layer.file);
+    const speeds = MENU_IMAGE_LAYERS.map((layer) => layer.parallax);
+    expect([...speeds].sort((a, b) => a - b)).toEqual(speeds);
   });
 });

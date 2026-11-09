@@ -283,6 +283,22 @@ export const IMAGE_ICONS: Readonly<Record<string, string>> = {
   conquer: 'icons/icon_conquer-16',
 };
 
+/**
+ * Main-menu backdrop drawn as pictures (G5, `docs/art-review/g5/menu/`): strips far → near, each repeating
+ * left-to-right in front of the code sky, drifting at `parallax` screen px per second. The middle strip is a whole
+ * countryside down to the screen's bottom edge, so it replaces both nearer code hill layers.
+ */
+export const MENU_IMAGE_LAYERS: readonly { readonly file: string; readonly parallax: number }[] = [
+  { file: 'menu/hills_far', parallax: 4 },
+  { file: 'menu/hills_mid', parallax: 10 },
+];
+
+/** The picture strips when every one of them loaded, else null (the menu keeps its painted hills). */
+export const menuImageLayers = (
+  loaded: (file: string) => boolean,
+): readonly { readonly file: string; readonly parallax: number }[] | null =>
+  MENU_IMAGE_LAYERS.every((layer) => loaded(layer.file)) ? MENU_IMAGE_LAYERS : null;
+
 /** Every PNG of the set (file name without `.png`). */
 export const IMAGE_ART_FILES: readonly string[] = [
   ...Object.values(IMAGE_UNITS).flatMap((prefix) => [
@@ -291,6 +307,7 @@ export const IMAGE_ART_FILES: readonly string[] = [
   ]),
   ...Object.values(IMAGE_BUILDINGS),
   ...Object.values(IMAGE_ICONS),
+  ...MENU_IMAGE_LAYERS.map((layer) => layer.file),
   ...Object.values(IMAGE_PLOTS).flatMap((prefix) => PLOT_STATES.map((s) => `${prefix}_${s}`)),
   ...GRASS_FILES,
   WALL_FILE,

@@ -70,3 +70,13 @@ describe('in-game icons', () => {
     }
   });
 });
+
+describe('main-menu strips', () => {
+  it('every picture strip exists on disk and is registered', async () => {
+    const { MENU_IMAGE_LAYERS } = await import('../src/render/imageArt');
+    for (const { file } of MENU_IMAGE_LAYERS) {
+      expect(existsSync(png(file)), file).toBe(true);
+      expect(manifest).toContain(`path: ${png(file)}`);
+    }
+  });
+});

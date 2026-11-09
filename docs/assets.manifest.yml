@@ -14602,3 +14602,31 @@ assets:
     nativeSize: 1448x1086
     finalSize: 48x36
     notes: Card illustration of Ngai San Hô (tide_throne) (approved 2026-11-09 by Claude under the owner's delegation); box-reduced by docs/art-review/g3e/cards/make_assets.py; copy for picture windows under 96 px (src/ui/cards/cardImage.ts)
+  - id: menu_hills_far
+    path: public/assets/art/ai-v1/menu/hills_far.png
+    category: ui
+    origin: custom
+    source: docs/art-review/g5/menu/hills_far/source.png
+    creator: Project owner (OpenAI imagegen via Codex; prompt in docs/art-review/g5/menu/hills_far/prompt.md)
+    license: project-owned
+    attribution: false
+    redistribute: true
+    evidence: docs/art-review/g5/menu/hills_far/preview.png
+    modified: true
+    nativeSize: 1536x1024
+    finalSize: 256x120
+    notes: Main-menu parallax strip "Núi xa" (approved 2026-11-09 by Claude under the owner's delegation); magenta keyed out, bottom band box-reduced by docs/art-review/g5/menu/make_assets.py; repeats left-to-right (src/render/imageArt.ts MENU_IMAGE_LAYERS)
+  - id: menu_hills_mid
+    path: public/assets/art/ai-v1/menu/hills_mid.png
+    category: ui
+    origin: custom
+    source: docs/art-review/g5/menu/hills_mid/source.png
+    creator: Project owner (OpenAI imagegen via Codex; prompt in docs/art-review/g5/menu/hills_mid/prompt.md)
+    license: project-owned
+    attribution: false
+    redistribute: true
+    evidence: docs/art-review/g5/menu/hills_mid/preview.png
+    modified: true
+    nativeSize: 1536x1024
+    finalSize: 256x90
+    notes: Main-menu parallax strip "Đồi quê" (approved 2026-11-09 by Claude under the owner's delegation); magenta keyed out, bottom band box-reduced by docs/art-review/g5/menu/make_assets.py; repeats left-to-right (src/render/imageArt.ts MENU_IMAGE_LAYERS)
