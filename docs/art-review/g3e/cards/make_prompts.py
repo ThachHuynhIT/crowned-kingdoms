@@ -17,6 +17,8 @@ D = ROOT / 'docs/art-review/g3e/cards'
 STYLE_DOC = 'docs/ART_STYLE.md'
 REFERENCE = 'docs/art-review/style-references/harvester-house-front-approved.png'
 CATALOG = D / 'cards.json'
+# an approved card picture of the same kind, attached to every card prompt (ART_STYLE: approved image of the same kind)
+CARD_REFERENCE = 'docs/art-review/style-references/card-art-approved.png'
 
 # The building prompts use the "Prompt mẫu dùng lại" block of docs/ART_STYLE.md word for word (the mandatory frame
 # says not to retype it): reuse the building tool's extractor instead of copying the text here.
@@ -214,7 +216,7 @@ def main(only):
         out = (d / 'source.png').relative_to(ROOT).as_posix()
         (d / 'prompt.md').write_text(build_prompt(out, card), encoding='utf-8')
         prompt = (d / 'prompt.md').relative_to(ROOT).as_posix()
-        images = f'-i {REFERENCE}'
+        images = f'-i {REFERENCE} -i {CARD_REFERENCE}'
         portrait = f"docs/art-review/g3e/portraits/{card['owner']}/source.png"
         if card['owner'] != 'neutral' and (ROOT / portrait).exists():
             images += f' -i {portrait}'
