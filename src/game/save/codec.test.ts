@@ -12,7 +12,8 @@ import { simulateBattle } from '../battle/step';
 import { CONTENT, type Content } from '../cards/registry';
 import { randomBot } from '../sim/bots/random';
 import { contentWith, fakeKing, runState, unitStats } from '../testing/fixtures';
-import { contentHash, decodeRun, encodeRun } from './codec';
+import { ENDLESS_DATA_VERSION } from '../../data/endless';
+import { contentHash, decodeRun, encodeRun, endlessContentHash } from './codec';
 import { MemorySaveStore } from './MemorySaveStore';
 
 /** Every state a bot-played full run passes through, in order (the state after each command). */
@@ -44,7 +45,9 @@ const ok = (raw: unknown): RunState => {
   return r.state;
 };
 const incompatible = (raw: unknown): boolean => decodeRun(raw, CONTENT).kind === 'incompatible';
-const env = (state: RunState): { formatVersion: 1; version: number; contentHash: number; state: RunState } =>
+const env = (
+  state: RunState,
+): { formatVersion: 1; version: number; contentHash: number; state: RunState } =>
   structuredClone(encodeRun(state, CONTENT));
 
 describe('roundtrip', () => {
@@ -58,7 +61,15 @@ describe('roundtrip', () => {
 
   it('covers planning, battle, reward, council, quest, yearEnd and ended', () => {
     const phases = new Set(states.map((s) => s.phase));
-    for (const p of ['planning', 'battle', 'reward', 'council', 'quest', 'yearEnd', 'ended'] as const) {
+    for (const p of [
+      'planning',
+      'battle',
+      'reward',
+      'council',
+      'quest',
+      'yearEnd',
+      'ended',
+    ] as const) {
       expect(phases.has(p), p).toBe(true);
     }
   });
@@ -69,7 +80,8 @@ describe('roundtrip', () => {
       ...council,
       offers: {
         ...(council.offers as Extract<RunState['offers'], { kind: 'council' }>),
-        selected: (council.offers as Extract<RunState['offers'], { kind: 'council' }>).decreeIds[0]!,
+        selected: (council.offers as Extract<RunState['offers'], { kind: 'council' }>)
+          .decreeIds[0]!,
         selection: { plots: [1, 0], cardId: null, deckIndices: [2] },
       },
     } as RunState;
@@ -83,7 +95,11 @@ describe('roundtrip', () => {
     const conquest: RunState = {
       ...base,
       phase: 'conquest',
-      offers: { kind: 'conquest', cardIds: ['neutral_move' as CardId, 'neutral_well' as CardId], king: 'stone' },
+      offers: {
+        kind: 'conquest',
+        cardIds: ['neutral_move' as CardId, 'neutral_well' as CardId],
+        king: 'stone',
+      },
     };
     expect(ok(wire(conquest))).toEqual(conquest);
   });
@@ -112,17 +128,25 @@ describe('empty and unusable data', () => {
     expect(decodeRun(undefined, CONTENT)).toEqual({ kind: 'empty' });
   });
 
-  it.each([['a string', 'oops'], ['a number', 7], ['an array', []], ['broken JSON text', '{"a":']])(
-    '%s is incompatible with the Vietnamese notice',
-    (_n, raw) => {
-      expect(decodeRun(raw, CONTENT)).toEqual({ kind: 'incompatible', message: INCOMPATIBLE_RUN_TEXT });
-    },
-  );
+  it.each([
+    ['a string', 'oops'],
+    ['a number', 7],
+    ['an array', []],
+    ['broken JSON text', '{"a":'],
+  ])('%s is incompatible with the Vietnamese notice', (_n, raw) => {
+    expect(decodeRun(raw, CONTENT)).toEqual({
+      kind: 'incompatible',
+      message: INCOMPATIBLE_RUN_TEXT,
+    });
+  });
 
   it('unknown_versions: state 1, 2, a future 8, an unknown format and a version that disagrees', () => {
     const e = env(runState());
     for (const version of [1, 2, 8, 99]) {
-      expect(incompatible({ ...e, version, state: { ...e.state, version } }), `state ${version}`).toBe(true);
+      expect(
+        incompatible({ ...e, version, state: { ...e.state, version } }),
+        `state ${version}`,
+      ).toBe(true);
     }
     expect(incompatible({ ...e, formatVersion: 2 })).toBe(true);
     expect(incompatible({ ...e, version: 3 })).toBe(true); // envelope says 3 but the state is 7
@@ -132,8 +156,23 @@ describe('empty and unusable data', () => {
 describe('content hash', () => {
   it('is stable and changes when an id is added', () => {
     expect(contentHash(CONTENT)).toBe(contentHash(CONTENT));
-    const more = contentWith({ kings: [fakeKing('grove')], units: [unitStats({ unit: 'extra' })] as never });
+    const more = contentWith({
+      kings: [fakeKing('grove')],
+      units: [unitStats({ unit: 'extra' })] as never,
+    });
     expect(contentHash(more)).not.toBe(contentHash(CONTENT));
+  });
+
+  it('an Endless save also hashes the Endless data (version, blessings, modifiers); a normal save is unchanged', () => {
+    const normal = contentHash(CONTENT);
+    expect(contentHash(CONTENT, 'normal')).toBe(normal); // the normal hash ignores the Endless pool
+    const endless = contentHash(CONTENT, 'endless');
+    expect(endless).not.toBe(normal);
+    expect(endless).toBe(endlessContentHash(CONTENT, ENDLESS_DATA_VERSION));
+    expect(endlessContentHash(CONTENT, ENDLESS_DATA_VERSION + 1)).not.toBe(endless);
+    const run = { ...runState(), mode: 'endless' as const };
+    expect(encodeRun(run, CONTENT).contentHash).toBe(endless);
+    expect(encodeRun(runState(), CONTENT).contentHash).toBe(normal);
   });
 
   it('a different hash is accepted when every reference still resolves (added ids)', () => {
@@ -142,8 +181,18 @@ describe('content hash', () => {
   });
 
   it('a v5 save written before the six new thrones joined the content still loads', () => {
-    const NEW_THRONES = ['grove_throne', 'tide_throne', 'forge_throne', 'clock_throne', 'moon_throne', 'nomad_throne'];
-    const before: Content = { ...CONTENT, allCards: () => CONTENT.allCards().filter((c) => !NEW_THRONES.includes(c.id)) };
+    const NEW_THRONES = [
+      'grove_throne',
+      'tide_throne',
+      'forge_throne',
+      'clock_throne',
+      'moon_throne',
+      'nomad_throne',
+    ];
+    const before: Content = {
+      ...CONTENT,
+      allCards: () => CONTENT.allCards().filter((c) => !NEW_THRONES.includes(c.id)),
+    };
     const oldHash = contentHash(before);
     expect(oldHash).not.toBe(contentHash(CONTENT));
     const e = env(runState());
@@ -172,18 +221,67 @@ describe('references to ids that no longer exist', () => {
     ['draw pile', (s: RunState) => void s.drawPile.push(GHOST)],
     ['discard pile', (s: RunState) => void s.discardPile.push(GHOST)],
     ['a building', (s: RunState) => void (s.plots[THRONE_PLOT]!.building!.cardId = GHOST)],
-    ['an enchantment', (s: RunState) => void s.plots[THRONE_PLOT]!.building!.enchants.push({ cardId: GHOST, stacks: 1 })],
-    ['an offer', (s: RunState) => void (s.offers = { kind: 'reward', cardIds: [GHOST] }, s.phase = 'reward')],
+    [
+      'an enchantment',
+      (s: RunState) =>
+        void s.plots[THRONE_PLOT]!.building!.enchants.push({ cardId: GHOST, stacks: 1 }),
+    ],
+    [
+      'an offer',
+      (s: RunState) =>
+        void ((s.offers = { kind: 'reward', cardIds: [GHOST] }), (s.phase = 'reward')),
+    ],
     ['the queue', (s: RunState) => void s.pendingOffers.push({ kind: 'reward', cardIds: [GHOST] })],
-    ['a council decree', (s: RunState) => void (s.offers = { kind: 'council', decreeIds: ['decree_ghost' as never], selected: null, selection: { plots: [], cardId: null, deckIndices: [] } }, s.phase = 'council')],
-    ['a council selection card', (s: RunState) => void (s.offers = { kind: 'council', decreeIds: ['decree_moat'], selected: 'decree_moat', selection: { plots: [], cardId: GHOST, deckIndices: [] } }, s.phase = 'council')],
+    [
+      'a council decree',
+      (s: RunState) =>
+        void ((s.offers = {
+          kind: 'council',
+          decreeIds: ['decree_ghost' as never],
+          selected: null,
+          selection: { plots: [], cardId: null, deckIndices: [] },
+        }),
+        (s.phase = 'council')),
+    ],
+    [
+      'a council selection card',
+      (s: RunState) =>
+        void ((s.offers = {
+          kind: 'council',
+          decreeIds: ['decree_moat'],
+          selected: 'decree_moat',
+          selection: { plots: [], cardId: GHOST, deckIndices: [] },
+        }),
+        (s.phase = 'council')),
+    ],
     ['an owned decree', (s: RunState) => void s.decrees.push('decree_ghost' as never)],
-    ['a quest', (s: RunState) => void s.quests.push({ id: 'quest_ghost' as never, offeredYear: 1, deadlineYear: 2, status: 'active', progress: {} })],
+    [
+      'a quest',
+      (s: RunState) =>
+        void s.quests.push({
+          id: 'quest_ghost' as never,
+          offeredYear: 1,
+          deadlineYear: 2,
+          status: 'active',
+          progress: {},
+        }),
+    ],
     ['an offered quest id', (s: RunState) => void s.offeredQuestIds.push('quest_ghost' as never)],
-    ['a quest offer', (s: RunState) => void (s.offers = { kind: 'quest', questId: 'quest_ghost' as never }, s.phase = 'quest')],
+    [
+      'a quest offer',
+      (s: RunState) =>
+        void ((s.offers = { kind: 'quest', questId: 'quest_ghost' as never }), (s.phase = 'quest')),
+    ],
     ['an enemy king', (s: RunState) => void s.enemyKings.push('ghost' as KingId)],
     ['the player king', (s: RunState) => void (s.kingId = 'ghost' as KingId)],
-    ['an army unit', (s: RunState) => void (s.army!.waves[0]!.units as { unit: string; edge: string }[]).push({ unit: 'ghost', edge: 'N' })],
+    [
+      'an army unit',
+      (s: RunState) =>
+        void (s.army!.waves[0]!.units as { unit: string; edge: string }[]).push({
+          unit: 'ghost',
+          edge: 'N',
+        }),
+    ],
     ['an army boss', (s: RunState) => void (s.army = { ...s.army!, boss: 'boss_ghost' as never })],
     ['a defeated boss', (s: RunState) => void s.stats.bossesDefeated.push('boss_ghost' as never)],
   ])('rejects a missing id in %s (the whole run, not just the deck)', (_name, mutate) => {
@@ -201,13 +299,34 @@ describe('structure checks', () => {
   it.each([
     ['24 plots', (s: RunState) => void s.plots.pop()],
     ['an empty throne plot', (s: RunState) => void (s.plots[THRONE_PLOT]!.building = null)],
-    ['a duplicate uid', (s: RunState) => void (s.plots[6] = { unlocked: true, building: { ...structuredClone(s.plots[THRONE_PLOT]!.building!), level: 1 } })],
+    [
+      'a duplicate uid',
+      (s: RunState) =>
+        void (s.plots[6] = {
+          unlocked: true,
+          building: { ...structuredClone(s.plots[THRONE_PLOT]!.building!), level: 1 },
+        }),
+    ],
     ['nextUid not above the uids', (s: RunState) => void (s.nextUid = 0)],
     ['level 0', (s: RunState) => void (s.plots[THRONE_PLOT]!.building!.level = 0 as never)],
     ['level 6', (s: RunState) => void (s.plots[THRONE_PLOT]!.building!.level = 6 as never)],
     ['a throne level that disagrees with its building', (s: RunState) => void (s.throneLevel = 3)],
-    ['0 stacks', (s: RunState) => void s.plots[THRONE_PLOT]!.building!.enchants.push({ cardId: 'neutral_sharpen' as CardId, stacks: 0 })],
-    ['5 stacks', (s: RunState) => void s.plots[THRONE_PLOT]!.building!.enchants.push({ cardId: 'neutral_sharpen' as CardId, stacks: 5 })],
+    [
+      '0 stacks',
+      (s: RunState) =>
+        void s.plots[THRONE_PLOT]!.building!.enchants.push({
+          cardId: 'neutral_sharpen' as CardId,
+          stacks: 0,
+        }),
+    ],
+    [
+      '5 stacks',
+      (s: RunState) =>
+        void s.plots[THRONE_PLOT]!.building!.enchants.push({
+          cardId: 'neutral_sharpen' as CardId,
+          stacks: 5,
+        }),
+    ],
     ['negative gold', (s: RunState) => void (s.gold = -1)],
     ['fractional gold', (s: RunState) => void (s.gold = 1.5)],
     ['NaN gold', (s: RunState) => void (s.gold = Number.NaN)],
@@ -227,24 +346,57 @@ describe('structure checks', () => {
     ['a card in the piles that is not in the deck', (s: RunState) => void s.deck.pop()],
     ['an rng outside uint32', (s: RunState) => void (s.rng.draw = -1)],
     ['a fractional rng', (s: RunState) => void (s.rng.quest = 1.5)],
-    ['3 active quests', (s: RunState) => void s.quests.push(...(['quest_blitz', 'quest_hoard', 'quest_wager'] as const).map((id) => ({ id, offeredYear: 1, deadlineYear: 3, status: 'active' as const, progress: {} })))],
+    [
+      '3 active quests',
+      (s: RunState) =>
+        void s.quests.push(
+          ...(['quest_blitz', 'quest_hoard', 'quest_wager'] as const).map((id) => ({
+            id,
+            offeredYear: 1,
+            deadlineYear: 3,
+            status: 'active' as const,
+            progress: {},
+          })),
+        ),
+    ],
     ['4 attacks', (s: RunState) => void (s.enemies = { stone: { attacks: 4, status: 'pending' } })],
-    ['a battle without an army', (s: RunState) => void (s.phase = 'battle', s.army = null)],
-    ['a reward phase with no offer', (s: RunState) => void (s.phase = 'reward', s.offers = null)],
-    ['a planning phase that still holds an offer', (s: RunState) => void (s.offers = { kind: 'reward', cardIds: [] })],
-    ['an offer of the wrong phase', (s: RunState) => void (s.phase = 'council', s.offers = { kind: 'reward', cardIds: [] })],
-    ['an edge that does not exist', (s: RunState) => void (s.army!.waves[0]!.units as { unit: string; edge: string }[]).push({ unit: 'bandit', edge: 'X' })],
+    ['a battle without an army', (s: RunState) => void ((s.phase = 'battle'), (s.army = null))],
+    [
+      'a reward phase with no offer',
+      (s: RunState) => void ((s.phase = 'reward'), (s.offers = null)),
+    ],
+    [
+      'a planning phase that still holds an offer',
+      (s: RunState) => void (s.offers = { kind: 'reward', cardIds: [] }),
+    ],
+    [
+      'an offer of the wrong phase',
+      (s: RunState) => void ((s.phase = 'council'), (s.offers = { kind: 'reward', cardIds: [] })),
+    ],
+    [
+      'an edge that does not exist',
+      (s: RunState) =>
+        void (s.army!.waves[0]!.units as { unit: string; edge: string }[]).push({
+          unit: 'bandit',
+          edge: 'X',
+        }),
+    ],
   ])('rejects %s', (_name, mutate) => {
     expect(bad(mutate)).toBe(true);
   });
 
   it('accepts a perk of the run king, meta cards and difficulty 5', () => {
-    const s = newRun(4, 'stone', CONTENT, RULES_FULL, { perk: 'stone_p2', difficulty: 5, unlockedCards: ['neutral_move' as CardId] });
+    const s = newRun(4, 'stone', CONTENT, RULES_FULL, {
+      perk: 'stone_p2',
+      difficulty: 5,
+      unlockedCards: ['neutral_move' as CardId],
+    });
     expect(ok(wire(s))).toEqual(s);
   });
 
   it('a fresh state of each shipped rule set is accepted', () => {
-    for (const rules of [RULES_FULL]) expect(ok(wire(newRun(4, 'stone', CONTENT, rules)))).toBeDefined();
+    for (const rules of [RULES_FULL])
+      expect(ok(wire(newRun(4, 'stone', CONTENT, rules)))).toBeDefined();
     expect(ok(wire(runState()))).toBeDefined();
   });
 });
@@ -263,7 +415,9 @@ describe('meta_untouched', () => {
 
 describe('legacy_edges_normalize_to_south', () => {
   const withArmy = (): RunState => {
-    const s = trail(1, 'wheat').find((x) => x.army !== null && x.army.waves.some((w) => w.units.length > 0));
+    const s = trail(1, 'wheat').find(
+      (x) => x.army !== null && x.army.waves.some((w) => w.units.length > 0),
+    );
     if (s === undefined) throw new Error('no state with an army');
     return s;
   };
@@ -302,7 +456,8 @@ describe('legacy_edges_normalize_to_south', () => {
   it('bad_edge_still_rejected: unknown edge values are not turned into S', () => {
     for (const bad of ['Q', null, 7, '']) {
       const raw = env(withArmy());
-      (raw.state.army!.waves.find((w) => w.units.length > 0)!.units[0] as { edge: unknown }).edge = bad;
+      (raw.state.army!.waves.find((w) => w.units.length > 0)!.units[0] as { edge: unknown }).edge =
+        bad;
       expect(incompatible(raw)).toBe(true);
     }
   });
@@ -312,6 +467,8 @@ describe('legacy_edges_normalize_to_south', () => {
     setEdges(raw, ['N', 'E']);
     const state = ok(raw);
     const setup = buildBattleSetup({ ...state, phase: 'battle' }, CONTENT);
-    expect(setup.waves.flatMap((w) => w.spawns.map((s) => s.edge)).every((e) => e === 'S')).toBe(true);
+    expect(setup.waves.flatMap((w) => w.spawns.map((s) => s.edge)).every((e) => e === 'S')).toBe(
+      true,
+    );
   });
 });

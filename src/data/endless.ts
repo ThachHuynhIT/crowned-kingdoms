@@ -30,13 +30,11 @@ export type EndlessModifierId = (typeof ENDLESS_MODIFIER_IDS)[number];
  * năm xa hơn tra phần tử cuối (không Math.pow, không vòng lặp theo năm).
  */
 export const ENDLESS_BASE_BUDGET: readonly number[] = [
-  795, 914, 1051, 1209, 1390, 1599, 1839, 2115,
-  2432, 2797, 3217, 3700, 4255, 4893, 5627, 6471,
-  7442, 8558, 9842, 11_318, 13_016, 14_968, 17_213, 19_795,
-  22_764, 26_179, 30_106, 34_622, 39_815, 45_787, 52_655, 60_553,
-  69_636, 80_081, 92_093, 105_907, 121_793, 140_062, 161_071, 185_232,
-  213_017, 244_970, 281_716, 323_973, 372_569, 428_454, 492_722, 566_630,
-  651_625, 749_369, 861_774, 991_040, 1_000_000,
+  795, 914, 1051, 1209, 1390, 1599, 1839, 2115, 2432, 2797, 3217, 3700, 4255, 4893, 5627, 6471,
+  7442, 8558, 9842, 11_318, 13_016, 14_968, 17_213, 19_795, 22_764, 26_179, 30_106, 34_622, 39_815,
+  45_787, 52_655, 60_553, 69_636, 80_081, 92_093, 105_907, 121_793, 140_062, 161_071, 185_232,
+  213_017, 244_970, 281_716, 323_973, 372_569, 428_454, 492_722, 566_630, 651_625, 749_369, 861_774,
+  991_040, 1_000_000,
 ];
 /** Trần ngân sách gốc và trần ngân sách cuối (sau slot, Gai và biến thể). */
 export const ENDLESS_BASE_BUDGET_CAP = 1_000_000;
@@ -47,8 +45,7 @@ export const ENDLESS_FINAL_BUDGET_CAP = 3_000_000;
  * tròn, trần 100000 (×10). Tra bão hoà ở phần tử cuối.
  */
 export const ENDLESS_BOSS_SCALE_BP: readonly number[] = [
-  10_000, 12_500, 15_625, 19_531, 24_414, 30_518, 38_148, 47_685,
-  59_606, 74_508, 93_135, 100_000,
+  10_000, 12_500, 15_625, 19_531, 24_414, 30_518, 38_148, 47_685, 59_606, 74_508, 93_135, 100_000,
 ];
 export const ENDLESS_BOSS_SCALE_CAP_BP = 100_000;
 
@@ -130,10 +127,50 @@ export interface EndlessModifierDef {
 
 /** Bốn biến thể theo thứ tự id cố định (spec §6). */
 export const ENDLESS_MODIFIERS: readonly EndlessModifierDef[] = [
-  { id: 'elite', name: 'Tinh nhuệ', foeHpPct: 25, foeDmgPct: 10, allyDmgPct: 0, taxFlat: 0, battleGoldFlat: 0, budgetPct: 100, structureHpPct: 0 },
-  { id: 'double_edge', name: 'Hai lưỡi', foeHpPct: 0, foeDmgPct: 25, allyDmgPct: 25, taxFlat: 0, battleGoldFlat: 0, budgetPct: 100, structureHpPct: 0 },
-  { id: 'famine', name: 'Khó mùa', foeHpPct: 0, foeDmgPct: 0, allyDmgPct: 0, taxFlat: -2, battleGoldFlat: 3, budgetPct: 100, structureHpPct: 0 },
-  { id: 'siege', name: 'Công thành', foeHpPct: 0, foeDmgPct: 0, allyDmgPct: 0, taxFlat: 0, battleGoldFlat: 0, budgetPct: 120, structureHpPct: 20 },
+  {
+    id: 'elite',
+    name: 'Tinh nhuệ',
+    foeHpPct: 25,
+    foeDmgPct: 10,
+    allyDmgPct: 0,
+    taxFlat: 0,
+    battleGoldFlat: 0,
+    budgetPct: 100,
+    structureHpPct: 0,
+  },
+  {
+    id: 'double_edge',
+    name: 'Hai lưỡi',
+    foeHpPct: 0,
+    foeDmgPct: 25,
+    allyDmgPct: 25,
+    taxFlat: 0,
+    battleGoldFlat: 0,
+    budgetPct: 100,
+    structureHpPct: 0,
+  },
+  {
+    id: 'famine',
+    name: 'Khó mùa',
+    foeHpPct: 0,
+    foeDmgPct: 0,
+    allyDmgPct: 0,
+    taxFlat: -2,
+    battleGoldFlat: 3,
+    budgetPct: 100,
+    structureHpPct: 0,
+  },
+  {
+    id: 'siege',
+    name: 'Công thành',
+    foeHpPct: 0,
+    foeDmgPct: 0,
+    allyDmgPct: 0,
+    taxFlat: 0,
+    battleGoldFlat: 0,
+    budgetPct: 120,
+    structureHpPct: 20,
+  },
 ];
 /** Năm đầu có biến thể và độ dài một thập niên. */
 export const ENDLESS_MODIFIER_FIRST_YEAR = 31;
@@ -144,3 +181,6 @@ export const ENDLESS_SCORED_YEARS_CAP = 60;
 export const ENDLESS_SCORED_BOSSES_CAP = 3;
 /** Thông báo khi một ván thắng 30 năm mở Vô tận. */
 export const ENDLESS_UNLOCK_TEXT = 'Đã mở chế độ Vô tận';
+
+/** Version of the Endless definitions above (blessings, modifiers, tables): bump it when any of them changes meaning. */
+export const ENDLESS_DATA_VERSION = 1;
