@@ -41,7 +41,7 @@ describe('decodeMeta', () => {
     }
   });
   it('a newer version still decodes', () => {
-    const r = decodeMeta({ ...defaultProfile(), version: 2, crownPoints: 7 });
+    const r = decodeMeta({ ...defaultProfile(), version: 3, crownPoints: 7 });
     expect(r.kind).toBe('newer');
     expect(r.profile.crownPoints).toBe(7);
   });
@@ -49,6 +49,26 @@ describe('decodeMeta', () => {
     const runs = Array.from({ length: 25 }, (_, i) => `r${i}`);
     const r = decodeMeta({ ...defaultProfile(), settledRuns: [...runs, 3] });
     expect(r.profile.settledRuns).toEqual(runs.slice(5));
+  });
+});
+
+describe('decodeMeta v1 -> v2 (Endless, spec 2026-11-09 §2)', () => {
+  it('migrates a v1 profile to v2: every progress field kept, Endless still locked even with wins', () => {
+    const v1 = { ...defaultProfile(), version: 1, crownPoints: 55, wins: { ...defaultProfile().wins, stone: 3 } } as Record<string, unknown>;
+    delete v1.endlessUnlocked;
+    const r = decodeMeta(v1);
+    expect(r.kind).toBe('repaired'); // written back once as v2
+    expect(r.profile.version).toBe(2);
+    expect(r.profile.crownPoints).toBe(55);
+    expect(r.profile.wins.stone).toBe(3);
+    expect(r.profile.endlessUnlocked).toBe(false);
+  });
+
+  it('a v2 profile round-trips unchanged', () => {
+    const v2 = { ...defaultProfile(), endlessUnlocked: true };
+    const r = decodeMeta(JSON.parse(JSON.stringify(v2)));
+    expect(r.kind).toBe('ok');
+    expect(r.profile).toEqual(v2);
   });
 });
 
@@ -66,7 +86,7 @@ describe('decodeMeta settings (G5)', () => {
   it('a v1 profile without screenShake gets true and keeps every other field', () => {
     const r = decodeMeta(old({ master: 30, music: 70, sfx: 20 }));
     expect(r.profile.settings).toEqual({ master: 30, music: 70, sfx: 20, screenShake: true });
-    expect(r.profile.version).toBe(1);
+    expect(r.profile.version).toBe(2);
     expect(r.profile.crownPoints).toBe(42);
     expect(r.profile.mastery.wheat).toBe(31);
     expect(r.profile.unlockedKings).toEqual(['arcane', 'grove', 'stone', 'wheat']);

@@ -1,3 +1,4 @@
+import { META_SAVE_VERSION } from '../data/meta';
 import { IDBFactory, IDBObjectStore } from 'fake-indexeddb';
 import { describe, expect, it, vi } from 'vitest';
 import {
@@ -269,7 +270,7 @@ describe('session settings and discard (G5 §4)', () => {
 
   it('a newer profile refuses settings and never writes', async () => {
     const store = new LoggingStore();
-    await store.saveMeta({ ...defaultProfile(), version: 2 });
+    await store.saveMeta({ ...defaultProfile(), version: META_SAVE_VERSION + 1 });
     store.log = [];
     const s = await openSession(store, CONTENT);
     expect(await s.updateSettings({ master: 10 })).toMatchObject({ ok: false, reason: 'readOnly' });
