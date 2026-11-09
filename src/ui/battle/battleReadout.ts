@@ -4,6 +4,8 @@ import { bossPhase } from '../../game/battle/bosses';
 import { TICKS_PER_SECOND } from '../../core/SimClock';
 import { KIND_UNIT, TEAM_FOE, type BattleWorld } from '../../game/battle/world';
 import { throneHealth } from '../hud/armyHealth';
+import type { Content } from '../../game/cards/registry';
+import type { BuildingState, PlotState } from '../../game/run/state';
 
 /**
  * Pure read-outs of a running battle for the battle HUD (§10.7). They only read the world;
@@ -49,8 +51,34 @@ export const interventionCooldown = (world: BattleWorld): InterventionCooldown =
   };
 };
 
+export interface BestStructure {
+  name: string;
+  kills: number;
+}
+
+/** Only our board buildings qualify; equal kill counts favour the smaller uid. */
+export const bestStructure = (
+  killsBySource: Readonly<Record<number, number>>,
+  plots: readonly PlotState[],
+  content: Content,
+): BestStructure | null => {
+  let best: BuildingState | null = null;
+  let kills = 0;
+  for (const { building } of plots) {
+    if (building === null) continue;
+    const count = killsBySource[building.uid] ?? 0;
+    if (count > kills || (count > 0 && count === kills && best !== null && building.uid < best.uid)) {
+      best = building;
+      kills = count;
+    }
+  }
+  return best === null ? null : { name: content.card(best.cardId).nameVi, kills };
+};
+
 export interface SummaryInput {
   kills: number;
+  throneLostPct: number;
+  best: BestStructure | null;
   lives: number;
   /** Battle length already formatted ("m:ss"). */
   time: string;
@@ -63,6 +91,8 @@ export interface SummaryInput {
 /** The lines of the post-battle summary panel (§10.7). */
 export const summaryLines = (s: SummaryInput): string[] => [
   `Địch đã hạ: ${s.kills}`,
+  `Ngai mất: ${Math.round(s.throneLostPct)}% máu`,
+  ...(s.best !== null ? [`Giỏi nhất: ${s.best.name} (${s.best.kills} địch)`] : []),
   `Mạng còn: ${s.lives}`,
   `Thời gian: ${s.time}`,
   ...(s.goldGain > 0 ? [`Vàng nhận: +${s.goldGain}`] : []),

@@ -14,6 +14,7 @@ import { SPRITES_KEY, iconFrame } from '../render/atlas';
 import { ToastStack } from '../ui/ToastStack';
 import { Tooltip } from '../ui/Tooltip';
 import {
+  bestStructure,
   foesRemaining,
   interventionCooldown,
   summaryLines,
@@ -815,7 +816,19 @@ export class BattleHudScene extends Phaser.Scene {
     const result = this.result;
     if (!result) return;
     const overlay = createOverlay(this).setDepth(MODAL_DEPTH);
-    const panel = createPanel(this, 'panel', 320, 240);
+    const state = this.controller.state;
+    const summary = summaryLines({
+      kills: result.kills,
+      throneLostPct: result.throneHpLostPct,
+      best: bestStructure(result.killsBySource, state.plots, CONTENT),
+      lives: state.lives,
+      time: tickClock(result.ticks),
+      goldGain: Math.max(0, state.gold - this.goldAtStart),
+      conquered: state.pendingConquest === null ? null : CONTENT.enemyKing(state.pendingConquest).nameVi,
+    });
+    const inset = frameBorder(this, 'panel') + PAD;
+    const { panel: panelRect } = resultLayout(this.screen(), inset, summary.length, 1);
+    const panel = createPanel(this, 'panel', panelRect.w, panelRect.h);
     panel.image.setDepth(MODAL_DEPTH);
     const title = addUiText(
       this,
@@ -828,14 +841,7 @@ export class BattleHudScene extends Phaser.Scene {
       .setOrigin(0.5)
       .setFontStyle('bold')
       .setDepth(MODAL_DEPTH);
-    const state = this.controller.state;
-    const lines = summaryLines({
-      kills: result.kills,
-      lives: state.lives,
-      time: tickClock(result.ticks),
-      goldGain: Math.max(0, state.gold - this.goldAtStart),
-      conquered: state.pendingConquest === null ? null : CONTENT.enemyKing(state.pendingConquest).nameVi,
-    }).map((line) => addUiText(this, 0, 0, line, 18).setOrigin(0.5).setDepth(MODAL_DEPTH));
+    const lines = summary.map((line) => addUiText(this, 0, 0, line, 18).setOrigin(0.5).setDepth(MODAL_DEPTH));
     const next = createButton(this, 0, 0, 'Tiếp tục', {
       width: RESULT_BUTTON.w,
       height: RESULT_BUTTON.h,
@@ -948,6 +954,7 @@ export class BattleHudScene extends Phaser.Scene {
     s.title.setPosition(l.title.x + l.title.w / 2, l.title.y + l.title.h / 2);
     s.lines.forEach((t, i) => {
       const r = l.lines[i]!;
+      fitTextWidth(t, 18, 11, r.w);
       t.setPosition(r.x + r.w / 2, r.y + r.h / 2);
     });
     const b = l.buttons[0]!;
