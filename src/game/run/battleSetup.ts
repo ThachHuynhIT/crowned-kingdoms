@@ -1,6 +1,6 @@
 /** Dựng BattleSetup từ RunState (spec §5.3: G1 = cấp 1; §3.6: cấp địch). Thuần, không sửa đầu vào. */
 import { formationRowsFor } from '../battle/bounds';
-import { EMBER_TICKS, ENEMY_LEVEL_STAT, ENEMY_STAT_MULT, WAVES } from '../../data/battle';
+import { BOSS_DMG_MULT, BOSS_HP_MULT, EMBER_TICKS, ENEMY_LEVEL_STAT, ENEMY_STAT_MULT, WAVES } from '../../data/battle';
 import { BOSSES, BOSS_RULES } from '../../data/bosses';
 import { SOUL_HARVEST_UNIT } from '../../data/kings/moon';
 import { BOSS_SUMMON_UNITS } from '../../data/raiders';
@@ -416,7 +416,9 @@ const bossSetup = (
   const def = BOSSES.find((b) => b.id === army.boss);
   if (def === undefined) throw new Error(`Unknown boss ${army.boss}`);
   const stats = unitStats(def.unit, 1, def.unit.tags.includes('siege'), content, [], speedScale);
-  stats.hp = def.unit.hp * (1 + RUN.difficultyBudgetStep * state.difficulty);
+  // Trận không còn thắng vì hết giờ (10/11/2026): boss phải hạ được, nên máu/sát thương nhân hệ số theo thứ tự boss.
+  stats.hp = def.unit.hp * BOSS_HP_MULT[def.ordinal - 1]! * (1 + RUN.difficultyBudgetStep * state.difficulty);
+  stats.dmg = stats.dmg * BOSS_DMG_MULT[def.ordinal - 1]!;
   const summons: Record<string, UnitStats> = {};
   for (const u of BOSS_SUMMON_UNITS) summons[u.id] = unitStats(u, 1, false, content, [], speedScale);
 

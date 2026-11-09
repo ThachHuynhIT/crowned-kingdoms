@@ -25,7 +25,13 @@ export const ENEMY_LEVEL_STAT = [1, 1.45, 2.1, 3.05, 4.42] as const;
  * HP và sát thương của mọi lính địch nhân thêm hệ số này (cân bằng lại 2026-11-09 sau khi tầm tháp ×3, công trình
  * chặn đường và địch phải phá hết nhà: bot greedy Gai 0 thắng gần 100%; mục tiêu 35–65% mỗi vua).
  */
-export const ENEMY_STAT_MULT = 2.05;
+export const ENEMY_STAT_MULT = 1.75;
+/**
+ * Máu và sát thương của boss 1/2/3 lúc vào trận, nhân với số trong `BOSSES` (10/11/2026: hết giờ không
+ * còn là thắng, boss phải hạ được). Đo bằng `npm run balance`, xem docs/balance/2026-11-10-draw-one-balance.md.
+ */
+export const BOSS_HP_MULT = [1, 0.39, 0.27] as const;
+export const BOSS_DMG_MULT = [1, 0.64, 1] as const;
 export const WAVES = { share: [0.4, 0.35, 0.25], spawnTick: [0, 120, 240] } as const;
 
 /** Hằng hình quạt 45° (cos 45° làm tròn xuống nên đúng 45° vẫn nằm trong quạt); không dùng Math.cos. */
@@ -61,9 +67,9 @@ export const BATTLE = {
   /** Trần an toàn (chủ dự án 10/11/2026): tới tick này trận chưa xong thì tính THUA; hết giờ không còn là thắng. */
   hardLimitTick: 3000,
   /** Từ rageTick, cứ chừng này tick địch thêm một bậc Cuồng Nộ (bậc 1 ngay ở rageTick). */
-  rageStackTicks: 300,
+  rageStackTicks: 600,
   /** Mỗi bậc Cuồng Nộ: mọi đòn của địch +% này, cộng dồn. */
-  rageStackDmgPct: 25,
+  rageStackDmgPct: 20,
   rageSpeedPct: 50,
   /** Cuồng Nộ: đòn của địch vào công trình (không phải Ngai) thêm % này — địch vẫn phải phá hết nhà trước (2026-11-09). */
   rageStructureDmgPct: 100,

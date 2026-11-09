@@ -171,7 +171,7 @@ export const CLOCK: KingDef = {
     tags: [],
     textVi:
       'Ngai của Vua Đồng Hồ: bắn trong tầm. Lên Dây: mọi lính và tháp của mình đánh nhanh dần mỗi giây trong trận (tối đa +40% tốc đánh).',
-    hp: 720,
+    hp: 850,
     armor: 0.1,
     attack: { dmg: 8, type: 'physical', range: cells(1.6875), interval: 12, projectileSpeed: 16 },
     // Lên Dây: mọi lính và tháp +% tốc đánh mỗi giây (theo cấp Ngai), tối đa +40%.

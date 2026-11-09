@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest';
-import { BATTLE, ENEMY_LEVEL_STAT, ENEMY_PORTAL, ENEMY_STAT_MULT, WAVES } from '../../data/battle';
+import { BATTLE, BOSS_HP_MULT, ENEMY_LEVEL_STAT, ENEMY_PORTAL, ENEMY_STAT_MULT, WAVES } from '../../data/battle';
 import { SPEC_MOVE_SCALE } from '../../data/boardGeometry';
 import { RULES_FULL } from '../../data/rules';
 import { CONTENT } from '../cards/registry';
@@ -51,7 +51,7 @@ describe('the boss in the battle setup', () => {
 
   it('multiplies HP by 1 + 0.1 x thorn difficulty (difficulty 5 -> x1.5)', () => {
     expect(bossYear(10, { difficulty: 5 }).setup.boss!.stats.hp).toBe(3750);
-    expect(bossYear(20, { difficulty: 5 }).setup.boss!.stats.hp).toBe(13500);
+    expect(bossYear(20, { difficulty: 5 }).setup.boss!.stats.hp).toBeCloseTo(9000 * BOSS_HP_MULT[1] * 1.5, 6);
     expect(bossYear(10, { difficulty: 0 }).setup.boss!.stats.hp).toBe(2500);
   });
 });

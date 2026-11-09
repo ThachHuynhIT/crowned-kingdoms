@@ -1,5 +1,6 @@
 import { describe, expect, it } from 'vitest';
 import { RULES_G1 } from '../../data/rules';
+import { WHEAT } from '../../data/kings/wheat';
 import { ENEMY_LEVEL_STAT, ENEMY_STAT_MULT } from '../../data/battle';
 import { STRUCT_HP, TOWER_SHOT_DMG_MULT } from '../../data/scaling';
 import { composeArmy, armyBudget } from '../battle/compose';
@@ -116,7 +117,7 @@ describe('buildBattleSetup', () => {
   });
 
   it('maps the throne', () => {
-    expect(setup.throne.hp).toBe(1100);
+    expect(setup.throne.hp).toBe(WHEAT.throne.hp);
     expect(setup.throne.plot).toBe(THRONE_PLOT);
     expect(setup.throne.uid).toBe(0);
     expect(setup.throne.kind).toBe('throne');
@@ -141,7 +142,7 @@ describe('buildBattleSetup', () => {
     };
     const s = buildBattleSetup(makeState(army), CONTENT).waves[0]!.spawns[0]!.stats;
     expect(s.hp).toBeCloseTo(30 * ENEMY_LEVEL_STAT[1]! * 1.5 * ENEMY_STAT_MULT, 6);
-    expect(s.hp).toBeCloseTo(133.7625, 6); // 30 × 1.45 × 1.5 × 2.05
+    expect(s.hp).toBeCloseTo(114.1875, 6); // 30 × 1.45 × 1.5 × 1.75
     expect(s.dmg).toBeCloseTo(5 * 1.45 * 1.5 * ENEMY_STAT_MULT, 6);
   });
 

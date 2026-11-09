@@ -1,6 +1,8 @@
 import { describe, expect, it } from 'vitest';
 import { BATTLE, INTERVENTION } from '../../data/battle';
 import { RULES_FULL } from '../../data/rules';
+import { MOON } from '../../data/kings/moon';
+import { STONE } from '../../data/kings/stone';
 import { RUN, battleGold, rerollCost } from '../../data/run';
 import type { CardId, KingDef, KingId, PerkId } from '../../data/types';
 import { hashWorld } from '../battle/hash';
@@ -126,9 +128,9 @@ describe('wheat perks', () => {
 });
 
 describe('stone perks', () => {
-  it("'stone_p1' Nền Móng Vững: throne +200 HP flat (115 → 315)", () => {
-    expect(setupOf(run('stone')).throne.hp).toBe(115);
-    expect(setupOf(run('stone', 'stone_p1')).throne.hp).toBe(315);
+  it("'stone_p1' Nền Móng Vững: throne +200 HP flat (90 → 290)", () => {
+    expect(setupOf(run('stone')).throne.hp).toBe(STONE.throne.hp);
+    expect(setupOf(run('stone', 'stone_p1')).throne.hp).toBe(STONE.throne.hp + 200);
   });
 
   it("'stone_p2' Đá Gọi Đá: a level-1 Tháp Ném Đá on plot 7", () => {
@@ -141,7 +143,7 @@ describe('stone perks', () => {
       return plot === THRONE_PLOT ? setup.throne.hp : setup.structures.find((x) => x.plot === plot)!.hp;
     };
     expect(hp('stone_p3', 8)).toBeCloseTo(hp(null, 8) * 1.3);
-    expect(hp('stone_p3', THRONE_PLOT)).toBeCloseTo(115 * 1.3);
+    expect(hp('stone_p3', THRONE_PLOT)).toBeCloseTo(STONE.throne.hp * 1.3);
   });
 });
 
@@ -318,11 +320,11 @@ describe('moon perks', () => {
     expect([...s.hand, ...s.drawPile, ...s.discardPile].sort()).toEqual([...s.deck].sort());
   });
 
-  it("'moon_p3' Mạng Thứ Tư: start with RUN.maxLives lives, throne −20% HP (560 → 448)", () => {
+  it("'moon_p3' Mạng Thứ Tư: start with RUN.maxLives lives, throne −20% HP (720 → 576)", () => {
     const s = run('moon', 'moon_p3');
     expect(s.lives).toBe(RUN.maxLives);
     expect(s.lives).toBe(4);
-    expect(setupOf(s).throne.hp).toBeCloseTo(448);
+    expect(setupOf(s).throne.hp).toBeCloseTo(MOON.throne.hp * 0.8);
     expect(run('moon').lives).toBe(RUN.startLives);
   });
 });

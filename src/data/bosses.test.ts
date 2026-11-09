@@ -49,7 +49,7 @@ describe('the three bosses (spec 7.3)', () => {
     });
     expect(BOSS_RULES.crownless).toMatchObject({
       mirrorEveryTicks: 100,
-      shield: 3000,
+      shield: 1200,
       shieldWindowTicks: 100,
       rageSpeedPct: 50,
       rageAttackSpeedPct: 50,
