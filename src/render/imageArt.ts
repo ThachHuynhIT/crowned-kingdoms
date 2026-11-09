@@ -293,6 +293,19 @@ export const IMAGE_ICONS: Readonly<Record<string, string>> = {
 };
 
 /**
+ * Battle effects drawn as pictures (G5, `docs/art-review/g5/fx/review.md`): fx id → file, at 2 art px per world px like
+ * units. Arrows (eight hand-drawn directions of a sprite that never rotates) and the boulder's translucent shadow
+ * stay painted in code.
+ */
+export const IMAGE_FX: Readonly<Record<string, string>> = {
+  boulder: 'fx/fx_boulder',
+  pulse: 'fx/fx_pulse',
+  shield: 'fx/fx_shield',
+  stun: 'fx/fx_stun',
+  spark: 'fx/fx_spark',
+};
+
+/**
  * King-select card backgrounds drawn as pictures (G5, `docs/art-review/g5/king-cards/`), 66×96 each; only the kings
  * listed here are loaded, the others keep the painted card. The portrait window and the corner glyphs are always
  * drawn over the picture (`paintKingCard`).
@@ -325,6 +338,7 @@ export const IMAGE_ART_FILES: readonly string[] = [
   ...Object.values(IMAGE_BUILDINGS),
   ...Object.values(IMAGE_ICONS),
   ...MENU_IMAGE_LAYERS.map((layer) => layer.file),
+  ...Object.values(IMAGE_FX),
   ...KING_CARDS_APPROVED.map(kingCardFile),
   ...Object.values(IMAGE_PLOTS).flatMap((prefix) => PLOT_STATES.map((s) => `${prefix}_${s}`)),
   ...GRASS_FILES,

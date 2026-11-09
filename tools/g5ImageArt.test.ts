@@ -92,3 +92,14 @@ describe('king-select card backgrounds', () => {
     }
   });
 });
+
+describe('battle effects', () => {
+  it('every image effect exists on disk and is registered', async () => {
+    const { IMAGE_FX } = await import('../src/render/imageArt');
+    expect(Object.keys(IMAGE_FX).sort()).toEqual(['boulder', 'pulse', 'shield', 'spark', 'stun']);
+    for (const file of Object.values(IMAGE_FX)) {
+      expect(existsSync(png(file)), file).toBe(true);
+      expect(manifest).toContain(`path: ${png(file)}`);
+    }
+  });
+});

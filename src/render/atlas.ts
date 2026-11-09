@@ -28,6 +28,7 @@ import {
   GROUND_TEXTURES_APPROVED,
   IMAGE_ART_SCALE,
   IMAGE_BUILDINGS,
+  IMAGE_FX,
   IMAGE_ICONS,
   IMAGE_PLOTS,
   IMAGE_UNITS,
@@ -275,6 +276,7 @@ export const withImageArt = (
     wanted.set(buildingFrame(card as CardId), file);
   for (const [icon, file] of Object.entries(IMAGE_ICONS))
     wanted.set(iconFrame(icon as IconId), file);
+  for (const [fx, file] of Object.entries(IMAGE_FX)) wanted.set(fxFrame(fx), file);
   for (const [king, prefix] of Object.entries(IMAGE_PLOTS))
     for (const state of PLOT_STATES) wanted.set(kingPlotFrame(king, state), `${prefix}_${state}`);
   return list.map((s) => {

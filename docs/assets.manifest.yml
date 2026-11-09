@@ -18232,3 +18232,73 @@ assets:
     nativeSize: 1024x1536
     finalSize: 66x96
     notes: King-select card background (approved 2026-11-09 by Claude under the owner's delegation); magenta keyed out and box-reduced by docs/art-review/g5/king-cards/make_assets.py; window and glyphs drawn over it by src/render/kingCardArt.ts (KING_CARDS_APPROVED)
+  - id: fx_boulder_image
+    path: public/assets/art/ai-v1/fx/fx_boulder.png
+    category: fx
+    origin: custom
+    source: docs/art-review/g5/fx/boulder/source.png
+    creator: Project owner (OpenAI imagegen via Codex; prompt in docs/art-review/g5/fx/boulder/prompt.md)
+    license: project-owned
+    attribution: false
+    redistribute: true
+    evidence: docs/art-review/g5/fx/sheet.png
+    modified: true
+    nativeSize: 1024x1024
+    finalSize: 32x32
+    notes: Battle effect "Đá tảng rơi" (approved 2026-11-09 by Claude under the owner's delegation); magenta keyed out and box-reduced by docs/art-review/g5/fx/make_assets.py at 2 art px per world px (src/render/imageArt.ts IMAGE_FX)
+  - id: fx_pulse_image
+    path: public/assets/art/ai-v1/fx/fx_pulse.png
+    category: fx
+    origin: custom
+    source: docs/art-review/g5/fx/pulse/source.png
+    creator: Project owner (OpenAI imagegen via Codex; prompt in docs/art-review/g5/fx/pulse/prompt.md)
+    license: project-owned
+    attribution: false
+    redistribute: true
+    evidence: docs/art-review/g5/fx/sheet.png
+    modified: true
+    nativeSize: 1024x1024
+    finalSize: 32x32
+    notes: Battle effect "Xung lực công trình" (approved 2026-11-09 by Claude under the owner's delegation); magenta keyed out and box-reduced by docs/art-review/g5/fx/make_assets.py at 2 art px per world px (src/render/imageArt.ts IMAGE_FX)
+  - id: fx_shield_image
+    path: public/assets/art/ai-v1/fx/fx_shield.png
+    category: fx
+    origin: custom
+    source: docs/art-review/g5/fx/shield/source.png
+    creator: Project owner (OpenAI imagegen via Codex; prompt in docs/art-review/g5/fx/shield/prompt.md)
+    license: project-owned
+    attribution: false
+    redistribute: true
+    evidence: docs/art-review/g5/fx/sheet.png
+    modified: true
+    nativeSize: 1024x1024
+    finalSize: 32x32
+    notes: Battle effect "Khiên bảo hộ (lòng khoét trong suốt)" (approved 2026-11-09 by Claude under the owner's delegation); magenta keyed out and box-reduced by docs/art-review/g5/fx/make_assets.py at 2 art px per world px (src/render/imageArt.ts IMAGE_FX)
+  - id: fx_stun_image
+    path: public/assets/art/ai-v1/fx/fx_stun.png
+    category: fx
+    origin: custom
+    source: docs/art-review/g5/fx/stun/source.png
+    creator: Project owner (OpenAI imagegen via Codex; prompt in docs/art-review/g5/fx/stun/prompt.md)
+    license: project-owned
+    attribution: false
+    redistribute: true
+    evidence: docs/art-review/g5/fx/sheet.png
+    modified: true
+    nativeSize: 1024x1024
+    finalSize: 16x16
+    notes: Battle effect "Sao choáng" (approved 2026-11-09 by Claude under the owner's delegation); magenta keyed out and box-reduced by docs/art-review/g5/fx/make_assets.py at 2 art px per world px (src/render/imageArt.ts IMAGE_FX)
+  - id: fx_spark_image
+    path: public/assets/art/ai-v1/fx/fx_spark.png
+    category: fx
+    origin: custom
+    source: docs/art-review/g5/fx/spark/source.png
+    creator: Project owner (OpenAI imagegen via Codex; prompt in docs/art-review/g5/fx/spark/prompt.md)
+    license: project-owned
+    attribution: false
+    redistribute: true
+    evidence: docs/art-review/g5/fx/sheet.png
+    modified: true
+    nativeSize: 1024x1024
+    finalSize: 8x8
+    notes: Battle effect "Tia lửa trúng đòn" (approved 2026-11-09 by Claude under the owner's delegation); magenta keyed out and box-reduced by docs/art-review/g5/fx/make_assets.py at 2 art px per world px (src/render/imageArt.ts IMAGE_FX)

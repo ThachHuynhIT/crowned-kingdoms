@@ -4,9 +4,9 @@
 
 Every prompt tells Codex to read docs/ART_STYLE.md ("Quy tắc vẽ", "Góc nhìn") and attaches the approved style
 reference plus the approved boulder icon (the closest approved image of the same kind). FX keep their native sizes
-from src/render/fxArt.ts (ART_STYLE: never change a native size), so the subject must stay readable at 16x16.
-Arrows (8x8, eight hand-drawn directions), the 4x4 spark and the 8x8 stun stars stay painted in code: at that size
-a reduced picture carries no more detail than the hand-placed pixels.
+(2026-11-09, second try) are drawn at the image-art density: 2 art px per world px, like units and buildings, so a 32x32
+picture shows exactly as big as the 16x16 code boulder (the 16 px try lost its outline). Arrows stay hand-drawn: eight
+directions of a sprite that never rotates.
 """
 import sys
 from pathlib import Path
@@ -24,7 +24,7 @@ BẮT BUỘC TRƯỚC KHI VẼ: mở và đọc `{doc}` — mục "Quy tắc v�
 """
 
 BODY = """Create one pixel-art BATTLE EFFECT sprite for Crowned Kingdoms: {name} — {meaning}
-Format: a SQUARE image (1:1, target 1024x1024 px), to be reduced to {size}x{size} art pixels, so each art pixel is {px}x{px} source pixels. ONE bold simple shape centered, filling about 85% of the frame, readable at {size}x{size}: strong silhouette, big flat clusters, 3 to 4 tones, no tiny details.
+Format: a SQUARE image (1:1, target 1024x1024 px), to be reduced to {size}x{size} art pixels, so each art pixel is {px}x{px} source pixels. ONE bold simple shape centered, filling about 85% of the frame, readable at {size}x{size}: strong silhouette, a clear 1-art-pixel outline all round, big flat clusters, 3 to 4 tones, no tiny details.
 Subject: {visual}
 Style: warm cozy medieval fantasy pixel art, crisp square pixel clusters, upper-left lighting (top-left lighter, bottom-right darker), a 1-art-pixel outline in a darker tone of the subject's own colour (never pure black), saturated warm palette.
 View: seen as a small sprite floating over the battlefield, no ground, no cast shadow, no scene.
@@ -33,12 +33,16 @@ No text, letters, numbers, UI frame, watermark, blur, antialiasing, soft glow or
 """
 
 FX = {
-    'boulder': ('Đá tảng rơi', 'the royal boulder falling onto the battlefield.', 16,
+    'boulder': ('Đá tảng rơi', 'the royal boulder falling onto the battlefield.', 32,
                 'one big round grey boulder, slightly lumpy, two or three short cracks, a bright highlight on the top-left and a darker shaded bottom-right; warm grey stone, no crown mark, no speed lines.'),
-    'pulse': ('Xung lực công trình', 'the burst a pulsing building sends out.', 16,
+    'pulse': ('Xung lực công trình', 'the burst a pulsing building sends out.', 32,
               'a bold eight-pointed golden starburst with a white-hot core, four long rays and four short diagonal rays; gold and white.'),
-    'shield': ('Khiên bảo hộ', 'a magic ward bubble around a protected soldier.', 16,
+    'shield': ('Khiên bảo hộ', 'a magic ward bubble around a protected soldier.', 32,
                'a round water-blue protective bubble ring, thick bright rim, the inside left mostly empty and pale, one small white shine on the top-left; water blue and white.'),
+    'stun': ('Choáng', 'stars circling the head of a stunned unit.', 16,
+             'three small five-pointed golden stars with white centres arranged in a small arc; gold and white.'),
+    'spark': ('Tia lửa trúng đòn', 'the tiny spark where a hit lands.', 8,
+              'one tiny four-pointed white-gold spark, a white core and gold tips; gold and white.'),
 }
 
 

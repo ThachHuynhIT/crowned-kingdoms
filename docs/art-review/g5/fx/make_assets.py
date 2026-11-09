@@ -15,11 +15,26 @@ from PIL import Image
 ROOT = Path(__file__).resolve().parents[4]
 P = ROOT / 'docs/art-review/g5/fx'
 OUT = ROOT / 'public/assets/art/ai-v1/fx'
-SIZES = {'boulder': 16, 'pulse': 16, 'shield': 16}
+SIZES = {'boulder': 32, 'pulse': 32, 'shield': 32, 'stun': 16, 'spark': 8}
 
 spec = importlib.util.spec_from_file_location('icon_assets', ROOT / 'docs/art-review/g3e/icons/make_assets.py')
 icons = importlib.util.module_from_spec(spec)
 spec.loader.exec_module(icons)
+
+
+def hollow(img):
+    """The ward bubble must not hide the soldier inside it: clear the pale fill, keep the rim (outer 3 px) and the
+    white shine (top-left), so only the ring and the glint are drawn."""
+    import numpy as np
+    a = np.array(img)
+    n = a.shape[0]
+    c = (n - 1) / 2
+    ys, xs = np.mgrid[0:n, 0:n]
+    d = np.sqrt((xs - c) ** 2 + (ys - c) ** 2)
+    white = (a[..., 0] > 235) & (a[..., 1] > 235) & (a[..., 2] > 235)
+    inner = (d < n / 2 - 3.5) & ~white
+    a[inner] = 0
+    return Image.fromarray(a, 'RGBA')
 
 
 def main(ids):
@@ -28,6 +43,8 @@ def main(ids):
         n = SIZES[fx]
         sq, m = icons.cut(P / fx / 'source.png')
         img = icons.reduce(sq, m, n)
+        if fx == 'shield':
+            img = hollow(img)
         img.save(OUT / f'fx_{fx}.png')
         prev = Image.new('RGBA', (n * 8 + 16, n * 8 + 16), (110, 150, 70, 255))
         prev.alpha_composite(img.resize((n * 8, n * 8), Image.NEAREST), (8, 8))
