@@ -32,3 +32,10 @@ Nguồn và prompt của mẫu giữ trong `boulder/` để tra lại. `make_pro
 - **Tia lửa:** tia bốn cánh 8×8. ĐÃ DUYỆT.
 - **Vẫn vẽ bằng code:** tám hướng mũi tên (sprite không bao giờ xoay; bitmap tay giữ đúng đường chéo 1 px) và bóng của đá tảng (hình elip mờ, alpha 128 đã khai báo).
 - Bảng tổng hợp: `sheet.png`. Nối vào game qua `IMAGE_FX` (`src/render/imageArt.ts`).
+
+## Mũi tên (09/11/2026)
+
+- **Cách vẽ:** một bảng 3×3, mỗi ô một hướng, Codex vẽ riêng từng hướng (không xoay ảnh), ô giữa để trống. `make_arrows.py` cắt từng ô về 16×16, alpha 0/255.
+- **Claude kiểm:** cán gỗ, mũi sắt xám, lông đuôi đỏ trắng, viền tối 1 px; cùng độ dài ở cả tám hướng; ở 16 px vẫn đọc rõ hướng. ĐÃ DUYỆT.
+- Ảnh hiện ở tỉ lệ 1 như các FX khác, nên to gấp đôi mũi tên 8 px cũ, hợp với lính to hơn.
+- Bóng mờ dưới đá tảng vẫn vẽ bằng code: hình elip trong mờ alpha 128 đã khai báo, ảnh không thêm gì.

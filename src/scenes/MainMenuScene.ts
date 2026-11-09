@@ -3,7 +3,7 @@ import { toCss } from '../data/palette';
 import { UI_PALETTE } from '../data/uiPalette';
 import type { RunState } from '../game/run/state';
 import { UI_KEY, addPixelTexture } from '../render/atlas';
-import { imageArtKey, menuImageLayers } from '../render/imageArt';
+import { MENU_SKY_FILE, imageArtKey, menuImageLayers } from '../render/imageArt';
 import { HILL_LAYERS, MENU_SKY_H, menuPixelScale, paintHills, paintSky } from '../render/uiArt';
 import { resolveShortcut, shortcutFlags } from '../ui/input/shortcuts';
 import { MENU_BUTTON, layoutMenu, visibleMenuItems, type MenuItemId } from '../ui/menuLayout';
@@ -81,7 +81,9 @@ export class MainMenuScene extends Phaser.Scene {
 
     // Dithered dusk sky, three drifting hill silhouettes, fireflies.
     addPixelTexture(this.textures, SKY_KEY, paintSky());
-    this.sky = this.add.tileSprite(0, 0, 4, MENU_SKY_H, SKY_KEY).setOrigin(0, 0);
+    // The approved dusk-sky picture when it loaded (G5), else the painted bands; both are MENU_SKY_H tall.
+    const skyKey = MENU_SKY_FILE && this.textures.exists(imageArtKey(MENU_SKY_FILE)) ? imageArtKey(MENU_SKY_FILE) : SKY_KEY;
+    this.sky = this.add.tileSprite(0, 0, 4, MENU_SKY_H, skyKey).setOrigin(0, 0);
     // Picture strips (G5) when they all loaded, else the painted hill silhouettes.
     const pictures = menuImageLayers((file) => this.textures.exists(imageArtKey(file)));
     if (pictures !== null) {

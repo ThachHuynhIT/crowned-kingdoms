@@ -294,8 +294,8 @@ export const IMAGE_ICONS: Readonly<Record<string, string>> = {
 
 /**
  * Battle effects drawn as pictures (G5, `docs/art-review/g5/fx/review.md`): fx id → file, at 2 art px per world px like
- * units. Arrows (eight hand-drawn directions of a sprite that never rotates) and the boulder's translucent shadow
- * stay painted in code.
+ * units. The eight arrows come from one sheet with each direction drawn separately (sprites never rotate); only the
+ * boulder's translucent shadow stays painted in code.
  */
 export const IMAGE_FX: Readonly<Record<string, string>> = {
   boulder: 'fx/fx_boulder',
@@ -303,6 +303,15 @@ export const IMAGE_FX: Readonly<Record<string, string>> = {
   shield: 'fx/fx_shield',
   stun: 'fx/fx_stun',
   spark: 'fx/fx_spark',
+  // eight arrows, each drawn for its own direction on one sheet (sprites never rotate)
+  arrow_e: 'fx/fx_arrow_e',
+  arrow_ne: 'fx/fx_arrow_ne',
+  arrow_n: 'fx/fx_arrow_n',
+  arrow_nw: 'fx/fx_arrow_nw',
+  arrow_w: 'fx/fx_arrow_w',
+  arrow_sw: 'fx/fx_arrow_sw',
+  arrow_s: 'fx/fx_arrow_s',
+  arrow_se: 'fx/fx_arrow_se',
 };
 
 /**
@@ -323,6 +332,9 @@ export const MENU_IMAGE_LAYERS: readonly { readonly file: string; readonly paral
   { file: 'menu/hills_mid', parallax: 10 },
 ];
 
+/** The dusk sky behind the strips as a picture (384×256, repeats left to right); null keeps the painted bands. */
+export const MENU_SKY_FILE: string | null = 'menu/sky';
+
 /** The picture strips when every one of them loaded, else null (the menu keeps its painted hills). */
 export const menuImageLayers = (
   loaded: (file: string) => boolean,
@@ -338,6 +350,7 @@ export const IMAGE_ART_FILES: readonly string[] = [
   ...Object.values(IMAGE_BUILDINGS),
   ...Object.values(IMAGE_ICONS),
   ...MENU_IMAGE_LAYERS.map((layer) => layer.file),
+  ...(MENU_SKY_FILE ? [MENU_SKY_FILE] : []),
   ...Object.values(IMAGE_FX),
   ...KING_CARDS_APPROVED.map(kingCardFile),
   ...Object.values(IMAGE_PLOTS).flatMap((prefix) => PLOT_STATES.map((s) => `${prefix}_${s}`)),

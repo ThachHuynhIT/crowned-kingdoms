@@ -11,3 +11,9 @@ Plan `docs/superpowers/plans/2026-11-09-missing-art-assets.md` Task 7 bước 4.
 - **Claude kiểm:** ánh sáng trên-trái, cụm pixel vuông rõ, không chữ, không người; hai lớp đặt lên trời hoàng hôn code (`paintSky`) hợp màu. Bản ghép: `preview.png` trong từng thư mục.
 - **Trạng thái:** ĐÃ DUYỆT cả hai. Không vẽ `hills_near`.
 - **Nối vào game:** `MENU_IMAGE_LAYERS` trong `src/render/imageArt.ts` (trôi 4 và 10 px/giây); thiếu một file thì menu giữ ba lớp đồi vẽ bằng code.
+
+## Trời hoàng hôn (09/11/2026)
+
+- **Cách vẽ:** cùng khung prompt, bốn dải màu của `UI_PALETTE.sky` nối bằng dither, thêm mây và vài sao nhỏ ở dải tím, lặp ngang liền mạch. `make_sky.py` thu 4 lần về 384×256 (đúng `MENU_SKY_H`).
+- **Claude kiểm:** độ chênh màu qua mép nối 4,6, bên trong 2,2, không thấy khi lặp; hợp với hai dải đồi đã duyệt. ĐÃ DUYỆT.
+- **Nối vào game:** `MENU_SKY_FILE`; thiếu file thì về dải màu vẽ bằng code.

@@ -18302,3 +18302,129 @@ assets:
     nativeSize: 1024x1024
     finalSize: 8x8
     notes: Battle effect "Tia lửa trúng đòn" (approved 2026-11-09 by Claude under the owner's delegation); magenta keyed out and box-reduced by docs/art-review/g5/fx/make_assets.py at 2 art px per world px (src/render/imageArt.ts IMAGE_FX)
+  - id: fx_arrow_e_image
+    path: public/assets/art/ai-v1/fx/fx_arrow_e.png
+    category: fx
+    origin: custom
+    source: docs/art-review/g5/fx/arrows/source.png
+    creator: Project owner (OpenAI imagegen via Codex; prompt beside the source)
+    license: project-owned
+    attribution: false
+    redistribute: true
+    evidence: docs/art-review/g5/fx/arrows/preview.png
+    modified: true
+    nativeSize: 1024x1024 sheet
+    finalSize: 16x16
+    notes: Arrow in flight, direction e (approved 2026-11-09 by Claude under the owner's delegation); cut from the 3x3 sheet by docs/art-review/g5/fx/make_arrows.py (src/render/imageArt.ts IMAGE_FX)
+  - id: fx_arrow_ne_image
+    path: public/assets/art/ai-v1/fx/fx_arrow_ne.png
+    category: fx
+    origin: custom
+    source: docs/art-review/g5/fx/arrows/source.png
+    creator: Project owner (OpenAI imagegen via Codex; prompt beside the source)
+    license: project-owned
+    attribution: false
+    redistribute: true
+    evidence: docs/art-review/g5/fx/arrows/preview.png
+    modified: true
+    nativeSize: 1024x1024 sheet
+    finalSize: 16x16
+    notes: Arrow in flight, direction ne (approved 2026-11-09 by Claude under the owner's delegation); cut from the 3x3 sheet by docs/art-review/g5/fx/make_arrows.py (src/render/imageArt.ts IMAGE_FX)
+  - id: fx_arrow_n_image
+    path: public/assets/art/ai-v1/fx/fx_arrow_n.png
+    category: fx
+    origin: custom
+    source: docs/art-review/g5/fx/arrows/source.png
+    creator: Project owner (OpenAI imagegen via Codex; prompt beside the source)
+    license: project-owned
+    attribution: false
+    redistribute: true
+    evidence: docs/art-review/g5/fx/arrows/preview.png
+    modified: true
+    nativeSize: 1024x1024 sheet
+    finalSize: 16x16
+    notes: Arrow in flight, direction n (approved 2026-11-09 by Claude under the owner's delegation); cut from the 3x3 sheet by docs/art-review/g5/fx/make_arrows.py (src/render/imageArt.ts IMAGE_FX)
+  - id: fx_arrow_nw_image
+    path: public/assets/art/ai-v1/fx/fx_arrow_nw.png
+    category: fx
+    origin: custom
+    source: docs/art-review/g5/fx/arrows/source.png
+    creator: Project owner (OpenAI imagegen via Codex; prompt beside the source)
+    license: project-owned
+    attribution: false
+    redistribute: true
+    evidence: docs/art-review/g5/fx/arrows/preview.png
+    modified: true
+    nativeSize: 1024x1024 sheet
+    finalSize: 16x16
+    notes: Arrow in flight, direction nw (approved 2026-11-09 by Claude under the owner's delegation); cut from the 3x3 sheet by docs/art-review/g5/fx/make_arrows.py (src/render/imageArt.ts IMAGE_FX)
+  - id: fx_arrow_w_image
+    path: public/assets/art/ai-v1/fx/fx_arrow_w.png
+    category: fx
+    origin: custom
+    source: docs/art-review/g5/fx/arrows/source.png
+    creator: Project owner (OpenAI imagegen via Codex; prompt beside the source)
+    license: project-owned
+    attribution: false
+    redistribute: true
+    evidence: docs/art-review/g5/fx/arrows/preview.png
+    modified: true
+    nativeSize: 1024x1024 sheet
+    finalSize: 16x16
+    notes: Arrow in flight, direction w (approved 2026-11-09 by Claude under the owner's delegation); cut from the 3x3 sheet by docs/art-review/g5/fx/make_arrows.py (src/render/imageArt.ts IMAGE_FX)
+  - id: fx_arrow_sw_image
+    path: public/assets/art/ai-v1/fx/fx_arrow_sw.png
+    category: fx
+    origin: custom
+    source: docs/art-review/g5/fx/arrows/source.png
+    creator: Project owner (OpenAI imagegen via Codex; prompt beside the source)
+    license: project-owned
+    attribution: false
+    redistribute: true
+    evidence: docs/art-review/g5/fx/arrows/preview.png
+    modified: true
+    nativeSize: 1024x1024 sheet
+    finalSize: 16x16
+    notes: Arrow in flight, direction sw (approved 2026-11-09 by Claude under the owner's delegation); cut from the 3x3 sheet by docs/art-review/g5/fx/make_arrows.py (src/render/imageArt.ts IMAGE_FX)
+  - id: fx_arrow_s_image
+    path: public/assets/art/ai-v1/fx/fx_arrow_s.png
+    category: fx
+    origin: custom
+    source: docs/art-review/g5/fx/arrows/source.png
+    creator: Project owner (OpenAI imagegen via Codex; prompt beside the source)
+    license: project-owned
+    attribution: false
+    redistribute: true
+    evidence: docs/art-review/g5/fx/arrows/preview.png
+    modified: true
+    nativeSize: 1024x1024 sheet
+    finalSize: 16x16
+    notes: Arrow in flight, direction s (approved 2026-11-09 by Claude under the owner's delegation); cut from the 3x3 sheet by docs/art-review/g5/fx/make_arrows.py (src/render/imageArt.ts IMAGE_FX)
+  - id: fx_arrow_se_image
+    path: public/assets/art/ai-v1/fx/fx_arrow_se.png
+    category: fx
+    origin: custom
+    source: docs/art-review/g5/fx/arrows/source.png
+    creator: Project owner (OpenAI imagegen via Codex; prompt beside the source)
+    license: project-owned
+    attribution: false
+    redistribute: true
+    evidence: docs/art-review/g5/fx/arrows/preview.png
+    modified: true
+    nativeSize: 1024x1024 sheet
+    finalSize: 16x16
+    notes: Arrow in flight, direction se (approved 2026-11-09 by Claude under the owner's delegation); cut from the 3x3 sheet by docs/art-review/g5/fx/make_arrows.py (src/render/imageArt.ts IMAGE_FX)
+  - id: menu_sky
+    path: public/assets/art/ai-v1/menu/sky.png
+    category: ui
+    origin: custom
+    source: docs/art-review/g5/menu/sky/source.png
+    creator: Project owner (OpenAI imagegen via Codex; prompt beside the source)
+    license: project-owned
+    attribution: false
+    redistribute: true
+    evidence: docs/art-review/g5/menu/sky/preview.png
+    modified: true
+    nativeSize: 1536x1024
+    finalSize: 384x256
+    notes: Main-menu dusk sky (approved 2026-11-09 by Claude under the owner's delegation); box-reduced 4x by docs/art-review/g5/menu/make_sky.py; repeats left to right (src/render/imageArt.ts MENU_SKY_FILE)
