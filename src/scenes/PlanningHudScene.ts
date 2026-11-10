@@ -347,9 +347,12 @@ export class PlanningHudScene extends Phaser.Scene {
         this.refreshPending();
       }),
       bus.on('run:illegal', ({ reason }) => {
-        // A refused pick (the offer is still open) must not leave Nhận disabled for good.
-        if (reason === 'wrongPhase' || reason === 'badTarget') {
+        // Sync affordability before unlocking a refused pick on an open offer.
+        if (reason === 'wrongPhase' || reason === 'badTarget' || reason === 'notEnoughGold') {
+          this.reward?.setGold(this.controller.state.gold);
           this.reward?.retry();
+        }
+        if (reason === 'wrongPhase' || reason === 'badTarget') {
           this.blessing?.retry();
         }
         this.flashIllegal(reason);
@@ -540,7 +543,7 @@ export class PlanningHudScene extends Phaser.Scene {
 
     const offers = state.phase === 'reward' || state.phase === 'conquest' ? cardOffer(state) : null;
     // The reward step is followed by a conquest step: a new offer replaces the open modal.
-    const offerKey = offers ? `${offers.kind}:${offers.cardIds.join(',')}` : null;
+    const offerKey = offers ? JSON.stringify([offers.kind, offers.cardIds, offers.kind === 'merchant' ? offers.price : null]) : null;
     if (this.reward && offerKey !== this.rewardKey) {
       this.reward.destroy();
       this.reward = null;
@@ -556,9 +559,11 @@ export class PlanningHudScene extends Phaser.Scene {
         {
           skin: state.kingId,
           heading: offerHeadingFor(offers, (id) => CONTENT.enemyKing(id).nameVi),
+          merchant: offers.kind === 'merchant' ? { price: offers.price ?? RUN.merchantPrice, gold: state.gold } : undefined,
         },
       ).setDepth(MODAL_DEPTH);
     }
+    this.reward?.setGold(state.gold);
     if (!choosing && this.pending.handIndex !== null) this.pending = NO_PENDING;
     if (!planning) this.buy = null;
     this.refreshPending();

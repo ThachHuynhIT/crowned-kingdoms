@@ -1,5 +1,6 @@
 import { describe, expect, it } from 'vitest';
 import type { Rect, Size } from '../hud/layout';
+import { cardLayout } from '../cards/cardLayout';
 import {
   COUNCIL_HEADER_H,
   DECK_CARD,
@@ -33,6 +34,24 @@ describe('centredPanel', () => {
 });
 
 describe('rewardLayout', () => {
+  it('merchant prices have a separate badge row and the skip/buy footer has touch targets', () => {
+    for (const screen of [DESKTOP, MOBILE, { w: 1280, h: 480 }]) {
+      const l = rewardLayout(screen, 4);
+      for (const rect of [...l.cards, l.reroll, l.take]) {
+        expect(rect.w).toBeGreaterThanOrEqual(44);
+        expect(rect.h).toBeGreaterThanOrEqual(44);
+      }
+      expect(overlaps(l.reroll, l.take)).toBe(false);
+      expect(l.reroll.y).toBeGreaterThanOrEqual(l.viewport.y + l.viewport.h);
+      for (const card of l.cards) {
+        const face = cardLayout(card, 10, 'full');
+        expect(face.badge.h).toBeGreaterThanOrEqual(12);
+        expect(overlaps(face.badge, face.description)).toBe(false);
+        expect(face.description.y + face.description.h).toBeLessThanOrEqual(card.h);
+      }
+    }
+  });
+
   for (const [name, screen, inset, card] of [
     ['desktop', DESKTOP, 24, { w: 212, h: 280 }],
     ['mobile', MOBILE, 10, { w: 108, h: 180 }],

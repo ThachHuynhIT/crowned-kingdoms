@@ -3,10 +3,11 @@ import { toCss } from '../../data/palette';
 import type { CardId, KingId } from '../../data/types';
 import type { Content } from '../../game/cards/registry';
 import { CardView } from '../cards/CardView';
-import { textContent } from '../hud/layout';
+import { textContent, type TooltipContent } from '../hud/layout';
 import { kingTheme } from '../kingSelect/kingTheme';
+import { illegalText } from '../realm/calendarModel';
 import { createButton, textStyle, type Button, type TooltipHost } from '../theme';
-import { rewardRerollView } from './offerModel';
+import { merchantOfferView, rewardRerollView } from './offerModel';
 import { rewardLayout, visibleRewardCards, type RewardLayout } from './modalLayout';
 import { createOverlay, fitOverlay } from './overlay';
 import { canConfirmReward, selectReward } from './rewardSelection';
@@ -20,12 +21,13 @@ export interface RewardModalOptions {
   /** The playing king: the cards, buttons and headings take his colours. */
   skin: KingId;
   heading: { title: string; subtitle: string };
+  merchant?: { price: number; gold: number };
 }
 
 /**
- * Reward / conquest picker (§10.6): two headings floating over the darkened world, the offered
- * vertical cards, the disabled "ĐỔI THƯỞNG" line and **Nhận** (enabled once a card is chosen; the
- * reward cannot be skipped, and Nhận works once). Pure display: the choice goes to `onPick`.
+ * Card offer picker (§10.6). Merchants show a price on each card and replace the reroll line
+ * with Bỏ qua; Mua / Nhận only works with an eligible pick. All submissions share one lock.
+ * Pure display: the choice goes to `onPick`.
  * Call `layout()` on resize and `destroy()` when the reward phase ends. When the screen is too
  * short for every card, the cards scroll (wheel or drag) and only fully visible ones show.
  */
@@ -39,6 +41,8 @@ export class RewardModal {
   private readonly root: Phaser.GameObjects.Container;
   private selected: number | null = null;
   private submitted = false;
+  private readonly merchant: { price: number; gold: number } | undefined;
+  private enabled: boolean[] = [];
   private scroll = 0;
   private drag: { id: number; y: number; scroll: number } | null = null;
   private lay: RewardLayout;
@@ -48,9 +52,10 @@ export class RewardModal {
     content: Content,
     offers: readonly CardId[],
     tooltip: TooltipHost,
-    private readonly onPick: (index: number) => void,
-    { skin, heading }: RewardModalOptions,
+    private readonly onPick: (index: number | null) => void,
+    { skin, heading, merchant }: RewardModalOptions,
   ) {
+    this.merchant = merchant ? { ...merchant } : undefined;
     const theme = kingTheme(skin);
     this.overlay = createOverlay(scene, { alpha: REWARD_OVERLAY_ALPHA });
     const heads = (text: string, color: number): Phaser.GameObjects.Text =>
@@ -62,28 +67,38 @@ export class RewardModal {
     this.title = heads(heading.title, theme.light);
     this.subtitle = heads(heading.subtitle, theme.accent);
     this.cards = offers.map((id, i) => {
-      const card = new CardView(scene, content, { w: 180, h: 288 }, tooltip);
+      // Keep CardView's hover / 400 ms hold even when buying is unavailable.
+      const reasonContent = (original: TooltipContent): TooltipContent => {
+        const reason = this.merchantView()?.disabledReason;
+        return reason ? textContent([illegalText(reason)]) : original;
+      };
+      const cardTooltip: TooltipHost = {
+        showAtPointer: (value, owner) => tooltip.showAtPointer(reasonContent(value), owner),
+        showAbove: (value, anchor, owner) => tooltip.showAbove(reasonContent(value), anchor, owner),
+        hide: (owner) => tooltip.hide(owner),
+      };
+      const card = new CardView(scene, content, { w: 180, h: 288 }, cardTooltip);
       card.setTheme(skin);
-      card.setCard(id);
+      card.setCard(id, { badge: this.merchantView()?.priceLabel });
       card.onClick(() => this.select(i));
       return card;
     });
     const view = rewardRerollView();
-    this.reroll = createButton(scene, 0, 0, view.label, {
+    this.reroll = createButton(scene, 0, 0, merchant ? 'Bỏ qua' : view.label, {
       width: 240,
       height: 44,
       fontSize: 14,
-      onClick: () => undefined,
-      tooltip: { host: tooltip, content: () => textContent([view.tooltip]) },
+      onClick: () => this.skip(),
+      tooltip: { host: tooltip, content: () => textContent([merchant ? 'Bỏ qua miễn phí' : view.tooltip]) },
       skin,
     });
-    this.reroll.setEnabled(view.enabled);
-    this.take = createButton(scene, 0, 0, 'Nhận', {
+    this.reroll.setEnabled(merchant !== undefined);
+    this.take = createButton(scene, 0, 0, merchant ? 'Mua' : 'Nhận', {
       width: 150,
       height: 48,
       fontSize: 18,
       onClick: () => this.confirm(),
-      tooltip: { host: tooltip, content: () => textContent(['Nhận thẻ đã chọn (Enter)']) },
+      tooltip: { host: tooltip, content: () => textContent([merchant ? 'Mua thẻ đã chọn (Enter)' : 'Nhận thẻ đã chọn (Enter)']) },
       skin,
     });
     this.take.setEnabled(false);
@@ -105,16 +120,47 @@ export class RewardModal {
 
   /** Take the selected card (Enter or Nhận); does nothing until one is chosen, and only once. */
   confirm(): void {
-    if (!canConfirmReward(this.selected, this.cards.length, this.submitted)) return;
-    this.submitted = true;
-    this.take.setEnabled(false);
-    this.onPick(this.selected!);
+    if (!canConfirmReward(this.selected, this.cards.length, this.submitted, this.enabled)) return;
+    this.submit(this.selected);
   }
 
-  /** The command was refused (the offer is still open): Nhận works again with the same pick. */
+  skip(): void {
+    if (!this.merchant || this.submitted) return;
+    this.submit(null);
+  }
+
+  private submit(index: number | null): void {
+    this.submitted = true;
+    this.refreshEligibility();
+    this.onPick(index);
+  }
+
+  setGold(gold: number): void {
+    if (!this.merchant) return;
+    this.merchant.gold = gold;
+    this.refreshEligibility();
+  }
+
+  private merchantView(): ReturnType<typeof merchantOfferView> | null {
+    return this.merchant ? merchantOfferView(this.merchant, this.merchant.gold) : null;
+  }
+
+  private refreshEligibility(): void {
+    const canBuy = this.merchantView()?.canBuy ?? true;
+    this.enabled = this.cards.map(() => canBuy);
+    if (this.selected !== null && !this.enabled[this.selected]) this.selected = null;
+    this.cards.forEach((card, i) => {
+      card.setDimmed(!this.enabled[i]);
+      card.setSelected(i === this.selected);
+    });
+    this.take.setEnabled(canConfirmReward(this.selected, this.cards.length, this.submitted, this.enabled));
+    this.reroll.setEnabled(this.merchant !== undefined && !this.submitted);
+  }
+
+  /** A refused command unlocks the open offer, retaining only an eligible pick. */
   retry(): void {
     this.submitted = false;
-    this.take.setEnabled(canConfirmReward(this.selected, this.cards.length, this.submitted));
+    this.refreshEligibility();
   }
 
   setDepth(depth: number): this {
@@ -163,6 +209,7 @@ export class RewardModal {
     this.reroll.container.setPosition(l.reroll.x + l.reroll.w / 2, l.reroll.y + l.reroll.h / 2);
     this.take.resize(l.take.w, l.take.h);
     this.take.container.setPosition(l.take.x + l.take.w / 2, l.take.y + l.take.h / 2);
+    this.refreshEligibility();
   }
 
   /** The heading text at `size` px, made smaller until it fits `maxWidth`. */
@@ -174,9 +221,9 @@ export class RewardModal {
 
   private select(index: number): void {
     if (this.submitted) return;
-    this.selected = selectReward(this.selected, index, this.cards.length);
+    this.selected = selectReward(this.selected, index, this.cards.length, this.enabled);
     this.cards.forEach((card, i) => card.setSelected(i === this.selected));
-    this.take.setEnabled(canConfirmReward(this.selected, this.cards.length, this.submitted));
+    this.take.setEnabled(canConfirmReward(this.selected, this.cards.length, this.submitted, this.enabled));
   }
 
   private inViewport(x: number, y: number): boolean {
