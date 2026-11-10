@@ -32,6 +32,8 @@ Chẩn đoán trận boss năm 20 (Lúa Mì seed 1–2, script tạm theo dõi m
 
 **100 ván/vua (cấu hình c5): ĐẠT.** Thắng: phép 48%, đồng hồ 63%, lò rèn 57%, rừng 54%, trăng 50%, du mục 48%, đá 50%, thuỷ triều 59%, lúa 53%; chênh lệch 15,0 điểm. Thua theo năm (ván còn sống): năm 10: 21%, năm 20: 51%, năm 30: 64%; năm thường ≤ 2%.
 
-Mẫu nghiệm thu 500 ván/vua: xem mục bên dưới (chạy sau commit này).
+**Mẫu nghiệm thu 500 ván/vua (cấu hình c5, seeds 1–500, 54,5 phút): gần đạt.** Thắng: phép 52,4% · đồng hồ 66,2% · lò rèn 61,0% · rừng 62,8% · trăng 58,6% · du mục 51,0% · đá 53,0% · thuỷ triều 63,2% · lúa 57,0%. Chênh lệch 15,2 điểm (mục tiêu ≤ 15); Đồng Hồ vượt trần 65% thêm 1,2 điểm. Trung bình 58,4%.
+
+Đề xuất bước kế (chưa đo): `FOE_MULT_BY_KING.clock` 0,9 → 0,93 và `nomad` 1,04 → 1,02, rồi chạy lại 500 ván.
 
 Ghi chú: `FOE_MULT_BY_KING` là giải pháp tạm. Cách lâu dài là chỉnh thẻ của từng vua để các vua mạnh ngang nhau khi gặp cùng một đạo quân địch.
