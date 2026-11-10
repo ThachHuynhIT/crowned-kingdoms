@@ -1,7 +1,7 @@
 import { describe, expect, it } from 'vitest';
 import { ALL_KINGS } from '../data/rules';
-import { KING_THEMES, LOCKED_THEME } from '../data/uiPalette';
-import { KING_CARD_NATIVE, KING_CARD_WINDOW, kingSuit, paintKingCard } from './kingCardArt';
+import { KING_THEMES } from '../data/uiPalette';
+import { KING_CARD_NATIVE, KING_CARD_WINDOW, LOCKED_SHADE, kingSuit, lockedShade, paintKingCard } from './kingCardArt';
 import { PixelCanvas } from './pixel';
 
 const colorAt = (c: PixelCanvas, x: number, y: number): number => {
@@ -64,20 +64,29 @@ describe('paintKingCard', () => {
     expect(ALL_KINGS.map(kingSuit)).toEqual(ALL_KINGS.map((_, i) => ['diamond', 'spade', 'heart', 'club'][i % 4]));
   });
 
-  it('paints a locked king in grey with a "?" and a padlock in the window, hiding the king colours', () => {
+  it('paints a locked king as the same card in dark greys, alpha unchanged (owner 2026-11-10)', () => {
     const open = paintKingCard('wheat');
     const locked = paintKingCard('wheat', true);
     expect(same(open, locked)).toBe(false);
-    expect(colorAt(locked, 31, 0)).toBe(LOCKED_THEME.bgDark);
-    const win = new Set<number>();
-    for (let y = KING_CARD_WINDOW.y; y < KING_CARD_WINDOW.y + KING_CARD_WINDOW.h; y++) {
-      for (let x = KING_CARD_WINDOW.x; x < KING_CARD_WINDOW.x + KING_CARD_WINDOW.w; x++) win.add(colorAt(locked, x, y));
+    expect(same(locked, lockedShade(open))).toBe(true);
+    for (let i = 0; i < locked.data.length; i += 4) {
+      expect(locked.data[i + 3]).toBe(open.data[i + 3]);
+      expect(locked.data[i]).toBe(locked.data[i + 1]);
+      expect(locked.data[i + 1]).toBe(locked.data[i + 2]);
+      expect(locked.data[i]!).toBeLessThanOrEqual(Math.ceil(255 * LOCKED_SHADE));
     }
-    expect(win.size).toBeGreaterThanOrEqual(2);
-    for (const c of win) {
-      const r = (c >> 16) & 255; const g = (c >> 8) & 255; const b = c & 255;
-      expect(Math.max(r, g, b) - Math.min(r, g, b)).toBeLessThan(24); // grey only
-    }
+  });
+});
+
+describe('lockedShade', () => {
+  it('turns each pixel into a dark grey of its luminance and keeps hard alpha', () => {
+    const art = new PixelCanvas(2, 1);
+    art.set(0, 0, 0xffffff);
+    art.set(1, 0, 0xff0000, 0);
+    const out = lockedShade(art);
+    expect([...out.data.slice(0, 4)]).toEqual([128, 128, 128, 255]);
+    expect(out.data[7]).toBe(0);
+    expect(art.data[0]).toBe(255); // the source is not changed
   });
 });
 

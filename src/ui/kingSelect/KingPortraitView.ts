@@ -2,29 +2,33 @@ import type Phaser from 'phaser';
 import type { KingId } from '../../data/types';
 import { describeCard } from '../../game/cards/describe';
 import type { Content } from '../../game/cards/registry';
-import { addPixelTexture, imageFile } from '../../render/atlas';
+import { addPixelTexture, iconFrame, imageFile, SPRITES_KEY, textureArt } from '../../render/atlas';
 import { kingCardFile } from '../../render/imageArt';
-import { KING_CARD_NATIVE, KING_CARD_WINDOW, paintKingCard } from '../../render/kingCardArt';
+import { KING_CARD_NATIVE, KING_CARD_WINDOW, lockedShade, paintKingCard } from '../../render/kingCardArt';
 import { paintPortrait, PORTRAIT_SIZE } from '../../render/portraitArt';
 import { PORTRAIT_ASSETS, pickPortraitCopy, portraitLargeTextureKey, portraitPlacement, portraitTextureKey } from '../../render/portraitAssets';
 import type { Rect, TooltipContent } from '../hud/layout';
 import type { TooltipHost } from '../theme';
 import type { KingChoice } from './carouselModel';
+import { lockedCardLayout } from './lockedCardLayout';
 
 const cardKey = (id: KingId, locked: boolean): string => `king-card-${id}${locked ? '-locked' : ''}`;
 const portraitKey = (id: KingId): string => `portrait-${id}`;
+const lockedKey = (key: string): string => `${key}-locked`;
 /** A tap, not a drag: the pointer moved at most this many px. */
 const TAP_PX = 8;
 
 /**
  * The tall king card (see `paintKingCard`) with the king's portrait in its window; hover or
  * long-press shows the blurb, the throne and the banner he carries as an enemy. A locked king
- * is grey with a "?" and shows no portrait. Pure display: `layout(rect)` places it (the rect's
+ * keeps his card and portrait (owner 2026-11-10) as dark-grey copies (`lockedShade`, precomputed
+ * once per texture) with the `icon_lock` padlock centred on the window. Pure display: `layout(rect)` places it (the rect's
  * width is the art width times an integer scale); the click callback decides what it means.
  */
 export class KingPortraitView {
   private readonly card: Phaser.GameObjects.Image;
   private portrait: Phaser.GameObjects.Image | null = null;
+  private lock: Phaser.GameObjects.Image | null = null;
   private portraitArt = { w: PORTRAIT_SIZE, h: PORTRAIT_SIZE };
   private choice: KingChoice | null = null;
   private rect: Rect = { x: 0, y: 0, w: KING_CARD_NATIVE.w, h: KING_CARD_NATIVE.h };
@@ -68,13 +72,17 @@ export class KingPortraitView {
     addPixelTexture(this.scene.textures, cardKey(choice.id, locked), paintKingCard(choice.id, locked, picture));
     this.card.setTexture(cardKey(choice.id, locked)).setVisible(this.shown);
     this.portrait?.destroy();
-    this.portrait = null;
-    if (!locked) {
-      // The approved 96×144 picture when it loaded, else the generated placeholder.
-      const real = this.scene.textures.exists(portraitTextureKey(choice.id));
-      if (!real) addPixelTexture(this.scene.textures, portraitKey(choice.id), paintPortrait(this.content.king(choice.id)));
-      this.portraitArt = real ? { w: PORTRAIT_ASSETS[choice.id].width, h: PORTRAIT_ASSETS[choice.id].height } : { w: PORTRAIT_SIZE, h: PORTRAIT_SIZE };
-      this.portrait = this.scene.add.image(0, 0, real ? portraitTextureKey(choice.id) : portraitKey(choice.id)).setOrigin(0, 0).setTint(this.brightness).setDepth(this.depth + 0.5).setVisible(this.shown);
+    this.lock?.destroy();
+    this.lock = null;
+    // The approved 96×144 picture when it loaded, else the generated placeholder; a locked king gets its grey copy.
+    const real = this.scene.textures.exists(portraitTextureKey(choice.id));
+    if (!real) addPixelTexture(this.scene.textures, portraitKey(choice.id), paintPortrait(this.content.king(choice.id)));
+    this.portraitArt = real ? { w: PORTRAIT_ASSETS[choice.id].width, h: PORTRAIT_ASSETS[choice.id].height } : { w: PORTRAIT_SIZE, h: PORTRAIT_SIZE };
+    const key = this.shaded(real ? portraitTextureKey(choice.id) : portraitKey(choice.id), locked);
+    this.portrait = this.scene.add.image(0, 0, key).setOrigin(0, 0).setTint(this.brightness).setDepth(this.depth + 0.5).setVisible(this.shown);
+    const atlas = this.scene.textures.exists(SPRITES_KEY) ? this.scene.textures.get(SPRITES_KEY) : null;
+    if (locked && atlas?.has(iconFrame('lock'))) {
+      this.lock = this.scene.add.image(0, 0, SPRITES_KEY, iconFrame('lock')).setOrigin(0, 0).setTint(this.brightness).setDepth(this.depth + 0.6).setVisible(this.shown);
     }
     this.place();
   }
@@ -95,12 +103,14 @@ export class KingPortraitView {
     const tint = (v << 16) | (v << 8) | v;
     this.card.setTint(tint);
     this.portrait?.setTint(tint);
+    this.lock?.setTint(tint);
     this.brightness = tint;
   }
 
   setDepth(depth: number): void {
     this.card.setDepth(depth);
     this.portrait?.setDepth(depth + 0.5);
+    this.lock?.setDepth(depth + 0.6);
     this.depth = depth;
   }
 
@@ -108,31 +118,37 @@ export class KingPortraitView {
     this.shown = visible;
     this.card.setVisible(visible && this.choice !== null);
     this.portrait?.setVisible(visible);
+    this.lock?.setVisible(visible);
     if (!visible) this.tooltip.hide(this.owner);
   }
 
   /** A short side-to-side shake: "this one cannot be chosen". */
   shake(): void {
-    const x = this.card.x;
+    const parts = [this.card, this.portrait, this.lock].filter((p): p is Phaser.GameObjects.Image => p !== null);
     this.scene.tweens.add({
-      targets: this.card,
-      x: x + 6,
+      targets: parts,
+      x: '+=6',
       duration: 45,
       yoyo: true,
       repeat: 2,
-      onComplete: () => this.card.setX(x),
+      onComplete: () => this.place(),
     });
   }
 
   destroy(): void {
     this.tooltip.hide(this.owner);
     this.portrait?.destroy();
+    this.lock?.destroy();
     this.card.destroy();
   }
 
   private place(): void {
     const scale = this.exact ? this.rect.w / KING_CARD_NATIVE.w : Math.max(1, Math.floor(this.rect.w / KING_CARD_NATIVE.w));
     this.card.setPosition(this.rect.x, this.rect.y).setScale(scale);
+    if (this.lock) {
+      const at = lockedCardLayout({ x: this.rect.x, y: this.rect.y, w: KING_CARD_NATIVE.w * scale, h: KING_CARD_NATIVE.h * scale }).lock;
+      this.lock.setPosition(at.x, at.y).setScale(at.scale);
+    }
     if (!this.portrait) return;
     this.pickPortraitTexture(scale);
     const at = portraitPlacement(KING_CARD_WINDOW, scale, this.portraitArt);
@@ -142,18 +158,29 @@ export class KingPortraitView {
   /** The approved portrait in the copy that is sharp at this card scale (only while it is at rest on a whole scale). */
   private pickPortraitTexture(scale: number): void {
     const c = this.choice;
-    if (!this.portrait || !c || !c.playable || !this.scene.textures.exists(portraitTextureKey(c.id))) return;
+    if (!this.portrait || !c || !this.scene.textures.exists(portraitTextureKey(c.id))) return;
     const large = pickPortraitCopy(scale) === 'large' && this.scene.textures.exists(portraitLargeTextureKey(c.id));
     const asset = PORTRAIT_ASSETS[c.id];
-    const key = large ? portraitLargeTextureKey(c.id) : portraitTextureKey(c.id);
+    const key = this.shaded(large ? portraitLargeTextureKey(c.id) : portraitTextureKey(c.id), !c.playable);
     if (this.portrait.texture.key !== key) this.portrait.setTexture(key);
     this.portraitArt = large ? { w: asset.large.width, h: asset.large.height } : { w: asset.width, h: asset.height };
+  }
+
+  /** `key`, or for a locked king its dark-grey copy (made once from the texture's pixels; `key` itself if that fails). */
+  private shaded(key: string, locked: boolean): string {
+    if (!locked) return key;
+    const grey = lockedKey(key);
+    if (!this.scene.textures.exists(grey)) {
+      const art = textureArt(this.scene.textures, key);
+      if (art) addPixelTexture(this.scene.textures, grey, lockedShade(art));
+    }
+    return this.scene.textures.exists(grey) ? grey : key;
   }
 
   private tooltipContent(): TooltipContent | null {
     const c = this.choice;
     if (!c) return null;
-    if (!c.playable) return { title: `${c.title.prefix}${c.title.title}`, lines: [[{ text: c.note ?? '' }]] };
+    if (!c.playable) return { title: c.nameVi, lines: [[{ text: c.lockText ?? c.note ?? '' }]] };
     const king = this.content.king(c.id);
     const throne = describeCard(king.throne);
     return {

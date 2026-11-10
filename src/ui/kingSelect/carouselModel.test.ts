@@ -3,6 +3,7 @@ import type { KingId } from '../../data/types';
 import { CONTENT } from '../../game/cards/registry';
 import { defaultProfile, type MetaProfile } from '../../game/meta';
 import { kingChoices, nextIndex, swipeTarget, unlockLabel } from './carouselModel';
+import { kingTitleParts } from './kingTitle';
 
 describe('kingChoices', () => {
   const choices = kingChoices(CONTENT, defaultProfile());
@@ -36,10 +37,18 @@ describe('kingChoices', () => {
     expect(find(choices, 'clock').note).toBe('Cần 40 điểm Vương Miện');
     expect(find(choices, 'moon').note).toBe('Cần 60 điểm Vương Miện');
     expect(find(choices, 'nomad').note).toBe('Cần 80 điểm và thắng 1 ván');
+    expect(find(choices, 'grove').lockText).toBe('Mở khoá: 25 điểm Vương Miện');
+    expect(find(choices, 'nomad').lockText).toBe('Mở khoá: 80 điểm và thắng 1 ván');
     for (const c of choices.filter((x) => !x.playable)) {
       expect(c.cards).toEqual([]);
-      expect(c.title).toEqual({ prefix: 'Vua của ', title: '?' });
       expect(c.nameVi).toBe(CONTENT.king(c.id).nameVi);
+    }
+  });
+
+  it('a locked king keeps his real name in the heading (owner 2026-11-10), no "Vua của ?"', () => {
+    for (const c of choices.filter((x) => !x.playable)) {
+      expect(c.title).toEqual(kingTitleParts(CONTENT.king(c.id).nameVi));
+      expect(c.title.title).not.toBe('?');
     }
   });
 
@@ -71,6 +80,7 @@ describe('kingChoices', () => {
       expect(c.cards).toEqual(king.cards.map((x) => x.id));
       expect(c.cards).toHaveLength(9);
       expect(c.note).toBeNull();
+      expect(c.lockText).toBeNull();
     }
   });
 

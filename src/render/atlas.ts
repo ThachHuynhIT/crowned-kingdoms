@@ -277,8 +277,11 @@ export const imageFrameScale = (frame: string): number =>
   IMAGE_FRAMES.has(frame) ? IMAGE_ART_SCALE : 1;
 
 /** Pixels of a loaded image texture by file name, or null when it did not load. */
-export const imageFile = (textures: Phaser.Textures.TextureManager, file: string): PixelCanvas | null => {
-  const key = imageArtKey(file);
+export const imageFile = (textures: Phaser.Textures.TextureManager, file: string): PixelCanvas | null =>
+  textureArt(textures, imageArtKey(file));
+
+/** Pixels of the texture under `key` (its source image), or null when there is no such texture. */
+export const textureArt = (textures: Phaser.Textures.TextureManager, key: string): PixelCanvas | null => {
   if (!textures.exists(key)) return null;
   return imageToPixelCanvas(
     textures.get(key).getSourceImage() as CanvasImageSource & { width: number; height: number },
