@@ -37,6 +37,17 @@
       ],
       "port": 5180,
       "url": "http://localhost:5180"
+    },
+    {
+      "name": "dev-check",
+      "runtimeExecutable": "npx",
+      "runtimeArgs": [
+        "vite",
+        "--port",
+        "5176",
+        "--strictPort"
+      ],
+      "port": 5176
     }
   ]
 }

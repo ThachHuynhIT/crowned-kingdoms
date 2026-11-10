@@ -4,7 +4,7 @@ import type { CodeFxDef } from '../codeFx';
 import { smokePuff } from './smokePuff';
 
 export const boulderBlast: CodeFxDef = {
-  id: 'boulderBlast', label: 'Đá tảng nổ', size: { w: 40, h: 40 }, frames: 8,
+  id: 'boulderBlast', kind: 'effect', covers: ['fx_explosion'], label: 'Đá tảng nổ', size: { w: 40, h: 40 }, frames: 8,
   frameMs: [75, 45, 45, 55, 60, 70, 80, 90], loop: false, anchor: 'centre',
   note: 'Chớp nổ và sóng bụi tại điểm đá tảng can thiệp chạm đất.',
   paint(i) {

@@ -4,7 +4,7 @@ import type { CodeFxDef } from '../codeFx';
 import { smokePuff } from './smokePuff';
 
 export const unitDeath: CodeFxDef = {
-  id: 'unitDeath', label: 'Lính tan biến', size: { w: 24, h: 24 }, frames: 7,
+  id: 'unitDeath', kind: 'effect', label: 'Lính tan biến', size: { w: 24, h: 24 }, frames: 7,
   frameMs: [65, 45, 50, 55, 60, 65, 80], loop: false, anchor: 'feet',
   note: 'Bụi và đốm hồn xuất hiện tại chân lính vừa bị hạ.',
   paint(i) {

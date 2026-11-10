@@ -23,6 +23,8 @@ describe('projectile source rendering', () => {
                 y: 0, frame: { name },
                 setVisible() { return this; },
                 setDepth() { return this; },
+                setScale() { return this; },
+                setOrigin() { return this; },
                 setPosition(_x: number, y: number) { this.y = y; return this; },
               };
               images.push(image);

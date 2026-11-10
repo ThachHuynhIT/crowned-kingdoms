@@ -4,7 +4,7 @@ import type { CodeFxDef } from '../codeFx';
 import { smokePuff } from './smokePuff';
 
 export const buildingCollapse: CodeFxDef = {
-  id: 'buildingCollapse', label: 'Công trình sụp đổ', size: { w: 48, h: 48 }, frames: 9,
+  id: 'buildingCollapse', kind: 'effect', covers: ['fx_destroy'], label: 'Công trình sụp đổ', size: { w: 48, h: 48 }, frames: 9,
   frameMs: [90, 55, 60, 65, 70, 75, 85, 95, 105], loop: false, anchor: 'feet',
   note: 'Cột khói cùng gạch và gỗ rơi tại nền công trình bị phá.',
   paint(i) {

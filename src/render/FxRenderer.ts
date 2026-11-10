@@ -1,27 +1,33 @@
 import type { CardId } from '../data/types';
-import { KIND_UNIT } from '../game/battle/world';
+import { KIND_UNIT, TEAM_FOE } from '../game/battle/world';
+import { rageStacks } from '../game/battle/targeting';
 import { BUILDING_FOOT_DY } from './BoardRenderer';
 import { projectileVisualHeight } from './projectileModel';
 import type Phaser from 'phaser';
 import { INTERVENTION } from '../data/battle';
 import { PALETTE } from '../data/palette';
-import { DEATH_POP_POOL, FLOAT_MS, FLOAT_POOL, FLOAT_RISE_PX } from '../data/juice';
+import { FLOAT_MS, FLOAT_POOL, FLOAT_RISE_PX } from '../data/juice';
 import { FONT_UI } from '../ui/theme';
-import { deathPopFrame, deathPopPuffs, showsFloatingDamage } from './juiceModel';
+import { showsFloatingDamage } from './juiceModel';
 import type { BattleEvent } from '../game/battle/types';
 import type { BattleWorld } from '../game/battle/world';
 import { ISO_SPRITE_SCALE, iso } from './isoView';
 import { SPRITES_KEY, buildingFrame, fxFrame, imageFrameScale } from './atlas';
 import { arrowDir } from './fxArt';
-import { IMPACT_FRAMES, IMPACT_FRAME_MS } from './impactFx';
+import { CODE_FX, type CodeFxDef } from './codeFx';
+import { CODE_FX_DIRS, codeFxFrame, codeFxFrameAt, projectileFxFor } from './projectileFx';
+
+const FX_BY_ID: ReadonlyMap<string, CodeFxDef> = new Map(CODE_FX.map((d) => [d.id, d]));
 
 
 /** The royal boulder starts this many px above its landing point. */
 const BOULDER_DROP_H = 96;
 /** Ground shadows sit above plots (depth 1–2) and under every y-sorted sprite. */
 const SHADOW_DEPTH = 3;
-/** At most this many impacts at once; extra hits in a crowded frame are skipped. */
-const IMPACT_POOL = 48;
+/** At most this many one-shot code effects at once; extra ones in a crowded frame are skipped. */
+const SHOT_POOL = 96;
+/** At most this many Rage auras (one per enemy unit) are drawn. */
+const AURA_POOL = 60;
 const RING_MS = 320;
 const BUBBLE_MS = 600;
 const RING_DEPTH = 99_500;
@@ -47,8 +53,10 @@ export class FxRenderer {
   private readonly projectiles: Phaser.GameObjects.Image[] = [];
   private readonly boulders: Phaser.GameObjects.Image[] = [];
   private readonly shadows: Phaser.GameObjects.Image[] = [];
-  private readonly sparks: Phaser.GameObjects.Image[] = [];
-  private readonly impacts: { img: Phaser.GameObjects.Image; glow: Phaser.GameObjects.Image; start: number }[] = [];
+  /** One-shot code effects (hit, death, collapse, blast…): colour image plus an additive glow image. */
+  private readonly shots: { img: Phaser.GameObjects.Image; glow: Phaser.GameObjects.Image; def: CodeFxDef; start: number }[] = [];
+  /** Looping Rage auras under enemy units while the rage is on. */
+  private readonly auras: Phaser.GameObjects.Image[] = [];
   /** Pulse bursts and shield bubbles, pooled separately from the hit sparks. */
   private readonly bursts: Phaser.GameObjects.Image[] = [];
   private readonly rings: Ring[] = [];
@@ -58,8 +66,6 @@ export class FxRenderer {
     y: number;
   }[] = [];
   private readonly ringGfx: Phaser.GameObjects.Graphics;
-  /** Death pops (spec §11.5): four discrete frames of square puffs, real time, drawn with the rings. */
-  private readonly pops: { x: number; y: number; start: number }[] = [];
 
   constructor(scene: Phaser.Scene) {
     this.scene = scene;
@@ -71,9 +77,9 @@ export class FxRenderer {
     const now = this.scene.time.now;
     for (const e of events) {
       if (e.type === 'hit') {
-        this.spark(world, e.id);
+        this.hitFx(world, e.id, e.sourceId, e.dmgType);
         if (showsFloatingDamage(e.dmg)) this.floatDamage(world, e.id, e.dmg, now);
-      } else if (e.type === 'boulder' && e.phase === 'impact')
+      } else if (e.type === 'boulder' && e.phase === 'impact') {
         this.rings.push({
           x: e.x,
           y: e.y,
@@ -81,27 +87,25 @@ export class FxRenderer {
           radius: INTERVENTION.radius,
           color: PALETTE.cream,
         });
-      else if (e.type === 'pulse' || e.type === 'revive') this.pulse(world, e.id, now);
-      else if (e.type === 'shield') this.bubble(world, e.id);
-      else if (e.type === 'death' && e.id >= 0 && e.id < world.count) {
-        const p = iso({ x: world.x[e.id]!, y: world.y[e.id]! });
-        this.pops.push({
-          x: Math.round(p.x),
-          y: Math.round(p.y - world.radius[e.id]!),
-          start: now,
-        });
-        if (this.pops.length > DEATH_POP_POOL) this.pops.shift();
-      }
+        const at = iso(e);
+        this.play('boulderBlast', at.x, at.y, at.y + 4);
+      } else if (e.type === 'pulse' || e.type === 'revive') {
+        this.pulse(world, e.id, now);
+        if (e.type === 'revive' && e.id >= 0 && e.id < world.count) this.playOn(world, e.id, 'fx_revive');
+      } else if (e.type === 'shield') this.bubble(world, e.id);
+      else if (e.type === 'death' && e.id >= 0 && e.id < world.count)
+        this.playOn(world, e.id, world.kind[e.id] === KIND_UNIT ? 'unitDeath' : 'buildingCollapse');
     }
     this.syncProjectiles(world, a);
     this.syncBoulders(world, a);
+    this.syncAuras(world, now);
   }
 
   /** Damage numbers, rings and death pops finish in real time even after the runner has ended. */
   updateDamage(): void {
     const now = this.scene.time.now;
     this.drawRings(now);
-    this.stepImpacts(now);
+    this.stepShots(now);
     for (const slot of this.damageTexts) {
       if (!slot.text.visible) continue;
       const t = Math.min(1, Math.max(0, (now - slot.start) / FLOAT_MS));
@@ -111,20 +115,19 @@ export class FxRenderer {
   }
 
   destroy(): void {
-    for (const list of [this.projectiles, this.boulders, this.shadows, this.sparks, this.bursts]) {
+    for (const list of [this.projectiles, this.boulders, this.shadows, this.auras, this.bursts]) {
       for (const img of list) {
         this.scene.tweens.killTweensOf(img);
         img.destroy();
       }
       list.length = 0;
     }
-    for (const p of this.impacts) {
+    for (const p of this.shots) {
       p.img.destroy();
       p.glow.destroy();
     }
-    this.impacts.length = 0;
+    this.shots.length = 0;
     this.rings.length = 0;
-    this.pops.length = 0;
     for (const slot of this.damageTexts) slot.text.destroy();
     this.damageTexts.length = 0;
     this.ringGfx.destroy();
@@ -137,6 +140,7 @@ export class FxRenderer {
   private syncProjectiles(world: BattleWorld, a: number): void {
     const p = world.projectiles;
     const n = world.projectileCount;
+    const now = this.scene.time.now;
     let used = 0;
     for (let k = 0; k < n; k++) {
       if (p.alive[k] === 0) continue;
@@ -164,13 +168,20 @@ export class FxRenderer {
       const toY = world.y[t]! - point.y;
       const offset = projectileVisualHeight(height, Math.sqrt(fromX * fromX + fromY * fromY),
         Math.sqrt(toX * toX + toY * toY), structure, structure ? BUILDING_FOOT_DY : 0);
-      // The arrow frame follows the flight on screen (projected direction), never a rotated sprite.
-      const img = this.image(
-        this.projectiles,
-        used,
-        fxFrame(`arrow_${arrowDir(dy - dx, (dx + dy) / 2 + offset - 6)}`),
-      );
-      img.setPosition(Math.round(at.x), Math.round(at.y - offset)).setDepth(at.y);
+      // The frame follows the flight on screen (projected direction), never a rotated sprite.
+      const dir = arrowDir(dy - dx, (dx + dy) / 2 + offset - 6);
+      const fx = projectileFxFor(world.label[src]!);
+      const def = fx === null ? undefined : FX_BY_ID.get(fx);
+      let shotFrame = fxFrame(`arrow_${dir}`);
+      if (def !== undefined) {
+        const i = def.directional ? CODE_FX_DIRS.indexOf(dir) : def.frames > 1 ? (codeFxFrameAt(def.frameMs, now, true) ?? 0) : 0;
+        shotFrame = codeFxFrame(def.id, Math.max(0, i));
+      }
+      const img = this.image(this.projectiles, used, shotFrame);
+      img
+        .setScale(def === undefined ? 1 : ISO_SPRITE_SCALE)
+        .setPosition(Math.round(at.x), Math.round(at.y - offset))
+        .setDepth(at.y);
       used += 1;
     }
     for (let i = used; i < this.projectiles.length; i++) this.projectiles[i]!.setVisible(false);
@@ -202,46 +213,90 @@ export class FxRenderer {
     }
   }
 
-  /** Hit impact (sample 10/11/2026): colour frames plus an additive glow, stepped in real time. */
-  private spark(world: BattleWorld, id: number): void {
+  /** Hit effect by how the blow landed: magic burst, a projectile's splinters, or the melee impact. */
+  private hitFx(world: BattleWorld, id: number, sourceId: number, dmgType: string): void {
     if (id < 0 || id >= world.count) return;
-    let pair = this.impacts.find((p) => !p.img.visible);
-    if (pair === undefined) {
-      if (this.impacts.length >= IMPACT_POOL) return;
-      pair = {
-        img: this.scene.add.image(0, 0, SPRITES_KEY, fxFrame('impact_0')).setScale(ISO_SPRITE_SCALE).setVisible(false),
+    const ranged = sourceId >= 0 && sourceId < world.count && world.projSpeed[sourceId]! > 0;
+    const fx = dmgType === 'magic' ? 'fx_magic_hit' : ranged ? 'arrowHit' : 'impact';
+    const r = world.radius[id]!;
+    const { x, y } = iso({ x: world.x[id]!, y: world.y[id]! });
+    this.play(fx, x, y - r, y + r + 2);
+  }
+
+  /** A code effect on entity `id`: at its feet for 'feet' effects, else at its body centre. */
+  private playOn(world: BattleWorld, id: number, fx: string): void {
+    const def = FX_BY_ID.get(fx);
+    if (def === undefined) return;
+    const r = world.radius[id]!;
+    const { x, y } = iso({ x: world.x[id]!, y: world.y[id]! });
+    this.play(fx, x, def.anchor === 'feet' ? y : y - r, y + r + 2);
+  }
+
+  /** Starts one-shot code effect `fx` at screen point (x, y): feet-anchored effects stand on it, others centre on it. */
+  private play(fx: string, x: number, y: number, depth: number): void {
+    const def = FX_BY_ID.get(fx);
+    if (def === undefined) return;
+    let shot = this.shots.find((p) => !p.img.visible);
+    if (shot === undefined) {
+      if (this.shots.length >= SHOT_POOL) return;
+      shot = {
+        img: this.scene.add.image(0, 0, SPRITES_KEY, codeFxFrame(def.id, 0)).setScale(ISO_SPRITE_SCALE).setVisible(false),
         glow: this.scene.add
-          .image(0, 0, SPRITES_KEY, fxFrame('impact_glow_0'))
+          .image(0, 0, SPRITES_KEY, codeFxFrame(def.id, 0))
           .setScale(ISO_SPRITE_SCALE)
           .setBlendMode('ADD')
           .setVisible(false),
+        def,
         start: 0,
       };
-      this.impacts.push(pair);
+      this.shots.push(shot);
     }
-    const r = world.radius[id]!;
-    const { x, y } = iso({ x: world.x[id]!, y: world.y[id]! });
-    const px = Math.round(x);
-    const py = Math.round(y - r);
-    pair.start = this.scene.time.now;
-    pair.img.setPosition(px, py).setDepth(y + r + 2).setFrame(fxFrame('impact_0')).setVisible(true);
-    pair.glow.setPosition(px, py).setDepth(y + r + 1).setFrame(fxFrame('impact_glow_0')).setVisible(true);
+    const oy = def.anchor === 'feet' ? 1 : 0.5;
+    shot.def = def;
+    shot.start = this.scene.time.now;
+    shot.img
+      .setOrigin(0.5, oy)
+      .setPosition(Math.round(x), Math.round(y))
+      .setDepth(depth)
+      .setFrame(codeFxFrame(def.id, 0))
+      .setVisible(true);
+    shot.glow.setOrigin(0.5, oy).setPosition(Math.round(x), Math.round(y)).setDepth(depth - 1);
+    if (def.paintGlow) shot.glow.setFrame(codeFxFrame(def.id, 0, true)).setVisible(true);
+    else shot.glow.setVisible(false);
   }
 
-  private stepImpacts(now: number): void {
-    for (const p of this.impacts) {
+  private stepShots(now: number): void {
+    for (const p of this.shots) {
       if (!p.img.visible) continue;
-      let elapsed = now - p.start;
-      let f = 0;
-      while (f < IMPACT_FRAMES && elapsed >= IMPACT_FRAME_MS[f]!) elapsed -= IMPACT_FRAME_MS[f++]!;
-      if (f >= IMPACT_FRAMES) {
+      const f = codeFxFrameAt(p.def.frameMs, now - p.start, false);
+      if (f === null) {
         p.img.setVisible(false);
         p.glow.setVisible(false);
         continue;
       }
-      p.img.setFrame(fxFrame(`impact_${f}`));
-      p.glow.setFrame(fxFrame(`impact_glow_${f}`));
+      p.img.setFrame(codeFxFrame(p.def.id, f));
+      if (p.glow.visible) p.glow.setFrame(codeFxFrame(p.def.id, f, true));
     }
+  }
+
+  /** While the rage is on, a looping fire ring under every living enemy unit. */
+  private syncAuras(world: BattleWorld, now: number): void {
+    const def = FX_BY_ID.get('rageAura');
+    let used = 0;
+    if (def !== undefined && rageStacks(world) > 0) {
+      const f = codeFxFrameAt(def.frameMs, now, true) ?? 0;
+      for (let id = 0; id < world.count && used < AURA_POOL; id++) {
+        if (world.alive[id] === 0 || world.team[id] !== TEAM_FOE || world.kind[id] !== KIND_UNIT) continue;
+        const { x, y } = iso({ x: world.x[id]!, y: world.y[id]! });
+        this.image(this.auras, used, codeFxFrame(def.id, f))
+          .setScale(ISO_SPRITE_SCALE)
+          .setOrigin(0.5, 1)
+          .setPosition(Math.round(x), Math.round(y + 4))
+          .setDepth(y - 1);
+        used += 1;
+      }
+    }
+    for (let i = used; i < this.auras.length; i++) this.auras[i]!.setVisible(false);
   }
 
   private floatDamage(world: BattleWorld, id: number, dmg: number, now: number): void {
@@ -327,17 +382,6 @@ export class FxRenderer {
       // A world circle on the isometric ground: an ellipse r·√2 wide, r/√2 tall (radius in world px).
       const r = 4 + (ring.radius - 4) * t;
       g.strokeEllipse(ring.x, ring.y, 2 * r * Math.SQRT2, (2 * r) / Math.SQRT2);
-    }
-    for (let i = this.pops.length - 1; i >= 0; i--) {
-      const pop = this.pops[i]!;
-      const frame = deathPopFrame(now - pop.start);
-      if (frame === null) {
-        this.pops.splice(i, 1);
-        continue;
-      }
-      g.fillStyle(PALETTE.cream, 1);
-      for (const p of deathPopPuffs(frame))
-        g.fillRect(pop.x + p.dx - (p.size >> 1), pop.y + p.dy - (p.size >> 1), p.size, p.size);
     }
   }
 

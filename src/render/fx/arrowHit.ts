@@ -3,7 +3,7 @@ import { PixelCanvas, pixelHash } from '../pixel';
 import type { CodeFxDef } from '../codeFx';
 
 export const arrowHit: CodeFxDef = {
-  id: 'arrowHit', label: 'Tên trúng', size: { w: 16, h: 16 }, frames: 5,
+  id: 'arrowHit', kind: 'effect', label: 'Tên trúng', size: { w: 16, h: 16 }, frames: 5,
   frameMs: [45, 30, 30, 35, 40], loop: false, anchor: 'centre',
   note: 'Vụn gỗ bật ngược khi tên hoặc đạn nhẹ trúng lính.',
   paint(i) {

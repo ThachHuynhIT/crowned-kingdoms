@@ -1,4 +1,5 @@
-import { IMPACT_FRAMES, paintImpactFrame, paintImpactGlow } from './impactFx';
+import { CODE_FX } from './codeFx';
+import { codeFxFrame } from './projectileFx';
 import type Phaser from 'phaser';
 import { BATTLE } from '../data/battle';
 import type { RunMode } from '../data/rules';
@@ -239,10 +240,12 @@ export const spriteList = (content: Content): { name: string; art: PixelCanvas }
   out.push({ name: fxFrame('boulder'), art: paintBoulder() });
   out.push({ name: fxFrame('boulder_shadow'), art: paintBoulderShadow() });
   out.push({ name: fxFrame('spark'), art: paintSpark() });
-  for (let i = 0; i < IMPACT_FRAMES; i++) {
-    out.push({ name: fxFrame(`impact_${i}`), art: paintImpactFrame(i) });
-    out.push({ name: fxFrame(`impact_glow_${i}`), art: paintImpactGlow(i) });
-  }
+  // Effects and projectiles drawn in code (`CODE_FX`, 10/11/2026), one frame per authored frame plus its glow layer.
+  for (const def of CODE_FX)
+    for (let i = 0; i < def.frames; i++) {
+      out.push({ name: codeFxFrame(def.id, i), art: def.paint(i) });
+      if (def.paintGlow) out.push({ name: codeFxFrame(def.id, i, true), art: def.paintGlow(i) });
+    }
   out.push({ name: fxFrame('pulse'), art: paintPulse() });
   out.push({ name: fxFrame('shield'), art: paintShieldFx() });
   out.push({ name: fxFrame('stun'), art: paintStun() });

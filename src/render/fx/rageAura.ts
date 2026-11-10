@@ -3,7 +3,7 @@ import { PixelCanvas, pixelHash } from '../pixel';
 import type { CodeFxDef } from '../codeFx';
 
 export const rageAura: CodeFxDef = {
-  id: 'rageAura', label: 'Cuồng Nộ', size: { w: 24, h: 24 }, frames: 6,
+  id: 'rageAura', kind: 'effect', covers: ['fx_rage'], label: 'Cuồng Nộ', size: { w: 24, h: 24 }, frames: 6,
   frameMs: [90, 90, 90, 90, 90, 90], loop: true, anchor: 'feet',
   note: 'Lửa đỏ nhịp nhàng quanh chân địch đang Cuồng Nộ.',
   paint(i) {
