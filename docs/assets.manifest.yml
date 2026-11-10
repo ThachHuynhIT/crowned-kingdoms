@@ -3027,7 +3027,7 @@ assets:
     nativeSize: 1536x1024
     finalSize: 77x102
     anchor: feet
-    notes: Wild tall (outside the field) decoration (approved 2026-11-06); cut from the wilds sheet, black keyed and box-reduced 4x by docs/art-review/iso-board/wilds/make_wilds.py; placed by src/render/decorationModel.ts (DECOR_CATALOG)
+    notes: Wild tall (outside the field) decoration (approved 2026-11-06); cut from the wilds sheet, black keyed and box-reduced 4x by docs/art-review/iso-board/wilds/make_wilds.py; placed by src/render/decorationModel.ts (DECOR_CATALOG); dark outline rim removed by tools/strip_decor_outline.py (owner 2026-11-10, originals kept in docs/art-review/decor-outline/originals/)
   - id: decor_tree_pine_light_iso
     path: public/assets/art/ai-v1/iso/wilds/tree_pine_light.png
     category: doodad
@@ -3042,7 +3042,7 @@ assets:
     nativeSize: 1536x1024
     finalSize: 73x102
     anchor: feet
-    notes: Wild tall (outside the field) decoration (approved 2026-11-06); cut from the wilds sheet, black keyed and box-reduced 4x by docs/art-review/iso-board/wilds/make_wilds.py; placed by src/render/decorationModel.ts (DECOR_CATALOG)
+    notes: Wild tall (outside the field) decoration (approved 2026-11-06); cut from the wilds sheet, black keyed and box-reduced 4x by docs/art-review/iso-board/wilds/make_wilds.py; placed by src/render/decorationModel.ts (DECOR_CATALOG); dark outline rim removed by tools/strip_decor_outline.py (owner 2026-11-10, originals kept in docs/art-review/decor-outline/originals/)
   - id: decor_tree_oak_iso
     path: public/assets/art/ai-v1/iso/wilds/tree_oak.png
     category: doodad
@@ -3057,7 +3057,7 @@ assets:
     nativeSize: 1536x1024
     finalSize: 94x100
     anchor: feet
-    notes: Wild tall (outside the field) decoration (approved 2026-11-06); cut from the wilds sheet, black keyed and box-reduced 4x by docs/art-review/iso-board/wilds/make_wilds.py; placed by src/render/decorationModel.ts (DECOR_CATALOG)
+    notes: Wild tall (outside the field) decoration (approved 2026-11-06); cut from the wilds sheet, black keyed and box-reduced 4x by docs/art-review/iso-board/wilds/make_wilds.py; placed by src/render/decorationModel.ts (DECOR_CATALOG); dark outline rim removed by tools/strip_decor_outline.py (owner 2026-11-10, originals kept in docs/art-review/decor-outline/originals/)
   - id: decor_tree_autumn_iso
     path: public/assets/art/ai-v1/iso/wilds/tree_autumn.png
     category: doodad
@@ -3072,7 +3072,7 @@ assets:
     nativeSize: 1536x1024
     finalSize: 95x97
     anchor: feet
-    notes: Wild tall (outside the field) decoration (approved 2026-11-06); cut from the wilds sheet, black keyed and box-reduced 4x by docs/art-review/iso-board/wilds/make_wilds.py; placed by src/render/decorationModel.ts (DECOR_CATALOG)
+    notes: Wild tall (outside the field) decoration (approved 2026-11-06); cut from the wilds sheet, black keyed and box-reduced 4x by docs/art-review/iso-board/wilds/make_wilds.py; placed by src/render/decorationModel.ts (DECOR_CATALOG); dark outline rim removed by tools/strip_decor_outline.py (owner 2026-11-10, originals kept in docs/art-review/decor-outline/originals/)
   - id: decor_mountain_snow_iso
     path: public/assets/art/ai-v1/iso/wilds/mountain_snow.png
     category: doodad
@@ -3087,7 +3087,7 @@ assets:
     nativeSize: 1536x1024
     finalSize: 121x88
     anchor: feet
-    notes: Wild tall (outside the field) decoration (approved 2026-11-06); cut from the wilds sheet, black keyed and box-reduced 4x by docs/art-review/iso-board/wilds/make_wilds.py; placed by src/render/decorationModel.ts (DECOR_CATALOG)
+    notes: Wild tall (outside the field) decoration (approved 2026-11-06); cut from the wilds sheet, black keyed and box-reduced 4x by docs/art-review/iso-board/wilds/make_wilds.py; placed by src/render/decorationModel.ts (DECOR_CATALOG); dark outline rim removed by tools/strip_decor_outline.py (owner 2026-11-10, originals kept in docs/art-review/decor-outline/originals/)
   - id: decor_cliff_mossy_iso
     path: public/assets/art/ai-v1/iso/wilds/cliff_mossy.png
     category: doodad
@@ -3102,7 +3102,7 @@ assets:
     nativeSize: 1536x1024
     finalSize: 108x86
     anchor: feet
-    notes: Wild tall (outside the field) decoration (approved 2026-11-06); cut from the wilds sheet, black keyed and box-reduced 4x by docs/art-review/iso-board/wilds/make_wilds.py; placed by src/render/decorationModel.ts (DECOR_CATALOG)
+    notes: Wild tall (outside the field) decoration (approved 2026-11-06); cut from the wilds sheet, black keyed and box-reduced 4x by docs/art-review/iso-board/wilds/make_wilds.py; placed by src/render/decorationModel.ts (DECOR_CATALOG); dark outline rim removed by tools/strip_decor_outline.py (owner 2026-11-10, originals kept in docs/art-review/decor-outline/originals/)
   - id: decor_boulders_big_iso
     path: public/assets/art/ai-v1/iso/wilds/boulders_big.png
     category: doodad
@@ -3117,7 +3117,7 @@ assets:
     nativeSize: 1536x1024
     finalSize: 129x84
     anchor: feet
-    notes: Wild tall (outside the field) decoration (approved 2026-11-06); cut from the wilds sheet, black keyed and box-reduced 4x by docs/art-review/iso-board/wilds/make_wilds.py; placed by src/render/decorationModel.ts (DECOR_CATALOG)
+    notes: Wild tall (outside the field) decoration (approved 2026-11-06); cut from the wilds sheet, black keyed and box-reduced 4x by docs/art-review/iso-board/wilds/make_wilds.py; placed by src/render/decorationModel.ts (DECOR_CATALOG); dark outline rim removed by tools/strip_decor_outline.py (owner 2026-11-10, originals kept in docs/art-review/decor-outline/originals/)
   - id: decor_bush_green_iso
     path: public/assets/art/ai-v1/iso/wilds/bush_green.png
     category: doodad
@@ -3132,7 +3132,7 @@ assets:
     nativeSize: 1536x1024
     finalSize: 41x31
     anchor: feet
-    notes: Wild low (inside the field) decoration (approved 2026-11-06); cut from the wilds sheet, black keyed and box-reduced 4x by docs/art-review/iso-board/wilds/make_wilds.py; placed by src/render/decorationModel.ts (DECOR_CATALOG)
+    notes: Wild low (inside the field) decoration (approved 2026-11-06); cut from the wilds sheet, black keyed and box-reduced 4x by docs/art-review/iso-board/wilds/make_wilds.py; placed by src/render/decorationModel.ts (DECOR_CATALOG); dark outline rim removed by tools/strip_decor_outline.py (owner 2026-11-10, originals kept in docs/art-review/decor-outline/originals/)
   - id: decor_bush_berry_iso
     path: public/assets/art/ai-v1/iso/wilds/bush_berry.png
     category: doodad
@@ -3147,7 +3147,7 @@ assets:
     nativeSize: 1536x1024
     finalSize: 41x30
     anchor: feet
-    notes: Wild low (inside the field) decoration (approved 2026-11-06); cut from the wilds sheet, black keyed and box-reduced 4x by docs/art-review/iso-board/wilds/make_wilds.py; placed by src/render/decorationModel.ts (DECOR_CATALOG)
+    notes: Wild low (inside the field) decoration (approved 2026-11-06); cut from the wilds sheet, black keyed and box-reduced 4x by docs/art-review/iso-board/wilds/make_wilds.py; placed by src/render/decorationModel.ts (DECOR_CATALOG); dark outline rim removed by tools/strip_decor_outline.py (owner 2026-11-10, originals kept in docs/art-review/decor-outline/originals/)
   - id: decor_bush_dry_iso
     path: public/assets/art/ai-v1/iso/wilds/bush_dry.png
     category: doodad
@@ -3162,7 +3162,7 @@ assets:
     nativeSize: 1536x1024
     finalSize: 40x34
     anchor: feet
-    notes: Wild low (inside the field) decoration (approved 2026-11-06); cut from the wilds sheet, black keyed and box-reduced 4x by docs/art-review/iso-board/wilds/make_wilds.py; placed by src/render/decorationModel.ts (DECOR_CATALOG)
+    notes: Wild low (inside the field) decoration (approved 2026-11-06); cut from the wilds sheet, black keyed and box-reduced 4x by docs/art-review/iso-board/wilds/make_wilds.py; placed by src/render/decorationModel.ts (DECOR_CATALOG); dark outline rim removed by tools/strip_decor_outline.py (owner 2026-11-10, originals kept in docs/art-review/decor-outline/originals/)
   - id: decor_rock_large_iso
     path: public/assets/art/ai-v1/iso/wilds/rock_large.png
     category: doodad
@@ -3177,7 +3177,7 @@ assets:
     nativeSize: 1536x1024
     finalSize: 52x34
     anchor: feet
-    notes: Wild low (inside the field) decoration (approved 2026-11-06); cut from the wilds sheet, black keyed and box-reduced 4x by docs/art-review/iso-board/wilds/make_wilds.py; placed by src/render/decorationModel.ts (DECOR_CATALOG)
+    notes: Wild low (inside the field) decoration (approved 2026-11-06); cut from the wilds sheet, black keyed and box-reduced 4x by docs/art-review/iso-board/wilds/make_wilds.py; placed by src/render/decorationModel.ts (DECOR_CATALOG); dark outline rim removed by tools/strip_decor_outline.py (owner 2026-11-10, originals kept in docs/art-review/decor-outline/originals/)
   - id: decor_rock_medium_iso
     path: public/assets/art/ai-v1/iso/wilds/rock_medium.png
     category: doodad
@@ -3192,7 +3192,7 @@ assets:
     nativeSize: 1536x1024
     finalSize: 36x25
     anchor: feet
-    notes: Wild low (inside the field) decoration (approved 2026-11-06); cut from the wilds sheet, black keyed and box-reduced 4x by docs/art-review/iso-board/wilds/make_wilds.py; placed by src/render/decorationModel.ts (DECOR_CATALOG)
+    notes: Wild low (inside the field) decoration (approved 2026-11-06); cut from the wilds sheet, black keyed and box-reduced 4x by docs/art-review/iso-board/wilds/make_wilds.py; placed by src/render/decorationModel.ts (DECOR_CATALOG); dark outline rim removed by tools/strip_decor_outline.py (owner 2026-11-10, originals kept in docs/art-review/decor-outline/originals/)
   - id: decor_rock_small_iso
     path: public/assets/art/ai-v1/iso/wilds/rock_small.png
     category: doodad
@@ -3207,7 +3207,7 @@ assets:
     nativeSize: 1536x1024
     finalSize: 29x20
     anchor: feet
-    notes: Wild low (inside the field) decoration (approved 2026-11-06); cut from the wilds sheet, black keyed and box-reduced 4x by docs/art-review/iso-board/wilds/make_wilds.py; placed by src/render/decorationModel.ts (DECOR_CATALOG)
+    notes: Wild low (inside the field) decoration (approved 2026-11-06); cut from the wilds sheet, black keyed and box-reduced 4x by docs/art-review/iso-board/wilds/make_wilds.py; placed by src/render/decorationModel.ts (DECOR_CATALOG); dark outline rim removed by tools/strip_decor_outline.py (owner 2026-11-10, originals kept in docs/art-review/decor-outline/originals/)
   - id: decor_stump_iso
     path: public/assets/art/ai-v1/iso/wilds/stump.png
     category: doodad
@@ -3222,7 +3222,7 @@ assets:
     nativeSize: 1536x1024
     finalSize: 41x29
     anchor: feet
-    notes: Wild low (inside the field) decoration (approved 2026-11-06); cut from the wilds sheet, black keyed and box-reduced 4x by docs/art-review/iso-board/wilds/make_wilds.py; placed by src/render/decorationModel.ts (DECOR_CATALOG)
+    notes: Wild low (inside the field) decoration (approved 2026-11-06); cut from the wilds sheet, black keyed and box-reduced 4x by docs/art-review/iso-board/wilds/make_wilds.py; placed by src/render/decorationModel.ts (DECOR_CATALOG); dark outline rim removed by tools/strip_decor_outline.py (owner 2026-11-10, originals kept in docs/art-review/decor-outline/originals/)
   - id: decor_log_iso
     path: public/assets/art/ai-v1/iso/wilds/log.png
     category: doodad
@@ -3237,7 +3237,7 @@ assets:
     nativeSize: 1536x1024
     finalSize: 64x32
     anchor: feet
-    notes: Wild low (inside the field) decoration (approved 2026-11-06); cut from the wilds sheet, black keyed and box-reduced 4x by docs/art-review/iso-board/wilds/make_wilds.py; placed by src/render/decorationModel.ts (DECOR_CATALOG)
+    notes: Wild low (inside the field) decoration (approved 2026-11-06); cut from the wilds sheet, black keyed and box-reduced 4x by docs/art-review/iso-board/wilds/make_wilds.py; placed by src/render/decorationModel.ts (DECOR_CATALOG); dark outline rim removed by tools/strip_decor_outline.py (owner 2026-11-10, originals kept in docs/art-review/decor-outline/originals/)
   - id: iso_enemy_portal
     path: public/assets/art/ai-v1/iso/polish/enemy_portal.png
     category: doodad
