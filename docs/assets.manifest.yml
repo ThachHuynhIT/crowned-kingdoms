@@ -19982,3 +19982,153 @@ L4x216 copy (2026-11-10) made by tools/prepare_king_portraits.py --size 144x216 
     nativeSize: 1024x1536
     finalSize: 144x216
 L4x216 copy (2026-11-10) made by tools/prepare_king_portraits.py --size 144x216 from the same approved source, for king cards drawn at scale 3; Wheat King portrait; box-downscaled and snapped to a 24-colour palette by tools/prepare_king_portraits.py (variant A, approved 29/10/2026); drawn in the king card window (src/render/portraitAssets.ts)
+  - id: decor_barrel_iso
+    path: public/assets/art/ai-v1/iso/wilds/barrel.png
+    category: doodad
+    origin: custom
+    source: docs/art-review/iso-board/decor/wild_barrel/source.png
+    creator: Project owner (OpenAI imagegen via Codex; prompt in docs/art-review/iso-board/decor/wild_barrel/prompt.md)
+    license: project-owned
+    attribution: false
+    redistribute: true
+    evidence: docs/art-review/iso-board/decor/review.md
+    modified: true
+    nativeSize: 1024x1024
+    finalSize: 23x30
+    anchor: feet
+    notes: Small field decoration (P2, 2026-11-10), magenta keyed and box-reduced by docs/art-review/iso-board/decor/make_decor.py; approved by Claude under the owner's delegation
+  - id: decor_haystack_iso
+    path: public/assets/art/ai-v1/iso/wilds/haystack.png
+    category: doodad
+    origin: custom
+    source: docs/art-review/iso-board/decor/wild_haystack/source.png
+    creator: Project owner (OpenAI imagegen via Codex; prompt in docs/art-review/iso-board/decor/wild_haystack/prompt.md)
+    license: project-owned
+    attribution: false
+    redistribute: true
+    evidence: docs/art-review/iso-board/decor/review.md
+    modified: true
+    nativeSize: 1024x1024
+    finalSize: 41x36
+    anchor: feet
+    notes: Small field decoration (P2, 2026-11-10), magenta keyed and box-reduced by docs/art-review/iso-board/decor/make_decor.py; approved by Claude under the owner's delegation
+  - id: decor_sign_iso
+    path: public/assets/art/ai-v1/iso/wilds/sign.png
+    category: doodad
+    origin: custom
+    source: docs/art-review/iso-board/decor/wild_sign/source.png
+    creator: Project owner (OpenAI imagegen via Codex; prompt in docs/art-review/iso-board/decor/wild_sign/prompt.md)
+    license: project-owned
+    attribution: false
+    redistribute: true
+    evidence: docs/art-review/iso-board/decor/review.md
+    modified: true
+    nativeSize: 1024x1024
+    finalSize: 23x34
+    anchor: feet
+    notes: Small field decoration (P2, 2026-11-10), magenta keyed and box-reduced by docs/art-review/iso-board/decor/make_decor.py; approved by Claude under the owner's delegation
+  - id: decor_wheat_cart_iso
+    path: public/assets/art/ai-v1/iso/wilds/wheat_cart.png
+    category: doodad
+    origin: custom
+    source: docs/art-review/iso-board/decor/wild_wheat_cart/source.png
+    creator: Project owner (OpenAI imagegen via Codex; prompt in docs/art-review/iso-board/decor/wild_wheat_cart/prompt.md)
+    license: project-owned
+    attribution: false
+    redistribute: true
+    evidence: docs/art-review/iso-board/decor/review.md
+    modified: true
+    nativeSize: 1024x1024
+    finalSize: 57x40
+    anchor: feet
+    notes: Small field decoration (P2, 2026-11-10), magenta keyed and box-reduced by docs/art-review/iso-board/decor/make_decor.py; approved by Claude under the owner's delegation
+  - id: decor_fence_ne_iso
+    path: public/assets/art/ai-v1/iso/wilds/fence_ne.png
+    category: doodad
+    origin: custom
+    source: docs/art-review/iso-board/decor/wild_fence_ne/source.png
+    creator: Project owner (OpenAI imagegen via Codex; prompt in docs/art-review/iso-board/decor/wild_fence_ne/prompt.md)
+    license: project-owned
+    attribution: false
+    redistribute: true
+    evidence: docs/art-review/iso-board/decor/review.md
+    modified: true
+    nativeSize: 1024x1024
+    finalSize: 30x26
+    anchor: feet
+    notes: Small field decoration (P2, 2026-11-10), magenta keyed and box-reduced by docs/art-review/iso-board/decor/make_decor.py; approved by Claude under the owner's delegation
+  - id: decor_fence_nw_iso
+    path: public/assets/art/ai-v1/iso/wilds/fence_nw.png
+    category: doodad
+    origin: custom
+    source: docs/art-review/iso-board/decor/wild_fence_nw/source.png
+    creator: Project owner (OpenAI imagegen via Codex; prompt in docs/art-review/iso-board/decor/wild_fence_nw/prompt.md)
+    license: project-owned
+    attribution: false
+    redistribute: true
+    evidence: docs/art-review/iso-board/decor/review.md
+    modified: true
+    nativeSize: 1024x1024
+    finalSize: 32x26
+    anchor: feet
+    notes: Small field decoration (P2, 2026-11-10), magenta keyed and box-reduced by docs/art-review/iso-board/decor/make_decor.py; approved by Claude under the owner's delegation
+  - id: decor_fence_se_iso
+    path: public/assets/art/ai-v1/iso/wilds/fence_se.png
+    category: doodad
+    origin: custom
+    source: docs/art-review/iso-board/decor/wild_fence_se/source.png
+    creator: Project owner (OpenAI imagegen via Codex; prompt in docs/art-review/iso-board/decor/wild_fence_se/prompt.md)
+    license: project-owned
+    attribution: false
+    redistribute: true
+    evidence: docs/art-review/iso-board/decor/review.md
+    modified: true
+    nativeSize: 1024x1024
+    finalSize: 39x26
+    anchor: feet
+    notes: Small field decoration (P2, 2026-11-10), magenta keyed and box-reduced by docs/art-review/iso-board/decor/make_decor.py; approved by Claude under the owner's delegation
+  - id: decor_fence_sw_iso
+    path: public/assets/art/ai-v1/iso/wilds/fence_sw.png
+    category: doodad
+    origin: custom
+    source: docs/art-review/iso-board/decor/wild_fence_sw/source.png
+    creator: Project owner (OpenAI imagegen via Codex; prompt in docs/art-review/iso-board/decor/wild_fence_sw/prompt.md)
+    license: project-owned
+    attribution: false
+    redistribute: true
+    evidence: docs/art-review/iso-board/decor/review.md
+    modified: true
+    nativeSize: 1024x1024
+    finalSize: 32x26
+    anchor: feet
+    notes: Small field decoration (P2, 2026-11-10), magenta keyed and box-reduced by docs/art-review/iso-board/decor/make_decor.py; approved by Claude under the owner's delegation
+  - id: decor_fence_horizontal_iso
+    path: public/assets/art/ai-v1/iso/wilds/fence_horizontal.png
+    category: doodad
+    origin: custom
+    source: docs/art-review/iso-board/decor/wild_fence_horizontal/source.png
+    creator: Project owner (OpenAI imagegen via Codex; prompt in docs/art-review/iso-board/decor/wild_fence_horizontal/prompt.md)
+    license: project-owned
+    attribution: false
+    redistribute: true
+    evidence: docs/art-review/iso-board/decor/review.md
+    modified: true
+    nativeSize: 1024x1024
+    finalSize: 60x24
+    anchor: feet
+    notes: Small field decoration (P2, 2026-11-10), magenta keyed and box-reduced by docs/art-review/iso-board/decor/make_decor.py; approved by Claude under the owner's delegation
+  - id: decor_gate_iso
+    path: public/assets/art/ai-v1/iso/wilds/gate.png
+    category: doodad
+    origin: custom
+    source: docs/art-review/iso-board/decor/wild_gate/source.png
+    creator: Project owner (OpenAI imagegen via Codex; prompt in docs/art-review/iso-board/decor/wild_gate/prompt.md)
+    license: project-owned
+    attribution: false
+    redistribute: true
+    evidence: docs/art-review/iso-board/decor/review.md
+    modified: true
+    nativeSize: 1024x1024
+    finalSize: 32x30
+    anchor: feet
+    notes: Small field decoration (P2, 2026-11-10), magenta keyed and box-reduced by docs/art-review/iso-board/decor/make_decor.py; approved by Claude under the owner's delegation

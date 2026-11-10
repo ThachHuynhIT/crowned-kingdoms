@@ -219,8 +219,13 @@ export const DECOR_CATALOG: readonly { id: string; tall: boolean; radius: number
   { id: 'rock_small', tall: false, radius: 7 },
   { id: 'stump', tall: false, radius: 10 },
   { id: 'log', tall: false, radius: 16 },
+  // small farm decoration (P2, 10/11/2026, `docs/art-review/iso-board/decor`; Claude under the owner's delegation)
+  { id: 'barrel', tall: false, radius: 7 },
+  { id: 'haystack', tall: false, radius: 12 },
+  { id: 'sign', tall: false, radius: 7 },
+  { id: 'wheat_cart', tall: false, radius: 16 },
 ];
-/** Owner-approved wild objects (all fifteen, 2026-11-06). */
+/** Approved wild objects (the fifteen of 2026-11-06 plus the four farm pieces of 2026-11-10). */
 export const DECOR_APPROVED: readonly string[] = DECOR_CATALOG.map((d) => d.id);
 /** File of an approved wild object. */
 export const decorFile = (id: string): string => `iso/wilds/${id}`;

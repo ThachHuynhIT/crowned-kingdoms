@@ -3349,6 +3349,18 @@
    "label": "Hoang dã",
    "items": [
     {
+     "id": "wild_barrel",
+     "label": "barrel",
+     "src": "/public/assets/art/ai-v1/iso/wilds/barrel.png",
+     "w": 23,
+     "h": 30,
+     "kind": "object",
+     "group": "wild",
+     "tags": [
+      "barrel"
+     ]
+    },
+    {
      "id": "wild_boulders_big",
      "label": "boulders big",
      "src": "/public/assets/art/ai-v1/iso/wilds/boulders_big.png",
@@ -3406,6 +3418,90 @@
      "group": "wild",
      "tags": [
       "cliff_mossy"
+     ]
+    },
+    {
+     "id": "wild_fence_horizontal",
+     "label": "fence horizontal",
+     "src": "/public/assets/art/ai-v1/iso/wilds/fence_horizontal.png",
+     "w": 60,
+     "h": 24,
+     "kind": "object",
+     "group": "wild",
+     "tags": [
+      "fence_horizontal"
+     ]
+    },
+    {
+     "id": "wild_fence_ne",
+     "label": "fence ne",
+     "src": "/public/assets/art/ai-v1/iso/wilds/fence_ne.png",
+     "w": 30,
+     "h": 26,
+     "kind": "object",
+     "group": "wild",
+     "tags": [
+      "fence_ne"
+     ]
+    },
+    {
+     "id": "wild_fence_nw",
+     "label": "fence nw",
+     "src": "/public/assets/art/ai-v1/iso/wilds/fence_nw.png",
+     "w": 32,
+     "h": 26,
+     "kind": "object",
+     "group": "wild",
+     "tags": [
+      "fence_nw"
+     ]
+    },
+    {
+     "id": "wild_fence_se",
+     "label": "fence se",
+     "src": "/public/assets/art/ai-v1/iso/wilds/fence_se.png",
+     "w": 39,
+     "h": 26,
+     "kind": "object",
+     "group": "wild",
+     "tags": [
+      "fence_se"
+     ]
+    },
+    {
+     "id": "wild_fence_sw",
+     "label": "fence sw",
+     "src": "/public/assets/art/ai-v1/iso/wilds/fence_sw.png",
+     "w": 32,
+     "h": 26,
+     "kind": "object",
+     "group": "wild",
+     "tags": [
+      "fence_sw"
+     ]
+    },
+    {
+     "id": "wild_gate",
+     "label": "gate",
+     "src": "/public/assets/art/ai-v1/iso/wilds/gate.png",
+     "w": 32,
+     "h": 30,
+     "kind": "object",
+     "group": "wild",
+     "tags": [
+      "gate"
+     ]
+    },
+    {
+     "id": "wild_haystack",
+     "label": "haystack",
+     "src": "/public/assets/art/ai-v1/iso/wilds/haystack.png",
+     "w": 41,
+     "h": 36,
+     "kind": "object",
+     "group": "wild",
+     "tags": [
+      "haystack"
      ]
     },
     {
@@ -3469,6 +3565,18 @@
      ]
     },
     {
+     "id": "wild_sign",
+     "label": "sign",
+     "src": "/public/assets/art/ai-v1/iso/wilds/sign.png",
+     "w": 23,
+     "h": 34,
+     "kind": "object",
+     "group": "wild",
+     "tags": [
+      "sign"
+     ]
+    },
+    {
      "id": "wild_stump",
      "label": "stump",
      "src": "/public/assets/art/ai-v1/iso/wilds/stump.png",
@@ -3526,6 +3634,18 @@
      "group": "wild",
      "tags": [
       "tree_pine_light"
+     ]
+    },
+    {
+     "id": "wild_wheat_cart",
+     "label": "wheat cart",
+     "src": "/public/assets/art/ai-v1/iso/wilds/wheat_cart.png",
+     "w": 57,
+     "h": 40,
+     "kind": "object",
+     "group": "wild",
+     "tags": [
+      "wheat_cart"
      ]
     },
     {
