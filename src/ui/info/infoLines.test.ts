@@ -10,9 +10,43 @@ import { bossWorld } from '../../game/battle/bossKit';
 import { addDot } from '../../game/battle/statuses';
 import { runState, withBuilding } from '../../game/testing/fixtures';
 import { buildingInfoModel, unitInfoModel } from './inspectionModel';
-import { buildingModelLines, unitModelLines, crownTally, entityAt, infoContent, placeInfoBox, runSummary, statusLines } from './infoLines';
+import { buildingModelLines, unitModelLines, crownTally, entityAt, infoContent, lineIcon, placeInfoBox, runSummary, statusLines } from './infoLines';
+import { IMAGE_ART_FILES, STAT_ICONS } from '../../render/imageArt';
 import { crownPoints } from '../../game/meta';
 import { META_MEMORY_ONLY_TEXT, META_READ_ONLY_TEXT, META_SAVE_FAILED_TEXT, RUN_ALREADY_SCORED_TEXT } from '../../data/save';
+
+describe('lineIcon', () => {
+  it.each([
+    ['Máu: 100', 'life'], ['Máu lính: 32 → 40', 'life'],
+    ['Sát thương: 5 (vật lý)', 'attack'], ['Không tấn công', 'attack'],
+    ['Tầm đánh: 20 · Tốc độ: 10', 'range'], ['Giáp: 25%', 'armor'],
+    ['Khiên: 10', 'shield'], ['Bùa: Lửa ×2', 'enchantment'],
+    ['Cấp sau:', 'upgrade'], ['Tuổi: 3 năm', 'cooldown'], ['Lính: Dân Quân ×6', 'support'],
+    ['Đang bỏng: 3/s (còn 2s)', 'burn'], ['Nhiễm độc: 2/s (còn 3s)', 'poison'],
+    ['Bị làm chậm 25% (còn 2s)', 'slow'], ['Đang choáng', 'stun'],
+    ['Loại: cận chiến, bay, thú', 'flying'], ['bay', 'flying'], ['Bị vô hiệu', 'disabled'],
+    ['Hồi 5 máu mỗi giây cho lính cùng phe trong 30 px', 'heal'],
+    ['Hạ địch hồi 10 máu', 'heal'], ['Hồi máu mỗi giây', 'heal'],
+    ['Sống lại một lần với 50% máu', 'revive'], ['Đã hồi sinh', 'revive'],
+    ['Hiến tế lính', 'sacrifice'], ['Thu linh hồn', 'soul'],
+    ['Mỗi lính cùng phe đã chết: +5% máu và sát thương', 'soul'],
+    ['Nhận 5 vàng', 'economy'], ['Kinh tế: +10%', 'economy'],
+  ])('maps %s to %s', (line, icon) => {
+    expect(lineIcon(line)).toBe(icon);
+    expect(STAT_ICONS[icon]).toBe(`icons/icon_${icon}-16`);
+    expect(IMAGE_ART_FILES).toContain(STAT_ICONS[icon]);
+  });
+
+  it.each(['', 'Cấp 2/5', 'Không từ công trình của bạn', 'Sinh lính.', 'Loại: cận chiến', 'Đang hạ cánh: nhận thêm sát thương'])('leaves %s without an icon', (line) => {
+    expect(lineIcon(line)).toBeNull();
+  });
+
+  it('keeps the title separate even when its name matches an icon label', () => {
+    const content = infoContent(['Máu linh hồn', 'Cấp 1/5', 'Máu: 100']);
+    expect(content.title).toBe('Máu linh hồn');
+    expect(content.lines.map((line) => lineIcon(line[0]!.text))).toEqual([null, 'life']);
+  });
+});
 
 describe('infoContent', () => {
   it('titles the first line and tints level, HP and spawned-unit lines from UI_PALETTE', () => {

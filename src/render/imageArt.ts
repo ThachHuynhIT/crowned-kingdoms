@@ -292,6 +292,37 @@ export const IMAGE_ICONS: Readonly<Record<string, string>> = {
   conquer: 'icons/icon_conquer-16',
 };
 
+/** Inspection stat icons, loaded as separate native 16×16 textures. */
+export const STAT_ICONS: Readonly<Record<string, string>> = {
+  life: 'icons/icon_life-16',
+  attack: 'icons/icon_attack-16',
+  range: 'icons/icon_range-16',
+  speed: 'icons/icon_speed-16',
+  cooldown: 'icons/icon_cooldown-16',
+  armor: 'icons/icon_armor-16',
+  shield: 'icons/icon_shield-16',
+  heal: 'icons/icon_heal-16',
+  burn: 'icons/icon_burn-16',
+  poison: 'icons/icon_poison-16',
+  slow: 'icons/icon_slow-16',
+  stun: 'icons/icon_stun-16',
+  flying: 'icons/icon_flying-16',
+  disabled: 'icons/icon_disabled-16',
+  revive: 'icons/icon_revive-16',
+  sacrifice: 'icons/icon_sacrifice-16',
+  move: 'icons/icon_move-16',
+  upgrade: 'icons/icon_upgrade-16',
+  unlock: 'icons/icon_unlock-16',
+  quest: 'icons/icon_quest-16',
+  decree: 'icons/icon_decree-16',
+  pause: 'icons/icon_pause-16',
+  save: 'icons/icon_save-16',
+  economy: 'icons/icon_economy-16',
+  enchantment: 'icons/icon_enchantment-16',
+  soul: 'icons/icon_soul-16',
+  support: 'icons/icon_support-16',
+};
+
 /**
  * Battle effects drawn as pictures (G5, `docs/art-review/g5/fx/review.md`): fx id → file, at 2 art px per world px like
  * units. The eight arrows come from one sheet with each direction drawn separately (sprites never rotate); only the
@@ -349,6 +380,7 @@ export const IMAGE_ART_FILES: readonly string[] = [
   ]),
   ...Object.values(IMAGE_BUILDINGS),
   ...Object.values(IMAGE_ICONS),
+  ...Object.values(STAT_ICONS),
   ...MENU_IMAGE_LAYERS.map((layer) => layer.file),
   ...(MENU_SKY_FILE ? [MENU_SKY_FILE] : []),
   ...Object.values(IMAGE_FX),

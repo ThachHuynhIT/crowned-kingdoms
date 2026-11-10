@@ -2,7 +2,8 @@ import Phaser from 'phaser';
 import { ContentBox } from '../ContentBox';
 import type { Point, Rect, Size } from '../hud/layout';
 import { createButton, type Button } from '../theme';
-import { buildingModelLines, infoContent, unitModelLines } from './infoLines';
+import { buildingModelLines, infoContent, lineIcon, unitModelLines } from './infoLines';
+import { imageArtKey, STAT_ICONS } from '../../render/imageArt';
 import type { BuildingInfoModel, UnitInfoModel } from './inspectionModel';
 import { inspectionLayout, scrollLinesForDrag, scrollLinesForWheel } from './inspectionLayout';
 
@@ -33,7 +34,14 @@ export class InspectionView {
     depth: number,
     private readonly onClose: () => void = () => undefined,
   ) {
-    this.box = new ContentBox(scene, 'panel', MAX_W, { blocking: true });
+    this.box = new ContentBox(scene, 'panel', MAX_W, {
+      blocking: true,
+      lineIcon: (text) => {
+        const id = lineIcon(text);
+        const file = id === null ? undefined : STAT_ICONS[id];
+        return file ? imageArtKey(file) : null;
+      },
+    });
     this.box.container.setDepth(depth);
     this.close = createButton(scene, 0, 0, '×', {
       width: 48,

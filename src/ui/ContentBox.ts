@@ -19,6 +19,8 @@ export interface ContentBoxOptions {
   fontSize?: number;
   /** Make the frame interactive so clicks on it never reach the map. */
   blocking?: boolean;
+  /** Optional native 16 px leading icon; missing textures leave the row unchanged. */
+  lineIcon?: (text: string) => string | null;
 }
 
 /**
@@ -32,6 +34,7 @@ export class ContentBox {
   private readonly box: UiBox;
   private readonly items: (Phaser.GameObjects.Text | Phaser.GameObjects.Image)[] = [];
   private readonly fontSize: number;
+  private readonly lineIcon: ContentBoxOptions['lineIcon'];
   private content: TooltipContent | null = null;
   private key = '';
   private maxHeight: number | null = null;
@@ -46,9 +49,10 @@ export class ContentBox {
     private readonly scene: Phaser.Scene,
     private readonly frame: UiFrame,
     private maxWidth: number,
-    { fontSize = 13, blocking = false }: ContentBoxOptions = {},
+    { fontSize = 13, blocking = false, lineIcon }: ContentBoxOptions = {},
   ) {
     this.fontSize = fontSize;
+    this.lineIcon = lineIcon;
     this.box = createPanel(scene, frame, 32, 32);
     if (blocking) this.box.image.setInteractive();
     this.container = scene.add.container(0, 0, [this.box.image]).setVisible(false);
@@ -136,6 +140,16 @@ export class ContentBox {
       let x = inset;
       let lineHeight = 0;
       const row: Row = { top: y, h: 0, items: [] };
+      const iconKey = this.lineIcon?.(line.map((part) => part.text).join(''));
+      const leadingIcon = iconKey && this.scene.textures.exists(iconKey)
+        ? this.scene.add.image(Math.round(x), Math.round(y), iconKey).setOrigin(0, 0).setScale(1)
+        : null;
+      if (leadingIcon) {
+        this.add(leadingIcon);
+        x += 20;
+        lineHeight = 16;
+        right = Math.max(right, x);
+      }
       for (const part of line) {
         if (part.icon) {
           const icon = this.scene.add
@@ -150,7 +164,7 @@ export class ContentBox {
         }
         if (part.text) {
           const text = addUiText(this.scene, x, y, part.text, this.fontSize, part.color);
-          if (line.length === 1) text.setWordWrapWidth(wrap);
+          if (line.length === 1) text.setWordWrapWidth(Math.max(1, wrap - (leadingIcon ? 20 : 0)));
           this.add(text);
           row.items.push({ obj: text, y0: y });
           right = Math.max(right, x + text.width);
@@ -159,6 +173,11 @@ export class ContentBox {
         }
       }
       row.h = lineHeight;
+      if (leadingIcon) {
+        const iconY = Math.round(y + (lineHeight - 16) / 2);
+        leadingIcon.y = iconY;
+        row.items.push({ obj: leadingIcon, y0: iconY });
+      }
       this.rows.push(row);
       y += lineHeight + LINE_GAP;
     }
@@ -188,7 +207,7 @@ export class ContentBox {
       const shown = i >= this.scrollLine && i < end;
       for (const it of row.items) {
         it.obj.setVisible(shown);
-        if (shown) it.obj.y = it.y0 - row.top + y;
+        if (shown) it.obj.y = Math.round(it.y0 - row.top + y);
       }
       if (shown) y += row.h + LINE_GAP;
     });
