@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest';
-import { SFX, SFX_IDS } from './sfx';
+import { BATTLE_HIT_GAIN, BATTLE_HIT_SFX, SFX, SFX_IDS } from './sfx';
 
 const EXPECTED = [
   'ui_click', 'ui_hover', 'card_draw', 'card_play', 'reroll', 'coin', 'plot_unlock', 'level_up',
@@ -28,5 +28,25 @@ describe('SFX data', () => {
     expect(d.gain).toBeLessThanOrEqual(1);
     expect(d.attack + d.decay + d.release).toBeLessThanOrEqual(d.duration);
     expect(['square', 'triangle', 'noise']).toContain(d.wave);
+  });
+});
+
+describe('battle hit sounds (owner 10/11/2026: too loud)', () => {
+  it('are the hits, arrows, cannon, fire, magic and impacts, at half their designed gain', () => {
+    expect([...BATTLE_HIT_SFX]).toEqual([
+      'hit_light', 'hit_heavy', 'arrow', 'cannon', 'fire', 'magic', 'boulder_impact', 'throne_hit',
+    ]);
+    expect(BATTLE_HIT_GAIN).toBe(0.5);
+    expect(SFX.hit_light.gain).toBeCloseTo(0.15);
+    expect(SFX.hit_heavy.gain).toBeCloseTo(0.225);
+    expect(SFX.cannon.gain).toBeCloseTo(0.275);
+    expect(SFX.boulder_impact.gain).toBeCloseTo(0.3);
+  });
+
+  it('every battle hit is quieter than the UI click and the battle horn', () => {
+    for (const id of BATTLE_HIT_SFX) {
+      expect(SFX[id].gain).toBeLessThan(SFX.ui_click.gain);
+      expect(SFX[id].gain).toBeLessThan(SFX.battle_horn.gain);
+    }
   });
 });

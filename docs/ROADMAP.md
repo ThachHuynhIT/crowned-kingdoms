@@ -34,7 +34,7 @@ Tất cả là cảm nhận trên PC (desktop ≥ 768 px). Bố cục điện th
 5. ✔ (thay bằng luật 10/11/2026, spec `2026-11-10-draw-one-and-shop-design.md`) Năm 1 có 5 lá, mỗi năm sau rút 1 lá (2 ở năm 5, 10, 11, 15, 20, 21, 25), bài cũ giữ lại; chơi hoặc bán tới khi còn 2 lá thì trận tự bắt đầu (năm 30: 0 lá); Mua thẻ bằng vàng (5, 8, 11…); save v8.
 
 **Bàn cờ và camera**
-6. Cây và đá trang trí bên ngoài bàn cờ: bỏ viền, rải dày hơn cho map sinh động.
+6. Cây và đá trang trí bên ngoài bàn cờ: bỏ viền (✔ 10/11/2026, việc 15), rải dày hơn cho map sinh động.
 7. ✔ Zoom (10/11/2026: zoom out xa hơn 60%, zoom in tối đa = mức xa nhất cũ, kéo ngang hẹp 40%):
    - zoom out nhỏ nhất rộng thêm 30–40%;
    - zoom in tối đa bằng mức zoom out lớn nhất hiện nay;
@@ -55,6 +55,12 @@ Tất cả là cảm nhận trên PC (desktop ≥ 768 px). Bố cục điện th
     Không chép tên, thẻ, chỉ số, văn bản hay hình của game đó. Ghi chép tóm tắt bằng lời của mình vào `docs/research/`.
 
     ✔ Đã làm từ ý "người bán hàng": **Thương nhân** (spec `2026-11-10-merchant-design.md`): sau trận năm 6, 12, 18, 24 (Vô tận: mỗi 6 năm) bày 3 thẻ, mỗi thẻ 3 vàng, mua tối đa 1 hoặc bỏ qua; save v9. Số năm và giá chờ chủ dự án duyệt.
+
+**Phản hồi 10/11/2026 (PC)**
+13. ✔ Bấm nhà chính xác ở mọi mức zoom: bấm vào hình nhà (không chỉ ô đất hình thoi) là mở bảng thông tin, nhà đứng trước được ưu tiên (`src/ui/info/spritePick.ts`, `src/render/pickBoxes.ts`).
+14. ✔ Bấm lính địch trong trận mở bảng thông tin như lính ta: bấm trúng cả hình lính, không chỉ vòng va chạm dưới chân.
+15. ✔ Bỏ viền sẫm của cây, đá, bụi trang trí (`tools/strip_decor_outline.py`, ảnh gốc giữ ở `docs/art-review/decor-outline/originals/`).
+16. ✔ Âm thanh nhỏ còn 1/3 (`MASTER_OUTPUT` 0,25 → 0,083); tiếng đánh, bắn, va chạm trong trận nhỏ thêm một nửa (`BATTLE_HIT_GAIN`).
 
 ## Để sau: điện thoại (chỉ làm khi chủ dự án bảo)
 

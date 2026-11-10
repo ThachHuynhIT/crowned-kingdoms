@@ -50,13 +50,13 @@ describe('AudioManager', () => {
     await manager.destroy();
   });
 
-  it('master 50 × sfx 20 gives an effective sfx gain of 0.1 × MASTER_OUTPUT (the whole mix at a quarter, owner 10/11/2026)', async () => {
+  it('master 50 × sfx 20 gives an effective sfx gain of 0.1 × MASTER_OUTPUT (the whole mix at a twelfth, owner 10/11/2026)', async () => {
     const { manager, contexts } = setup();
     manager.setVolumes({ master: 50, music: 100, sfx: 20, screenShake: true });
     await manager.unlock();
     const [master, , sfx] = contexts[0]!.gains as FakeGain[];
     expect(master!.gain.value * sfx!.gain.value).toBeCloseTo(0.1 * MASTER_OUTPUT);
-    expect(MASTER_OUTPUT).toBe(0.25);
+    expect(MASTER_OUTPUT).toBeCloseTo(0.25 / 3);
     await manager.destroy();
   });
 
