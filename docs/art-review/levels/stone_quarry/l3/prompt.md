@@ -25,3 +25,5 @@ PRODUCTION (overrides "transparent background" above): image 1024x1024, ONE flat
 filling the whole canvas, no gradient, no ground patch outside the building's own footprint, no cast shadow on the
 background; the building itself must not contain magenta. Draw it centred with padding, the whole building visible.
 When done, print the saved path and the image size.
+
+REVIEW FIX (round 2): the previous level-3 drawing was almost identical to level 1. Make it the grand quarry: a tall timber-and-stone crane tower with a pulley wheel, a stone workshop with a slate roof and gold trim, glowing blue crystal veins in the cliff, carts of polished blocks, a large blue banner. Clearly bigger and richer than level 1, same footprint.

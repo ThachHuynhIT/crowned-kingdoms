@@ -188,11 +188,16 @@ export const IMAGE_BUILDINGS: Readonly<Record<string, string>> = {
  * a missing level falls back to the next lower one, then to the base image. Files sit next to the base image.
  */
 export const IMAGE_BUILDING_LEVELS: Readonly<Partial<Record<string, readonly (2 | 3)[]>>> = {
+  arcane_archmage: [2, 3],
+  arcane_frost_mages: [2, 3],
+  arcane_throne: [2, 3],
+  arcane_ward: [2, 3],
   stone_catapult: [2, 3],
   stone_crystal: [2, 3],
   stone_golem_forge: [2, 3],
   stone_miners: [2, 3],
   stone_mountain_heart: [2, 3],
+  stone_quarry: [2, 3],
   stone_throne: [2, 3],
   stone_wall: [2, 3],
   wheat_field: [2, 3],

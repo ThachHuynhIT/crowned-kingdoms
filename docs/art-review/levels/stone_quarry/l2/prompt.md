@@ -25,3 +25,5 @@ PRODUCTION (overrides "transparent background" above): image 1024x1024, ONE flat
 filling the whole canvas, no gradient, no ground patch outside the building's own footprint, no cast shadow on the
 background; the building itself must not contain magenta. Draw it centred with padding, the whole building visible.
 When done, print the saved path and the image size.
+
+REVIEW FIX (round 2): the previous level-2 drawing was almost identical to level 1. Make the upgrade CLEARLY visible at thumbnail size: a second storey on the cutter's hut with a blue slate roof, a bigger wooden crane with a hanging stone block, neat stacked cut-stone blocks in front, and a blue banner.

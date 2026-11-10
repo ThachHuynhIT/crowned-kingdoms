@@ -20582,3 +20582,153 @@ L4x216 copy (2026-11-10) made by tools/prepare_king_portraits.py --size 144x216 
     finalSize: 68x72
     anchor: feet
     notes: Level 3 architecture of stone_wall (P2, 2026-11-10), magenta keyed and reduced to the level-1 width by docs/art-review/levels/make_levels.py; approved by Claude under the owner's delegation
+  - id: building_stone_quarry_l2_iso
+    path: public/assets/art/ai-v1/iso/stone_quarry_l2.png
+    category: building
+    origin: custom
+    source: docs/art-review/levels/stone_quarry/l2/source.png
+    creator: Project owner (OpenAI imagegen via Codex; prompt in docs/art-review/levels/stone_quarry/l2/prompt.md)
+    license: project-owned
+    attribution: false
+    redistribute: true
+    evidence: docs/art-review/levels/review.md
+    modified: true
+    nativeSize: 1024x1024
+    finalSize: 75x61
+    anchor: feet
+    notes: Level 2 architecture of stone_quarry (P2, 2026-11-10), magenta keyed and reduced to the level-1 width by docs/art-review/levels/make_levels.py; approved by Claude under the owner's delegation
+  - id: building_stone_quarry_l3_iso
+    path: public/assets/art/ai-v1/iso/stone_quarry_l3.png
+    category: building
+    origin: custom
+    source: docs/art-review/levels/stone_quarry/l3/source.png
+    creator: Project owner (OpenAI imagegen via Codex; prompt in docs/art-review/levels/stone_quarry/l3/prompt.md)
+    license: project-owned
+    attribution: false
+    redistribute: true
+    evidence: docs/art-review/levels/review.md
+    modified: true
+    nativeSize: 1024x1024
+    finalSize: 75x77
+    anchor: feet
+    notes: Level 3 architecture of stone_quarry (P2, 2026-11-10), magenta keyed and reduced to the level-1 width by docs/art-review/levels/make_levels.py; approved by Claude under the owner's delegation
+  - id: building_arcane_frost_mages_l2_iso
+    path: public/assets/art/ai-v1/iso/arcane_frost_mages_l2.png
+    category: building
+    origin: custom
+    source: docs/art-review/levels/arcane_frost_mages/l2/source.png
+    creator: Project owner (OpenAI imagegen via Codex; prompt in docs/art-review/levels/arcane_frost_mages/l2/prompt.md)
+    license: project-owned
+    attribution: false
+    redistribute: true
+    evidence: docs/art-review/levels/review.md
+    modified: true
+    nativeSize: 1024x1024
+    finalSize: 55x84
+    anchor: feet
+    notes: Level 2 architecture of arcane_frost_mages (P2, 2026-11-10), magenta keyed and reduced to the level-1 width by docs/art-review/levels/make_levels.py; approved by Claude under the owner's delegation
+  - id: building_arcane_frost_mages_l3_iso
+    path: public/assets/art/ai-v1/iso/arcane_frost_mages_l3.png
+    category: building
+    origin: custom
+    source: docs/art-review/levels/arcane_frost_mages/l3/source.png
+    creator: Project owner (OpenAI imagegen via Codex; prompt in docs/art-review/levels/arcane_frost_mages/l3/prompt.md)
+    license: project-owned
+    attribution: false
+    redistribute: true
+    evidence: docs/art-review/levels/review.md
+    modified: true
+    nativeSize: 1024x1024
+    finalSize: 55x97
+    anchor: feet
+    notes: Level 3 architecture of arcane_frost_mages (P2, 2026-11-10), magenta keyed and reduced to the level-1 width by docs/art-review/levels/make_levels.py; approved by Claude under the owner's delegation
+  - id: building_arcane_archmage_l2_iso
+    path: public/assets/art/ai-v1/iso/arcane_archmage_l2.png
+    category: building
+    origin: custom
+    source: docs/art-review/levels/arcane_archmage/l2/source.png
+    creator: Project owner (OpenAI imagegen via Codex; prompt in docs/art-review/levels/arcane_archmage/l2/prompt.md)
+    license: project-owned
+    attribution: false
+    redistribute: true
+    evidence: docs/art-review/levels/review.md
+    modified: true
+    nativeSize: 1024x1024
+    finalSize: 34x69
+    anchor: feet
+    notes: Level 2 architecture of arcane_archmage (P2, 2026-11-10), magenta keyed and reduced to the level-1 width by docs/art-review/levels/make_levels.py; approved by Claude under the owner's delegation
+  - id: building_arcane_archmage_l3_iso
+    path: public/assets/art/ai-v1/iso/arcane_archmage_l3.png
+    category: building
+    origin: custom
+    source: docs/art-review/levels/arcane_archmage/l3/source.png
+    creator: Project owner (OpenAI imagegen via Codex; prompt in docs/art-review/levels/arcane_archmage/l3/prompt.md)
+    license: project-owned
+    attribution: false
+    redistribute: true
+    evidence: docs/art-review/levels/review.md
+    modified: true
+    nativeSize: 1024x1024
+    finalSize: 34x77
+    anchor: feet
+    notes: Level 3 architecture of arcane_archmage (P2, 2026-11-10), magenta keyed and reduced to the level-1 width by docs/art-review/levels/make_levels.py; approved by Claude under the owner's delegation
+  - id: building_arcane_throne_l2_iso
+    path: public/assets/art/ai-v1/iso/arcane_throne_l2.png
+    category: building
+    origin: custom
+    source: docs/art-review/levels/arcane_throne/l2/source.png
+    creator: Project owner (OpenAI imagegen via Codex; prompt in docs/art-review/levels/arcane_throne/l2/prompt.md)
+    license: project-owned
+    attribution: false
+    redistribute: true
+    evidence: docs/art-review/levels/review.md
+    modified: true
+    nativeSize: 1024x1024
+    finalSize: 34x70
+    anchor: feet
+    notes: Level 2 architecture of arcane_throne (P2, 2026-11-10), magenta keyed and reduced to the level-1 width by docs/art-review/levels/make_levels.py; approved by Claude under the owner's delegation
+  - id: building_arcane_throne_l3_iso
+    path: public/assets/art/ai-v1/iso/arcane_throne_l3.png
+    category: building
+    origin: custom
+    source: docs/art-review/levels/arcane_throne/l3/source.png
+    creator: Project owner (OpenAI imagegen via Codex; prompt in docs/art-review/levels/arcane_throne/l3/prompt.md)
+    license: project-owned
+    attribution: false
+    redistribute: true
+    evidence: docs/art-review/levels/review.md
+    modified: true
+    nativeSize: 1024x1024
+    finalSize: 34x81
+    anchor: feet
+    notes: Level 3 architecture of arcane_throne (P2, 2026-11-10), magenta keyed and reduced to the level-1 width by docs/art-review/levels/make_levels.py; approved by Claude under the owner's delegation
+  - id: building_arcane_ward_l2_iso
+    path: public/assets/art/ai-v1/iso/arcane_ward_l2.png
+    category: building
+    origin: custom
+    source: docs/art-review/levels/arcane_ward/l2/source.png
+    creator: Project owner (OpenAI imagegen via Codex; prompt in docs/art-review/levels/arcane_ward/l2/prompt.md)
+    license: project-owned
+    attribution: false
+    redistribute: true
+    evidence: docs/art-review/levels/review.md
+    modified: true
+    nativeSize: 1024x1024
+    finalSize: 56x54
+    anchor: feet
+    notes: Level 2 architecture of arcane_ward (P2, 2026-11-10), magenta keyed and reduced to the level-1 width by docs/art-review/levels/make_levels.py; approved by Claude under the owner's delegation
+  - id: building_arcane_ward_l3_iso
+    path: public/assets/art/ai-v1/iso/arcane_ward_l3.png
+    category: building
+    origin: custom
+    source: docs/art-review/levels/arcane_ward/l3/source.png
+    creator: Project owner (OpenAI imagegen via Codex; prompt in docs/art-review/levels/arcane_ward/l3/prompt.md)
+    license: project-owned
+    attribution: false
+    redistribute: true
+    evidence: docs/art-review/levels/review.md
+    modified: true
+    nativeSize: 1024x1024
+    finalSize: 56x52
+    anchor: feet
+    notes: Level 3 architecture of arcane_ward (P2, 2026-11-10), magenta keyed and reduced to the level-1 width by docs/art-review/levels/make_levels.py; approved by Claude under the owner's delegation
