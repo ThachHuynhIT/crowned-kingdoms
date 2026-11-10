@@ -54,6 +54,8 @@ Tất cả là cảm nhận trên PC (desktop ≥ 768 px). Bố cục điện th
 
     Không chép tên, thẻ, chỉ số, văn bản hay hình của game đó. Ghi chép tóm tắt bằng lời của mình vào `docs/research/`.
 
+    ✔ Đã làm từ ý "người bán hàng": **Thương nhân** (spec `2026-11-10-merchant-design.md`): sau trận năm 6, 12, 18, 24 (Vô tận: mỗi 6 năm) bày 3 thẻ, mỗi thẻ 3 vàng, mua tối đa 1 hoặc bỏ qua; save v9. Số năm và giá chờ chủ dự án duyệt.
+
 ## Để sau: điện thoại (chỉ làm khi chủ dự án bảo)
 
 - Tải trang và vào map trên điện thoại quá lâu: cần tối ưu (gói atlas, nạp art theo vua, cache PWA).

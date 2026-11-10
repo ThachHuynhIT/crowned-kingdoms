@@ -37,3 +37,13 @@ Chẩn đoán trận boss năm 20 (Lúa Mì seed 1–2, script tạm theo dõi m
 Đề xuất bước kế (chưa đo): `FOE_MULT_BY_KING.clock` 0,9 → 0,93 và `nomad` 1,04 → 1,02, rồi chạy lại 500 ván.
 
 Ghi chú: `FOE_MULT_BY_KING` là giải pháp tạm. Cách lâu dài là chỉnh thẻ của từng vua để các vua mạnh ngang nhau khi gặp cùng một đạo quân địch.
+
+## Lượt 3 (10/11/2026, có Thương nhân)
+
+Cấu hình: c5 + `FOE_MULT_BY_KING` đồng hồ 0,93, du mục 1,02 + Thương nhân (năm 6/12/18/24, giá 3).
+
+**500 ván/vua (seeds 1–500, 35 phút):** phép 51,2% · đồng hồ 60,8% · lò rèn 66,2% · rừng 65,0% · trăng 57,6% · du mục 54,0% · đá 53,0% · thuỷ triều 59,8% · lúa 58,8%. Lò Rèn vượt trần 1,2 điểm.
+
+Chỉnh tiếp `FOE_MULT_BY_KING.forge` 1,07 → 1,1 và đo lại riêng Lò Rèn 500 ván: **60,4%**.
+
+**Kết quả cuối: ĐẠT.** Mọi vua trong 51,2–65,0%, chênh lệch 13,8 điểm (mục tiêu 35–65%, ≤ 15 điểm). Trung bình khoảng 58%.

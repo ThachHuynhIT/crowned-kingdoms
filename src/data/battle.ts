@@ -43,10 +43,10 @@ export const FOE_MULT_BY_KING: Readonly<Record<KingId, number>> = {
   arcane: 1.03,
   grove: 0.95,
   tide: 0.85,
-  forge: 1.07,
-  clock: 0.9,
+  forge: 1.1,
+  clock: 0.93,
   moon: 0.92,
-  nomad: 1.04,
+  nomad: 1.02,
 };
 export const WAVES = { share: [0.4, 0.35, 0.25], spawnTick: [0, 120, 240] } as const;
 

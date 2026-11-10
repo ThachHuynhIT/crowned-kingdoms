@@ -89,3 +89,15 @@ Kiểm tra lượt 2: lint, typecheck, test (2699 qua), build và benchmark đ�
    - `FOE_MULT_BY_KING`: vua mạnh gặp địch mạnh hơn, giải pháp tạm.
 5. **Đề xuất từ so sánh 9 Kings còn lại:** thương nhân hiếm (chọn 1 trong 3), tương tác lân cận giữa thẻ của các vua, cho Vua Phép Thuật gọi Construct.
 6. **Để sau:** cây/đá bỏ viền, can thiệp riêng từng vua, toàn bộ phần điện thoại.
+
+---
+
+## Lượt 3 (09:00 →)
+- Việc dở 1: chỉnh `FOE_MULT_BY_KING` (đồng hồ 0,93, du mục 1,02); đang chạy lại 500 ván/vua (bắt đầu 09:00).
+- Việc dở 3: đã xem bảng tóm tắt sau trận trong trận chạy bình thường ở ×3 (`.superpowers/day-summary.png`): "Ngai mất: 100% máu", "Giỏi nhất: Ngai Bó Lúa (4 địch)", chữ nằm gọn trong khung, nút Tiếp tục đủ lớn.
+- **Việc mới: Thương nhân** (đề xuất 2 từ so sánh 9 Kings). Codex viết spec + plan (`0a3962e`), mình review 1 vòng, không có lỗi chặn.
+  - Phase 1 (logic, mình làm, có test) `16d46d4`: sau trận năm 6, 12, 18, 24 (Vô tận sau năm 30: cứ 6 năm) bày 3 thẻ như thẻ thưởng, giá 3 vàng, mua tối đa 1 hoặc bỏ qua miễn phí; luồng RNG `shop`; save v9 (migrator 8→9 chỉ đổi số phiên bản); bot greedy mua khi còn ≥ 4 vàng sau khi trả.
+  - Phase 2 (giao diện, Codex làm, mình review và sửa 1 lỗi kiểu) `2efebf4`: giá dưới mỗi lá, lá không đủ vàng bị mờ, nút Mua/Bỏ qua. Kiểm trên trình duyệt (`.superpowers/day-merchant*.png`).
+  - Phase 3: mục trợ giúp `Thương nhân` (đọc số từ dữ liệu, có test). Còn đo cân bằng sau khi phép đo 500 ván đang chạy xong.
+  - Quyết định: các con số (năm 6/12/18/24, giá 3, 3 thẻ) do mình chọn khi chạy tự động. Giá rẻ hơn Mua thẻ (5) vì người chơi bị giới hạn 1 lá và chỉ được chọn trong 3.
+- **Cân bằng sau Thương nhân (11:25 → 12:05):** phép đo 500 ván cũ (chưa có Thương nhân) đã dừng và bỏ. Đo lại 500 ván/vua: 51,2–66,2%, Lò Rèn vượt trần; tăng `FOE_MULT_BY_KING.forge` 1,07 → 1,1, đo lại Lò Rèn: 60,4%. **Kết quả: 51,2–65,0%, chênh 13,8 điểm, ĐẠT.** Chi tiết: `docs/balance/2026-11-10-draw-one-balance.md`. Gate đầy đủ qua (2713 test, build, 83 test Python).
