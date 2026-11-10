@@ -5527,6 +5527,34 @@
    "label": "Biểu tượng",
    "items": [
     {
+     "id": "icon_armor",
+     "label": "icon armor",
+     "src": "/public/assets/art/ai-v1/icons/icon_armor.png",
+     "w": 32,
+     "h": 32,
+     "kind": "object",
+     "group": "ui-icons",
+     "tags": [
+      "icon_armor",
+      "16×16",
+      "32×32"
+     ]
+    },
+    {
+     "id": "icon_attack",
+     "label": "icon attack",
+     "src": "/public/assets/art/ai-v1/icons/icon_attack.png",
+     "w": 32,
+     "h": 32,
+     "kind": "object",
+     "group": "ui-icons",
+     "tags": [
+      "icon_attack",
+      "16×16",
+      "32×32"
+     ]
+    },
+    {
      "id": "icon_boulder",
      "label": "icon boulder",
      "src": "/public/assets/art/ai-v1/icons/icon_boulder.png",
@@ -5536,6 +5564,20 @@
      "group": "ui-icons",
      "tags": [
       "icon_boulder",
+      "16×16",
+      "32×32"
+     ]
+    },
+    {
+     "id": "icon_burn",
+     "label": "icon burn",
+     "src": "/public/assets/art/ai-v1/icons/icon_burn.png",
+     "w": 32,
+     "h": 32,
+     "kind": "object",
+     "group": "ui-icons",
+     "tags": [
+      "icon_burn",
       "16×16",
       "32×32"
      ]
@@ -5555,6 +5597,20 @@
      ]
     },
     {
+     "id": "icon_cooldown",
+     "label": "icon cooldown",
+     "src": "/public/assets/art/ai-v1/icons/icon_cooldown.png",
+     "w": 32,
+     "h": 32,
+     "kind": "object",
+     "group": "ui-icons",
+     "tags": [
+      "icon_cooldown",
+      "16×16",
+      "32×32"
+     ]
+    },
+    {
      "id": "icon_crown",
      "label": "icon crown",
      "src": "/public/assets/art/ai-v1/icons/icon_crown.png",
@@ -5564,6 +5620,48 @@
      "group": "ui-icons",
      "tags": [
       "icon_crown",
+      "16×16",
+      "32×32"
+     ]
+    },
+    {
+     "id": "icon_decree",
+     "label": "icon decree",
+     "src": "/public/assets/art/ai-v1/icons/icon_decree.png",
+     "w": 32,
+     "h": 32,
+     "kind": "object",
+     "group": "ui-icons",
+     "tags": [
+      "icon_decree",
+      "16×16",
+      "32×32"
+     ]
+    },
+    {
+     "id": "icon_disabled",
+     "label": "icon disabled",
+     "src": "/public/assets/art/ai-v1/icons/icon_disabled.png",
+     "w": 32,
+     "h": 32,
+     "kind": "object",
+     "group": "ui-icons",
+     "tags": [
+      "icon_disabled",
+      "16×16",
+      "32×32"
+     ]
+    },
+    {
+     "id": "icon_economy",
+     "label": "icon economy",
+     "src": "/public/assets/art/ai-v1/icons/icon_economy.png",
+     "w": 32,
+     "h": 32,
+     "kind": "object",
+     "group": "ui-icons",
+     "tags": [
+      "icon_economy",
       "16×16",
       "32×32"
      ]
@@ -5583,6 +5681,34 @@
      ]
     },
     {
+     "id": "icon_enchantment",
+     "label": "icon enchantment",
+     "src": "/public/assets/art/ai-v1/icons/icon_enchantment.png",
+     "w": 32,
+     "h": 32,
+     "kind": "object",
+     "group": "ui-icons",
+     "tags": [
+      "icon_enchantment",
+      "16×16",
+      "32×32"
+     ]
+    },
+    {
+     "id": "icon_flying",
+     "label": "icon flying",
+     "src": "/public/assets/art/ai-v1/icons/icon_flying.png",
+     "w": 32,
+     "h": 32,
+     "kind": "object",
+     "group": "ui-icons",
+     "tags": [
+      "icon_flying",
+      "16×16",
+      "32×32"
+     ]
+    },
+    {
      "id": "icon_gold",
      "label": "icon gold",
      "src": "/public/assets/art/ai-v1/icons/icon_gold.png",
@@ -5592,6 +5718,20 @@
      "group": "ui-icons",
      "tags": [
       "icon_gold",
+      "16×16",
+      "32×32"
+     ]
+    },
+    {
+     "id": "icon_heal",
+     "label": "icon heal",
+     "src": "/public/assets/art/ai-v1/icons/icon_heal.png",
+     "w": 32,
+     "h": 32,
+     "kind": "object",
+     "group": "ui-icons",
+     "tags": [
+      "icon_heal",
       "16×16",
       "32×32"
      ]
@@ -5737,6 +5877,20 @@
      ]
     },
     {
+     "id": "icon_life",
+     "label": "icon life",
+     "src": "/public/assets/art/ai-v1/icons/icon_life.png",
+     "w": 32,
+     "h": 32,
+     "kind": "object",
+     "group": "ui-icons",
+     "tags": [
+      "icon_life",
+      "16×16",
+      "32×32"
+     ]
+    },
+    {
      "id": "icon_lock",
      "label": "icon lock",
      "src": "/public/assets/art/ai-v1/icons/icon_lock.png",
@@ -5746,6 +5900,76 @@
      "group": "ui-icons",
      "tags": [
       "icon_lock",
+      "16×16",
+      "32×32"
+     ]
+    },
+    {
+     "id": "icon_move",
+     "label": "icon move",
+     "src": "/public/assets/art/ai-v1/icons/icon_move.png",
+     "w": 32,
+     "h": 32,
+     "kind": "object",
+     "group": "ui-icons",
+     "tags": [
+      "icon_move",
+      "16×16",
+      "32×32"
+     ]
+    },
+    {
+     "id": "icon_pause",
+     "label": "icon pause",
+     "src": "/public/assets/art/ai-v1/icons/icon_pause.png",
+     "w": 32,
+     "h": 32,
+     "kind": "object",
+     "group": "ui-icons",
+     "tags": [
+      "icon_pause",
+      "16×16",
+      "32×32"
+     ]
+    },
+    {
+     "id": "icon_poison",
+     "label": "icon poison",
+     "src": "/public/assets/art/ai-v1/icons/icon_poison.png",
+     "w": 32,
+     "h": 32,
+     "kind": "object",
+     "group": "ui-icons",
+     "tags": [
+      "icon_poison",
+      "16×16",
+      "32×32"
+     ]
+    },
+    {
+     "id": "icon_quest",
+     "label": "icon quest",
+     "src": "/public/assets/art/ai-v1/icons/icon_quest.png",
+     "w": 32,
+     "h": 32,
+     "kind": "object",
+     "group": "ui-icons",
+     "tags": [
+      "icon_quest",
+      "16×16",
+      "32×32"
+     ]
+    },
+    {
+     "id": "icon_range",
+     "label": "icon range",
+     "src": "/public/assets/art/ai-v1/icons/icon_range.png",
+     "w": 32,
+     "h": 32,
+     "kind": "object",
+     "group": "ui-icons",
+     "tags": [
+      "icon_range",
       "16×16",
       "32×32"
      ]
@@ -5765,6 +5989,48 @@
      ]
     },
     {
+     "id": "icon_revive",
+     "label": "icon revive",
+     "src": "/public/assets/art/ai-v1/icons/icon_revive.png",
+     "w": 32,
+     "h": 32,
+     "kind": "object",
+     "group": "ui-icons",
+     "tags": [
+      "icon_revive",
+      "16×16",
+      "32×32"
+     ]
+    },
+    {
+     "id": "icon_sacrifice",
+     "label": "icon sacrifice",
+     "src": "/public/assets/art/ai-v1/icons/icon_sacrifice.png",
+     "w": 32,
+     "h": 32,
+     "kind": "object",
+     "group": "ui-icons",
+     "tags": [
+      "icon_sacrifice",
+      "16×16",
+      "32×32"
+     ]
+    },
+    {
+     "id": "icon_save",
+     "label": "icon save",
+     "src": "/public/assets/art/ai-v1/icons/icon_save.png",
+     "w": 32,
+     "h": 32,
+     "kind": "object",
+     "group": "ui-icons",
+     "tags": [
+      "icon_save",
+      "16×16",
+      "32×32"
+     ]
+    },
+    {
      "id": "icon_sell",
      "label": "icon sell",
      "src": "/public/assets/art/ai-v1/icons/icon_sell.png",
@@ -5779,6 +6045,20 @@
      ]
     },
     {
+     "id": "icon_shield",
+     "label": "icon shield",
+     "src": "/public/assets/art/ai-v1/icons/icon_shield.png",
+     "w": 32,
+     "h": 32,
+     "kind": "object",
+     "group": "ui-icons",
+     "tags": [
+      "icon_shield",
+      "16×16",
+      "32×32"
+     ]
+    },
+    {
      "id": "icon_skull",
      "label": "icon skull",
      "src": "/public/assets/art/ai-v1/icons/icon_skull.png",
@@ -5788,6 +6068,76 @@
      "group": "ui-icons",
      "tags": [
       "icon_skull",
+      "16×16",
+      "32×32"
+     ]
+    },
+    {
+     "id": "icon_slow",
+     "label": "icon slow",
+     "src": "/public/assets/art/ai-v1/icons/icon_slow.png",
+     "w": 32,
+     "h": 32,
+     "kind": "object",
+     "group": "ui-icons",
+     "tags": [
+      "icon_slow",
+      "16×16",
+      "32×32"
+     ]
+    },
+    {
+     "id": "icon_soul",
+     "label": "icon soul",
+     "src": "/public/assets/art/ai-v1/icons/icon_soul.png",
+     "w": 32,
+     "h": 32,
+     "kind": "object",
+     "group": "ui-icons",
+     "tags": [
+      "icon_soul",
+      "16×16",
+      "32×32"
+     ]
+    },
+    {
+     "id": "icon_speed",
+     "label": "icon speed",
+     "src": "/public/assets/art/ai-v1/icons/icon_speed.png",
+     "w": 32,
+     "h": 32,
+     "kind": "object",
+     "group": "ui-icons",
+     "tags": [
+      "icon_speed",
+      "16×16",
+      "32×32"
+     ]
+    },
+    {
+     "id": "icon_stun",
+     "label": "icon stun",
+     "src": "/public/assets/art/ai-v1/icons/icon_stun.png",
+     "w": 32,
+     "h": 32,
+     "kind": "object",
+     "group": "ui-icons",
+     "tags": [
+      "icon_stun",
+      "16×16",
+      "32×32"
+     ]
+    },
+    {
+     "id": "icon_support",
+     "label": "icon support",
+     "src": "/public/assets/art/ai-v1/icons/icon_support.png",
+     "w": 32,
+     "h": 32,
+     "kind": "object",
+     "group": "ui-icons",
+     "tags": [
+      "icon_support",
       "16×16",
       "32×32"
      ]
@@ -5844,6 +6194,34 @@
      "group": "ui-icons",
      "tags": [
       "icon_troop",
+      "16×16",
+      "32×32"
+     ]
+    },
+    {
+     "id": "icon_unlock",
+     "label": "icon unlock",
+     "src": "/public/assets/art/ai-v1/icons/icon_unlock.png",
+     "w": 32,
+     "h": 32,
+     "kind": "object",
+     "group": "ui-icons",
+     "tags": [
+      "icon_unlock",
+      "16×16",
+      "32×32"
+     ]
+    },
+    {
+     "id": "icon_upgrade",
+     "label": "icon upgrade",
+     "src": "/public/assets/art/ai-v1/icons/icon_upgrade.png",
+     "w": 32,
+     "h": 32,
+     "kind": "object",
+     "group": "ui-icons",
+     "tags": [
+      "icon_upgrade",
       "16×16",
       "32×32"
      ]
