@@ -1,3 +1,4 @@
+import { IMPACT_FRAMES, paintImpactFrame, paintImpactGlow } from './impactFx';
 import type Phaser from 'phaser';
 import { BATTLE } from '../data/battle';
 import type { RunMode } from '../data/rules';
@@ -238,6 +239,10 @@ export const spriteList = (content: Content): { name: string; art: PixelCanvas }
   out.push({ name: fxFrame('boulder'), art: paintBoulder() });
   out.push({ name: fxFrame('boulder_shadow'), art: paintBoulderShadow() });
   out.push({ name: fxFrame('spark'), art: paintSpark() });
+  for (let i = 0; i < IMPACT_FRAMES; i++) {
+    out.push({ name: fxFrame(`impact_${i}`), art: paintImpactFrame(i) });
+    out.push({ name: fxFrame(`impact_glow_${i}`), art: paintImpactGlow(i) });
+  }
   out.push({ name: fxFrame('pulse'), art: paintPulse() });
   out.push({ name: fxFrame('shield'), art: paintShieldFx() });
   out.push({ name: fxFrame('stun'), art: paintStun() });

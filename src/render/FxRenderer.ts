@@ -13,13 +13,15 @@ import type { BattleWorld } from '../game/battle/world';
 import { ISO_SPRITE_SCALE, iso } from './isoView';
 import { SPRITES_KEY, buildingFrame, fxFrame, imageFrameScale } from './atlas';
 import { arrowDir } from './fxArt';
+import { IMPACT_FRAMES, IMPACT_FRAME_MS } from './impactFx';
 
 
 /** The royal boulder starts this many px above its landing point. */
 const BOULDER_DROP_H = 96;
 /** Ground shadows sit above plots (depth 1–2) and under every y-sorted sprite. */
 const SHADOW_DEPTH = 3;
-const SPARK_MS = 160;
+/** At most this many impacts at once; extra hits in a crowded frame are skipped. */
+const IMPACT_POOL = 48;
 const RING_MS = 320;
 const BUBBLE_MS = 600;
 const RING_DEPTH = 99_500;
@@ -46,6 +48,7 @@ export class FxRenderer {
   private readonly boulders: Phaser.GameObjects.Image[] = [];
   private readonly shadows: Phaser.GameObjects.Image[] = [];
   private readonly sparks: Phaser.GameObjects.Image[] = [];
+  private readonly impacts: { img: Phaser.GameObjects.Image; glow: Phaser.GameObjects.Image; start: number }[] = [];
   /** Pulse bursts and shield bubbles, pooled separately from the hit sparks. */
   private readonly bursts: Phaser.GameObjects.Image[] = [];
   private readonly rings: Ring[] = [];
@@ -98,6 +101,7 @@ export class FxRenderer {
   updateDamage(): void {
     const now = this.scene.time.now;
     this.drawRings(now);
+    this.stepImpacts(now);
     for (const slot of this.damageTexts) {
       if (!slot.text.visible) continue;
       const t = Math.min(1, Math.max(0, (now - slot.start) / FLOAT_MS));
@@ -114,6 +118,11 @@ export class FxRenderer {
       }
       list.length = 0;
     }
+    for (const p of this.impacts) {
+      p.img.destroy();
+      p.glow.destroy();
+    }
+    this.impacts.length = 0;
     this.rings.length = 0;
     this.pops.length = 0;
     for (const slot of this.damageTexts) slot.text.destroy();
@@ -193,33 +202,46 @@ export class FxRenderer {
     }
   }
 
+  /** Hit impact (sample 10/11/2026): colour frames plus an additive glow, stepped in real time. */
   private spark(world: BattleWorld, id: number): void {
     if (id < 0 || id >= world.count) return;
-    let img: Phaser.GameObjects.Image | undefined;
-    for (const s of this.sparks)
-      if (!s.visible) {
-        img = s;
-        break;
-      }
-    if (img === undefined) {
-      img = this.scene.add.image(0, 0, SPRITES_KEY, fxFrame('spark'));
-      this.sparks.push(img);
+    let pair = this.impacts.find((p) => !p.img.visible);
+    if (pair === undefined) {
+      if (this.impacts.length >= IMPACT_POOL) return;
+      pair = {
+        img: this.scene.add.image(0, 0, SPRITES_KEY, fxFrame('impact_0')).setScale(ISO_SPRITE_SCALE).setVisible(false),
+        glow: this.scene.add
+          .image(0, 0, SPRITES_KEY, fxFrame('impact_glow_0'))
+          .setScale(ISO_SPRITE_SCALE)
+          .setBlendMode('ADD')
+          .setVisible(false),
+        start: 0,
+      };
+      this.impacts.push(pair);
     }
     const r = world.radius[id]!;
     const { x, y } = iso({ x: world.x[id]!, y: world.y[id]! });
-    const s = img;
-    this.scene.tweens.killTweensOf(s);
-    s.setPosition(Math.round(x), Math.round(y - r))
-      .setDepth(y + r + 1)
-      .setAlpha(1)
-      .setVisible(true);
-    this.scene.tweens.add({
-      targets: s,
-      alpha: 0,
-      y: s.y - 3,
-      duration: SPARK_MS,
-      onComplete: () => s.setVisible(false),
-    });
+    const px = Math.round(x);
+    const py = Math.round(y - r);
+    pair.start = this.scene.time.now;
+    pair.img.setPosition(px, py).setDepth(y + r + 2).setFrame(fxFrame('impact_0')).setVisible(true);
+    pair.glow.setPosition(px, py).setDepth(y + r + 1).setFrame(fxFrame('impact_glow_0')).setVisible(true);
+  }
+
+  private stepImpacts(now: number): void {
+    for (const p of this.impacts) {
+      if (!p.img.visible) continue;
+      let elapsed = now - p.start;
+      let f = 0;
+      while (f < IMPACT_FRAMES && elapsed >= IMPACT_FRAME_MS[f]!) elapsed -= IMPACT_FRAME_MS[f++]!;
+      if (f >= IMPACT_FRAMES) {
+        p.img.setVisible(false);
+        p.glow.setVisible(false);
+        continue;
+      }
+      p.img.setFrame(fxFrame(`impact_${f}`));
+      p.glow.setFrame(fxFrame(`impact_glow_${f}`));
+    }
   }
 
   private floatDamage(world: BattleWorld, id: number, dmg: number, now: number): void {
