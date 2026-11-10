@@ -5,7 +5,7 @@
 
 export class FakeParam {
   value: number;
-  readonly events: { kind: string; value: number; time: number }[] = [];
+  readonly events: { kind: string; value: number; time: number; timeConstant?: number }[] = [];
   constructor(value = 1) {
     this.value = value;
   }
@@ -17,6 +17,10 @@ export class FakeParam {
   linearRampToValueAtTime(value: number, time: number): this {
     this.events.push({ kind: 'ramp', value, time });
     this.value = value;
+    return this;
+  }
+  setTargetAtTime(value: number, time: number, timeConstant: number): this {
+    this.events.push({ kind: 'target', value, time, timeConstant });
     return this;
   }
   cancelScheduledValues(time: number): this {
@@ -64,11 +68,32 @@ export class FakeSource extends FakeNode {
 
 export class FakeBufferSource extends FakeSource {
   buffer: FakeBuffer | null = null;
+  readonly playbackRate = new FakeParam(1);
 }
 
 export class FakeOscillator extends FakeSource {
   type = 'sine';
   readonly frequency = new FakeParam(440);
+  readonly detune = new FakeParam(0);
+}
+
+export class FakeBiquad extends FakeNode {
+  type = 'lowpass';
+  readonly frequency = new FakeParam(350);
+  readonly Q = new FakeParam(1);
+}
+
+export class FakeCompressor extends FakeNode {
+  readonly threshold = new FakeParam(-24);
+  readonly knee = new FakeParam(30);
+  readonly ratio = new FakeParam(12);
+  readonly attack = new FakeParam(0.003);
+  readonly release = new FakeParam(0.25);
+}
+
+export class FakeConvolver extends FakeNode {
+  buffer: FakeBuffer | null = null;
+  normalize = true;
 }
 
 export class FakeBuffer {
@@ -79,6 +104,9 @@ export class FakeBuffer {
     readonly sampleRate: number,
   ) {
     this.data = Array.from({ length: numberOfChannels }, () => new Float32Array(length));
+  }
+  get duration(): number {
+    return this.length / this.sampleRate;
   }
   getChannelData(channel: number): Float32Array {
     return this.data[channel]!;
@@ -96,6 +124,9 @@ export class FakeAudioContext {
   readonly gains: FakeGain[] = [];
   readonly buffers: FakeBuffer[] = [];
   readonly started: FakeSource[] = [];
+  readonly filters: FakeBiquad[] = [];
+  readonly compressors: FakeCompressor[] = [];
+  readonly convolvers: FakeConvolver[] = [];
   resumeCalls = 0;
   suspendCalls = 0;
   closeCalls = 0;
@@ -117,6 +148,21 @@ export class FakeAudioContext {
   }
   createOscillator(): FakeOscillator {
     return new FakeOscillator(this);
+  }
+  createBiquadFilter(): FakeBiquad {
+    const f = new FakeBiquad(this);
+    this.filters.push(f);
+    return f;
+  }
+  createDynamicsCompressor(): FakeCompressor {
+    const c = new FakeCompressor(this);
+    this.compressors.push(c);
+    return c;
+  }
+  createConvolver(): FakeConvolver {
+    const c = new FakeConvolver(this);
+    this.convolvers.push(c);
+    return c;
   }
   resume(): Promise<void> {
     this.resumeCalls += 1;

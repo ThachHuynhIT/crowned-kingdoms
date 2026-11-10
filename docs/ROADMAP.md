@@ -61,6 +61,7 @@ Tất cả là cảm nhận trên PC (desktop ≥ 768 px). Bố cục điện th
 14. ✔ Bấm lính địch trong trận mở bảng thông tin như lính ta: bấm trúng cả hình lính, không chỉ vòng va chạm dưới chân.
 15. ✔ Bỏ viền sẫm của cây, đá, bụi trang trí (`tools/strip_decor_outline.py`, ảnh gốc giữ ở `docs/art-review/decor-outline/originals/`).
 16. ✔ Âm thanh nhỏ còn 1/3 (`MASTER_OUTPUT` 0,25 → 0,083); tiếng đánh, bắn, va chạm trong trận nhỏ thêm một nửa (`BATTLE_HIT_GAIN`).
+22. ✔ Âm thanh hiện đại, êm hơn, nhỏ thêm một nửa (`MASTER_OUTPUT` 0,25/6 ≈ 0,042): bỏ sóng vuông, tiếng sine/triangle + nhiễu lọc, có nén và lọc thấp ở master, vang nhẹ, mỗi lần đánh lệch cao độ chút ít, giới hạn số tiếng trong trận; nhạc chậm và êm hơn (`src/data/sfx.ts`, `src/data/music.ts`, `src/audio/`).
 
 **Asset còn thiếu (10/11/2026, Codex vẽ, Claude duyệt theo uỷ quyền; xem `/admin` và `/admin/fx`)**
 17. ✔ Kho asset `/admin` liệt kê mọi PNG của game (`python tools/build_game_assets.py`); trang `/admin/fx` xem hiệu ứng vẽ bằng code.
@@ -78,7 +79,7 @@ Tất cả là cảm nhận trên PC (desktop ≥ 768 px). Bố cục điện th
 
 ## Chủ dự án cần quyết
 
-- Thẻ vua đang khoá: giữ hiện vua nào, hay ẩn thành "Vua của ?".
+- ✔ Thẻ vua khoá hiện tên và hình, phủ lớp xám có ổ khoá (chủ dự án 10/11/2026).
 - Khi nào phát hành `develop` → `main`.
 
 ## Giới hạn và lỗi nhỏ đã biết
