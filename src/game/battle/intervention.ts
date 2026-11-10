@@ -4,15 +4,19 @@
  * thương phép (bỏ qua giáp) qua hàng đợi bước 8 và bị đẩy lùi ra xa tâm. Không gây hại phe
  * mình. Không dùng Rng; địch duyệt theo id tăng dần, tảng đá theo thứ tự thả.
  */
-import { BATTLE, INTERVENTION } from '../../data/battle';
+import { BATTLE, INTERVENTION, INTERVENTION_POWERS } from '../../data/battle';
+import { addDot } from './statuses';
 import { BOSS_RULES } from '../../data/bosses';
 import { clampNorthY } from './bounds';
 import { queueDamage } from './combat';
 import type { AutoFireInput, BattleInput } from './types';
-import { DMG_MAGIC, KIND_UNIT, TEAM_FOE, type BattleWorld, type Boulder } from './world';
+import { DMG_MAGIC, KIND_UNIT, TEAM_FOE, stunFor, type BattleWorld, type Boulder } from './world';
+import type { InterventionPower } from '../../data/battle';
 
 /** sourceUid / sourceId của sát thương tảng đá (không phải công trình, không phải thực thể). */
 export const BOULDER_SOURCE = -2;
+/** Khoá bỏng/độc của Can Thiệp (dưới FOE_KEY_BASE nhưng không trùng uid công trình nào: uid ≥ 0). */
+const BOULDER_DOT_KEY = -2;
 
 /** Dưới khoảng cách này địch coi như trùng tâm và bị đẩy theo trục cố định (1, 0). */
 const COINCIDENT = 1e-3;
@@ -108,7 +112,8 @@ const impact = (world: BattleWorld, bx: number, by: number): void => {
   world.events.push({ type: 'boulder', phase: 'impact', x: bx, y: by });
   const base = (boulderDamage(world.setup.year) * (100 + world.boulderDmgPct)) / 100;
   const r2 = world.boulderRadius * world.boulderRadius;
-  const perTick = INTERVENTION.knockback / BATTLE.knockbackTicks;
+  const power = world.setup.power ? INTERVENTION_POWERS[world.setup.power] : undefined;
+  const perTick = (INTERVENTION.knockback * (power?.knockbackMult ?? 1)) / BATTLE.knockbackTicks;
   for (let i = 0; i < world.count; i++) {
     if (world.alive[i] === 0 || world.team[i] !== TEAM_FOE || world.kind[i] !== KIND_UNIT) continue;
     let dx = world.x[i]! - bx;
@@ -126,11 +131,27 @@ const impact = (world: BattleWorld, bx: number, by: number): void => {
     // Vua Không Ngai nhận ×3 (chỉ nó, không nhân cả vùng nổ); mọi boss miễn đẩy lùi.
     const dmg = world.setup.boss?.ordinal === 3 && i === world.bossId ? base * BOSS_RULES.crownless.boulderMult : base;
     queueDamage(world, i, dmg, DMG_MAGIC, BOULDER_SOURCE, undefined, BOULDER_SOURCE);
+    if (power) applyPower(world, i, power);
     if (world.boss[i] === 1) continue;
     world.kbX[i] = dx * perTick;
     world.kbY[i] = dy * perTick;
     world.kbTicks[i] = BATTLE.knockbackTicks;
   }
+};
+
+/**
+ * Hiệu ứng riêng của vua lên một địch trúng (thêm vào sát thương gốc). Boss miễn chậm và choáng như với tháp; bỏng và
+ * độc bám mọi địch. Khoá DoT là nguồn tảng đá nên các lần rơi sau làm mới thay vì chồng mục mới.
+ */
+const applyPower = (world: BattleWorld, i: number, power: InterventionPower): void => {
+  const boss = world.boss[i] === 1;
+  if (!boss && (power.slowPct ?? 0) > 0 && (power.slowTicks ?? 0) > 0) {
+    world.slowPct[i] = Math.min(Math.max(world.slowPct[i]!, power.slowPct!), BATTLE.maxSlowPct);
+    world.slowTicks[i] = Math.max(world.slowTicks[i]!, power.slowTicks!);
+  }
+  if (!boss && (power.stunTicks ?? 0) > 0) world.stunTicks[i] = Math.max(world.stunTicks[i]!, stunFor(world, i, power.stunTicks!));
+  if ((power.burnDps ?? 0) > 0) addDot(world, i, 'burn', BOULDER_DOT_KEY, power.burnDps!, power.burnTicks ?? 0, 1);
+  if ((power.poisonDps ?? 0) > 0) addDot(world, i, 'poison', BOULDER_DOT_KEY, power.poisonDps!, power.poisonTicks ?? 0, 1);
 };
 
 /** Bước 2 (sau các lệnh): tảng đá có `impactTick ≤ tick` rơi theo thứ tự thả rồi bị bỏ khỏi danh sách. */

@@ -31,23 +31,25 @@ export const ENEMY_STAT_MULT = 2.05;
  * Máu và sát thương của boss 1/2/3 lúc vào trận, nhân với số trong `BOSSES` (10/11/2026: hết giờ không
  * còn là thắng, boss phải hạ được). Đo bằng `npm run balance`, xem docs/balance/2026-11-10-draw-one-balance.md.
  */
-export const BOSS_HP_MULT = [1, 0.55, 0.27] as const;
-export const BOSS_DMG_MULT = [1, 0.64, 1] as const;
+export const BOSS_HP_MULT = [0.9, 0.5, 0.24] as const; // chủ dự án 10/11/2026: boss hơi khó → −10%
+export const BOSS_DMG_MULT = [0.9, 0.58, 0.9] as const;
 /**
- * Hệ số sức địch (và máu boss) theo vua người chơi chọn (10/11/2026). Cân bằng TẠM: các vua chênh nhau
- * ổn định dù đổi số chung; cách lâu dài là chỉnh thẻ từng vua. Đo: docs/balance/2026-11-10-draw-one-balance.md.
+ * Chỉnh sức phe mình theo vua (chủ dự án 10/11/2026, thay hệ số sức địch `FOE_MULT_BY_KING`): % cộng vào máu và sát
+ * thương của mọi công trình, Ngai và lính phe mình khi vào trận (`BattleWorld`, theo `setup.power`). Âm = yếu đi.
+ * Đo bằng `npm run balance`.
  */
-export const FOE_MULT_BY_KING: Readonly<Record<KingId, number>> = {
-  wheat: 0.92,
-  stone: 1.18,
-  arcane: 1.03,
-  grove: 0.95,
-  tide: 0.85,
-  forge: 1.1,
-  clock: 0.93,
-  moon: 0.92,
-  nomad: 1.02,
+export const KING_TUNING: Readonly<Record<KingId, { readonly hpPct: number; readonly dmgPct: number }>> = {
+  wheat: { hpPct: 2, dmgPct: 2 },
+  stone: { hpPct: -19, dmgPct: -19 },
+  arcane: { hpPct: -14, dmgPct: -14 },
+  grove: { hpPct: -2, dmgPct: -2 },
+  tide: { hpPct: 9, dmgPct: 9 },
+  forge: { hpPct: -21, dmgPct: -21 },
+  clock: { hpPct: 10, dmgPct: 10 },
+  moon: { hpPct: -1, dmgPct: -1 },
+  nomad: { hpPct: -6, dmgPct: -6 },
 };
+
 export const WAVES = { share: [0.4, 0.35, 0.25], spawnTick: [0, 120, 240] } as const;
 
 /** Hằng hình quạt 45° (cos 45° làm tròn xuống nên đúng 45° vẫn nằm trong quạt); không dùng Math.cos. */
@@ -68,6 +70,39 @@ export const INTERVENTION = {
   cooldownTicks: 150,
   firstReadyTick: 30,
 } as const;
+
+/**
+ * Can Thiệp riêng của từng vua (chủ dự án 10/11/2026): cùng điểm rơi, hồi chiêu và sát thương gốc, thêm một hiệu ứng
+ * khi chạm đất. Mọi trường đều tuỳ chọn; vắng = như đá tảng gốc. `dmgPct` / `radiusPct` cộng vào % của sắc lệnh.
+ */
+export interface InterventionPower {
+  /** Tên hiển thị (tiếng Việt). */
+  readonly name: string;
+  /** Mô tả một dòng cho trợ giúp và tooltip. */
+  readonly text: string;
+  readonly dmgPct?: number;
+  readonly radiusPct?: number;
+  readonly knockbackMult?: number;
+  readonly slowPct?: number;
+  readonly slowTicks?: number;
+  readonly stunTicks?: number;
+  readonly burnDps?: number;
+  readonly burnTicks?: number;
+  readonly poisonDps?: number;
+  readonly poisonTicks?: number;
+}
+
+export const INTERVENTION_POWERS: Readonly<Record<KingId, InterventionPower>> = {
+  wheat: { name: 'Bó Lúa Trói Chân', text: 'Địch trúng chậm 40% trong 4 giây.', slowPct: 40, slowTicks: 40 },
+  stone: { name: 'Đá Tảng Núi', text: 'Địch trúng choáng 1 giây.', stunTicks: 10 },
+  arcane: { name: 'Sét Phép', text: '+30% sát thương.', dmgPct: 30 },
+  grove: { name: 'Rễ Quấn', text: 'Rễ cây giữ chân: địch trúng chậm 60% (mức trần) trong 2,5 giây.', slowPct: 60, slowTicks: 25 },
+  tide: { name: 'Sóng Thần', text: 'Đẩy lùi địch xa gấp đôi.', knockbackMult: 2 },
+  forge: { name: 'Thép Nung', text: 'Địch trúng bị bỏng 8/giây trong 4 giây.', burnDps: 8, burnTicks: 40 },
+  clock: { name: 'Ngưng Thời Gian', text: 'Địch trúng choáng 1,8 giây; −10% sát thương.', stunTicks: 18, dmgPct: -10 },
+  moon: { name: 'Lời Nguyền Trăng', text: 'Địch trúng nhiễm độc 6/giây trong 5 giây.', poisonDps: 6, poisonTicks: 50 },
+  nomad: { name: 'Mưa Tên', text: 'Vùng rơi rộng thêm 35%; −15% sát thương.', radiusPct: 35, dmgPct: -15 },
+};
 
 export const BATTLE = {
   field: FIELD,

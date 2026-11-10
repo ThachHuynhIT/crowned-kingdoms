@@ -4,7 +4,6 @@ import { rageStacks } from '../game/battle/targeting';
 import { BUILDING_FOOT_DY } from './BoardRenderer';
 import { projectileVisualHeight } from './projectileModel';
 import type Phaser from 'phaser';
-import { INTERVENTION } from '../data/battle';
 import { PALETTE } from '../data/palette';
 import { FLOAT_MS, FLOAT_POOL, FLOAT_RISE_PX } from '../data/juice';
 import { FONT_UI } from '../ui/theme';
@@ -89,11 +88,13 @@ export class FxRenderer {
           x: e.x,
           y: e.y,
           start: now,
-          radius: INTERVENTION.radius,
+          radius: world.boulderRadius,
           color: PALETTE.cream,
         });
         const at = iso(e);
-        this.play('boulderBlast', at.x, at.y, at.y + 4);
+        // The king's own impact (`power_<king>_impact`), else the plain boulder blast.
+        const own = world.setup.power ? `power_${world.setup.power}_impact` : null;
+        this.play(own !== null && FX_BY_ID.has(own) ? own : 'boulderBlast', at.x, at.y, at.y + 4);
       } else if (e.type === 'pulse' || e.type === 'revive') {
         this.pulse(world, e.id, now);
         if (e.type === 'revive' && e.id >= 0 && e.id < world.count) this.playOn(world, e.id, 'fx_revive');
@@ -234,10 +235,15 @@ export class FxRenderer {
         .setPosition(at.x, at.y)
         .setDepth(SHADOW_DEPTH)
         .setScale((0.5 + t * 0.5) * ISO_SPRITE_SCALE);
-      const rock = this.image(this.boulders, i, fxFrame('boulder'));
+      // The king's own falling object (`power_<king>_drop`), else the royal boulder.
+      const drop = world.setup.power ? FX_BY_ID.get(`power_${world.setup.power}_drop`) : undefined;
+      const frame = drop
+        ? codeFxFrame(drop.id, codeFxFrameAt(drop.frameMs, this.scene.time.now, true) ?? 0)
+        : fxFrame('boulder');
+      const rock = this.image(this.boulders, i, frame);
       // Accelerating fall: height × (1 − t²), straight down on screen.
       rock
-        .setScale(imageFrameScale(fxFrame('boulder')) * ISO_SPRITE_SCALE)
+        .setScale((drop ? 1 : imageFrameScale(frame)) * ISO_SPRITE_SCALE)
         .setPosition(at.x, Math.round(at.y + 4 - BOULDER_DROP_H * (1 - t * t)))
         .setDepth(at.y + 4);
     }

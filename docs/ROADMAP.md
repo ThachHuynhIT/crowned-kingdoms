@@ -16,7 +16,7 @@ Chơi được trong trình duyệt:
 - Lưu ván và tải lại: lưu tự động và nhiều bản lưu có tên.
 - Âm thanh sinh bằng code, màn Cài đặt, PWA chơi offline.
 - Art bằng ảnh cho cả 9 vua.
-- Cân bằng: 45,0–55,4% thắng mỗi vua, chênh lệch 10,4 điểm (bot `greedy`, 500 ván/vua, Gai 0).
+- Cân bằng: 56,6–62,4% thắng mỗi vua, chênh lệch 5,8 điểm (bot `greedy`, 500 ván/vua, Gai 0, 10/11/2026); chỉnh theo vua bằng `KING_TUNING` (phe mình), boss −10%.
 
 ## Việc tiếp theo: phản hồi của chủ dự án, chỉ trên PC (09/11/2026)
 
@@ -43,7 +43,7 @@ Tất cả là cảm nhận trên PC (desktop ≥ 768 px). Bố cục điện th
 **Trận**
 8. ✔ Công trình chỉ hiện thanh máu khi đã bị đánh.
 9. ✔ Trận không thắng vì hết giờ; Cuồng Nộ từ 60 giây, mỗi 60 giây +20% sát thương địch; quá 5 phút là thua. **Cân bằng chưa đạt**: `docs/balance/2026-11-10-draw-one-balance.md` (27–83% mỗi vua, độ khó dồn vào boss năm 20).
-10. Can thiệp của mỗi vua có hiệu ứng và hình dạng riêng (hiện cả 9 vua chung đá tảng). Art theo `docs/ART_STYLE.md`, vẽ thử một mẫu trước.
+10. ✔ Can Thiệp riêng của mỗi vua (10/11/2026): cùng điểm rơi và hồi chiêu, thêm hiệu ứng riêng (`INTERVENTION_POWERS`: chậm, choáng, +sát thương, đẩy xa, bỏng, độc, vùng rộng), vật rơi và vụ nổ vẽ bằng code (`src/render/fx/powers.ts`).
 
 **Cân bằng**
 11. Vua Phép Thuật yếu vì không có lính cận chiến chịu đòn: xem lại thẻ và luật của vua này, rồi chạy lại `npm run balance`. (Đo nhanh 10/11: Phép Thuật 57%, giờ không còn là vua yếu nhất; yếu nhất là Thuỷ Triều, Lúa Mì, Ánh Trăng.)

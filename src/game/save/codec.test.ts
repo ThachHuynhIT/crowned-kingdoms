@@ -52,8 +52,8 @@ const env = (
 
 describe('roundtrip', () => {
   // Seeds picked so the random bot survives long enough to meet a council (year 5) in every run (re-picked after
-  // the 2026-11-09 rebalance made foes stronger and runs shorter).
-  const runs = [trail(2, 'wheat'), trail(6, 'stone'), trail(7, 'arcane')];
+  // the 2026-11-09 rebalance made foes stronger and runs shorter, again on 2026-11-10 for the king powers).
+  const runs = [trail(13, 'wheat'), trail(7, 'stone'), trail(34, 'arcane')];
   const states = runs.flat();
 
   it('keeps every state of three full runs exactly, through JSON', () => {

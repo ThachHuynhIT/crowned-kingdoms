@@ -1,7 +1,7 @@
 /** Mục "Cơ chế" của Trợ giúp: chữ tiếng Việt, mọi con số đọc từ data/luật (không gõ lại). */
 import { RULES_FULL } from '../../data/rules';
 import { TICKS_PER_SECOND } from '../../core/SimClock';
-import { BATTLE } from '../../data/battle';
+import { BATTLE, INTERVENTION_POWERS } from '../../data/battle';
 import { BOSS_RULES } from '../../data/bosses';
 import { DECREE_RULES } from '../../data/decrees';
 import { BATTLE_DIRECTION_HELP } from '../../data/help';
@@ -105,6 +105,10 @@ export const mechanicEntries = (content: Content): readonly HelpEntry[] => {
     ]),
     entry('rewards', 'Thẻ thưởng', [
       `Thẻ thưởng cho ${REWARD.choices} lựa chọn (sắc lệnh Giao Thương tăng lên ${DECREE_RULES.reward}).`,
+    ]),
+    entry('powers', 'Can Thiệp riêng của vua', [
+      'Can Thiệp rơi vào chỗ bạn chọn, cùng hồi chiêu và sát thương gốc; mỗi vua thêm một hiệu ứng:',
+      ...content.kings().map((k) => `${k.nameVi}: ${INTERVENTION_POWERS[k.id].name}. ${INTERVENTION_POWERS[k.id].text}`),
     ]),
     entry('merchant', 'Thương nhân', [
       `Sau trận các năm ${RUN.merchantYears.join(', ')} (Vô tận: sau năm ${RULES_FULL.years}, cứ ${RUN.merchantEvery} năm) thương nhân bày ${REWARD.choices} thẻ.`,

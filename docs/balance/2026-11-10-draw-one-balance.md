@@ -47,3 +47,22 @@ Cấu hình: c5 + `FOE_MULT_BY_KING` đồng hồ 0,93, du mục 1,02 + Thương
 Chỉnh tiếp `FOE_MULT_BY_KING.forge` 1,07 → 1,1 và đo lại riêng Lò Rèn 500 ván: **60,4%**.
 
 **Kết quả cuối: ĐẠT.** Mọi vua trong 51,2–65,0%, chênh lệch 13,8 điểm (mục tiêu 35–65%, ≤ 15 điểm). Trung bình khoảng 58%.
+
+## Lượt 4 (tối 10/11/2026): Can Thiệp riêng, chỉnh phe mình, boss nhẹ hơn
+
+Chủ dự án: boss hơi khó; bỏ hệ số sức địch theo vua, chỉnh phía thẻ của vua.
+
+- `BOSS_HP_MULT` [0,9; 0,5; 0,24], `BOSS_DMG_MULT` [0,9; 0,58; 0,9] (−10%).
+- `FOE_MULT_BY_KING` bỏ. Thay bằng `KING_TUNING` (`src/data/battle.ts`): % máu và sát thương của mọi công trình, Ngai và lính phe mình khi vào trận.
+- Can Thiệp riêng của từng vua (`INTERVENTION_POWERS`).
+
+| Lượt | Kết quả |
+|---|---|
+| 100 ván, chỉnh nghịch đảo hệ số cũ | 41–77% (Can Thiệp mới và boss nhẹ làm ván dễ hơn) |
+| 100 ván, chỉnh lại | 47–64% |
+| 500 ván, cả 9 vua | 49,8–67,2% |
+| 500 ván, chỉnh 6 vua lệch | xem bảng dưới |
+
+**Kết quả cuối (500 ván/vua, seeds 1–500): ĐẠT.** phép 59,2% · đồng hồ 60,0% · lò rèn 60,2% · rừng 58,8% · trăng 62,4% · du mục 58,8% · đá 59,6% · thuỷ triều 56,6% · lúa 57,4%. Chênh lệch 5,8 điểm. `KING_TUNING`: lúa +2, đá −19, phép −14, rừng −2, thuỷ triều +9, lò rèn −21, đồng hồ +10, trăng −1, du mục −6.
+
+Ghi chú: `KING_TUNING` là một % chung cho cả bộ thẻ của vua. Chỉnh từng lá riêng lẻ là bước sau nếu cần.

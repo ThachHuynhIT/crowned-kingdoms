@@ -3,7 +3,7 @@
  * BATTLE.entityCap thực thể + pool BATTLE.projectileCap đạn. Id = chỉ số mảng, cấp tăng dần
  * theo thứ tự tạo, không tái dùng. Không dùng Rng; mọi thứ tự theo plot / thứ tự setup.
  */
-import { BATTLE, INTERVENTION, SPAWN_OFFSETS } from '../../data/battle';
+import { BATTLE, INTERVENTION, INTERVENTION_POWERS, KING_TUNING, SPAWN_OFFSETS } from '../../data/battle';
 import { BUILDING_FOOT_OFFSET } from '../../data/boardGeometry';
 import type { RunMode } from '../../data/rules';
 import { plotCoords } from '../run/boardGeometry';
@@ -384,6 +384,9 @@ export class BattleWorld {
    * đọc session hay RunState, không băm.
    */
   readonly geometry: RunMode;
+  /** `KING_TUNING` của vua người chơi (1 = không đổi). */
+  allyHpMult = 1;
+  allyDmgMult = 1;
 
   constructor(setup: BattleSetup) {
     this.setup = setup;
@@ -394,6 +397,16 @@ export class BattleWorld {
       this.boulderDmgPct = setup.intervention.dmgPct;
       this.boulderRadius = setup.intervention.radius;
       this.cooldownTicks = setup.intervention.cooldownTicks;
+    }
+    // Sức phe mình theo vua (`KING_TUNING`, 10/11/2026): nhân máu và sát thương của mọi thực thể phe mình khi tạo.
+    const tune = setup.power ? KING_TUNING[setup.power] : undefined;
+    this.allyHpMult = 1 + (tune?.hpPct ?? 0) / 100;
+    this.allyDmgMult = 1 + (tune?.dmgPct ?? 0) / 100;
+    // Can Thiệp riêng của vua (10/11/2026): cộng % sát thương và bán kính lên số đã chốt.
+    const power = setup.power ? INTERVENTION_POWERS[setup.power] : undefined;
+    if (power) {
+      this.boulderDmgPct += power.dmgPct ?? 0;
+      this.boulderRadius = (this.boulderRadius * (100 + (power.radiusPct ?? 0))) / 100;
     }
     if (setup.perk) {
       this.rageTick = setup.perk.rageTick ?? BATTLE.rageTick;
@@ -525,6 +538,16 @@ const setAttack = (w: BattleWorld, id: number, a: AttackStats | null): void => {
   w.rampCap[id] = a.rampCapPct;
 };
 
+/** Phe mình: máu và sát thương nhân `KING_TUNING` của vua (không đổi gì khi hệ số là 1). */
+const tuneAlly = (w: BattleWorld, id: number): void => {
+  if (w.allyHpMult !== 1) {
+    w.hp[id] = w.hp[id]! * w.allyHpMult;
+    w.maxHp[id] = w.maxHp[id]! * w.allyHpMult;
+    w.baseMaxHp[id] = w.baseMaxHp[id]! * w.allyHpMult;
+  }
+  if (w.allyDmgMult !== 1) w.dmg[id] = w.dmg[id]! * w.allyDmgMult;
+};
+
 const place = (w: BattleWorld, id: number, x: number, y: number): void => {
   w.x[id] = x;
   w.y[id] = y;
@@ -550,11 +573,12 @@ const addStructure = (w: BattleWorld, s: StructureSetup, isThrone: boolean): num
   w.targeting[id] = TARGET_CODE[s.targeting];
   w.label[id] = s.cardId;
   setAttack(w, id, s.attack);
+  tuneAlly(w, id);
   w.taunt[id] = s.taunt;
   if (s.pulse) {
     w.pulseEvery[id] = s.pulse.everyTicks;
     w.pulseRadius[id] = s.pulse.radius;
-    w.pulseDmg[id] = s.pulse.dmg;
+    w.pulseDmg[id] = s.pulse.dmg * w.allyDmgMult;
     w.pulseDmgType[id] = dmgTypeCode(s.pulse.dmgType);
     w.pulseStun[id] = s.pulse.stunTicks;
     w.pulseKnock[id] = s.pulse.knockback ?? 0;
@@ -641,6 +665,7 @@ export const addUnit = (
   w.shield[id] = stats.shield;
   w.deathSpawn[id] = stats.deathSpawn;
   initBehaviours(w, id, stats);
+  if (team === TEAM_ALLY) tuneAlly(w, id);
   w.events.push({ type: 'spawn', id });
   return id;
 };

@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest';
-import { FOE_MULT_BY_KING, BATTLE, BOSS_HP_MULT, ENEMY_LEVEL_STAT, ENEMY_PORTAL, ENEMY_STAT_MULT, WAVES } from '../../data/battle';
+import { BATTLE, BOSS_DMG_MULT, BOSS_HP_MULT, ENEMY_LEVEL_STAT, ENEMY_PORTAL, ENEMY_STAT_MULT, WAVES } from '../../data/battle';
 import { SPEC_MOVE_SCALE } from '../../data/boardGeometry';
 import { RULES_FULL } from '../../data/rules';
 import { CONTENT } from '../cards/registry';
@@ -37,8 +37,8 @@ describe('the boss in the battle setup', () => {
   it('carries the table stats unscaled by the foe level, spawn tick 120 and the first edge of wave 2', () => {
     const { state, setup } = bossYear(10);
     const boss = setup.boss!;
-    expect(boss.stats.hp).toBeCloseTo(2500 * FOE_MULT_BY_KING.wheat, 6);
-    expect(boss.stats).toMatchObject({ armor: 0.2, speed: 0.5 * SPEC_MOVE_SCALE, radius: 14, dmg: 40, cleave: 3, range: 4, interval: 20, unit: 'boss_bog_ogre' });
+    expect(boss.stats.hp).toBeCloseTo(2500 * BOSS_HP_MULT[0], 6);
+    expect(boss.stats).toMatchObject({ armor: 0.2, speed: 0.5 * SPEC_MOVE_SCALE, radius: 14, dmg: 40 * BOSS_DMG_MULT[0], cleave: 3, range: 4, interval: 20, unit: 'boss_bog_ogre' });
     expect(boss.spawnTick).toBe(WAVES.spawnTick[1]);
     expect(boss.edge).toBe(state.army!.waves[1]!.units[0]!.edge);
     expect(Object.keys(boss.summons).sort()).toEqual(['frog', 'hornet']);
@@ -50,9 +50,9 @@ describe('the boss in the battle setup', () => {
   });
 
   it('multiplies HP by 1 + 0.1 x thorn difficulty (difficulty 5 -> x1.5)', () => {
-    expect(bossYear(10, { difficulty: 5 }).setup.boss!.stats.hp).toBeCloseTo(2500 * FOE_MULT_BY_KING.wheat * 1.5, 6);
-    expect(bossYear(20, { difficulty: 5 }).setup.boss!.stats.hp).toBeCloseTo(9000 * BOSS_HP_MULT[1] * FOE_MULT_BY_KING.wheat * 1.5, 6);
-    expect(bossYear(10, { difficulty: 0 }).setup.boss!.stats.hp).toBeCloseTo(2500 * FOE_MULT_BY_KING.wheat, 6);
+    expect(bossYear(10, { difficulty: 5 }).setup.boss!.stats.hp).toBeCloseTo(2500 * BOSS_HP_MULT[0] * 1.5, 6);
+    expect(bossYear(20, { difficulty: 5 }).setup.boss!.stats.hp).toBeCloseTo(9000 * BOSS_HP_MULT[1] * 1.5, 6);
+    expect(bossYear(10, { difficulty: 0 }).setup.boss!.stats.hp).toBeCloseTo(2500 * BOSS_HP_MULT[0], 6);
   });
 });
 
@@ -89,7 +89,7 @@ describe('spawn_at120_once', () => {
     expect(w.y[id!]).toBe(edgePositions('W', 1)[0]!.y);
     run(w, 130);
     expect(bossOf(w)).toHaveLength(1);
-    expect(w.hp[id!]).toBeCloseTo(2500 * FOE_MULT_BY_KING.wheat, 6);
+    expect(w.hp[id!]).toBeCloseTo(2500 * BOSS_HP_MULT[0], 6);
   });
 
   it('spawns on each edge where asked', () => {
@@ -161,7 +161,7 @@ describe('setup_mirror', () => {
     const count = setup.structures.find((x) => x.plot === 8)!.spawn!.count;
     expect(m.count).toBe(Math.max(1, Math.floor(count / 2)));
     const mult = ENEMY_LEVEL_STAT[s.army!.level - 1]! * s.army!.statMult * ENEMY_STAT_MULT;
-    expect(m.stats.hp).toBeCloseTo(CONTENT.unit('militia').hp * mult * FOE_MULT_BY_KING.wheat);
+    expect(m.stats.hp).toBeCloseTo(CONTENT.unit('militia').hp * mult);
   });
 
   it('breaks a level tie with the lowest plot', () => {

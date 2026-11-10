@@ -1,7 +1,7 @@
 import Phaser from 'phaser';
 import type { EventBus } from '../core/events';
 import type { GameSpeed } from '../core/SimClock';
-import { INTERVENTION } from '../data/battle';
+import { INTERVENTION, INTERVENTION_POWERS } from '../data/battle';
 import { toCss } from '../data/palette';
 import { UI_PALETTE } from '../data/uiPalette';
 import type { BattleResult } from '../game/battle/types';
@@ -286,8 +286,8 @@ export class BattleHudScene extends Phaser.Scene {
         : undefined,
       onClick: () => this.toggleAim(),
       tooltip: tip([
-        'Can Thiệp (Space / B)',
-        'Thả Đá Tảng Hoàng Gia lên quân địch.',
+        `Can Thiệp: ${INTERVENTION_POWERS[this.controller.state.kingId].name} (Space / B)`,
+        INTERVENTION_POWERS[this.controller.state.kingId].text,
         'Bấm lại để huỷ.',
       ]),
     });
@@ -509,8 +509,10 @@ export class BattleHudScene extends Phaser.Scene {
     const at = this.aimAt;
     if (!this.aiming || !at) return;
     // A world circle of the boulder radius is a 2:1 ellipse on the isometric ground: r·√2 wide, r/√2 tall.
-    const rx = INTERVENTION.radius * Math.SQRT2 * this.view.zoom;
-    const ry = (INTERVENTION.radius / Math.SQRT2) * this.view.zoom;
+    // The battle's own radius (decrees and the king's power change it), else the base one.
+    const radius = this.world?.boulderRadius ?? INTERVENTION.radius;
+    const rx = radius * Math.SQRT2 * this.view.zoom;
+    const ry = (radius / Math.SQRT2) * this.view.zoom;
     const onField = worldAtView(this.view, this.screen(), at) !== null;
     g.lineStyle(3, UI_PALETTE.outline, 0.8);
     g.strokeEllipse(at.x, at.y, rx * 2, ry * 2);

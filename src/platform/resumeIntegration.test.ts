@@ -1,3 +1,4 @@
+import { KING_TUNING } from '../data/battle';
 /**
  * Reload matrix (spec §9.3, G3d D6): every kind of state a run can stop in is written through the
  * real coordinator to a fake IndexedDB, read back by a brand-new session and driven by a brand-new
@@ -275,8 +276,10 @@ describe('resume_matrix with G4 kings and perks', () => {
     await controller.whenIdle();
     const world = controller.runner!.world;
     expect(world.tick).toBe(0);
-    expect(world.hp[world.throneId]).toBe(290);
-    expect(world.maxHp[world.throneId]).toBe(290);
+    // 90 + 200 from the perk, then the Stone king's KING_TUNING on our side in battle.
+    const hp = 290 * (1 + KING_TUNING.stone.hpPct / 100);
+    expect(world.hp[world.throneId]).toBeCloseTo(hp, 9);
+    expect(world.maxHp[world.throneId]).toBeCloseTo(hp, 9);
   });
 
   it('a Nomad run that used its free move this year still has used it after a reload', async () => {
