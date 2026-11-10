@@ -17,6 +17,16 @@ describe('mechanicEntries', () => {
   const entries = mechanicEntries(CONTENT);
   const all = text(entries);
 
+  it('explains the merchant from the data: years, price, one card at most, a free skip', () => {
+    const merchant = entries.find((e) => e.title === 'Thương nhân');
+    expect(merchant).toBeDefined();
+    const lines = merchant!.lines.join(' ');
+    expect(lines).toContain(RUN.merchantYears.join(', '));
+    expect(lines).toContain(`${RUN.merchantPrice} vàng`);
+    expect(lines).toContain('tối đa 1');
+    expect(lines).toContain('miễn phí');
+  });
+
   it('covers every mandatory mechanic', () => {
     const titles = entries.map((e) => e.title).join('|');
     for (const topic of [

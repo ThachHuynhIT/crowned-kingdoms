@@ -1,4 +1,5 @@
 /** Mục "Cơ chế" của Trợ giúp: chữ tiếng Việt, mọi con số đọc từ data/luật (không gõ lại). */
+import { RULES_FULL } from '../../data/rules';
 import { TICKS_PER_SECOND } from '../../core/SimClock';
 import { BATTLE } from '../../data/battle';
 import { BOSS_RULES } from '../../data/bosses';
@@ -104,6 +105,10 @@ export const mechanicEntries = (content: Content): readonly HelpEntry[] => {
     ]),
     entry('rewards', 'Thẻ thưởng', [
       `Thẻ thưởng cho ${REWARD.choices} lựa chọn (sắc lệnh Giao Thương tăng lên ${DECREE_RULES.reward}).`,
+    ]),
+    entry('merchant', 'Thương nhân', [
+      `Sau trận các năm ${RUN.merchantYears.join(', ')} (Vô tận: sau năm ${RULES_FULL.years}, cứ ${RUN.merchantEvery} năm) thương nhân bày ${REWARD.choices} thẻ.`,
+      `Mỗi thẻ ${RUN.merchantPrice} vàng, mua tối đa 1 hoặc bỏ qua miễn phí; thẻ mua có trên tay năm sau như thẻ thưởng.`,
     ]),
   ];
 };
