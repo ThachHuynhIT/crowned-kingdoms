@@ -37,6 +37,8 @@ import {
 } from '../ui/planning/freeMoveModel';
 import { buildingRanges, entityRanges } from '../ui/info/rangeModel';
 import { unproject } from '../core/iso';
+import { atlasOpacity, boardBuildingBoxes } from '../render/pickBoxes';
+import { PICK_SLOP, pickSprite } from '../ui/info/spritePick';
 import {
   isOverview,
   keepView,
@@ -752,6 +754,13 @@ export class RealmScene extends Phaser.Scene {
       else this.setFreeMove(tap.next);
       return;
     }
+    // Not aiming: a tap on a building's art inspects it, wherever its diamond is (owner 10/11/2026).
+    const art = aiming === null ? this.buildingAt(cam) : null;
+    if (art !== null) {
+      this.setPendingBuy(null);
+      this.bus.emit('ui:inspect', { plot: state.plots[art]?.building ? art : null, x: pointer.x, y: pointer.y });
+      return;
+    }
     if (plot !== null && state.plots[plot]?.unlocked === false) {
       if (aiming !== null) {
         // A tap has no hover or long-press: say why the aimed card cannot go on this plot.
@@ -787,6 +796,17 @@ export class RealmScene extends Phaser.Scene {
     // Not aiming a card: a tap on a building asks the HUD for its info box, any other tap closes it.
     const built = plot !== null && this.controller.state.plots[plot]?.building ? plot : null;
     this.bus.emit('ui:inspect', { plot: built, x: pointer.x, y: pointer.y });
+  }
+
+  /**
+   * The building whose drawn art is under camera point `cam` (front-most first, transparent pixels let the one
+   * behind through), null when none: at the overview zoom most of a building stands over the plot behind it.
+   */
+  private buildingAt(cam: { x: number; y: number }): number | null {
+    const state = this.controller.state;
+    const zoom = this.cameras.main.zoom || 1;
+    const boxes = boardBuildingBoxes(this.textures, state, CONTENT, state.mode);
+    return pickSprite(boxes, cam, PICK_SLOP / zoom, atlasOpacity(this.textures));
   }
 
   // ---- camera ----------------------------------------------------------------------------

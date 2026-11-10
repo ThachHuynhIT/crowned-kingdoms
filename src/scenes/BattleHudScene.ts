@@ -47,6 +47,8 @@ import {
 } from '../ui/realm/realmLayout';
 import { overviewView, worldAtView, type CameraView } from '../ui/realm/cameraModel';
 import { unproject } from '../core/iso';
+import { atlasOpacity, battleEntityBoxes } from '../render/pickBoxes';
+import { PICK_SLOP, pickSprite } from '../ui/info/spritePick';
 import {
   addUiText,
   createButton,
@@ -528,8 +530,7 @@ export class BattleHudScene extends Phaser.Scene {
   private inspectAt(p: Point): void {
     const world = this.world;
     if (!world) return;
-    const at = unproject(screenToWorld(p, this.view.scroll, this.screen(), this.view.zoom));
-    const id = entityAt(world, at.x, at.y);
+    const id = this.entityUnder(world, p);
     if (id === null) {
       this.hideInfo();
       return;
@@ -537,6 +538,19 @@ export class BattleHudScene extends Phaser.Scene {
     this.inspected = id;
     this.bus.emit('ui:range-selection', { target: { kind: 'entity', id }, mode: 'selected' });
     this.showInfo(world, id, p);
+  }
+
+  /**
+   * The entity drawn under screen point `p`, ours or the enemy's (owner 10/11/2026): first by its sprite as drawn
+   * (units by their whole box, buildings by their opaque pixels, the front-most wins), then by its collision circle.
+   */
+  private entityUnder(world: BattleWorld, p: Point): number | null {
+    const cam = screenToWorld(p, this.view.scroll, this.screen(), this.view.zoom);
+    const boxes = battleEntityBoxes(this.textures, world);
+    const art = pickSprite(boxes, cam, PICK_SLOP / this.view.zoom, atlasOpacity(this.textures));
+    if (art !== null) return art;
+    const at = unproject(cam);
+    return entityAt(world, at.x, at.y);
   }
 
   private showInfo(world: BattleWorld, id: number, anchor: Point): void {
@@ -683,8 +697,7 @@ export class BattleHudScene extends Phaser.Scene {
     const world = this.world;
     let id: number | null = null;
     if (world && !this.aiming && !pointer.wasTouch) {
-      const at = unproject(screenToWorld({ x: pointer.x, y: pointer.y }, this.view.scroll, this.screen(), this.view.zoom));
-      id = entityAt(world, at.x, at.y);
+      id = this.entityUnder(world, { x: pointer.x, y: pointer.y });
     }
     if (id === this.hoveredId) return;
     this.hoveredId = id;

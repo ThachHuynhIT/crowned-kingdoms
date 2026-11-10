@@ -65,9 +65,12 @@ import {
   isDesktop,
   confirmFor,
   planningLayout,
+  screenToWorld,
   type PlanningLayout,
 } from '../ui/realm/realmLayout';
 import { overviewView, plotAtView, plotRectAtView, type CameraView } from '../ui/realm/cameraModel';
+import { atlasOpacity, boardBuildingBoxes } from '../render/pickBoxes';
+import { PICK_SLOP, pickSprite } from '../ui/info/spritePick';
 import {
   addUiText,
   textStyle,
@@ -995,7 +998,7 @@ export class PlanningHudScene extends Phaser.Scene {
     const plot =
       this.modalOpen() || state.phase !== 'planning'
         ? null
-        : this.plotAt({ x: pointer.x, y: pointer.y });
+        : (this.buildingAt({ x: pointer.x, y: pointer.y }) ?? this.plotAt({ x: pointer.x, y: pointer.y }));
     const built = plot !== null && state.plots[plot]?.building ? plot : null;
     if (built === this.hoveredPlot) return;
     this.hoveredPlot = built;
@@ -1031,6 +1034,14 @@ export class PlanningHudScene extends Phaser.Scene {
       p,
       this.controller.state.mode,
     );
+  }
+
+  /** Building whose drawn art is under screen point `p` (the same pick as a click in RealmScene), else null. */
+  private buildingAt(p: { x: number; y: number }): number | null {
+    const state = this.controller.state;
+    const cam = screenToWorld(p, this.view.scroll, { w: this.scale.width, h: this.scale.height }, this.view.zoom);
+    const boxes = boardBuildingBoxes(this.textures, state, CONTENT, state.mode);
+    return pickSprite(boxes, cam, PICK_SLOP / this.view.zoom, atlasOpacity(this.textures));
   }
 
   /** Screen rect of a plot through the live realm camera. */
