@@ -20732,3 +20732,333 @@ L4x216 copy (2026-11-10) made by tools/prepare_king_portraits.py --size 144x216 
     finalSize: 56x52
     anchor: feet
     notes: Level 3 architecture of arcane_ward (P2, 2026-11-10), magenta keyed and reduced to the level-1 width by docs/art-review/levels/make_levels.py; approved by Claude under the owner's delegation
+  - id: building_arcane_apprentices_l2_iso
+    path: public/assets/art/ai-v1/iso/arcane_apprentices_l2.png
+    category: building
+    origin: custom
+    source: docs/art-review/levels/arcane_apprentices/l2/source.png
+    creator: Project owner (OpenAI imagegen via Codex; prompt in docs/art-review/levels/arcane_apprentices/l2/prompt.md)
+    license: project-owned
+    attribution: false
+    redistribute: true
+    evidence: docs/art-review/levels/review.md
+    modified: true
+    nativeSize: 1024x1024
+    finalSize: 69x71
+    anchor: feet
+    notes: Level 2 architecture of arcane_apprentices (P2, 2026-11-10), magenta keyed and reduced to the level-1 width by docs/art-review/levels/make_levels.py; approved by Claude under the owner's delegation
+  - id: building_arcane_apprentices_l3_iso
+    path: public/assets/art/ai-v1/iso/arcane_apprentices_l3.png
+    category: building
+    origin: custom
+    source: docs/art-review/levels/arcane_apprentices/l3/source.png
+    creator: Project owner (OpenAI imagegen via Codex; prompt in docs/art-review/levels/arcane_apprentices/l3/prompt.md)
+    license: project-owned
+    attribution: false
+    redistribute: true
+    evidence: docs/art-review/levels/review.md
+    modified: true
+    nativeSize: 1024x1024
+    finalSize: 69x88
+    anchor: feet
+    notes: Level 3 architecture of arcane_apprentices (P2, 2026-11-10), magenta keyed and reduced to the level-1 width by docs/art-review/levels/make_levels.py; approved by Claude under the owner's delegation
+  - id: building_arcane_library_l2_iso
+    path: public/assets/art/ai-v1/iso/arcane_library_l2.png
+    category: building
+    origin: custom
+    source: docs/art-review/levels/arcane_library/l2/source.png
+    creator: Project owner (OpenAI imagegen via Codex; prompt in docs/art-review/levels/arcane_library/l2/prompt.md)
+    license: project-owned
+    attribution: false
+    redistribute: true
+    evidence: docs/art-review/levels/review.md
+    modified: true
+    nativeSize: 1024x1024
+    finalSize: 71x73
+    anchor: feet
+    notes: Level 2 architecture of arcane_library (P2, 2026-11-10), magenta keyed and reduced to the level-1 width by docs/art-review/levels/make_levels.py; approved by Claude under the owner's delegation
+  - id: building_arcane_library_l3_iso
+    path: public/assets/art/ai-v1/iso/arcane_library_l3.png
+    category: building
+    origin: custom
+    source: docs/art-review/levels/arcane_library/l3/source.png
+    creator: Project owner (OpenAI imagegen via Codex; prompt in docs/art-review/levels/arcane_library/l3/prompt.md)
+    license: project-owned
+    attribution: false
+    redistribute: true
+    evidence: docs/art-review/levels/review.md
+    modified: true
+    nativeSize: 1024x1024
+    finalSize: 71x84
+    anchor: feet
+    notes: Level 3 architecture of arcane_library (P2, 2026-11-10), magenta keyed and reduced to the level-1 width by docs/art-review/levels/make_levels.py; approved by Claude under the owner's delegation
+  - id: building_arcane_mage_tower_l2_iso
+    path: public/assets/art/ai-v1/iso/arcane_mage_tower_l2.png
+    category: building
+    origin: custom
+    source: docs/art-review/levels/arcane_mage_tower/l2/source.png
+    creator: Project owner (OpenAI imagegen via Codex; prompt in docs/art-review/levels/arcane_mage_tower/l2/prompt.md)
+    license: project-owned
+    attribution: false
+    redistribute: true
+    evidence: docs/art-review/levels/review.md
+    modified: true
+    nativeSize: 1024x1024
+    finalSize: 49x71
+    anchor: feet
+    notes: Level 2 architecture of arcane_mage_tower (P2, 2026-11-10), magenta keyed and reduced to the level-1 width by docs/art-review/levels/make_levels.py; approved by Claude under the owner's delegation
+  - id: building_arcane_mage_tower_l3_iso
+    path: public/assets/art/ai-v1/iso/arcane_mage_tower_l3.png
+    category: building
+    origin: custom
+    source: docs/art-review/levels/arcane_mage_tower/l3/source.png
+    creator: Project owner (OpenAI imagegen via Codex; prompt in docs/art-review/levels/arcane_mage_tower/l3/prompt.md)
+    license: project-owned
+    attribution: false
+    redistribute: true
+    evidence: docs/art-review/levels/review.md
+    modified: true
+    nativeSize: 1024x1024
+    finalSize: 49x90
+    anchor: feet
+    notes: Level 3 architecture of arcane_mage_tower (P2, 2026-11-10), magenta keyed and reduced to the level-1 width by docs/art-review/levels/make_levels.py; approved by Claude under the owner's delegation
+  - id: building_grove_bear_cave_l2_iso
+    path: public/assets/art/ai-v1/iso/grove_bear_cave_l2.png
+    category: building
+    origin: custom
+    source: docs/art-review/levels/grove_bear_cave/l2/source.png
+    creator: Project owner (OpenAI imagegen via Codex; prompt in docs/art-review/levels/grove_bear_cave/l2/prompt.md)
+    license: project-owned
+    attribution: false
+    redistribute: true
+    evidence: docs/art-review/levels/review.md
+    modified: true
+    nativeSize: 1024x1024
+    finalSize: 66x68
+    anchor: feet
+    notes: Level 2 architecture of grove_bear_cave (P2, 2026-11-10), magenta keyed and reduced to the level-1 width by docs/art-review/levels/make_levels.py; approved by Claude under the owner's delegation
+  - id: building_grove_bear_cave_l3_iso
+    path: public/assets/art/ai-v1/iso/grove_bear_cave_l3.png
+    category: building
+    origin: custom
+    source: docs/art-review/levels/grove_bear_cave/l3/source.png
+    creator: Project owner (OpenAI imagegen via Codex; prompt in docs/art-review/levels/grove_bear_cave/l3/prompt.md)
+    license: project-owned
+    attribution: false
+    redistribute: true
+    evidence: docs/art-review/levels/review.md
+    modified: true
+    nativeSize: 1024x1024
+    finalSize: 66x73
+    anchor: feet
+    notes: Level 3 architecture of grove_bear_cave (P2, 2026-11-10), magenta keyed and reduced to the level-1 width by docs/art-review/levels/make_levels.py; approved by Claude under the owner's delegation
+  - id: building_grove_sapling_l2_iso
+    path: public/assets/art/ai-v1/iso/grove_sapling_l2.png
+    category: building
+    origin: custom
+    source: docs/art-review/levels/grove_sapling/l2/source.png
+    creator: Project owner (OpenAI imagegen via Codex; prompt in docs/art-review/levels/grove_sapling/l2/prompt.md)
+    license: project-owned
+    attribution: false
+    redistribute: true
+    evidence: docs/art-review/levels/review.md
+    modified: true
+    nativeSize: 1024x1024
+    finalSize: 32x46
+    anchor: feet
+    notes: Level 2 architecture of grove_sapling (P2, 2026-11-10), magenta keyed and reduced to the level-1 width by docs/art-review/levels/make_levels.py; approved by Claude under the owner's delegation
+  - id: building_grove_sapling_l3_iso
+    path: public/assets/art/ai-v1/iso/grove_sapling_l3.png
+    category: building
+    origin: custom
+    source: docs/art-review/levels/grove_sapling/l3/source.png
+    creator: Project owner (OpenAI imagegen via Codex; prompt in docs/art-review/levels/grove_sapling/l3/prompt.md)
+    license: project-owned
+    attribution: false
+    redistribute: true
+    evidence: docs/art-review/levels/review.md
+    modified: true
+    nativeSize: 1024x1024
+    finalSize: 32x45
+    anchor: feet
+    notes: Level 3 architecture of grove_sapling (P2, 2026-11-10), magenta keyed and reduced to the level-1 width by docs/art-review/levels/make_levels.py; approved by Claude under the owner's delegation
+  - id: building_grove_spirit_stags_l2_iso
+    path: public/assets/art/ai-v1/iso/grove_spirit_stags_l2.png
+    category: building
+    origin: custom
+    source: docs/art-review/levels/grove_spirit_stags/l2/source.png
+    creator: Project owner (OpenAI imagegen via Codex; prompt in docs/art-review/levels/grove_spirit_stags/l2/prompt.md)
+    license: project-owned
+    attribution: false
+    redistribute: true
+    evidence: docs/art-review/levels/review.md
+    modified: true
+    nativeSize: 1024x1024
+    finalSize: 59x69
+    anchor: feet
+    notes: Level 2 architecture of grove_spirit_stags (P2, 2026-11-10), magenta keyed and reduced to the level-1 width by docs/art-review/levels/make_levels.py; approved by Claude under the owner's delegation
+  - id: building_grove_spirit_stags_l3_iso
+    path: public/assets/art/ai-v1/iso/grove_spirit_stags_l3.png
+    category: building
+    origin: custom
+    source: docs/art-review/levels/grove_spirit_stags/l3/source.png
+    creator: Project owner (OpenAI imagegen via Codex; prompt in docs/art-review/levels/grove_spirit_stags/l3/prompt.md)
+    license: project-owned
+    attribution: false
+    redistribute: true
+    evidence: docs/art-review/levels/review.md
+    modified: true
+    nativeSize: 1024x1024
+    finalSize: 59x77
+    anchor: feet
+    notes: Level 3 architecture of grove_spirit_stags (P2, 2026-11-10), magenta keyed and reduced to the level-1 width by docs/art-review/levels/make_levels.py; approved by Claude under the owner's delegation
+  - id: building_grove_spring_l2_iso
+    path: public/assets/art/ai-v1/iso/grove_spring_l2.png
+    category: building
+    origin: custom
+    source: docs/art-review/levels/grove_spring/l2/source.png
+    creator: Project owner (OpenAI imagegen via Codex; prompt in docs/art-review/levels/grove_spring/l2/prompt.md)
+    license: project-owned
+    attribution: false
+    redistribute: true
+    evidence: docs/art-review/levels/review.md
+    modified: true
+    nativeSize: 1024x1024
+    finalSize: 52x55
+    anchor: feet
+    notes: Level 2 architecture of grove_spring (P2, 2026-11-10), magenta keyed and reduced to the level-1 width by docs/art-review/levels/make_levels.py; approved by Claude under the owner's delegation
+  - id: building_grove_spring_l3_iso
+    path: public/assets/art/ai-v1/iso/grove_spring_l3.png
+    category: building
+    origin: custom
+    source: docs/art-review/levels/grove_spring/l3/source.png
+    creator: Project owner (OpenAI imagegen via Codex; prompt in docs/art-review/levels/grove_spring/l3/prompt.md)
+    license: project-owned
+    attribution: false
+    redistribute: true
+    evidence: docs/art-review/levels/review.md
+    modified: true
+    nativeSize: 1024x1024
+    finalSize: 52x60
+    anchor: feet
+    notes: Level 3 architecture of grove_spring (P2, 2026-11-10), magenta keyed and reduced to the level-1 width by docs/art-review/levels/make_levels.py; approved by Claude under the owner's delegation
+  - id: building_grove_thorn_tower_l2_iso
+    path: public/assets/art/ai-v1/iso/grove_thorn_tower_l2.png
+    category: building
+    origin: custom
+    source: docs/art-review/levels/grove_thorn_tower/l2/source.png
+    creator: Project owner (OpenAI imagegen via Codex; prompt in docs/art-review/levels/grove_thorn_tower/l2/prompt.md)
+    license: project-owned
+    attribution: false
+    redistribute: true
+    evidence: docs/art-review/levels/review.md
+    modified: true
+    nativeSize: 1024x1024
+    finalSize: 41x61
+    anchor: feet
+    notes: Level 2 architecture of grove_thorn_tower (P2, 2026-11-10), magenta keyed and reduced to the level-1 width by docs/art-review/levels/make_levels.py; approved by Claude under the owner's delegation
+  - id: building_grove_thorn_tower_l3_iso
+    path: public/assets/art/ai-v1/iso/grove_thorn_tower_l3.png
+    category: building
+    origin: custom
+    source: docs/art-review/levels/grove_thorn_tower/l3/source.png
+    creator: Project owner (OpenAI imagegen via Codex; prompt in docs/art-review/levels/grove_thorn_tower/l3/prompt.md)
+    license: project-owned
+    attribution: false
+    redistribute: true
+    evidence: docs/art-review/levels/review.md
+    modified: true
+    nativeSize: 1024x1024
+    finalSize: 41x69
+    anchor: feet
+    notes: Level 3 architecture of grove_thorn_tower (P2, 2026-11-10), magenta keyed and reduced to the level-1 width by docs/art-review/levels/make_levels.py; approved by Claude under the owner's delegation
+  - id: building_grove_throne_l2_iso
+    path: public/assets/art/ai-v1/iso/grove_throne_l2.png
+    category: building
+    origin: custom
+    source: docs/art-review/levels/grove_throne/l2/source.png
+    creator: Project owner (OpenAI imagegen via Codex; prompt in docs/art-review/levels/grove_throne/l2/prompt.md)
+    license: project-owned
+    attribution: false
+    redistribute: true
+    evidence: docs/art-review/levels/review.md
+    modified: true
+    nativeSize: 1024x1024
+    finalSize: 62x75
+    anchor: feet
+    notes: Level 2 architecture of grove_throne (P2, 2026-11-10), magenta keyed and reduced to the level-1 width by docs/art-review/levels/make_levels.py; approved by Claude under the owner's delegation
+  - id: building_grove_throne_l3_iso
+    path: public/assets/art/ai-v1/iso/grove_throne_l3.png
+    category: building
+    origin: custom
+    source: docs/art-review/levels/grove_throne/l3/source.png
+    creator: Project owner (OpenAI imagegen via Codex; prompt in docs/art-review/levels/grove_throne/l3/prompt.md)
+    license: project-owned
+    attribution: false
+    redistribute: true
+    evidence: docs/art-review/levels/review.md
+    modified: true
+    nativeSize: 1024x1024
+    finalSize: 62x81
+    anchor: feet
+    notes: Level 3 architecture of grove_throne (P2, 2026-11-10), magenta keyed and reduced to the level-1 width by docs/art-review/levels/make_levels.py; approved by Claude under the owner's delegation
+  - id: building_grove_treant_l2_iso
+    path: public/assets/art/ai-v1/iso/grove_treant_l2.png
+    category: building
+    origin: custom
+    source: docs/art-review/levels/grove_treant/l2/source.png
+    creator: Project owner (OpenAI imagegen via Codex; prompt in docs/art-review/levels/grove_treant/l2/prompt.md)
+    license: project-owned
+    attribution: false
+    redistribute: true
+    evidence: docs/art-review/levels/review.md
+    modified: true
+    nativeSize: 1024x1024
+    finalSize: 70x77
+    anchor: feet
+    notes: Level 2 architecture of grove_treant (P2, 2026-11-10), magenta keyed and reduced to the level-1 width by docs/art-review/levels/make_levels.py; approved by Claude under the owner's delegation
+  - id: building_grove_treant_l3_iso
+    path: public/assets/art/ai-v1/iso/grove_treant_l3.png
+    category: building
+    origin: custom
+    source: docs/art-review/levels/grove_treant/l3/source.png
+    creator: Project owner (OpenAI imagegen via Codex; prompt in docs/art-review/levels/grove_treant/l3/prompt.md)
+    license: project-owned
+    attribution: false
+    redistribute: true
+    evidence: docs/art-review/levels/review.md
+    modified: true
+    nativeSize: 1024x1024
+    finalSize: 70x79
+    anchor: feet
+    notes: Level 3 architecture of grove_treant (P2, 2026-11-10), magenta keyed and reduced to the level-1 width by docs/art-review/levels/make_levels.py; approved by Claude under the owner's delegation
+  - id: building_grove_wolf_den_l2_iso
+    path: public/assets/art/ai-v1/iso/grove_wolf_den_l2.png
+    category: building
+    origin: custom
+    source: docs/art-review/levels/grove_wolf_den/l2/source.png
+    creator: Project owner (OpenAI imagegen via Codex; prompt in docs/art-review/levels/grove_wolf_den/l2/prompt.md)
+    license: project-owned
+    attribution: false
+    redistribute: true
+    evidence: docs/art-review/levels/review.md
+    modified: true
+    nativeSize: 1024x1024
+    finalSize: 71x61
+    anchor: feet
+    notes: Level 2 architecture of grove_wolf_den (P2, 2026-11-10), magenta keyed and reduced to the level-1 width by docs/art-review/levels/make_levels.py; approved by Claude under the owner's delegation
+  - id: building_grove_wolf_den_l3_iso
+    path: public/assets/art/ai-v1/iso/grove_wolf_den_l3.png
+    category: building
+    origin: custom
+    source: docs/art-review/levels/grove_wolf_den/l3/source.png
+    creator: Project owner (OpenAI imagegen via Codex; prompt in docs/art-review/levels/grove_wolf_den/l3/prompt.md)
+    license: project-owned
+    attribution: false
+    redistribute: true
+    evidence: docs/art-review/levels/review.md
+    modified: true
+    nativeSize: 1024x1024
+    finalSize: 71x76
+    anchor: feet
+    notes: Level 3 architecture of grove_wolf_den (P2, 2026-11-10), magenta keyed and reduced to the level-1 width by docs/art-review/levels/make_levels.py; approved by Claude under the owner's delegation

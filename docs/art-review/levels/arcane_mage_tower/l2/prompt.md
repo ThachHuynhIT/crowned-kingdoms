@@ -25,3 +25,5 @@ PRODUCTION (overrides "transparent background" above): image 1024x1024, ONE flat
 filling the whole canvas, no gradient, no ground patch outside the building's own footprint, no cast shadow on the
 background; the building itself must not contain magenta. Draw it centred with padding, the whole building visible.
 When done, print the saved path and the image size.
+
+REVIEW FIX: keep EXACTLY the roof colour and material of the level-1 building: plain violet tiles with gold trim, NO green, NO stripes; the upgrade shows in height, stonework, gold ornaments and banners only.

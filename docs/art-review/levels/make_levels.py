@@ -124,10 +124,30 @@ def prompts(args):
     print(ROOT / '.superpowers/lv.sh')
 
 
+def background_mask(a: np.ndarray) -> np.ndarray:
+    """Magenta-like pixels CONNECTED TO THE IMAGE BORDER. A loose colour key alone also ate violet roofs and pink
+    stone inside the building (review 10/11/2026: Arcane roofs came out striped with holes)."""
+    r, g, b = a[..., 0], a[..., 1], a[..., 2]
+    cand = (r > 150) & (b > 150) & (g < 110)
+    # grow the border seed through candidate pixels (4-neighbour dilation until stable; numpy only)
+    bg = np.zeros_like(cand)
+    bg[0, :], bg[-1, :], bg[:, 0], bg[:, -1] = cand[0, :], cand[-1, :], cand[:, 0], cand[:, -1]
+    while True:
+        grown = bg.copy()
+        grown[1:, :] |= bg[:-1, :]
+        grown[:-1, :] |= bg[1:, :]
+        grown[:, 1:] |= bg[:, :-1]
+        grown[:, :-1] |= bg[:, 1:]
+        grown &= cand
+        if (grown == bg).all():
+            # plus pure-magenta pockets trapped inside the object (between crane arms…): far from any violet paint
+            return bg | ((r > 225) & (b > 225) & (g < 45))
+        bg = grown
+
+
 def cut_one(src: Path, width: int) -> Image.Image:
     a = np.array(Image.open(src).convert('RGB')).astype(float)
-    r, g, b = a[..., 0], a[..., 1], a[..., 2]
-    solid = ~((r > 150) & (b > 150) & (g < 110))
+    solid = ~background_mask(a)
     ys, xs = np.where(solid)
     y0, y1, x0, x1 = ys.min(), ys.max() + 1, xs.min(), xs.max() + 1
     crop, m = a[y0:y1, x0:x1], solid[y0:y1, x0:x1].astype(np.float32)
