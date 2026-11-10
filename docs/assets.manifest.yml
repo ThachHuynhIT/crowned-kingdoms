@@ -21302,3 +21302,243 @@ L4x216 copy (2026-11-10) made by tools/prepare_king_portraits.py --size 144x216 
     finalSize: 56x88
     anchor: feet
     notes: Level 3 architecture of tide_wave_tower (P2, 2026-11-10), magenta keyed and reduced to the level-1 width by docs/art-review/levels/make_levels.py; approved by Claude under the owner's delegation
+  - id: building_forge_armory_l2_iso
+    path: public/assets/art/ai-v1/iso/forge_armory_l2.png
+    category: building
+    origin: custom
+    source: docs/art-review/levels/forge_armory/l2/source.png
+    creator: Project owner (OpenAI imagegen via Codex; prompt in docs/art-review/levels/forge_armory/l2/prompt.md)
+    license: project-owned
+    attribution: false
+    redistribute: true
+    evidence: docs/art-review/levels/review.md
+    modified: true
+    nativeSize: 1024x1024
+    finalSize: 72x73
+    anchor: feet
+    notes: Level 2 architecture of forge_armory (P2, 2026-11-10), magenta keyed and reduced to the level-1 width by docs/art-review/levels/make_levels.py; approved by Claude under the owner's delegation
+  - id: building_forge_armory_l3_iso
+    path: public/assets/art/ai-v1/iso/forge_armory_l3.png
+    category: building
+    origin: custom
+    source: docs/art-review/levels/forge_armory/l3/source.png
+    creator: Project owner (OpenAI imagegen via Codex; prompt in docs/art-review/levels/forge_armory/l3/prompt.md)
+    license: project-owned
+    attribution: false
+    redistribute: true
+    evidence: docs/art-review/levels/review.md
+    modified: true
+    nativeSize: 1024x1024
+    finalSize: 72x77
+    anchor: feet
+    notes: Level 3 architecture of forge_armory (P2, 2026-11-10), magenta keyed and reduced to the level-1 width by docs/art-review/levels/make_levels.py; approved by Claude under the owner's delegation
+  - id: building_forge_blast_furnace_l2_iso
+    path: public/assets/art/ai-v1/iso/forge_blast_furnace_l2.png
+    category: building
+    origin: custom
+    source: docs/art-review/levels/forge_blast_furnace/l2/source.png
+    creator: Project owner (OpenAI imagegen via Codex; prompt in docs/art-review/levels/forge_blast_furnace/l2/prompt.md)
+    license: project-owned
+    attribution: false
+    redistribute: true
+    evidence: docs/art-review/levels/review.md
+    modified: true
+    nativeSize: 1024x1024
+    finalSize: 52x70
+    anchor: feet
+    notes: Level 2 architecture of forge_blast_furnace (P2, 2026-11-10), magenta keyed and reduced to the level-1 width by docs/art-review/levels/make_levels.py; approved by Claude under the owner's delegation
+  - id: building_forge_blast_furnace_l3_iso
+    path: public/assets/art/ai-v1/iso/forge_blast_furnace_l3.png
+    category: building
+    origin: custom
+    source: docs/art-review/levels/forge_blast_furnace/l3/source.png
+    creator: Project owner (OpenAI imagegen via Codex; prompt in docs/art-review/levels/forge_blast_furnace/l3/prompt.md)
+    license: project-owned
+    attribution: false
+    redistribute: true
+    evidence: docs/art-review/levels/review.md
+    modified: true
+    nativeSize: 1024x1024
+    finalSize: 52x72
+    anchor: feet
+    notes: Level 3 architecture of forge_blast_furnace (P2, 2026-11-10), magenta keyed and reduced to the level-1 width by docs/art-review/levels/make_levels.py; approved by Claude under the owner's delegation
+  - id: building_forge_bombardiers_l2_iso
+    path: public/assets/art/ai-v1/iso/forge_bombardiers_l2.png
+    category: building
+    origin: custom
+    source: docs/art-review/levels/forge_bombardiers/l2/source.png
+    creator: Project owner (OpenAI imagegen via Codex; prompt in docs/art-review/levels/forge_bombardiers/l2/prompt.md)
+    license: project-owned
+    attribution: false
+    redistribute: true
+    evidence: docs/art-review/levels/review.md
+    modified: true
+    nativeSize: 1024x1024
+    finalSize: 68x69
+    anchor: feet
+    notes: Level 2 architecture of forge_bombardiers (P2, 2026-11-10), magenta keyed and reduced to the level-1 width by docs/art-review/levels/make_levels.py; approved by Claude under the owner's delegation
+  - id: building_forge_bombardiers_l3_iso
+    path: public/assets/art/ai-v1/iso/forge_bombardiers_l3.png
+    category: building
+    origin: custom
+    source: docs/art-review/levels/forge_bombardiers/l3/source.png
+    creator: Project owner (OpenAI imagegen via Codex; prompt in docs/art-review/levels/forge_bombardiers/l3/prompt.md)
+    license: project-owned
+    attribution: false
+    redistribute: true
+    evidence: docs/art-review/levels/review.md
+    modified: true
+    nativeSize: 1024x1024
+    finalSize: 68x74
+    anchor: feet
+    notes: Level 3 architecture of forge_bombardiers (P2, 2026-11-10), magenta keyed and reduced to the level-1 width by docs/art-review/levels/make_levels.py; approved by Claude under the owner's delegation
+  - id: building_forge_flame_tower_l2_iso
+    path: public/assets/art/ai-v1/iso/forge_flame_tower_l2.png
+    category: building
+    origin: custom
+    source: docs/art-review/levels/forge_flame_tower/l2/source.png
+    creator: Project owner (OpenAI imagegen via Codex; prompt in docs/art-review/levels/forge_flame_tower/l2/prompt.md)
+    license: project-owned
+    attribution: false
+    redistribute: true
+    evidence: docs/art-review/levels/review.md
+    modified: true
+    nativeSize: 1024x1024
+    finalSize: 70x74
+    anchor: feet
+    notes: Level 2 architecture of forge_flame_tower (P2, 2026-11-10), magenta keyed and reduced to the level-1 width by docs/art-review/levels/make_levels.py; approved by Claude under the owner's delegation
+  - id: building_forge_flame_tower_l3_iso
+    path: public/assets/art/ai-v1/iso/forge_flame_tower_l3.png
+    category: building
+    origin: custom
+    source: docs/art-review/levels/forge_flame_tower/l3/source.png
+    creator: Project owner (OpenAI imagegen via Codex; prompt in docs/art-review/levels/forge_flame_tower/l3/prompt.md)
+    license: project-owned
+    attribution: false
+    redistribute: true
+    evidence: docs/art-review/levels/review.md
+    modified: true
+    nativeSize: 1024x1024
+    finalSize: 70x83
+    anchor: feet
+    notes: Level 3 architecture of forge_flame_tower (P2, 2026-11-10), magenta keyed and reduced to the level-1 width by docs/art-review/levels/make_levels.py; approved by Claude under the owner's delegation
+  - id: building_forge_iron_drake_l2_iso
+    path: public/assets/art/ai-v1/iso/forge_iron_drake_l2.png
+    category: building
+    origin: custom
+    source: docs/art-review/levels/forge_iron_drake/l2/source.png
+    creator: Project owner (OpenAI imagegen via Codex; prompt in docs/art-review/levels/forge_iron_drake/l2/prompt.md)
+    license: project-owned
+    attribution: false
+    redistribute: true
+    evidence: docs/art-review/levels/review.md
+    modified: true
+    nativeSize: 1024x1024
+    finalSize: 71x73
+    anchor: feet
+    notes: Level 2 architecture of forge_iron_drake (P2, 2026-11-10), magenta keyed and reduced to the level-1 width by docs/art-review/levels/make_levels.py; approved by Claude under the owner's delegation
+  - id: building_forge_iron_drake_l3_iso
+    path: public/assets/art/ai-v1/iso/forge_iron_drake_l3.png
+    category: building
+    origin: custom
+    source: docs/art-review/levels/forge_iron_drake/l3/source.png
+    creator: Project owner (OpenAI imagegen via Codex; prompt in docs/art-review/levels/forge_iron_drake/l3/prompt.md)
+    license: project-owned
+    attribution: false
+    redistribute: true
+    evidence: docs/art-review/levels/review.md
+    modified: true
+    nativeSize: 1024x1024
+    finalSize: 71x75
+    anchor: feet
+    notes: Level 3 architecture of forge_iron_drake (P2, 2026-11-10), magenta keyed and reduced to the level-1 width by docs/art-review/levels/make_levels.py; approved by Claude under the owner's delegation
+  - id: building_forge_smithy_l2_iso
+    path: public/assets/art/ai-v1/iso/forge_smithy_l2.png
+    category: building
+    origin: custom
+    source: docs/art-review/levels/forge_smithy/l2/source.png
+    creator: Project owner (OpenAI imagegen via Codex; prompt in docs/art-review/levels/forge_smithy/l2/prompt.md)
+    license: project-owned
+    attribution: false
+    redistribute: true
+    evidence: docs/art-review/levels/review.md
+    modified: true
+    nativeSize: 1024x1024
+    finalSize: 63x70
+    anchor: feet
+    notes: Level 2 architecture of forge_smithy (P2, 2026-11-10), magenta keyed and reduced to the level-1 width by docs/art-review/levels/make_levels.py; approved by Claude under the owner's delegation
+  - id: building_forge_smithy_l3_iso
+    path: public/assets/art/ai-v1/iso/forge_smithy_l3.png
+    category: building
+    origin: custom
+    source: docs/art-review/levels/forge_smithy/l3/source.png
+    creator: Project owner (OpenAI imagegen via Codex; prompt in docs/art-review/levels/forge_smithy/l3/prompt.md)
+    license: project-owned
+    attribution: false
+    redistribute: true
+    evidence: docs/art-review/levels/review.md
+    modified: true
+    nativeSize: 1024x1024
+    finalSize: 63x71
+    anchor: feet
+    notes: Level 3 architecture of forge_smithy (P2, 2026-11-10), magenta keyed and reduced to the level-1 width by docs/art-review/levels/make_levels.py; approved by Claude under the owner's delegation
+  - id: building_forge_swordsmen_l2_iso
+    path: public/assets/art/ai-v1/iso/forge_swordsmen_l2.png
+    category: building
+    origin: custom
+    source: docs/art-review/levels/forge_swordsmen/l2/source.png
+    creator: Project owner (OpenAI imagegen via Codex; prompt in docs/art-review/levels/forge_swordsmen/l2/prompt.md)
+    license: project-owned
+    attribution: false
+    redistribute: true
+    evidence: docs/art-review/levels/review.md
+    modified: true
+    nativeSize: 1024x1024
+    finalSize: 76x65
+    anchor: feet
+    notes: Level 2 architecture of forge_swordsmen (P2, 2026-11-10), magenta keyed and reduced to the level-1 width by docs/art-review/levels/make_levels.py; approved by Claude under the owner's delegation
+  - id: building_forge_swordsmen_l3_iso
+    path: public/assets/art/ai-v1/iso/forge_swordsmen_l3.png
+    category: building
+    origin: custom
+    source: docs/art-review/levels/forge_swordsmen/l3/source.png
+    creator: Project owner (OpenAI imagegen via Codex; prompt in docs/art-review/levels/forge_swordsmen/l3/prompt.md)
+    license: project-owned
+    attribution: false
+    redistribute: true
+    evidence: docs/art-review/levels/review.md
+    modified: true
+    nativeSize: 1024x1024
+    finalSize: 76x76
+    anchor: feet
+    notes: Level 3 architecture of forge_swordsmen (P2, 2026-11-10), magenta keyed and reduced to the level-1 width by docs/art-review/levels/make_levels.py; approved by Claude under the owner's delegation
+  - id: building_forge_throne_l2_iso
+    path: public/assets/art/ai-v1/iso/forge_throne_l2.png
+    category: building
+    origin: custom
+    source: docs/art-review/levels/forge_throne/l2/source.png
+    creator: Project owner (OpenAI imagegen via Codex; prompt in docs/art-review/levels/forge_throne/l2/prompt.md)
+    license: project-owned
+    attribution: false
+    redistribute: true
+    evidence: docs/art-review/levels/review.md
+    modified: true
+    nativeSize: 1024x1024
+    finalSize: 50x65
+    anchor: feet
+    notes: Level 2 architecture of forge_throne (P2, 2026-11-10), magenta keyed and reduced to the level-1 width by docs/art-review/levels/make_levels.py; approved by Claude under the owner's delegation
+  - id: building_forge_throne_l3_iso
+    path: public/assets/art/ai-v1/iso/forge_throne_l3.png
+    category: building
+    origin: custom
+    source: docs/art-review/levels/forge_throne/l3/source.png
+    creator: Project owner (OpenAI imagegen via Codex; prompt in docs/art-review/levels/forge_throne/l3/prompt.md)
+    license: project-owned
+    attribution: false
+    redistribute: true
+    evidence: docs/art-review/levels/review.md
+    modified: true
+    nativeSize: 1024x1024
+    finalSize: 50x76
+    anchor: feet
+    notes: Level 3 architecture of forge_throne (P2, 2026-11-10), magenta keyed and reduced to the level-1 width by docs/art-review/levels/make_levels.py; approved by Claude under the owner's delegation
