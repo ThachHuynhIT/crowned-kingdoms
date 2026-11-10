@@ -187,7 +187,9 @@ export const IMAGE_BUILDINGS: Readonly<Record<string, string>> = {
  * its L2 and levels 3–5 its L3 (levels 4 and 5 are told apart by the stars). Only the levels listed here are loaded;
  * a missing level falls back to the next lower one, then to the base image. Files sit next to the base image.
  */
-export const IMAGE_BUILDING_LEVELS: Readonly<Partial<Record<string, readonly (2 | 3)[]>>> = {};
+export const IMAGE_BUILDING_LEVELS: Readonly<Partial<Record<string, readonly (2 | 3)[]>>> = {
+  wheat_militia: [2, 3],
+};
 
 /** Which architecture a building level shows: 1 (base), 2 or 3. */
 export const levelArt = (level: number): 1 | 2 | 3 => (level >= 3 ? 3 : level === 2 ? 2 : 1);

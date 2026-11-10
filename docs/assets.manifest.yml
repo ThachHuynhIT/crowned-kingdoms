@@ -20132,3 +20132,33 @@ L4x216 copy (2026-11-10) made by tools/prepare_king_portraits.py --size 144x216 
     finalSize: 32x30
     anchor: feet
     notes: Small field decoration (P2, 2026-11-10), magenta keyed and box-reduced by docs/art-review/iso-board/decor/make_decor.py; approved by Claude under the owner's delegation
+  - id: building_wheat_militia_l2_iso
+    path: public/assets/art/ai-v1/iso/wheat_militia_l2.png
+    category: building
+    origin: custom
+    source: docs/art-review/levels/wheat_militia/l2/source.png
+    creator: Project owner (OpenAI imagegen via Codex; prompt in docs/art-review/levels/wheat_militia/l2/prompt.md)
+    license: project-owned
+    attribution: false
+    redistribute: true
+    evidence: docs/art-review/levels/review.md
+    modified: true
+    nativeSize: 1024x1024
+    finalSize: 62x75
+    anchor: feet
+    notes: Level 2 architecture of wheat_militia (P2, 2026-11-10), magenta keyed and reduced to the level-1 width by docs/art-review/levels/make_levels.py; approved by Claude under the owner's delegation
+  - id: building_wheat_militia_l3_iso
+    path: public/assets/art/ai-v1/iso/wheat_militia_l3.png
+    category: building
+    origin: custom
+    source: docs/art-review/levels/wheat_militia/l3/source.png
+    creator: Project owner (OpenAI imagegen via Codex; prompt in docs/art-review/levels/wheat_militia/l3/prompt.md)
+    license: project-owned
+    attribution: false
+    redistribute: true
+    evidence: docs/art-review/levels/review.md
+    modified: true
+    nativeSize: 1024x1024
+    finalSize: 62x76
+    anchor: feet
+    notes: Level 3 architecture of wheat_militia (P2, 2026-11-10), magenta keyed and reduced to the level-1 width by docs/art-review/levels/make_levels.py; approved by Claude under the owner's delegation
