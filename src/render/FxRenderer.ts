@@ -15,6 +15,7 @@ import { ISO_SPRITE_SCALE, iso } from './isoView';
 import { SPRITES_KEY, buildingFrame, fxFrame, imageFrameScale } from './atlas';
 import { arrowDir } from './fxArt';
 import { CODE_FX, type CodeFxDef } from './codeFx';
+import { statusFxFor } from './fxCues';
 import { CODE_FX_DIRS, codeFxFrame, codeFxFrameAt, projectileFxFor } from './projectileFx';
 
 const FX_BY_ID: ReadonlyMap<string, CodeFxDef> = new Map(CODE_FX.map((d) => [d.id, d]));
@@ -28,6 +29,8 @@ const SHADOW_DEPTH = 3;
 const SHOT_POOL = 96;
 /** At most this many Rage auras (one per enemy unit) are drawn. */
 const AURA_POOL = 60;
+/** At most this many status effects are drawn at once. */
+const STATUS_POOL = 80;
 const RING_MS = 320;
 const BUBBLE_MS = 600;
 const RING_DEPTH = 99_500;
@@ -57,6 +60,8 @@ export class FxRenderer {
   private readonly shots: { img: Phaser.GameObjects.Image; glow: Phaser.GameObjects.Image; def: CodeFxDef; start: number }[] = [];
   /** Looping Rage auras under enemy units while the rage is on. */
   private readonly auras: Phaser.GameObjects.Image[] = [];
+  /** Looping status effects (one per affected entity). */
+  private readonly statuses: Phaser.GameObjects.Image[] = [];
   /** Pulse bursts and shield bubbles, pooled separately from the hit sparks. */
   private readonly bursts: Phaser.GameObjects.Image[] = [];
   private readonly rings: Ring[] = [];
@@ -99,6 +104,35 @@ export class FxRenderer {
     this.syncProjectiles(world, a);
     this.syncBoulders(world, a);
     this.syncAuras(world, now);
+    this.syncStatuses(world, now);
+  }
+
+  /**
+   * A one-shot code effect at a screen point on the board (place, move, upgrade): feet-anchored effects stand on
+   * the point, others centre on it. Drawn above the buildings of that row.
+   */
+  playAt(fx: string, x: number, y: number): void {
+    this.play(fx, x, y, y + 40);
+  }
+
+  /** One looping status effect (stun, disabled, burn, poison, slow) on every living entity that has one. */
+  private syncStatuses(world: BattleWorld, now: number): void {
+    let used = 0;
+    for (let id = 0; id < world.count && used < STATUS_POOL; id++) {
+      const fx = statusFxFor(world, id);
+      const def = fx === null ? undefined : FX_BY_ID.get(fx);
+      if (def === undefined) continue;
+      const r = world.radius[id]!;
+      const { x, y } = iso({ x: world.x[id]!, y: world.y[id]! });
+      const feet = def.anchor === 'feet';
+      this.image(this.statuses, used, codeFxFrame(def.id, codeFxFrameAt(def.frameMs, now, true) ?? 0))
+        .setScale(ISO_SPRITE_SCALE)
+        .setOrigin(0.5, feet ? 1 : 0.5)
+        .setPosition(Math.round(x), Math.round(feet ? y + 2 : y - r))
+        .setDepth(y + r + 3);
+      used += 1;
+    }
+    for (let i = used; i < this.statuses.length; i++) this.statuses[i]!.setVisible(false);
   }
 
   /** Damage numbers, rings and death pops finish in real time even after the runner has ended. */
@@ -115,7 +149,7 @@ export class FxRenderer {
   }
 
   destroy(): void {
-    for (const list of [this.projectiles, this.boulders, this.shadows, this.auras, this.bursts]) {
+    for (const list of [this.projectiles, this.boulders, this.shadows, this.auras, this.statuses, this.bursts]) {
       for (const img of list) {
         this.scene.tweens.killTweensOf(img);
         img.destroy();

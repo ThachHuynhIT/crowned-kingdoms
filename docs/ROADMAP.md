@@ -64,7 +64,7 @@ Tất cả là cảm nhận trên PC (desktop ≥ 768 px). Bố cục điện th
 
 **Asset còn thiếu (10/11/2026, Codex vẽ, Claude duyệt theo uỷ quyền; xem `/admin` và `/admin/fx`)**
 17. ✔ Kho asset `/admin` liệt kê mọi PNG của game (`python tools/build_game_assets.py`); trang `/admin/fx` xem hiệu ứng vẽ bằng code.
-18. ✔ P0 đạn (14) và VFX (20) vẽ bằng code (`src/render/codeFx.ts`, `src/render/fx/`), đã gắn vào trận: mỗi lính/công trình bắn đạn riêng (`src/render/projectileFx.ts`), trúng đòn, lính tan, công trình sụp, đá tảng nổ, hồi sinh, vòng lửa Cuồng Nộ. VFX trạng thái (bỏng, độc, chậm…) và bàn cờ (đặt, dời, nâng cấp) đã vẽ nhưng chưa gắn.
+18. ✔ P0 đạn (14) và VFX (20) vẽ bằng code (`src/render/codeFx.ts`, `src/render/fx/`), đã gắn vào trận: mỗi lính/công trình bắn đạn riêng (`src/render/projectileFx.ts`), trúng đòn, lính tan, công trình sụp, đá tảng nổ, hồi sinh, vòng lửa Cuồng Nộ. Trạng thái (choáng, vô hiệu, bỏng, độc, chậm) lặp trên lính/công trình đang bị; bàn cờ: đặt, dời, nâng cấp công trình (`src/render/fxCues.ts`).
 19. ✔ P0 icon (27): chỉ số, trạng thái, hành động (`docs/art-review/g3e/icons/review-2026-11-10.md`); hiện ở đầu dòng hộp thông tin.
 20. ✔ P2 đồ trang trí sân (10): thùng, rơm, biển, xe lúa rải trong sân; rào và cổng chỉ ở kho asset.
 21. Còn lại (P2, cần sửa renderer trước khi vẽ): công trình cấp 2/3 và hoạt ảnh (195), Ngai cấp 2/3 và hoạt ảnh (27), bộ frame lính mở rộng (42), mặt nạ nền dual-grid (76), nền menu và màn thắng/thua (6), ảnh phát hành (5).

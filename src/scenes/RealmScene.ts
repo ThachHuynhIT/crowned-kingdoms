@@ -16,7 +16,8 @@ import type { PlayTarget, RunState } from '../game/run/state';
 import type { RunMode } from '../data/rules';
 import type { KingId, PerkId } from '../data/types';
 import { newRun } from '../game/run/yearFlow';
-import { BoardRenderer } from '../render/BoardRenderer';
+import { BUILDING_FOOT_DY, BoardRenderer, buildingFoot } from '../render/BoardRenderer';
+import { boardFxCues } from '../render/fxCues';
 import { FieldRenderer } from '../render/FieldRenderer';
 import { FxRenderer } from '../render/FxRenderer';
 import { RangeRenderer } from '../render/RangeRenderer';
@@ -245,8 +246,15 @@ export class RealmScene extends Phaser.Scene {
     bus.on('run:state', ({ state }) => {
       if (this.soundState !== null && audio)
         for (const id of transitionCues(this.soundState, state)) audio.play(id);
+      const before = this.soundState;
       this.soundState = state;
       this.onState(state);
+      // Place / move / upgrade effects on the board for an accepted planning change (render only).
+      if (before !== null && this.fx && state.phase === 'planning')
+        for (const cue of boardFxCues(before, state)) {
+          const foot = buildingFoot(cue.plot, state.mode);
+          this.fx.playAt(cue.fx, foot.x, cue.fx === 'fx_upgrade' ? foot.y : foot.y - BUILDING_FOOT_DY);
+        }
     });
     bus.on('battle:started', () => {
       audio?.setMusic('battle');
