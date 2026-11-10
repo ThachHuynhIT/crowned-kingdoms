@@ -1,3 +1,4 @@
+import { INTERVENTION_POWERS } from '../data/battle';
 import { describe, expect, it } from 'vitest';
 import { CODE_FX } from './codeFx';
 import type { PixelCanvas } from './pixel';
@@ -13,6 +14,29 @@ function solidCount(canvas: PixelCanvas): number {
 }
 
 describe('CODE_FX', () => {
+  it('provides one drop and impact per intervention power', () => {
+    const powers = CODE_FX.filter((fx) => fx.group === 'Can Thiệp');
+    expect(powers).toHaveLength(Object.keys(INTERVENTION_POWERS).length * 2);
+    for (const king of Object.keys(INTERVENTION_POWERS)) for (const phase of ['drop', 'impact']) {
+      const matches = powers.filter((fx) => fx.id === `power_${king}_${phase}`);
+      expect(matches).toHaveLength(1);
+      const def = matches[0];
+      if (!def) throw new Error(`Missing ${king} ${phase}`);
+      expect(def.anchor).toBe('centre');
+      expect(def.kind).toBe(phase === 'drop' ? 'projectile' : 'effect');
+      expect(def.loop).toBe(phase === 'drop');
+      if (phase === 'drop') {
+        expect(def.size).toEqual({ w: 24, h: 24 });
+        expect([1, 2]).toContain(def.frames);
+      } else {
+        expect([7, 8]).toContain(def.frames);
+        const duration = def.frameMs.reduce((sum, ms) => sum + ms, 0);
+        expect(duration).toBeGreaterThanOrEqual(460);
+        expect(duration).toBeLessThanOrEqual(560);
+        if (def.paintGlow) for (let i = 3; i < def.frames; i++) expect(solidCount(def.paintGlow(i))).toBe(0);
+      }
+    }
+  });
   it('has unique ids', () => {
     expect(new Set(CODE_FX.map((fx) => fx.id)).size).toBe(CODE_FX.length);
   });

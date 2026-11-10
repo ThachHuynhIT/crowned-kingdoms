@@ -46,7 +46,7 @@ for (const kind of ['effect', 'projectile']) {
   section.append(el('h2', kind === 'effect' ? 'Hiệu ứng' : 'Đạn'));
   $('effects', HTMLElement).append(section);
   if (kind === 'effect') {
-    for (const name of ['Trạng thái', 'Chiến đấu', 'Sự kiện', 'Bàn cờ', 'Đặc biệt']) {
+    for (const name of new Set(CODE_FX.filter((def) => def.kind === 'effect').map((def) => def.group ?? 'Đặc biệt'))) {
       const subgroup = el('section'), children = el('div', undefined, 'cards fx-cards');
       subgroup.append(el('h3', name), children); section.append(subgroup); groups.set(name, children);
     }

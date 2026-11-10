@@ -1,3 +1,4 @@
+import { POWERS } from './fx/powers';
 import { PROJECTILES } from './fx/projectiles';
 import type { PixelCanvas } from './pixel';
 import { IMPACT_FRAMES, IMPACT_FRAME_MS, IMPACT_SIZE, paintImpactFrame, paintImpactGlow } from './impactFx';
@@ -39,5 +40,6 @@ export const CODE_FX: readonly CodeFxDef[] = [
   arrowHit, unitDeath, boulderBlast, buildingCollapse, rageAura,
   ...PROJECTILES,
   ...VFX,
+  ...POWERS,
   ...LEGACY_FX,
 ];
