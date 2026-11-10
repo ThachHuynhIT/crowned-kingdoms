@@ -17,3 +17,10 @@ Danh sách P2 `building_<card>_l2/_l3` trong `tools/asset-admin/planned.json`. D
 - **Thuỷ Triều (8):** pháo, cảng, nhà móc câu, xoáy kraken, tàu cướp biển, Ngai, rương báu, tháp sóng. Bảng `sheet-tide.png`. ĐÃ DUYỆT.
 - **Lò Rèn (8):** kho vũ khí, lò cao, nhà pháo thủ, tháp lửa, hang rồng sắt, lò rèn, nhà kiếm sĩ, Ngai. Bảng `sheet-forge.png`. ĐÃ DUYỆT. Ghi chú: ảnh cấp 1 có sẵn của tháp lửa, hang rồng sắt và nhà pháo thủ có viền xanh lá mảnh ở mép (lỗi cũ của ảnh gốc, chưa sửa).
 - **Đồng Hồ (8):** tháp chuông, xưởng người khổng lồ, tháp bánh răng, xưởng nhện, xưởng lò xo, pháo hơi nước, Ngai, xưởng lính lên dây. Bảng `sheet-clock.png`. ĐÃ DUYỆT.
+
+## Tạm dừng 10/11/2026 (chủ dự án bảo dừng)
+
+- Đã duyệt và đưa vào game: 55/74 (Lúa Mì, Đá Núi, Phép Thuật, Rừng Xanh, Thuỷ Triều, Lò Rèn, Đồng Hồ).
+- Đã vẽ nhưng **chưa cắt, chưa duyệt**: Ánh Trăng `moon_altar`, `moon_crypt`, `moon_reaper_shrine` (nguồn ở `<card>/l2|l3/source.png`).
+- Chưa vẽ: 5 công trình còn lại của Ánh Trăng, 7 của Du Mục, 4 trung lập. Prompt đã có sẵn.
+- Vẽ tiếp: `python docs/art-review/levels/make_levels.py prompts moon nomad neutral` rồi chạy `.superpowers/lv.sh` (bỏ dòng các thẻ đã có `source.png`), sau đó `cut <vua>`, duyệt, `register <vua>`.
