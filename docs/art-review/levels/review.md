@@ -9,3 +9,4 @@ Danh sách P2 `building_<card>_l2/_l3` trong `tools/asset-admin/planned.json`. D
 ## Theo vua
 
 - **Lúa Mì (7 + mẫu):** ruộng (L3 thêm chòi canh), kho thóc, trại nông dân, nhà thợ gặt, bù nhìn, Ngai, cối xay gió. Bảng `sheet-wheat.png`. ĐÃ DUYỆT cả nhóm.
+- **Đá Núi (7/8):** máy bắn đá, tháp pha lê, lò golem, mỏ, tim núi, Ngai, tường. Bảng `sheet-stone.png`. ĐÃ DUYỆT. **Mỏ đá (`stone_quarry`)**: L2/L3 gần như y hệt L1, vẽ lại với yêu cầu rõ hơn.
