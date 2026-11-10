@@ -62,6 +62,13 @@ Tất cả là cảm nhận trên PC (desktop ≥ 768 px). Bố cục điện th
 15. ✔ Bỏ viền sẫm của cây, đá, bụi trang trí (`tools/strip_decor_outline.py`, ảnh gốc giữ ở `docs/art-review/decor-outline/originals/`).
 16. ✔ Âm thanh nhỏ còn 1/3 (`MASTER_OUTPUT` 0,25 → 0,083); tiếng đánh, bắn, va chạm trong trận nhỏ thêm một nửa (`BATTLE_HIT_GAIN`).
 
+**Asset còn thiếu (10/11/2026, Codex vẽ, Claude duyệt theo uỷ quyền; xem `/admin` và `/admin/fx`)**
+17. ✔ Kho asset `/admin` liệt kê mọi PNG của game (`python tools/build_game_assets.py`); trang `/admin/fx` xem hiệu ứng vẽ bằng code.
+18. ✔ P0 đạn (14) và VFX (20) vẽ bằng code (`src/render/codeFx.ts`, `src/render/fx/`), đã gắn vào trận: mỗi lính/công trình bắn đạn riêng (`src/render/projectileFx.ts`), trúng đòn, lính tan, công trình sụp, đá tảng nổ, hồi sinh, vòng lửa Cuồng Nộ. VFX trạng thái (bỏng, độc, chậm…) và bàn cờ (đặt, dời, nâng cấp) đã vẽ nhưng chưa gắn.
+19. ✔ P0 icon (27): chỉ số, trạng thái, hành động (`docs/art-review/g3e/icons/review-2026-11-10.md`); hiện ở đầu dòng hộp thông tin.
+20. ✔ P2 đồ trang trí sân (10): thùng, rơm, biển, xe lúa rải trong sân; rào và cổng chỉ ở kho asset.
+21. Còn lại (P2, cần sửa renderer trước khi vẽ): công trình cấp 2/3 và hoạt ảnh (195), Ngai cấp 2/3 và hoạt ảnh (27), bộ frame lính mở rộng (42), mặt nạ nền dual-grid (76), nền menu và màn thắng/thua (6), ảnh phát hành (5).
+
 ## Để sau: điện thoại (chỉ làm khi chủ dự án bảo)
 
 - Tải trang và vào map trên điện thoại quá lâu: cần tối ưu (gói atlas, nạp art theo vua, cache PWA).
