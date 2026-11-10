@@ -10,3 +10,18 @@
 .missing-card p,#detail p{overflow-wrap:anywhere}
 .missing-badge{display:inline-block;color:#e5bc70;border:1px dashed #8d7e65;padding:4px 8px;margin-bottom:8px}
 .toolbar button:disabled{cursor:default;opacity:.5}
+
+/* Effect review keeps integer-sized pixels and scrollable frame strips. */
+.fx-cards{padding:16px;grid-template-columns:repeat(auto-fit,minmax(320px,1fr))}
+.fx-stage{height:auto;width:fit-content;max-width:100%;margin-inline:auto;display:flex;align-items:center;justify-content:flex-start}
+.fx-stage canvas{flex-shrink:0;margin:auto}
+.fx-grass{background:#5d9b3a}
+.fx-strip{display:flex;gap:6px;overflow-x:auto;padding:8px 0}
+.fx-strip button{flex-shrink:0;min-width:44px;min-height:44px}
+.fx-strip canvas{margin:auto}
+.fx-strip small{display:block}
+.fx-field{margin:16px;padding:16px;border:1px solid #45454e;border-radius:8px;background:#25252b}
+.fx-field-scroll{overflow:auto;margin-top:12px}
+.fx-field canvas{max-width:none;margin-inline:auto}
+.fx-cards button{min-height:44px}
+@media(max-width:400px){.fx-cards{grid-template-columns:minmax(0,1fr)}}

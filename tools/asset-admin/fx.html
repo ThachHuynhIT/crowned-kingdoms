@@ -1,0 +1,14 @@
+<!doctype html>
+<html lang="vi"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Hiệu ứng · Crowned Kingdoms</title><link rel="stylesheet" href="/tools/asset-admin/admin.css"></head>
+<body><header><a class="brand" href="/admin/fx">♛ Crowned Kingdoms / Hiệu ứng</a><a href="/admin">← Kho asset</a><a href="/admin/map">Dựng bản đồ →</a></header>
+<div class="toolbar">
+<label>Phóng <input id="zoom" type="range" min="1" max="8" step="1" value="4"><output id="zoom-label">4×</output></label>
+<label>Nền <select id="background"><option value="checker">Caro sáng</option><option value="checker-dark">Caro tối</option><option value="grass">Cỏ</option><option value="dark">Tối</option></select></label>
+<label>Tốc độ <select id="speed"><option value="0.25">0,25×</option><option value="0.5">0,5×</option><option value="1" selected>1×</option></select></label>
+<label>Phát <select id="repeat"><option value="repeat">Lặp</option><option value="once">Một lần</option></select></label>
+<label><input id="glow" type="checkbox" checked> Quầng sáng</label>
+<button id="restart" type="button">Phát lại tất cả</button></div>
+<p id="status" role="status"></p>
+<section class="fx-field"><h2>Thử trên sân</h2><label>Hiệu ứng <select id="selected"></select></label><p id="field-note" class="muted"></p><div class="fx-field-scroll"><canvas id="field" width="480" height="320" aria-label="Hiệu ứng so với lính mẫu"></canvas></div><p id="image-status" role="status"></p></section>
+<main id="effects" class="cards fx-cards"></main>
+<script type="module" src="/tools/asset-admin/src/fx.ts"></script></body></html>

@@ -8,6 +8,7 @@ const shortAdminRoutes = (): Plugin => ({
       const path = (req.url ?? '').split('?')[0]?.replace(/\/+$/, '');
       if (path === '/admin') req.url = '/tools/asset-admin/index.html';
       else if (path === '/admin/map') req.url = '/tools/asset-admin/map.html';
+      else if (path === '/admin/fx') req.url = '/tools/asset-admin/fx.html';
       next();
     });
   },

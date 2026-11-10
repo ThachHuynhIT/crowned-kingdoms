@@ -11,6 +11,13 @@ Vite dùng riêng `tools/asset-admin/vite.config.ts`, cổng 5180 (`strictPort`)
 http://localhost:5180/admin. Trang dựng bản đồ ở
 http://localhost:5180/admin/map.
 
+Trang `/admin/fx` xem sáu hiệu ứng vẽ bằng code, chưa gắn các hiệu ứng mới vào trận.
+Mỗi thẻ có thời lượng từng khung, dải khung bấm để dừng, nút phát/dừng và
+phóng nguyên 1–8× (mặc định 4×). Điều khiển chung đổi nền, tốc độ, lặp/một lần,
+bật/tắt glow cộng sáng và phát lại tất cả. “Thử trên sân” đặt hiệu ứng đang chọn
+cạnh lính mẫu theo neo chân/giữa, cùng world zoom 2× và pixelScale của manifest.
+Ẩn tab sẽ huỷ RAF; trở lại tiếp tục tại khung đang xem, không cộng thời gian ẩn.
+
 Đổi cổng nếu cần: `npm run admin -- --port 5181`.
 `root` là gốc repo, `publicDir: false`: URL ảnh `/public/assets/art/ai-v1/...`
 trong manifest vẫn giữ nguyên. Không dùng cấu hình Vite/build của game.
@@ -34,6 +41,8 @@ ESLint hiện tại dùng cấu hình TypeScript recommended toàn repo, không 
 `tsc --noEmit -p tools/asset-admin/tsconfig.json`.
 
 `manifest.json` do `python tools/slice_art_batches.py` sinh; trình duyệt chỉ đọc.
+`game-assets.json` sinh bằng `python tools/build_game_assets.py`, liệt kê ảnh game.
+Admin gộp nó với `manifest.json`; mục cùng id lấy bản `game-assets.json`.
 Dữ liệu đọc từ manifest, localStorage và file nhập bắt đầu bằng `unknown`.
 Guard kiểm schema trước khi dùng; map còn kiểm id asset và snap. Không dùng
 `any`, type assertion hoặc non-null assertion để bỏ qua kiểm tra.
