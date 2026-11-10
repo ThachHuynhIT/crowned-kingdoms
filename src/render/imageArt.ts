@@ -188,7 +188,14 @@ export const IMAGE_BUILDINGS: Readonly<Record<string, string>> = {
  * a missing level falls back to the next lower one, then to the base image. Files sit next to the base image.
  */
 export const IMAGE_BUILDING_LEVELS: Readonly<Partial<Record<string, readonly (2 | 3)[]>>> = {
+  wheat_field: [2, 3],
+  wheat_granary: [2, 3],
   wheat_militia: [2, 3],
+  wheat_peasant_horde: [2, 3],
+  wheat_reapers: [2, 3],
+  wheat_scarecrow: [2, 3],
+  wheat_throne: [2, 3],
+  wheat_windmill: [2, 3],
 };
 
 /** Which architecture a building level shows: 1 (base), 2 or 3. */

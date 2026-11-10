@@ -20162,3 +20162,213 @@ L4x216 copy (2026-11-10) made by tools/prepare_king_portraits.py --size 144x216 
     finalSize: 62x76
     anchor: feet
     notes: Level 3 architecture of wheat_militia (P2, 2026-11-10), magenta keyed and reduced to the level-1 width by docs/art-review/levels/make_levels.py; approved by Claude under the owner's delegation
+  - id: building_wheat_field_l2_iso
+    path: public/assets/art/ai-v1/iso/wheat_field_l2.png
+    category: building
+    origin: custom
+    source: docs/art-review/levels/wheat_field/l2/source.png
+    creator: Project owner (OpenAI imagegen via Codex; prompt in docs/art-review/levels/wheat_field/l2/prompt.md)
+    license: project-owned
+    attribution: false
+    redistribute: true
+    evidence: docs/art-review/levels/review.md
+    modified: true
+    nativeSize: 1024x1024
+    finalSize: 75x50
+    anchor: feet
+    notes: Level 2 architecture of wheat_field (P2, 2026-11-10), magenta keyed and reduced to the level-1 width by docs/art-review/levels/make_levels.py; approved by Claude under the owner's delegation
+  - id: building_wheat_field_l3_iso
+    path: public/assets/art/ai-v1/iso/wheat_field_l3.png
+    category: building
+    origin: custom
+    source: docs/art-review/levels/wheat_field/l3/source.png
+    creator: Project owner (OpenAI imagegen via Codex; prompt in docs/art-review/levels/wheat_field/l3/prompt.md)
+    license: project-owned
+    attribution: false
+    redistribute: true
+    evidence: docs/art-review/levels/review.md
+    modified: true
+    nativeSize: 1024x1024
+    finalSize: 75x71
+    anchor: feet
+    notes: Level 3 architecture of wheat_field (P2, 2026-11-10), magenta keyed and reduced to the level-1 width by docs/art-review/levels/make_levels.py; approved by Claude under the owner's delegation
+  - id: building_wheat_granary_l2_iso
+    path: public/assets/art/ai-v1/iso/wheat_granary_l2.png
+    category: building
+    origin: custom
+    source: docs/art-review/levels/wheat_granary/l2/source.png
+    creator: Project owner (OpenAI imagegen via Codex; prompt in docs/art-review/levels/wheat_granary/l2/prompt.md)
+    license: project-owned
+    attribution: false
+    redistribute: true
+    evidence: docs/art-review/levels/review.md
+    modified: true
+    nativeSize: 1024x1024
+    finalSize: 63x69
+    anchor: feet
+    notes: Level 2 architecture of wheat_granary (P2, 2026-11-10), magenta keyed and reduced to the level-1 width by docs/art-review/levels/make_levels.py; approved by Claude under the owner's delegation
+  - id: building_wheat_granary_l3_iso
+    path: public/assets/art/ai-v1/iso/wheat_granary_l3.png
+    category: building
+    origin: custom
+    source: docs/art-review/levels/wheat_granary/l3/source.png
+    creator: Project owner (OpenAI imagegen via Codex; prompt in docs/art-review/levels/wheat_granary/l3/prompt.md)
+    license: project-owned
+    attribution: false
+    redistribute: true
+    evidence: docs/art-review/levels/review.md
+    modified: true
+    nativeSize: 1024x1024
+    finalSize: 63x74
+    anchor: feet
+    notes: Level 3 architecture of wheat_granary (P2, 2026-11-10), magenta keyed and reduced to the level-1 width by docs/art-review/levels/make_levels.py; approved by Claude under the owner's delegation
+  - id: building_wheat_peasant_horde_l2_iso
+    path: public/assets/art/ai-v1/iso/wheat_peasant_horde_l2.png
+    category: building
+    origin: custom
+    source: docs/art-review/levels/wheat_peasant_horde/l2/source.png
+    creator: Project owner (OpenAI imagegen via Codex; prompt in docs/art-review/levels/wheat_peasant_horde/l2/prompt.md)
+    license: project-owned
+    attribution: false
+    redistribute: true
+    evidence: docs/art-review/levels/review.md
+    modified: true
+    nativeSize: 1024x1024
+    finalSize: 64x69
+    anchor: feet
+    notes: Level 2 architecture of wheat_peasant_horde (P2, 2026-11-10), magenta keyed and reduced to the level-1 width by docs/art-review/levels/make_levels.py; approved by Claude under the owner's delegation
+  - id: building_wheat_peasant_horde_l3_iso
+    path: public/assets/art/ai-v1/iso/wheat_peasant_horde_l3.png
+    category: building
+    origin: custom
+    source: docs/art-review/levels/wheat_peasant_horde/l3/source.png
+    creator: Project owner (OpenAI imagegen via Codex; prompt in docs/art-review/levels/wheat_peasant_horde/l3/prompt.md)
+    license: project-owned
+    attribution: false
+    redistribute: true
+    evidence: docs/art-review/levels/review.md
+    modified: true
+    nativeSize: 1024x1024
+    finalSize: 64x75
+    anchor: feet
+    notes: Level 3 architecture of wheat_peasant_horde (P2, 2026-11-10), magenta keyed and reduced to the level-1 width by docs/art-review/levels/make_levels.py; approved by Claude under the owner's delegation
+  - id: building_wheat_reapers_l2_iso
+    path: public/assets/art/ai-v1/iso/wheat_reapers_l2.png
+    category: building
+    origin: custom
+    source: docs/art-review/levels/wheat_reapers/l2/source.png
+    creator: Project owner (OpenAI imagegen via Codex; prompt in docs/art-review/levels/wheat_reapers/l2/prompt.md)
+    license: project-owned
+    attribution: false
+    redistribute: true
+    evidence: docs/art-review/levels/review.md
+    modified: true
+    nativeSize: 1024x1024
+    finalSize: 64x60
+    anchor: feet
+    notes: Level 2 architecture of wheat_reapers (P2, 2026-11-10), magenta keyed and reduced to the level-1 width by docs/art-review/levels/make_levels.py; approved by Claude under the owner's delegation
+  - id: building_wheat_reapers_l3_iso
+    path: public/assets/art/ai-v1/iso/wheat_reapers_l3.png
+    category: building
+    origin: custom
+    source: docs/art-review/levels/wheat_reapers/l3/source.png
+    creator: Project owner (OpenAI imagegen via Codex; prompt in docs/art-review/levels/wheat_reapers/l3/prompt.md)
+    license: project-owned
+    attribution: false
+    redistribute: true
+    evidence: docs/art-review/levels/review.md
+    modified: true
+    nativeSize: 1024x1024
+    finalSize: 64x73
+    anchor: feet
+    notes: Level 3 architecture of wheat_reapers (P2, 2026-11-10), magenta keyed and reduced to the level-1 width by docs/art-review/levels/make_levels.py; approved by Claude under the owner's delegation
+  - id: building_wheat_scarecrow_l2_iso
+    path: public/assets/art/ai-v1/iso/wheat_scarecrow_l2.png
+    category: building
+    origin: custom
+    source: docs/art-review/levels/wheat_scarecrow/l2/source.png
+    creator: Project owner (OpenAI imagegen via Codex; prompt in docs/art-review/levels/wheat_scarecrow/l2/prompt.md)
+    license: project-owned
+    attribution: false
+    redistribute: true
+    evidence: docs/art-review/levels/review.md
+    modified: true
+    nativeSize: 1024x1024
+    finalSize: 45x74
+    anchor: feet
+    notes: Level 2 architecture of wheat_scarecrow (P2, 2026-11-10), magenta keyed and reduced to the level-1 width by docs/art-review/levels/make_levels.py; approved by Claude under the owner's delegation
+  - id: building_wheat_scarecrow_l3_iso
+    path: public/assets/art/ai-v1/iso/wheat_scarecrow_l3.png
+    category: building
+    origin: custom
+    source: docs/art-review/levels/wheat_scarecrow/l3/source.png
+    creator: Project owner (OpenAI imagegen via Codex; prompt in docs/art-review/levels/wheat_scarecrow/l3/prompt.md)
+    license: project-owned
+    attribution: false
+    redistribute: true
+    evidence: docs/art-review/levels/review.md
+    modified: true
+    nativeSize: 1024x1024
+    finalSize: 45x81
+    anchor: feet
+    notes: Level 3 architecture of wheat_scarecrow (P2, 2026-11-10), magenta keyed and reduced to the level-1 width by docs/art-review/levels/make_levels.py; approved by Claude under the owner's delegation
+  - id: building_wheat_throne_l2_iso
+    path: public/assets/art/ai-v1/iso/wheat_throne_l2.png
+    category: building
+    origin: custom
+    source: docs/art-review/levels/wheat_throne/l2/source.png
+    creator: Project owner (OpenAI imagegen via Codex; prompt in docs/art-review/levels/wheat_throne/l2/prompt.md)
+    license: project-owned
+    attribution: false
+    redistribute: true
+    evidence: docs/art-review/levels/review.md
+    modified: true
+    nativeSize: 1024x1024
+    finalSize: 54x77
+    anchor: feet
+    notes: Level 2 architecture of wheat_throne (P2, 2026-11-10), magenta keyed and reduced to the level-1 width by docs/art-review/levels/make_levels.py; approved by Claude under the owner's delegation
+  - id: building_wheat_throne_l3_iso
+    path: public/assets/art/ai-v1/iso/wheat_throne_l3.png
+    category: building
+    origin: custom
+    source: docs/art-review/levels/wheat_throne/l3/source.png
+    creator: Project owner (OpenAI imagegen via Codex; prompt in docs/art-review/levels/wheat_throne/l3/prompt.md)
+    license: project-owned
+    attribution: false
+    redistribute: true
+    evidence: docs/art-review/levels/review.md
+    modified: true
+    nativeSize: 1024x1024
+    finalSize: 54x88
+    anchor: feet
+    notes: Level 3 architecture of wheat_throne (P2, 2026-11-10), magenta keyed and reduced to the level-1 width by docs/art-review/levels/make_levels.py; approved by Claude under the owner's delegation
+  - id: building_wheat_windmill_l2_iso
+    path: public/assets/art/ai-v1/iso/wheat_windmill_l2.png
+    category: building
+    origin: custom
+    source: docs/art-review/levels/wheat_windmill/l2/source.png
+    creator: Project owner (OpenAI imagegen via Codex; prompt in docs/art-review/levels/wheat_windmill/l2/prompt.md)
+    license: project-owned
+    attribution: false
+    redistribute: true
+    evidence: docs/art-review/levels/review.md
+    modified: true
+    nativeSize: 1024x1024
+    finalSize: 39x63
+    anchor: feet
+    notes: Level 2 architecture of wheat_windmill (P2, 2026-11-10), magenta keyed and reduced to the level-1 width by docs/art-review/levels/make_levels.py; approved by Claude under the owner's delegation
+  - id: building_wheat_windmill_l3_iso
+    path: public/assets/art/ai-v1/iso/wheat_windmill_l3.png
+    category: building
+    origin: custom
+    source: docs/art-review/levels/wheat_windmill/l3/source.png
+    creator: Project owner (OpenAI imagegen via Codex; prompt in docs/art-review/levels/wheat_windmill/l3/prompt.md)
+    license: project-owned
+    attribution: false
+    redistribute: true
+    evidence: docs/art-review/levels/review.md
+    modified: true
+    nativeSize: 1024x1024
+    finalSize: 39x77
+    anchor: feet
+    notes: Level 3 architecture of wheat_windmill (P2, 2026-11-10), magenta keyed and reduced to the level-1 width by docs/art-review/levels/make_levels.py; approved by Claude under the owner's delegation

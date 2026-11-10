@@ -7,3 +7,5 @@ Danh sách P2 `building_<card>_l2/_l3` trong `tools/asset-admin/planned.json`. D
 - **Mẫu:** Dân Quân (`wheat_militia/preview.png`): L2 có móng đá, thêm cửa sổ và đèn; L3 thêm khung gỗ chạm, mái dày hơn, cờ thêu. Vẫn rõ là cùng một nhà, cùng chân, cửa bên phải. ĐÃ DUYỆT trước khi vẽ cả bộ.
 
 ## Theo vua
+
+- **Lúa Mì (7 + mẫu):** ruộng (L3 thêm chòi canh), kho thóc, trại nông dân, nhà thợ gặt, bù nhìn, Ngai, cối xay gió. Bảng `sheet-wheat.png`. ĐÃ DUYỆT cả nhóm.
