@@ -182,6 +182,22 @@ export const IMAGE_BUILDINGS: Readonly<Record<string, string>> = {
   neutral_well: 'iso-neutral/neutral_well',
   neutral_mercenary_camp: 'iso-neutral/neutral_mercenary_camp',
 };
+/**
+ * Architecture per building level (10/11/2026, P2 `building_<card>_l2/_l3`): level 1 shows the base image, level 2
+ * its L2 and levels 3–5 its L3 (levels 4 and 5 are told apart by the stars). Only the levels listed here are loaded;
+ * a missing level falls back to the next lower one, then to the base image. Files sit next to the base image.
+ */
+export const IMAGE_BUILDING_LEVELS: Readonly<Partial<Record<string, readonly (2 | 3)[]>>> = {};
+
+/** Which architecture a building level shows: 1 (base), 2 or 3. */
+export const levelArt = (level: number): 1 | 2 | 3 => (level >= 3 ? 3 : level === 2 ? 2 : 1);
+
+/** File of the L2/L3 image of `card` (base file + `_l2` / `_l3`). */
+export const buildingLevelFile = (card: string, art: 2 | 3): string | null => {
+  const base = IMAGE_BUILDINGS[card];
+  return base === undefined ? null : `${base}_l${art}`;
+};
+
 export const GRASS_FILES: readonly string[] = ['grass_0', 'grass_1', 'grass_2'];
 
 /**
@@ -384,6 +400,12 @@ export const IMAGE_ART_FILES: readonly string[] = [
     ...POSE_INDEXES.map((i) => `${prefix}_foe_${i}`),
   ]),
   ...Object.values(IMAGE_BUILDINGS),
+  ...Object.entries(IMAGE_BUILDING_LEVELS).flatMap(([card, arts]) =>
+    (arts ?? []).flatMap((art) => {
+      const file = buildingLevelFile(card, art);
+      return file === null ? [] : [file];
+    }),
+  ),
   ...Object.values(IMAGE_ICONS),
   ...Object.values(STAT_ICONS),
   ...MENU_IMAGE_LAYERS.map((layer) => layer.file),

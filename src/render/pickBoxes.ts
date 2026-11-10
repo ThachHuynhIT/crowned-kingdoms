@@ -7,7 +7,7 @@ import { THRONE_PLOT } from '../game/run/board';
 import { geometryFor } from '../game/run/boardGeometry';
 import type { RunState } from '../game/run/state';
 import { spriteBox, type OpacityTest, type SpriteBox } from '../ui/info/spritePick';
-import { SPRITES_KEY, buildingFrame, imageFrameScale, unitFrame } from './atlas';
+import { SPRITES_KEY, buildingFrame, imageFrameScale, pickBuildingFrame, unitFrame } from './atlas';
 import { BUILDING_FOOT_DY, buildingFoot } from './BoardRenderer';
 import { ISO_SPRITE_SCALE, iso } from './isoView';
 
@@ -59,7 +59,10 @@ export const boardBuildingBoxes = (
     const cardId = p === THRONE_PLOT ? throne : (state.plots[p]?.building?.cardId ?? null);
     if (cardId === null) continue;
     const foot = buildingFoot(p, mode);
-    const b = frameBox(textures, buildingFrame(cardId), p, foot.x, foot.y, true);
+    const level = p === THRONE_PLOT ? state.throneLevel : (state.plots[p]?.building?.level ?? 1);
+    const sprites = textures.get(SPRITES_KEY);
+    const frame = pickBuildingFrame(cardId, level, (f) => sprites.has(f));
+    const b = frameBox(textures, frame, p, foot.x, foot.y, true);
     if (b) out.push(b);
   }
   return out;

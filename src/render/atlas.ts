@@ -30,6 +30,9 @@ import {
   GROUND_TEXTURES_APPROVED,
   IMAGE_ART_SCALE,
   IMAGE_BUILDINGS,
+  IMAGE_BUILDING_LEVELS,
+  buildingLevelFile,
+  levelArt,
   IMAGE_FX,
   IMAGE_ICONS,
   IMAGE_PLOTS,
@@ -77,6 +80,20 @@ export const unitFrame = (unit: UnitId, team: UnitTeam, anim: UnitAnim, n: numbe
   `unit_${unit}_${team}_${anim}${n}`;
 /** Troop/tower building or the throne (the throne card id is its frame). */
 export const buildingFrame = (cardId: CardId): string => `building_${cardId}`;
+/** Frame of the L2/L3 architecture of a building (`IMAGE_BUILDING_LEVELS`). */
+export const buildingLevelFrame = (cardId: CardId, art: 2 | 3): string => `building_${cardId}_l${art}`;
+
+/**
+ * The frame a building of `level` shows: its L3 / L2 architecture when that frame exists (`has`), else the next lower
+ * one, else the base frame.
+ */
+export const pickBuildingFrame = (cardId: CardId, level: number, has: (frame: string) => boolean): string => {
+  for (let art = levelArt(level); art >= 2; art--) {
+    const f = buildingLevelFrame(cardId, art === 3 ? 3 : 2);
+    if (has(f)) return f;
+  }
+  return buildingFrame(cardId);
+};
 export const plotFrame = (state: PlotState): string => `plot_${state}`;
 /** The plot frame of `kingId`'s board: its own skin when `IMAGE_PLOTS` has one, else the shared plot. */
 export const kingPlotFrame = (kingId: string, state: PlotState): string =>
@@ -287,13 +304,24 @@ export const withImageArt = (
   for (const [fx, file] of Object.entries(IMAGE_FX)) wanted.set(fxFrame(fx), file);
   for (const [king, prefix] of Object.entries(IMAGE_PLOTS))
     for (const state of PLOT_STATES) wanted.set(kingPlotFrame(king, state), `${prefix}_${state}`);
-  return list.map((s) => {
+  const out = list.map((s) => {
     const file = wanted.get(s.name);
     const art = file === undefined ? null : imageFile(textures, file);
     if (art === null) return s;
     IMAGE_FRAMES.add(s.name);
     return { name: s.name, art };
   });
+  // Level architecture has no generated fallback: a frame exists only when its image loaded.
+  for (const [card, arts] of Object.entries(IMAGE_BUILDING_LEVELS))
+    for (const lv of arts ?? []) {
+      const file = buildingLevelFile(card, lv);
+      const art = file === null ? null : imageFile(textures, file);
+      if (art === null) continue;
+      const name = buildingLevelFrame(card as CardId, lv);
+      IMAGE_FRAMES.add(name);
+      out.push({ name, art });
+    }
+  return out;
 };
 
 /** The three grass PNGs as pixels, or null unless all loaded. */

@@ -6,7 +6,9 @@ import type { CardId } from '../data/types';
 import { KIND_UNIT, TEAM_ALLY, type BattleWorld } from '../game/battle/world';
 import { BUILDING_FOOT_DY } from './BoardRenderer';
 import { ISO_SPRITE_SCALE, iso } from './isoView';
-import { SPRITES_KEY, buildingFrame, fxFrame, imageFrameScale, unitFrame } from './atlas';
+import { SPRITES_KEY, fxFrame, imageFrameScale, pickBuildingFrame, unitFrame } from './atlas';
+import { plotAtWorld } from './endlessBoardModel';
+import type { RunMode } from '../data/rules';
 import type { UnitAnim } from './unitArt';
 
 /** Frames per second of each unit animation (spec §11.3: 6–8 idle/walk, 10–12 attack). */
@@ -44,10 +46,19 @@ export class UnitRenderer {
   private readonly frameOk = new Map<string, boolean>();
   private readonly warned = new Set<string>();
   private world: BattleWorld | null = null;
+  /** Level of the building on each plot (and the throne's), so structures show their L2/L3 architecture. */
+  private levels: ReadonlyMap<number, number> = new Map();
+  private mode: RunMode = 'normal';
 
   constructor(scene: Phaser.Scene) {
     this.scene = scene;
     this.bars = scene.add.graphics().setDepth(BAR_DEPTH);
+  }
+
+  /** Building levels by plot for the coming battle (render only). */
+  setStructureLevels(levels: ReadonlyMap<number, number>, mode: RunMode): void {
+    this.levels = levels;
+    this.mode = mode;
   }
 
   /** Draw `world` at `alpha` (0..1) of the way from the previous tick to the current one. */
@@ -98,6 +109,13 @@ export class UnitRenderer {
     this.world = null;
   }
 
+  /** A structure's frame: its L2/L3 architecture by the level of the building on its plot, else the base. */
+  private structureFrame(world: BattleWorld, id: number, cardId: CardId): string {
+    const plot = plotAtWorld(world.x[id]!, world.y[id]!, this.mode);
+    const level = plot === null ? 1 : (this.levels.get(plot) ?? 1);
+    return pickBuildingFrame(cardId, level, (f) => this.hasFrame(f));
+  }
+
   /** Keep render-frame flashes advancing even after the final simulation tick. */
   updateFlashes(): void {
     for (const slot of this.slots) {
@@ -110,7 +128,7 @@ export class UnitRenderer {
     const frame =
       world.kind[id] === KIND_UNIT
         ? unitFrame(label, world.team[id] === TEAM_ALLY ? 'ally' : 'foe', 'idle', 0)
-        : buildingFrame(label as CardId);
+        : this.structureFrame(world, id, label as CardId);
     if (label === '' || !this.hasFrame(frame)) {
       this.slots[id] = null;
       return null;

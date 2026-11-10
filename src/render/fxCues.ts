@@ -2,8 +2,8 @@
  * Which code effect to show, read from state (render only, 10/11/2026). Pure: no Phaser, never writes the world or
  * the run.
  *
- * - `statusFxFor`: the one looping status effect over a living entity, most important first (stun, disabled tower,
- *   burn, poison, slow).
+ * - `statusFxFor`: the one looping status effect over a living entity, most important first (disabled tower, burn,
+ *   poison, slow). Stun is left out: `UnitRenderer` already draws its stars.
  * - `boardFxCues`: effects for one accepted planning change: a new building (place), a building that changed plot
  *   (move) and a building whose level went up on the same plot (upgrade).
  */
@@ -12,12 +12,11 @@ import type { RunState } from '../game/run/state';
 
 export type StatusWorld = Pick<
   BattleWorld,
-  'tick' | 'alive' | 'stunTicks' | 'disabledUntil' | 'burnTicks' | 'poisonTicks' | 'slowTicks'
+  'tick' | 'alive' | 'disabledUntil' | 'burnTicks' | 'poisonTicks' | 'slowTicks'
 >;
 
 export const statusFxFor = (w: StatusWorld, id: number): string | null => {
   if (w.alive[id] === 0) return null;
-  if (w.stunTicks[id]! > 0) return 'fx_stun';
   if (w.disabledUntil[id]! > w.tick) return 'fx_disable';
   if (w.burnTicks[id]! > 0) return 'fx_burn';
   if (w.poisonTicks[id]! > 0) return 'fx_poison';

@@ -30,10 +30,10 @@ describe('statusFxFor', () => {
     w.disabledUntil[0] = w.tick + 10;
     expect(statusFxFor(w, 0)).toBe('fx_disable');
     w.stunTicks[0] = 2;
-    expect(statusFxFor(w, 0)).toBe('fx_stun');
+    expect(statusFxFor(w, 0)).toBe('fx_disable'); // stun stars come from UnitRenderer
   });
   it('every status effect exists as a looping code effect', () => {
-    for (const id of ['fx_stun', 'fx_disable', 'fx_burn', 'fx_poison', 'fx_slow']) {
+    for (const id of ['fx_disable', 'fx_burn', 'fx_poison', 'fx_slow']) {
       const def = CODE_FX.find((d) => d.id === id);
       expect(def?.loop, id).toBe(true);
     }

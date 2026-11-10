@@ -17,6 +17,7 @@ import type { RunMode } from '../data/rules';
 import type { KingId, PerkId } from '../data/types';
 import { newRun } from '../game/run/yearFlow';
 import { BUILDING_FOOT_DY, BoardRenderer, buildingFoot } from '../render/BoardRenderer';
+import { THRONE_PLOT } from '../data/boardGeometry';
 import { boardFxCues } from '../render/fxCues';
 import { FieldRenderer } from '../render/FieldRenderer';
 import { FxRenderer } from '../render/FxRenderer';
@@ -428,6 +429,15 @@ export class RealmScene extends Phaser.Scene {
 
   private onBattleStarted(): void {
     this.clearRange();
+    // Structures show the L2/L3 architecture of their level in battle too (render only).
+    const st = this.controller?.state;
+    if (st && this.units) {
+      const levels = new Map<number, number>([[THRONE_PLOT, st.throneLevel]]);
+      st.plots.forEach((p, i) => {
+        if (p.building) levels.set(i, p.building.level);
+      });
+      this.units.setStructureLevels(levels, st.mode);
+    }
     this.battleHudUp = true;
     this.inBattle = true;
     this.setPending(null);
