@@ -1,4 +1,4 @@
-# Night run report — 10/11/2026 (02:08 → 03:30)
+# Night run report — 10/11/2026 (lượt 1: 02:08 → 03:30; lượt 2: 06:01 →)
 
 Nhánh `pc-king-select-cards` (chưa push, chưa PR, chưa merge — theo quy tắc chạy đêm).
 
@@ -46,3 +46,46 @@ Trình duyệt (Playwright, 1280×720, ảnh trong `.superpowers/night-planning-
 2. **Kiểm giao diện bằng mắt:** tay cuộn khi > 6 lá (mua nhiều thẻ), đạn bay từ mái công trình, zoom/pan PC ở hai pha.
 3. **Chủ dự án duyệt:** giá Mua thẻ (+3/lần), Bàn Tay Thứ Tư mới, mức giảm boss.
 4. **Để sau:** cây/đá bỏ viền, can thiệp riêng từng vua, toàn bộ phần điện thoại.
+
+---
+
+## Lượt 2 (06:01 →)
+
+### Việc dở đang làm tiếp: cân bằng (Phase 4)
+- Chẩn đoán trận boss năm 20 (Vua Lúa Mì, seed 1–2): Nữ Hoàng Ong và đàn ong con đều bay; quân cận chiến đứng gần mà không đánh được, đàn ong ra mỗi 50 tick tích dần rồi hạ Ngai khoảng tick 1100–1200.
+- Sửa cơ chế (dữ liệu `BOSS_RULES.hornet`): đàn ong mỗi 100 tick (trước 50), boss đáp 70/150 tick (trước 40/150). Chẩn đoán lại: Lúa Mì và Thuỷ Triều seed 2 đều hạ được boss.
+- Commit `63b0f96`: sửa đàn ong (mỗi 100 tick) và thời gian boss đáp (70/150 tick); `ENEMY_STAT_MULT` 2,05, `BOSS_HP_MULT` [1; 0,55; 0,27]; thêm `FOE_MULT_BY_KING` (sức địch theo vua mình chơi, giải pháp tạm). **100 ván/vua: 48–63% mỗi vua, chênh lệch 15,0 điểm → ĐẠT mục tiêu.** Baseline Endless ghi lại. Gate đầy đủ qua (2696 test, build, benchmark).
+- Đang chạy nền: mẫu nghiệm thu 500 ván/vua (bắt đầu 06:28).
+- Kiểm trình duyệt 1280×720: tìm ra lỗi tay cuộn (tay 9 lá, sau khi lăn chuột các lá tràn ra đè nút Mua thẻ/Đổi bài/Bộ bài; ảnh `.superpowers/morning-hand-9*.png`) → đã giao Codex sửa (review vòng 1). Trận có 3 tháp Bù Nhìn: tên bay giữa tháp và địch (`.superpowers/morning-battle-towers.png`).
+
+### Quyết định lượt 2
+- **`FOE_MULT_BY_KING`** thay vì chỉnh thẻ từng vua: chênh lệch giữa các vua ổn định qua mọi lần đổi số chung, và chỉnh thẻ cần nhiều lượt đo hơn thời gian còn lại. Ghi rõ là tạm.
+- **Sửa đàn ong thay vì giảm máu boss**: giảm máu boss 2 gần như không đổi kết quả năm 20; nguyên nhân là đàn ong bay mà quân cận chiến không đánh được.
+- Commit `741fd07`: sửa tay cuộn (Codex, review vòng 1). Lá không nằm trọn trong khung tay bị ẩn và không nhận chuột; cuộn từng lá; dòng nhắc chuyển lên khu HUD phía trên, không đè bàn cờ. Kiểm lại trên trình duyệt với tay 9 lá: không còn đè nút (`.superpowers/morning-hand-9-r2*.png`).
+- Commit `60b635a`: **việc mới** từ đề xuất so sánh với 9 Kings, phản hồi sau trận. Bảng tóm tắt thêm "Ngai mất: N% máu" và "Giỏi nhất: <công trình> (K địch)"; Codex làm, mình review, có test. Chưa xem bằng mắt: ảnh chụp lúc ép trận chạy nhanh không vẽ kịp khung hình, console không lỗi.
+  - Quyết định: không lập spec/plan qua Codex cho việc này vì nó chỉ là hai dòng chữ trong bảng có sẵn; một plan riêng sẽ tốn hơn chính việc đó.
+- Commit `035c923`: mẫu nghiệm thu **500 ván/vua** (seeds 1–500, Gai 0): phép 52,4% · đồng hồ 66,2% · lò rèn 61,0% · rừng 62,8% · trăng 58,6% · du mục 51,0% · đá 53,0% · thuỷ triều 63,2% · lúa 57,0%. **Chênh lệch 15,2 điểm, gần đạt** (mục tiêu ≤ 15; Đồng Hồ vượt trần 65% thêm 1,2 điểm). Mình giữ đúng cấu hình đã đo, không chỉnh thêm số chưa đo.
+- Rà chữ nhiệm vụ và sắc lệnh (`src/data/quests.ts`, `src/data/decrees.ts`): không còn câu nào giả định "chơi 1 lá/năm" hay "hết giờ là thắng".
+
+### Commit lượt 2
+| Commit | Nội dung |
+|---|---|
+| `63b0f96` | Sửa đàn ong và thời gian boss đáp, sức địch, `FOE_MULT_BY_KING`; 100 ván/vua đạt |
+| `741fd07` | Sửa tay cuộn che nút (Codex, review vòng 1) |
+| `60b635a` | Bảng tóm tắt sau trận: % máu Ngai mất và công trình giỏi nhất |
+| `035c923` | Kết quả 500 ván/vua |
+| (commit cuối) | Báo cáo này |
+
+Kiểm tra lượt 2: lint, typecheck, test (2699 qua), build và benchmark đều qua ở lần chạy gate cuối; 83 test Python qua ở lượt 1, lượt 2 không đổi file Python.
+
+## Việc còn dở và bước tiếp theo (cập nhật 07:23)
+1. **Cân bằng nốt:** đổi `FOE_MULT_BY_KING.clock` 0,9 → 0,93 và `nomad` 1,04 → 1,02 (`src/data/battle.ts`), chạy lại `npm run balance -- --king all --runs 500 --bot greedy --difficulty 0` (khoảng 55 phút), rồi ghi lại baseline `src/game/run/endlessCompatibility.test.ts` nếu số đổi.
+2. **Thay `FOE_MULT_BY_KING` bằng chỉnh thẻ từng vua** (cách lâu dài), đo lại.
+3. **Xem bằng mắt:** bảng tóm tắt sau trận (cho trận chạy bình thường ở ×3, không ép tick), đường bay của đạn từ mái.
+4. **Chủ dự án duyệt:**
+   - giá Mua thẻ +3/lần;
+   - Bàn Tay Thứ Tư mới (rút thêm 1 lá/năm);
+   - đàn ong thưa hơn và boss đáp lâu hơn;
+   - `FOE_MULT_BY_KING`: vua mạnh gặp địch mạnh hơn, giải pháp tạm.
+5. **Đề xuất từ so sánh 9 Kings còn lại:** thương nhân hiếm (chọn 1 trong 3), tương tác lân cận giữa thẻ của các vua, cho Vua Phép Thuật gọi Construct.
+6. **Để sau:** cây/đá bỏ viền, can thiệp riêng từng vua, toàn bộ phần điện thoại.
