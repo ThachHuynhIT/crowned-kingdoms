@@ -16,3 +16,4 @@ Danh sách P2 `building_<card>_l2/_l3` trong `tools/asset-admin/planned.json`. D
 - **Rừng Xanh (8):** hang gấu, cây non, cổng hươu, suối, tháp gai, Ngai, người cây, hang sói. Bảng `sheet-grove.png`. ĐÃ DUYỆT.
 - **Thuỷ Triều (8):** pháo, cảng, nhà móc câu, xoáy kraken, tàu cướp biển, Ngai, rương báu, tháp sóng. Bảng `sheet-tide.png`. ĐÃ DUYỆT.
 - **Lò Rèn (8):** kho vũ khí, lò cao, nhà pháo thủ, tháp lửa, hang rồng sắt, lò rèn, nhà kiếm sĩ, Ngai. Bảng `sheet-forge.png`. ĐÃ DUYỆT. Ghi chú: ảnh cấp 1 có sẵn của tháp lửa, hang rồng sắt và nhà pháo thủ có viền xanh lá mảnh ở mép (lỗi cũ của ảnh gốc, chưa sửa).
+- **Đồng Hồ (8):** tháp chuông, xưởng người khổng lồ, tháp bánh răng, xưởng nhện, xưởng lò xo, pháo hơi nước, Ngai, xưởng lính lên dây. Bảng `sheet-clock.png`. ĐÃ DUYỆT.
