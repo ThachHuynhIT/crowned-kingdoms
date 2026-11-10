@@ -14,3 +14,4 @@ Danh sách P2 `building_<card>_l2/_l3` trong `tools/asset-admin/planned.json`. D
 - **Phép Thuật (4/7):** pháp sư băng, đại pháp sư, Ngai, bùa chắn. Bảng `sheet-arcane.png`. ĐÃ DUYỆT. Học viện, thư viện, tháp pháp sư: mái L2/L3 thành sọc tím xanh lá, khác mái tím trơn của L1, vẽ lại.
 - **Phép Thuật, học viện / thư viện / tháp pháp sư:** "mái sọc xanh lá" thật ra là lỗi cắt: khoá màu magenta lỏng ăn cả mái tím, cỏ lộ qua lỗ. `make_levels.py` nay chỉ bỏ magenta nối liền mép ảnh (cộng vài túi magenta thuần kẹt bên trong); cắt lại từ bản vẽ đầu (bản vẽ lại giữ ở `source-v2.png`). ĐÃ DUYỆT. Cắt lại các vua đã duyệt: chỉ lấp vài lỗ nhỏ (0–83 px mỗi ảnh).
 - **Rừng Xanh (8):** hang gấu, cây non, cổng hươu, suối, tháp gai, Ngai, người cây, hang sói. Bảng `sheet-grove.png`. ĐÃ DUYỆT.
+- **Thuỷ Triều (8):** pháo, cảng, nhà móc câu, xoáy kraken, tàu cướp biển, Ngai, rương báu, tháp sóng. Bảng `sheet-tide.png`. ĐÃ DUYỆT.

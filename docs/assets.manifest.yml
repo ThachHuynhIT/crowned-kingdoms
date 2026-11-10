@@ -21062,3 +21062,243 @@ L4x216 copy (2026-11-10) made by tools/prepare_king_portraits.py --size 144x216 
     finalSize: 71x76
     anchor: feet
     notes: Level 3 architecture of grove_wolf_den (P2, 2026-11-10), magenta keyed and reduced to the level-1 width by docs/art-review/levels/make_levels.py; approved by Claude under the owner's delegation
+  - id: building_tide_cannon_l2_iso
+    path: public/assets/art/ai-v1/iso/tide_cannon_l2.png
+    category: building
+    origin: custom
+    source: docs/art-review/levels/tide_cannon/l2/source.png
+    creator: Project owner (OpenAI imagegen via Codex; prompt in docs/art-review/levels/tide_cannon/l2/prompt.md)
+    license: project-owned
+    attribution: false
+    redistribute: true
+    evidence: docs/art-review/levels/review.md
+    modified: true
+    nativeSize: 1024x1024
+    finalSize: 35x43
+    anchor: feet
+    notes: Level 2 architecture of tide_cannon (P2, 2026-11-10), magenta keyed and reduced to the level-1 width by docs/art-review/levels/make_levels.py; approved by Claude under the owner's delegation
+  - id: building_tide_cannon_l3_iso
+    path: public/assets/art/ai-v1/iso/tide_cannon_l3.png
+    category: building
+    origin: custom
+    source: docs/art-review/levels/tide_cannon/l3/source.png
+    creator: Project owner (OpenAI imagegen via Codex; prompt in docs/art-review/levels/tide_cannon/l3/prompt.md)
+    license: project-owned
+    attribution: false
+    redistribute: true
+    evidence: docs/art-review/levels/review.md
+    modified: true
+    nativeSize: 1024x1024
+    finalSize: 35x54
+    anchor: feet
+    notes: Level 3 architecture of tide_cannon (P2, 2026-11-10), magenta keyed and reduced to the level-1 width by docs/art-review/levels/make_levels.py; approved by Claude under the owner's delegation
+  - id: building_tide_harbor_l2_iso
+    path: public/assets/art/ai-v1/iso/tide_harbor_l2.png
+    category: building
+    origin: custom
+    source: docs/art-review/levels/tide_harbor/l2/source.png
+    creator: Project owner (OpenAI imagegen via Codex; prompt in docs/art-review/levels/tide_harbor/l2/prompt.md)
+    license: project-owned
+    attribution: false
+    redistribute: true
+    evidence: docs/art-review/levels/review.md
+    modified: true
+    nativeSize: 1024x1024
+    finalSize: 69x62
+    anchor: feet
+    notes: Level 2 architecture of tide_harbor (P2, 2026-11-10), magenta keyed and reduced to the level-1 width by docs/art-review/levels/make_levels.py; approved by Claude under the owner's delegation
+  - id: building_tide_harbor_l3_iso
+    path: public/assets/art/ai-v1/iso/tide_harbor_l3.png
+    category: building
+    origin: custom
+    source: docs/art-review/levels/tide_harbor/l3/source.png
+    creator: Project owner (OpenAI imagegen via Codex; prompt in docs/art-review/levels/tide_harbor/l3/prompt.md)
+    license: project-owned
+    attribution: false
+    redistribute: true
+    evidence: docs/art-review/levels/review.md
+    modified: true
+    nativeSize: 1024x1024
+    finalSize: 69x79
+    anchor: feet
+    notes: Level 3 architecture of tide_harbor (P2, 2026-11-10), magenta keyed and reduced to the level-1 width by docs/art-review/levels/make_levels.py; approved by Claude under the owner's delegation
+  - id: building_tide_hookmen_l2_iso
+    path: public/assets/art/ai-v1/iso/tide_hookmen_l2.png
+    category: building
+    origin: custom
+    source: docs/art-review/levels/tide_hookmen/l2/source.png
+    creator: Project owner (OpenAI imagegen via Codex; prompt in docs/art-review/levels/tide_hookmen/l2/prompt.md)
+    license: project-owned
+    attribution: false
+    redistribute: true
+    evidence: docs/art-review/levels/review.md
+    modified: true
+    nativeSize: 1024x1024
+    finalSize: 68x72
+    anchor: feet
+    notes: Level 2 architecture of tide_hookmen (P2, 2026-11-10), magenta keyed and reduced to the level-1 width by docs/art-review/levels/make_levels.py; approved by Claude under the owner's delegation
+  - id: building_tide_hookmen_l3_iso
+    path: public/assets/art/ai-v1/iso/tide_hookmen_l3.png
+    category: building
+    origin: custom
+    source: docs/art-review/levels/tide_hookmen/l3/source.png
+    creator: Project owner (OpenAI imagegen via Codex; prompt in docs/art-review/levels/tide_hookmen/l3/prompt.md)
+    license: project-owned
+    attribution: false
+    redistribute: true
+    evidence: docs/art-review/levels/review.md
+    modified: true
+    nativeSize: 1024x1024
+    finalSize: 68x88
+    anchor: feet
+    notes: Level 3 architecture of tide_hookmen (P2, 2026-11-10), magenta keyed and reduced to the level-1 width by docs/art-review/levels/make_levels.py; approved by Claude under the owner's delegation
+  - id: building_tide_kraken_l2_iso
+    path: public/assets/art/ai-v1/iso/tide_kraken_l2.png
+    category: building
+    origin: custom
+    source: docs/art-review/levels/tide_kraken/l2/source.png
+    creator: Project owner (OpenAI imagegen via Codex; prompt in docs/art-review/levels/tide_kraken/l2/prompt.md)
+    license: project-owned
+    attribution: false
+    redistribute: true
+    evidence: docs/art-review/levels/review.md
+    modified: true
+    nativeSize: 1024x1024
+    finalSize: 68x61
+    anchor: feet
+    notes: Level 2 architecture of tide_kraken (P2, 2026-11-10), magenta keyed and reduced to the level-1 width by docs/art-review/levels/make_levels.py; approved by Claude under the owner's delegation
+  - id: building_tide_kraken_l3_iso
+    path: public/assets/art/ai-v1/iso/tide_kraken_l3.png
+    category: building
+    origin: custom
+    source: docs/art-review/levels/tide_kraken/l3/source.png
+    creator: Project owner (OpenAI imagegen via Codex; prompt in docs/art-review/levels/tide_kraken/l3/prompt.md)
+    license: project-owned
+    attribution: false
+    redistribute: true
+    evidence: docs/art-review/levels/review.md
+    modified: true
+    nativeSize: 1024x1024
+    finalSize: 68x68
+    anchor: feet
+    notes: Level 3 architecture of tide_kraken (P2, 2026-11-10), magenta keyed and reduced to the level-1 width by docs/art-review/levels/make_levels.py; approved by Claude under the owner's delegation
+  - id: building_tide_pirates_l2_iso
+    path: public/assets/art/ai-v1/iso/tide_pirates_l2.png
+    category: building
+    origin: custom
+    source: docs/art-review/levels/tide_pirates/l2/source.png
+    creator: Project owner (OpenAI imagegen via Codex; prompt in docs/art-review/levels/tide_pirates/l2/prompt.md)
+    license: project-owned
+    attribution: false
+    redistribute: true
+    evidence: docs/art-review/levels/review.md
+    modified: true
+    nativeSize: 1024x1024
+    finalSize: 55x71
+    anchor: feet
+    notes: Level 2 architecture of tide_pirates (P2, 2026-11-10), magenta keyed and reduced to the level-1 width by docs/art-review/levels/make_levels.py; approved by Claude under the owner's delegation
+  - id: building_tide_pirates_l3_iso
+    path: public/assets/art/ai-v1/iso/tide_pirates_l3.png
+    category: building
+    origin: custom
+    source: docs/art-review/levels/tide_pirates/l3/source.png
+    creator: Project owner (OpenAI imagegen via Codex; prompt in docs/art-review/levels/tide_pirates/l3/prompt.md)
+    license: project-owned
+    attribution: false
+    redistribute: true
+    evidence: docs/art-review/levels/review.md
+    modified: true
+    nativeSize: 1024x1024
+    finalSize: 55x69
+    anchor: feet
+    notes: Level 3 architecture of tide_pirates (P2, 2026-11-10), magenta keyed and reduced to the level-1 width by docs/art-review/levels/make_levels.py; approved by Claude under the owner's delegation
+  - id: building_tide_throne_l2_iso
+    path: public/assets/art/ai-v1/iso/tide_throne_l2.png
+    category: building
+    origin: custom
+    source: docs/art-review/levels/tide_throne/l2/source.png
+    creator: Project owner (OpenAI imagegen via Codex; prompt in docs/art-review/levels/tide_throne/l2/prompt.md)
+    license: project-owned
+    attribution: false
+    redistribute: true
+    evidence: docs/art-review/levels/review.md
+    modified: true
+    nativeSize: 1024x1024
+    finalSize: 45x74
+    anchor: feet
+    notes: Level 2 architecture of tide_throne (P2, 2026-11-10), magenta keyed and reduced to the level-1 width by docs/art-review/levels/make_levels.py; approved by Claude under the owner's delegation
+  - id: building_tide_throne_l3_iso
+    path: public/assets/art/ai-v1/iso/tide_throne_l3.png
+    category: building
+    origin: custom
+    source: docs/art-review/levels/tide_throne/l3/source.png
+    creator: Project owner (OpenAI imagegen via Codex; prompt in docs/art-review/levels/tide_throne/l3/prompt.md)
+    license: project-owned
+    attribution: false
+    redistribute: true
+    evidence: docs/art-review/levels/review.md
+    modified: true
+    nativeSize: 1024x1024
+    finalSize: 45x78
+    anchor: feet
+    notes: Level 3 architecture of tide_throne (P2, 2026-11-10), magenta keyed and reduced to the level-1 width by docs/art-review/levels/make_levels.py; approved by Claude under the owner's delegation
+  - id: building_tide_treasure_l2_iso
+    path: public/assets/art/ai-v1/iso/tide_treasure_l2.png
+    category: building
+    origin: custom
+    source: docs/art-review/levels/tide_treasure/l2/source.png
+    creator: Project owner (OpenAI imagegen via Codex; prompt in docs/art-review/levels/tide_treasure/l2/prompt.md)
+    license: project-owned
+    attribution: false
+    redistribute: true
+    evidence: docs/art-review/levels/review.md
+    modified: true
+    nativeSize: 1024x1024
+    finalSize: 52x65
+    anchor: feet
+    notes: Level 2 architecture of tide_treasure (P2, 2026-11-10), magenta keyed and reduced to the level-1 width by docs/art-review/levels/make_levels.py; approved by Claude under the owner's delegation
+  - id: building_tide_treasure_l3_iso
+    path: public/assets/art/ai-v1/iso/tide_treasure_l3.png
+    category: building
+    origin: custom
+    source: docs/art-review/levels/tide_treasure/l3/source.png
+    creator: Project owner (OpenAI imagegen via Codex; prompt in docs/art-review/levels/tide_treasure/l3/prompt.md)
+    license: project-owned
+    attribution: false
+    redistribute: true
+    evidence: docs/art-review/levels/review.md
+    modified: true
+    nativeSize: 1024x1024
+    finalSize: 52x64
+    anchor: feet
+    notes: Level 3 architecture of tide_treasure (P2, 2026-11-10), magenta keyed and reduced to the level-1 width by docs/art-review/levels/make_levels.py; approved by Claude under the owner's delegation
+  - id: building_tide_wave_tower_l2_iso
+    path: public/assets/art/ai-v1/iso/tide_wave_tower_l2.png
+    category: building
+    origin: custom
+    source: docs/art-review/levels/tide_wave_tower/l2/source.png
+    creator: Project owner (OpenAI imagegen via Codex; prompt in docs/art-review/levels/tide_wave_tower/l2/prompt.md)
+    license: project-owned
+    attribution: false
+    redistribute: true
+    evidence: docs/art-review/levels/review.md
+    modified: true
+    nativeSize: 1024x1024
+    finalSize: 56x80
+    anchor: feet
+    notes: Level 2 architecture of tide_wave_tower (P2, 2026-11-10), magenta keyed and reduced to the level-1 width by docs/art-review/levels/make_levels.py; approved by Claude under the owner's delegation
+  - id: building_tide_wave_tower_l3_iso
+    path: public/assets/art/ai-v1/iso/tide_wave_tower_l3.png
+    category: building
+    origin: custom
+    source: docs/art-review/levels/tide_wave_tower/l3/source.png
+    creator: Project owner (OpenAI imagegen via Codex; prompt in docs/art-review/levels/tide_wave_tower/l3/prompt.md)
+    license: project-owned
+    attribution: false
+    redistribute: true
+    evidence: docs/art-review/levels/review.md
+    modified: true
+    nativeSize: 1024x1024
+    finalSize: 56x88
+    anchor: feet
+    notes: Level 3 architecture of tide_wave_tower (P2, 2026-11-10), magenta keyed and reduced to the level-1 width by docs/art-review/levels/make_levels.py; approved by Claude under the owner's delegation
