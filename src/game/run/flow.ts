@@ -16,6 +16,7 @@ const phaseOf = (offer: OfferState): RunPhase => {
   switch (offer.kind) {
     case 'reward':
     case 'questReward':
+    case 'merchant':
       return 'reward';
     case 'conquest':
       return 'conquest';

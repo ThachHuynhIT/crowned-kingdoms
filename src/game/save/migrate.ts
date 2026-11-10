@@ -1,5 +1,5 @@
 /**
- * Nâng cấp RunState đã lưu lên phiên bản hiện tại (thuần, không sửa đầu vào): state 3 → 4 → 5 → 6 → 7 → 8.
+ * Nâng cấp RunState đã lưu lên phiên bản hiện tại (thuần, không sửa đầu vào): state 3 → 4 → 5 → 6 → 7 → 8 → 9.
  * State 1 và 2 chưa từng có định dạng trên đĩa; phiên bản khác được trả nguyên để `decodeRun` từ chối.
  */
 import { hashSeed } from '../../core/random';
@@ -99,6 +99,9 @@ const v7to8 = (raw: Loose): Loose => {
   return { ...raw, version: 8, shopPurchasesThisYear: 0, rng: { ...rng, shop: hashSeed(`${seed}:shop`) } };
 };
 
+/** State 8 → 9 (Thương nhân, spec 2026-11-10-merchant-design): loại offer mới, không thêm trường nào. */
+const v8to9 = (raw: Loose): Loose => ({ ...raw, version: 9 });
+
 export function migrateRunState(raw: unknown): unknown {
   if (!isObject(raw)) return raw;
   let out = raw;
@@ -107,5 +110,6 @@ export function migrateRunState(raw: unknown): unknown {
   if (out.version === 5) out = v5to6(out);
   if (out.version === 6) out = v6to7(out);
   if (out.version === 7) out = v7to8(out);
+  if (out.version === 8) out = v8to9(out);
   return out;
 }

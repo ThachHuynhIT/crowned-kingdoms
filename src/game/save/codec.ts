@@ -102,6 +102,7 @@ const OFFER_PHASE: Record<string, RunPhase> = {
   council: 'council',
   quest: 'quest',
   blessing: 'blessing',
+  merchant: 'reward',
 };
 const EDGES = ['N', 'E', 'S', 'W'];
 
@@ -392,7 +393,12 @@ function validate(raw: unknown, content: Content): asserts raw is RunState {
         'blessing year',
       );
     } else {
-      cardList(offer.cardIds, 'offer');
+      const ids = cardList(offer.cardIds, 'offer');
+      if (offer.kind === 'merchant') {
+        // Thương nhân (save v9): giá đúng `RUN.merchantPrice`, tối đa 3 thẻ khác nhau.
+        ensure(offer.price === RUN.merchantPrice, 'merchant price');
+        ensure(ids.length <= 3 && new Set(ids).size === ids.length, 'merchant cards');
+      }
       if (offer.king !== undefined)
         ensure(typeof offer.king === 'string' && kings.has(offer.king), 'offer king');
     }

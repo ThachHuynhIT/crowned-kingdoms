@@ -1,4 +1,5 @@
 /** Bot chơi ngẫu nhiên hợp lệ (spec §13.3): dùng cho headless/cân bằng, luôn sinh lệnh hợp lệ. */
+import { merchantPickIllegal } from '../../run/merchant';
 import { canStartBattle } from '../../run/turn';
 import type { Rng } from '../../../core/random';
 import { decree } from '../../run/decrees';
@@ -130,6 +131,12 @@ export const randomBot: Bot = (state, content, rng) => {
       const count = offer?.cardIds.length ?? 0;
       // Thưởng nhiệm vụ không được bỏ qua.
       if (offer?.kind === 'questReward') return { type: 'pickOffer', index: count === 0 ? 0 : rng.int(0, count - 1) };
+      // Thương nhân: chọn đều một lá mua được hoặc bỏ qua.
+      if (offer?.kind === 'merchant') {
+        if (count === 0 || merchantPickIllegal(state, offer) !== null) return { type: 'pickOffer', index: null };
+        const choice = rng.int(-1, count - 1);
+        return { type: 'pickOffer', index: choice < 0 ? null : choice };
+      }
       if (count === 0 || rng.int(0, 3) === 0) return { type: 'pickOffer', index: null };
       return { type: 'pickOffer', index: rng.int(0, count - 1) };
     }

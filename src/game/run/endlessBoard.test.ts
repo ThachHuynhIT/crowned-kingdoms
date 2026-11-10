@@ -84,7 +84,7 @@ describe('run mode (spec 2026-11-09 §3)', () => {
     expect(endless.mode).toBe('endless');
     expect(endless.endless).toEqual({ blessingStacks: {}, lastBlessingYear: 0, modifierId: null, modifierStartYear: 0 });
     expect(endless.plots).toHaveLength(49);
-    expect(endless.version).toBe(8);
+    expect(endless.version).toBe(9);
   });
 
   it('both modes carry the blessing RNG stream; other streams are identical', () => {

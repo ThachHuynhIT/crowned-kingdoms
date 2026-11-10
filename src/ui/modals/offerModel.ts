@@ -19,6 +19,8 @@ export const offerHeading = (kind: CardOfferState['kind']): { title: string; sub
       return { title: 'CHINH PHỤC', subtitle: 'CHỌN 1 THẺ' };
     case 'reward':
       return { title: 'CHIẾN THẮNG', subtitle: 'CHỌN PHẦN THƯỞNG' };
+    case 'merchant':
+      return { title: 'THƯƠNG NHÂN GHÉ QUA', subtitle: 'MUA TỐI ĐA 1 THẺ' };
   }
 };
 

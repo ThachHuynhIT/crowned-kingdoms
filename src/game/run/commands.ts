@@ -1,8 +1,8 @@
 /** Lệnh người chơi lên RunState (spec §5.1, §5.5). Thuần: làm việc trên bản sao, không sửa đầu vào. */
 import { Rng } from '../../core/random';
-import { RUN, START_DECK_G1, battleGold } from '../../data/run';
+import { RUN, battleGold } from '../../data/run';
 import { hasFullCalendar, type RunMode } from '../../data/rules';
-import type { CardDef, CardId, KingId } from '../../data/types';
+import type { CardId, KingId } from '../../data/types';
 import { CUSTOM_TOME_HANDLERS, runAfterMove, runAfterPlay, runBattleEnd } from '../cards/custom';
 import { freeMoveIllegal } from '../cards/custom/nomad';
 import type { Content } from '../cards/registry';
@@ -31,7 +31,8 @@ import { stateRefusal } from './playable';
 import { canStartBattle } from './turn';
 import { buyCardIllegal, shopPool, shopPrice } from './shop';
 import { answerQuest, recordQuestCommand, settleQuests } from './quests';
-import { neutralRewardPool, rollConquestCards, rollOffers } from './rewards';
+import { rollConquestCards, rollOffers } from './rewards';
+import { merchantPickIllegal, rewardPools, rollMerchantOffer } from './merchant';
 import type { IllegalReason, RunCommand, RunState } from './state';
 import { advanceAfterBattle, finishYear } from './yearEnd';
 
@@ -310,18 +311,12 @@ function applyBase(input: RunState, cmd: RunCommand, content: Content): CommandR
       if (result.won && !finalYear) {
         const rng = new Rng(s.rng.reward);
         // G1 (lịch toàn Thổ Phỉ) chỉ thưởng các thẻ G1: giao diện G1 chưa chơi được thẻ G2.
-        const g1 = s.rules.calendar === 'raiders';
-        const only = (cards: readonly CardDef[]): readonly CardDef[] =>
-          g1 ? cards.filter((c) => START_DECK_G1.includes(c.id)) : cards;
-        const cardIds = rollOffers(
-          rng,
-          s.year,
-          { king: only(content.king(s.kingId).cards), neutral: only(neutralRewardPool(content.neutralPool(), s.unlockedCards)) },
-          rewardCount(s),
-        );
+        const cardIds = rollOffers(rng, s.year, rewardPools(s, content), rewardCount(s));
         s.rng.reward = rng.getState();
         s = enqueueOffers({ ...s, pendingConquest: conquered }, [{ kind: 'reward', cardIds }]);
       }
+      // Thương nhân sau thưởng (chinh phục chen trước khi đóng thưởng), trước hội đồng (10/11/2026).
+      s = rollMerchantOffer(s, content);
       // Hội đồng sau thắng hay thua (chỉ ván đầy đủ, còn mạng, không phải năm cuối).
       if (isCouncilYear(s)) s = rollCouncil(s);
       // Phúc lành Vô tận sau hội đồng, cả khi thua còn mạng (spec 2026-11-09 §5).
@@ -340,17 +335,25 @@ function applyBase(input: RunState, cmd: RunCommand, content: Content): CommandR
       const offer = cardOffer(state);
       if (offer === null) return fail('wrongPhase');
       const { index } = cmd;
-      // Chỉ thưởng thường được bỏ qua; chinh phục và thưởng nhiệm vụ bắt buộc chọn một thẻ.
-      if (offer.kind !== 'reward' && index === null) return fail('badTarget');
+      // Thưởng thường và thương nhân được bỏ qua; chinh phục và thưởng nhiệm vụ bắt buộc chọn một thẻ.
+      const merchant = offer.kind === 'merchant';
+      if (offer.kind !== 'reward' && !merchant && index === null) return fail('badTarget');
       let { deck, drawPile } = state;
       let gold = state.gold;
       let goldEarned = state.stats.goldEarned;
       if (index === null) {
-        gold += RUN.skipRewardGold;
-        goldEarned += RUN.skipRewardGold;
+        if (!merchant) {
+          gold += RUN.skipRewardGold;
+          goldEarned += RUN.skipRewardGold;
+        }
       } else {
         const picked = Number.isInteger(index) ? offer.cardIds[index] : undefined;
         if (picked === undefined) return fail('badTarget');
+        if (merchant) {
+          const unaffordable = merchantPickIllegal(state, offer);
+          if (unaffordable !== null) return fail(unaffordable);
+          gold -= offer.price ?? RUN.merchantPrice;
+        }
         deck = [...deck, picked];
         // Lên đầu chồng rút: thẻ vừa chọn có ngay trên tay năm sau (không bị chôn trong chồng bỏ).
         drawPile = [picked, ...drawPile];

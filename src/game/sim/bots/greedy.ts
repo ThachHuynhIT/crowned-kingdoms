@@ -173,6 +173,21 @@ const offerValue = (state: RunState, content: Content, cardId: CardId): number =
 const pick = (state: RunState, content: Content): RunCommand => {
   const offer = cardOffer(state);
   const ids = offer?.cardIds ?? [];
+  // Thương nhân: mua lá giá trị cao nhất nếu sau khi trả vẫn còn GREEDY_SHOP_RESERVE vàng, không thì bỏ qua.
+  if (offer?.kind === 'merchant') {
+    const price = offer.price ?? 0;
+    if (ids.length === 0 || state.gold - price < GREEDY_SHOP_RESERVE) return { type: 'pickOffer', index: null };
+    let bestAt = 0;
+    let bestValue = offerValue(state, content, ids[0]!);
+    for (let i = 1; i < ids.length; i++) {
+      const value = offerValue(state, content, ids[i]!);
+      if (value > bestValue) {
+        bestAt = i;
+        bestValue = value;
+      }
+    }
+    return { type: 'pickOffer', index: bestAt };
+  }
   if (ids.length === 0)
     return {
       type: 'pickOffer',

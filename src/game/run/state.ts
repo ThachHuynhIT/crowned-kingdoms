@@ -4,7 +4,7 @@ import type { RunMode, Rules } from '../../data/rules';
 import type { BossId, CardId, DecreeId, KingId, Level, PerkId, QuestId, StatKey } from '../../data/types';
 import type { ArmyPlan, BattleResult } from '../battle/types';
 
-export const RUN_SAVE_VERSION = 8;
+export const RUN_SAVE_VERSION = 9;
 
 export interface BuildingState {
   uid: number;
@@ -58,8 +58,10 @@ export interface EnemyKingState {
 
 /** Chọn 1 thẻ: thưởng thường, chinh phục hoặc thưởng nhiệm vụ. */
 export interface CardOfferState {
-  kind: 'reward' | 'conquest' | 'questReward';
+  kind: 'reward' | 'conquest' | 'questReward' | 'merchant';
   cardIds: CardId[];
+  /** Giá mỗi thẻ (chỉ có ở `merchant`, 10/11/2026). */
+  price?: number;
   /** Vua bại trận (chỉ có ở `conquest`). */
   king?: KingId;
   /** Nhiệm vụ trả thưởng (chỉ có ở `questReward`). */

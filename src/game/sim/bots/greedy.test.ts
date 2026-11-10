@@ -1,10 +1,11 @@
 import { describe, expect, it } from 'vitest';
 import { Rng, hashSeed } from '../../../core/random';
-import { GREEDY_MAX_REROLLS, GREEDY_MAX_SHOP_PURCHASES } from '../../../data/balance';
+import { GREEDY_MAX_REROLLS, GREEDY_MAX_SHOP_PURCHASES, GREEDY_SHOP_RESERVE } from '../../../data/balance';
 import { ALL_KINGS, RULES_FULL } from '../../../data/rules';
 import { CONTENT } from '../../cards/registry';
 import { applyCommand } from '../../run/commands';
 import { THRONE_PLOT } from '../../run/board';
+import { runState } from '../../testing/fixtures';
 import { newRun } from '../../run/yearFlow';
 import {
   attackStats,
@@ -135,4 +136,19 @@ describe('greedyBot full runs (RULES_FULL, 9 kings × 3 seeds)', () => {
       }
     }, 300_000);
   }
+});
+
+describe('greedyBot and the merchant (2026-11-10)', () => {
+  it('greedy_merchant_reserve: buys only while GREEDY_SHOP_RESERVE gold is left after paying', () => {
+    const base = runState({ rules: RULES_FULL, year: 6 });
+    const at = (gold: number) =>
+      greedyBot(
+        { ...base, gold, phase: 'reward', offers: { kind: 'merchant', cardIds: ['wheat_field', 'wheat_militia'], price: 3 }, pendingOffers: [] },
+        CONTENT,
+        new Rng(1),
+      );
+    expect(at(3 + GREEDY_SHOP_RESERVE - 1)).toEqual({ type: 'pickOffer', index: null });
+    const buy = at(3 + GREEDY_SHOP_RESERVE);
+    expect(buy.type === 'pickOffer' && buy.index !== null).toBe(true);
+  });
 });

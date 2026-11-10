@@ -108,6 +108,7 @@ export const scriptedBot: Bot = (state, content) => {
       return council(state, content);
     case 'reward':
     case 'conquest': {
+      if (cardOffer(state)?.kind === 'merchant') return { type: 'pickOffer', index: null }; // đối chứng: không mua
       const count = cardOffer(state)?.cardIds.length ?? 0;
       return { type: 'pickOffer', index: count === 0 ? (state.phase === 'reward' && cardOffer(state)?.kind === 'reward' ? null : 0) : 0 };
     }
