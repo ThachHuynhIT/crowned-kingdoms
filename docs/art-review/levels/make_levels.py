@@ -2,6 +2,7 @@
 
     python docs/art-review/levels/make_levels.py prompts <card|king> [...]   # writes <card>/l2|l3/prompt.md and .superpowers/lv.sh
     python docs/art-review/levels/make_levels.py cut <card|king> [...]       # -> public/assets/art/ai-v1/<base>_l2.png, _l3.png
+    python docs/art-review/levels/make_levels.py cut --density 4 <card|king> # HiDPI: -> public/assets/art/ai-v1-hd/...
 
 The prompt is the "Prompt isometric dùng lại" block of docs/ART_STYLE.md (read through the buildings tool), with the
 approved style reference, the approved isometric building AND the building's own approved level-1 source attached:
@@ -20,6 +21,8 @@ from PIL import Image
 ROOT = Path(__file__).resolve().parents[3]
 D = Path(__file__).resolve().parent
 ART = ROOT / 'public/assets/art/ai-v1'
+# HiDPI set (4 art px per world unit, drawn at scale 0.25): same file names; cut against the HD level-1 image's width.
+ART_HD = ROOT / 'public/assets/art/ai-v1-hd'
 REFERENCE = 'docs/art-review/style-references/harvester-house-front-approved.png'
 ISO_REF = 'docs/art-review/style-references/iso-building-approved.png'
 KINGS = ['wheat', 'stone', 'arcane', 'grove', 'tide', 'forge', 'clock', 'moon', 'nomad', 'neutral']
@@ -145,14 +148,14 @@ def background_mask(a: np.ndarray) -> np.ndarray:
         bg = grown
 
 
-def cut_one(src: Path, width: int) -> Image.Image:
+def cut_one(src: Path, width: int, height: int | None = None) -> Image.Image:
     a = np.array(Image.open(src).convert('RGB')).astype(float)
     solid = ~background_mask(a)
     ys, xs = np.where(solid)
     y0, y1, x0, x1 = ys.min(), ys.max() + 1, xs.min(), xs.max() + 1
     crop, m = a[y0:y1, x0:x1], solid[y0:y1, x0:x1].astype(np.float32)
     tw = width
-    th = max(1, round((y1 - y0) * tw / (x1 - x0)))
+    th = height or max(1, round((y1 - y0) * tw / (x1 - x0)))
     mm = np.array(Image.fromarray(m, mode='F').resize((tw, th), Image.BOX))
     out = np.zeros((th, tw, 4), dtype=np.uint8)
     for k in range(3):
@@ -164,18 +167,36 @@ def cut_one(src: Path, width: int) -> Image.Image:
 
 
 def cut(args):
+    """`--density 4` cuts into ART_HD against the HD level-1 image (make it first with iso-board/make_assets.py
+    --density 4); the review preview is written only for the default density."""
+    density = 2
+    if '--density' in args:
+        i = args.index('--density')
+        density, args = int(args[i + 1]), args[:i] + args[i + 2:]
+    if density not in (2, 4):
+        raise SystemExit('--density must be 2 or 4')
+    art = ART if density == 2 else ART_HD
     files = image_buildings()
     for card in cards_of(args):
-        base = Image.open(ART / f'{files[card]}.png').convert('RGBA')
+        base = Image.open(art / f'{files[card]}.png').convert('RGBA')
         ims = [base]
         for lv in (2, 3):
             src = D / card / f'l{lv}' / 'source.png'
             if not src.exists():
                 print(card, f'l{lv} missing')
                 continue
-            im = cut_one(src, base.width)
-            im.save(ART / f'{files[card]}_l{lv}.png')
+            # HD: exactly twice the shipped L2/L3 image (same world footprint and feet), when that one exists
+            shipped = ART / f'{files[card]}_l{lv}.png'
+            if density != 2 and not shipped.exists():
+                print(card, f'l{lv}: no published density-2 image, no HD twin')
+                continue
+            h = Image.open(shipped).height * density // 2 if density != 2 else None
+            im = cut_one(src, base.width, h)
+            im.save(art / f'{files[card]}_l{lv}.png')
             ims.append(im)
+        if density != 2:
+            print(card, [i.size for i in ims])
+            continue
         S, pad = 3, 8
         w = sum(i.width * S + pad for i in ims) + pad
         h = max(i.height for i in ims) * S + 2 * pad

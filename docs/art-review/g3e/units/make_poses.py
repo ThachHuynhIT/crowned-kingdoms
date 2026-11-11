@@ -1,6 +1,11 @@
 """Slice a unit's 3x2 animation sheet into the six native pose frames, the red foe recolour and review previews.
 
     python docs/art-review/g3e/units/make_poses.py militia [reaper ...]
+    python docs/art-review/g3e/units/make_poses.py --export [--density 4] militia [reaper ...]
+
+`--export` also writes the runtime frames: at the default density 2 (art px per world unit) into
+public/assets/art/ai-v1/, at `--density 4` (HiDPI, drawn at scale 0.25) into public/assets/art/ai-v1-hd/ under the same
+file names (see `runtime_dir` and `IMAGE_ART_HD_FILES` in src/render/imageArt.ts).
 
 Input: docs/art-review/g3e/units/<unit>/poses-source.png (made by `make_prompts.py --poses`, cells in reading order
 idle0 idle1 walk0 walk1 attack0 attack1 on flat magenta). Every cell is reduced by the SAME factor, chosen so that the
@@ -116,17 +121,43 @@ def head_centre(frame):
     return (xs.min() + xs.max()) / 2
 
 
-def place(frames):
+def place(frames, at_least=(0, 0)):
+    """One canvas for all poses: feet on the bottom row, every head centre on the middle column. `at_least` (height,
+    width) grows the canvas to a given size (the HiDPI export uses twice the density-2 canvas, so the world-space
+    footprint and the anchor match exactly)."""
     pivots = [head_centre(f) for f in frames]
     left = max(p for p in pivots)
     right = max(f.shape[1] - p for f, p in zip(frames, pivots))
-    half = int(np.ceil(max(left, right))) + 1
-    width, height = 2 * half, max(f.shape[0] for f in frames) + 1
+    half = max(int(np.ceil(max(left, right))) + 1, (at_least[1] + 1) // 2)
+    width, height = 2 * half, max(max(f.shape[0] for f in frames) + 1, at_least[0])
     placed = []
     for f, p in zip(frames, pivots):
         c = np.zeros((height, width, 4), dtype=np.uint8)
         ox, oy = int(round(half - p)), height - f.shape[0]
         c[oy:oy + f.shape[0], ox:ox + f.shape[1]] = f
+        placed.append(c)
+    return placed
+
+
+def place_twin(frames, twins):
+    """The HiDPI frames at EXACTLY twice the density-2 canvas, each pose where its density-2 twin stands: the twin's
+    canvas and per-pose offset come from `place(twins)` (the shipped density-2 frames), and each HD figure is centred
+    on 2 x its twin's box with feet on the bottom row. Re-deriving the head pivot at HD resolution would move some
+    poses by up to a world pixel against the approved density-2 set."""
+    pivots = [head_centre(f) for f in twins]
+    left = max(p for p in pivots)
+    right = max(f.shape[1] - p for f, p in zip(twins, pivots))
+    half = int(np.ceil(max(left, right))) + 1
+    height = max(f.shape[0] for f in twins) + 1
+    W, H = 4 * half, 2 * height
+    placed = []
+    for f, t, p in zip(frames, twins, pivots):
+        c = np.zeros((H, W, 4), dtype=np.uint8)
+        ox = int(round(2 * round(half - p) + (2 * t.shape[1] - f.shape[1]) / 2))
+        oy = H - f.shape[0]
+        x0, y0 = max(0, ox), max(0, oy)
+        x1, y1 = min(W, ox + f.shape[1]), min(H, oy + f.shape[0])
+        c[y0:y1, x0:x1] = f[y0 - oy:y1 - oy, x0 - ox:x1 - ox]
         placed.append(c)
     return placed
 
@@ -150,7 +181,7 @@ def on_grass(frame):
     return bg.resize((frame.shape[1] * ZOOM, frame.shape[0] * ZOOM), Image.NEAREST)
 
 
-def make(unit, export=False):
+def make(unit, export=False, density=2):
     src = P / unit / 'poses-source.png'
     if not src.exists():
         raise SystemExit(f'{unit}: {src} is missing (run make_prompts.py --poses {unit} and the Codex runner first)')
@@ -179,16 +210,50 @@ def make(unit, export=False):
         # The game shows image art at 2 art px per world unit (IMAGE_ART_SCALE 0.5, 1:1 screen pixels at camera zoom 2),
         # so the runtime frames are reduced straight from the source at twice the factor (not by halving the 4-px
         # frames above, which would average already-averaged pixels). The 4-px frames stay here as the masters.
-        game = place([outline(reduce(rgb, solid, factor * 2)) for rgb, solid in figures])
-        RUNTIME.mkdir(parents=True, exist_ok=True)
+        # `density` art px per world unit: 2 is the shipped set (factor x 2), 4 the HiDPI set (factor x 1, the same
+        # reduction as the 4-px masters, redrawn outline included), both straight from the source.
+        runtime = runtime_dir(density)
+        if density == 2:
+            game = place([outline(reduce(rgb, solid, factor * 2)) for rgb, solid in figures])
+        else:
+            # HiDPI: same source, factor x 1 (the 4-px masters' reduction, outline redrawn), each pose placed where
+            # its shipped density-2 twin stands on a canvas of exactly twice its size (`place_twin`)
+            twins = [outline(reduce(rgb, solid, factor * 2)) for rgb, solid in figures]
+            game = place_twin([outline(reduce(rgb, solid, factor)) for rgb, solid in figures], twins)
+            shipped = RUNTIME / f'{unit}_0.png'
+            if shipped.exists():
+                with Image.open(shipped) as im:
+                    if (im.height * 2, im.width * 2) != game[0].shape[:2]:
+                        raise SystemExit(f'{unit}: shipped frames {im.size} are not this source density-2 cut; '
+                                         're-export density 2 first')
+        runtime.mkdir(parents=True, exist_ok=True)
         for i, c in enumerate(game):
-            Image.fromarray(c).save(RUNTIME / f'{unit}_{i}.png')
-            Image.fromarray(foe(c)).save(RUNTIME / f'{unit}_foe_{i}.png')
+            Image.fromarray(c).save(runtime / f'{unit}_{i}.png')
+            Image.fromarray(foe(c)).save(runtime / f'{unit}_foe_{i}.png')
         gh, gw = game[0].shape[:2]
-        print(f'{unit}: runtime frames {gw}x{gh} -> {RUNTIME.as_posix()}')
+        print(f'{unit}: runtime frames {gw}x{gh} (density {density}) -> {runtime.as_posix()}')
 
 
 RUNTIME = ROOT / 'public/assets/art/ai-v1'
+RUNTIME_HD = ROOT / 'public/assets/art/ai-v1-hd'
+DENSITIES = (2, 4)
+
+
+def runtime_dir(density):
+    """Where runtime frames of `density` art px per world unit go: ai-v1 (2, IMAGE_ART_SCALE 0.5) or ai-v1-hd (4)."""
+    if density not in DENSITIES:
+        raise SystemExit(f'--density must be one of {DENSITIES}')
+    return RUNTIME if density == 2 else RUNTIME_HD
+
+
+def parse_density(args):
+    """`--density N` (default 2) and the remaining arguments."""
+    if '--density' not in args:
+        return 2, args
+    i = args.index('--density')
+    if i + 1 >= len(args):
+        raise SystemExit('--density needs a value (2 or 4)')
+    return int(args[i + 1]), args[:i] + args[i + 2:]
 
 
 def sample(units, sheet_name):
@@ -218,10 +283,10 @@ def sample(units, sheet_name):
 
 
 if __name__ == '__main__':
-    args = sys.argv[1:]
+    density, args = parse_density(sys.argv[1:])
     names = [a for a in args if not a.startswith('--')]
     if '--sample' in args:
         sample(names, f'sheet-sample-{"-".join(names)}.png' if len(names) < 3 else 'sheet-sample-new.png')
     else:
         for u in names or ['militia']:
-            make(u, '--export' in args)
+            make(u, '--export' in args, density)

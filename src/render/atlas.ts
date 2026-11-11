@@ -28,6 +28,7 @@ import {
   GRASS_FILES,
   GROUND_TEXTURE_FILES,
   GROUND_TEXTURES_APPROVED,
+  IMAGE_ART_HD_SCALE,
   IMAGE_ART_SCALE,
   IMAGE_BUILDINGS,
   IMAGE_BUILDING_LEVELS,
@@ -38,9 +39,11 @@ import {
   IMAGE_PLOTS,
   IMAGE_UNITS,
   PLOT_STATES,
+  imageArtHdKey,
   imageArtKey,
   unitPoseFile,
 } from './imageArt';
+import { ART_POLICY } from './artPolicy';
 import { squareToIso } from './isoArt';
 import { PixelCanvas } from './pixel';
 import { paintPlot, type PlotState } from './plotArt';
@@ -70,8 +73,8 @@ import { UNIT_FRAME_COUNT, paintUnit, unitCloth, type UnitAnim, type UnitTeam } 
 /**
  * Turns generated pixel art into Phaser textures. Scenes refer to frames by name only, so
  * an Aseprite atlas with the same frame names can replace any generated texture (spec
- * §11.4). World sprites live in one `sprites` atlas; each battle field is its own
- * `field-<seed>` texture.
+ * §11.4). World sprites live in one `sprites` texture made of several pages (sources), each side ≤ 4096; each
+ * battle field is its own `field-<seed>` texture.
  */
 
 // ---- Frame names (pure; the only way code refers to a sprite, spec §11.4) ----
@@ -206,9 +209,16 @@ const imageToPixelCanvas = (
   return art;
 };
 
-/** Every world sprite (units, buildings, plots, card pictures, icons, fx). */
+/**
+ * Every world sprite (units, buildings, plots, card pictures, icons, fx). One Phaser texture with several sources
+ * ("pages", like a Phaser multi-atlas): every frame records the page it lives on, so callers keep asking for
+ * `(SPRITES_KEY, frame)` and Phaser resolves the page (`Frame.sourceIndex`) when it draws, reads alpha or sizes it.
+ */
 export const SPRITES_KEY = 'sprites';
-const SPRITES_WIDTH = 512;
+/** Width of a `sprites` page; its height grows up to `SPRITES_MAX_SIDE`, then a new page starts. */
+export const SPRITES_PAGE_WIDTH = 2048;
+/** Largest side of any atlas page (CLAUDE.md "each side ≤ 4096"). */
+export const SPRITES_MAX_SIDE: number = ART_POLICY.maxAtlasSide;
 
 /** Accent colour of a card: its king's colour, neutral cards blue. */
 const cardAccent = (content: Content, def: CardDef): number => {
@@ -269,16 +279,81 @@ export const spriteList = (content: Content): { name: string; art: PixelCanvas }
   return out;
 };
 
-/** Frames whose art came from `imageArt` (2 art px per world unit); filled by `withImageArt`. */
-const IMAGE_FRAMES = new Set<string>();
+/** One page of the `sprites` texture: its frames' positions and the page size. */
+export interface SpritePage<T extends { art: { width: number; height: number } }> {
+  placed: (T & { x: number; y: number })[];
+  width: number;
+  height: number;
+}
 
-/** Display scale of a sprite frame: 0.5 for image art, 1 for generated art. */
-export const imageFrameScale = (frame: string): number =>
-  IMAGE_FRAMES.has(frame) ? IMAGE_ART_SCALE : 1;
+/**
+ * Shelf-pack `sprites` onto as many pages as needed, each at most `width` × `maxSide` (tallest first, ties in list
+ * order, so the packing is deterministic and shelves waste little). Throws if one sprite cannot fit a page.
+ */
+export const packSpritePages = <T extends { name: string; art: { width: number; height: number } }>(
+  sprites: readonly T[],
+  width = SPRITES_PAGE_WIDTH,
+  maxSide = SPRITES_MAX_SIDE,
+): SpritePage<T>[] => {
+  const order = sprites.map((s, i) => ({ s, i })).sort((a, b) => b.s.art.height - a.s.art.height || a.i - b.i);
+  const pages: SpritePage<T>[] = [];
+  let page: SpritePage<T> | null = null;
+  let x = 0;
+  let y = 0;
+  let shelf = 0;
+  for (const { s } of order) {
+    const { width: w, height: h } = s.art;
+    if (w > width || h > maxSide) throw new Error(`Sprite ${s.name} (${w}×${h}) does not fit a ${width}×${maxSide} page`);
+    if (page !== null && x + w > width) {
+      x = 0;
+      y += shelf + 1;
+      shelf = 0;
+    }
+    if (page === null || y + h > maxSide) {
+      page = { placed: [], width, height: 0 };
+      pages.push(page);
+      x = 0;
+      y = 0;
+      shelf = 0;
+    }
+    page.placed.push({ ...s, x, y });
+    x += w + 1;
+    shelf = Math.max(shelf, h);
+    page.height = Math.max(page.height, y + h);
+  }
+  return pages;
+};
+
+/** Frames whose art came from `imageArt` → their display scale (0.5, or 0.25 for HD art); filled by `withImageArt`. */
+const IMAGE_FRAMES = new Map<string, number>();
+
+/** Display scale of a sprite frame: 0.5 for image art (0.25 for its HD twin), 1 for generated art. */
+export const imageFrameScale = (frame: string): number => IMAGE_FRAMES.get(frame) ?? 1;
+
+/**
+ * Frame px → px of the frame's standard (`ai-v1`, density-2) export: 0.5 for an HD frame, else 1. HUD code that sizes
+ * a sprite frame by its pixel size multiplies by this so an HD frame shows at the same size as before.
+ */
+export const frameDensityFactor = (frame: string): number =>
+  IMAGE_FRAMES.get(frame) === IMAGE_ART_HD_SCALE ? IMAGE_ART_HD_SCALE / IMAGE_ART_SCALE : 1;
 
 /** Pixels of a loaded image texture by file name, or null when it did not load. */
 export const imageFile = (textures: Phaser.Textures.TextureManager, file: string): PixelCanvas | null =>
   textureArt(textures, imageArtKey(file));
+
+/**
+ * Pixels of a loaded image-art file with the display scale of its density: the HD twin (`imageArtHdKey`, 4 art px per
+ * world unit) when that loaded, else the `ai-v1` file (2 art px per world unit); null when neither loaded.
+ */
+export const imageFileScaled = (
+  textures: Phaser.Textures.TextureManager,
+  file: string,
+): { art: PixelCanvas; scale: number } | null => {
+  const hd = textureArt(textures, imageArtHdKey(file));
+  if (hd !== null) return { art: hd, scale: IMAGE_ART_HD_SCALE };
+  const art = imageFile(textures, file);
+  return art === null ? null : { art, scale: IMAGE_ART_SCALE };
+};
 
 /** Pixels of the texture under `key` (its source image), or null when there is no such texture. */
 export const textureArt = (textures: Phaser.Textures.TextureManager, key: string): PixelCanvas | null => {
@@ -291,6 +366,12 @@ export const textureArt = (textures: Phaser.Textures.TextureManager, key: string
 /** `list` with the frames of `imageArt` replaced by their PNGs (those that loaded; the rest keep generated art). */
 export const withImageArt = (
   textures: Phaser.Textures.TextureManager,
+  list: { name: string; art: PixelCanvas }[],
+): { name: string; art: PixelCanvas }[] => withImageArtFrom((file) => imageFileScaled(textures, file), list);
+
+/** `withImageArt` over any file lookup (pixels and display scale of a loaded file, or null): pure, so tests can size it. */
+export const withImageArtFrom = (
+  lookup: (file: string) => { art: PixelCanvas; scale: number } | null,
   list: { name: string; art: PixelCanvas }[],
 ): { name: string; art: PixelCanvas }[] => {
   IMAGE_FRAMES.clear();
@@ -309,20 +390,20 @@ export const withImageArt = (
     for (const state of PLOT_STATES) wanted.set(kingPlotFrame(king, state), `${prefix}_${state}`);
   const out = list.map((s) => {
     const file = wanted.get(s.name);
-    const art = file === undefined ? null : imageFile(textures, file);
-    if (art === null) return s;
-    IMAGE_FRAMES.add(s.name);
-    return { name: s.name, art };
+    const image = file === undefined ? null : lookup(file);
+    if (image === null) return s;
+    IMAGE_FRAMES.set(s.name, image.scale);
+    return { name: s.name, art: image.art };
   });
   // Level architecture has no generated fallback: a frame exists only when its image loaded.
   for (const [card, arts] of Object.entries(IMAGE_BUILDING_LEVELS))
     for (const lv of arts ?? []) {
       const file = buildingLevelFile(card, lv);
-      const art = file === null ? null : imageFile(textures, file);
-      if (art === null) continue;
+      const image = file === null ? null : lookup(file);
+      if (image === null) continue;
       const name = buildingLevelFrame(card as CardId, lv);
-      IMAGE_FRAMES.add(name);
-      out.push({ name, art });
+      IMAGE_FRAMES.set(name, image.scale);
+      out.push({ name, art: image.art });
     }
   return out;
 };
@@ -356,21 +437,25 @@ export const isoPlots = (
       : s,
   );
 
-/** Build the `sprites` atlas once (no-op if it already exists). */
+/** Build the `sprites` texture once (no-op if it already exists): one source per page of `packSpritePages`. */
 export const buildSpritesTexture = (
   textures: Phaser.Textures.TextureManager,
   content: Content,
 ): void => {
   if (textures.exists(SPRITES_KEY)) return;
-  const { placed, height } = packShelves(
-    isoPlots(withImageArt(textures, spriteList(content))),
-    SPRITES_WIDTH,
-  );
-  const sheet = new PixelCanvas(SPRITES_WIDTH, height);
-  for (const p of placed) sheet.blit(p.art, p.x, p.y);
-  const texture = textures.addCanvas(SPRITES_KEY, toCanvas(sheet));
+  const pages = packSpritePages(isoPlots(withImageArt(textures, spriteList(content))));
+  const canvases = pages.map((page) => {
+    const sheet = new PixelCanvas(page.width, Math.max(1, page.height));
+    for (const p of page.placed) sheet.blit(p.art, p.x, p.y);
+    return toCanvas(sheet);
+  });
+  const texture = textures.create(SPRITES_KEY, canvases);
   if (!texture) throw new Error('Failed to create sprites texture');
-  for (const p of placed) texture.add(p.name, 0, p.x, p.y, p.art.width, p.art.height);
+  const first = canvases[0];
+  if (first) texture.add('__BASE', 0, 0, 0, first.width, first.height);
+  pages.forEach((page, source) => {
+    for (const p of page.placed) texture.add(p.name, source, p.x, p.y, p.art.width, p.art.height);
+  });
 };
 
 /** Texture key of the code-drawn enemy portal (spec 2026-11-08 §3). */

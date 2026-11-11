@@ -1,11 +1,15 @@
 """Re-cut approved black-background building sources keying only BORDER-CONNECTED black (10/11/2026).
 
     python docs/art-review/g5/recut_border_key.py forge_flame_tower forge_iron_drake forge_bombardiers
+    python docs/art-review/g5/recut_border_key.py --density 4 forge_flame_tower forge_iron_drake forge_bombardiers
 
 The G5 cutter keyed every near-black pixel, so dark mortar lines and outlines inside a building became holes (the
 owner saw them as green dotted lines over the grass). This keeps the published image's exact size and footprint: it
 crops the source to the object, box-reduces (mask-weighted, alpha 0/255) to the current PNG's width × height and
 overwrites it. The old file is kept as `<id>.pre-recut.png` next to the source for rollback.
+
+`--density 4` writes the HiDPI twin instead: the same cut at EXACTLY twice the published density-2 image's size into
+public/assets/art/ai-v1-hd/iso/ (no rollback copy; the density-2 file is not touched).
 """
 import sys
 from pathlib import Path
@@ -15,6 +19,7 @@ from PIL import Image
 
 ROOT = Path(__file__).resolve().parents[3]
 ART = ROOT / 'public/assets/art/ai-v1/iso'
+ART_HD = ROOT / 'public/assets/art/ai-v1-hd/iso'
 
 
 def background(a: np.ndarray) -> np.ndarray:
@@ -33,18 +38,23 @@ def background(a: np.ndarray) -> np.ndarray:
         bg = g
 
 
-def recut(card: str) -> None:
+def recut(card: str, density: int = 2) -> None:
     king = card.split('_', 1)[0]
     src = ROOT / f'docs/art-review/g5/{king}/{card}/source.png'
     dst = ART / f'{card}.png'
     old = Image.open(dst).convert('RGBA')
-    (src.parent / f'{card}.pre-recut.png').write_bytes(dst.read_bytes())
+    mul = density // 2
+    if density == 2:
+        (src.parent / f'{card}.pre-recut.png').write_bytes(dst.read_bytes())
+    else:
+        dst = ART_HD / f'{card}.png'
+        dst.parent.mkdir(parents=True, exist_ok=True)
     a = np.array(Image.open(src).convert('RGB')).astype(float)
     solid = ~background(a)
     ys, xs = np.where(solid)
     y0, y1, x0, x1 = ys.min(), ys.max() + 1, xs.min(), xs.max() + 1
     crop, m = a[y0:y1, x0:x1], solid[y0:y1, x0:x1].astype(np.float32)
-    tw, th = old.size
+    tw, th = old.width * mul, old.height * mul
     mm = np.array(Image.fromarray(m, mode='F').resize((tw, th), Image.BOX))
     out = np.zeros((th, tw, 4), dtype=np.uint8)
     for k in range(3):
@@ -57,5 +67,12 @@ def recut(card: str) -> None:
 
 
 if __name__ == '__main__':
-    for c in sys.argv[1:]:
-        recut(c)
+    args = sys.argv[1:]
+    density = 2
+    if '--density' in args:
+        i = args.index('--density')
+        density, args = int(args[i + 1]), args[:i] + args[i + 2:]
+    if density not in (2, 4):
+        raise SystemExit('--density must be 2 or 4')
+    for c in args:
+        recut(c, density)

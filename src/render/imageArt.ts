@@ -1,6 +1,7 @@
 /**
  * Hand-picked image art (G3e, `ai-v1`): AI-assisted PNGs sliced by `docs/art-review/g3e/ai-v1/make_assets.py`.
  * Density is 2 art px per world unit, so these frames are drawn at scale 0.5 (camera zoom 2 → 1:1 screen pixels).
+ * Files with an HD twin (`IMAGE_ART_HD_FILES`) may load at 4 art px per world unit instead, drawn at 0.25.
  * Anything not listed here keeps its generated art at scale 1.
  */
 import type { KingId } from '../data/types';
@@ -11,6 +12,69 @@ export const IMAGE_ART_DIR = 'assets/art/ai-v1/';
 export const IMAGE_ART_SCALE = 0.5;
 
 export const imageArtKey = (file: string): string => `imgart-${file}`;
+
+/**
+ * HiDPI art (11/11/2026, `.superpowers/art-hd-map.md`): the same approved sources re-exported at 4 art px per world
+ * unit into `ai-v1-hd/` under the same file names, drawn at `IMAGE_ART_HD_SCALE` so every world size and anchor stays
+ * identical (each HD file is exactly twice its `ai-v1` twin). Only files in `IMAGE_ART_HD_FILES` have an HD twin; they
+ * are loaded instead of the `ai-v1` file when the display density is at least `HD_ART_MIN_DENSITY` (at density 1 the
+ * extra pixels would only be dropped by nearest sampling). HD files feed only the `sprites` atlas (unit poses,
+ * buildings and plots), which reads the density back from the texture key (`imageArtHdKey`). Wall, wilds, forest,
+ * portal, grass and terrain stay ai-v1: they are drawn outside the atlas at a fixed scale (see `.superpowers/art-hd-map.md`).
+ */
+export const IMAGE_ART_HD_DIR = 'assets/art/ai-v1-hd/';
+/** World units per art pixel of an HD file (4 art px per world unit). */
+export const IMAGE_ART_HD_SCALE = 0.25;
+export const HD_ART_MIN_DENSITY = 2;
+export const imageArtHdKey = (file: string): string => `imgart-hd-${file}`;
+/**
+ * Units with an HD twin (11/11/2026: every unit, enemy and boss with a pose source). `footman` has none: its ai-v1
+ * frames were cut from the old front-view barracks sheet (`docs/art-review/g3e/batch-01-barracks`), not from a pose
+ * source, so it keeps its ai-v1 frames at every density. Rollback of a group = remove its ids.
+ */
+export const IMAGE_ART_HD_UNITS: readonly string[] = [
+  'militia', 'reaper', 'peasant', 'golem', 'miner', 'rubble', 'slinger', 'apprentice', 'frost_mage', 'archmage',
+  'construct', 'wolf', 'bear', 'treant', 'stag', 'dryad', 'pirate', 'hookman', 'musketeer', 'swordsman',
+  'bombardier', 'shieldbearer', 'iron_drake', 'tin_soldier', 'spider', 'gear_gunner', 'colossus', 'skeleton',
+  'wraith', 'vampire', 'moon_reaper', 'rider', 'horse_archer', 'khan_guard', 'mercenary', 'bandit', 'bandit_archer',
+  'boar_rider', 'ogre', 'frog', 'hornet', 'boss_bog_ogre', 'boss_hornet_queen', 'boss_crownless_king',
+];
+/** Building cards with an HD twin of their base image and of each listed L2/L3 image (`IMAGE_BUILDING_LEVELS`). */
+export const IMAGE_ART_HD_BUILDINGS: readonly string[] = [
+  // wheat
+  'wheat_throne', 'wheat_field', 'wheat_windmill', 'wheat_granary', 'wheat_peasant_horde', 'wheat_militia',
+  'wheat_reapers', 'wheat_scarecrow',
+  // stone
+  'stone_throne', 'stone_catapult', 'stone_crystal', 'stone_golem_forge', 'stone_miners', 'stone_mountain_heart',
+  'stone_quarry', 'stone_wall',
+  // arcane
+  'arcane_throne', 'arcane_apprentices', 'arcane_archmage', 'arcane_frost_mages', 'arcane_library',
+  'arcane_mage_tower', 'arcane_ward',
+  // grove
+  'grove_throne', 'grove_bear_cave', 'grove_sapling', 'grove_spirit_stags', 'grove_spring', 'grove_thorn_tower',
+  'grove_treant', 'grove_wolf_den',
+  // tide
+  'tide_throne', 'tide_cannon', 'tide_harbor', 'tide_hookmen', 'tide_kraken', 'tide_pirates', 'tide_treasure',
+  'tide_wave_tower',
+  // forge
+  'forge_throne', 'forge_armory', 'forge_blast_furnace', 'forge_bombardiers', 'forge_flame_tower',
+  'forge_iron_drake', 'forge_smithy', 'forge_swordsmen',
+  // clock
+  'clock_throne', 'clock_bell_tower', 'clock_colossus', 'clock_gear_tower', 'clock_spiders', 'clock_spring_workshop',
+  'clock_steam_cannon', 'clock_windup_soldiers',
+  // moon
+  'moon_throne', 'moon_altar', 'moon_crypt', 'moon_reaper_shrine', 'moon_shadow_spire', 'moon_summoning_circle',
+  'moon_vampires',
+  // nomad
+  'nomad_throne', 'nomad_bazaar', 'nomad_caravan', 'nomad_horse_archers', 'nomad_khan_guard', 'nomad_riders',
+  'nomad_stables', 'nomad_watchtower',
+  // neutral
+  'neutral_barracks', 'neutral_archer_tower', 'neutral_well', 'neutral_mercenary_camp',
+];
+/** Kings whose four plot skins (`IMAGE_PLOTS`) have an HD twin. */
+export const IMAGE_ART_HD_PLOTS: readonly string[] = [
+  'wheat', 'stone', 'arcane', 'grove', 'tide', 'forge', 'clock', 'moon', 'nomad',
+];
 
 /**
  * Units drawn from image art: unit id → file prefix of its six poses (`<prefix>_<i>`, `<prefix>_foe_<i>`).
@@ -476,6 +540,37 @@ export const IMAGE_ART_FILES: readonly string[] = [
   ...(PORTAL_APPROVED ? [PORTAL_ART.file] : []),
   ...GROUND_TEXTURES_APPROVED.map((t) => GROUND_TEXTURE_FILES[t]),
 ];
+
+/**
+ * Files with an HD twin in `IMAGE_ART_HD_DIR`: the twelve poses of each HD unit, each HD building's base, L2 and L3, the
+ * four plot skins of each HD king.
+ */
+export const IMAGE_ART_HD_FILES: ReadonlySet<string> = new Set([
+  ...IMAGE_ART_HD_UNITS.flatMap((unit) => {
+    const prefix = IMAGE_UNITS[unit];
+    return prefix === undefined ? [] : POSE_INDEXES.flatMap((i) => [`${prefix}_${i}`, `${prefix}_foe_${i}`]);
+  }),
+  ...IMAGE_ART_HD_BUILDINGS.flatMap((card) => {
+    const base = IMAGE_BUILDINGS[card];
+    if (base === undefined) return [];
+    return [base, ...(IMAGE_BUILDING_LEVELS[card] ?? []).flatMap((art) => buildingLevelFile(card, art) ?? [])];
+  }),
+  ...IMAGE_ART_HD_PLOTS.flatMap((king) => {
+    const prefix = IMAGE_PLOTS[king];
+    return prefix === undefined ? [] : PLOT_STATES.map((s) => `${prefix}_${s}`);
+  }),
+]);
+
+/** Whether HD art is loaded at display density `density`. */
+export const useHdArt = (density: number): boolean => density >= HD_ART_MIN_DENSITY;
+
+/** What to load for every image-art file: its HD twin (under the HD key) when `hd` and it has one, else the `ai-v1` file. */
+export const imageArtLoads = (hd: boolean): readonly { key: string; url: string }[] =>
+  IMAGE_ART_FILES.map((file) =>
+    hd && IMAGE_ART_HD_FILES.has(file)
+      ? { key: imageArtHdKey(file), url: `${IMAGE_ART_HD_DIR}${file}.png` }
+      : { key: imageArtKey(file), url: `${IMAGE_ART_DIR}${file}.png` },
+  );
 
 /** Pose index of each animation frame (the sheets are drawn idle0 idle1 walk0 walk1 attack0 attack1). */
 export const POSES: Record<UnitAnim, readonly [number, number]> = {
