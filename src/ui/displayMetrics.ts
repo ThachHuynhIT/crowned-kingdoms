@@ -65,3 +65,28 @@ export const cameraBackingView = (view: CameraView, m: DisplayMetrics): { zoom: 
 /** A logical translation rounded so that `value × ratio` is a whole device pixel (ratio 1: `Math.round`). */
 export const snapTranslation = (value: number, ratio: number): number =>
   ratio === 1 ? Math.round(value) : Math.round(value * ratio) / ratio;
+
+const DECIMAL = /^\d+(?:\.\d+)?$|^\.\d+$/;
+
+/**
+ * The density to use (spec §5): a valid override (a positive decimal string, trimmed; odd values allowed) wins,
+ * else the device density, else 1.
+ */
+export const effectiveDensity = (deviceDpr: number, override?: string): number => {
+  const raw = override?.trim() ?? '';
+  if (DECIMAL.test(raw)) {
+    const o = Number(raw);
+    if (Number.isFinite(o) && o > 0) return o;
+  }
+  return validDensity(deviceDpr);
+};
+
+/**
+ * Rollout policy (spec §5): while HiDPI is disabled the game draws at 1 unless a DEV `?density=` override is given;
+ * once enabled it uses the device density. Production builds ignore the override.
+ */
+export const resolveDensity = (o: { device: number; enabled: boolean; dev: boolean; override?: string }): number => {
+  const override = o.dev ? o.override : undefined;
+  if (!o.enabled) return effectiveDensity(1, override);
+  return effectiveDensity(o.device, override);
+};

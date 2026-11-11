@@ -12,6 +12,7 @@ import {
   type Rect,
   type TooltipContent,
 } from './hud/layout';
+import { logicalSize } from './displayRuntime';
 import { skinFrame, type UiSkin } from './skin';
 
 export { TOUCH_TARGET };
@@ -52,8 +53,10 @@ export const addUiText = (
     .setShadow(1, 1, toCss(UI_PALETTE.textShadow), 0, false, true);
 
 /** Border pixel scale for this scene's viewport (1× on phones, 2× otherwise). */
-export const uiScale = (scene: Phaser.Scene): 1 | 2 =>
-  uiScaleFor(scene.scale.width, scene.scale.height);
+export const uiScale = (scene: Phaser.Scene): 1 | 2 => {
+  const { w, h } = logicalSize(scene);
+  return uiScaleFor(w, h);
+};
 
 /** Screen px of a frame's decorative edge at the current uiScale. */
 export const frameBorder = (scene: Phaser.Scene, frame: AnyUiFrame): number =>

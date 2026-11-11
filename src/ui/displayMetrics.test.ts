@@ -1,8 +1,10 @@
 import { describe, expect, it } from 'vitest';
 import {
   cameraBackingView,
+  effectiveDensity,
   logicalPressDistance,
   makeDisplayMetrics,
+  resolveDensity,
   snapTranslation,
   toBackingPoint,
   toLogicalPoint,
@@ -152,5 +154,41 @@ describe('snapTranslation', () => {
 
   it('is Math.round at ratio 1', () => {
     for (const t of [0.3, -12.71, 100.5, 7]) expect(snapTranslation(t, 1)).toBe(Math.round(t));
+  });
+});
+
+describe('effectiveDensity', () => {
+  it('uses a valid override, including odd densities and whitespace', () => {
+    expect(effectiveDensity(1, '2')).toBe(2);
+    expect(effectiveDensity(1, '1.25')).toBe(1.25);
+    expect(effectiveDensity(3, ' 1.5 ')).toBe(1.5);
+  });
+
+  it('falls back to the device density for a missing or invalid override', () => {
+    for (const o of [undefined, '', '  ', 'abc', '2x', 'NaN', 'Infinity', '0', '-1']) expect(effectiveDensity(2, o)).toBe(2);
+  });
+
+  it('falls back to 1 for an invalid device density', () => {
+    for (const d of [Number.NaN, 0, -1, Number.POSITIVE_INFINITY]) expect(effectiveDensity(d)).toBe(1);
+  });
+});
+
+describe('resolveDensity (rollout policy)', () => {
+  it('forces 1 while HiDPI is disabled, unless a DEV override is given', () => {
+    expect(resolveDensity({ device: 2, enabled: false, dev: true })).toBe(1);
+    expect(resolveDensity({ device: 2, enabled: false, dev: true, override: '2' })).toBe(2);
+    expect(resolveDensity({ device: 1, enabled: false, dev: true, override: '1.75' })).toBe(1.75);
+    expect(resolveDensity({ device: 2, enabled: false, dev: true, override: 'bad' })).toBe(1);
+  });
+
+  it('uses the device density once enabled', () => {
+    expect(resolveDensity({ device: 2, enabled: true, dev: false })).toBe(2);
+    expect(resolveDensity({ device: 2, enabled: true, dev: true, override: '1' })).toBe(1);
+    expect(resolveDensity({ device: Number.NaN, enabled: true, dev: false })).toBe(1);
+  });
+
+  it('ignores the override in production builds', () => {
+    expect(resolveDensity({ device: 1, enabled: false, dev: false, override: '2' })).toBe(1);
+    expect(resolveDensity({ device: 2, enabled: true, dev: false, override: '1' })).toBe(2);
   });
 });

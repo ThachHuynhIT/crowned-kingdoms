@@ -10,6 +10,7 @@ import type { UiFrame } from '../render/uiArt';
 import { UI_KIT_DIR, UI_KIT_FILES, kitTextureKey } from '../render/uiKit';
 import { CARD_ART_FILES } from '../ui/cards/cardImage';
 import { KING_BADGE_FILES } from '../ui/realm/kingBadge';
+import { bindSceneDisplay, logicalSize } from '../ui/displayRuntime';
 import { textStyle } from '../ui/theme';
 import { SCENES } from './keys';
 
@@ -22,10 +23,14 @@ export class PreloadScene extends Phaser.Scene {
   }
 
   preload(): void {
-    const { width, height } = this.scale;
+    const { w: width, h: height } = logicalSize(this);
     const label = this.add
       .text(width / 2, height / 2, LOADING_LABEL, textStyle(16, UI_PALETTE.creamLight))
       .setOrigin(0.5);
+    bindSceneDisplay(this, () => {
+      const s = logicalSize(this);
+      label.setPosition(s.w / 2, s.h / 2);
+    });
     this.load.on(Phaser.Loader.Events.PROGRESS, (p: number) => {
       label.setText(`${LOADING_LABEL} ${Math.round(p * 100)}%`);
     });
