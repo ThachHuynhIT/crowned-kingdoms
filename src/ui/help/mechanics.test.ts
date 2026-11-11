@@ -25,6 +25,7 @@ describe('mechanicEntries', () => {
     expect(lines).toContain(`${RUN.merchantPrice} vàng`);
     expect(lines).toContain('tối đa 1');
     expect(lines).toContain('miễn phí');
+    expect(lines).toContain('vào thẳng tay'); // bug fix 12/11/2026
   });
 
   it('covers every mandatory mechanic', () => {

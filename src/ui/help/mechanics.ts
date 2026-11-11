@@ -105,6 +105,7 @@ export const mechanicEntries = (content: Content): readonly HelpEntry[] => {
     ]),
     entry('rewards', 'Thẻ thưởng', [
       `Thẻ thưởng cho ${REWARD.choices} lựa chọn (sắc lệnh Giao Thương tăng lên ${DECREE_RULES.reward}).`,
+      'Thẻ thưởng chọn được nằm trên đầu chồng rút: đó là lá bạn rút đầu năm sau.',
     ]),
     entry('powers', 'Can Thiệp riêng của vua', [
       'Can Thiệp rơi vào chỗ bạn chọn, cùng hồi chiêu và sát thương gốc; mỗi vua thêm một hiệu ứng:',
@@ -112,7 +113,7 @@ export const mechanicEntries = (content: Content): readonly HelpEntry[] => {
     ]),
     entry('merchant', 'Thương nhân', [
       `Sau trận các năm ${RUN.merchantYears.join(', ')} (Vô tận: sau năm ${RULES_FULL.years}, cứ ${RUN.merchantEvery} năm) thương nhân bày ${REWARD.choices} thẻ.`,
-      `Mỗi thẻ ${RUN.merchantPrice} vàng, mua tối đa 1 hoặc bỏ qua miễn phí; thẻ mua có trên tay năm sau như thẻ thưởng.`,
+      `Mỗi thẻ ${RUN.merchantPrice} vàng, mua tối đa 1 hoặc bỏ qua miễn phí; thẻ mua vào thẳng tay (như Mua thẻ), lá rút năm sau vẫn là lá mới.`,
     ]),
   ];
 };
