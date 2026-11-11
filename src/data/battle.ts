@@ -45,9 +45,9 @@ export const KING_TUNING: Readonly<Record<KingId, { readonly hpPct: number; read
   grove: { hpPct: 21, dmgPct: 21 },
   tide: { hpPct: 3, dmgPct: 3 },
   forge: { hpPct: -26, dmgPct: -26 },
-  clock: { hpPct: 130, dmgPct: 130 },
-  moon: { hpPct: 7, dmgPct: 7 },
-  nomad: { hpPct: 21, dmgPct: 21 },
+  clock: { hpPct: 0, dmgPct: 0 },
+  moon: { hpPct: 5, dmgPct: 5 },
+  nomad: { hpPct: 18, dmgPct: 18 },
 };
 
 /**

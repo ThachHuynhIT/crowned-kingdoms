@@ -49,7 +49,7 @@ const WANTED: readonly { label: string; match: (s: RunState, next: RunCommand) =
 const collect = (): Sample[] => {
   const found = new Map<string, Sample>();
   runHeadless({
-    seed: 29, // re-picked 11/11/2026 after the intervention nerf: the first stone seed (1..40) whose greedy run lives to 42
+    seed: 4, // re-picked 11/11/2026 after the Endless budget retune (10%/year): the first stone seed (1..40) whose greedy run lives to 42
     kingId: 'stone',
     rules: RULES_ENDLESS,
     bot: greedyBot,

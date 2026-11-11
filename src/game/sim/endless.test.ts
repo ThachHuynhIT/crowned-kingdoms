@@ -68,6 +68,7 @@ describe('runHeadless in Endless', () => {
 });
 
 // Measured on 2026-11-09 (seeds 1..20 tried in order, the first that lives to 40 is frozen here); re-picked 11/11/2026 after
-// the intervention nerf (seeds 1..40: only 29 lives to 40).
-const ENDLESS_SEED = 29;
+// the intervention nerf (seeds 1..40: only 29 lives to 40), then again after the Endless budget growth went 15% -> 10%
+// a year (seeds 1..40: 4 is the first that lives to 42).
+const ENDLESS_SEED = 4;
 const ENDLESS_KING = 'stone' as const;

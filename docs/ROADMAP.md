@@ -16,7 +16,7 @@ Chơi được trong trình duyệt:
 - Lưu ván và tải lại: lưu tự động và nhiều bản lưu có tên.
 - Âm thanh sinh bằng code, màn Cài đặt, PWA chơi offline.
 - Art bằng ảnh cho cả 9 vua.
-- Cân bằng: 54,6–63,8% thắng mỗi vua, chênh lệch 9,2 điểm (bot `greedy`, 500 ván/vua, Gai 0, tối 11/11/2026); Can Thiệp giảm còn 30–43% tổng sát thương (trước 75–81%), lính và tháp mạnh hơn (`ALLY_ROLE_TUNING`), `ENEMY_STAT_MULT` 1,5, `KING_TUNING` theo vua. Số sát thương trận trước hiện dưới chân nhà và trong hộp thông tin.
+- Cân bằng: 55,6–64,0% thắng mỗi vua, chênh lệch 8,4 điểm (bot `greedy`, 500 ván/vua, Gai 0, tối 11/11/2026); Can Thiệp giảm còn 30–43% tổng sát thương (trước 75–81%), lính và tháp mạnh hơn (`ALLY_ROLE_TUNING`), `ENEMY_STAT_MULT` 1,5, `KING_TUNING` theo vua (Đồng Hồ 0 nhờ tăng thẳng thẻ); Vô tận ngân sách địch +10%/năm sau năm 30. Số sát thương trận trước hiện dưới chân nhà và trong hộp thông tin.
 
 ## Việc tiếp theo: phản hồi của chủ dự án, chỉ trên PC (09/11/2026)
 

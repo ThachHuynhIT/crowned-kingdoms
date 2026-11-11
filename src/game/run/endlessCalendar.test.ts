@@ -47,11 +47,11 @@ describe('endless budgets', () => {
   it('base budget: years 1..30 are the shipped table, then the stored recurrence', () => {
     for (let y = 1; y <= 30; y++) expect(endlessBaseBudget(y)).toBe(ENEMY_BUDGET[y - 1]);
     expect(endlessBaseBudget(30)).toBe(691);
-    expect(endlessBaseBudget(31)).toBe(795);
-    expect(endlessBaseBudget(32)).toBe(914);
+    expect(endlessBaseBudget(31)).toBe(760);
+    expect(endlessBaseBudget(32)).toBe(836);
     let prev = 691;
     ENDLESS_BASE_BUDGET.forEach((b, i) => {
-      expect(b).toBe(Math.min(ENDLESS_BASE_BUDGET_CAP, Math.floor((prev * 115 + 50) / 100)));
+      expect(b).toBe(Math.min(ENDLESS_BASE_BUDGET_CAP, Math.floor((prev * 110 + 50) / 100)));
       if (i < ENDLESS_BASE_BUDGET.length - 1) expect(b).toBeLessThan(ENDLESS_BASE_BUDGET_CAP);
       prev = b;
     });
