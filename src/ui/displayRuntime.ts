@@ -230,6 +230,32 @@ export const installDisplayRuntime = (
 const runtimeOf = (scene: Phaser.Scene): DisplayRuntime | undefined =>
   scene.registry?.get(REGISTRY_KEY) as DisplayRuntime | undefined;
 
+/** The realm scene's key (`SCENES.realm`; a literal so `ui` does not import `scenes`). */
+const REALM_SCENE = 'Realm';
+
+export type DevDisplaySnapshot = DisplayMetrics & { realmView?: { zoom: number; scroll: { x: number; y: number } } };
+
+/**
+ * DEV hook (`window.displayMetrics`, plan Task 4): a deep copy of the runtime metrics plus the Realm scene's logical
+ * camera view while that scene is active. Never returns live runtime or scene objects. Null without a runtime.
+ */
+export const devDisplaySnapshot = (game: Phaser.Game): DevDisplaySnapshot | null => {
+  const runtime = game.registry.get(REGISTRY_KEY) as DisplayRuntime | undefined;
+  if (!runtime) return null;
+  const { logical, backing, density, ratio } = runtime.metrics;
+  const snap: DevDisplaySnapshot = {
+    logical: { w: logical.w, h: logical.h },
+    backing: { w: backing.w, h: backing.h },
+    density,
+    ratio: { x: ratio.x, y: ratio.y },
+  };
+  if (!game.scene.isActive(REALM_SCENE)) return snap;
+  const view = (game.scene.getScene(REALM_SCENE) as unknown as { view?: { zoom: number; scroll: { x: number; y: number } } | null } | null)
+    ?.view;
+  if (!view) return snap;
+  return { ...snap, realmView: { zoom: view.zoom, scroll: { x: view.scroll.x, y: view.scroll.y } } };
+};
+
 /** Current metrics; without a runtime (tests, tools) the scale size at density 1. */
 export const displayMetrics = (scene: Phaser.Scene): DisplayMetrics =>
   runtimeOf(scene)?.metrics ?? makeDisplayMetrics({ w: scene.scale.width || 1, h: scene.scale.height || 1 }, 1);

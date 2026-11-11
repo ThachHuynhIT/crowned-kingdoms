@@ -53,7 +53,7 @@ const Phaser = (await import('phaser')).default as unknown as {
   Emitter: new () => { emit: (e: string, ...a: unknown[]) => void; count: (e: string) => number };
   GameObjects: { Text: new () => { style: { resolution: number }; destroy(): void } };
 };
-const { DisplayRuntime, logicalPointerDistance, worldTextBucket } = await import('./displayRuntime');
+const { DisplayRuntime, devDisplaySnapshot, logicalPointerDistance, worldTextBucket } = await import('./displayRuntime');
 const { makeDisplayMetrics } = await import('./displayMetrics');
 
 const host = () => {
@@ -208,6 +208,41 @@ describe('DisplayRuntime', () => {
     events.emit('addedtoscene', t);
     rt.setWorldTextZoom(scene, 3);
     expect(t.style.resolution).toBe(1);
+  });
+});
+
+describe('devDisplaySnapshot', () => {
+  const gameWith = (rt: unknown, realm: { active: boolean; view: unknown } | null) =>
+    ({
+      registry: { get: (k: string) => (k === 'displayRuntime' ? rt : undefined) },
+      scene: {
+        getScene: (k: string) => (k === 'Realm' && realm ? { view: realm.view } : null),
+        isActive: (k: string) => k === 'Realm' && !!realm?.active,
+      },
+    }) as never;
+
+  it('dev_metrics_snapshot_is_copy: metrics and realm view are deep copies, never the live objects', () => {
+    const rt = new DisplayRuntime(host(), m(1280, 720, 2));
+    const view = { zoom: 1.5, scroll: { x: 10, y: 20 } };
+    const snap = devDisplaySnapshot(gameWith(rt, { active: true, view }))!;
+    expect(snap).toEqual({ ...m(1280, 720, 2), realmView: { zoom: 1.5, scroll: { x: 10, y: 20 } } });
+    expect(snap.logical).not.toBe(rt.metrics.logical);
+    expect(snap.backing).not.toBe(rt.metrics.backing);
+    expect(snap.ratio).not.toBe(rt.metrics.ratio);
+    expect(snap.realmView).not.toBe(view);
+    expect(snap.realmView!.scroll).not.toBe(view.scroll);
+    (snap.logical as { w: number }).w = 1;
+    (snap.realmView!.scroll as { x: number }).x = 999;
+    expect(rt.metrics.logical.w).toBe(1280);
+    expect(view.scroll.x).toBe(10);
+  });
+
+  it('omits the realm view when the Realm scene is inactive or has no view; null without a runtime', () => {
+    const rt = new DisplayRuntime(host(), m(375, 812, 1));
+    expect(devDisplaySnapshot(gameWith(rt, { active: false, view: { zoom: 1, scroll: { x: 0, y: 0 } } }))).toEqual(m(375, 812, 1));
+    expect(devDisplaySnapshot(gameWith(rt, { active: true, view: null }))).toEqual(m(375, 812, 1));
+    expect(devDisplaySnapshot(gameWith(rt, null))).toEqual(m(375, 812, 1));
+    expect(devDisplaySnapshot(gameWith(undefined, null))).toBeNull();
   });
 });
 
