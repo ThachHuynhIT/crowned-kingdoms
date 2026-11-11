@@ -235,7 +235,7 @@ export class RealmScene extends Phaser.Scene {
     this.field = new FieldRenderer(this, seed, initial.kingId, initial.mode);
     this.board = new BoardRenderer(this, CONTENT, initial.mode);
     this.units = new UnitRenderer(this);
-    this.fx = new FxRenderer(this);
+    this.fx = new FxRenderer(this, () => getSession(this)?.meta().settings.effects !== false);
     this.range = new RangeRenderer(this);
 
     const bus = this.bus;
@@ -411,10 +411,12 @@ export class RealmScene extends Phaser.Scene {
       this.units?.destroy();
       this.fx?.destroy();
       this.units = new UnitRenderer(this);
-      this.fx = new FxRenderer(this);
+      this.fx = new FxRenderer(this, () => getSession(this)?.meta().settings.effects !== false);
       this.board?.setBuildingsVisible(true);
     }
-    this.board?.render(state, this.controller.lastBattleDamage);
+    // Last-battle damage under each building, unless the graphics setting hides it (11/11/2026).
+    const showDamage = getSession(this)?.meta().settings.damageNumbers !== false;
+    this.board?.render(state, showDamage ? this.controller.lastBattleDamage : null);
     const edges = new Set<Edge>();
     for (const wave of state.army?.waves ?? []) for (const u of wave.units) edges.add(u.edge);
     this.board?.setEdgeArrows([...edges].sort());

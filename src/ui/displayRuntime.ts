@@ -62,8 +62,14 @@ const boxOf = (parent: HTMLElement): Size => ({
   h: parent.clientHeight || window.innerHeight,
 });
 
-const densityOf = (env: DisplayEnv): number =>
-  resolveDensity({ device: env.devicePixelRatio(), enabled: env.enabled, dev: env.dev, override: env.densityOverride() });
+const densityOf = (env: DisplayEnv, cap?: number): number =>
+  resolveDensity({
+    device: env.devicePixelRatio(),
+    enabled: env.enabled,
+    dev: env.dev,
+    override: env.densityOverride(),
+    ...(cap !== undefined ? { cap } : {}),
+  });
 
 /** Metrics before the game exists (for its config width/height). */
 export const readInitialDisplayMetrics = (parent: HTMLElement, env: DisplayEnv = browserDisplayEnv()): DisplayMetrics =>
@@ -93,6 +99,10 @@ export interface DisplayHost {
 export class DisplayRuntime {
   private current: DisplayMetrics;
   private readonly bindings = new Set<Binding>();
+  /** Density cap from the graphics setting (`GRAPHICS_DENSITY_CAP`); Infinity = the device density. */
+  densityCap = Number.POSITIVE_INFINITY;
+  /** Re-measures the box and density and applies them (set by `installDisplayRuntime`). */
+  recheck: () => void = () => {};
 
   constructor(
     private readonly host: DisplayHost,
@@ -200,7 +210,7 @@ export const installDisplayRuntime = (
   const check = (): void => {
     const box = boxOf(parent);
     if (!(box.w > 0 && box.h > 0)) return; // minimised: keep the last valid metrics
-    runtime.apply(makeDisplayMetrics(box, densityOf(env)));
+    runtime.apply(makeDisplayMetrics(box, densityOf(env, runtime.densityCap)));
     watchDensity();
   };
   const watchDensity = (): void => {
@@ -210,6 +220,7 @@ export const installDisplayRuntime = (
     media = window.matchMedia(`(resolution: ${d}dppx)`);
     media.addEventListener('change', check);
   };
+  runtime.recheck = check;
   const observer = typeof ResizeObserver === 'undefined' ? null : new ResizeObserver(check);
   // BOOT: the renderer has created the canvas at the config's backing size; this listener (registered in preBoot)
   // runs just before ScaleManager.boot, which then measures these CSS bounds for its pointer mapping.
@@ -295,4 +306,15 @@ export const logicalPointerDistance = (
 ): number => {
   const now = pointer.isDown ? { x: pointer.x, y: pointer.y } : { x: pointer.upX, y: pointer.upY };
   return logicalPressDistance(now, { x: pointer.downX, y: pointer.downY }, displayMetrics(scene));
+};
+
+/**
+ * Graphics setting (owner 11/11/2026): cap the canvas density (`GRAPHICS_DENSITY_CAP`: Infinity, 2 or 1) and apply it
+ * at once. Without a runtime it does nothing.
+ */
+export const setDisplayDensityCap = (game: Phaser.Game, cap: number): void => {
+  const runtime = game.registry?.get(REGISTRY_KEY) as DisplayRuntime | undefined;
+  if (!runtime) return;
+  runtime.densityCap = cap > 0 ? cap : Number.POSITIVE_INFINITY;
+  runtime.recheck();
 };

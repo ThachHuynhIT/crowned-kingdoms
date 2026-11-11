@@ -192,3 +192,14 @@ describe('resolveDensity (rollout policy)', () => {
     expect(resolveDensity({ device: 2, enabled: true, dev: false, override: '1' })).toBe(2);
   });
 });
+
+describe('resolveDensity cap (graphics setting, 11/11/2026)', () => {
+  it('caps the device density; a DEV override ignores the cap', () => {
+    expect(resolveDensity({ device: 3, enabled: true, dev: false, cap: 2 })).toBe(2);
+    expect(resolveDensity({ device: 1.5, enabled: true, dev: false, cap: 2 })).toBe(1.5);
+    expect(resolveDensity({ device: 2, enabled: true, dev: false, cap: 1 })).toBe(1);
+    expect(resolveDensity({ device: 3, enabled: true, dev: false, cap: Number.POSITIVE_INFINITY })).toBe(3);
+    expect(resolveDensity({ device: 1, enabled: true, dev: true, override: '2', cap: 1 })).toBe(2);
+    expect(resolveDensity({ device: 3, enabled: true, dev: true, override: 'bad', cap: 2 })).toBe(2);
+  });
+});

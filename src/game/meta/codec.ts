@@ -4,7 +4,14 @@
  */
 import { CARD_UNLOCK, DEFAULT_VOLUME, META_SAVE_VERSION, SETTLED_RUNS_KEPT, STARTING_KINGS } from '../../data/meta';
 import { RUN } from '../../data/run';
-import { DEFAULT_SCREEN_SHAKE } from '../../data/settings';
+import {
+  DEFAULT_DAMAGE_NUMBERS,
+  DEFAULT_EFFECTS,
+  DEFAULT_GRAPHICS,
+  DEFAULT_SCREEN_SHAKE,
+  GRAPHICS_QUALITIES,
+  type GraphicsQuality,
+} from '../../data/settings';
 import { ALL_KINGS } from '../../data/rules';
 import type { CardId, KingId } from '../../data/types';
 import { defaultProfile, type MetaProfile, perKing } from './profile';
@@ -84,6 +91,23 @@ export const decodeMeta = (raw: unknown): DecodeMetaResult => {
         set.screenShake === undefined
           ? DEFAULT_SCREEN_SHAKE
           : fix(set.screenShake as boolean, typeof set.screenShake === 'boolean', DEFAULT_SCREEN_SHAKE),
+      // Graphics settings (11/11/2026), also without a version bump: missing = default, wrong type = repaired.
+      graphics:
+        set.graphics === undefined
+          ? DEFAULT_GRAPHICS
+          : fix(
+              set.graphics as GraphicsQuality,
+              GRAPHICS_QUALITIES.includes(set.graphics as GraphicsQuality),
+              DEFAULT_GRAPHICS,
+            ),
+      effects:
+        set.effects === undefined
+          ? DEFAULT_EFFECTS
+          : fix(set.effects as boolean, typeof set.effects === 'boolean', DEFAULT_EFFECTS),
+      damageNumbers:
+        set.damageNumbers === undefined
+          ? DEFAULT_DAMAGE_NUMBERS
+          : fix(set.damageNumbers as boolean, typeof set.damageNumbers === 'boolean', DEFAULT_DAMAGE_NUMBERS),
     },
     settledRuns: runs.slice(-SETTLED_RUNS_KEPT),
     // Vô tận (spec 2026-11-09 §2): thiếu = chưa mở (không suy từ số lần thắng); sai kiểu thì sửa riêng về false.

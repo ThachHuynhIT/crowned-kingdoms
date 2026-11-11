@@ -68,25 +68,36 @@ export const snapTranslation = (value: number, ratio: number): number =>
 
 const DECIMAL = /^\d+(?:\.\d+)?$|^\.\d+$/;
 
+/** A `?density=` value as a positive finite number, or null when missing or invalid (trimmed; odd values allowed). */
+export const parseDensityOverride = (override?: string): number | null => {
+  const raw = override?.trim() ?? '';
+  if (!DECIMAL.test(raw)) return null;
+  const o = Number(raw);
+  return Number.isFinite(o) && o > 0 ? o : null;
+};
+
 /**
  * The density to use (spec §5): a valid override (a positive decimal string, trimmed; odd values allowed) wins,
  * else the device density, else 1.
  */
-export const effectiveDensity = (deviceDpr: number, override?: string): number => {
-  const raw = override?.trim() ?? '';
-  if (DECIMAL.test(raw)) {
-    const o = Number(raw);
-    if (Number.isFinite(o) && o > 0) return o;
-  }
-  return validDensity(deviceDpr);
-};
+export const effectiveDensity = (deviceDpr: number, override?: string): number =>
+  parseDensityOverride(override) ?? validDensity(deviceDpr);
 
 /**
  * Rollout policy (spec §5): while HiDPI is disabled the game draws at 1 unless a DEV `?density=` override is given;
- * once enabled it uses the device density. Production builds ignore the override.
+ * once enabled it uses the device density, capped by the graphics setting (`cap`, 11/11/2026). A DEV override wins
+ * over both. Production builds ignore the override.
  */
-export const resolveDensity = (o: { device: number; enabled: boolean; dev: boolean; override?: string }): number => {
-  const override = o.dev ? o.override : undefined;
-  if (!o.enabled) return effectiveDensity(1, override);
-  return effectiveDensity(o.device, override);
+export const resolveDensity = (o: {
+  device: number;
+  enabled: boolean;
+  dev: boolean;
+  override?: string;
+  /** Graphics setting cap (`GRAPHICS_DENSITY_CAP`); absent = no cap. */
+  cap?: number;
+}): number => {
+  const override = o.dev ? parseDensityOverride(o.override) : null;
+  if (override !== null) return override;
+  const d = o.enabled ? validDensity(o.device) : 1;
+  return o.cap !== undefined && o.cap > 0 ? Math.min(d, o.cap) : d;
 };
