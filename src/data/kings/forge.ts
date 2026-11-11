@@ -162,7 +162,7 @@ export const FORGE: KingDef = {
     tags: [],
     textVi:
       'Ngai của Vua Lò Rèn: bắn lửa gây bỏng. Lửa Tôi: công trình cấp 3 trở lên được +10% sát thương (cao hơn khi Ngai lên cấp).',
-    hp: 190,
+    hp: 150,
     armor: 0.1,
     attack: { dmg: 9, type: 'fire', range: cells(1.5), interval: 12, projectileSpeed: 14, onHit: [{ type: 'burn', dps: 2, ticks: 30 }] },
     // Lửa Tôi: công trình cấp ≥ 3 +DMG theo cấp Ngai.

@@ -58,7 +58,7 @@ describe('migrate_v5_to6', () => {
   it('adds perk null, no meta cards and no free moves used, keeping everything else', () => {
     const original = base();
     const migrated = migrateRunState(asV5(original)) as RunState;
-    expect(migrated.version).toBe(7);
+    expect(migrated.version).toBe(9);
     expect(migrated).toEqual(original);
     expect(migrated).toMatchObject({ perk: null, unlockedCards: [], freeMovesUsed: 0 });
   });
@@ -73,7 +73,7 @@ describe('migrate_v5_to6', () => {
 
   it('migrates all the way from version 3 and decodeRun accepts a version 5 envelope', () => {
     const original = base();
-    expect((migrateRunState(asV3(original)) as RunState).version).toBe(7);
+    expect((migrateRunState(asV3(original)) as RunState).version).toBe(9);
     const r = decodeRun({ formatVersion: 1, version: 5, contentHash: 1, state: asV5(original) }, CONTENT);
     expect(r.kind).toBe('ok');
     if (r.kind === 'ok') expect(r.state).toEqual(original);
@@ -89,7 +89,7 @@ describe('migrate_v3_to4', () => {
   it('turns a version 3 state into version 6 (through 4 and 5) keeping the run and adding neutral defaults', () => {
     const original = base();
     const migrated = migrateRunState(asV3(original)) as RunState;
-    expect(migrated.version).toBe(7);
+    expect(migrated.version).toBe(9);
     expect(migrated).toMatchObject({
       seed: original.seed,
       year: original.year,
@@ -140,10 +140,10 @@ describe('migrate_v3_to4', () => {
     expect(v3).toEqual(copy);
   });
 
-  it('leaves version 6, version 1, 2, 7 and non-objects untouched', () => {
+  it('leaves the current version 9, versions 1, 2 and non-objects untouched', () => {
     const v6 = base();
     expect(migrateRunState(v6)).toBe(v6);
-    for (const version of [1, 2, 7]) {
+    for (const version of [1, 2, 9]) {
       const s = { ...asV3(v6), version };
       expect(migrateRunState(s)).toBe(s);
     }
@@ -156,7 +156,7 @@ describe('migrate_v3_to4', () => {
     const v3 = asV3(original);
     const inEnvelope = decodeRun({ formatVersion: 1, version: 3, contentHash: 1, state: v3 }, CONTENT);
     expect(inEnvelope.kind).toBe('ok');
-    if (inEnvelope.kind === 'ok') expect(inEnvelope.state.version).toBe(7);
+    if (inEnvelope.kind === 'ok') expect(inEnvelope.state.version).toBe(9);
     expect(decodeRun(v3, CONTENT).kind).toBe('ok');
   });
 
@@ -248,7 +248,7 @@ describe('migrate_v6_to7 (Endless)', () => {
     const copy = structuredClone(v6);
     const migrated = migrateRunState(v6) as RunState;
     expect(v6).toEqual(copy);
-    expect(migrated.version).toBe(7);
+    expect(migrated.version).toBe(9);
     expect(migrated.mode).toBe('normal');
     expect(migrated.endless).toBeNull();
     expect(migrated.rng.blessing).toBe(hashSeed('9:blessing'));
@@ -266,12 +266,12 @@ describe('migrate_v6_to7 (Endless)', () => {
 
   it('decodeRun rejects a mode that disagrees with the rules and a board of the wrong size', () => {
     const normal = base();
-    expect(decodeRun({ formatVersion: 1, version: 7, contentHash: 1, state: { ...normal, mode: 'endless' } }, CONTENT).kind).toBe('incompatible');
+    expect(decodeRun({ formatVersion: 1, version: 9, contentHash: 1, state: { ...normal, mode: 'endless' } }, CONTENT).kind).toBe('incompatible');
     const endless = newRun(9, 'arcane', CONTENT, RULES_ENDLESS);
-    expect(decodeRun({ formatVersion: 1, version: 7, contentHash: 1, state: endless }, CONTENT).kind).toBe('ok');
-    expect(decodeRun({ formatVersion: 1, version: 7, contentHash: 1, state: { ...endless, plots: normal.plots } }, CONTENT).kind).toBe('incompatible');
-    expect(decodeRun({ formatVersion: 1, version: 7, contentHash: 1, state: { ...endless, endless: null } }, CONTENT).kind).toBe('incompatible');
-    expect(decodeRun({ formatVersion: 1, version: 7, contentHash: 1, state: { ...normal, plots: endless.plots } }, CONTENT).kind).toBe('incompatible');
+    expect(decodeRun({ formatVersion: 1, version: 9, contentHash: 1, state: endless }, CONTENT).kind).toBe('ok');
+    expect(decodeRun({ formatVersion: 1, version: 9, contentHash: 1, state: { ...endless, plots: normal.plots } }, CONTENT).kind).toBe('incompatible');
+    expect(decodeRun({ formatVersion: 1, version: 9, contentHash: 1, state: { ...endless, endless: null } }, CONTENT).kind).toBe('incompatible');
+    expect(decodeRun({ formatVersion: 1, version: 9, contentHash: 1, state: { ...normal, plots: endless.plots } }, CONTENT).kind).toBe('incompatible');
   });
 });
 
@@ -285,7 +285,7 @@ describe('endless blessing offers survive a save', () => {
       endless: { ...s.endless!, lastBlessingYear: 35, blessingStacks: { harvest: 2 }, modifierId: modifierAt(9, 35)!.id, modifierStartYear: 31 },
       offers: { kind: 'blessing', blessingIds: ['harvest', 'might', 'survey'], year: 35 },
     };
-    const env = (state: unknown) => ({ formatVersion: 1, version: 7, contentHash: 1, state });
+    const env = (state: unknown) => ({ formatVersion: 1, version: 9, contentHash: 1, state });
     const r = decodeRun(env(waiting), CONTENT);
     expect(r.kind).toBe('ok');
     if (r.kind === 'ok') expect(r.state).toEqual(waiting);
@@ -295,5 +295,45 @@ describe('endless blessing offers survive a save', () => {
     expect(decodeRun(env(badYear), CONTENT).kind).toBe('incompatible');
     const unknown = { ...waiting, endless: { ...waiting.endless!, blessingStacks: { gold_rain: 1 } } };
     expect(decodeRun(env(unknown), CONTENT).kind).toBe('incompatible');
+  });
+});
+
+describe('migrate_v7_to8 (Mua thẻ, spec 2026-11-10 §4)', () => {
+  it('migrate_v7_midyear_keeps_hand_played_offers_and_old_rng: adds a zero shop counter and a shop stream only', () => {
+    const now = newRun(7, 'wheat', CONTENT, RULES_FULL);
+    const oldRng: Partial<RunState['rng']> = { ...now.rng };
+    delete oldRng.shop;
+    const raw: Partial<RunState> = { ...now, version: 7, played: true, rng: oldRng as RunState['rng'] };
+    delete raw.shopPurchasesThisYear;
+    const copy = structuredClone(raw);
+    const migrated = migrateRunState(raw) as RunState;
+    expect(raw).toEqual(copy);
+    expect(migrated.version).toBe(9);
+    expect(migrated.shopPurchasesThisYear).toBe(0);
+    expect(migrated.rng.shop).toBe(now.rng.shop);
+    expect({ ...migrated.rng, shop: undefined }).toEqual({ ...oldRng, shop: undefined });
+    expect(migrated.hand).toEqual(raw.hand);
+    expect(migrated.played).toBe(true);
+    expect(migrateRunState(migrated)).toBe(migrated);
+    expect(decodeRun({ formatVersion: 1, version: 7, contentHash: 1, state: raw }, CONTENT).kind).toBe('ok');
+  });
+});
+
+describe('migrate_v8_to9 (Thương nhân, spec 2026-11-10-merchant-design)', () => {
+  it('v8_to_v9_fixture_changes_only_version, and a merchant offer survives a save', () => {
+    const now = newRun(8, 'wheat', CONTENT, RULES_FULL);
+    const v8 = { ...now, version: 8, played: true };
+    const migrated = migrateRunState(v8) as RunState;
+    expect({ ...migrated, version: 8 }).toEqual(v8);
+    expect(migrated.version).toBe(9);
+    expect(decodeRun({ formatVersion: 1, version: 8, contentHash: 1, state: v8 }, CONTENT).kind).toBe('ok');
+    const merchant: RunState = {
+      ...now,
+      phase: 'reward',
+      offers: { kind: 'merchant', cardIds: ['wheat_field', 'wheat_militia'], price: 3 },
+    };
+    expect(decodeRun({ formatVersion: 1, version: 9, contentHash: 1, state: merchant }, CONTENT).kind).toBe('ok');
+    const badPrice = { ...merchant, offers: { ...merchant.offers!, price: 2 } };
+    expect(decodeRun({ formatVersion: 1, version: 9, contentHash: 1, state: badPrice }, CONTENT).kind).toBe('incompatible');
   });
 });

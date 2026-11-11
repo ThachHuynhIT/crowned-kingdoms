@@ -1,3 +1,5 @@
+import { BOSS_DMG_MULT } from '../../data/battle';
+import { BOSSES } from '../../data/bosses';
 /** Dựng thế giới trận có boss cho test (không dùng trong mã chạy thật). */
 import { RULES_FULL } from '../../data/rules';
 import { CONTENT } from '../cards/registry';
@@ -16,7 +18,10 @@ export const realBoss = (ordinal: 1 | 2 | 3): BossSetup => {
   const base = newRun(5, 'wheat', CONTENT, RULES_FULL);
   const s = startYear({ ...base, year: year - 1 }, CONTENT);
   const setup: BattleSetup = buildBattleSetup({ ...s, phase: 'battle' }, CONTENT);
-  return setup.boss!;
+  // Mechanics tests use the table numbers of `BOSSES`: undo the balance multipliers (BOSS_HP_MULT / BOSS_DMG_MULT).
+  const boss = setup.boss!;
+  const def = BOSSES[ordinal - 1]!;
+  return { ...boss, stats: { ...boss.stats, hp: def.unit.hp, dmg: Math.round(boss.stats.dmg / BOSS_DMG_MULT[ordinal - 1]!) } };
 };
 
 /**

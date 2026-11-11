@@ -16,9 +16,26 @@ export function decree(id: DecreeId): DecreeDef {
 export const hasDecree = (state: Pick<RunState, 'decrees'>, id: DecreeId): boolean =>
   state.decrees.includes(id);
 
-/** Số thẻ rút đầu năm: `RUN.handSize`, hoặc 4 với Bàn Tay Thứ Tư. */
-export const handLimit = (state: Pick<RunState, 'decrees'>): number =>
-  hasDecree(state, 'decree_fourth_hand') ? DECREE_RULES.hand : RUN.handSize;
+/**
+ * Năm được rút thêm (10/11/2026): năm hội đồng, hoặc năm ngay sau một năm boss (trừ năm boss cuối).
+ * Hai điều kiện tính một lần (OR), không cộng dồn.
+ */
+export const isBonusDrawYear = (year: number, councilYears: readonly number[], bossYears: readonly number[]): boolean =>
+  councilYears.includes(year) || bossYears.slice(0, -1).some((b) => b + 1 === year);
+
+/**
+ * Số lá rút đầu năm, cộng vào bài đang giữ: năm 1 `RUN.handSize`, năm thường `RUN.yearDraw`,
+ * năm thưởng `RUN.bonusYearDraw`; Bàn Tay Thứ Tư thêm `DECREE_RULES.hand` mỗi năm.
+ */
+export const yearDrawCount = (state: Pick<RunState, 'year' | 'decrees'>): number => {
+  const base =
+    state.year <= 1
+      ? RUN.handSize
+      : isBonusDrawYear(state.year, RUN.councilYears, RUN.bossYears)
+        ? RUN.bonusYearDraw
+        : RUN.yearDraw;
+  return base + (hasDecree(state, 'decree_fourth_hand') ? DECREE_RULES.hand : 0);
+};
 
 /** Số thẻ thưởng: `REWARD.choices`, hoặc 4 với Giao Thương. */
 export const rewardCount = (state: Pick<RunState, 'decrees'>): number =>

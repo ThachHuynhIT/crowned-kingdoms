@@ -1,3 +1,4 @@
+import { throneLandRange } from './boardGeometry';
 import { describe, expect, it } from 'vitest';
 import { INTERVENTION } from '../../data/battle';
 import { DECREES, DECREE_RULES } from '../../data/decrees';
@@ -9,8 +10,9 @@ import { CONTENT } from '../cards/registry';
 import { applyCommand } from './commands';
 import {
   decree,
-  handLimit,
   interventionStats,
+  isBonusDrawYear,
+  yearDrawCount,
   rerollPrice,
   rewardCount,
 } from './decrees';
@@ -76,7 +78,7 @@ describe('decree catalog', () => {
 
   it('carries the runtime numbers of spec 7.1/7.4 in data', () => {
     expect(DECREE_RULES).toMatchObject({
-      hand: 4,
+      hand: 1,
       freeReroll: 1,
       reward: 4,
       boulderDmgPct: 50,
@@ -113,8 +115,9 @@ describe('decree_stat_matrix', () => {
     const after = withBoard(['decree_royal_archers']);
     expect(structure(before, 8).attack!.range).toBeCloseTo(132 * 3); // ×3 (2026-11-09); the decree stays a flat +18
     expect(structure(after, 8).attack!.range).toBeCloseTo(132 * 3 + 18);
-    expect(structure(before, 12).attack!.range).toBeCloseTo(108);
-    expect(structure(after, 12).attack!.range).toBeCloseTo(126);
+    // the throne's base range now covers its whole land (owner 11/11/2026); the decree still adds its +18
+    expect(structure(before, 12).attack!.range).toBeCloseTo(throneLandRange('normal'));
+    expect(structure(after, 12).attack!.range).toBeCloseTo(throneLandRange('normal') + 18);
     // troop buildings are not towers
     expect(collectStatSheet(after, CONTENT, 6).range.flat).toBe(0);
   });
@@ -144,11 +147,29 @@ describe('harvest tax', () => {
 });
 
 describe('hand limit, reward count and rerolls', () => {
-  it('fourth_hand: refill 4 cards', () => {
-    expect(handLimit(withBoard())).toBe(3);
-    expect(handLimit(withBoard(['decree_fourth_hand']))).toBe(4);
-    const next = startYear({ ...withBoard(['decree_fourth_hand']), year: 1, hand: [] }, CONTENT);
-    expect(next.hand).toHaveLength(4);
+  it('first_year_has_five_cards, then one a year, two in council and post-boss years (10/11/2026)', () => {
+    const draws = [1, 2, 4, 5, 6, 10, 11, 12, 15, 20, 21, 25, 29, 30, 31].map((year) => yearDrawCount({ year, decrees: [] }));
+    expect(draws).toEqual([5, 1, 1, 2, 1, 2, 2, 1, 2, 2, 2, 2, 1, 1, 1]);
+  });
+
+  it('overlapping_bonus_is_not_additive and the last boss year gives no bonus', () => {
+    expect(isBonusDrawYear(11, [5, 11], [10, 20, 30])).toBe(true);
+    expect(yearDrawCount({ year: 11, decrees: [] })).toBe(2);
+    expect(isBonusDrawYear(31, [5], [10, 20, 30])).toBe(false);
+  });
+
+  it('fourth_hand_adds_one_to_annual_draw', () => {
+    expect(yearDrawCount({ year: 2, decrees: ['decree_fourth_hand'] })).toBe(2);
+    expect(yearDrawCount({ year: 5, decrees: ['decree_fourth_hand'] })).toBe(3);
+    expect(yearDrawCount({ year: 1, decrees: ['decree_fourth_hand'] })).toBe(6);
+  });
+
+  it('draw_one_keeps_the_carried_cards: a year starts with the kept hand plus one card', () => {
+    const kept = withBoard(['decree_fourth_hand']);
+    const s = { ...withBoard(), year: 2, hand: kept.deck.slice(0, 2), drawPile: kept.deck.slice(2), discardPile: [] };
+    const next = startYear(s, CONTENT);
+    expect(next.hand.slice(0, 2)).toEqual(s.hand);
+    expect(next.hand).toHaveLength(3);
   });
 
   it('trade: reward offers 4 unique cards', () => {

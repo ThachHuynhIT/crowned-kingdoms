@@ -8,6 +8,7 @@ import type { Content } from '../cards/registry';
 import { buildBattleSetup } from '../run/battleSetup';
 import { applyCommand } from '../run/commands';
 import type { RunCommand, RunState } from '../run/state';
+import { canStartBattle } from '../run/turn';
 import { newRun } from '../run/yearFlow';
 import { randomBot } from './bots/random';
 import type { Bot } from './bots/random';
@@ -78,7 +79,8 @@ export function runHeadless(opts: HeadlessOptions, content: Content = CONTENT): 
       return { state, commands, stoppedBy: 'yearLimit' };
     }
     if (commands >= maxCommands) throw new Error(`runHeadless: exceeded ${maxCommands} commands`);
-    const cmd = bot(state, content, rng);
+    // The battle starts by itself once the hand is down to its target (10/11/2026): the bot is not asked.
+    const cmd: RunCommand = canStartBattle(state) ? { type: 'startBattle' } : bot(state, content, rng);
     apply(cmd);
     if (cmd.type === 'startBattle') {
       const result = simulateBattle(buildBattleSetup(state, content), []);

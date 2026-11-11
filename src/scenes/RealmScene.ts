@@ -1,3 +1,4 @@
+import { handWindow } from '../ui/planning/handLayoutModel';
 import Phaser from 'phaser';
 import { SHAKE_MS } from '../data/juice';
 import { shakeOffset } from '../render/juiceModel';
@@ -15,7 +16,9 @@ import type { PlayTarget, RunState } from '../game/run/state';
 import type { RunMode } from '../data/rules';
 import type { KingId, PerkId } from '../data/types';
 import { newRun } from '../game/run/yearFlow';
-import { BoardRenderer } from '../render/BoardRenderer';
+import { BUILDING_FOOT_DY, BoardRenderer, buildingFoot } from '../render/BoardRenderer';
+import { THRONE_PLOT } from '../data/boardGeometry';
+import { boardFxCues } from '../render/fxCues';
 import { FieldRenderer } from '../render/FieldRenderer';
 import { FxRenderer } from '../render/FxRenderer';
 import { RangeRenderer } from '../render/RangeRenderer';
@@ -36,6 +39,8 @@ import {
 } from '../ui/planning/freeMoveModel';
 import { buildingRanges, entityRanges } from '../ui/info/rangeModel';
 import { unproject } from '../core/iso';
+import { atlasOpacity, boardBuildingBoxes } from '../render/pickBoxes';
+import { PICK_SLOP, pickSprite } from '../ui/info/spritePick';
 import {
   isOverview,
   keepView,
@@ -112,6 +117,8 @@ export class RealmScene extends Phaser.Scene {
   private units: UnitRenderer | null = null;
   private fx: FxRenderer | null = null;
   private pending: PendingPlay | null = null;
+  /** Year and hand of the last state shown: a change drops the card being aimed. */
+  private handKey = '';
   /** A locked plot waiting for ✓ to be bought. */
   private pendingBuy: number | null = null;
   /** The Nomad King's free relocation being picked (null = none). */
@@ -161,6 +168,7 @@ export class RealmScene extends Phaser.Scene {
   create(data: RealmData | undefined): void {
     // Scene instances are reused: reset every per-run field first.
     this.pending = null;
+    this.handKey = '';
     this.pendingBuy = null;
     this.freeMove = null;
     this.inBattle = false;
@@ -239,8 +247,15 @@ export class RealmScene extends Phaser.Scene {
     bus.on('run:state', ({ state }) => {
       if (this.soundState !== null && audio)
         for (const id of transitionCues(this.soundState, state)) audio.play(id);
+      const before = this.soundState;
       this.soundState = state;
       this.onState(state);
+      // Place / move / upgrade effects on the board for an accepted planning change (render only).
+      if (before !== null && this.fx && state.phase === 'planning')
+        for (const cue of boardFxCues(before, state)) {
+          const foot = buildingFoot(cue.plot, state.mode);
+          this.fx.playAt(cue.fx, foot.x, cue.fx === 'fx_upgrade' ? foot.y : foot.y - BUILDING_FOOT_DY);
+        }
     });
     bus.on('battle:started', () => {
       audio?.setMusic('battle');
@@ -403,13 +418,26 @@ export class RealmScene extends Phaser.Scene {
     // A finished move (or a new year) may leave no free move: stop picking.
     if (this.freeMove && (!showFreeMove(state) || freeMovesLeft(state, CONTENT) === 0))
       this.setFreeMove(null);
-    if (state.played) this.setPending(null);
-    else this.refreshHighlights();
+    // A played or sold card shifts the hand: any card being aimed is dropped (owner 2026-11-10: many cards a year).
+    const handKey = `${state.year}:${state.hand.join(',')}`;
+    if (handKey !== this.handKey) {
+      this.handKey = handKey;
+      this.setPending(null);
+    } else this.refreshHighlights();
     if (reframe) this.placeCamera();
   }
 
   private onBattleStarted(): void {
     this.clearRange();
+    // Structures show the L2/L3 architecture of their level in battle too (render only).
+    const st = this.controller?.state;
+    if (st && this.units) {
+      const levels = new Map<number, number>([[THRONE_PLOT, st.throneLevel]]);
+      st.plots.forEach((p, i) => {
+        if (p.building) levels.set(i, p.building.level);
+      });
+      this.units.setStructureLevels(levels, st.mode);
+    }
     this.battleHudUp = true;
     this.inBattle = true;
     this.setPending(null);
@@ -465,7 +493,6 @@ export class RealmScene extends Phaser.Scene {
     const ok =
       handIndex !== null &&
       state.phase === 'planning' &&
-      !state.played &&
       state.hand[handIndex] !== undefined;
     this.setPending(ok ? { handIndex, targets: [] } : null);
   }
@@ -613,7 +640,15 @@ export class RealmScene extends Phaser.Scene {
 
   // ---- input -----------------------------------------------------------------------------
 
+  private inHand(pointer: Phaser.Input.Pointer): boolean {
+    if (this.scale.width < 768 || this.controller.state.phase !== 'planning') return false;
+    const { viewport } = handWindow(this.screen(), this.controller.state.hand.length, 0);
+    return pointer.x >= viewport.x && pointer.x <= viewport.x + viewport.w &&
+      pointer.y >= viewport.y - 12 && pointer.y <= viewport.y + viewport.h;
+  }
+
   private onPointerDown(pointer: Phaser.Input.Pointer): void {
+    if (this.inHand(pointer)) return;
     this.pointers.set(pointer.id, { x: pointer.x, y: pointer.y });
     if (this.pointers.size === 2 && !this.mapBlocked) {
       // A second finger on the map: a pinch, never a click or a pan.
@@ -632,6 +667,7 @@ export class RealmScene extends Phaser.Scene {
   private onPointerMove(pointer: Phaser.Input.Pointer): void {
     const last = this.pointers.get(pointer.id);
     if (!last || !pointer.isDown) return;
+    if (this.inHand(pointer)) return;
     this.pointers.set(pointer.id, { x: pointer.x, y: pointer.y });
     if (this.mapBlocked || !this.view) return;
     if (this.pinch !== null) {
@@ -674,7 +710,7 @@ export class RealmScene extends Phaser.Scene {
 
   /** Mouse wheel: a smooth zoom in (up) or out (down), keeping the world point under the cursor (spec 2026-11-08 §4). */
   private onWheel(pointer: Phaser.Input.Pointer, _over: unknown, _dx: number, dy: number): void {
-    if (this.mapBlocked || !this.view || dy === 0) return;
+    if (this.mapBlocked || !this.view || dy === 0 || this.inHand(pointer)) return;
     const next = wheelZoom(this.view.zoom, dy);
     this.applyView(
       zoomAt(
@@ -736,6 +772,13 @@ export class RealmScene extends Phaser.Scene {
       else this.setFreeMove(tap.next);
       return;
     }
+    // Not aiming: a tap on a building's art inspects it, wherever its diamond is (owner 10/11/2026).
+    const art = aiming === null ? this.buildingAt(cam) : null;
+    if (art !== null) {
+      this.setPendingBuy(null);
+      this.bus.emit('ui:inspect', { plot: state.plots[art]?.building ? art : null, x: pointer.x, y: pointer.y });
+      return;
+    }
     if (plot !== null && state.plots[plot]?.unlocked === false) {
       if (aiming !== null) {
         // A tap has no hover or long-press: say why the aimed card cannot go on this plot.
@@ -771,6 +814,17 @@ export class RealmScene extends Phaser.Scene {
     // Not aiming a card: a tap on a building asks the HUD for its info box, any other tap closes it.
     const built = plot !== null && this.controller.state.plots[plot]?.building ? plot : null;
     this.bus.emit('ui:inspect', { plot: built, x: pointer.x, y: pointer.y });
+  }
+
+  /**
+   * The building whose drawn art is under camera point `cam` (front-most first, transparent pixels let the one
+   * behind through), null when none: at the overview zoom most of a building stands over the plot behind it.
+   */
+  private buildingAt(cam: { x: number; y: number }): number | null {
+    const state = this.controller.state;
+    const zoom = this.cameras.main.zoom || 1;
+    const boxes = boardBuildingBoxes(this.textures, state, CONTENT, state.mode);
+    return pickSprite(boxes, cam, PICK_SLOP / zoom, atlasOpacity(this.textures));
   }
 
   // ---- camera ----------------------------------------------------------------------------

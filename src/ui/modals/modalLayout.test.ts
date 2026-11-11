@@ -1,5 +1,6 @@
 import { describe, expect, it } from 'vitest';
 import type { Rect, Size } from '../hud/layout';
+import { cardLayout } from '../cards/cardLayout';
 import {
   COUNCIL_HEADER_H,
   DECK_CARD,
@@ -33,8 +34,26 @@ describe('centredPanel', () => {
 });
 
 describe('rewardLayout', () => {
+  it('merchant prices have a separate badge row and the skip/buy footer has touch targets', () => {
+    for (const screen of [DESKTOP, MOBILE, { w: 1280, h: 480 }]) {
+      const l = rewardLayout(screen, 4);
+      for (const rect of [...l.cards, l.reroll, l.take]) {
+        expect(rect.w).toBeGreaterThanOrEqual(44);
+        expect(rect.h).toBeGreaterThanOrEqual(44);
+      }
+      expect(overlaps(l.reroll, l.take)).toBe(false);
+      expect(l.reroll.y).toBeGreaterThanOrEqual(l.viewport.y + l.viewport.h);
+      for (const card of l.cards) {
+        const face = cardLayout(card, 10, 'full');
+        expect(face.badge.h).toBeGreaterThanOrEqual(12);
+        expect(overlaps(face.badge, face.description)).toBe(false);
+        expect(face.description.y + face.description.h).toBeLessThanOrEqual(card.h);
+      }
+    }
+  });
+
   for (const [name, screen, inset, card] of [
-    ['desktop', DESKTOP, 24, { w: 180, h: 288 }],
+    ['desktop', DESKTOP, 24, { w: 212, h: 280 }],
     ['mobile', MOBILE, 10, { w: 108, h: 180 }],
   ] as const) {
     it(`fits the headings, 3 vertical cards, the reroll line and the take button inside the panel (${name})`, () => {
@@ -72,11 +91,11 @@ describe('rewardLayout', () => {
     });
   }
 
-  it('reward_desktop_three_180x288_cards_in_a_row_centred_on_the_screen', () => {
+  it('reward_desktop_three_212x280_cards_in_a_row_centred_on_the_screen', () => {
     const l = rewardLayout(DESKTOP, 24);
     const mid = (l.cards[0]!.x + l.cards[2]!.x + l.cards[2]!.w) / 2;
     expect(mid).toBeCloseTo(DESKTOP.w / 2, 0);
-    expect(l.cards[1]!.x - (l.cards[0]!.x + 180)).toBe(24);
+    expect(l.cards[1]!.x - (l.cards[0]!.x + 212)).toBe(24);
     const centreY = (l.panel.y + l.panel.y + l.panel.h) / 2;
     expect(Math.abs(centreY - DESKTOP.h / 2)).toBeLessThanOrEqual(1);
   });
@@ -162,18 +181,18 @@ describe('calendarModalLayout', () => {
 });
 
 describe('deckModalLayout', () => {
-  for (const [name, screen, inset, cols] of [
-    ['desktop', DESKTOP, 24, 6],
-    ['mobile', MOBILE, 10, 3],
+  for (const [name, screen, inset, cols, card] of [
+    ['desktop', DESKTOP, 24, 6, { w: 116, h: 180 }],
+    ['mobile', MOBILE, 10, 3, { w: 96, h: 144 }],
   ] as const) {
-    it(`has ${cols} columns of 96×144 cards in a viewport inside the panel (${name})`, () => {
+    it(`has ${cols} columns of ${card.w}×${card.h} cards in a viewport inside the panel (${name})`, () => {
       const l = deckModalLayout(screen, inset, 20, 0);
       expect(contains({ x: 0, y: 0, ...screen }, l.panel)).toBe(true);
       expect(l.cols).toBe(cols);
       expect(l.cards).toHaveLength(20);
       for (const c of l.cards) {
-        expect(c.w).toBe(96);
-        expect(c.h).toBe(144);
+        expect(c.w).toBe(card.w);
+        expect(c.h).toBe(card.h);
         // Horizontally always inside the viewport.
         expect(c.x).toBeGreaterThanOrEqual(l.viewport.x);
         expect(c.x + c.w).toBeLessThanOrEqual(l.viewport.x + l.viewport.w);
@@ -242,11 +261,11 @@ const SCREENS: readonly [string, Size, number][] = [
 const inside = (screen: Size, r: Rect): boolean => contains({ x: 0, y: 0, ...screen }, r);
 
 describe('rewardLayout with 4 cards', () => {
-  it('is one row of 180×288 cards on desktop', () => {
+  it('is one row of 212×280 cards on desktop', () => {
     const l = rewardLayout(DESKTOP, 24, 4);
     expect(l.cards).toHaveLength(4);
     expect(new Set(l.cards.map((c) => c.y)).size).toBe(1);
-    expect(l.cards.every((c) => c.w === 180 && c.h === 288)).toBe(true);
+    expect(l.cards.every((c) => c.w === 212 && c.h === 280)).toBe(true);
     expect(inside(DESKTOP, l.panel)).toBe(true);
   });
 

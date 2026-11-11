@@ -221,6 +221,8 @@ export interface BattleSetup {
   banner?: BannerDef;
   /** Đá Tảng tự bắn ngay từ đầu trận (mặc định tắt). */
   autoFire?: boolean;
+  /** Vua của người chơi: chọn hiệu ứng Can Thiệp riêng (`INTERVENTION_POWERS`); vắng = đá tảng gốc. */
+  power?: KingId;
   /** Can Thiệp đã chốt cho trận (sắc lệnh + nhiệm vụ); vắng = số gốc §7.4. */
   intervention?: { dmgPct: number; radius: number; cooldownTicks: number };
   /** Mod trận của perk (dữ liệu thuần, không tham chiếu RunState); vắng khi perk không đổi gì trong trận. */

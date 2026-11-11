@@ -1,6 +1,7 @@
 import { describe, expect, it } from 'vitest';
 import type { CardDef, CardId, EnchantCardDef, Level, UnitDef } from '../../data/types';
 import { ENEMY_STAT_MULT } from '../../data/battle';
+import { WHEAT } from '../../data/kings/wheat';
 import { TOWER_SHOT_DMG_MULT } from '../../data/scaling';
 import { CONTENT } from '../cards/registry';
 import { contentWith, fakeKing, runState } from '../testing/fixtures';
@@ -239,7 +240,7 @@ describe('G1 behaviour is unchanged for level-1 plain buildings', () => {
   it('keeps the shipped numbers', () => {
     const s = buildBattleSetup(board([[6, bld(1, 'wheat_scarecrow')]]), CONTENT);
     expect(s.structures[0]!.attack!.dmg).toBe(6 * TOWER_SHOT_DMG_MULT);
-    expect(s.throne.hp).toBe(1100);
+    expect(s.throne.hp).toBe(WHEAT.throne.hp);
   });
 });
 
@@ -411,7 +412,7 @@ describe('enemy banners', () => {
 
   it('leaves raiders untouched', () => {
     const s = foe('raiders');
-    expect(s.hp).toBe(30 * ENEMY_STAT_MULT); // no banner, only the global enemy multiplier
+    expect(s.hp).toBeCloseTo(30 * ENEMY_STAT_MULT, 9); // no banner: the global enemy multiplier
     expect(s.shield).toBe(0);
   });
 });

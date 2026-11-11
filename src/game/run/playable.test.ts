@@ -56,13 +56,13 @@ describe('hasPlayableCard', () => {
       expect('error' in start(s)).toBe(false);
     });
 
-    it('the same cards stay playable when the run state allows them', () => {
+    it('the same cards stay playable when the run state allows them; Ra trận only looks at the hand size', () => {
       const seal = runState({ hand: ['neutral_royal_seal'] });
       expect(hasPlayableCard(seal, CONTENT)).toBe(true);
-      expect(start(seal)).toEqual({ error: 'notPlayed' });
+      expect('error' in start(seal)).toBe(false); // a playable card no longer blocks the battle (10/11/2026)
       const pact = { ...withBuilding(runState({ hand: ['moon_eclipse_pact'] }), 6, 'wheat_militia', 1), lives: 2 };
       expect(hasPlayableCard(pact, CONTENT)).toBe(true);
-      expect(start(pact)).toEqual({ error: 'notPlayed' });
+      expect('error' in start(pact)).toBe(false);
     });
   });
 });

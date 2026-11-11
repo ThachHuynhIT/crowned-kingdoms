@@ -1,4 +1,5 @@
 import { describe, expect, it } from 'vitest';
+import { BOSS_RULES } from '../../data/bosses';
 import { SPEC_MOVE_SCALE } from '../../data/boardGeometry';
 import type { BossSetup } from './types';
 import { bossWorld, realBoss } from './bossKit';
@@ -27,6 +28,9 @@ const withMirror = (count: number): BossSetup => {
   const real = realBoss(3);
   return { ...real, mirror: { stats: unitStats({ unit: 'militia', hp: 50, dmg: 3 }), count } };
 };
+
+/** Khiên Ngai Vỡ (10/11/2026: 1200, trước là 3000). */
+const SHIELD = BOSS_RULES.crownless.shield;
 
 describe('bossPhase thresholds (integers, 30000 HP)', () => {
   it.each([
@@ -93,32 +97,32 @@ describe('Khiên Ngai Vỡ', () => {
     return w;
   };
 
-  it('grants 3000 once when the middle phase begins', () => {
+  it('grants SHIELD once when the middle phase begins', () => {
     const w = inShield();
-    expect(w.shield[w.bossId]).toBe(3000);
+    expect(w.shield[w.bossId]).toBe(SHIELD);
     expect(w.bossShieldDeadline).toBe(400);
-    w.shield[w.bossId] = 2000;
+    w.shield[w.bossId] = 700;
     at(w, 301);
-    expect(w.shield[w.bossId]).toBe(2000); // not granted a second time
+    expect(w.shield[w.bossId]).toBe(700); // not granted a second time
   });
 
-  it('refills to 3000 if it survives 100 ticks, and repeats', () => {
+  it('refills to SHIELD if it survives 100 ticks, and repeats', () => {
     const w = inShield();
-    w.shield[w.bossId] = 1200;
+    w.shield[w.bossId] = 600;
     at(w, 399);
-    expect(w.shield[w.bossId]).toBe(1200);
+    expect(w.shield[w.bossId]).toBe(600);
     at(w, 400);
-    expect(w.shield[w.bossId]).toBe(3000);
+    expect(w.shield[w.bossId]).toBe(SHIELD);
     w.shield[w.bossId] = 5;
     at(w, 499);
     expect(w.shield[w.bossId]).toBe(5);
     at(w, 500);
-    expect(w.shield[w.bossId]).toBe(3000);
+    expect(w.shield[w.bossId]).toBe(SHIELD);
   });
 
   it('is not refilled once broken in time', () => {
     const w = inShield();
-    hit(w, 3000); // magic: the whole shield goes
+    hit(w, SHIELD); // magic: the whole shield goes
     expect(w.shield[w.bossId]).toBe(0);
     at(w, 350);
     expect(w.bossShieldBroken).toBe(true);
@@ -129,7 +133,7 @@ describe('Khiên Ngai Vỡ', () => {
 
   it('falling into rage clears what is left and never brings it back', () => {
     const w = inShield();
-    w.shield[w.bossId] = 800;
+    w.shield[w.bossId] = 500;
     hpAt(w, 9899);
     at(w, 310);
     expect(w.shield[w.bossId]).toBe(0);
@@ -143,7 +147,7 @@ describe('Khiên Ngai Vỡ', () => {
     const hp = w.hp[w.bossId]!;
     hit(w, 1000);
     expect(w.hp[w.bossId]).toBe(hp);
-    expect(w.shield[w.bossId]).toBe(2000);
+    expect(w.shield[w.bossId]).toBe(SHIELD - 1000);
   });
 });
 

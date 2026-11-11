@@ -38,26 +38,26 @@ describe('camera model (spec 06/11/2026, P2 zoom)', () => {
   it('starts at the overview camera of the phase; zoom is free between the overview and 3 (spec 2026-11-08 §4)', () => {
     for (const s of [DESKTOP, MOBILE]) {
       expect(overviewView(s, 'planning')).toEqual(realmCamera(s, 'planning'));
-      expect(zoomLimits(s, 'planning')).toEqual({ min: overviewZoom(s, 'planning'), max: 3 });
+      expect(zoomLimits(s, 'planning')).toEqual({ min: overviewZoom(s, 'planning'), max: s.w >= 768 ? 1.19375 : 3 });
     }
     expect(ZOOM_MAX).toBe(3);
     // zoom_max_is_three_on_wide_screen; a screen whose overview is already past 3 cannot zoom further
-    expect(zoomLimits({ w: 2000, h: 994 }, 'battle')).toEqual({ min: 2.03125, max: 3 });
-    expect(zoomLimits({ w: 8000, h: 4000 }, 'battle')).toEqual({ min: 3, max: 3 });
+    expect(zoomLimits({ w: 2000, h: 994 }, 'battle')).toEqual({ min: 2.03125 / 1.6, max: 2.03125 });
+    expect(zoomLimits({ w: 8000, h: 4000 }, 'battle')).toEqual({ min: 3 / 1.6, max: 3 });
   });
 
   it('fractional_zoom_keeps_pointer_anchor_without_clamp', () => {
     const base = overviewView(DESKTOP, 'planning');
-    const p = { x: 700, y: 400 };
+    const p = { x: 640, y: 360 };
     const before = screenToWorld(p, base.scroll, DESKTOP, base.zoom);
-    for (const z of [1.5, 1.77, 2.4, 3]) {
+    for (const z of [0.85, 0.95, 1.1]) {
       const v = zoomAt(base, p, z, DESKTOP, 'planning');
       expect(v.zoom).toBeCloseTo(z, 12);
       const after = screenToWorld(p, v.scroll, DESKTOP, v.zoom);
       expect(after.x).toBeCloseTo(before.x, 8);
       expect(after.y).toBeCloseTo(before.y, 8);
     }
-    expect(zoomAt(base, p, 9, DESKTOP, 'planning').zoom).toBe(3);
+    expect(zoomAt(base, p, 9, DESKTOP, 'planning').zoom).toBe(1.19375);
     expect(zoomAt(base, p, 0.1, DESKTOP, 'planning').zoom).toBe(overviewZoom(DESKTOP, 'planning'));
   });
 
@@ -81,19 +81,19 @@ describe('camera model (spec 06/11/2026, P2 zoom)', () => {
   });
 
   it('pinch_moving_midpoint_keeps_original_world_anchor, and pinch_at_limit_still_pans_midpoint', () => {
-    const start = zoomAt(overviewView(DESKTOP, 'planning'), { x: 640, y: 360 }, 2, DESKTOP, 'planning');
+    const start = zoomAt(overviewView(DESKTOP, 'planning'), { x: 640, y: 360 }, 0.9, DESKTOP, 'planning');
     const startMid = { x: 640, y: 360 };
     const anchor = screenToWorld(startMid, start.scroll, DESKTOP, start.zoom);
     const nowMid = { x: 660, y: 350 };
     const v = pinchView(start, startMid, nowMid, 100 * 100, 120 * 120, DESKTOP, 'planning');
-    expect(v.zoom).toBeCloseTo(2.4, 12);
+    expect(v.zoom).toBeCloseTo(1.08, 12);
     const at = screenToWorld(nowMid, v.scroll, DESKTOP, v.zoom);
     expect(at.x).toBeCloseTo(anchor.x, 8);
     expect(at.y).toBeCloseTo(anchor.y, 8);
     // spread far past the limit: the zoom stops at 3, the anchor still follows the moving midpoint
     const capped = pinchView(start, startMid, nowMid, 100 * 100, 400 * 400, DESKTOP, 'planning');
-    expect(capped.zoom).toBe(3);
-    const at3 = screenToWorld(nowMid, capped.scroll, DESKTOP, 3);
+    expect(capped.zoom).toBe(1.19375);
+    const at3 = screenToWorld(nowMid, capped.scroll, DESKTOP, capped.zoom);
     expect(at3.x).toBeCloseTo(anchor.x, 8);
     expect(at3.y).toBeCloseTo(anchor.y, 8);
     expect(pinchView(start, startMid, startMid, 0, 50, DESKTOP, 'planning').zoom).toBe(start.zoom); // zero_spread_is_safe
@@ -105,7 +105,7 @@ describe('camera model (spec 06/11/2026, P2 zoom)', () => {
     const z = zoomAt(plan, { x: 700, y: 400 }, 2, DESKTOP, 'planning');
     expect(isOverview(z, DESKTOP, 'planning')).toBe(false);
     const kept = keepView(z, DESKTOP, 'battle');
-    expect(kept.zoom).toBe(2);
+    expect(kept.zoom).toBe(1.19375);
     const c0 = screenToWorld({ x: 640, y: 360 }, z.scroll, DESKTOP, z.zoom);
     const c1 = screenToWorld({ x: 640, y: 360 }, kept.scroll, DESKTOP, kept.zoom);
     expect(c1.x).toBeCloseTo(c0.x, 6);
@@ -131,9 +131,9 @@ describe('camera model (spec 06/11/2026, P2 zoom)', () => {
 
   it('wheel_steps_keep_the_world_point_under_the_cursor', () => {
     const base = overviewView(DESKTOP, 'planning');
-    const p = { x: 760, y: 420 }; // well inside the map: near an edge the clamp wins over the anchor
+    const p = { x: 640, y: 360 }; // well inside the map: near an edge the clamp wins over the anchor
     const before = screenToWorld(p, base.scroll, DESKTOP, base.zoom);
-    for (const z of [2, 3] as const) {
+    for (const z of [0.9, 1.1] as const) {
       const v = zoomAt(base, p, z, DESKTOP, 'planning');
       expect(v.zoom).toBe(z);
       const after = screenToWorld(p, v.scroll, DESKTOP, v.zoom);
@@ -160,10 +160,15 @@ describe('camera model (spec 06/11/2026, P2 zoom)', () => {
           expect(c.x).toBeGreaterThanOrEqual(-BATTLE.plot - 1e-6);
           expect(c.x).toBeLessThanOrEqual(BATTLE.field + BATTLE.plot + 1e-6);
           const r = visible(v, s);
+          if (s.w / v.zoom <= MAP_BOUNDS.x1 - MAP_BOUNDS.x0) {
           expect(r.x0).toBeGreaterThanOrEqual(MAP_BOUNDS.x0 - 1e-6);
-          expect(r.y0).toBeGreaterThanOrEqual(MAP_BOUNDS.y0 - 1e-6);
+
           expect(r.x1).toBeLessThanOrEqual(MAP_BOUNDS.x1 + 1e-6);
+          }
+          if (s.h / v.zoom <= MAP_BOUNDS.y1 - MAP_BOUNDS.y0) {
+          expect(r.y0).toBeGreaterThanOrEqual(MAP_BOUNDS.y0 - 1e-6);
           expect(r.y1).toBeLessThanOrEqual(MAP_BOUNDS.y1 + 1e-6);
+          }
         }
       }
   });
@@ -187,7 +192,7 @@ describe('camera model (spec 06/11/2026, P2 zoom)', () => {
     const next: Size = { w: 1000, h: 700 };
     const r = resizeView(z, DESKTOP, next, 'planning');
     const now = screenToWorld({ x: 500, y: 350 }, r.scroll, next, r.zoom);
-    expect(r.zoom).toBe(2);
+    expect(r.zoom).toBe(zoomLimits(next, 'planning').max);
     expect(now.x).toBeCloseTo(centre.x, 6);
     expect(now.y).toBeCloseTo(centre.y, 6);
     expect(resizeView(overviewView(DESKTOP, 'planning'), DESKTOP, next, 'planning')).toEqual(overviewView(next, 'planning'));
@@ -204,7 +209,7 @@ describe('camera model (spec 06/11/2026, P2 zoom)', () => {
     for (const k of ['x', 'y', 'w', 'h'] as const) expect(a[k]).toBeCloseTo(b[k], 6);
     const z = zoomAt(base, { x: 640, y: 360 }, 3, DESKTOP, 'planning');
     const r = plotRectAtView(z, DESKTOP, 7);
-    expect([r.w, r.h]).toEqual([ISO.plotW * 3, ISO.plotH * 3]);
+    expect([r.w, r.h]).toEqual([ISO.plotW * z.zoom, ISO.plotH * z.zoom]);
     const c = { x: r.x + r.w / 2, y: r.y + r.h / 2 };
     expect(plotAtView(z, DESKTOP, c)).toBe(7);
     // half a diamond right and down is the next row south (plot 12); half left and down the next column (plot 8)
@@ -216,7 +221,7 @@ describe('camera model (spec 06/11/2026, P2 zoom)', () => {
   it('maps battle aim through the live view and returns null off the field', () => {
     const z = zoomAt(overviewView(DESKTOP, 'battle'), { x: 640, y: 360 }, 2, DESKTOP, 'battle');
     const w = worldAtView(z, DESKTOP, { x: 640, y: 360 })!;
-    expect(w).toEqual(unproject(screenToWorld({ x: 640, y: 360 }, z.scroll, DESKTOP, 2)));
+    expect(w).toEqual(unproject(screenToWorld({ x: 640, y: 360 }, z.scroll, DESKTOP, z.zoom)));
     // a point west of the field (and one north of it) is off the field
     expect(worldAtView(z, DESKTOP, worldToScreen(z, DESKTOP, { x: -40, y: 400 }))).toBeNull();
     expect(worldAtView(z, DESKTOP, worldToScreen(z, DESKTOP, { x: 400, y: -20 }))).toBeNull();
@@ -281,6 +286,54 @@ describe('Endless live camera geometry', () => {
       .toBeGreaterThanOrEqual(176);
     expect(resizeView(overviewView(DESKTOP, 'planning', 'endless'), DESKTOP, MOBILE, 'planning', 'endless'))
       .toEqual(overviewView(MOBILE, 'planning', 'endless'));
-    expect(zoomLimits(DESKTOP, 'planning', 'endless').max).toBe(3);
+    expect(zoomLimits(DESKTOP, 'planning', 'endless').max).toBeCloseTo(382 / 448, 12);
+  });
+});
+
+describe('desktop camera constraints', () => {
+  it('shrinks the valid horizontal centre interval to sixty percent around its midpoint', () => {
+    // Same rect, zoom and centre row; only the breakpoint changes the horizontal rule.
+    const zoom = 2;
+    const desktop = { w: 768, h: 600 };
+    const phone = { w: 767, h: 600 };
+    const extreme = (screen: Size, x: number) => {
+      const v = clampView({ zoom, scroll: { x, y: 60 } }, screen);
+      return v.scroll.x + screen.w / 2;
+    };
+    const lo = extreme(phone, -1e5);
+    const hi = extreme(phone, 1e5);
+    // Remove the half-pixel viewport-width difference in each legacy interval edge.
+    const oldLo = Math.max(lo, MAP_BOUNDS.x0 + desktop.w / (2 * zoom));
+    const oldHi = Math.min(hi, MAP_BOUNDS.x1 - desktop.w / (2 * zoom));
+    const newLo = extreme(desktop, -1e5);
+    const newHi = extreme(desktop, 1e5);
+    expect((newLo + newHi) / 2).toBeCloseTo((oldLo + oldHi) / 2, 9);
+    expect(newHi - newLo).toBeCloseTo((oldHi - oldLo) * 0.6, 9);
+  });
+
+  it('reclamps both limits on desktop/phone resize and phase change', () => {
+    for (const mode of ['normal', 'endless'] as const) {
+      for (const phase of ['planning', 'battle'] as const) {
+        for (const [from, to] of [[{ w: 767, h: 720 }, DESKTOP], [DESKTOP, { w: 767, h: 720 }]]) {
+          const view = { ...overviewView(from!, phase, mode), zoom: 3 };
+          const resized = resizeView(view, from!, to!, phase, mode);
+          const limits = zoomLimits(to!, phase, mode);
+          expect(resized.zoom).toBeGreaterThanOrEqual(limits.min);
+          expect(resized.zoom).toBeLessThanOrEqual(limits.max);
+          const kept = keepView(resized, to!, phase === 'planning' ? 'battle' : 'planning', mode);
+          const next = zoomLimits(to!, phase === 'planning' ? 'battle' : 'planning', mode);
+          expect(kept.zoom).toBeGreaterThanOrEqual(next.min);
+          expect(kept.zoom).toBeLessThanOrEqual(next.max);
+          const snapped = snapView(kept, to!);
+          for (const [plot, cell] of geometryFor(mode).plotCells.entries()) {
+            const point = worldToScreen(snapped, to!, {
+              x: 224 + (cell.col + 0.5) * 64,
+              y: 224 + (cell.row + 0.5) * 64,
+            });
+            expect(plotAtView(snapped, to!, point, mode)).toBe(plot);
+          }
+        }
+      }
+    }
   });
 });

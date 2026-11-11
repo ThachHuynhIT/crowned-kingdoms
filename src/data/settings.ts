@@ -20,7 +20,8 @@ export const VOLUME_MIN = 0;
 export const VOLUME_MAX = 100;
 
 /**
- * Gain of the whole mix at master 100 (owner 09/11/2026: the default was too loud, halve it). Applied in the
- * AudioManager, so profiles that already saved master 100 get quieter too; the Settings sliders still scale it.
+ * Gain of the whole mix at master 100 (owner 09/11/2026 halved it, 10/11/2026 halved it again to 0.25, cut it to a
+ * third of that, 0.25 / 3, and then halved it once more: 0.25 / 6 ≈ 0.042). Applied in the AudioManager after the
+ * master compressor, so profiles that already saved master 100 get quieter too; the Settings sliders still scale it.
  */
-export const MASTER_OUTPUT = 0.5;
+export const MASTER_OUTPUT = 0.25 / 6;

@@ -139,6 +139,7 @@ const make = () => {
   const graphics: FakeGraphics[] = [];
   const images: FakeImage[] = [];
   const scene = {
+    textures: { get: () => ({ has: () => false }) },
     add: {
       image: (x: number, y: number) => {
         const img = new FakeImage(x, y);

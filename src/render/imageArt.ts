@@ -182,6 +182,78 @@ export const IMAGE_BUILDINGS: Readonly<Record<string, string>> = {
   neutral_well: 'iso-neutral/neutral_well',
   neutral_mercenary_camp: 'iso-neutral/neutral_mercenary_camp',
 };
+/**
+ * Architecture per building level (10/11/2026, P2 `building_<card>_l2/_l3`): level 1 shows the base image, level 2
+ * its L2 and levels 3–5 its L3 (levels 4 and 5 are told apart by the stars). Only the levels listed here are loaded;
+ * a missing level falls back to the next lower one, then to the base image. Files sit next to the base image.
+ */
+export const IMAGE_BUILDING_LEVELS: Readonly<Partial<Record<string, readonly (2 | 3)[]>>> = {
+  arcane_apprentices: [2, 3],
+  arcane_archmage: [2, 3],
+  arcane_frost_mages: [2, 3],
+  arcane_library: [2, 3],
+  arcane_mage_tower: [2, 3],
+  arcane_throne: [2, 3],
+  arcane_ward: [2, 3],
+  clock_bell_tower: [2, 3],
+  clock_colossus: [2, 3],
+  clock_gear_tower: [2, 3],
+  clock_spiders: [2, 3],
+  clock_spring_workshop: [2, 3],
+  clock_steam_cannon: [2, 3],
+  clock_throne: [2, 3],
+  clock_windup_soldiers: [2, 3],
+  forge_armory: [2, 3],
+  forge_blast_furnace: [2, 3],
+  forge_bombardiers: [2, 3],
+  forge_flame_tower: [2, 3],
+  forge_iron_drake: [2, 3],
+  forge_smithy: [2, 3],
+  forge_swordsmen: [2, 3],
+  forge_throne: [2, 3],
+  grove_bear_cave: [2, 3],
+  grove_sapling: [2, 3],
+  grove_spirit_stags: [2, 3],
+  grove_spring: [2, 3],
+  grove_thorn_tower: [2, 3],
+  grove_throne: [2, 3],
+  grove_treant: [2, 3],
+  grove_wolf_den: [2, 3],
+  stone_catapult: [2, 3],
+  stone_crystal: [2, 3],
+  stone_golem_forge: [2, 3],
+  stone_miners: [2, 3],
+  stone_mountain_heart: [2, 3],
+  stone_quarry: [2, 3],
+  stone_throne: [2, 3],
+  stone_wall: [2, 3],
+  tide_cannon: [2, 3],
+  tide_harbor: [2, 3],
+  tide_hookmen: [2, 3],
+  tide_kraken: [2, 3],
+  tide_pirates: [2, 3],
+  tide_throne: [2, 3],
+  tide_treasure: [2, 3],
+  tide_wave_tower: [2, 3],
+  wheat_field: [2, 3],
+  wheat_granary: [2, 3],
+  wheat_militia: [2, 3],
+  wheat_peasant_horde: [2, 3],
+  wheat_reapers: [2, 3],
+  wheat_scarecrow: [2, 3],
+  wheat_throne: [2, 3],
+  wheat_windmill: [2, 3],
+};
+
+/** Which architecture a building level shows: 1 (base), 2 or 3. */
+export const levelArt = (level: number): 1 | 2 | 3 => (level >= 3 ? 3 : level === 2 ? 2 : 1);
+
+/** File of the L2/L3 image of `card` (base file + `_l2` / `_l3`). */
+export const buildingLevelFile = (card: string, art: 2 | 3): string | null => {
+  const base = IMAGE_BUILDINGS[card];
+  return base === undefined ? null : `${base}_l${art}`;
+};
+
 export const GRASS_FILES: readonly string[] = ['grass_0', 'grass_1', 'grass_2'];
 
 /**
@@ -219,8 +291,13 @@ export const DECOR_CATALOG: readonly { id: string; tall: boolean; radius: number
   { id: 'rock_small', tall: false, radius: 7 },
   { id: 'stump', tall: false, radius: 10 },
   { id: 'log', tall: false, radius: 16 },
+  // small farm decoration (P2, 10/11/2026, `docs/art-review/iso-board/decor`; Claude under the owner's delegation)
+  { id: 'barrel', tall: false, radius: 7 },
+  { id: 'haystack', tall: false, radius: 12 },
+  { id: 'sign', tall: false, radius: 7 },
+  { id: 'wheat_cart', tall: false, radius: 16 },
 ];
-/** Owner-approved wild objects (all fifteen, 2026-11-06). */
+/** Approved wild objects (the fifteen of 2026-11-06 plus the four farm pieces of 2026-11-10). */
 export const DECOR_APPROVED: readonly string[] = DECOR_CATALOG.map((d) => d.id);
 /** File of an approved wild object. */
 export const decorFile = (id: string): string => `iso/wilds/${id}`;
@@ -292,6 +369,37 @@ export const IMAGE_ICONS: Readonly<Record<string, string>> = {
   conquer: 'icons/icon_conquer-16',
 };
 
+/** Inspection stat icons, loaded as separate native 16×16 textures. */
+export const STAT_ICONS: Readonly<Record<string, string>> = {
+  life: 'icons/icon_life-16',
+  attack: 'icons/icon_attack-16',
+  range: 'icons/icon_range-16',
+  speed: 'icons/icon_speed-16',
+  cooldown: 'icons/icon_cooldown-16',
+  armor: 'icons/icon_armor-16',
+  shield: 'icons/icon_shield-16',
+  heal: 'icons/icon_heal-16',
+  burn: 'icons/icon_burn-16',
+  poison: 'icons/icon_poison-16',
+  slow: 'icons/icon_slow-16',
+  stun: 'icons/icon_stun-16',
+  flying: 'icons/icon_flying-16',
+  disabled: 'icons/icon_disabled-16',
+  revive: 'icons/icon_revive-16',
+  sacrifice: 'icons/icon_sacrifice-16',
+  move: 'icons/icon_move-16',
+  upgrade: 'icons/icon_upgrade-16',
+  unlock: 'icons/icon_unlock-16',
+  quest: 'icons/icon_quest-16',
+  decree: 'icons/icon_decree-16',
+  pause: 'icons/icon_pause-16',
+  save: 'icons/icon_save-16',
+  economy: 'icons/icon_economy-16',
+  enchantment: 'icons/icon_enchantment-16',
+  soul: 'icons/icon_soul-16',
+  support: 'icons/icon_support-16',
+};
+
 /**
  * Battle effects drawn as pictures (G5, `docs/art-review/g5/fx/review.md`): fx id → file, at 2 art px per world px like
  * units. The eight arrows come from one sheet with each direction drawn separately (sprites never rotate); only the
@@ -348,7 +456,14 @@ export const IMAGE_ART_FILES: readonly string[] = [
     ...POSE_INDEXES.map((i) => `${prefix}_foe_${i}`),
   ]),
   ...Object.values(IMAGE_BUILDINGS),
+  ...Object.entries(IMAGE_BUILDING_LEVELS).flatMap(([card, arts]) =>
+    (arts ?? []).flatMap((art) => {
+      const file = buildingLevelFile(card, art);
+      return file === null ? [] : [file];
+    }),
+  ),
   ...Object.values(IMAGE_ICONS),
+  ...Object.values(STAT_ICONS),
   ...MENU_IMAGE_LAYERS.map((layer) => layer.file),
   ...(MENU_SKY_FILE ? [MENU_SKY_FILE] : []),
   ...Object.values(IMAGE_FX),

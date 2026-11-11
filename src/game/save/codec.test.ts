@@ -52,8 +52,8 @@ const env = (
 
 describe('roundtrip', () => {
   // Seeds picked so the random bot survives long enough to meet a council (year 5) in every run (re-picked after
-  // the 2026-11-09 rebalance made foes stronger and runs shorter).
-  const runs = [trail(2, 'wheat'), trail(6, 'stone'), trail(7, 'arcane')];
+  // the 2026-11-09 rebalance made foes stronger and runs shorter, again on 2026-11-10 for the king powers and 2026-11-11 for the throne range).
+  const runs = [trail(13, 'wheat'), trail(6, 'stone'), trail(34, 'arcane')];
   const states = runs.flat();
 
   it('keeps every state of three full runs exactly, through JSON', () => {
@@ -113,7 +113,7 @@ describe('roundtrip', () => {
     s.hand.push('neutral_move' as CardId);
     expect(e.state.gold).not.toBe(s.gold);
     expect(e.state.hand).not.toContain('neutral_move');
-    expect(e).toMatchObject({ formatVersion: SAVE_FORMAT_VERSION, version: 7 });
+    expect(e).toMatchObject({ formatVersion: SAVE_FORMAT_VERSION, version: 9 });
   });
 
   it('decoding copies: changes to the result do not reach the raw data', () => {
@@ -142,9 +142,9 @@ describe('empty and unusable data', () => {
     });
   });
 
-  it('unknown_versions: state 1, 2, a future 8, an unknown format and a version that disagrees', () => {
+  it('unknown_versions: state 1, 2, a future 10, an unknown format and a version that disagrees', () => {
     const e = env(runState());
-    for (const version of [1, 2, 8, 99]) {
+    for (const version of [1, 2, 10, 99]) {
       expect(
         incompatible({ ...e, version, state: { ...e.state, version } }),
         `state ${version}`,

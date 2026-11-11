@@ -13,6 +13,3 @@ export const kingTitleParts = (nameVi: string): KingTitleParts => {
   if (nameVi.startsWith(KING)) return { prefix: OF, title: nameVi.slice(KING.length) };
   return { prefix: '', title: nameVi };
 };
-
-/** The heading of a king the player has not unlocked: the title stays a mystery. */
-export const LOCKED_KING_TITLE: KingTitleParts = { prefix: OF, title: '?' };

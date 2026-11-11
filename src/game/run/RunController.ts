@@ -9,7 +9,7 @@ import { crownPoints } from '../meta/crowns';
 import type { SessionPersistence, SettleOutcome } from '../save/types';
 import { buildBattleSetup } from './battleSetup';
 import { applyCommand } from './commands';
-import { hasPlayableCard } from './playable';
+import { canStartBattle } from './turn';
 import type { RunCommand, RunState } from './state';
 
 /** Điểm tính tại chỗ khi không có hồ sơ để chấm (hoặc chấm hỏng: không được cộng). */
@@ -169,13 +169,8 @@ export class RunController {
     this.bus.emit('battle:started', { setup });
   }
 
-  /** Luật G1 (`autoStart`): đã chơi/bán thẻ, hoặc không lá nào trên tay có mục tiêu. */
+  /** Trận luôn tự bắt đầu khi tay tới ngưỡng (10/11/2026), mọi luật; cờ `rules.autoStart` cũ không còn quyết định. */
   private shouldAutoStart(): boolean {
-    const s = this.current;
-    return (
-      s.rules.autoStart &&
-      s.phase === 'planning' &&
-      (s.played || !hasPlayableCard(s, this.content))
-    );
+    return this.active === null && canStartBattle(this.current);
   }
 }

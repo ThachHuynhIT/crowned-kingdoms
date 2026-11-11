@@ -8,11 +8,12 @@ import { defaultProfile, type MetaProfile } from '../game/meta';
 import { buildSpritesTexture } from '../render/atlas';
 import { CardView } from '../ui/cards/CardView';
 import { textContent } from '../ui/hud/layout';
-import { carouselScreen, carouselSlots, unlockButtonRect } from '../ui/kingSelect/carouselLayout';
+import { carouselScreen, carouselSlots, unlockButtonRect, type CarouselSlot } from '../ui/kingSelect/carouselLayout';
 import { kingChoices, nextIndex, swipeTarget, unlockLabel, type KingChoice } from '../ui/kingSelect/carouselModel';
 import { difficultyChoices, type DifficultyOption } from '../ui/kingSelect/difficulty';
 import { detailLayout } from '../ui/kingSelect/detailLayout';
 import { KingPortraitView } from '../ui/kingSelect/KingPortraitView';
+import { lockedCardLayout } from '../ui/kingSelect/lockedCardLayout';
 import { modeChoices, pickRunMode } from '../ui/kingSelect/modeModel';
 import { kingTheme, lockedTheme } from '../ui/kingSelect/kingTheme';
 import { PerkDialog } from '../ui/kingSelect/PerkDialog';
@@ -32,6 +33,9 @@ import { getSession } from './sessionRegistry';
 let lastKing: KingId = 'wheat';
 
 type Mode = 'carousel' | 'detail';
+
+/** How long the king cards take to glide to their new slots. */
+const SLIDE_MS = 240;
 
 /** Launch data: a notice to show once (e.g. the realm refused to start a locked Endless run). */
 export interface KingSelectData {
@@ -59,7 +63,8 @@ const themedText = (
 /**
  * Choose a king (§10.3), two steps. **Carousel:** five tall king cards, the selected one big
  * and bright in the middle (click, ←/→, arrows or a swipe to move; click the middle card or
- * Enter to open it; locked kings are grey with a "?"). **Detail:** the king's nine cards in a
+ * Enter to open it; a locked king keeps his name and portrait under a dark-grey shade with a padlock and
+ * the "Mở khoá: …" condition on the card, and only shakes when opened). **Detail:** the king's nine cards in a
  * 3×3 grid, the big king card, **Đặc quyền** (a dialog: at most one perk the king's mastery has
  * opened), the difficulty (Nông dân, then the Gai levels the profile has opened), **CHƠI** and
  * the run seed with **Đổi seed**. Lock state comes from the meta profile (`session.meta()`, or
@@ -83,6 +88,7 @@ export class KingSelectScene extends Phaser.Scene {
   private next!: Button;
   private views: KingPortraitView[] = [];
   private detailView!: KingPortraitView;
+  private slideTween: Phaser.Tweens.Tween | null = null;
   private grid: CardView[] = [];
   private perks!: Button;
   private diffPrev!: Button;
@@ -118,6 +124,7 @@ export class KingSelectScene extends Phaser.Scene {
     this.profile = getSession(this)?.meta() ?? defaultProfile();
     this.runMode = 'normal';
     this.modeButtons = [];
+    this.slideTween = null;
     this.choices = kingChoices(CONTENT, this.profile);
     this.selected = Math.max(0, this.choices.findIndex((c) => c.id === lastKing && c.playable));
     this.mode = 'carousel';
@@ -137,7 +144,7 @@ export class KingSelectScene extends Phaser.Scene {
     this.title = themedText(this, 'CHỌN VUA', 30, theme.light, theme.bgDark).setOrigin(0.5);
     this.namePrefix = themedText(this, '', 26, theme.light, theme.bgDark).setOrigin(0, 0.5);
     this.nameTitle = themedText(this, '', 26, theme.accent, theme.bgDark).setOrigin(0, 0.5);
-    this.note = themedText(this, '', 16, theme.light, theme.bgDark).setOrigin(0.5, 0);
+    this.note = themedText(this, '', 16, theme.light, theme.bgDark).setOrigin(0.5, 0).setAlign('center').setDepth(UNLOCK_DEPTH);
     this.points = themedText(this, '', 16, theme.light, theme.bgDark).setOrigin(1, 0.5);
     this.toasts = new ToastStack(this, DIALOG_DEPTH + 50);
     this.modeNote = themedText(this, '', 13, theme.light, theme.bgDark).setOrigin(0, 0.5);
@@ -286,9 +293,44 @@ export class KingSelectScene extends Phaser.Scene {
 
   private select(index: number): void {
     if (index === this.selected || this.choices[index] === undefined) return;
+    const area = carouselScreen({ w: this.scale.width, h: this.scale.height }).area;
+    const from = carouselSlots(area, this.selected, this.choices.length);
     this.selected = index;
     this.perk = null; // perks belong to one king
     this.refresh();
+    if (this.mode === 'carousel') this.slide(from, carouselSlots(area, index, this.choices.length));
+  }
+
+  /** The cards glide from their old slots to the new ones (owner 2026-11-10: "lướt qua trái phải"). */
+  private slide(from: readonly CarouselSlot[], to: readonly CarouselSlot[]): void {
+    this.slideTween?.remove();
+    const lerp = (a: number, b: number, t: number): number => Math.round(a + (b - a) * t);
+    const step = (t: number): void => {
+      if (this.mode !== 'carousel') return;
+      this.views.forEach((view, i) => {
+        const a = from[i];
+        const b = to[i];
+        if (!a || !b) return;
+        view.setVisible(a.visible || b.visible);
+        view.layout({ x: lerp(a.rect.x, b.rect.x, t), y: lerp(a.rect.y, b.rect.y, t), w: lerp(a.rect.w, b.rect.w, t), h: lerp(a.rect.h, b.rect.h, t) }, true);
+        view.setBrightness(a.brightness + (b.brightness - a.brightness) * t);
+        // the card coming to the middle rises above the one leaving it halfway through
+        view.setDepth(t < 0.5 ? a.depth : b.depth);
+      });
+    };
+    const progress = { t: 0 };
+    step(0);
+    this.slideTween = this.tweens.add({
+      targets: progress,
+      t: 1,
+      duration: SLIDE_MS,
+      ease: 'Cubic.easeOut',
+      onUpdate: () => step(progress.t),
+      onComplete: () => {
+        this.slideTween = null;
+        this.layout();
+      },
+    });
   }
 
   private difficulties(): readonly DifficultyOption[] {
@@ -407,7 +449,7 @@ export class KingSelectScene extends Phaser.Scene {
     this.title.setColor(toCss(theme.light));
     this.namePrefix.setText(c.title.prefix).setColor(toCss(theme.light));
     this.nameTitle.setText(c.title.title).setColor(toCss(theme.accent));
-    this.note.setText(c.note ?? '').setColor(toCss(theme.light));
+    this.note.setText(c.lockText ?? '').setColor(toCss(theme.light));
     this.diffCaption.setColor(toCss(theme.light));
     const levels = this.difficulties();
     this.diffLabel.setText(levels[this.difficulty]?.labelVi ?? '').setColor(toCss(theme.light));
@@ -480,8 +522,13 @@ export class KingSelectScene extends Phaser.Scene {
       view.setBrightness(slot.brightness);
       view.setDepth(slot.depth);
     });
-    this.note.setVisible(carousel && this.choice().note !== null);
-    if (mid) this.note.setPosition(mid.rect.x + mid.rect.w / 2, mid.rect.y + mid.rect.h + 8);
+    // The unlock condition sits on the locked middle card, under its padlock.
+    this.note.setVisible(carousel && this.choice().lockText !== null && mid !== undefined);
+    if (mid) {
+      const box = lockedCardLayout(mid.rect).note;
+      this.note.setFontSize(screen.w >= 768 ? 16 : 12).setWordWrapWidth(box.w, true);
+      this.note.setPosition(Math.round(box.x + box.w / 2), box.y);
+    }
     this.unlock.setVisible(carousel && this.choice().unlockCost !== null && mid !== undefined);
     if (mid) this.place(this.unlock, unlockButtonRect(mid.rect));
     // Crown point balance: top right, level with the back button (desktop) or just under the
@@ -503,7 +550,10 @@ export class KingSelectScene extends Phaser.Scene {
     this.detailView.setDepth(10);
     this.grid.forEach((view, i) => {
       view.container.setVisible(detail);
-      if (detail) view.setPosition(dl.cards[i]!.x, dl.cards[i]!.y);
+      if (!detail) return;
+      const r = dl.cards[i]!;
+      if (view.container.width !== r.w || view.container.height !== r.h) view.resize({ w: r.w, h: r.h });
+      view.setPosition(r.x, r.y);
     });
     for (const b of [this.perks, this.diffPrev, this.diffNext, this.play, this.reroll, ...this.modeButtons]) b.setVisible(detail);
     this.modeButtons.forEach((b, i) => this.place(b, dl.modes[i]!));

@@ -70,7 +70,11 @@ describe('buildingInfoModel', () => {
     const e = withBuilding(runState(), 6, 'wheat_militia', 1, {
       enchants: [{ cardId: 'neutral_sharpen', stacks: 3 }],
     });
-    expect(buildingInfoModel(e, 6, CONTENT)!.enchants).toEqual([`${CONTENT.card('neutral_sharpen').nameVi} ×3`]);
+    // name, stacks and what the charm does (owner 11/11/2026)
+    expect(buildingInfoModel(e, 6, CONTENT)!.enchants).toEqual([
+      `${CONTENT.card('neutral_sharpen').nameVi} ×3 — ${describeCard(CONTENT.card('neutral_sharpen')).lines.join(' ')}`,
+    ]);
+    expect(buildingInfoModel(e, 6, CONTENT)!.enchants[0]).toMatch(/sát thương/);
   });
 
   it('separate_unit_model: the building text carries no unit stat block', () => {

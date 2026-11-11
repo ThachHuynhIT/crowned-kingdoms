@@ -1,6 +1,6 @@
 /** Dựng BattleSetup từ RunState (spec §5.3: G1 = cấp 1; §3.6: cấp địch). Thuần, không sửa đầu vào. */
 import { formationRowsFor } from '../battle/bounds';
-import { EMBER_TICKS, ENEMY_LEVEL_STAT, ENEMY_STAT_MULT, WAVES } from '../../data/battle';
+import { BOSS_DMG_MULT, BOSS_HP_MULT, EMBER_TICKS, ENEMY_LEVEL_STAT, ENEMY_STAT_MULT, WAVES } from '../../data/battle';
 import { BOSSES, BOSS_RULES } from '../../data/bosses';
 import { SOUL_HARVEST_UNIT } from '../../data/kings/moon';
 import { BOSS_SUMMON_UNITS } from '../../data/raiders';
@@ -29,6 +29,7 @@ import type {
   WaveSetup,
 } from '../battle/types';
 import { THRONE_PLOT } from './board';
+import { throneLandRange } from './boardGeometry';
 import { foeSpeedMult, interventionStats } from './decrees';
 import { activeModifier } from './endlessModifiers';
 import { endlessBossScale } from './endlessRules';
@@ -248,6 +249,17 @@ const soulSummonOf = (
   return { soulSummon: { every, max, stats: summonStats(state, content, THRONE_PLOT, SOUL_HARVEST_UNIT, level) } };
 };
 
+/**
+ * Ngai bắn tới hết vùng đất của mình (chủ dự án 11/11/2026): tầm gốc của thẻ Ngai được thay bằng `throneLandRange`,
+ * phần cộng thêm (sắc lệnh Cung Thủ Hoàng Gia…) vẫn cộng lên trên.
+ */
+const throneAttack = (
+  a: ReturnType<typeof attackStats>,
+  baseRange: number,
+  mode: RunState['mode'],
+): ReturnType<typeof attackStats> =>
+  a === null ? a : { ...a, range: Math.max(a.range, throneLandRange(mode, THRONE_PLOT) + (a.range - baseRange)) };
+
 /** Công trình/Ngai ở `plot` đúng như vào trận (range/radius theo px thế giới, interval theo tick); UI dùng lại, không tính lại. */
 export const structureFor = (state: RunState, plot: number, content: Content): StructureSetup => {
   const b = state.plots[plot]!.building!;
@@ -261,7 +273,7 @@ export const structureFor = (state: RunState, plot: number, content: Content): S
       kind: 'throne',
       hp: Math.max(finalStat(card.hp * mult, sheet.structureHp), card.hp * mult * 0.3),
       armor: clamp(finalStat(card.armor, sheet.armor), 0, 0.75),
-      attack: attackStats(card.attack, mult, 0, sheet),
+      attack: throneAttack(attackStats(card.attack, mult, 0, sheet), card.attack?.range ?? 0, state.mode),
       targeting: 'nearest',
       spawn: null,
       pulse: null,
@@ -416,7 +428,9 @@ const bossSetup = (
   const def = BOSSES.find((b) => b.id === army.boss);
   if (def === undefined) throw new Error(`Unknown boss ${army.boss}`);
   const stats = unitStats(def.unit, 1, def.unit.tags.includes('siege'), content, [], speedScale);
-  stats.hp = def.unit.hp * (1 + RUN.difficultyBudgetStep * state.difficulty);
+  // Trận không còn thắng vì hết giờ (10/11/2026): boss phải hạ được, nên máu/sát thương nhân hệ số theo thứ tự boss.
+  stats.hp = def.unit.hp * BOSS_HP_MULT[def.ordinal - 1]! * (1 + RUN.difficultyBudgetStep * state.difficulty);
+  stats.dmg = stats.dmg * BOSS_DMG_MULT[def.ordinal - 1]!;
   const summons: Record<string, UnitStats> = {};
   for (const u of BOSS_SUMMON_UNITS) summons[u.id] = unitStats(u, 1, false, content, [], speedScale);
 
@@ -480,6 +494,7 @@ export function buildBattleSetup(state: RunState, content: Content): BattleSetup
     if (plot !== THRONE_PLOT && p.building !== null) structures.push(structureFor(state, plot, content));
   });
 
+  // Sức địch theo vua mình chơi (10/11/2026, cân bằng tạm: vua mạnh gặp địch mạnh hơn).
   const mult = ENEMY_LEVEL_STAT[army.level - 1]! * army.statMult * ENEMY_STAT_MULT;
   const bannerDef =
     army.attacker === 'raiders' || army.attacker === 'coalition' || army.attacker === 'boss'
@@ -519,6 +534,7 @@ export function buildBattleSetup(state: RunState, content: Content): BattleSetup
     structures,
     waves,
     autoFire: state.autoFire,
+    power: state.kingId,
     ...(bannerDef ? { banner: bannerDef } : {}),
     ...(boss ? { boss } : {}),
     // Vắng khi không có sắc lệnh/nhiệm vụ/perk: trận giữ số gốc §7.4 (G1/G2).

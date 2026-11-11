@@ -16,7 +16,7 @@ export interface DecreeDef {
 
 /** Các giá trị thường trực không phải `EffectDef` (spec §7.1, §7.4). */
 export const DECREE_RULES = {
-  hand: 4, // Bàn Tay Thứ Tư
+  hand: 1, // Bàn Tay Thứ Tư: số lá rút THÊM mỗi năm (10/11/2026)
   freeReroll: 1, // Phường Hội Thương Nhân: lần đổi bài miễn phí mỗi năm
   reward: 4, // Giao Thương: số thẻ thưởng
   boulderDmgPct: 50, // Đá Tảng Lớn: +% sát thương
@@ -103,7 +103,7 @@ export const DECREES: readonly DecreeDef[] = [
   {
     id: 'decree_fourth_hand',
     nameVi: 'Bàn Tay Thứ Tư',
-    textVi: 'Rút {hand} thẻ mỗi năm.',
+    textVi: 'Mỗi năm rút thêm {hand} thẻ.',
     effects: [],
     action: 'none',
   },

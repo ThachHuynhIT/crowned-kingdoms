@@ -18,6 +18,30 @@ const HIT_SLOP = 4;
 const ANCHOR_GAP = 12;
 const SCREEN_MARGIN = 4;
 
+/** Choose an inspection row's icon from its Vietnamese label; titles are handled separately. */
+export const lineIcon = (line: string): string | null => {
+  const prefixes: readonly [string, string][] = [
+    ['Máu', 'life'], ['Sát thương', 'attack'], ['Không tấn công', 'attack'],
+    ['Tầm đánh', 'range'], ['Giáp', 'armor'], ['Khiên', 'shield'],
+    ['Bùa:', 'enchantment'], ['Cấp sau', 'upgrade'], ['Tuổi', 'cooldown'], ['Lính:', 'support'],
+  ];
+  for (const [prefix, icon] of prefixes) if (line.startsWith(prefix)) return icon;
+  if (line.startsWith('Cấp ')) return null;
+  const text = line.toLocaleLowerCase('vi');
+  if (text.includes('bỏng')) return 'burn';
+  if (text.includes('độc')) return 'poison';
+  if (text.includes('chậm')) return 'slow';
+  if (text.includes('choáng')) return 'stun';
+  if (text === 'bay' || (text.startsWith('loại:') && /(?:^|[, :])bay(?:,|$)/u.test(text))) return 'flying';
+  if (text.includes('vô hiệu')) return 'disabled';
+  if (text.includes('hồi sinh') || text.startsWith('sống lại một lần')) return 'revive';
+  if (text.includes('hiến tế')) return 'sacrifice';
+  if (text.includes('linh hồn') || text.startsWith('mỗi lính cùng phe đã chết:')) return 'soul';
+  if (text.includes('hồi máu') || /hồi .+ máu/u.test(text)) return 'heal';
+  if (text.includes('vàng') || text.includes('kinh tế')) return 'economy';
+  return null;
+};
+
 const tintOf = (line: string): number | undefined => {
   if (line.startsWith('Lính:') || line.startsWith('Máu lính')) return UI_PALETTE.woodDark;
   if (line.startsWith('Cấp ')) return UI_PALETTE.wood;

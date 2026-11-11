@@ -13,7 +13,7 @@ import { THRONE_PLOT, adjacentToUnlocked } from '../game/run/board';
 import type { RunState } from '../game/run/state';
 import { FONT_UI } from '../ui/theme';
 import { ISO } from '../core/iso';
-import { SPRITES_KEY, buildingFrame, imageFrameScale, kingPlotFrame, plotFrame } from './atlas';
+import { SPRITES_KEY, imageFrameScale, kingPlotFrame, pickBuildingFrame, plotFrame } from './atlas';
 import { ISO_SPRITE_SCALE, insetPoly, iso, isoQuad, strokePoly } from './isoView';
 
 /** Ground layer: plots sit on the field (depth 0), under every y-sorted sprite. */
@@ -76,7 +76,8 @@ export class BoardRenderer {
   private readonly plots: Phaser.GameObjects.Image[] = [];
   private readonly buildings: (Phaser.GameObjects.Image | null)[] = [];
   /** Card shown on each plot's building image, null = none. */
-  private readonly cards: (CardId | null)[] = [];
+  /** Frame shown on each plot (base or L2/L3 architecture), null when empty. */
+  private readonly cards: (string | null)[] = [];
   private readonly highlights: Phaser.GameObjects.Graphics;
   private readonly arrows: Phaser.GameObjects.Graphics;
   /** Level pips (bottom) and enchantment dots (top) of each building. */
@@ -113,7 +114,8 @@ export class BoardRenderer {
       const img = this.plots[p]!.setFrame(frame);
       img.setScale(ISO.plotW / img.frame.width);
       const cardId = p === THRONE_PLOT ? throneId : (plot?.building?.cardId ?? null);
-      this.setBuilding(p, cardId);
+      const level = p === THRONE_PLOT ? state.throneLevel : (plot?.building?.level ?? 1);
+      this.setBuilding(p, cardId, level);
     }
     this.drawMarks(state);
     this.drawPrices(state);
@@ -247,24 +249,28 @@ export class BoardRenderer {
     return king.throne.id;
   }
 
-  private setBuilding(plot: number, cardId: CardId | null): void {
+  private setBuilding(plot: number, cardId: CardId | null, level: number): void {
     let img = this.buildings[plot] ?? null;
     const shown = this.cards[plot] ?? null;
-    this.cards[plot] = cardId;
     if (cardId === null) {
+      this.cards[plot] = null;
       img?.setVisible(false);
       return;
     }
+    // L2/L3 architecture when its image is loaded (`IMAGE_BUILDING_LEVELS`), else the base image.
+    const sprites = this.scene.textures.get(SPRITES_KEY);
+    const frame = pickBuildingFrame(cardId, level, (f) => sprites.has(f));
+    this.cards[plot] = frame;
     if (img === null) {
       const foot = buildingFoot(plot, this.mode);
       img = this.scene.add
-        .image(foot.x, foot.y, SPRITES_KEY, buildingFrame(cardId))
+        .image(foot.x, foot.y, SPRITES_KEY, frame)
         .setOrigin(0.5, 1)
-        .setScale(imageFrameScale(buildingFrame(cardId)) * ISO_SPRITE_SCALE)
+        .setScale(imageFrameScale(frame) * ISO_SPRITE_SCALE)
         .setDepth(foot.y);
       this.buildings[plot] = img;
-    } else if (shown !== cardId) {
-      img.setFrame(buildingFrame(cardId)).setScale(imageFrameScale(buildingFrame(cardId)) * ISO_SPRITE_SCALE);
+    } else if (shown !== frame) {
+      img.setFrame(frame).setScale(imageFrameScale(frame) * ISO_SPRITE_SCALE);
     }
     img.setVisible(this.buildingsVisible);
   }

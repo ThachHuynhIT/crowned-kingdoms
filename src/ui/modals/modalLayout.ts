@@ -49,7 +49,8 @@ const BUTTON_GAP = 16;
 
 /** "Nhận" (the same size in both layouts). */
 export const REWARD_BUTTON = { w: 150, h: 48 } as const;
-const REWARD_DESK = { card: { w: 180, h: 288, gap: 24 }, reroll: { w: 240, h: 44 } } as const;
+/** Desktop reward cards (2026-11-10): a 192 px picture window, the 96×72 picture at scale 2. */
+const REWARD_DESK = { card: { w: 212, h: 280, gap: 24 }, reroll: { w: 240, h: 44 } } as const;
 const REWARD_PHONE = { card: { w: 108, h: 180, gap: 5 }, reroll: { w: 220, h: 44 } } as const;
 
 /**
@@ -338,7 +339,10 @@ export interface DeckModalLayout {
   visible: readonly number[];
 }
 
+/** Deck card on phones; desktop cards (2026-11-10) are bigger so the 96×72 picture fills the card's width. */
 export const DECK_CARD = { w: 96, h: 144 } as const;
+export const DECK_CARD_DESK = { w: 116, h: 180 } as const;
+export const deckCardSize = (screen: Size): { w: number; h: number } => (isDesktop(screen.w) ? DECK_CARD_DESK : DECK_CARD);
 export const DECK_TAB_COUNT = 4;
 const DECK_GAP = 8;
 const DECK_TAB_H = 44;
@@ -351,7 +355,8 @@ export const deckModalLayout = (
   scroll: number,
 ): DeckModalLayout => {
   const cols = isDesktop(screen.w) ? 6 : 3;
-  const gridW = cols * DECK_CARD.w + (cols - 1) * DECK_GAP;
+  const card = deckCardSize(screen);
+  const gridW = cols * card.w + (cols - 1) * DECK_GAP;
   const panelW = gridW + 2 * inset;
   const panelH = Math.min(640, screen.h - 2 * MARGIN);
   const panel = centredPanel(screen, panelW, panelH);
@@ -379,16 +384,16 @@ export const deckModalLayout = (
     w: gridW,
     h: Math.max(0, panel.y + panel.h - inset - vy),
   };
-  const rowStep = DECK_CARD.h + DECK_GAP;
+  const rowStep = card.h + DECK_GAP;
   const rows = Math.ceil(count / cols);
   const contentH = rows === 0 ? 0 : rows * rowStep - DECK_GAP;
   const maxScroll = Math.max(0, contentH - viewport.h);
   const at = Math.max(0, Math.min(scroll, maxScroll));
   const cards = Array.from({ length: count }, (_, i) => ({
-    x: viewport.x + (i % cols) * (DECK_CARD.w + DECK_GAP),
+    x: viewport.x + (i % cols) * (card.w + DECK_GAP),
     y: viewport.y + Math.floor(i / cols) * rowStep - at,
-    w: DECK_CARD.w,
-    h: DECK_CARD.h,
+    w: card.w,
+    h: card.h,
   }));
   const visible = cards.flatMap((c, i) =>
     c.y >= viewport.y && c.y + c.h <= viewport.y + viewport.h ? [i] : [],

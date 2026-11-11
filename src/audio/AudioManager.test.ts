@@ -1,9 +1,19 @@
 import { ESLint } from 'eslint';
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
+import { MUSIC_BUS_GAIN } from '../data/music';
 import { MASTER_OUTPUT } from '../data/settings';
-import { SFX_IDS } from '../data/sfx';
+import {
+  MASTER_COMPRESSOR,
+  MASTER_LOWPASS_HZ,
+  REVERB,
+  SFX_BATTLE_MAX_VOICES,
+  SFX_IDS,
+  SFX_MAX_VOICES,
+  SFX_MIN_INTERVAL_MS,
+} from '../data/sfx';
 import { AudioManager } from './AudioManager';
-import { asContext, FakeAudioContext, type FakeBufferSource, type FakeGain } from './testing/fakeAudio';
+import { compressorMakeupTrim } from './mix';
+import { asContext, FakeAudioContext, FakeBufferSource, type FakeGain } from './testing/fakeAudio';
 
 const setup = (configure?: (ctx: FakeAudioContext) => void) => {
   const contexts: FakeAudioContext[] = [];
@@ -16,8 +26,14 @@ const setup = (configure?: (ctx: FakeAudioContext) => void) => {
   return { manager, contexts };
 };
 
+/** Effect voices: buffer sources feeding a per-voice gain on the sfx bus (gains[2]). */
 const sfxSources = (ctx: FakeAudioContext): FakeBufferSource[] =>
-  ctx.started.filter((s) => (s as FakeBufferSource).buffer?.length !== undefined && s.connections.includes(ctx.gains[2])) as FakeBufferSource[];
+  ctx.started.filter(
+    (s) => s instanceof FakeBufferSource && (s.connections[0] as FakeGain | undefined)?.connections.includes(ctx.gains[2]),
+  ) as FakeBufferSource[];
+
+/** Seconds between two plays of one id that both pass the minimum interval. */
+const GAP = SFX_MIN_INTERVAL_MS / 1000;
 
 describe('AudioManager', () => {
   beforeEach(() => {
@@ -45,19 +61,56 @@ describe('AudioManager', () => {
     await Promise.all([manager.unlock(), manager.unlock(), manager.unlock()]);
     await manager.unlock();
     expect(contexts.length).toBe(1);
-    expect(contexts[0]!.buffers.length).toBe(SFX_IDS.length);
+    // One buffer per effect plus the stereo reverb impulse.
+    expect(contexts[0]!.buffers.length).toBe(SFX_IDS.length + 1);
     expect(contexts[0]!.state).toBe('running');
     await manager.destroy();
   });
 
-  it('master 50 × sfx 20 gives an effective sfx gain of 0.1 × MASTER_OUTPUT (the whole mix is halved)', async () => {
+  it('master 50 × sfx 20 gives an effective sfx gain of 0.1 × MASTER_OUTPUT (the whole mix at a 24th, owner 10/11/2026)', async () => {
     const { manager, contexts } = setup();
     manager.setVolumes({ master: 50, music: 100, sfx: 20, screenShake: true });
     await manager.unlock();
-    const [master, , sfx] = contexts[0]!.gains as FakeGain[];
+    const [master, music, sfx] = contexts[0]!.gains as FakeGain[];
     expect(master!.gain.value * sfx!.gain.value).toBeCloseTo(0.1 * MASTER_OUTPUT);
-    expect(MASTER_OUTPUT).toBe(0.5);
+    expect(MASTER_OUTPUT).toBeCloseTo(0.25 / 6);
+    // Music sits under the effects.
+    expect(music!.gain.value).toBeCloseTo(MUSIC_BUS_GAIN);
+    expect(MUSIC_BUS_GAIN).toBeLessThan(1);
     await manager.destroy();
+  });
+
+  it('routes both buses through a low-pass, a compressor and a makeup trim into the master, with a reverb send', async () => {
+    const { manager, contexts } = setup();
+    await manager.unlock();
+    const ctx = contexts[0]!;
+    const [master, music, sfx] = ctx.gains as FakeGain[];
+    expect(ctx.filters.length).toBe(1);
+    expect(ctx.compressors.length).toBe(1);
+    expect(ctx.convolvers.length).toBe(1);
+    const lowpass = ctx.filters[0]!;
+    const compressor = ctx.compressors[0]!;
+    const convolver = ctx.convolvers[0]!;
+    expect(lowpass.type).toBe('lowpass');
+    expect(lowpass.frequency.value).toBe(MASTER_LOWPASS_HZ);
+    expect(compressor.threshold.value).toBe(MASTER_COMPRESSOR.threshold);
+    expect(compressor.knee.value).toBe(MASTER_COMPRESSOR.knee);
+    expect(compressor.ratio.value).toBe(MASTER_COMPRESSOR.ratio);
+    expect(music!.connections).toContain(lowpass);
+    expect(sfx!.connections).toContain(lowpass);
+    expect(lowpass.connections).toEqual([compressor]);
+    const trim = compressor.connections[0] as FakeGain;
+    expect(trim.gain.value).toBeCloseTo(compressorMakeupTrim());
+    expect(trim.connections).toEqual([master]);
+    expect(master!.connections).toEqual([ctx.destination]);
+    const sends = ctx.gains.filter((g) => g.connections.includes(convolver));
+    expect(sends.map((g) => g.gain.value).sort()).toEqual([REVERB.sfxSend, REVERB.musicSend].sort());
+    expect(convolver.buffer?.numberOfChannels).toBe(2);
+    const wet = convolver.connections[0] as FakeGain;
+    expect(wet.gain.value).toBe(REVERB.wet);
+    expect(wet.connections).toEqual([lowpass]);
+    await manager.destroy();
+    expect(lowpass.disconnected && compressor.disconnected && convolver.disconnected).toBe(true);
   });
 
   it('muted sfx creates no voice', async () => {
@@ -71,17 +124,69 @@ describe('AudioManager', () => {
     await manager.destroy();
   });
 
-  it('drops the fifth voice of one id; an ended voice frees its slot', async () => {
+  it('drops a voice of one id past the cap; an ended voice frees its slot', async () => {
     const { manager, contexts } = setup();
     await manager.unlock();
     const ctx = contexts[0]!;
-    for (let i = 0; i < 5; i++) manager.play('hit_light');
-    expect(ctx.started.length).toBe(4);
+    for (let i = 0; i <= SFX_MAX_VOICES; i++) {
+      manager.play('hit_light');
+      ctx.currentTime += GAP;
+    }
+    expect(ctx.started.length).toBe(SFX_MAX_VOICES);
     manager.play('arrow');
-    expect(ctx.started.length).toBe(5);
+    expect(ctx.started.length).toBe(SFX_MAX_VOICES + 1);
     ctx.started[0]!.finish();
     manager.play('hit_light');
-    expect(ctx.started.length).toBe(6);
+    expect(ctx.started.length).toBe(SFX_MAX_VOICES + 2);
+    await manager.destroy();
+  });
+
+  it('drops a repeat of one id inside the minimum interval', async () => {
+    const { manager, contexts } = setup();
+    await manager.unlock();
+    const ctx = contexts[0]!;
+    manager.play('hit_light');
+    manager.play('hit_light');
+    ctx.currentTime += GAP / 2;
+    manager.play('hit_light');
+    expect(sfxSources(ctx).length).toBe(1);
+    ctx.currentTime += GAP / 2;
+    manager.play('hit_light');
+    expect(sfxSources(ctx).length).toBe(2);
+    await manager.destroy();
+  });
+
+  it('a busy battle never plays more than the battle voice cap at once; UI sounds still play', async () => {
+    const { manager, contexts } = setup();
+    await manager.unlock();
+    const ctx = contexts[0]!;
+    const battle = ['hit_light', 'hit_heavy', 'arrow', 'cannon', 'fire', 'magic', 'death_pop', 'throne_hit'] as const;
+    for (let frame = 0; frame < 10; frame++) {
+      for (const id of battle) manager.play(id);
+      ctx.currentTime += GAP;
+    }
+    expect(sfxSources(ctx).length).toBe(SFX_BATTLE_MAX_VOICES);
+    manager.play('ui_click');
+    expect(sfxSources(ctx).length).toBe(SFX_BATTLE_MAX_VOICES + 1);
+    await manager.destroy();
+  });
+
+  it('repeated hits get slightly different pitch and level; a coin stays in tune', async () => {
+    const { manager, contexts } = setup();
+    await manager.unlock();
+    const ctx = contexts[0]!;
+    for (let i = 0; i < 3; i++) {
+      manager.play('hit_light');
+      manager.play('coin');
+      ctx.currentTime += GAP;
+      for (const s of ctx.started) s.finish();
+    }
+    const voices = sfxSources(ctx);
+    const hits = voices.filter((_, i) => i % 2 === 0);
+    const coins = voices.filter((_, i) => i % 2 === 1);
+    expect(new Set(hits.map((s) => s.playbackRate.value)).size).toBe(3);
+    expect(new Set(hits.map((s) => (s.connections[0] as FakeGain).gain.value)).size).toBe(3);
+    for (const s of coins) expect(s.playbackRate.value).toBe(1);
     await manager.destroy();
   });
 

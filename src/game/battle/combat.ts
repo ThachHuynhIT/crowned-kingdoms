@@ -8,7 +8,7 @@ import { deathBehaviours, hitBehaviours } from './behaviours';
 import { afterBossDamage } from './bosses';
 import { mitigate } from './damage';
 import { BOSS_RULES } from '../../data/bosses';
-import { allowsFoeStructureTarget, canHit, edgeDistance, inRange, isRage, pickShotTarget, pickShotTargets } from './targeting';
+import { allowsFoeStructureTarget, canHit, edgeDistance, inRange, isRage, pickShotTarget, pickShotTargets, rageStacks } from './targeting';
 import {
   DMG_NAME,
   DMG_FIRE,
@@ -368,6 +368,8 @@ export const applyDamagePhase = (world: BattleWorld): void => {
   world.damageQueue = [];
   // Cuồng Nộ: đòn của địch vào công trình nặng hơn (Ngai không tính).
   const rageMult = isRage(world) ? 1 + BATTLE.rageStructureDmgPct / 100 : 1;
+  // Cuồng Nộ cộng dồn: mọi đòn của địch mạnh thêm mỗi bậc (10/11/2026).
+  const stackMult = 1 + (BATTLE.rageStackDmgPct * rageStacks(world)) / 100;
   const order = queue.map((_, i) => i);
   order.sort((a, b) => {
     const qa = queue[a]!;
@@ -382,7 +384,8 @@ export const applyDamagePhase = (world: BattleWorld): void => {
     const landed = v === world.bossId && world.bossLanded ? 1 + BOSS_RULES.hornet.landDmgTakenPct / 100 : 1;
     const raging =
       rageMult !== 1 && q.sourceId >= 0 && world.team[q.sourceId] === TEAM_FOE && world.kind[v] === KIND_STRUCTURE;
-    const dmg = Math.max(0, mitigateCode(q.raw, q.type, world.armor[v]!)) * landed * (raging ? rageMult : 1);
+    const foeHit = q.sourceId >= 0 && world.team[q.sourceId] === TEAM_FOE;
+    const dmg = Math.max(0, mitigateCode(q.raw, q.type, world.armor[v]!)) * landed * (raging ? rageMult : 1) * (foeHit ? stackMult : 1);
     // Khiên hấp thụ trước HP, sau giáp (§8.5).
     const absorbed = Math.min(world.shield[v]!, dmg);
     world.shield[v] = world.shield[v]! - absorbed;

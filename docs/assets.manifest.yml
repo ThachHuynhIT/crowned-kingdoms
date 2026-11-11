@@ -3027,7 +3027,7 @@ assets:
     nativeSize: 1536x1024
     finalSize: 77x102
     anchor: feet
-    notes: Wild tall (outside the field) decoration (approved 2026-11-06); cut from the wilds sheet, black keyed and box-reduced 4x by docs/art-review/iso-board/wilds/make_wilds.py; placed by src/render/decorationModel.ts (DECOR_CATALOG)
+    notes: Wild tall (outside the field) decoration (approved 2026-11-06); cut from the wilds sheet, black keyed and box-reduced 4x by docs/art-review/iso-board/wilds/make_wilds.py; placed by src/render/decorationModel.ts (DECOR_CATALOG); dark outline rim removed by tools/strip_decor_outline.py (owner 2026-11-10, originals kept in docs/art-review/decor-outline/originals/)
   - id: decor_tree_pine_light_iso
     path: public/assets/art/ai-v1/iso/wilds/tree_pine_light.png
     category: doodad
@@ -3042,7 +3042,7 @@ assets:
     nativeSize: 1536x1024
     finalSize: 73x102
     anchor: feet
-    notes: Wild tall (outside the field) decoration (approved 2026-11-06); cut from the wilds sheet, black keyed and box-reduced 4x by docs/art-review/iso-board/wilds/make_wilds.py; placed by src/render/decorationModel.ts (DECOR_CATALOG)
+    notes: Wild tall (outside the field) decoration (approved 2026-11-06); cut from the wilds sheet, black keyed and box-reduced 4x by docs/art-review/iso-board/wilds/make_wilds.py; placed by src/render/decorationModel.ts (DECOR_CATALOG); dark outline rim removed by tools/strip_decor_outline.py (owner 2026-11-10, originals kept in docs/art-review/decor-outline/originals/)
   - id: decor_tree_oak_iso
     path: public/assets/art/ai-v1/iso/wilds/tree_oak.png
     category: doodad
@@ -3057,7 +3057,7 @@ assets:
     nativeSize: 1536x1024
     finalSize: 94x100
     anchor: feet
-    notes: Wild tall (outside the field) decoration (approved 2026-11-06); cut from the wilds sheet, black keyed and box-reduced 4x by docs/art-review/iso-board/wilds/make_wilds.py; placed by src/render/decorationModel.ts (DECOR_CATALOG)
+    notes: Wild tall (outside the field) decoration (approved 2026-11-06); cut from the wilds sheet, black keyed and box-reduced 4x by docs/art-review/iso-board/wilds/make_wilds.py; placed by src/render/decorationModel.ts (DECOR_CATALOG); dark outline rim removed by tools/strip_decor_outline.py (owner 2026-11-10, originals kept in docs/art-review/decor-outline/originals/)
   - id: decor_tree_autumn_iso
     path: public/assets/art/ai-v1/iso/wilds/tree_autumn.png
     category: doodad
@@ -3072,7 +3072,7 @@ assets:
     nativeSize: 1536x1024
     finalSize: 95x97
     anchor: feet
-    notes: Wild tall (outside the field) decoration (approved 2026-11-06); cut from the wilds sheet, black keyed and box-reduced 4x by docs/art-review/iso-board/wilds/make_wilds.py; placed by src/render/decorationModel.ts (DECOR_CATALOG)
+    notes: Wild tall (outside the field) decoration (approved 2026-11-06); cut from the wilds sheet, black keyed and box-reduced 4x by docs/art-review/iso-board/wilds/make_wilds.py; placed by src/render/decorationModel.ts (DECOR_CATALOG); dark outline rim removed by tools/strip_decor_outline.py (owner 2026-11-10, originals kept in docs/art-review/decor-outline/originals/)
   - id: decor_mountain_snow_iso
     path: public/assets/art/ai-v1/iso/wilds/mountain_snow.png
     category: doodad
@@ -3087,7 +3087,7 @@ assets:
     nativeSize: 1536x1024
     finalSize: 121x88
     anchor: feet
-    notes: Wild tall (outside the field) decoration (approved 2026-11-06); cut from the wilds sheet, black keyed and box-reduced 4x by docs/art-review/iso-board/wilds/make_wilds.py; placed by src/render/decorationModel.ts (DECOR_CATALOG)
+    notes: Wild tall (outside the field) decoration (approved 2026-11-06); cut from the wilds sheet, black keyed and box-reduced 4x by docs/art-review/iso-board/wilds/make_wilds.py; placed by src/render/decorationModel.ts (DECOR_CATALOG); dark outline rim removed by tools/strip_decor_outline.py (owner 2026-11-10, originals kept in docs/art-review/decor-outline/originals/)
   - id: decor_cliff_mossy_iso
     path: public/assets/art/ai-v1/iso/wilds/cliff_mossy.png
     category: doodad
@@ -3102,7 +3102,7 @@ assets:
     nativeSize: 1536x1024
     finalSize: 108x86
     anchor: feet
-    notes: Wild tall (outside the field) decoration (approved 2026-11-06); cut from the wilds sheet, black keyed and box-reduced 4x by docs/art-review/iso-board/wilds/make_wilds.py; placed by src/render/decorationModel.ts (DECOR_CATALOG)
+    notes: Wild tall (outside the field) decoration (approved 2026-11-06); cut from the wilds sheet, black keyed and box-reduced 4x by docs/art-review/iso-board/wilds/make_wilds.py; placed by src/render/decorationModel.ts (DECOR_CATALOG); dark outline rim removed by tools/strip_decor_outline.py (owner 2026-11-10, originals kept in docs/art-review/decor-outline/originals/)
   - id: decor_boulders_big_iso
     path: public/assets/art/ai-v1/iso/wilds/boulders_big.png
     category: doodad
@@ -3117,7 +3117,7 @@ assets:
     nativeSize: 1536x1024
     finalSize: 129x84
     anchor: feet
-    notes: Wild tall (outside the field) decoration (approved 2026-11-06); cut from the wilds sheet, black keyed and box-reduced 4x by docs/art-review/iso-board/wilds/make_wilds.py; placed by src/render/decorationModel.ts (DECOR_CATALOG)
+    notes: Wild tall (outside the field) decoration (approved 2026-11-06); cut from the wilds sheet, black keyed and box-reduced 4x by docs/art-review/iso-board/wilds/make_wilds.py; placed by src/render/decorationModel.ts (DECOR_CATALOG); dark outline rim removed by tools/strip_decor_outline.py (owner 2026-11-10, originals kept in docs/art-review/decor-outline/originals/)
   - id: decor_bush_green_iso
     path: public/assets/art/ai-v1/iso/wilds/bush_green.png
     category: doodad
@@ -3132,7 +3132,7 @@ assets:
     nativeSize: 1536x1024
     finalSize: 41x31
     anchor: feet
-    notes: Wild low (inside the field) decoration (approved 2026-11-06); cut from the wilds sheet, black keyed and box-reduced 4x by docs/art-review/iso-board/wilds/make_wilds.py; placed by src/render/decorationModel.ts (DECOR_CATALOG)
+    notes: Wild low (inside the field) decoration (approved 2026-11-06); cut from the wilds sheet, black keyed and box-reduced 4x by docs/art-review/iso-board/wilds/make_wilds.py; placed by src/render/decorationModel.ts (DECOR_CATALOG); dark outline rim removed by tools/strip_decor_outline.py (owner 2026-11-10, originals kept in docs/art-review/decor-outline/originals/)
   - id: decor_bush_berry_iso
     path: public/assets/art/ai-v1/iso/wilds/bush_berry.png
     category: doodad
@@ -3147,7 +3147,7 @@ assets:
     nativeSize: 1536x1024
     finalSize: 41x30
     anchor: feet
-    notes: Wild low (inside the field) decoration (approved 2026-11-06); cut from the wilds sheet, black keyed and box-reduced 4x by docs/art-review/iso-board/wilds/make_wilds.py; placed by src/render/decorationModel.ts (DECOR_CATALOG)
+    notes: Wild low (inside the field) decoration (approved 2026-11-06); cut from the wilds sheet, black keyed and box-reduced 4x by docs/art-review/iso-board/wilds/make_wilds.py; placed by src/render/decorationModel.ts (DECOR_CATALOG); dark outline rim removed by tools/strip_decor_outline.py (owner 2026-11-10, originals kept in docs/art-review/decor-outline/originals/)
   - id: decor_bush_dry_iso
     path: public/assets/art/ai-v1/iso/wilds/bush_dry.png
     category: doodad
@@ -3162,7 +3162,7 @@ assets:
     nativeSize: 1536x1024
     finalSize: 40x34
     anchor: feet
-    notes: Wild low (inside the field) decoration (approved 2026-11-06); cut from the wilds sheet, black keyed and box-reduced 4x by docs/art-review/iso-board/wilds/make_wilds.py; placed by src/render/decorationModel.ts (DECOR_CATALOG)
+    notes: Wild low (inside the field) decoration (approved 2026-11-06); cut from the wilds sheet, black keyed and box-reduced 4x by docs/art-review/iso-board/wilds/make_wilds.py; placed by src/render/decorationModel.ts (DECOR_CATALOG); dark outline rim removed by tools/strip_decor_outline.py (owner 2026-11-10, originals kept in docs/art-review/decor-outline/originals/)
   - id: decor_rock_large_iso
     path: public/assets/art/ai-v1/iso/wilds/rock_large.png
     category: doodad
@@ -3177,7 +3177,7 @@ assets:
     nativeSize: 1536x1024
     finalSize: 52x34
     anchor: feet
-    notes: Wild low (inside the field) decoration (approved 2026-11-06); cut from the wilds sheet, black keyed and box-reduced 4x by docs/art-review/iso-board/wilds/make_wilds.py; placed by src/render/decorationModel.ts (DECOR_CATALOG)
+    notes: Wild low (inside the field) decoration (approved 2026-11-06); cut from the wilds sheet, black keyed and box-reduced 4x by docs/art-review/iso-board/wilds/make_wilds.py; placed by src/render/decorationModel.ts (DECOR_CATALOG); dark outline rim removed by tools/strip_decor_outline.py (owner 2026-11-10, originals kept in docs/art-review/decor-outline/originals/)
   - id: decor_rock_medium_iso
     path: public/assets/art/ai-v1/iso/wilds/rock_medium.png
     category: doodad
@@ -3192,7 +3192,7 @@ assets:
     nativeSize: 1536x1024
     finalSize: 36x25
     anchor: feet
-    notes: Wild low (inside the field) decoration (approved 2026-11-06); cut from the wilds sheet, black keyed and box-reduced 4x by docs/art-review/iso-board/wilds/make_wilds.py; placed by src/render/decorationModel.ts (DECOR_CATALOG)
+    notes: Wild low (inside the field) decoration (approved 2026-11-06); cut from the wilds sheet, black keyed and box-reduced 4x by docs/art-review/iso-board/wilds/make_wilds.py; placed by src/render/decorationModel.ts (DECOR_CATALOG); dark outline rim removed by tools/strip_decor_outline.py (owner 2026-11-10, originals kept in docs/art-review/decor-outline/originals/)
   - id: decor_rock_small_iso
     path: public/assets/art/ai-v1/iso/wilds/rock_small.png
     category: doodad
@@ -3207,7 +3207,7 @@ assets:
     nativeSize: 1536x1024
     finalSize: 29x20
     anchor: feet
-    notes: Wild low (inside the field) decoration (approved 2026-11-06); cut from the wilds sheet, black keyed and box-reduced 4x by docs/art-review/iso-board/wilds/make_wilds.py; placed by src/render/decorationModel.ts (DECOR_CATALOG)
+    notes: Wild low (inside the field) decoration (approved 2026-11-06); cut from the wilds sheet, black keyed and box-reduced 4x by docs/art-review/iso-board/wilds/make_wilds.py; placed by src/render/decorationModel.ts (DECOR_CATALOG); dark outline rim removed by tools/strip_decor_outline.py (owner 2026-11-10, originals kept in docs/art-review/decor-outline/originals/)
   - id: decor_stump_iso
     path: public/assets/art/ai-v1/iso/wilds/stump.png
     category: doodad
@@ -3222,7 +3222,7 @@ assets:
     nativeSize: 1536x1024
     finalSize: 41x29
     anchor: feet
-    notes: Wild low (inside the field) decoration (approved 2026-11-06); cut from the wilds sheet, black keyed and box-reduced 4x by docs/art-review/iso-board/wilds/make_wilds.py; placed by src/render/decorationModel.ts (DECOR_CATALOG)
+    notes: Wild low (inside the field) decoration (approved 2026-11-06); cut from the wilds sheet, black keyed and box-reduced 4x by docs/art-review/iso-board/wilds/make_wilds.py; placed by src/render/decorationModel.ts (DECOR_CATALOG); dark outline rim removed by tools/strip_decor_outline.py (owner 2026-11-10, originals kept in docs/art-review/decor-outline/originals/)
   - id: decor_log_iso
     path: public/assets/art/ai-v1/iso/wilds/log.png
     category: doodad
@@ -3237,7 +3237,7 @@ assets:
     nativeSize: 1536x1024
     finalSize: 64x32
     anchor: feet
-    notes: Wild low (inside the field) decoration (approved 2026-11-06); cut from the wilds sheet, black keyed and box-reduced 4x by docs/art-review/iso-board/wilds/make_wilds.py; placed by src/render/decorationModel.ts (DECOR_CATALOG)
+    notes: Wild low (inside the field) decoration (approved 2026-11-06); cut from the wilds sheet, black keyed and box-reduced 4x by docs/art-review/iso-board/wilds/make_wilds.py; placed by src/render/decorationModel.ts (DECOR_CATALOG); dark outline rim removed by tools/strip_decor_outline.py (owner 2026-11-10, originals kept in docs/art-review/decor-outline/originals/)
   - id: iso_enemy_portal
     path: public/assets/art/ai-v1/iso/polish/enemy_portal.png
     category: doodad
@@ -18428,3 +18428,3357 @@ assets:
     nativeSize: 1536x1024
     finalSize: 384x256
     notes: Main-menu dusk sky (approved 2026-11-09 by Claude under the owner's delegation); box-reduced 4x by docs/art-review/g5/menu/make_sky.py; repeats left to right (src/render/imageArt.ts MENU_SKY_FILE)
+  - id: card_art_wheat_throne_128
+    path: public/assets/art/ai-v1/cards/wheat_throne-128.png
+    category: ui
+    origin: custom
+    source: docs/art-review/g3e/cards/wheat_throne/source.png
+    creator: Project owner (OpenAI imagegen via Codex; prompt in docs/art-review/g3e/cards/wheat_throne/prompt.md)
+    license: project-owned
+    attribution: false
+    redistribute: true
+    evidence: docs/art-review/g3e/cards/sheet-wheat.png
+    modified: true
+    nativeSize: 1448x1086
+    finalSize: 128x96
+    notes: Card illustration of Ngai Bó Lúa (wheat_throne) (style approved 2026-10-29); box-reduced by docs/art-review/g3e/cards/make_assets.py; copy for the bigger desktop hand cards (added 2026-11-10) (src/ui/cards/cardImage.ts)
+  - id: card_art_wheat_field_128
+    path: public/assets/art/ai-v1/cards/wheat_field-128.png
+    category: ui
+    origin: custom
+    source: docs/art-review/g3e/cards/wheat_field/source.png
+    creator: Project owner (OpenAI imagegen via Codex; prompt in docs/art-review/g3e/cards/wheat_field/prompt.md)
+    license: project-owned
+    attribution: false
+    redistribute: true
+    evidence: docs/art-review/g3e/cards/sheet-wheat.png
+    modified: true
+    nativeSize: 1024x768
+    finalSize: 128x96
+    notes: Card illustration of Ruộng Lúa (wheat_field) (style approved 2026-10-29); box-reduced by docs/art-review/g3e/cards/make_assets.py; copy for the bigger desktop hand cards (added 2026-11-10) (src/ui/cards/cardImage.ts)
+  - id: card_art_wheat_fertilizer_128
+    path: public/assets/art/ai-v1/cards/wheat_fertilizer-128.png
+    category: ui
+    origin: custom
+    source: docs/art-review/g3e/cards/wheat_fertilizer/source.png
+    creator: Project owner (OpenAI imagegen via Codex; prompt in docs/art-review/g3e/cards/wheat_fertilizer/prompt.md)
+    license: project-owned
+    attribution: false
+    redistribute: true
+    evidence: docs/art-review/g3e/cards/sheet-wheat.png
+    modified: true
+    nativeSize: 1448x1086
+    finalSize: 128x96
+    notes: Card illustration of Bùa Phân Bón (wheat_fertilizer) (style approved 2026-10-29); box-reduced by docs/art-review/g3e/cards/make_assets.py; copy for the bigger desktop hand cards (added 2026-11-10) (src/ui/cards/cardImage.ts)
+  - id: card_art_wheat_windmill_128
+    path: public/assets/art/ai-v1/cards/wheat_windmill-128.png
+    category: ui
+    origin: custom
+    source: docs/art-review/g3e/cards/wheat_windmill/source.png
+    creator: Project owner (OpenAI imagegen via Codex; prompt in docs/art-review/g3e/cards/wheat_windmill/prompt.md)
+    license: project-owned
+    attribution: false
+    redistribute: true
+    evidence: docs/art-review/g3e/cards/sheet-wheat.png
+    modified: true
+    nativeSize: 1024x768
+    finalSize: 128x96
+    notes: Card illustration of Cối Xay Gió (wheat_windmill) (style approved 2026-10-29); box-reduced by docs/art-review/g3e/cards/make_assets.py; copy for the bigger desktop hand cards (added 2026-11-10) (src/ui/cards/cardImage.ts)
+  - id: card_art_wheat_harvest_festival_128
+    path: public/assets/art/ai-v1/cards/wheat_harvest_festival-128.png
+    category: ui
+    origin: custom
+    source: docs/art-review/g3e/cards/wheat_harvest_festival/source.png
+    creator: Project owner (OpenAI imagegen via Codex; prompt in docs/art-review/g3e/cards/wheat_harvest_festival/prompt.md)
+    license: project-owned
+    attribution: false
+    redistribute: true
+    evidence: docs/art-review/g3e/cards/sheet-wheat.png
+    modified: true
+    nativeSize: 1448x1086
+    finalSize: 128x96
+    notes: Card illustration of Lễ Hội Mùa Màng (wheat_harvest_festival) (style approved 2026-10-29); box-reduced by docs/art-review/g3e/cards/make_assets.py; copy for the bigger desktop hand cards (added 2026-11-10) (src/ui/cards/cardImage.ts)
+  - id: card_art_wheat_granary_128
+    path: public/assets/art/ai-v1/cards/wheat_granary-128.png
+    category: ui
+    origin: custom
+    source: docs/art-review/g3e/cards/wheat_granary/source.png
+    creator: Project owner (OpenAI imagegen via Codex; prompt in docs/art-review/g3e/cards/wheat_granary/prompt.md)
+    license: project-owned
+    attribution: false
+    redistribute: true
+    evidence: docs/art-review/g3e/cards/sheet-wheat.png
+    modified: true
+    nativeSize: 1024x768
+    finalSize: 128x96
+    notes: Card illustration of Kho Thóc (wheat_granary) (style approved 2026-10-29); box-reduced by docs/art-review/g3e/cards/make_assets.py; copy for the bigger desktop hand cards (added 2026-11-10) (src/ui/cards/cardImage.ts)
+  - id: card_art_wheat_peasant_horde_128
+    path: public/assets/art/ai-v1/cards/wheat_peasant_horde-128.png
+    category: ui
+    origin: custom
+    source: docs/art-review/g3e/cards/wheat_peasant_horde/source.png
+    creator: Project owner (OpenAI imagegen via Codex; prompt in docs/art-review/g3e/cards/wheat_peasant_horde/prompt.md)
+    license: project-owned
+    attribution: false
+    redistribute: true
+    evidence: docs/art-review/g3e/cards/sheet-wheat.png
+    modified: true
+    nativeSize: 1024x768
+    finalSize: 128x96
+    notes: Card illustration of Khởi Nghĩa Nông Dân (wheat_peasant_horde) (style approved 2026-10-29); box-reduced by docs/art-review/g3e/cards/make_assets.py; copy for the bigger desktop hand cards (added 2026-11-10) (src/ui/cards/cardImage.ts)
+  - id: card_art_wheat_militia_128
+    path: public/assets/art/ai-v1/cards/wheat_militia-128.png
+    category: ui
+    origin: custom
+    source: docs/art-review/g3e/cards/wheat_militia/source.png
+    creator: Project owner (OpenAI imagegen via Codex; prompt in docs/art-review/g3e/cards/wheat_militia/prompt.md)
+    license: project-owned
+    attribution: false
+    redistribute: true
+    evidence: docs/art-review/g3e/cards/sheet-wheat.png
+    modified: true
+    nativeSize: 1024x768
+    finalSize: 128x96
+    notes: Card illustration of Dân Quân (wheat_militia) (style approved 2026-10-29); box-reduced by docs/art-review/g3e/cards/make_assets.py; copy for the bigger desktop hand cards (added 2026-11-10) (src/ui/cards/cardImage.ts)
+  - id: card_art_wheat_reapers_128
+    path: public/assets/art/ai-v1/cards/wheat_reapers-128.png
+    category: ui
+    origin: custom
+    source: docs/art-review/g3e/cards/wheat_reapers/source.png
+    creator: Project owner (OpenAI imagegen via Codex; prompt in docs/art-review/g3e/cards/wheat_reapers/prompt.md)
+    license: project-owned
+    attribution: false
+    redistribute: true
+    evidence: docs/art-review/g3e/cards/sheet-wheat.png
+    modified: true
+    nativeSize: 1024x768
+    finalSize: 128x96
+    notes: Card illustration of Đội Thợ Gặt (wheat_reapers) (style approved 2026-10-29); box-reduced by docs/art-review/g3e/cards/make_assets.py; copy for the bigger desktop hand cards (added 2026-11-10) (src/ui/cards/cardImage.ts)
+  - id: card_art_wheat_scarecrow_128
+    path: public/assets/art/ai-v1/cards/wheat_scarecrow-128.png
+    category: ui
+    origin: custom
+    source: docs/art-review/g3e/cards/wheat_scarecrow/source.png
+    creator: Project owner (OpenAI imagegen via Codex; prompt in docs/art-review/g3e/cards/wheat_scarecrow/prompt.md)
+    license: project-owned
+    attribution: false
+    redistribute: true
+    evidence: docs/art-review/g3e/cards/sheet-wheat.png
+    modified: true
+    nativeSize: 1024x768
+    finalSize: 128x96
+    notes: Card illustration of Bù Nhìn Gác (wheat_scarecrow) (style approved 2026-10-29); box-reduced by docs/art-review/g3e/cards/make_assets.py; copy for the bigger desktop hand cards (added 2026-11-10) (src/ui/cards/cardImage.ts)
+  - id: card_art_arcane_apprentices_128
+    path: public/assets/art/ai-v1/cards/arcane_apprentices-128.png
+    category: ui
+    origin: custom
+    source: docs/art-review/g3e/cards/arcane_apprentices/source.png
+    creator: Project owner (OpenAI imagegen via Codex; prompt in docs/art-review/g3e/cards/arcane_apprentices/prompt.md)
+    license: project-owned
+    attribution: false
+    redistribute: true
+    evidence: docs/art-review/g3e/cards/sheet-arcane.png
+    modified: true
+    nativeSize: 1024x768
+    finalSize: 128x96
+    notes: Card illustration of Học Viện (arcane_apprentices) (approved 2026-11-09 by Claude under the owner's delegation); box-reduced by docs/art-review/g3e/cards/make_assets.py; copy for the bigger desktop hand cards (added 2026-11-10) (src/ui/cards/cardImage.ts)
+  - id: card_art_arcane_archmage_128
+    path: public/assets/art/ai-v1/cards/arcane_archmage-128.png
+    category: ui
+    origin: custom
+    source: docs/art-review/g3e/cards/arcane_archmage/source.png
+    creator: Project owner (OpenAI imagegen via Codex; prompt in docs/art-review/g3e/cards/arcane_archmage/prompt.md)
+    license: project-owned
+    attribution: false
+    redistribute: true
+    evidence: docs/art-review/g3e/cards/sheet-arcane.png
+    modified: true
+    nativeSize: 1024x768
+    finalSize: 128x96
+    notes: Card illustration of Tháp Đại Pháp Sư (arcane_archmage) (approved 2026-11-09 by Claude under the owner's delegation); box-reduced by docs/art-review/g3e/cards/make_assets.py; copy for the bigger desktop hand cards (added 2026-11-10) (src/ui/cards/cardImage.ts)
+  - id: card_art_arcane_frost_mages_128
+    path: public/assets/art/ai-v1/cards/arcane_frost_mages-128.png
+    category: ui
+    origin: custom
+    source: docs/art-review/g3e/cards/arcane_frost_mages/source.png
+    creator: Project owner (OpenAI imagegen via Codex; prompt in docs/art-review/g3e/cards/arcane_frost_mages/prompt.md)
+    license: project-owned
+    attribution: false
+    redistribute: true
+    evidence: docs/art-review/g3e/cards/sheet-arcane.png
+    modified: true
+    nativeSize: 1024x768
+    finalSize: 128x96
+    notes: Card illustration of Tháp Băng Sư (arcane_frost_mages) (approved 2026-11-09 by Claude under the owner's delegation); box-reduced by docs/art-review/g3e/cards/make_assets.py; copy for the bigger desktop hand cards (added 2026-11-10) (src/ui/cards/cardImage.ts)
+  - id: card_art_arcane_haste_rune_128
+    path: public/assets/art/ai-v1/cards/arcane_haste_rune-128.png
+    category: ui
+    origin: custom
+    source: docs/art-review/g3e/cards/arcane_haste_rune/source.png
+    creator: Project owner (OpenAI imagegen via Codex; prompt in docs/art-review/g3e/cards/arcane_haste_rune/prompt.md)
+    license: project-owned
+    attribution: false
+    redistribute: true
+    evidence: docs/art-review/g3e/cards/sheet-arcane.png
+    modified: true
+    nativeSize: 1448x1086
+    finalSize: 128x96
+    notes: Card illustration of Bùa Tốc Biến (arcane_haste_rune) (approved 2026-11-09 by Claude under the owner's delegation); box-reduced by docs/art-review/g3e/cards/make_assets.py; copy for the bigger desktop hand cards (added 2026-11-10) (src/ui/cards/cardImage.ts)
+  - id: card_art_arcane_library_128
+    path: public/assets/art/ai-v1/cards/arcane_library-128.png
+    category: ui
+    origin: custom
+    source: docs/art-review/g3e/cards/arcane_library/source.png
+    creator: Project owner (OpenAI imagegen via Codex; prompt in docs/art-review/g3e/cards/arcane_library/prompt.md)
+    license: project-owned
+    attribution: false
+    redistribute: true
+    evidence: docs/art-review/g3e/cards/sheet-arcane.png
+    modified: true
+    nativeSize: 1024x768
+    finalSize: 128x96
+    notes: Card illustration of Thư Viện (arcane_library) (approved 2026-11-09 by Claude under the owner's delegation); box-reduced by docs/art-review/g3e/cards/make_assets.py; copy for the bigger desktop hand cards (added 2026-11-10) (src/ui/cards/cardImage.ts)
+  - id: card_art_arcane_mage_tower_128
+    path: public/assets/art/ai-v1/cards/arcane_mage_tower-128.png
+    category: ui
+    origin: custom
+    source: docs/art-review/g3e/cards/arcane_mage_tower/source.png
+    creator: Project owner (OpenAI imagegen via Codex; prompt in docs/art-review/g3e/cards/arcane_mage_tower/prompt.md)
+    license: project-owned
+    attribution: false
+    redistribute: true
+    evidence: docs/art-review/g3e/cards/sheet-arcane.png
+    modified: true
+    nativeSize: 1024x768
+    finalSize: 128x96
+    notes: Card illustration of Tháp Pháp Sư (arcane_mage_tower) (approved 2026-11-09 by Claude under the owner's delegation); box-reduced by docs/art-review/g3e/cards/make_assets.py; copy for the bigger desktop hand cards (added 2026-11-10) (src/ui/cards/cardImage.ts)
+  - id: card_art_arcane_mirror_128
+    path: public/assets/art/ai-v1/cards/arcane_mirror-128.png
+    category: ui
+    origin: custom
+    source: docs/art-review/g3e/cards/arcane_mirror/source.png
+    creator: Project owner (OpenAI imagegen via Codex; prompt in docs/art-review/g3e/cards/arcane_mirror/prompt.md)
+    license: project-owned
+    attribution: false
+    redistribute: true
+    evidence: docs/art-review/g3e/cards/sheet-arcane.png
+    modified: true
+    nativeSize: 1448x1086
+    finalSize: 128x96
+    notes: Card illustration of Gương Chép Bùa (arcane_mirror) (approved 2026-11-09 by Claude under the owner's delegation); box-reduced by docs/art-review/g3e/cards/make_assets.py; copy for the bigger desktop hand cards (added 2026-11-10) (src/ui/cards/cardImage.ts)
+  - id: card_art_arcane_spark_rune_128
+    path: public/assets/art/ai-v1/cards/arcane_spark_rune-128.png
+    category: ui
+    origin: custom
+    source: docs/art-review/g3e/cards/arcane_spark_rune/source.png
+    creator: Project owner (OpenAI imagegen via Codex; prompt in docs/art-review/g3e/cards/arcane_spark_rune/prompt.md)
+    license: project-owned
+    attribution: false
+    redistribute: true
+    evidence: docs/art-review/g3e/cards/sheet-arcane.png
+    modified: true
+    nativeSize: 1448x1086
+    finalSize: 128x96
+    notes: Card illustration of Bùa Tia Lửa (arcane_spark_rune) (approved 2026-11-09 by Claude under the owner's delegation); box-reduced by docs/art-review/g3e/cards/make_assets.py; copy for the bigger desktop hand cards (added 2026-11-10) (src/ui/cards/cardImage.ts)
+  - id: card_art_arcane_throne_128
+    path: public/assets/art/ai-v1/cards/arcane_throne-128.png
+    category: ui
+    origin: custom
+    source: docs/art-review/g3e/cards/arcane_throne/source.png
+    creator: Project owner (OpenAI imagegen via Codex; prompt in docs/art-review/g3e/cards/arcane_throne/prompt.md)
+    license: project-owned
+    attribution: false
+    redistribute: true
+    evidence: docs/art-review/g3e/cards/sheet-arcane.png
+    modified: true
+    nativeSize: 1448x1086
+    finalSize: 128x96
+    notes: Card illustration of Ngai Tinh Tú (arcane_throne) (approved 2026-11-09 by Claude under the owner's delegation); box-reduced by docs/art-review/g3e/cards/make_assets.py; copy for the bigger desktop hand cards (added 2026-11-10) (src/ui/cards/cardImage.ts)
+  - id: card_art_arcane_ward_128
+    path: public/assets/art/ai-v1/cards/arcane_ward-128.png
+    category: ui
+    origin: custom
+    source: docs/art-review/g3e/cards/arcane_ward/source.png
+    creator: Project owner (OpenAI imagegen via Codex; prompt in docs/art-review/g3e/cards/arcane_ward/prompt.md)
+    license: project-owned
+    attribution: false
+    redistribute: true
+    evidence: docs/art-review/g3e/cards/sheet-arcane.png
+    modified: true
+    nativeSize: 1024x768
+    finalSize: 128x96
+    notes: Card illustration of Vòng Kết Giới (arcane_ward) (approved 2026-11-09 by Claude under the owner's delegation); box-reduced by docs/art-review/g3e/cards/make_assets.py; copy for the bigger desktop hand cards (added 2026-11-10) (src/ui/cards/cardImage.ts)
+  - id: card_art_forge_armory_128
+    path: public/assets/art/ai-v1/cards/forge_armory-128.png
+    category: ui
+    origin: custom
+    source: docs/art-review/g3e/cards/forge_armory/source.png
+    creator: Project owner (OpenAI imagegen via Codex; prompt in docs/art-review/g3e/cards/forge_armory/prompt.md)
+    license: project-owned
+    attribution: false
+    redistribute: true
+    evidence: docs/art-review/g3e/cards/sheet-forge.png
+    modified: true
+    nativeSize: 1024x768
+    finalSize: 128x96
+    notes: Card illustration of Kho Giáp (forge_armory) (approved 2026-11-09 by Claude under the owner's delegation); box-reduced by docs/art-review/g3e/cards/make_assets.py; copy for the bigger desktop hand cards (added 2026-11-10) (src/ui/cards/cardImage.ts)
+  - id: card_art_forge_blast_furnace_128
+    path: public/assets/art/ai-v1/cards/forge_blast_furnace-128.png
+    category: ui
+    origin: custom
+    source: docs/art-review/g3e/cards/forge_blast_furnace/source.png
+    creator: Project owner (OpenAI imagegen via Codex; prompt in docs/art-review/g3e/cards/forge_blast_furnace/prompt.md)
+    license: project-owned
+    attribution: false
+    redistribute: true
+    evidence: docs/art-review/g3e/cards/sheet-forge.png
+    modified: true
+    nativeSize: 1024x768
+    finalSize: 128x96
+    notes: Card illustration of Lò Cao (forge_blast_furnace) (approved 2026-11-09 by Claude under the owner's delegation); box-reduced by docs/art-review/g3e/cards/make_assets.py; copy for the bigger desktop hand cards (added 2026-11-10) (src/ui/cards/cardImage.ts)
+  - id: card_art_forge_bombardiers_128
+    path: public/assets/art/ai-v1/cards/forge_bombardiers-128.png
+    category: ui
+    origin: custom
+    source: docs/art-review/g3e/cards/forge_bombardiers/source.png
+    creator: Project owner (OpenAI imagegen via Codex; prompt in docs/art-review/g3e/cards/forge_bombardiers/prompt.md)
+    license: project-owned
+    attribution: false
+    redistribute: true
+    evidence: docs/art-review/g3e/cards/sheet-forge.png
+    modified: true
+    nativeSize: 1024x768
+    finalSize: 128x96
+    notes: Card illustration of Đội Ném Lửa (forge_bombardiers) (approved 2026-11-09 by Claude under the owner's delegation); box-reduced by docs/art-review/g3e/cards/make_assets.py; copy for the bigger desktop hand cards (added 2026-11-10) (src/ui/cards/cardImage.ts)
+  - id: card_art_forge_ember_rune_128
+    path: public/assets/art/ai-v1/cards/forge_ember_rune-128.png
+    category: ui
+    origin: custom
+    source: docs/art-review/g3e/cards/forge_ember_rune/source.png
+    creator: Project owner (OpenAI imagegen via Codex; prompt in docs/art-review/g3e/cards/forge_ember_rune/prompt.md)
+    license: project-owned
+    attribution: false
+    redistribute: true
+    evidence: docs/art-review/g3e/cards/sheet-forge.png
+    modified: true
+    nativeSize: 1448x1086
+    finalSize: 128x96
+    notes: Card illustration of Bùa Than Hồng (forge_ember_rune) (approved 2026-11-09 by Claude under the owner's delegation); box-reduced by docs/art-review/g3e/cards/make_assets.py; copy for the bigger desktop hand cards (added 2026-11-10) (src/ui/cards/cardImage.ts)
+  - id: card_art_forge_flame_tower_128
+    path: public/assets/art/ai-v1/cards/forge_flame_tower-128.png
+    category: ui
+    origin: custom
+    source: docs/art-review/g3e/cards/forge_flame_tower/source.png
+    creator: Project owner (OpenAI imagegen via Codex; prompt in docs/art-review/g3e/cards/forge_flame_tower/prompt.md)
+    license: project-owned
+    attribution: false
+    redistribute: true
+    evidence: docs/art-review/g3e/cards/sheet-forge.png
+    modified: true
+    nativeSize: 1024x768
+    finalSize: 128x96
+    notes: Card illustration of Tháp Phun Lửa (forge_flame_tower) (approved 2026-11-09 by Claude under the owner's delegation); box-reduced by docs/art-review/g3e/cards/make_assets.py; copy for the bigger desktop hand cards (added 2026-11-10) (src/ui/cards/cardImage.ts)
+  - id: card_art_forge_iron_drake_128
+    path: public/assets/art/ai-v1/cards/forge_iron_drake-128.png
+    category: ui
+    origin: custom
+    source: docs/art-review/g3e/cards/forge_iron_drake/source.png
+    creator: Project owner (OpenAI imagegen via Codex; prompt in docs/art-review/g3e/cards/forge_iron_drake/prompt.md)
+    license: project-owned
+    attribution: false
+    redistribute: true
+    evidence: docs/art-review/g3e/cards/sheet-forge.png
+    modified: true
+    nativeSize: 1024x768
+    finalSize: 128x96
+    notes: Card illustration of Tổ Rồng Sắt (forge_iron_drake) (approved 2026-11-09 by Claude under the owner's delegation); box-reduced by docs/art-review/g3e/cards/make_assets.py; copy for the bigger desktop hand cards (added 2026-11-10) (src/ui/cards/cardImage.ts)
+  - id: card_art_forge_master_hammer_128
+    path: public/assets/art/ai-v1/cards/forge_master_hammer-128.png
+    category: ui
+    origin: custom
+    source: docs/art-review/g3e/cards/forge_master_hammer/source.png
+    creator: Project owner (OpenAI imagegen via Codex; prompt in docs/art-review/g3e/cards/forge_master_hammer/prompt.md)
+    license: project-owned
+    attribution: false
+    redistribute: true
+    evidence: docs/art-review/g3e/cards/sheet-forge.png
+    modified: true
+    nativeSize: 1448x1086
+    finalSize: 128x96
+    notes: Card illustration of Búa Thợ Cả (forge_master_hammer) (approved 2026-11-09 by Claude under the owner's delegation); box-reduced by docs/art-review/g3e/cards/make_assets.py; copy for the bigger desktop hand cards (added 2026-11-10) (src/ui/cards/cardImage.ts)
+  - id: card_art_forge_smithy_128
+    path: public/assets/art/ai-v1/cards/forge_smithy-128.png
+    category: ui
+    origin: custom
+    source: docs/art-review/g3e/cards/forge_smithy/source.png
+    creator: Project owner (OpenAI imagegen via Codex; prompt in docs/art-review/g3e/cards/forge_smithy/prompt.md)
+    license: project-owned
+    attribution: false
+    redistribute: true
+    evidence: docs/art-review/g3e/cards/sheet-forge.png
+    modified: true
+    nativeSize: 1024x768
+    finalSize: 128x96
+    notes: Card illustration of Lò Rèn (forge_smithy) (approved 2026-11-09 by Claude under the owner's delegation); box-reduced by docs/art-review/g3e/cards/make_assets.py; copy for the bigger desktop hand cards (added 2026-11-10) (src/ui/cards/cardImage.ts)
+  - id: card_art_forge_swordsmen_128
+    path: public/assets/art/ai-v1/cards/forge_swordsmen-128.png
+    category: ui
+    origin: custom
+    source: docs/art-review/g3e/cards/forge_swordsmen/source.png
+    creator: Project owner (OpenAI imagegen via Codex; prompt in docs/art-review/g3e/cards/forge_swordsmen/prompt.md)
+    license: project-owned
+    attribution: false
+    redistribute: true
+    evidence: docs/art-review/g3e/cards/sheet-forge.png
+    modified: true
+    nativeSize: 1024x768
+    finalSize: 128x96
+    notes: Card illustration of Doanh Trại Kiếm Sĩ (forge_swordsmen) (approved 2026-11-09 by Claude under the owner's delegation); box-reduced by docs/art-review/g3e/cards/make_assets.py; copy for the bigger desktop hand cards (added 2026-11-10) (src/ui/cards/cardImage.ts)
+  - id: card_art_grove_bear_cave_128
+    path: public/assets/art/ai-v1/cards/grove_bear_cave-128.png
+    category: ui
+    origin: custom
+    source: docs/art-review/g3e/cards/grove_bear_cave/source.png
+    creator: Project owner (OpenAI imagegen via Codex; prompt in docs/art-review/g3e/cards/grove_bear_cave/prompt.md)
+    license: project-owned
+    attribution: false
+    redistribute: true
+    evidence: docs/art-review/g3e/cards/sheet-grove.png
+    modified: true
+    nativeSize: 1024x768
+    finalSize: 128x96
+    notes: Card illustration of Hang Gấu (grove_bear_cave) (approved 2026-11-09 by Claude under the owner's delegation); box-reduced by docs/art-review/g3e/cards/make_assets.py; copy for the bigger desktop hand cards (added 2026-11-10) (src/ui/cards/cardImage.ts)
+  - id: card_art_grove_deep_roots_128
+    path: public/assets/art/ai-v1/cards/grove_deep_roots-128.png
+    category: ui
+    origin: custom
+    source: docs/art-review/g3e/cards/grove_deep_roots/source.png
+    creator: Project owner (OpenAI imagegen via Codex; prompt in docs/art-review/g3e/cards/grove_deep_roots/prompt.md)
+    license: project-owned
+    attribution: false
+    redistribute: true
+    evidence: docs/art-review/g3e/cards/sheet-grove.png
+    modified: true
+    nativeSize: 1448x1086
+    finalSize: 128x96
+    notes: Card illustration of Bùa Rễ Sâu (grove_deep_roots) (approved 2026-11-09 by Claude under the owner's delegation); box-reduced by docs/art-review/g3e/cards/make_assets.py; copy for the bigger desktop hand cards (added 2026-11-10) (src/ui/cards/cardImage.ts)
+  - id: card_art_grove_sapling_128
+    path: public/assets/art/ai-v1/cards/grove_sapling-128.png
+    category: ui
+    origin: custom
+    source: docs/art-review/g3e/cards/grove_sapling/source.png
+    creator: Project owner (OpenAI imagegen via Codex; prompt in docs/art-review/g3e/cards/grove_sapling/prompt.md)
+    license: project-owned
+    attribution: false
+    redistribute: true
+    evidence: docs/art-review/g3e/cards/sheet-grove.png
+    modified: true
+    nativeSize: 1024x768
+    finalSize: 128x96
+    notes: Card illustration of Cây Mầm (grove_sapling) (approved 2026-11-09 by Claude under the owner's delegation); box-reduced by docs/art-review/g3e/cards/make_assets.py; copy for the bigger desktop hand cards (added 2026-11-10) (src/ui/cards/cardImage.ts)
+  - id: card_art_grove_spirit_stags_128
+    path: public/assets/art/ai-v1/cards/grove_spirit_stags-128.png
+    category: ui
+    origin: custom
+    source: docs/art-review/g3e/cards/grove_spirit_stags/source.png
+    creator: Project owner (OpenAI imagegen via Codex; prompt in docs/art-review/g3e/cards/grove_spirit_stags/prompt.md)
+    license: project-owned
+    attribution: false
+    redistribute: true
+    evidence: docs/art-review/g3e/cards/sheet-grove.png
+    modified: true
+    nativeSize: 1024x768
+    finalSize: 128x96
+    notes: Card illustration of Đàn Hươu Thần (grove_spirit_stags) (approved 2026-11-09 by Claude under the owner's delegation); box-reduced by docs/art-review/g3e/cards/make_assets.py; copy for the bigger desktop hand cards (added 2026-11-10) (src/ui/cards/cardImage.ts)
+  - id: card_art_grove_spring_128
+    path: public/assets/art/ai-v1/cards/grove_spring-128.png
+    category: ui
+    origin: custom
+    source: docs/art-review/g3e/cards/grove_spring/source.png
+    creator: Project owner (OpenAI imagegen via Codex; prompt in docs/art-review/g3e/cards/grove_spring/prompt.md)
+    license: project-owned
+    attribution: false
+    redistribute: true
+    evidence: docs/art-review/g3e/cards/sheet-grove.png
+    modified: true
+    nativeSize: 1024x768
+    finalSize: 128x96
+    notes: Card illustration of Suối Hồi Sinh (grove_spring) (approved 2026-11-09 by Claude under the owner's delegation); box-reduced by docs/art-review/g3e/cards/make_assets.py; copy for the bigger desktop hand cards (added 2026-11-10) (src/ui/cards/cardImage.ts)
+  - id: card_art_grove_spring_rain_128
+    path: public/assets/art/ai-v1/cards/grove_spring_rain-128.png
+    category: ui
+    origin: custom
+    source: docs/art-review/g3e/cards/grove_spring_rain/source.png
+    creator: Project owner (OpenAI imagegen via Codex; prompt in docs/art-review/g3e/cards/grove_spring_rain/prompt.md)
+    license: project-owned
+    attribution: false
+    redistribute: true
+    evidence: docs/art-review/g3e/cards/sheet-grove.png
+    modified: true
+    nativeSize: 1448x1086
+    finalSize: 128x96
+    notes: Card illustration of Mưa Xuân (grove_spring_rain) (approved 2026-11-09 by Claude under the owner's delegation); box-reduced by docs/art-review/g3e/cards/make_assets.py; copy for the bigger desktop hand cards (added 2026-11-10) (src/ui/cards/cardImage.ts)
+  - id: card_art_grove_thorn_tower_128
+    path: public/assets/art/ai-v1/cards/grove_thorn_tower-128.png
+    category: ui
+    origin: custom
+    source: docs/art-review/g3e/cards/grove_thorn_tower/source.png
+    creator: Project owner (OpenAI imagegen via Codex; prompt in docs/art-review/g3e/cards/grove_thorn_tower/prompt.md)
+    license: project-owned
+    attribution: false
+    redistribute: true
+    evidence: docs/art-review/g3e/cards/sheet-grove.png
+    modified: true
+    nativeSize: 1024x768
+    finalSize: 128x96
+    notes: Card illustration of Tháp Gai (grove_thorn_tower) (approved 2026-11-09 by Claude under the owner's delegation); box-reduced by docs/art-review/g3e/cards/make_assets.py; copy for the bigger desktop hand cards (added 2026-11-10) (src/ui/cards/cardImage.ts)
+  - id: card_art_grove_treant_128
+    path: public/assets/art/ai-v1/cards/grove_treant-128.png
+    category: ui
+    origin: custom
+    source: docs/art-review/g3e/cards/grove_treant/source.png
+    creator: Project owner (OpenAI imagegen via Codex; prompt in docs/art-review/g3e/cards/grove_treant/prompt.md)
+    license: project-owned
+    attribution: false
+    redistribute: true
+    evidence: docs/art-review/g3e/cards/sheet-grove.png
+    modified: true
+    nativeSize: 1024x768
+    finalSize: 128x96
+    notes: Card illustration of Cổ Thụ Thức Tỉnh (grove_treant) (approved 2026-11-09 by Claude under the owner's delegation); box-reduced by docs/art-review/g3e/cards/make_assets.py; copy for the bigger desktop hand cards (added 2026-11-10) (src/ui/cards/cardImage.ts)
+  - id: card_art_grove_wolf_den_128
+    path: public/assets/art/ai-v1/cards/grove_wolf_den-128.png
+    category: ui
+    origin: custom
+    source: docs/art-review/g3e/cards/grove_wolf_den/source.png
+    creator: Project owner (OpenAI imagegen via Codex; prompt in docs/art-review/g3e/cards/grove_wolf_den/prompt.md)
+    license: project-owned
+    attribution: false
+    redistribute: true
+    evidence: docs/art-review/g3e/cards/sheet-grove.png
+    modified: true
+    nativeSize: 1024x768
+    finalSize: 128x96
+    notes: Card illustration of Hang Sói (grove_wolf_den) (approved 2026-11-09 by Claude under the owner's delegation); box-reduced by docs/art-review/g3e/cards/make_assets.py; copy for the bigger desktop hand cards (added 2026-11-10) (src/ui/cards/cardImage.ts)
+  - id: card_art_stone_catapult_128
+    path: public/assets/art/ai-v1/cards/stone_catapult-128.png
+    category: ui
+    origin: custom
+    source: docs/art-review/g3e/cards/stone_catapult/source.png
+    creator: Project owner (OpenAI imagegen via Codex; prompt in docs/art-review/g3e/cards/stone_catapult/prompt.md)
+    license: project-owned
+    attribution: false
+    redistribute: true
+    evidence: docs/art-review/g3e/cards/sheet-stone.png
+    modified: true
+    nativeSize: 1024x768
+    finalSize: 128x96
+    notes: Card illustration of Tháp Ném Đá (stone_catapult) (approved 2026-11-09 by Claude under the owner's delegation); box-reduced by docs/art-review/g3e/cards/make_assets.py; copy for the bigger desktop hand cards (added 2026-11-10) (src/ui/cards/cardImage.ts)
+  - id: card_art_stone_crystal_128
+    path: public/assets/art/ai-v1/cards/stone_crystal-128.png
+    category: ui
+    origin: custom
+    source: docs/art-review/g3e/cards/stone_crystal/source.png
+    creator: Project owner (OpenAI imagegen via Codex; prompt in docs/art-review/g3e/cards/stone_crystal/prompt.md)
+    license: project-owned
+    attribution: false
+    redistribute: true
+    evidence: docs/art-review/g3e/cards/sheet-stone.png
+    modified: true
+    nativeSize: 1024x768
+    finalSize: 128x96
+    notes: Card illustration of Tháp Pha Lê (stone_crystal) (approved 2026-11-09 by Claude under the owner's delegation); box-reduced by docs/art-review/g3e/cards/make_assets.py; copy for the bigger desktop hand cards (added 2026-11-10) (src/ui/cards/cardImage.ts)
+  - id: card_art_stone_golem_forge_128
+    path: public/assets/art/ai-v1/cards/stone_golem_forge-128.png
+    category: ui
+    origin: custom
+    source: docs/art-review/g3e/cards/stone_golem_forge/source.png
+    creator: Project owner (OpenAI imagegen via Codex; prompt in docs/art-review/g3e/cards/stone_golem_forge/prompt.md)
+    license: project-owned
+    attribution: false
+    redistribute: true
+    evidence: docs/art-review/g3e/cards/sheet-stone.png
+    modified: true
+    nativeSize: 1024x768
+    finalSize: 128x96
+    notes: Card illustration of Xưởng Người Đá (stone_golem_forge) (approved 2026-11-09 by Claude under the owner's delegation); box-reduced by docs/art-review/g3e/cards/make_assets.py; copy for the bigger desktop hand cards (added 2026-11-10) (src/ui/cards/cardImage.ts)
+  - id: card_art_stone_miners_128
+    path: public/assets/art/ai-v1/cards/stone_miners-128.png
+    category: ui
+    origin: custom
+    source: docs/art-review/g3e/cards/stone_miners/source.png
+    creator: Project owner (OpenAI imagegen via Codex; prompt in docs/art-review/g3e/cards/stone_miners/prompt.md)
+    license: project-owned
+    attribution: false
+    redistribute: true
+    evidence: docs/art-review/g3e/cards/sheet-stone.png
+    modified: true
+    nativeSize: 1024x768
+    finalSize: 128x96
+    notes: Card illustration of Đội Thợ Mỏ (stone_miners) (approved 2026-11-09 by Claude under the owner's delegation); box-reduced by docs/art-review/g3e/cards/make_assets.py; copy for the bigger desktop hand cards (added 2026-11-10) (src/ui/cards/cardImage.ts)
+  - id: card_art_stone_mountain_heart_128
+    path: public/assets/art/ai-v1/cards/stone_mountain_heart-128.png
+    category: ui
+    origin: custom
+    source: docs/art-review/g3e/cards/stone_mountain_heart/source.png
+    creator: Project owner (OpenAI imagegen via Codex; prompt in docs/art-review/g3e/cards/stone_mountain_heart/prompt.md)
+    license: project-owned
+    attribution: false
+    redistribute: true
+    evidence: docs/art-review/g3e/cards/sheet-stone.png
+    modified: true
+    nativeSize: 1024x768
+    finalSize: 128x96
+    notes: Card illustration of Tim Núi (stone_mountain_heart) (approved 2026-11-09 by Claude under the owner's delegation); box-reduced by docs/art-review/g3e/cards/make_assets.py; copy for the bigger desktop hand cards (added 2026-11-10) (src/ui/cards/cardImage.ts)
+  - id: card_art_stone_quarry_128
+    path: public/assets/art/ai-v1/cards/stone_quarry-128.png
+    category: ui
+    origin: custom
+    source: docs/art-review/g3e/cards/stone_quarry/source.png
+    creator: Project owner (OpenAI imagegen via Codex; prompt in docs/art-review/g3e/cards/stone_quarry/prompt.md)
+    license: project-owned
+    attribution: false
+    redistribute: true
+    evidence: docs/art-review/g3e/cards/sheet-stone.png
+    modified: true
+    nativeSize: 1024x768
+    finalSize: 128x96
+    notes: Card illustration of Mỏ Đá (stone_quarry) (approved 2026-11-09 by Claude under the owner's delegation); box-reduced by docs/art-review/g3e/cards/make_assets.py; copy for the bigger desktop hand cards (added 2026-11-10) (src/ui/cards/cardImage.ts)
+  - id: card_art_stone_rune_carving_128
+    path: public/assets/art/ai-v1/cards/stone_rune_carving-128.png
+    category: ui
+    origin: custom
+    source: docs/art-review/g3e/cards/stone_rune_carving/source.png
+    creator: Project owner (OpenAI imagegen via Codex; prompt in docs/art-review/g3e/cards/stone_rune_carving/prompt.md)
+    license: project-owned
+    attribution: false
+    redistribute: true
+    evidence: docs/art-review/g3e/cards/sheet-stone.png
+    modified: true
+    nativeSize: 1448x1086
+    finalSize: 128x96
+    notes: Card illustration of Khắc Ấn Núi (stone_rune_carving) (approved 2026-11-09 by Claude under the owner's delegation); box-reduced by docs/art-review/g3e/cards/make_assets.py; copy for the bigger desktop hand cards (added 2026-11-10) (src/ui/cards/cardImage.ts)
+  - id: card_art_stone_stoneskin_128
+    path: public/assets/art/ai-v1/cards/stone_stoneskin-128.png
+    category: ui
+    origin: custom
+    source: docs/art-review/g3e/cards/stone_stoneskin/source.png
+    creator: Project owner (OpenAI imagegen via Codex; prompt in docs/art-review/g3e/cards/stone_stoneskin/prompt.md)
+    license: project-owned
+    attribution: false
+    redistribute: true
+    evidence: docs/art-review/g3e/cards/sheet-stone.png
+    modified: true
+    nativeSize: 1448x1086
+    finalSize: 128x96
+    notes: Card illustration of Bùa Da Đá (stone_stoneskin) (approved 2026-11-09 by Claude under the owner's delegation); box-reduced by docs/art-review/g3e/cards/make_assets.py; copy for the bigger desktop hand cards (added 2026-11-10) (src/ui/cards/cardImage.ts)
+  - id: card_art_stone_throne_128
+    path: public/assets/art/ai-v1/cards/stone_throne-128.png
+    category: ui
+    origin: custom
+    source: docs/art-review/g3e/cards/stone_throne/source.png
+    creator: Project owner (OpenAI imagegen via Codex; prompt in docs/art-review/g3e/cards/stone_throne/prompt.md)
+    license: project-owned
+    attribution: false
+    redistribute: true
+    evidence: docs/art-review/g3e/cards/sheet-stone.png
+    modified: true
+    nativeSize: 1448x1086
+    finalSize: 128x96
+    notes: Card illustration of Ngai Đá Tảng (stone_throne) (approved 2026-11-09 by Claude under the owner's delegation); box-reduced by docs/art-review/g3e/cards/make_assets.py; copy for the bigger desktop hand cards (added 2026-11-10) (src/ui/cards/cardImage.ts)
+  - id: card_art_stone_wall_128
+    path: public/assets/art/ai-v1/cards/stone_wall-128.png
+    category: ui
+    origin: custom
+    source: docs/art-review/g3e/cards/stone_wall/source.png
+    creator: Project owner (OpenAI imagegen via Codex; prompt in docs/art-review/g3e/cards/stone_wall/prompt.md)
+    license: project-owned
+    attribution: false
+    redistribute: true
+    evidence: docs/art-review/g3e/cards/sheet-stone.png
+    modified: true
+    nativeSize: 1024x768
+    finalSize: 128x96
+    notes: Card illustration of Tường Thành (stone_wall) (approved 2026-11-09 by Claude under the owner's delegation); box-reduced by docs/art-review/g3e/cards/make_assets.py; copy for the bigger desktop hand cards (added 2026-11-10) (src/ui/cards/cardImage.ts)
+  - id: card_art_tide_cannon_128
+    path: public/assets/art/ai-v1/cards/tide_cannon-128.png
+    category: ui
+    origin: custom
+    source: docs/art-review/g3e/cards/tide_cannon/source.png
+    creator: Project owner (OpenAI imagegen via Codex; prompt in docs/art-review/g3e/cards/tide_cannon/prompt.md)
+    license: project-owned
+    attribution: false
+    redistribute: true
+    evidence: docs/art-review/g3e/cards/sheet-tide.png
+    modified: true
+    nativeSize: 1024x768
+    finalSize: 128x96
+    notes: Card illustration of Pháo Đài Biển (tide_cannon) (approved 2026-11-09 by Claude under the owner's delegation); box-reduced by docs/art-review/g3e/cards/make_assets.py; copy for the bigger desktop hand cards (added 2026-11-10) (src/ui/cards/cardImage.ts)
+  - id: card_art_tide_harbor_128
+    path: public/assets/art/ai-v1/cards/tide_harbor-128.png
+    category: ui
+    origin: custom
+    source: docs/art-review/g3e/cards/tide_harbor/source.png
+    creator: Project owner (OpenAI imagegen via Codex; prompt in docs/art-review/g3e/cards/tide_harbor/prompt.md)
+    license: project-owned
+    attribution: false
+    redistribute: true
+    evidence: docs/art-review/g3e/cards/sheet-tide.png
+    modified: true
+    nativeSize: 1024x768
+    finalSize: 128x96
+    notes: Card illustration of Bến Cảng (tide_harbor) (approved 2026-11-09 by Claude under the owner's delegation); box-reduced by docs/art-review/g3e/cards/make_assets.py; copy for the bigger desktop hand cards (added 2026-11-10) (src/ui/cards/cardImage.ts)
+  - id: card_art_tide_hookmen_128
+    path: public/assets/art/ai-v1/cards/tide_hookmen-128.png
+    category: ui
+    origin: custom
+    source: docs/art-review/g3e/cards/tide_hookmen/source.png
+    creator: Project owner (OpenAI imagegen via Codex; prompt in docs/art-review/g3e/cards/tide_hookmen/prompt.md)
+    license: project-owned
+    attribution: false
+    redistribute: true
+    evidence: docs/art-review/g3e/cards/sheet-tide.png
+    modified: true
+    nativeSize: 1024x768
+    finalSize: 128x96
+    notes: Card illustration of Đội Móc Câu (tide_hookmen) (approved 2026-11-09 by Claude under the owner's delegation); box-reduced by docs/art-review/g3e/cards/make_assets.py; copy for the bigger desktop hand cards (added 2026-11-10) (src/ui/cards/cardImage.ts)
+  - id: card_art_tide_kraken_128
+    path: public/assets/art/ai-v1/cards/tide_kraken-128.png
+    category: ui
+    origin: custom
+    source: docs/art-review/g3e/cards/tide_kraken/source.png
+    creator: Project owner (OpenAI imagegen via Codex; prompt in docs/art-review/g3e/cards/tide_kraken/prompt.md)
+    license: project-owned
+    attribution: false
+    redistribute: true
+    evidence: docs/art-review/g3e/cards/sheet-tide.png
+    modified: true
+    nativeSize: 1024x768
+    finalSize: 128x96
+    notes: Card illustration of Vực Kraken (tide_kraken) (approved 2026-11-09 by Claude under the owner's delegation); box-reduced by docs/art-review/g3e/cards/make_assets.py; copy for the bigger desktop hand cards (added 2026-11-10) (src/ui/cards/cardImage.ts)
+  - id: card_art_tide_pirates_128
+    path: public/assets/art/ai-v1/cards/tide_pirates-128.png
+    category: ui
+    origin: custom
+    source: docs/art-review/g3e/cards/tide_pirates/source.png
+    creator: Project owner (OpenAI imagegen via Codex; prompt in docs/art-review/g3e/cards/tide_pirates/prompt.md)
+    license: project-owned
+    attribution: false
+    redistribute: true
+    evidence: docs/art-review/g3e/cards/sheet-tide.png
+    modified: true
+    nativeSize: 1024x768
+    finalSize: 128x96
+    notes: Card illustration of Thuyền Cướp Biển (tide_pirates) (approved 2026-11-09 by Claude under the owner's delegation); box-reduced by docs/art-review/g3e/cards/make_assets.py; copy for the bigger desktop hand cards (added 2026-11-10) (src/ui/cards/cardImage.ts)
+  - id: card_art_tide_privateers_128
+    path: public/assets/art/ai-v1/cards/tide_privateers-128.png
+    category: ui
+    origin: custom
+    source: docs/art-review/g3e/cards/tide_privateers/source.png
+    creator: Project owner (OpenAI imagegen via Codex; prompt in docs/art-review/g3e/cards/tide_privateers/prompt.md)
+    license: project-owned
+    attribution: false
+    redistribute: true
+    evidence: docs/art-review/g3e/cards/sheet-tide.png
+    modified: true
+    nativeSize: 1448x1086
+    finalSize: 128x96
+    notes: Card illustration of Hợp Đồng Đánh Thuê (tide_privateers) (approved 2026-11-09 by Claude under the owner's delegation); box-reduced by docs/art-review/g3e/cards/make_assets.py; copy for the bigger desktop hand cards (added 2026-11-10) (src/ui/cards/cardImage.ts)
+  - id: card_art_tide_treasure_128
+    path: public/assets/art/ai-v1/cards/tide_treasure-128.png
+    category: ui
+    origin: custom
+    source: docs/art-review/g3e/cards/tide_treasure/source.png
+    creator: Project owner (OpenAI imagegen via Codex; prompt in docs/art-review/g3e/cards/tide_treasure/prompt.md)
+    license: project-owned
+    attribution: false
+    redistribute: true
+    evidence: docs/art-review/g3e/cards/sheet-tide.png
+    modified: true
+    nativeSize: 1024x768
+    finalSize: 128x96
+    notes: Card illustration of Rương Châu Báu (tide_treasure) (approved 2026-11-09 by Claude under the owner's delegation); box-reduced by docs/art-review/g3e/cards/make_assets.py; copy for the bigger desktop hand cards (added 2026-11-10) (src/ui/cards/cardImage.ts)
+  - id: card_art_tide_undertow_rune_128
+    path: public/assets/art/ai-v1/cards/tide_undertow_rune-128.png
+    category: ui
+    origin: custom
+    source: docs/art-review/g3e/cards/tide_undertow_rune/source.png
+    creator: Project owner (OpenAI imagegen via Codex; prompt in docs/art-review/g3e/cards/tide_undertow_rune/prompt.md)
+    license: project-owned
+    attribution: false
+    redistribute: true
+    evidence: docs/art-review/g3e/cards/sheet-tide.png
+    modified: true
+    nativeSize: 1448x1086
+    finalSize: 128x96
+    notes: Card illustration of Bùa Sóng Ngầm (tide_undertow_rune) (approved 2026-11-09 by Claude under the owner's delegation); box-reduced by docs/art-review/g3e/cards/make_assets.py; copy for the bigger desktop hand cards (added 2026-11-10) (src/ui/cards/cardImage.ts)
+  - id: card_art_tide_wave_tower_128
+    path: public/assets/art/ai-v1/cards/tide_wave_tower-128.png
+    category: ui
+    origin: custom
+    source: docs/art-review/g3e/cards/tide_wave_tower/source.png
+    creator: Project owner (OpenAI imagegen via Codex; prompt in docs/art-review/g3e/cards/tide_wave_tower/prompt.md)
+    license: project-owned
+    attribution: false
+    redistribute: true
+    evidence: docs/art-review/g3e/cards/sheet-tide.png
+    modified: true
+    nativeSize: 1024x768
+    finalSize: 128x96
+    notes: Card illustration of Tháp Sóng (tide_wave_tower) (approved 2026-11-09 by Claude under the owner's delegation); box-reduced by docs/art-review/g3e/cards/make_assets.py; copy for the bigger desktop hand cards (added 2026-11-10) (src/ui/cards/cardImage.ts)
+  - id: card_art_clock_bell_tower_128
+    path: public/assets/art/ai-v1/cards/clock_bell_tower-128.png
+    category: ui
+    origin: custom
+    source: docs/art-review/g3e/cards/clock_bell_tower/source.png
+    creator: Project owner (OpenAI imagegen via Codex; prompt in docs/art-review/g3e/cards/clock_bell_tower/prompt.md)
+    license: project-owned
+    attribution: false
+    redistribute: true
+    evidence: docs/art-review/g3e/cards/sheet-clock.png
+    modified: true
+    nativeSize: 1024x768
+    finalSize: 128x96
+    notes: Card illustration of Tháp Chuông (clock_bell_tower) (approved 2026-11-09 by Claude under the owner's delegation); box-reduced by docs/art-review/g3e/cards/make_assets.py; copy for the bigger desktop hand cards (added 2026-11-10) (src/ui/cards/cardImage.ts)
+  - id: card_art_clock_colossus_128
+    path: public/assets/art/ai-v1/cards/clock_colossus-128.png
+    category: ui
+    origin: custom
+    source: docs/art-review/g3e/cards/clock_colossus/source.png
+    creator: Project owner (OpenAI imagegen via Codex; prompt in docs/art-review/g3e/cards/clock_colossus/prompt.md)
+    license: project-owned
+    attribution: false
+    redistribute: true
+    evidence: docs/art-review/g3e/cards/sheet-clock.png
+    modified: true
+    nativeSize: 1024x768
+    finalSize: 128x96
+    notes: Card illustration of Lò Khổng Lồ Đồng (clock_colossus) (approved 2026-11-09 by Claude under the owner's delegation); box-reduced by docs/art-review/g3e/cards/make_assets.py; copy for the bigger desktop hand cards (added 2026-11-10) (src/ui/cards/cardImage.ts)
+  - id: card_art_clock_gear_tower_128
+    path: public/assets/art/ai-v1/cards/clock_gear_tower-128.png
+    category: ui
+    origin: custom
+    source: docs/art-review/g3e/cards/clock_gear_tower/source.png
+    creator: Project owner (OpenAI imagegen via Codex; prompt in docs/art-review/g3e/cards/clock_gear_tower/prompt.md)
+    license: project-owned
+    attribution: false
+    redistribute: true
+    evidence: docs/art-review/g3e/cards/sheet-clock.png
+    modified: true
+    nativeSize: 1024x768
+    finalSize: 128x96
+    notes: Card illustration of Tháp Bánh Răng (clock_gear_tower) (approved 2026-11-09 by Claude under the owner's delegation); box-reduced by docs/art-review/g3e/cards/make_assets.py; copy for the bigger desktop hand cards (added 2026-11-10) (src/ui/cards/cardImage.ts)
+  - id: card_art_clock_rewind_128
+    path: public/assets/art/ai-v1/cards/clock_rewind-128.png
+    category: ui
+    origin: custom
+    source: docs/art-review/g3e/cards/clock_rewind/source.png
+    creator: Project owner (OpenAI imagegen via Codex; prompt in docs/art-review/g3e/cards/clock_rewind/prompt.md)
+    license: project-owned
+    attribution: false
+    redistribute: true
+    evidence: docs/art-review/g3e/cards/sheet-clock.png
+    modified: true
+    nativeSize: 1448x1086
+    finalSize: 128x96
+    notes: Card illustration of Tua Ngược (clock_rewind) (approved 2026-11-09 by Claude under the owner's delegation); box-reduced by docs/art-review/g3e/cards/make_assets.py; copy for the bigger desktop hand cards (added 2026-11-10) (src/ui/cards/cardImage.ts)
+  - id: card_art_clock_spiders_128
+    path: public/assets/art/ai-v1/cards/clock_spiders-128.png
+    category: ui
+    origin: custom
+    source: docs/art-review/g3e/cards/clock_spiders/source.png
+    creator: Project owner (OpenAI imagegen via Codex; prompt in docs/art-review/g3e/cards/clock_spiders/prompt.md)
+    license: project-owned
+    attribution: false
+    redistribute: true
+    evidence: docs/art-review/g3e/cards/sheet-clock.png
+    modified: true
+    nativeSize: 1024x768
+    finalSize: 128x96
+    notes: Card illustration of Ổ Nhện Cơ Khí (clock_spiders) (approved 2026-11-09 by Claude under the owner's delegation); box-reduced by docs/art-review/g3e/cards/make_assets.py; copy for the bigger desktop hand cards (added 2026-11-10) (src/ui/cards/cardImage.ts)
+  - id: card_art_clock_spring_workshop_128
+    path: public/assets/art/ai-v1/cards/clock_spring_workshop-128.png
+    category: ui
+    origin: custom
+    source: docs/art-review/g3e/cards/clock_spring_workshop/source.png
+    creator: Project owner (OpenAI imagegen via Codex; prompt in docs/art-review/g3e/cards/clock_spring_workshop/prompt.md)
+    license: project-owned
+    attribution: false
+    redistribute: true
+    evidence: docs/art-review/g3e/cards/sheet-clock.png
+    modified: true
+    nativeSize: 1024x768
+    finalSize: 128x96
+    notes: Card illustration of Xưởng Lò Xo (clock_spring_workshop) (approved 2026-11-09 by Claude under the owner's delegation); box-reduced by docs/art-review/g3e/cards/make_assets.py; copy for the bigger desktop hand cards (added 2026-11-10) (src/ui/cards/cardImage.ts)
+  - id: card_art_clock_steam_cannon_128
+    path: public/assets/art/ai-v1/cards/clock_steam_cannon-128.png
+    category: ui
+    origin: custom
+    source: docs/art-review/g3e/cards/clock_steam_cannon/source.png
+    creator: Project owner (OpenAI imagegen via Codex; prompt in docs/art-review/g3e/cards/clock_steam_cannon/prompt.md)
+    license: project-owned
+    attribution: false
+    redistribute: true
+    evidence: docs/art-review/g3e/cards/sheet-clock.png
+    modified: true
+    nativeSize: 1024x768
+    finalSize: 128x96
+    notes: Card illustration of Pháo Hơi Nước (clock_steam_cannon) (approved 2026-11-09 by Claude under the owner's delegation); box-reduced by docs/art-review/g3e/cards/make_assets.py; copy for the bigger desktop hand cards (added 2026-11-10) (src/ui/cards/cardImage.ts)
+  - id: card_art_clock_throne_128
+    path: public/assets/art/ai-v1/cards/clock_throne-128.png
+    category: ui
+    origin: custom
+    source: docs/art-review/g3e/cards/clock_throne/source.png
+    creator: Project owner (OpenAI imagegen via Codex; prompt in docs/art-review/g3e/cards/clock_throne/prompt.md)
+    license: project-owned
+    attribution: false
+    redistribute: true
+    evidence: docs/art-review/g3e/cards/sheet-clock.png
+    modified: true
+    nativeSize: 1448x1086
+    finalSize: 128x96
+    notes: Card illustration of Ngai Bánh Răng (clock_throne) (approved 2026-11-09 by Claude under the owner's delegation); box-reduced by docs/art-review/g3e/cards/make_assets.py; copy for the bigger desktop hand cards (added 2026-11-10) (src/ui/cards/cardImage.ts)
+  - id: card_art_clock_tick_rune_128
+    path: public/assets/art/ai-v1/cards/clock_tick_rune-128.png
+    category: ui
+    origin: custom
+    source: docs/art-review/g3e/cards/clock_tick_rune/source.png
+    creator: Project owner (OpenAI imagegen via Codex; prompt in docs/art-review/g3e/cards/clock_tick_rune/prompt.md)
+    license: project-owned
+    attribution: false
+    redistribute: true
+    evidence: docs/art-review/g3e/cards/sheet-clock.png
+    modified: true
+    nativeSize: 1448x1086
+    finalSize: 128x96
+    notes: Card illustration of Bùa Tích Tắc (clock_tick_rune) (approved 2026-11-09 by Claude under the owner's delegation); box-reduced by docs/art-review/g3e/cards/make_assets.py; copy for the bigger desktop hand cards (added 2026-11-10) (src/ui/cards/cardImage.ts)
+  - id: card_art_clock_windup_soldiers_128
+    path: public/assets/art/ai-v1/cards/clock_windup_soldiers-128.png
+    category: ui
+    origin: custom
+    source: docs/art-review/g3e/cards/clock_windup_soldiers/source.png
+    creator: Project owner (OpenAI imagegen via Codex; prompt in docs/art-review/g3e/cards/clock_windup_soldiers/prompt.md)
+    license: project-owned
+    attribution: false
+    redistribute: true
+    evidence: docs/art-review/g3e/cards/sheet-clock.png
+    modified: true
+    nativeSize: 1024x768
+    finalSize: 128x96
+    notes: Card illustration of Xưởng Lính Thiếc (clock_windup_soldiers) (approved 2026-11-09 by Claude under the owner's delegation); box-reduced by docs/art-review/g3e/cards/make_assets.py; copy for the bigger desktop hand cards (added 2026-11-10) (src/ui/cards/cardImage.ts)
+  - id: card_art_forge_throne_128
+    path: public/assets/art/ai-v1/cards/forge_throne-128.png
+    category: ui
+    origin: custom
+    source: docs/art-review/g3e/cards/forge_throne/source.png
+    creator: Project owner (OpenAI imagegen via Codex; prompt in docs/art-review/g3e/cards/forge_throne/prompt.md)
+    license: project-owned
+    attribution: false
+    redistribute: true
+    evidence: docs/art-review/g3e/cards/sheet-forge.png
+    modified: true
+    nativeSize: 1448x1086
+    finalSize: 128x96
+    notes: Card illustration of Ngai Đe Sắt (forge_throne) (approved 2026-11-09 by Claude under the owner's delegation); box-reduced by docs/art-review/g3e/cards/make_assets.py; copy for the bigger desktop hand cards (added 2026-11-10) (src/ui/cards/cardImage.ts)
+  - id: card_art_grove_throne_128
+    path: public/assets/art/ai-v1/cards/grove_throne-128.png
+    category: ui
+    origin: custom
+    source: docs/art-review/g3e/cards/grove_throne/source.png
+    creator: Project owner (OpenAI imagegen via Codex; prompt in docs/art-review/g3e/cards/grove_throne/prompt.md)
+    license: project-owned
+    attribution: false
+    redistribute: true
+    evidence: docs/art-review/g3e/cards/sheet-grove.png
+    modified: true
+    nativeSize: 1448x1086
+    finalSize: 128x96
+    notes: Card illustration of Ngai Cổ Thụ (grove_throne) (approved 2026-11-09 by Claude under the owner's delegation); box-reduced by docs/art-review/g3e/cards/make_assets.py; copy for the bigger desktop hand cards (added 2026-11-10) (src/ui/cards/cardImage.ts)
+  - id: card_art_moon_altar_128
+    path: public/assets/art/ai-v1/cards/moon_altar-128.png
+    category: ui
+    origin: custom
+    source: docs/art-review/g3e/cards/moon_altar/source.png
+    creator: Project owner (OpenAI imagegen via Codex; prompt in docs/art-review/g3e/cards/moon_altar/prompt.md)
+    license: project-owned
+    attribution: false
+    redistribute: true
+    evidence: docs/art-review/g3e/cards/sheet-moon.png
+    modified: true
+    nativeSize: 1024x768
+    finalSize: 128x96
+    notes: Card illustration of Đàn Tế (moon_altar) (approved 2026-11-09 by Claude under the owner's delegation); box-reduced by docs/art-review/g3e/cards/make_assets.py; copy for the bigger desktop hand cards (added 2026-11-10) (src/ui/cards/cardImage.ts)
+  - id: card_art_moon_blood_moon_rune_128
+    path: public/assets/art/ai-v1/cards/moon_blood_moon_rune-128.png
+    category: ui
+    origin: custom
+    source: docs/art-review/g3e/cards/moon_blood_moon_rune/source.png
+    creator: Project owner (OpenAI imagegen via Codex; prompt in docs/art-review/g3e/cards/moon_blood_moon_rune/prompt.md)
+    license: project-owned
+    attribution: false
+    redistribute: true
+    evidence: docs/art-review/g3e/cards/sheet-moon.png
+    modified: true
+    nativeSize: 1448x1086
+    finalSize: 128x96
+    notes: Card illustration of Bùa Trăng Máu (moon_blood_moon_rune) (approved 2026-11-09 by Claude under the owner's delegation); box-reduced by docs/art-review/g3e/cards/make_assets.py; copy for the bigger desktop hand cards (added 2026-11-10) (src/ui/cards/cardImage.ts)
+  - id: card_art_moon_blood_pact_128
+    path: public/assets/art/ai-v1/cards/moon_blood_pact-128.png
+    category: ui
+    origin: custom
+    source: docs/art-review/g3e/cards/moon_blood_pact/source.png
+    creator: Project owner (OpenAI imagegen via Codex; prompt in docs/art-review/g3e/cards/moon_blood_pact/prompt.md)
+    license: project-owned
+    attribution: false
+    redistribute: true
+    evidence: docs/art-review/g3e/cards/sheet-moon.png
+    modified: true
+    nativeSize: 1448x1086
+    finalSize: 128x96
+    notes: Card illustration of Khế Ước Máu (moon_blood_pact) (approved 2026-11-09 by Claude under the owner's delegation); box-reduced by docs/art-review/g3e/cards/make_assets.py; copy for the bigger desktop hand cards (added 2026-11-10) (src/ui/cards/cardImage.ts)
+  - id: card_art_moon_crypt_128
+    path: public/assets/art/ai-v1/cards/moon_crypt-128.png
+    category: ui
+    origin: custom
+    source: docs/art-review/g3e/cards/moon_crypt/source.png
+    creator: Project owner (OpenAI imagegen via Codex; prompt in docs/art-review/g3e/cards/moon_crypt/prompt.md)
+    license: project-owned
+    attribution: false
+    redistribute: true
+    evidence: docs/art-review/g3e/cards/sheet-moon.png
+    modified: true
+    nativeSize: 1024x768
+    finalSize: 128x96
+    notes: Card illustration of Hầm Mộ (moon_crypt) (approved 2026-11-09 by Claude under the owner's delegation); box-reduced by docs/art-review/g3e/cards/make_assets.py; copy for the bigger desktop hand cards (added 2026-11-10) (src/ui/cards/cardImage.ts)
+  - id: card_art_moon_eclipse_pact_128
+    path: public/assets/art/ai-v1/cards/moon_eclipse_pact-128.png
+    category: ui
+    origin: custom
+    source: docs/art-review/g3e/cards/moon_eclipse_pact/source.png
+    creator: Project owner (OpenAI imagegen via Codex; prompt in docs/art-review/g3e/cards/moon_eclipse_pact/prompt.md)
+    license: project-owned
+    attribution: false
+    redistribute: true
+    evidence: docs/art-review/g3e/cards/sheet-moon.png
+    modified: true
+    nativeSize: 1448x1086
+    finalSize: 128x96
+    notes: Card illustration of Giao Ước Nguyệt Thực (moon_eclipse_pact) (approved 2026-11-09 by Claude under the owner's delegation); box-reduced by docs/art-review/g3e/cards/make_assets.py; copy for the bigger desktop hand cards (added 2026-11-10) (src/ui/cards/cardImage.ts)
+  - id: card_art_moon_reaper_shrine_128
+    path: public/assets/art/ai-v1/cards/moon_reaper_shrine-128.png
+    category: ui
+    origin: custom
+    source: docs/art-review/g3e/cards/moon_reaper_shrine/source.png
+    creator: Project owner (OpenAI imagegen via Codex; prompt in docs/art-review/g3e/cards/moon_reaper_shrine/prompt.md)
+    license: project-owned
+    attribution: false
+    redistribute: true
+    evidence: docs/art-review/g3e/cards/sheet-moon.png
+    modified: true
+    nativeSize: 1024x768
+    finalSize: 128x96
+    notes: Card illustration of Điện Thần Chết (moon_reaper_shrine) (approved 2026-11-09 by Claude under the owner's delegation); box-reduced by docs/art-review/g3e/cards/make_assets.py; copy for the bigger desktop hand cards (added 2026-11-10) (src/ui/cards/cardImage.ts)
+  - id: card_art_moon_shadow_spire_128
+    path: public/assets/art/ai-v1/cards/moon_shadow_spire-128.png
+    category: ui
+    origin: custom
+    source: docs/art-review/g3e/cards/moon_shadow_spire/source.png
+    creator: Project owner (OpenAI imagegen via Codex; prompt in docs/art-review/g3e/cards/moon_shadow_spire/prompt.md)
+    license: project-owned
+    attribution: false
+    redistribute: true
+    evidence: docs/art-review/g3e/cards/sheet-moon.png
+    modified: true
+    nativeSize: 1024x768
+    finalSize: 128x96
+    notes: Card illustration of Tháp Bóng Đêm (moon_shadow_spire) (approved 2026-11-09 by Claude under the owner's delegation); box-reduced by docs/art-review/g3e/cards/make_assets.py; copy for the bigger desktop hand cards (added 2026-11-10) (src/ui/cards/cardImage.ts)
+  - id: card_art_moon_summoning_circle_128
+    path: public/assets/art/ai-v1/cards/moon_summoning_circle-128.png
+    category: ui
+    origin: custom
+    source: docs/art-review/g3e/cards/moon_summoning_circle/source.png
+    creator: Project owner (OpenAI imagegen via Codex; prompt in docs/art-review/g3e/cards/moon_summoning_circle/prompt.md)
+    license: project-owned
+    attribution: false
+    redistribute: true
+    evidence: docs/art-review/g3e/cards/sheet-moon.png
+    modified: true
+    nativeSize: 1024x768
+    finalSize: 128x96
+    notes: Card illustration of Vòng Triệu Hồi (moon_summoning_circle) (approved 2026-11-09 by Claude under the owner's delegation); box-reduced by docs/art-review/g3e/cards/make_assets.py; copy for the bigger desktop hand cards (added 2026-11-10) (src/ui/cards/cardImage.ts)
+  - id: card_art_moon_throne_128
+    path: public/assets/art/ai-v1/cards/moon_throne-128.png
+    category: ui
+    origin: custom
+    source: docs/art-review/g3e/cards/moon_throne/source.png
+    creator: Project owner (OpenAI imagegen via Codex; prompt in docs/art-review/g3e/cards/moon_throne/prompt.md)
+    license: project-owned
+    attribution: false
+    redistribute: true
+    evidence: docs/art-review/g3e/cards/sheet-moon.png
+    modified: true
+    nativeSize: 1448x1086
+    finalSize: 128x96
+    notes: Card illustration of Ngai Nguyệt Thực (moon_throne) (approved 2026-11-09 by Claude under the owner's delegation); box-reduced by docs/art-review/g3e/cards/make_assets.py; copy for the bigger desktop hand cards (added 2026-11-10) (src/ui/cards/cardImage.ts)
+  - id: card_art_moon_vampires_128
+    path: public/assets/art/ai-v1/cards/moon_vampires-128.png
+    category: ui
+    origin: custom
+    source: docs/art-review/g3e/cards/moon_vampires/source.png
+    creator: Project owner (OpenAI imagegen via Codex; prompt in docs/art-review/g3e/cards/moon_vampires/prompt.md)
+    license: project-owned
+    attribution: false
+    redistribute: true
+    evidence: docs/art-review/g3e/cards/sheet-moon.png
+    modified: true
+    nativeSize: 1024x768
+    finalSize: 128x96
+    notes: Card illustration of Lâu Đài Ma Cà Rồng (moon_vampires) (approved 2026-11-09 by Claude under the owner's delegation); box-reduced by docs/art-review/g3e/cards/make_assets.py; copy for the bigger desktop hand cards (added 2026-11-10) (src/ui/cards/cardImage.ts)
+  - id: card_art_neutral_archer_tower_128
+    path: public/assets/art/ai-v1/cards/neutral_archer_tower-128.png
+    category: ui
+    origin: custom
+    source: docs/art-review/g3e/cards/neutral_archer_tower/source.png
+    creator: Project owner (OpenAI imagegen via Codex; prompt in docs/art-review/g3e/cards/neutral_archer_tower/prompt.md)
+    license: project-owned
+    attribution: false
+    redistribute: true
+    evidence: docs/art-review/g3e/cards/sheet-neutral.png
+    modified: true
+    nativeSize: 1024x768
+    finalSize: 128x96
+    notes: Card illustration of Tháp Cung (neutral_archer_tower) (approved 2026-11-09 by Claude under the owner's delegation); box-reduced by docs/art-review/g3e/cards/make_assets.py; copy for the bigger desktop hand cards (added 2026-11-10) (src/ui/cards/cardImage.ts)
+  - id: card_art_neutral_barracks_128
+    path: public/assets/art/ai-v1/cards/neutral_barracks-128.png
+    category: ui
+    origin: custom
+    source: docs/art-review/g3e/cards/neutral_barracks/source.png
+    creator: Project owner (OpenAI imagegen via Codex; prompt in docs/art-review/g3e/cards/neutral_barracks/prompt.md)
+    license: project-owned
+    attribution: false
+    redistribute: true
+    evidence: docs/art-review/g3e/cards/sheet-neutral.png
+    modified: true
+    nativeSize: 1024x768
+    finalSize: 128x96
+    notes: Card illustration of Trại Lính (neutral_barracks) (approved 2026-11-09 by Claude under the owner's delegation); box-reduced by docs/art-review/g3e/cards/make_assets.py; copy for the bigger desktop hand cards (added 2026-11-10) (src/ui/cards/cardImage.ts)
+  - id: card_art_neutral_clear_land_128
+    path: public/assets/art/ai-v1/cards/neutral_clear_land-128.png
+    category: ui
+    origin: custom
+    source: docs/art-review/g3e/cards/neutral_clear_land/source.png
+    creator: Project owner (OpenAI imagegen via Codex; prompt in docs/art-review/g3e/cards/neutral_clear_land/prompt.md)
+    license: project-owned
+    attribution: false
+    redistribute: true
+    evidence: docs/art-review/g3e/cards/sheet-neutral.png
+    modified: true
+    nativeSize: 1448x1086
+    finalSize: 128x96
+    notes: Card illustration of Khai Hoang (neutral_clear_land) (approved 2026-11-09 by Claude under the owner's delegation); box-reduced by docs/art-review/g3e/cards/make_assets.py; copy for the bigger desktop hand cards (added 2026-11-10) (src/ui/cards/cardImage.ts)
+  - id: card_art_neutral_demolish_128
+    path: public/assets/art/ai-v1/cards/neutral_demolish-128.png
+    category: ui
+    origin: custom
+    source: docs/art-review/g3e/cards/neutral_demolish/source.png
+    creator: Project owner (OpenAI imagegen via Codex; prompt in docs/art-review/g3e/cards/neutral_demolish/prompt.md)
+    license: project-owned
+    attribution: false
+    redistribute: true
+    evidence: docs/art-review/g3e/cards/sheet-neutral.png
+    modified: true
+    nativeSize: 1448x1086
+    finalSize: 128x96
+    notes: Card illustration of Dỡ Bỏ (neutral_demolish) (approved 2026-11-09 by Claude under the owner's delegation); box-reduced by docs/art-review/g3e/cards/make_assets.py; copy for the bigger desktop hand cards (added 2026-11-10) (src/ui/cards/cardImage.ts)
+  - id: card_art_neutral_duplicate_128
+    path: public/assets/art/ai-v1/cards/neutral_duplicate-128.png
+    category: ui
+    origin: custom
+    source: docs/art-review/g3e/cards/neutral_duplicate/source.png
+    creator: Project owner (OpenAI imagegen via Codex; prompt in docs/art-review/g3e/cards/neutral_duplicate/prompt.md)
+    license: project-owned
+    attribution: false
+    redistribute: true
+    evidence: docs/art-review/g3e/cards/sheet-neutral.png
+    modified: true
+    nativeSize: 1448x1086
+    finalSize: 128x96
+    notes: Card illustration of Nhân Bản (neutral_duplicate) (approved 2026-11-09 by Claude under the owner's delegation); box-reduced by docs/art-review/g3e/cards/make_assets.py; copy for the bigger desktop hand cards (added 2026-11-10) (src/ui/cards/cardImage.ts)
+  - id: card_art_neutral_fortify_128
+    path: public/assets/art/ai-v1/cards/neutral_fortify-128.png
+    category: ui
+    origin: custom
+    source: docs/art-review/g3e/cards/neutral_fortify/source.png
+    creator: Project owner (OpenAI imagegen via Codex; prompt in docs/art-review/g3e/cards/neutral_fortify/prompt.md)
+    license: project-owned
+    attribution: false
+    redistribute: true
+    evidence: docs/art-review/g3e/cards/sheet-neutral.png
+    modified: true
+    nativeSize: 1448x1086
+    finalSize: 128x96
+    notes: Card illustration of Bùa Vững Chãi (neutral_fortify) (approved 2026-11-09 by Claude under the owner's delegation); box-reduced by docs/art-review/g3e/cards/make_assets.py; copy for the bigger desktop hand cards (added 2026-11-10) (src/ui/cards/cardImage.ts)
+  - id: card_art_neutral_mercenary_camp_128
+    path: public/assets/art/ai-v1/cards/neutral_mercenary_camp-128.png
+    category: ui
+    origin: custom
+    source: docs/art-review/g3e/cards/neutral_mercenary_camp/source.png
+    creator: Project owner (OpenAI imagegen via Codex; prompt in docs/art-review/g3e/cards/neutral_mercenary_camp/prompt.md)
+    license: project-owned
+    attribution: false
+    redistribute: true
+    evidence: docs/art-review/g3e/cards/sheet-neutral.png
+    modified: true
+    nativeSize: 1024x768
+    finalSize: 128x96
+    notes: Card illustration of Trại Đánh Thuê (neutral_mercenary_camp) (approved 2026-11-09 by Claude under the owner's delegation); box-reduced by docs/art-review/g3e/cards/make_assets.py; copy for the bigger desktop hand cards (added 2026-11-10) (src/ui/cards/cardImage.ts)
+  - id: card_art_neutral_move_128
+    path: public/assets/art/ai-v1/cards/neutral_move-128.png
+    category: ui
+    origin: custom
+    source: docs/art-review/g3e/cards/neutral_move/source.png
+    creator: Project owner (OpenAI imagegen via Codex; prompt in docs/art-review/g3e/cards/neutral_move/prompt.md)
+    license: project-owned
+    attribution: false
+    redistribute: true
+    evidence: docs/art-review/g3e/cards/sheet-neutral.png
+    modified: true
+    nativeSize: 1448x1086
+    finalSize: 128x96
+    notes: Card illustration of Dời Nhà (neutral_move) (approved 2026-11-09 by Claude under the owner's delegation); box-reduced by docs/art-review/g3e/cards/make_assets.py; copy for the bigger desktop hand cards (added 2026-11-10) (src/ui/cards/cardImage.ts)
+  - id: card_art_neutral_promote_128
+    path: public/assets/art/ai-v1/cards/neutral_promote-128.png
+    category: ui
+    origin: custom
+    source: docs/art-review/g3e/cards/neutral_promote/source.png
+    creator: Project owner (OpenAI imagegen via Codex; prompt in docs/art-review/g3e/cards/neutral_promote/prompt.md)
+    license: project-owned
+    attribution: false
+    redistribute: true
+    evidence: docs/art-review/g3e/cards/sheet-neutral.png
+    modified: true
+    nativeSize: 1448x1086
+    finalSize: 128x96
+    notes: Card illustration of Thăng Cấp (neutral_promote) (approved 2026-11-09 by Claude under the owner's delegation); box-reduced by docs/art-review/g3e/cards/make_assets.py; copy for the bigger desktop hand cards (added 2026-11-10) (src/ui/cards/cardImage.ts)
+  - id: card_art_neutral_royal_seal_128
+    path: public/assets/art/ai-v1/cards/neutral_royal_seal-128.png
+    category: ui
+    origin: custom
+    source: docs/art-review/g3e/cards/neutral_royal_seal/source.png
+    creator: Project owner (OpenAI imagegen via Codex; prompt in docs/art-review/g3e/cards/neutral_royal_seal/prompt.md)
+    license: project-owned
+    attribution: false
+    redistribute: true
+    evidence: docs/art-review/g3e/cards/sheet-neutral.png
+    modified: true
+    nativeSize: 1448x1086
+    finalSize: 128x96
+    notes: Card illustration of Ấn Triện (neutral_royal_seal) (approved 2026-11-09 by Claude under the owner's delegation); box-reduced by docs/art-review/g3e/cards/make_assets.py; copy for the bigger desktop hand cards (added 2026-11-10) (src/ui/cards/cardImage.ts)
+  - id: card_art_neutral_sharpen_128
+    path: public/assets/art/ai-v1/cards/neutral_sharpen-128.png
+    category: ui
+    origin: custom
+    source: docs/art-review/g3e/cards/neutral_sharpen/source.png
+    creator: Project owner (OpenAI imagegen via Codex; prompt in docs/art-review/g3e/cards/neutral_sharpen/prompt.md)
+    license: project-owned
+    attribution: false
+    redistribute: true
+    evidence: docs/art-review/g3e/cards/sheet-neutral.png
+    modified: true
+    nativeSize: 1448x1086
+    finalSize: 128x96
+    notes: Card illustration of Bùa Sắc Bén (neutral_sharpen) (approved 2026-11-09 by Claude under the owner's delegation); box-reduced by docs/art-review/g3e/cards/make_assets.py; copy for the bigger desktop hand cards (added 2026-11-10) (src/ui/cards/cardImage.ts)
+  - id: card_art_neutral_well_128
+    path: public/assets/art/ai-v1/cards/neutral_well-128.png
+    category: ui
+    origin: custom
+    source: docs/art-review/g3e/cards/neutral_well/source.png
+    creator: Project owner (OpenAI imagegen via Codex; prompt in docs/art-review/g3e/cards/neutral_well/prompt.md)
+    license: project-owned
+    attribution: false
+    redistribute: true
+    evidence: docs/art-review/g3e/cards/sheet-neutral.png
+    modified: true
+    nativeSize: 1024x768
+    finalSize: 128x96
+    notes: Card illustration of Giếng Làng (neutral_well) (approved 2026-11-09 by Claude under the owner's delegation); box-reduced by docs/art-review/g3e/cards/make_assets.py; copy for the bigger desktop hand cards (added 2026-11-10) (src/ui/cards/cardImage.ts)
+  - id: card_art_nomad_bazaar_128
+    path: public/assets/art/ai-v1/cards/nomad_bazaar-128.png
+    category: ui
+    origin: custom
+    source: docs/art-review/g3e/cards/nomad_bazaar/source.png
+    creator: Project owner (OpenAI imagegen via Codex; prompt in docs/art-review/g3e/cards/nomad_bazaar/prompt.md)
+    license: project-owned
+    attribution: false
+    redistribute: true
+    evidence: docs/art-review/g3e/cards/sheet-nomad.png
+    modified: true
+    nativeSize: 1024x768
+    finalSize: 128x96
+    notes: Card illustration of Chợ Phiên (nomad_bazaar) (approved 2026-11-09 by Claude under the owner's delegation); box-reduced by docs/art-review/g3e/cards/make_assets.py; copy for the bigger desktop hand cards (added 2026-11-10) (src/ui/cards/cardImage.ts)
+  - id: card_art_nomad_caravan_128
+    path: public/assets/art/ai-v1/cards/nomad_caravan-128.png
+    category: ui
+    origin: custom
+    source: docs/art-review/g3e/cards/nomad_caravan/source.png
+    creator: Project owner (OpenAI imagegen via Codex; prompt in docs/art-review/g3e/cards/nomad_caravan/prompt.md)
+    license: project-owned
+    attribution: false
+    redistribute: true
+    evidence: docs/art-review/g3e/cards/sheet-nomad.png
+    modified: true
+    nativeSize: 1024x768
+    finalSize: 128x96
+    notes: Card illustration of Đoàn Lữ Hành (nomad_caravan) (approved 2026-11-09 by Claude under the owner's delegation); box-reduced by docs/art-review/g3e/cards/make_assets.py; copy for the bigger desktop hand cards (added 2026-11-10) (src/ui/cards/cardImage.ts)
+  - id: card_art_nomad_horse_archers_128
+    path: public/assets/art/ai-v1/cards/nomad_horse_archers-128.png
+    category: ui
+    origin: custom
+    source: docs/art-review/g3e/cards/nomad_horse_archers/source.png
+    creator: Project owner (OpenAI imagegen via Codex; prompt in docs/art-review/g3e/cards/nomad_horse_archers/prompt.md)
+    license: project-owned
+    attribution: false
+    redistribute: true
+    evidence: docs/art-review/g3e/cards/sheet-nomad.png
+    modified: true
+    nativeSize: 1024x768
+    finalSize: 128x96
+    notes: Card illustration of Trại Cung Kỵ (nomad_horse_archers) (approved 2026-11-09 by Claude under the owner's delegation); box-reduced by docs/art-review/g3e/cards/make_assets.py; copy for the bigger desktop hand cards (added 2026-11-10) (src/ui/cards/cardImage.ts)
+  - id: card_art_nomad_khan_guard_128
+    path: public/assets/art/ai-v1/cards/nomad_khan_guard-128.png
+    category: ui
+    origin: custom
+    source: docs/art-review/g3e/cards/nomad_khan_guard/source.png
+    creator: Project owner (OpenAI imagegen via Codex; prompt in docs/art-review/g3e/cards/nomad_khan_guard/prompt.md)
+    license: project-owned
+    attribution: false
+    redistribute: true
+    evidence: docs/art-review/g3e/cards/sheet-nomad.png
+    modified: true
+    nativeSize: 1024x768
+    finalSize: 128x96
+    notes: Card illustration of Ngự Lâm Thiết Kỵ (nomad_khan_guard) (approved 2026-11-09 by Claude under the owner's delegation); box-reduced by docs/art-review/g3e/cards/make_assets.py; copy for the bigger desktop hand cards (added 2026-11-10) (src/ui/cards/cardImage.ts)
+  - id: card_art_nomad_relocate_128
+    path: public/assets/art/ai-v1/cards/nomad_relocate-128.png
+    category: ui
+    origin: custom
+    source: docs/art-review/g3e/cards/nomad_relocate/source.png
+    creator: Project owner (OpenAI imagegen via Codex; prompt in docs/art-review/g3e/cards/nomad_relocate/prompt.md)
+    license: project-owned
+    attribution: false
+    redistribute: true
+    evidence: docs/art-review/g3e/cards/sheet-nomad.png
+    modified: true
+    nativeSize: 1448x1086
+    finalSize: 128x96
+    notes: Card illustration of Nhổ Trại (nomad_relocate) (approved 2026-11-09 by Claude under the owner's delegation); box-reduced by docs/art-review/g3e/cards/make_assets.py; copy for the bigger desktop hand cards (added 2026-11-10) (src/ui/cards/cardImage.ts)
+  - id: card_art_nomad_riders_128
+    path: public/assets/art/ai-v1/cards/nomad_riders-128.png
+    category: ui
+    origin: custom
+    source: docs/art-review/g3e/cards/nomad_riders/source.png
+    creator: Project owner (OpenAI imagegen via Codex; prompt in docs/art-review/g3e/cards/nomad_riders/prompt.md)
+    license: project-owned
+    attribution: false
+    redistribute: true
+    evidence: docs/art-review/g3e/cards/sheet-nomad.png
+    modified: true
+    nativeSize: 1024x768
+    finalSize: 128x96
+    notes: Card illustration of Trại Kỵ Binh (nomad_riders) (approved 2026-11-09 by Claude under the owner's delegation); box-reduced by docs/art-review/g3e/cards/make_assets.py; copy for the bigger desktop hand cards (added 2026-11-10) (src/ui/cards/cardImage.ts)
+  - id: card_art_nomad_stables_128
+    path: public/assets/art/ai-v1/cards/nomad_stables-128.png
+    category: ui
+    origin: custom
+    source: docs/art-review/g3e/cards/nomad_stables/source.png
+    creator: Project owner (OpenAI imagegen via Codex; prompt in docs/art-review/g3e/cards/nomad_stables/prompt.md)
+    license: project-owned
+    attribution: false
+    redistribute: true
+    evidence: docs/art-review/g3e/cards/sheet-nomad.png
+    modified: true
+    nativeSize: 1024x768
+    finalSize: 128x96
+    notes: Card illustration of Chuồng Ngựa (nomad_stables) (approved 2026-11-09 by Claude under the owner's delegation); box-reduced by docs/art-review/g3e/cards/make_assets.py; copy for the bigger desktop hand cards (added 2026-11-10) (src/ui/cards/cardImage.ts)
+  - id: card_art_nomad_throne_128
+    path: public/assets/art/ai-v1/cards/nomad_throne-128.png
+    category: ui
+    origin: custom
+    source: docs/art-review/g3e/cards/nomad_throne/source.png
+    creator: Project owner (OpenAI imagegen via Codex; prompt in docs/art-review/g3e/cards/nomad_throne/prompt.md)
+    license: project-owned
+    attribution: false
+    redistribute: true
+    evidence: docs/art-review/g3e/cards/sheet-nomad.png
+    modified: true
+    nativeSize: 1448x1086
+    finalSize: 128x96
+    notes: Card illustration of Ngai Lều Vàng (nomad_throne) (approved 2026-11-09 by Claude under the owner's delegation); box-reduced by docs/art-review/g3e/cards/make_assets.py; copy for the bigger desktop hand cards (added 2026-11-10) (src/ui/cards/cardImage.ts)
+  - id: card_art_nomad_watchtower_128
+    path: public/assets/art/ai-v1/cards/nomad_watchtower-128.png
+    category: ui
+    origin: custom
+    source: docs/art-review/g3e/cards/nomad_watchtower/source.png
+    creator: Project owner (OpenAI imagegen via Codex; prompt in docs/art-review/g3e/cards/nomad_watchtower/prompt.md)
+    license: project-owned
+    attribution: false
+    redistribute: true
+    evidence: docs/art-review/g3e/cards/sheet-nomad.png
+    modified: true
+    nativeSize: 1024x768
+    finalSize: 128x96
+    notes: Card illustration of Chòi Canh Thảo Nguyên (nomad_watchtower) (approved 2026-11-09 by Claude under the owner's delegation); box-reduced by docs/art-review/g3e/cards/make_assets.py; copy for the bigger desktop hand cards (added 2026-11-10) (src/ui/cards/cardImage.ts)
+  - id: card_art_nomad_wind_rune_128
+    path: public/assets/art/ai-v1/cards/nomad_wind_rune-128.png
+    category: ui
+    origin: custom
+    source: docs/art-review/g3e/cards/nomad_wind_rune/source.png
+    creator: Project owner (OpenAI imagegen via Codex; prompt in docs/art-review/g3e/cards/nomad_wind_rune/prompt.md)
+    license: project-owned
+    attribution: false
+    redistribute: true
+    evidence: docs/art-review/g3e/cards/sheet-nomad.png
+    modified: true
+    nativeSize: 1448x1086
+    finalSize: 128x96
+    notes: Card illustration of Bùa Gió Thảo Nguyên (nomad_wind_rune) (approved 2026-11-09 by Claude under the owner's delegation); box-reduced by docs/art-review/g3e/cards/make_assets.py; copy for the bigger desktop hand cards (added 2026-11-10) (src/ui/cards/cardImage.ts)
+  - id: card_art_tide_throne_128
+    path: public/assets/art/ai-v1/cards/tide_throne-128.png
+    category: ui
+    origin: custom
+    source: docs/art-review/g3e/cards/tide_throne/source.png
+    creator: Project owner (OpenAI imagegen via Codex; prompt in docs/art-review/g3e/cards/tide_throne/prompt.md)
+    license: project-owned
+    attribution: false
+    redistribute: true
+    evidence: docs/art-review/g3e/cards/sheet-tide.png
+    modified: true
+    nativeSize: 1448x1086
+    finalSize: 128x96
+    notes: Card illustration of Ngai San Hô (tide_throne) (approved 2026-11-09 by Claude under the owner's delegation); box-reduced by docs/art-review/g3e/cards/make_assets.py; copy for the bigger desktop hand cards (added 2026-11-10) (src/ui/cards/cardImage.ts)
+  - id: portrait_king_arcane_144
+    path: public/assets/art/ai-v1/portraits/arcane-144.png
+    category: ui
+    origin: custom
+    source: docs/art-review/g3e/portraits/arcane/source.png
+    creator: Project owner (OpenAI imagegen via Codex; prompt in docs/art-review/g3e/portraits/arcane/prompt.md, approved 29/10/2026)
+    license: project-owned
+    attribution: false
+    redistribute: true
+    evidence: docs/art-review/g3e/portraits/native-review.md
+    modified: true
+    nativeSize: 1024x1536
+    finalSize: 144x216
+L4x216 copy (2026-11-10) made by tools/prepare_king_portraits.py --size 144x216 from the same approved source, for king cards drawn at scale 3; Arcane King portrait; box-downscaled and snapped to a 24-colour palette by tools/prepare_king_portraits.py (variant A, approved 29/10/2026); drawn in the king card window (src/render/portraitAssets.ts)
+  - id: portrait_king_clock_144
+    path: public/assets/art/ai-v1/portraits/clock-144.png
+    category: ui
+    origin: custom
+    source: docs/art-review/g3e/portraits/clock/source.png
+    creator: Project owner (OpenAI imagegen via Codex; prompt in docs/art-review/g3e/portraits/clock/prompt.md, approved 29/10/2026)
+    license: project-owned
+    attribution: false
+    redistribute: true
+    evidence: docs/art-review/g3e/portraits/native-review.md
+    modified: true
+    nativeSize: 1024x1536
+    finalSize: 144x216
+L4x216 copy (2026-11-10) made by tools/prepare_king_portraits.py --size 144x216 from the same approved source, for king cards drawn at scale 3; Clockwork King portrait; box-downscaled and snapped to a 24-colour palette by tools/prepare_king_portraits.py (variant A, approved 29/10/2026); drawn in the king card window (src/render/portraitAssets.ts)
+  - id: portrait_king_forge_144
+    path: public/assets/art/ai-v1/portraits/forge-144.png
+    category: ui
+    origin: custom
+    source: docs/art-review/g3e/portraits/forge/source.png
+    creator: Project owner (OpenAI imagegen via Codex; prompt in docs/art-review/g3e/portraits/forge/prompt.md, approved 29/10/2026)
+    license: project-owned
+    attribution: false
+    redistribute: true
+    evidence: docs/art-review/g3e/portraits/native-review.md
+    modified: true
+    nativeSize: 1024x1536
+    finalSize: 144x216
+L4x216 copy (2026-11-10) made by tools/prepare_king_portraits.py --size 144x216 from the same approved source, for king cards drawn at scale 3; Forge King portrait; box-downscaled and snapped to a 24-colour palette by tools/prepare_king_portraits.py (variant A, approved 29/10/2026); drawn in the king card window (src/render/portraitAssets.ts)
+  - id: portrait_king_grove_144
+    path: public/assets/art/ai-v1/portraits/grove-144.png
+    category: ui
+    origin: custom
+    source: docs/art-review/g3e/portraits/grove/source.png
+    creator: Project owner (OpenAI imagegen via Codex; prompt in docs/art-review/g3e/portraits/grove/prompt.md, approved 29/10/2026)
+    license: project-owned
+    attribution: false
+    redistribute: true
+    evidence: docs/art-review/g3e/portraits/native-review.md
+    modified: true
+    nativeSize: 1024x1536
+    finalSize: 144x216
+L4x216 copy (2026-11-10) made by tools/prepare_king_portraits.py --size 144x216 from the same approved source, for king cards drawn at scale 3; Grove King portrait; box-downscaled and snapped to a 24-colour palette by tools/prepare_king_portraits.py (variant A, approved 29/10/2026); drawn in the king card window (src/render/portraitAssets.ts)
+  - id: portrait_king_moon_144
+    path: public/assets/art/ai-v1/portraits/moon-144.png
+    category: ui
+    origin: custom
+    source: docs/art-review/g3e/portraits/moon/source.png
+    creator: Project owner (OpenAI imagegen via Codex; prompt in docs/art-review/g3e/portraits/moon/prompt.md, approved 29/10/2026)
+    license: project-owned
+    attribution: false
+    redistribute: true
+    evidence: docs/art-review/g3e/portraits/native-review.md
+    modified: true
+    nativeSize: 1024x1536
+    finalSize: 144x216
+L4x216 copy (2026-11-10) made by tools/prepare_king_portraits.py --size 144x216 from the same approved source, for king cards drawn at scale 3; Moon King portrait; box-downscaled and snapped to a 24-colour palette by tools/prepare_king_portraits.py (variant A, approved 29/10/2026); drawn in the king card window (src/render/portraitAssets.ts)
+  - id: portrait_king_nomad_144
+    path: public/assets/art/ai-v1/portraits/nomad-144.png
+    category: ui
+    origin: custom
+    source: docs/art-review/g3e/portraits/nomad/source.png
+    creator: Project owner (OpenAI imagegen via Codex; prompt in docs/art-review/g3e/portraits/nomad/prompt.md, approved 29/10/2026)
+    license: project-owned
+    attribution: false
+    redistribute: true
+    evidence: docs/art-review/g3e/portraits/native-review.md
+    modified: true
+    nativeSize: 1024x1536
+    finalSize: 144x216
+L4x216 copy (2026-11-10) made by tools/prepare_king_portraits.py --size 144x216 from the same approved source, for king cards drawn at scale 3; Nomad Khan portrait; box-downscaled and snapped to a 24-colour palette by tools/prepare_king_portraits.py (variant A, approved 29/10/2026); drawn in the king card window (src/render/portraitAssets.ts)
+  - id: portrait_king_stone_144
+    path: public/assets/art/ai-v1/portraits/stone-144.png
+    category: ui
+    origin: custom
+    source: docs/art-review/g3e/portraits/stone/source.png
+    creator: Project owner (OpenAI imagegen via Codex; prompt in docs/art-review/g3e/portraits/stone/prompt.md, approved 29/10/2026)
+    license: project-owned
+    attribution: false
+    redistribute: true
+    evidence: docs/art-review/g3e/portraits/native-review.md
+    modified: true
+    nativeSize: 1024x1536
+    finalSize: 144x216
+L4x216 copy (2026-11-10) made by tools/prepare_king_portraits.py --size 144x216 from the same approved source, for king cards drawn at scale 3; Stone King portrait; box-downscaled and snapped to a 24-colour palette by tools/prepare_king_portraits.py (variant A, approved 29/10/2026); drawn in the king card window (src/render/portraitAssets.ts)
+  - id: portrait_king_tide_144
+    path: public/assets/art/ai-v1/portraits/tide-144.png
+    category: ui
+    origin: custom
+    source: docs/art-review/g3e/portraits/tide/source.png
+    creator: Project owner (OpenAI imagegen via Codex; prompt in docs/art-review/g3e/portraits/tide/prompt.md, approved 29/10/2026)
+    license: project-owned
+    attribution: false
+    redistribute: true
+    evidence: docs/art-review/g3e/portraits/native-review.md
+    modified: true
+    nativeSize: 1024x1536
+    finalSize: 144x216
+L4x216 copy (2026-11-10) made by tools/prepare_king_portraits.py --size 144x216 from the same approved source, for king cards drawn at scale 3; Tide King portrait; box-downscaled and snapped to a 24-colour palette by tools/prepare_king_portraits.py (variant A, approved 29/10/2026); drawn in the king card window (src/render/portraitAssets.ts)
+  - id: portrait_king_wheat_144
+    path: public/assets/art/ai-v1/portraits/wheat-144.png
+    category: ui
+    origin: custom
+    source: docs/art-review/g3e/portraits/wheat/source.png
+    creator: Project owner (OpenAI imagegen via Codex; prompt in docs/art-review/g3e/portraits/wheat/prompt.md, approved 29/10/2026)
+    license: project-owned
+    attribution: false
+    redistribute: true
+    evidence: docs/art-review/g3e/portraits/native-review.md
+    modified: true
+    nativeSize: 1024x1536
+    finalSize: 144x216
+L4x216 copy (2026-11-10) made by tools/prepare_king_portraits.py --size 144x216 from the same approved source, for king cards drawn at scale 3; Wheat King portrait; box-downscaled and snapped to a 24-colour palette by tools/prepare_king_portraits.py (variant A, approved 29/10/2026); drawn in the king card window (src/render/portraitAssets.ts)
+  - id: decor_barrel_iso
+    path: public/assets/art/ai-v1/iso/wilds/barrel.png
+    category: doodad
+    origin: custom
+    source: docs/art-review/iso-board/decor/wild_barrel/source.png
+    creator: Project owner (OpenAI imagegen via Codex; prompt in docs/art-review/iso-board/decor/wild_barrel/prompt.md)
+    license: project-owned
+    attribution: false
+    redistribute: true
+    evidence: docs/art-review/iso-board/decor/review.md
+    modified: true
+    nativeSize: 1024x1024
+    finalSize: 23x30
+    anchor: feet
+    notes: Small field decoration (P2, 2026-11-10), magenta keyed and box-reduced by docs/art-review/iso-board/decor/make_decor.py; approved by Claude under the owner's delegation
+  - id: decor_haystack_iso
+    path: public/assets/art/ai-v1/iso/wilds/haystack.png
+    category: doodad
+    origin: custom
+    source: docs/art-review/iso-board/decor/wild_haystack/source.png
+    creator: Project owner (OpenAI imagegen via Codex; prompt in docs/art-review/iso-board/decor/wild_haystack/prompt.md)
+    license: project-owned
+    attribution: false
+    redistribute: true
+    evidence: docs/art-review/iso-board/decor/review.md
+    modified: true
+    nativeSize: 1024x1024
+    finalSize: 41x36
+    anchor: feet
+    notes: Small field decoration (P2, 2026-11-10), magenta keyed and box-reduced by docs/art-review/iso-board/decor/make_decor.py; approved by Claude under the owner's delegation
+  - id: decor_sign_iso
+    path: public/assets/art/ai-v1/iso/wilds/sign.png
+    category: doodad
+    origin: custom
+    source: docs/art-review/iso-board/decor/wild_sign/source.png
+    creator: Project owner (OpenAI imagegen via Codex; prompt in docs/art-review/iso-board/decor/wild_sign/prompt.md)
+    license: project-owned
+    attribution: false
+    redistribute: true
+    evidence: docs/art-review/iso-board/decor/review.md
+    modified: true
+    nativeSize: 1024x1024
+    finalSize: 23x34
+    anchor: feet
+    notes: Small field decoration (P2, 2026-11-10), magenta keyed and box-reduced by docs/art-review/iso-board/decor/make_decor.py; approved by Claude under the owner's delegation
+  - id: decor_wheat_cart_iso
+    path: public/assets/art/ai-v1/iso/wilds/wheat_cart.png
+    category: doodad
+    origin: custom
+    source: docs/art-review/iso-board/decor/wild_wheat_cart/source.png
+    creator: Project owner (OpenAI imagegen via Codex; prompt in docs/art-review/iso-board/decor/wild_wheat_cart/prompt.md)
+    license: project-owned
+    attribution: false
+    redistribute: true
+    evidence: docs/art-review/iso-board/decor/review.md
+    modified: true
+    nativeSize: 1024x1024
+    finalSize: 57x40
+    anchor: feet
+    notes: Small field decoration (P2, 2026-11-10), magenta keyed and box-reduced by docs/art-review/iso-board/decor/make_decor.py; approved by Claude under the owner's delegation
+  - id: decor_fence_ne_iso
+    path: public/assets/art/ai-v1/iso/wilds/fence_ne.png
+    category: doodad
+    origin: custom
+    source: docs/art-review/iso-board/decor/wild_fence_ne/source.png
+    creator: Project owner (OpenAI imagegen via Codex; prompt in docs/art-review/iso-board/decor/wild_fence_ne/prompt.md)
+    license: project-owned
+    attribution: false
+    redistribute: true
+    evidence: docs/art-review/iso-board/decor/review.md
+    modified: true
+    nativeSize: 1024x1024
+    finalSize: 30x26
+    anchor: feet
+    notes: Small field decoration (P2, 2026-11-10), magenta keyed and box-reduced by docs/art-review/iso-board/decor/make_decor.py; approved by Claude under the owner's delegation
+  - id: decor_fence_nw_iso
+    path: public/assets/art/ai-v1/iso/wilds/fence_nw.png
+    category: doodad
+    origin: custom
+    source: docs/art-review/iso-board/decor/wild_fence_nw/source.png
+    creator: Project owner (OpenAI imagegen via Codex; prompt in docs/art-review/iso-board/decor/wild_fence_nw/prompt.md)
+    license: project-owned
+    attribution: false
+    redistribute: true
+    evidence: docs/art-review/iso-board/decor/review.md
+    modified: true
+    nativeSize: 1024x1024
+    finalSize: 32x26
+    anchor: feet
+    notes: Small field decoration (P2, 2026-11-10), magenta keyed and box-reduced by docs/art-review/iso-board/decor/make_decor.py; approved by Claude under the owner's delegation
+  - id: decor_fence_se_iso
+    path: public/assets/art/ai-v1/iso/wilds/fence_se.png
+    category: doodad
+    origin: custom
+    source: docs/art-review/iso-board/decor/wild_fence_se/source.png
+    creator: Project owner (OpenAI imagegen via Codex; prompt in docs/art-review/iso-board/decor/wild_fence_se/prompt.md)
+    license: project-owned
+    attribution: false
+    redistribute: true
+    evidence: docs/art-review/iso-board/decor/review.md
+    modified: true
+    nativeSize: 1024x1024
+    finalSize: 39x26
+    anchor: feet
+    notes: Small field decoration (P2, 2026-11-10), magenta keyed and box-reduced by docs/art-review/iso-board/decor/make_decor.py; approved by Claude under the owner's delegation
+  - id: decor_fence_sw_iso
+    path: public/assets/art/ai-v1/iso/wilds/fence_sw.png
+    category: doodad
+    origin: custom
+    source: docs/art-review/iso-board/decor/wild_fence_sw/source.png
+    creator: Project owner (OpenAI imagegen via Codex; prompt in docs/art-review/iso-board/decor/wild_fence_sw/prompt.md)
+    license: project-owned
+    attribution: false
+    redistribute: true
+    evidence: docs/art-review/iso-board/decor/review.md
+    modified: true
+    nativeSize: 1024x1024
+    finalSize: 32x26
+    anchor: feet
+    notes: Small field decoration (P2, 2026-11-10), magenta keyed and box-reduced by docs/art-review/iso-board/decor/make_decor.py; approved by Claude under the owner's delegation
+  - id: decor_fence_horizontal_iso
+    path: public/assets/art/ai-v1/iso/wilds/fence_horizontal.png
+    category: doodad
+    origin: custom
+    source: docs/art-review/iso-board/decor/wild_fence_horizontal/source.png
+    creator: Project owner (OpenAI imagegen via Codex; prompt in docs/art-review/iso-board/decor/wild_fence_horizontal/prompt.md)
+    license: project-owned
+    attribution: false
+    redistribute: true
+    evidence: docs/art-review/iso-board/decor/review.md
+    modified: true
+    nativeSize: 1024x1024
+    finalSize: 60x24
+    anchor: feet
+    notes: Small field decoration (P2, 2026-11-10), magenta keyed and box-reduced by docs/art-review/iso-board/decor/make_decor.py; approved by Claude under the owner's delegation
+  - id: decor_gate_iso
+    path: public/assets/art/ai-v1/iso/wilds/gate.png
+    category: doodad
+    origin: custom
+    source: docs/art-review/iso-board/decor/wild_gate/source.png
+    creator: Project owner (OpenAI imagegen via Codex; prompt in docs/art-review/iso-board/decor/wild_gate/prompt.md)
+    license: project-owned
+    attribution: false
+    redistribute: true
+    evidence: docs/art-review/iso-board/decor/review.md
+    modified: true
+    nativeSize: 1024x1024
+    finalSize: 32x30
+    anchor: feet
+    notes: Small field decoration (P2, 2026-11-10), magenta keyed and box-reduced by docs/art-review/iso-board/decor/make_decor.py; approved by Claude under the owner's delegation
+  - id: building_wheat_militia_l2_iso
+    path: public/assets/art/ai-v1/iso/wheat_militia_l2.png
+    category: building
+    origin: custom
+    source: docs/art-review/levels/wheat_militia/l2/source.png
+    creator: Project owner (OpenAI imagegen via Codex; prompt in docs/art-review/levels/wheat_militia/l2/prompt.md)
+    license: project-owned
+    attribution: false
+    redistribute: true
+    evidence: docs/art-review/levels/review.md
+    modified: true
+    nativeSize: 1024x1024
+    finalSize: 62x75
+    anchor: feet
+    notes: Level 2 architecture of wheat_militia (P2, 2026-11-10), magenta keyed and reduced to the level-1 width by docs/art-review/levels/make_levels.py; approved by Claude under the owner's delegation
+  - id: building_wheat_militia_l3_iso
+    path: public/assets/art/ai-v1/iso/wheat_militia_l3.png
+    category: building
+    origin: custom
+    source: docs/art-review/levels/wheat_militia/l3/source.png
+    creator: Project owner (OpenAI imagegen via Codex; prompt in docs/art-review/levels/wheat_militia/l3/prompt.md)
+    license: project-owned
+    attribution: false
+    redistribute: true
+    evidence: docs/art-review/levels/review.md
+    modified: true
+    nativeSize: 1024x1024
+    finalSize: 62x76
+    anchor: feet
+    notes: Level 3 architecture of wheat_militia (P2, 2026-11-10), magenta keyed and reduced to the level-1 width by docs/art-review/levels/make_levels.py; approved by Claude under the owner's delegation
+  - id: building_wheat_field_l2_iso
+    path: public/assets/art/ai-v1/iso/wheat_field_l2.png
+    category: building
+    origin: custom
+    source: docs/art-review/levels/wheat_field/l2/source.png
+    creator: Project owner (OpenAI imagegen via Codex; prompt in docs/art-review/levels/wheat_field/l2/prompt.md)
+    license: project-owned
+    attribution: false
+    redistribute: true
+    evidence: docs/art-review/levels/review.md
+    modified: true
+    nativeSize: 1024x1024
+    finalSize: 75x50
+    anchor: feet
+    notes: Level 2 architecture of wheat_field (P2, 2026-11-10), magenta keyed and reduced to the level-1 width by docs/art-review/levels/make_levels.py; approved by Claude under the owner's delegation
+  - id: building_wheat_field_l3_iso
+    path: public/assets/art/ai-v1/iso/wheat_field_l3.png
+    category: building
+    origin: custom
+    source: docs/art-review/levels/wheat_field/l3/source.png
+    creator: Project owner (OpenAI imagegen via Codex; prompt in docs/art-review/levels/wheat_field/l3/prompt.md)
+    license: project-owned
+    attribution: false
+    redistribute: true
+    evidence: docs/art-review/levels/review.md
+    modified: true
+    nativeSize: 1024x1024
+    finalSize: 75x71
+    anchor: feet
+    notes: Level 3 architecture of wheat_field (P2, 2026-11-10), magenta keyed and reduced to the level-1 width by docs/art-review/levels/make_levels.py; approved by Claude under the owner's delegation
+  - id: building_wheat_granary_l2_iso
+    path: public/assets/art/ai-v1/iso/wheat_granary_l2.png
+    category: building
+    origin: custom
+    source: docs/art-review/levels/wheat_granary/l2/source.png
+    creator: Project owner (OpenAI imagegen via Codex; prompt in docs/art-review/levels/wheat_granary/l2/prompt.md)
+    license: project-owned
+    attribution: false
+    redistribute: true
+    evidence: docs/art-review/levels/review.md
+    modified: true
+    nativeSize: 1024x1024
+    finalSize: 63x69
+    anchor: feet
+    notes: Level 2 architecture of wheat_granary (P2, 2026-11-10), magenta keyed and reduced to the level-1 width by docs/art-review/levels/make_levels.py; approved by Claude under the owner's delegation
+  - id: building_wheat_granary_l3_iso
+    path: public/assets/art/ai-v1/iso/wheat_granary_l3.png
+    category: building
+    origin: custom
+    source: docs/art-review/levels/wheat_granary/l3/source.png
+    creator: Project owner (OpenAI imagegen via Codex; prompt in docs/art-review/levels/wheat_granary/l3/prompt.md)
+    license: project-owned
+    attribution: false
+    redistribute: true
+    evidence: docs/art-review/levels/review.md
+    modified: true
+    nativeSize: 1024x1024
+    finalSize: 63x74
+    anchor: feet
+    notes: Level 3 architecture of wheat_granary (P2, 2026-11-10), magenta keyed and reduced to the level-1 width by docs/art-review/levels/make_levels.py; approved by Claude under the owner's delegation
+  - id: building_wheat_peasant_horde_l2_iso
+    path: public/assets/art/ai-v1/iso/wheat_peasant_horde_l2.png
+    category: building
+    origin: custom
+    source: docs/art-review/levels/wheat_peasant_horde/l2/source.png
+    creator: Project owner (OpenAI imagegen via Codex; prompt in docs/art-review/levels/wheat_peasant_horde/l2/prompt.md)
+    license: project-owned
+    attribution: false
+    redistribute: true
+    evidence: docs/art-review/levels/review.md
+    modified: true
+    nativeSize: 1024x1024
+    finalSize: 64x69
+    anchor: feet
+    notes: Level 2 architecture of wheat_peasant_horde (P2, 2026-11-10), magenta keyed and reduced to the level-1 width by docs/art-review/levels/make_levels.py; approved by Claude under the owner's delegation
+  - id: building_wheat_peasant_horde_l3_iso
+    path: public/assets/art/ai-v1/iso/wheat_peasant_horde_l3.png
+    category: building
+    origin: custom
+    source: docs/art-review/levels/wheat_peasant_horde/l3/source.png
+    creator: Project owner (OpenAI imagegen via Codex; prompt in docs/art-review/levels/wheat_peasant_horde/l3/prompt.md)
+    license: project-owned
+    attribution: false
+    redistribute: true
+    evidence: docs/art-review/levels/review.md
+    modified: true
+    nativeSize: 1024x1024
+    finalSize: 64x75
+    anchor: feet
+    notes: Level 3 architecture of wheat_peasant_horde (P2, 2026-11-10), magenta keyed and reduced to the level-1 width by docs/art-review/levels/make_levels.py; approved by Claude under the owner's delegation
+  - id: building_wheat_reapers_l2_iso
+    path: public/assets/art/ai-v1/iso/wheat_reapers_l2.png
+    category: building
+    origin: custom
+    source: docs/art-review/levels/wheat_reapers/l2/source.png
+    creator: Project owner (OpenAI imagegen via Codex; prompt in docs/art-review/levels/wheat_reapers/l2/prompt.md)
+    license: project-owned
+    attribution: false
+    redistribute: true
+    evidence: docs/art-review/levels/review.md
+    modified: true
+    nativeSize: 1024x1024
+    finalSize: 64x60
+    anchor: feet
+    notes: Level 2 architecture of wheat_reapers (P2, 2026-11-10), magenta keyed and reduced to the level-1 width by docs/art-review/levels/make_levels.py; approved by Claude under the owner's delegation
+  - id: building_wheat_reapers_l3_iso
+    path: public/assets/art/ai-v1/iso/wheat_reapers_l3.png
+    category: building
+    origin: custom
+    source: docs/art-review/levels/wheat_reapers/l3/source.png
+    creator: Project owner (OpenAI imagegen via Codex; prompt in docs/art-review/levels/wheat_reapers/l3/prompt.md)
+    license: project-owned
+    attribution: false
+    redistribute: true
+    evidence: docs/art-review/levels/review.md
+    modified: true
+    nativeSize: 1024x1024
+    finalSize: 64x73
+    anchor: feet
+    notes: Level 3 architecture of wheat_reapers (P2, 2026-11-10), magenta keyed and reduced to the level-1 width by docs/art-review/levels/make_levels.py; approved by Claude under the owner's delegation
+  - id: building_wheat_scarecrow_l2_iso
+    path: public/assets/art/ai-v1/iso/wheat_scarecrow_l2.png
+    category: building
+    origin: custom
+    source: docs/art-review/levels/wheat_scarecrow/l2/source.png
+    creator: Project owner (OpenAI imagegen via Codex; prompt in docs/art-review/levels/wheat_scarecrow/l2/prompt.md)
+    license: project-owned
+    attribution: false
+    redistribute: true
+    evidence: docs/art-review/levels/review.md
+    modified: true
+    nativeSize: 1024x1024
+    finalSize: 45x74
+    anchor: feet
+    notes: Level 2 architecture of wheat_scarecrow (P2, 2026-11-10), magenta keyed and reduced to the level-1 width by docs/art-review/levels/make_levels.py; approved by Claude under the owner's delegation
+  - id: building_wheat_scarecrow_l3_iso
+    path: public/assets/art/ai-v1/iso/wheat_scarecrow_l3.png
+    category: building
+    origin: custom
+    source: docs/art-review/levels/wheat_scarecrow/l3/source.png
+    creator: Project owner (OpenAI imagegen via Codex; prompt in docs/art-review/levels/wheat_scarecrow/l3/prompt.md)
+    license: project-owned
+    attribution: false
+    redistribute: true
+    evidence: docs/art-review/levels/review.md
+    modified: true
+    nativeSize: 1024x1024
+    finalSize: 45x81
+    anchor: feet
+    notes: Level 3 architecture of wheat_scarecrow (P2, 2026-11-10), magenta keyed and reduced to the level-1 width by docs/art-review/levels/make_levels.py; approved by Claude under the owner's delegation
+  - id: building_wheat_throne_l2_iso
+    path: public/assets/art/ai-v1/iso/wheat_throne_l2.png
+    category: building
+    origin: custom
+    source: docs/art-review/levels/wheat_throne/l2/source.png
+    creator: Project owner (OpenAI imagegen via Codex; prompt in docs/art-review/levels/wheat_throne/l2/prompt.md)
+    license: project-owned
+    attribution: false
+    redistribute: true
+    evidence: docs/art-review/levels/review.md
+    modified: true
+    nativeSize: 1024x1024
+    finalSize: 54x77
+    anchor: feet
+    notes: Level 2 architecture of wheat_throne (P2, 2026-11-10), magenta keyed and reduced to the level-1 width by docs/art-review/levels/make_levels.py; approved by Claude under the owner's delegation
+  - id: building_wheat_throne_l3_iso
+    path: public/assets/art/ai-v1/iso/wheat_throne_l3.png
+    category: building
+    origin: custom
+    source: docs/art-review/levels/wheat_throne/l3/source.png
+    creator: Project owner (OpenAI imagegen via Codex; prompt in docs/art-review/levels/wheat_throne/l3/prompt.md)
+    license: project-owned
+    attribution: false
+    redistribute: true
+    evidence: docs/art-review/levels/review.md
+    modified: true
+    nativeSize: 1024x1024
+    finalSize: 54x88
+    anchor: feet
+    notes: Level 3 architecture of wheat_throne (P2, 2026-11-10), magenta keyed and reduced to the level-1 width by docs/art-review/levels/make_levels.py; approved by Claude under the owner's delegation
+  - id: building_wheat_windmill_l2_iso
+    path: public/assets/art/ai-v1/iso/wheat_windmill_l2.png
+    category: building
+    origin: custom
+    source: docs/art-review/levels/wheat_windmill/l2/source.png
+    creator: Project owner (OpenAI imagegen via Codex; prompt in docs/art-review/levels/wheat_windmill/l2/prompt.md)
+    license: project-owned
+    attribution: false
+    redistribute: true
+    evidence: docs/art-review/levels/review.md
+    modified: true
+    nativeSize: 1024x1024
+    finalSize: 39x63
+    anchor: feet
+    notes: Level 2 architecture of wheat_windmill (P2, 2026-11-10), magenta keyed and reduced to the level-1 width by docs/art-review/levels/make_levels.py; approved by Claude under the owner's delegation
+  - id: building_wheat_windmill_l3_iso
+    path: public/assets/art/ai-v1/iso/wheat_windmill_l3.png
+    category: building
+    origin: custom
+    source: docs/art-review/levels/wheat_windmill/l3/source.png
+    creator: Project owner (OpenAI imagegen via Codex; prompt in docs/art-review/levels/wheat_windmill/l3/prompt.md)
+    license: project-owned
+    attribution: false
+    redistribute: true
+    evidence: docs/art-review/levels/review.md
+    modified: true
+    nativeSize: 1024x1024
+    finalSize: 39x77
+    anchor: feet
+    notes: Level 3 architecture of wheat_windmill (P2, 2026-11-10), magenta keyed and reduced to the level-1 width by docs/art-review/levels/make_levels.py; approved by Claude under the owner's delegation
+  - id: building_stone_catapult_l2_iso
+    path: public/assets/art/ai-v1/iso/stone_catapult_l2.png
+    category: building
+    origin: custom
+    source: docs/art-review/levels/stone_catapult/l2/source.png
+    creator: Project owner (OpenAI imagegen via Codex; prompt in docs/art-review/levels/stone_catapult/l2/prompt.md)
+    license: project-owned
+    attribution: false
+    redistribute: true
+    evidence: docs/art-review/levels/review.md
+    modified: true
+    nativeSize: 1024x1024
+    finalSize: 58x70
+    anchor: feet
+    notes: Level 2 architecture of stone_catapult (P2, 2026-11-10), magenta keyed and reduced to the level-1 width by docs/art-review/levels/make_levels.py; approved by Claude under the owner's delegation
+  - id: building_stone_catapult_l3_iso
+    path: public/assets/art/ai-v1/iso/stone_catapult_l3.png
+    category: building
+    origin: custom
+    source: docs/art-review/levels/stone_catapult/l3/source.png
+    creator: Project owner (OpenAI imagegen via Codex; prompt in docs/art-review/levels/stone_catapult/l3/prompt.md)
+    license: project-owned
+    attribution: false
+    redistribute: true
+    evidence: docs/art-review/levels/review.md
+    modified: true
+    nativeSize: 1024x1024
+    finalSize: 58x74
+    anchor: feet
+    notes: Level 3 architecture of stone_catapult (P2, 2026-11-10), magenta keyed and reduced to the level-1 width by docs/art-review/levels/make_levels.py; approved by Claude under the owner's delegation
+  - id: building_stone_crystal_l2_iso
+    path: public/assets/art/ai-v1/iso/stone_crystal_l2.png
+    category: building
+    origin: custom
+    source: docs/art-review/levels/stone_crystal/l2/source.png
+    creator: Project owner (OpenAI imagegen via Codex; prompt in docs/art-review/levels/stone_crystal/l2/prompt.md)
+    license: project-owned
+    attribution: false
+    redistribute: true
+    evidence: docs/art-review/levels/review.md
+    modified: true
+    nativeSize: 1024x1024
+    finalSize: 37x64
+    anchor: feet
+    notes: Level 2 architecture of stone_crystal (P2, 2026-11-10), magenta keyed and reduced to the level-1 width by docs/art-review/levels/make_levels.py; approved by Claude under the owner's delegation
+  - id: building_stone_crystal_l3_iso
+    path: public/assets/art/ai-v1/iso/stone_crystal_l3.png
+    category: building
+    origin: custom
+    source: docs/art-review/levels/stone_crystal/l3/source.png
+    creator: Project owner (OpenAI imagegen via Codex; prompt in docs/art-review/levels/stone_crystal/l3/prompt.md)
+    license: project-owned
+    attribution: false
+    redistribute: true
+    evidence: docs/art-review/levels/review.md
+    modified: true
+    nativeSize: 1024x1024
+    finalSize: 37x71
+    anchor: feet
+    notes: Level 3 architecture of stone_crystal (P2, 2026-11-10), magenta keyed and reduced to the level-1 width by docs/art-review/levels/make_levels.py; approved by Claude under the owner's delegation
+  - id: building_stone_golem_forge_l2_iso
+    path: public/assets/art/ai-v1/iso/stone_golem_forge_l2.png
+    category: building
+    origin: custom
+    source: docs/art-review/levels/stone_golem_forge/l2/source.png
+    creator: Project owner (OpenAI imagegen via Codex; prompt in docs/art-review/levels/stone_golem_forge/l2/prompt.md)
+    license: project-owned
+    attribution: false
+    redistribute: true
+    evidence: docs/art-review/levels/review.md
+    modified: true
+    nativeSize: 1024x1024
+    finalSize: 67x71
+    anchor: feet
+    notes: Level 2 architecture of stone_golem_forge (P2, 2026-11-10), magenta keyed and reduced to the level-1 width by docs/art-review/levels/make_levels.py; approved by Claude under the owner's delegation
+  - id: building_stone_golem_forge_l3_iso
+    path: public/assets/art/ai-v1/iso/stone_golem_forge_l3.png
+    category: building
+    origin: custom
+    source: docs/art-review/levels/stone_golem_forge/l3/source.png
+    creator: Project owner (OpenAI imagegen via Codex; prompt in docs/art-review/levels/stone_golem_forge/l3/prompt.md)
+    license: project-owned
+    attribution: false
+    redistribute: true
+    evidence: docs/art-review/levels/review.md
+    modified: true
+    nativeSize: 1024x1024
+    finalSize: 67x78
+    anchor: feet
+    notes: Level 3 architecture of stone_golem_forge (P2, 2026-11-10), magenta keyed and reduced to the level-1 width by docs/art-review/levels/make_levels.py; approved by Claude under the owner's delegation
+  - id: building_stone_miners_l2_iso
+    path: public/assets/art/ai-v1/iso/stone_miners_l2.png
+    category: building
+    origin: custom
+    source: docs/art-review/levels/stone_miners/l2/source.png
+    creator: Project owner (OpenAI imagegen via Codex; prompt in docs/art-review/levels/stone_miners/l2/prompt.md)
+    license: project-owned
+    attribution: false
+    redistribute: true
+    evidence: docs/art-review/levels/review.md
+    modified: true
+    nativeSize: 1024x1024
+    finalSize: 75x69
+    anchor: feet
+    notes: Level 2 architecture of stone_miners (P2, 2026-11-10), magenta keyed and reduced to the level-1 width by docs/art-review/levels/make_levels.py; approved by Claude under the owner's delegation
+  - id: building_stone_miners_l3_iso
+    path: public/assets/art/ai-v1/iso/stone_miners_l3.png
+    category: building
+    origin: custom
+    source: docs/art-review/levels/stone_miners/l3/source.png
+    creator: Project owner (OpenAI imagegen via Codex; prompt in docs/art-review/levels/stone_miners/l3/prompt.md)
+    license: project-owned
+    attribution: false
+    redistribute: true
+    evidence: docs/art-review/levels/review.md
+    modified: true
+    nativeSize: 1024x1024
+    finalSize: 75x79
+    anchor: feet
+    notes: Level 3 architecture of stone_miners (P2, 2026-11-10), magenta keyed and reduced to the level-1 width by docs/art-review/levels/make_levels.py; approved by Claude under the owner's delegation
+  - id: building_stone_mountain_heart_l2_iso
+    path: public/assets/art/ai-v1/iso/stone_mountain_heart_l2.png
+    category: building
+    origin: custom
+    source: docs/art-review/levels/stone_mountain_heart/l2/source.png
+    creator: Project owner (OpenAI imagegen via Codex; prompt in docs/art-review/levels/stone_mountain_heart/l2/prompt.md)
+    license: project-owned
+    attribution: false
+    redistribute: true
+    evidence: docs/art-review/levels/review.md
+    modified: true
+    nativeSize: 1024x1024
+    finalSize: 54x70
+    anchor: feet
+    notes: Level 2 architecture of stone_mountain_heart (P2, 2026-11-10), magenta keyed and reduced to the level-1 width by docs/art-review/levels/make_levels.py; approved by Claude under the owner's delegation
+  - id: building_stone_mountain_heart_l3_iso
+    path: public/assets/art/ai-v1/iso/stone_mountain_heart_l3.png
+    category: building
+    origin: custom
+    source: docs/art-review/levels/stone_mountain_heart/l3/source.png
+    creator: Project owner (OpenAI imagegen via Codex; prompt in docs/art-review/levels/stone_mountain_heart/l3/prompt.md)
+    license: project-owned
+    attribution: false
+    redistribute: true
+    evidence: docs/art-review/levels/review.md
+    modified: true
+    nativeSize: 1024x1024
+    finalSize: 54x78
+    anchor: feet
+    notes: Level 3 architecture of stone_mountain_heart (P2, 2026-11-10), magenta keyed and reduced to the level-1 width by docs/art-review/levels/make_levels.py; approved by Claude under the owner's delegation
+  - id: building_stone_throne_l2_iso
+    path: public/assets/art/ai-v1/iso/stone_throne_l2.png
+    category: building
+    origin: custom
+    source: docs/art-review/levels/stone_throne/l2/source.png
+    creator: Project owner (OpenAI imagegen via Codex; prompt in docs/art-review/levels/stone_throne/l2/prompt.md)
+    license: project-owned
+    attribution: false
+    redistribute: true
+    evidence: docs/art-review/levels/review.md
+    modified: true
+    nativeSize: 1024x1024
+    finalSize: 51x62
+    anchor: feet
+    notes: Level 2 architecture of stone_throne (P2, 2026-11-10), magenta keyed and reduced to the level-1 width by docs/art-review/levels/make_levels.py; approved by Claude under the owner's delegation
+  - id: building_stone_throne_l3_iso
+    path: public/assets/art/ai-v1/iso/stone_throne_l3.png
+    category: building
+    origin: custom
+    source: docs/art-review/levels/stone_throne/l3/source.png
+    creator: Project owner (OpenAI imagegen via Codex; prompt in docs/art-review/levels/stone_throne/l3/prompt.md)
+    license: project-owned
+    attribution: false
+    redistribute: true
+    evidence: docs/art-review/levels/review.md
+    modified: true
+    nativeSize: 1024x1024
+    finalSize: 51x71
+    anchor: feet
+    notes: Level 3 architecture of stone_throne (P2, 2026-11-10), magenta keyed and reduced to the level-1 width by docs/art-review/levels/make_levels.py; approved by Claude under the owner's delegation
+  - id: building_stone_wall_l2_iso
+    path: public/assets/art/ai-v1/iso/stone_wall_l2.png
+    category: building
+    origin: custom
+    source: docs/art-review/levels/stone_wall/l2/source.png
+    creator: Project owner (OpenAI imagegen via Codex; prompt in docs/art-review/levels/stone_wall/l2/prompt.md)
+    license: project-owned
+    attribution: false
+    redistribute: true
+    evidence: docs/art-review/levels/review.md
+    modified: true
+    nativeSize: 1024x1024
+    finalSize: 68x56
+    anchor: feet
+    notes: Level 2 architecture of stone_wall (P2, 2026-11-10), magenta keyed and reduced to the level-1 width by docs/art-review/levels/make_levels.py; approved by Claude under the owner's delegation
+  - id: building_stone_wall_l3_iso
+    path: public/assets/art/ai-v1/iso/stone_wall_l3.png
+    category: building
+    origin: custom
+    source: docs/art-review/levels/stone_wall/l3/source.png
+    creator: Project owner (OpenAI imagegen via Codex; prompt in docs/art-review/levels/stone_wall/l3/prompt.md)
+    license: project-owned
+    attribution: false
+    redistribute: true
+    evidence: docs/art-review/levels/review.md
+    modified: true
+    nativeSize: 1024x1024
+    finalSize: 68x72
+    anchor: feet
+    notes: Level 3 architecture of stone_wall (P2, 2026-11-10), magenta keyed and reduced to the level-1 width by docs/art-review/levels/make_levels.py; approved by Claude under the owner's delegation
+  - id: building_stone_quarry_l2_iso
+    path: public/assets/art/ai-v1/iso/stone_quarry_l2.png
+    category: building
+    origin: custom
+    source: docs/art-review/levels/stone_quarry/l2/source.png
+    creator: Project owner (OpenAI imagegen via Codex; prompt in docs/art-review/levels/stone_quarry/l2/prompt.md)
+    license: project-owned
+    attribution: false
+    redistribute: true
+    evidence: docs/art-review/levels/review.md
+    modified: true
+    nativeSize: 1024x1024
+    finalSize: 75x61
+    anchor: feet
+    notes: Level 2 architecture of stone_quarry (P2, 2026-11-10), magenta keyed and reduced to the level-1 width by docs/art-review/levels/make_levels.py; approved by Claude under the owner's delegation
+  - id: building_stone_quarry_l3_iso
+    path: public/assets/art/ai-v1/iso/stone_quarry_l3.png
+    category: building
+    origin: custom
+    source: docs/art-review/levels/stone_quarry/l3/source.png
+    creator: Project owner (OpenAI imagegen via Codex; prompt in docs/art-review/levels/stone_quarry/l3/prompt.md)
+    license: project-owned
+    attribution: false
+    redistribute: true
+    evidence: docs/art-review/levels/review.md
+    modified: true
+    nativeSize: 1024x1024
+    finalSize: 75x77
+    anchor: feet
+    notes: Level 3 architecture of stone_quarry (P2, 2026-11-10), magenta keyed and reduced to the level-1 width by docs/art-review/levels/make_levels.py; approved by Claude under the owner's delegation
+  - id: building_arcane_frost_mages_l2_iso
+    path: public/assets/art/ai-v1/iso/arcane_frost_mages_l2.png
+    category: building
+    origin: custom
+    source: docs/art-review/levels/arcane_frost_mages/l2/source.png
+    creator: Project owner (OpenAI imagegen via Codex; prompt in docs/art-review/levels/arcane_frost_mages/l2/prompt.md)
+    license: project-owned
+    attribution: false
+    redistribute: true
+    evidence: docs/art-review/levels/review.md
+    modified: true
+    nativeSize: 1024x1024
+    finalSize: 55x84
+    anchor: feet
+    notes: Level 2 architecture of arcane_frost_mages (P2, 2026-11-10), magenta keyed and reduced to the level-1 width by docs/art-review/levels/make_levels.py; approved by Claude under the owner's delegation
+  - id: building_arcane_frost_mages_l3_iso
+    path: public/assets/art/ai-v1/iso/arcane_frost_mages_l3.png
+    category: building
+    origin: custom
+    source: docs/art-review/levels/arcane_frost_mages/l3/source.png
+    creator: Project owner (OpenAI imagegen via Codex; prompt in docs/art-review/levels/arcane_frost_mages/l3/prompt.md)
+    license: project-owned
+    attribution: false
+    redistribute: true
+    evidence: docs/art-review/levels/review.md
+    modified: true
+    nativeSize: 1024x1024
+    finalSize: 55x97
+    anchor: feet
+    notes: Level 3 architecture of arcane_frost_mages (P2, 2026-11-10), magenta keyed and reduced to the level-1 width by docs/art-review/levels/make_levels.py; approved by Claude under the owner's delegation
+  - id: building_arcane_archmage_l2_iso
+    path: public/assets/art/ai-v1/iso/arcane_archmage_l2.png
+    category: building
+    origin: custom
+    source: docs/art-review/levels/arcane_archmage/l2/source.png
+    creator: Project owner (OpenAI imagegen via Codex; prompt in docs/art-review/levels/arcane_archmage/l2/prompt.md)
+    license: project-owned
+    attribution: false
+    redistribute: true
+    evidence: docs/art-review/levels/review.md
+    modified: true
+    nativeSize: 1024x1024
+    finalSize: 34x69
+    anchor: feet
+    notes: Level 2 architecture of arcane_archmage (P2, 2026-11-10), magenta keyed and reduced to the level-1 width by docs/art-review/levels/make_levels.py; approved by Claude under the owner's delegation
+  - id: building_arcane_archmage_l3_iso
+    path: public/assets/art/ai-v1/iso/arcane_archmage_l3.png
+    category: building
+    origin: custom
+    source: docs/art-review/levels/arcane_archmage/l3/source.png
+    creator: Project owner (OpenAI imagegen via Codex; prompt in docs/art-review/levels/arcane_archmage/l3/prompt.md)
+    license: project-owned
+    attribution: false
+    redistribute: true
+    evidence: docs/art-review/levels/review.md
+    modified: true
+    nativeSize: 1024x1024
+    finalSize: 34x77
+    anchor: feet
+    notes: Level 3 architecture of arcane_archmage (P2, 2026-11-10), magenta keyed and reduced to the level-1 width by docs/art-review/levels/make_levels.py; approved by Claude under the owner's delegation
+  - id: building_arcane_throne_l2_iso
+    path: public/assets/art/ai-v1/iso/arcane_throne_l2.png
+    category: building
+    origin: custom
+    source: docs/art-review/levels/arcane_throne/l2/source.png
+    creator: Project owner (OpenAI imagegen via Codex; prompt in docs/art-review/levels/arcane_throne/l2/prompt.md)
+    license: project-owned
+    attribution: false
+    redistribute: true
+    evidence: docs/art-review/levels/review.md
+    modified: true
+    nativeSize: 1024x1024
+    finalSize: 34x70
+    anchor: feet
+    notes: Level 2 architecture of arcane_throne (P2, 2026-11-10), magenta keyed and reduced to the level-1 width by docs/art-review/levels/make_levels.py; approved by Claude under the owner's delegation
+  - id: building_arcane_throne_l3_iso
+    path: public/assets/art/ai-v1/iso/arcane_throne_l3.png
+    category: building
+    origin: custom
+    source: docs/art-review/levels/arcane_throne/l3/source.png
+    creator: Project owner (OpenAI imagegen via Codex; prompt in docs/art-review/levels/arcane_throne/l3/prompt.md)
+    license: project-owned
+    attribution: false
+    redistribute: true
+    evidence: docs/art-review/levels/review.md
+    modified: true
+    nativeSize: 1024x1024
+    finalSize: 34x81
+    anchor: feet
+    notes: Level 3 architecture of arcane_throne (P2, 2026-11-10), magenta keyed and reduced to the level-1 width by docs/art-review/levels/make_levels.py; approved by Claude under the owner's delegation
+  - id: building_arcane_ward_l2_iso
+    path: public/assets/art/ai-v1/iso/arcane_ward_l2.png
+    category: building
+    origin: custom
+    source: docs/art-review/levels/arcane_ward/l2/source.png
+    creator: Project owner (OpenAI imagegen via Codex; prompt in docs/art-review/levels/arcane_ward/l2/prompt.md)
+    license: project-owned
+    attribution: false
+    redistribute: true
+    evidence: docs/art-review/levels/review.md
+    modified: true
+    nativeSize: 1024x1024
+    finalSize: 56x54
+    anchor: feet
+    notes: Level 2 architecture of arcane_ward (P2, 2026-11-10), magenta keyed and reduced to the level-1 width by docs/art-review/levels/make_levels.py; approved by Claude under the owner's delegation
+  - id: building_arcane_ward_l3_iso
+    path: public/assets/art/ai-v1/iso/arcane_ward_l3.png
+    category: building
+    origin: custom
+    source: docs/art-review/levels/arcane_ward/l3/source.png
+    creator: Project owner (OpenAI imagegen via Codex; prompt in docs/art-review/levels/arcane_ward/l3/prompt.md)
+    license: project-owned
+    attribution: false
+    redistribute: true
+    evidence: docs/art-review/levels/review.md
+    modified: true
+    nativeSize: 1024x1024
+    finalSize: 56x52
+    anchor: feet
+    notes: Level 3 architecture of arcane_ward (P2, 2026-11-10), magenta keyed and reduced to the level-1 width by docs/art-review/levels/make_levels.py; approved by Claude under the owner's delegation
+  - id: building_arcane_apprentices_l2_iso
+    path: public/assets/art/ai-v1/iso/arcane_apprentices_l2.png
+    category: building
+    origin: custom
+    source: docs/art-review/levels/arcane_apprentices/l2/source.png
+    creator: Project owner (OpenAI imagegen via Codex; prompt in docs/art-review/levels/arcane_apprentices/l2/prompt.md)
+    license: project-owned
+    attribution: false
+    redistribute: true
+    evidence: docs/art-review/levels/review.md
+    modified: true
+    nativeSize: 1024x1024
+    finalSize: 69x71
+    anchor: feet
+    notes: Level 2 architecture of arcane_apprentices (P2, 2026-11-10), magenta keyed and reduced to the level-1 width by docs/art-review/levels/make_levels.py; approved by Claude under the owner's delegation
+  - id: building_arcane_apprentices_l3_iso
+    path: public/assets/art/ai-v1/iso/arcane_apprentices_l3.png
+    category: building
+    origin: custom
+    source: docs/art-review/levels/arcane_apprentices/l3/source.png
+    creator: Project owner (OpenAI imagegen via Codex; prompt in docs/art-review/levels/arcane_apprentices/l3/prompt.md)
+    license: project-owned
+    attribution: false
+    redistribute: true
+    evidence: docs/art-review/levels/review.md
+    modified: true
+    nativeSize: 1024x1024
+    finalSize: 69x88
+    anchor: feet
+    notes: Level 3 architecture of arcane_apprentices (P2, 2026-11-10), magenta keyed and reduced to the level-1 width by docs/art-review/levels/make_levels.py; approved by Claude under the owner's delegation
+  - id: building_arcane_library_l2_iso
+    path: public/assets/art/ai-v1/iso/arcane_library_l2.png
+    category: building
+    origin: custom
+    source: docs/art-review/levels/arcane_library/l2/source.png
+    creator: Project owner (OpenAI imagegen via Codex; prompt in docs/art-review/levels/arcane_library/l2/prompt.md)
+    license: project-owned
+    attribution: false
+    redistribute: true
+    evidence: docs/art-review/levels/review.md
+    modified: true
+    nativeSize: 1024x1024
+    finalSize: 71x73
+    anchor: feet
+    notes: Level 2 architecture of arcane_library (P2, 2026-11-10), magenta keyed and reduced to the level-1 width by docs/art-review/levels/make_levels.py; approved by Claude under the owner's delegation
+  - id: building_arcane_library_l3_iso
+    path: public/assets/art/ai-v1/iso/arcane_library_l3.png
+    category: building
+    origin: custom
+    source: docs/art-review/levels/arcane_library/l3/source.png
+    creator: Project owner (OpenAI imagegen via Codex; prompt in docs/art-review/levels/arcane_library/l3/prompt.md)
+    license: project-owned
+    attribution: false
+    redistribute: true
+    evidence: docs/art-review/levels/review.md
+    modified: true
+    nativeSize: 1024x1024
+    finalSize: 71x84
+    anchor: feet
+    notes: Level 3 architecture of arcane_library (P2, 2026-11-10), magenta keyed and reduced to the level-1 width by docs/art-review/levels/make_levels.py; approved by Claude under the owner's delegation
+  - id: building_arcane_mage_tower_l2_iso
+    path: public/assets/art/ai-v1/iso/arcane_mage_tower_l2.png
+    category: building
+    origin: custom
+    source: docs/art-review/levels/arcane_mage_tower/l2/source.png
+    creator: Project owner (OpenAI imagegen via Codex; prompt in docs/art-review/levels/arcane_mage_tower/l2/prompt.md)
+    license: project-owned
+    attribution: false
+    redistribute: true
+    evidence: docs/art-review/levels/review.md
+    modified: true
+    nativeSize: 1024x1024
+    finalSize: 49x71
+    anchor: feet
+    notes: Level 2 architecture of arcane_mage_tower (P2, 2026-11-10), magenta keyed and reduced to the level-1 width by docs/art-review/levels/make_levels.py; approved by Claude under the owner's delegation
+  - id: building_arcane_mage_tower_l3_iso
+    path: public/assets/art/ai-v1/iso/arcane_mage_tower_l3.png
+    category: building
+    origin: custom
+    source: docs/art-review/levels/arcane_mage_tower/l3/source.png
+    creator: Project owner (OpenAI imagegen via Codex; prompt in docs/art-review/levels/arcane_mage_tower/l3/prompt.md)
+    license: project-owned
+    attribution: false
+    redistribute: true
+    evidence: docs/art-review/levels/review.md
+    modified: true
+    nativeSize: 1024x1024
+    finalSize: 49x90
+    anchor: feet
+    notes: Level 3 architecture of arcane_mage_tower (P2, 2026-11-10), magenta keyed and reduced to the level-1 width by docs/art-review/levels/make_levels.py; approved by Claude under the owner's delegation
+  - id: building_grove_bear_cave_l2_iso
+    path: public/assets/art/ai-v1/iso/grove_bear_cave_l2.png
+    category: building
+    origin: custom
+    source: docs/art-review/levels/grove_bear_cave/l2/source.png
+    creator: Project owner (OpenAI imagegen via Codex; prompt in docs/art-review/levels/grove_bear_cave/l2/prompt.md)
+    license: project-owned
+    attribution: false
+    redistribute: true
+    evidence: docs/art-review/levels/review.md
+    modified: true
+    nativeSize: 1024x1024
+    finalSize: 66x68
+    anchor: feet
+    notes: Level 2 architecture of grove_bear_cave (P2, 2026-11-10), magenta keyed and reduced to the level-1 width by docs/art-review/levels/make_levels.py; approved by Claude under the owner's delegation
+  - id: building_grove_bear_cave_l3_iso
+    path: public/assets/art/ai-v1/iso/grove_bear_cave_l3.png
+    category: building
+    origin: custom
+    source: docs/art-review/levels/grove_bear_cave/l3/source.png
+    creator: Project owner (OpenAI imagegen via Codex; prompt in docs/art-review/levels/grove_bear_cave/l3/prompt.md)
+    license: project-owned
+    attribution: false
+    redistribute: true
+    evidence: docs/art-review/levels/review.md
+    modified: true
+    nativeSize: 1024x1024
+    finalSize: 66x73
+    anchor: feet
+    notes: Level 3 architecture of grove_bear_cave (P2, 2026-11-10), magenta keyed and reduced to the level-1 width by docs/art-review/levels/make_levels.py; approved by Claude under the owner's delegation
+  - id: building_grove_sapling_l2_iso
+    path: public/assets/art/ai-v1/iso/grove_sapling_l2.png
+    category: building
+    origin: custom
+    source: docs/art-review/levels/grove_sapling/l2/source.png
+    creator: Project owner (OpenAI imagegen via Codex; prompt in docs/art-review/levels/grove_sapling/l2/prompt.md)
+    license: project-owned
+    attribution: false
+    redistribute: true
+    evidence: docs/art-review/levels/review.md
+    modified: true
+    nativeSize: 1024x1024
+    finalSize: 32x46
+    anchor: feet
+    notes: Level 2 architecture of grove_sapling (P2, 2026-11-10), magenta keyed and reduced to the level-1 width by docs/art-review/levels/make_levels.py; approved by Claude under the owner's delegation
+  - id: building_grove_sapling_l3_iso
+    path: public/assets/art/ai-v1/iso/grove_sapling_l3.png
+    category: building
+    origin: custom
+    source: docs/art-review/levels/grove_sapling/l3/source.png
+    creator: Project owner (OpenAI imagegen via Codex; prompt in docs/art-review/levels/grove_sapling/l3/prompt.md)
+    license: project-owned
+    attribution: false
+    redistribute: true
+    evidence: docs/art-review/levels/review.md
+    modified: true
+    nativeSize: 1024x1024
+    finalSize: 32x45
+    anchor: feet
+    notes: Level 3 architecture of grove_sapling (P2, 2026-11-10), magenta keyed and reduced to the level-1 width by docs/art-review/levels/make_levels.py; approved by Claude under the owner's delegation
+  - id: building_grove_spirit_stags_l2_iso
+    path: public/assets/art/ai-v1/iso/grove_spirit_stags_l2.png
+    category: building
+    origin: custom
+    source: docs/art-review/levels/grove_spirit_stags/l2/source.png
+    creator: Project owner (OpenAI imagegen via Codex; prompt in docs/art-review/levels/grove_spirit_stags/l2/prompt.md)
+    license: project-owned
+    attribution: false
+    redistribute: true
+    evidence: docs/art-review/levels/review.md
+    modified: true
+    nativeSize: 1024x1024
+    finalSize: 59x69
+    anchor: feet
+    notes: Level 2 architecture of grove_spirit_stags (P2, 2026-11-10), magenta keyed and reduced to the level-1 width by docs/art-review/levels/make_levels.py; approved by Claude under the owner's delegation
+  - id: building_grove_spirit_stags_l3_iso
+    path: public/assets/art/ai-v1/iso/grove_spirit_stags_l3.png
+    category: building
+    origin: custom
+    source: docs/art-review/levels/grove_spirit_stags/l3/source.png
+    creator: Project owner (OpenAI imagegen via Codex; prompt in docs/art-review/levels/grove_spirit_stags/l3/prompt.md)
+    license: project-owned
+    attribution: false
+    redistribute: true
+    evidence: docs/art-review/levels/review.md
+    modified: true
+    nativeSize: 1024x1024
+    finalSize: 59x77
+    anchor: feet
+    notes: Level 3 architecture of grove_spirit_stags (P2, 2026-11-10), magenta keyed and reduced to the level-1 width by docs/art-review/levels/make_levels.py; approved by Claude under the owner's delegation
+  - id: building_grove_spring_l2_iso
+    path: public/assets/art/ai-v1/iso/grove_spring_l2.png
+    category: building
+    origin: custom
+    source: docs/art-review/levels/grove_spring/l2/source.png
+    creator: Project owner (OpenAI imagegen via Codex; prompt in docs/art-review/levels/grove_spring/l2/prompt.md)
+    license: project-owned
+    attribution: false
+    redistribute: true
+    evidence: docs/art-review/levels/review.md
+    modified: true
+    nativeSize: 1024x1024
+    finalSize: 52x55
+    anchor: feet
+    notes: Level 2 architecture of grove_spring (P2, 2026-11-10), magenta keyed and reduced to the level-1 width by docs/art-review/levels/make_levels.py; approved by Claude under the owner's delegation
+  - id: building_grove_spring_l3_iso
+    path: public/assets/art/ai-v1/iso/grove_spring_l3.png
+    category: building
+    origin: custom
+    source: docs/art-review/levels/grove_spring/l3/source.png
+    creator: Project owner (OpenAI imagegen via Codex; prompt in docs/art-review/levels/grove_spring/l3/prompt.md)
+    license: project-owned
+    attribution: false
+    redistribute: true
+    evidence: docs/art-review/levels/review.md
+    modified: true
+    nativeSize: 1024x1024
+    finalSize: 52x60
+    anchor: feet
+    notes: Level 3 architecture of grove_spring (P2, 2026-11-10), magenta keyed and reduced to the level-1 width by docs/art-review/levels/make_levels.py; approved by Claude under the owner's delegation
+  - id: building_grove_thorn_tower_l2_iso
+    path: public/assets/art/ai-v1/iso/grove_thorn_tower_l2.png
+    category: building
+    origin: custom
+    source: docs/art-review/levels/grove_thorn_tower/l2/source.png
+    creator: Project owner (OpenAI imagegen via Codex; prompt in docs/art-review/levels/grove_thorn_tower/l2/prompt.md)
+    license: project-owned
+    attribution: false
+    redistribute: true
+    evidence: docs/art-review/levels/review.md
+    modified: true
+    nativeSize: 1024x1024
+    finalSize: 41x61
+    anchor: feet
+    notes: Level 2 architecture of grove_thorn_tower (P2, 2026-11-10), magenta keyed and reduced to the level-1 width by docs/art-review/levels/make_levels.py; approved by Claude under the owner's delegation
+  - id: building_grove_thorn_tower_l3_iso
+    path: public/assets/art/ai-v1/iso/grove_thorn_tower_l3.png
+    category: building
+    origin: custom
+    source: docs/art-review/levels/grove_thorn_tower/l3/source.png
+    creator: Project owner (OpenAI imagegen via Codex; prompt in docs/art-review/levels/grove_thorn_tower/l3/prompt.md)
+    license: project-owned
+    attribution: false
+    redistribute: true
+    evidence: docs/art-review/levels/review.md
+    modified: true
+    nativeSize: 1024x1024
+    finalSize: 41x69
+    anchor: feet
+    notes: Level 3 architecture of grove_thorn_tower (P2, 2026-11-10), magenta keyed and reduced to the level-1 width by docs/art-review/levels/make_levels.py; approved by Claude under the owner's delegation
+  - id: building_grove_throne_l2_iso
+    path: public/assets/art/ai-v1/iso/grove_throne_l2.png
+    category: building
+    origin: custom
+    source: docs/art-review/levels/grove_throne/l2/source.png
+    creator: Project owner (OpenAI imagegen via Codex; prompt in docs/art-review/levels/grove_throne/l2/prompt.md)
+    license: project-owned
+    attribution: false
+    redistribute: true
+    evidence: docs/art-review/levels/review.md
+    modified: true
+    nativeSize: 1024x1024
+    finalSize: 62x75
+    anchor: feet
+    notes: Level 2 architecture of grove_throne (P2, 2026-11-10), magenta keyed and reduced to the level-1 width by docs/art-review/levels/make_levels.py; approved by Claude under the owner's delegation
+  - id: building_grove_throne_l3_iso
+    path: public/assets/art/ai-v1/iso/grove_throne_l3.png
+    category: building
+    origin: custom
+    source: docs/art-review/levels/grove_throne/l3/source.png
+    creator: Project owner (OpenAI imagegen via Codex; prompt in docs/art-review/levels/grove_throne/l3/prompt.md)
+    license: project-owned
+    attribution: false
+    redistribute: true
+    evidence: docs/art-review/levels/review.md
+    modified: true
+    nativeSize: 1024x1024
+    finalSize: 62x81
+    anchor: feet
+    notes: Level 3 architecture of grove_throne (P2, 2026-11-10), magenta keyed and reduced to the level-1 width by docs/art-review/levels/make_levels.py; approved by Claude under the owner's delegation
+  - id: building_grove_treant_l2_iso
+    path: public/assets/art/ai-v1/iso/grove_treant_l2.png
+    category: building
+    origin: custom
+    source: docs/art-review/levels/grove_treant/l2/source.png
+    creator: Project owner (OpenAI imagegen via Codex; prompt in docs/art-review/levels/grove_treant/l2/prompt.md)
+    license: project-owned
+    attribution: false
+    redistribute: true
+    evidence: docs/art-review/levels/review.md
+    modified: true
+    nativeSize: 1024x1024
+    finalSize: 70x77
+    anchor: feet
+    notes: Level 2 architecture of grove_treant (P2, 2026-11-10), magenta keyed and reduced to the level-1 width by docs/art-review/levels/make_levels.py; approved by Claude under the owner's delegation
+  - id: building_grove_treant_l3_iso
+    path: public/assets/art/ai-v1/iso/grove_treant_l3.png
+    category: building
+    origin: custom
+    source: docs/art-review/levels/grove_treant/l3/source.png
+    creator: Project owner (OpenAI imagegen via Codex; prompt in docs/art-review/levels/grove_treant/l3/prompt.md)
+    license: project-owned
+    attribution: false
+    redistribute: true
+    evidence: docs/art-review/levels/review.md
+    modified: true
+    nativeSize: 1024x1024
+    finalSize: 70x79
+    anchor: feet
+    notes: Level 3 architecture of grove_treant (P2, 2026-11-10), magenta keyed and reduced to the level-1 width by docs/art-review/levels/make_levels.py; approved by Claude under the owner's delegation
+  - id: building_grove_wolf_den_l2_iso
+    path: public/assets/art/ai-v1/iso/grove_wolf_den_l2.png
+    category: building
+    origin: custom
+    source: docs/art-review/levels/grove_wolf_den/l2/source.png
+    creator: Project owner (OpenAI imagegen via Codex; prompt in docs/art-review/levels/grove_wolf_den/l2/prompt.md)
+    license: project-owned
+    attribution: false
+    redistribute: true
+    evidence: docs/art-review/levels/review.md
+    modified: true
+    nativeSize: 1024x1024
+    finalSize: 71x61
+    anchor: feet
+    notes: Level 2 architecture of grove_wolf_den (P2, 2026-11-10), magenta keyed and reduced to the level-1 width by docs/art-review/levels/make_levels.py; approved by Claude under the owner's delegation
+  - id: building_grove_wolf_den_l3_iso
+    path: public/assets/art/ai-v1/iso/grove_wolf_den_l3.png
+    category: building
+    origin: custom
+    source: docs/art-review/levels/grove_wolf_den/l3/source.png
+    creator: Project owner (OpenAI imagegen via Codex; prompt in docs/art-review/levels/grove_wolf_den/l3/prompt.md)
+    license: project-owned
+    attribution: false
+    redistribute: true
+    evidence: docs/art-review/levels/review.md
+    modified: true
+    nativeSize: 1024x1024
+    finalSize: 71x76
+    anchor: feet
+    notes: Level 3 architecture of grove_wolf_den (P2, 2026-11-10), magenta keyed and reduced to the level-1 width by docs/art-review/levels/make_levels.py; approved by Claude under the owner's delegation
+  - id: building_tide_cannon_l2_iso
+    path: public/assets/art/ai-v1/iso/tide_cannon_l2.png
+    category: building
+    origin: custom
+    source: docs/art-review/levels/tide_cannon/l2/source.png
+    creator: Project owner (OpenAI imagegen via Codex; prompt in docs/art-review/levels/tide_cannon/l2/prompt.md)
+    license: project-owned
+    attribution: false
+    redistribute: true
+    evidence: docs/art-review/levels/review.md
+    modified: true
+    nativeSize: 1024x1024
+    finalSize: 35x43
+    anchor: feet
+    notes: Level 2 architecture of tide_cannon (P2, 2026-11-10), magenta keyed and reduced to the level-1 width by docs/art-review/levels/make_levels.py; approved by Claude under the owner's delegation
+  - id: building_tide_cannon_l3_iso
+    path: public/assets/art/ai-v1/iso/tide_cannon_l3.png
+    category: building
+    origin: custom
+    source: docs/art-review/levels/tide_cannon/l3/source.png
+    creator: Project owner (OpenAI imagegen via Codex; prompt in docs/art-review/levels/tide_cannon/l3/prompt.md)
+    license: project-owned
+    attribution: false
+    redistribute: true
+    evidence: docs/art-review/levels/review.md
+    modified: true
+    nativeSize: 1024x1024
+    finalSize: 35x54
+    anchor: feet
+    notes: Level 3 architecture of tide_cannon (P2, 2026-11-10), magenta keyed and reduced to the level-1 width by docs/art-review/levels/make_levels.py; approved by Claude under the owner's delegation
+  - id: building_tide_harbor_l2_iso
+    path: public/assets/art/ai-v1/iso/tide_harbor_l2.png
+    category: building
+    origin: custom
+    source: docs/art-review/levels/tide_harbor/l2/source.png
+    creator: Project owner (OpenAI imagegen via Codex; prompt in docs/art-review/levels/tide_harbor/l2/prompt.md)
+    license: project-owned
+    attribution: false
+    redistribute: true
+    evidence: docs/art-review/levels/review.md
+    modified: true
+    nativeSize: 1024x1024
+    finalSize: 69x62
+    anchor: feet
+    notes: Level 2 architecture of tide_harbor (P2, 2026-11-10), magenta keyed and reduced to the level-1 width by docs/art-review/levels/make_levels.py; approved by Claude under the owner's delegation
+  - id: building_tide_harbor_l3_iso
+    path: public/assets/art/ai-v1/iso/tide_harbor_l3.png
+    category: building
+    origin: custom
+    source: docs/art-review/levels/tide_harbor/l3/source.png
+    creator: Project owner (OpenAI imagegen via Codex; prompt in docs/art-review/levels/tide_harbor/l3/prompt.md)
+    license: project-owned
+    attribution: false
+    redistribute: true
+    evidence: docs/art-review/levels/review.md
+    modified: true
+    nativeSize: 1024x1024
+    finalSize: 69x79
+    anchor: feet
+    notes: Level 3 architecture of tide_harbor (P2, 2026-11-10), magenta keyed and reduced to the level-1 width by docs/art-review/levels/make_levels.py; approved by Claude under the owner's delegation
+  - id: building_tide_hookmen_l2_iso
+    path: public/assets/art/ai-v1/iso/tide_hookmen_l2.png
+    category: building
+    origin: custom
+    source: docs/art-review/levels/tide_hookmen/l2/source.png
+    creator: Project owner (OpenAI imagegen via Codex; prompt in docs/art-review/levels/tide_hookmen/l2/prompt.md)
+    license: project-owned
+    attribution: false
+    redistribute: true
+    evidence: docs/art-review/levels/review.md
+    modified: true
+    nativeSize: 1024x1024
+    finalSize: 68x72
+    anchor: feet
+    notes: Level 2 architecture of tide_hookmen (P2, 2026-11-10), magenta keyed and reduced to the level-1 width by docs/art-review/levels/make_levels.py; approved by Claude under the owner's delegation
+  - id: building_tide_hookmen_l3_iso
+    path: public/assets/art/ai-v1/iso/tide_hookmen_l3.png
+    category: building
+    origin: custom
+    source: docs/art-review/levels/tide_hookmen/l3/source.png
+    creator: Project owner (OpenAI imagegen via Codex; prompt in docs/art-review/levels/tide_hookmen/l3/prompt.md)
+    license: project-owned
+    attribution: false
+    redistribute: true
+    evidence: docs/art-review/levels/review.md
+    modified: true
+    nativeSize: 1024x1024
+    finalSize: 68x88
+    anchor: feet
+    notes: Level 3 architecture of tide_hookmen (P2, 2026-11-10), magenta keyed and reduced to the level-1 width by docs/art-review/levels/make_levels.py; approved by Claude under the owner's delegation
+  - id: building_tide_kraken_l2_iso
+    path: public/assets/art/ai-v1/iso/tide_kraken_l2.png
+    category: building
+    origin: custom
+    source: docs/art-review/levels/tide_kraken/l2/source.png
+    creator: Project owner (OpenAI imagegen via Codex; prompt in docs/art-review/levels/tide_kraken/l2/prompt.md)
+    license: project-owned
+    attribution: false
+    redistribute: true
+    evidence: docs/art-review/levels/review.md
+    modified: true
+    nativeSize: 1024x1024
+    finalSize: 68x61
+    anchor: feet
+    notes: Level 2 architecture of tide_kraken (P2, 2026-11-10), magenta keyed and reduced to the level-1 width by docs/art-review/levels/make_levels.py; approved by Claude under the owner's delegation
+  - id: building_tide_kraken_l3_iso
+    path: public/assets/art/ai-v1/iso/tide_kraken_l3.png
+    category: building
+    origin: custom
+    source: docs/art-review/levels/tide_kraken/l3/source.png
+    creator: Project owner (OpenAI imagegen via Codex; prompt in docs/art-review/levels/tide_kraken/l3/prompt.md)
+    license: project-owned
+    attribution: false
+    redistribute: true
+    evidence: docs/art-review/levels/review.md
+    modified: true
+    nativeSize: 1024x1024
+    finalSize: 68x68
+    anchor: feet
+    notes: Level 3 architecture of tide_kraken (P2, 2026-11-10), magenta keyed and reduced to the level-1 width by docs/art-review/levels/make_levels.py; approved by Claude under the owner's delegation
+  - id: building_tide_pirates_l2_iso
+    path: public/assets/art/ai-v1/iso/tide_pirates_l2.png
+    category: building
+    origin: custom
+    source: docs/art-review/levels/tide_pirates/l2/source.png
+    creator: Project owner (OpenAI imagegen via Codex; prompt in docs/art-review/levels/tide_pirates/l2/prompt.md)
+    license: project-owned
+    attribution: false
+    redistribute: true
+    evidence: docs/art-review/levels/review.md
+    modified: true
+    nativeSize: 1024x1024
+    finalSize: 55x71
+    anchor: feet
+    notes: Level 2 architecture of tide_pirates (P2, 2026-11-10), magenta keyed and reduced to the level-1 width by docs/art-review/levels/make_levels.py; approved by Claude under the owner's delegation
+  - id: building_tide_pirates_l3_iso
+    path: public/assets/art/ai-v1/iso/tide_pirates_l3.png
+    category: building
+    origin: custom
+    source: docs/art-review/levels/tide_pirates/l3/source.png
+    creator: Project owner (OpenAI imagegen via Codex; prompt in docs/art-review/levels/tide_pirates/l3/prompt.md)
+    license: project-owned
+    attribution: false
+    redistribute: true
+    evidence: docs/art-review/levels/review.md
+    modified: true
+    nativeSize: 1024x1024
+    finalSize: 55x69
+    anchor: feet
+    notes: Level 3 architecture of tide_pirates (P2, 2026-11-10), magenta keyed and reduced to the level-1 width by docs/art-review/levels/make_levels.py; approved by Claude under the owner's delegation
+  - id: building_tide_throne_l2_iso
+    path: public/assets/art/ai-v1/iso/tide_throne_l2.png
+    category: building
+    origin: custom
+    source: docs/art-review/levels/tide_throne/l2/source.png
+    creator: Project owner (OpenAI imagegen via Codex; prompt in docs/art-review/levels/tide_throne/l2/prompt.md)
+    license: project-owned
+    attribution: false
+    redistribute: true
+    evidence: docs/art-review/levels/review.md
+    modified: true
+    nativeSize: 1024x1024
+    finalSize: 45x74
+    anchor: feet
+    notes: Level 2 architecture of tide_throne (P2, 2026-11-10), magenta keyed and reduced to the level-1 width by docs/art-review/levels/make_levels.py; approved by Claude under the owner's delegation
+  - id: building_tide_throne_l3_iso
+    path: public/assets/art/ai-v1/iso/tide_throne_l3.png
+    category: building
+    origin: custom
+    source: docs/art-review/levels/tide_throne/l3/source.png
+    creator: Project owner (OpenAI imagegen via Codex; prompt in docs/art-review/levels/tide_throne/l3/prompt.md)
+    license: project-owned
+    attribution: false
+    redistribute: true
+    evidence: docs/art-review/levels/review.md
+    modified: true
+    nativeSize: 1024x1024
+    finalSize: 45x78
+    anchor: feet
+    notes: Level 3 architecture of tide_throne (P2, 2026-11-10), magenta keyed and reduced to the level-1 width by docs/art-review/levels/make_levels.py; approved by Claude under the owner's delegation
+  - id: building_tide_treasure_l2_iso
+    path: public/assets/art/ai-v1/iso/tide_treasure_l2.png
+    category: building
+    origin: custom
+    source: docs/art-review/levels/tide_treasure/l2/source.png
+    creator: Project owner (OpenAI imagegen via Codex; prompt in docs/art-review/levels/tide_treasure/l2/prompt.md)
+    license: project-owned
+    attribution: false
+    redistribute: true
+    evidence: docs/art-review/levels/review.md
+    modified: true
+    nativeSize: 1024x1024
+    finalSize: 52x65
+    anchor: feet
+    notes: Level 2 architecture of tide_treasure (P2, 2026-11-10), magenta keyed and reduced to the level-1 width by docs/art-review/levels/make_levels.py; approved by Claude under the owner's delegation
+  - id: building_tide_treasure_l3_iso
+    path: public/assets/art/ai-v1/iso/tide_treasure_l3.png
+    category: building
+    origin: custom
+    source: docs/art-review/levels/tide_treasure/l3/source.png
+    creator: Project owner (OpenAI imagegen via Codex; prompt in docs/art-review/levels/tide_treasure/l3/prompt.md)
+    license: project-owned
+    attribution: false
+    redistribute: true
+    evidence: docs/art-review/levels/review.md
+    modified: true
+    nativeSize: 1024x1024
+    finalSize: 52x64
+    anchor: feet
+    notes: Level 3 architecture of tide_treasure (P2, 2026-11-10), magenta keyed and reduced to the level-1 width by docs/art-review/levels/make_levels.py; approved by Claude under the owner's delegation
+  - id: building_tide_wave_tower_l2_iso
+    path: public/assets/art/ai-v1/iso/tide_wave_tower_l2.png
+    category: building
+    origin: custom
+    source: docs/art-review/levels/tide_wave_tower/l2/source.png
+    creator: Project owner (OpenAI imagegen via Codex; prompt in docs/art-review/levels/tide_wave_tower/l2/prompt.md)
+    license: project-owned
+    attribution: false
+    redistribute: true
+    evidence: docs/art-review/levels/review.md
+    modified: true
+    nativeSize: 1024x1024
+    finalSize: 56x80
+    anchor: feet
+    notes: Level 2 architecture of tide_wave_tower (P2, 2026-11-10), magenta keyed and reduced to the level-1 width by docs/art-review/levels/make_levels.py; approved by Claude under the owner's delegation
+  - id: building_tide_wave_tower_l3_iso
+    path: public/assets/art/ai-v1/iso/tide_wave_tower_l3.png
+    category: building
+    origin: custom
+    source: docs/art-review/levels/tide_wave_tower/l3/source.png
+    creator: Project owner (OpenAI imagegen via Codex; prompt in docs/art-review/levels/tide_wave_tower/l3/prompt.md)
+    license: project-owned
+    attribution: false
+    redistribute: true
+    evidence: docs/art-review/levels/review.md
+    modified: true
+    nativeSize: 1024x1024
+    finalSize: 56x88
+    anchor: feet
+    notes: Level 3 architecture of tide_wave_tower (P2, 2026-11-10), magenta keyed and reduced to the level-1 width by docs/art-review/levels/make_levels.py; approved by Claude under the owner's delegation
+  - id: building_forge_armory_l2_iso
+    path: public/assets/art/ai-v1/iso/forge_armory_l2.png
+    category: building
+    origin: custom
+    source: docs/art-review/levels/forge_armory/l2/source.png
+    creator: Project owner (OpenAI imagegen via Codex; prompt in docs/art-review/levels/forge_armory/l2/prompt.md)
+    license: project-owned
+    attribution: false
+    redistribute: true
+    evidence: docs/art-review/levels/review.md
+    modified: true
+    nativeSize: 1024x1024
+    finalSize: 72x73
+    anchor: feet
+    notes: Level 2 architecture of forge_armory (P2, 2026-11-10), magenta keyed and reduced to the level-1 width by docs/art-review/levels/make_levels.py; approved by Claude under the owner's delegation
+  - id: building_forge_armory_l3_iso
+    path: public/assets/art/ai-v1/iso/forge_armory_l3.png
+    category: building
+    origin: custom
+    source: docs/art-review/levels/forge_armory/l3/source.png
+    creator: Project owner (OpenAI imagegen via Codex; prompt in docs/art-review/levels/forge_armory/l3/prompt.md)
+    license: project-owned
+    attribution: false
+    redistribute: true
+    evidence: docs/art-review/levels/review.md
+    modified: true
+    nativeSize: 1024x1024
+    finalSize: 72x77
+    anchor: feet
+    notes: Level 3 architecture of forge_armory (P2, 2026-11-10), magenta keyed and reduced to the level-1 width by docs/art-review/levels/make_levels.py; approved by Claude under the owner's delegation
+  - id: building_forge_blast_furnace_l2_iso
+    path: public/assets/art/ai-v1/iso/forge_blast_furnace_l2.png
+    category: building
+    origin: custom
+    source: docs/art-review/levels/forge_blast_furnace/l2/source.png
+    creator: Project owner (OpenAI imagegen via Codex; prompt in docs/art-review/levels/forge_blast_furnace/l2/prompt.md)
+    license: project-owned
+    attribution: false
+    redistribute: true
+    evidence: docs/art-review/levels/review.md
+    modified: true
+    nativeSize: 1024x1024
+    finalSize: 52x70
+    anchor: feet
+    notes: Level 2 architecture of forge_blast_furnace (P2, 2026-11-10), magenta keyed and reduced to the level-1 width by docs/art-review/levels/make_levels.py; approved by Claude under the owner's delegation
+  - id: building_forge_blast_furnace_l3_iso
+    path: public/assets/art/ai-v1/iso/forge_blast_furnace_l3.png
+    category: building
+    origin: custom
+    source: docs/art-review/levels/forge_blast_furnace/l3/source.png
+    creator: Project owner (OpenAI imagegen via Codex; prompt in docs/art-review/levels/forge_blast_furnace/l3/prompt.md)
+    license: project-owned
+    attribution: false
+    redistribute: true
+    evidence: docs/art-review/levels/review.md
+    modified: true
+    nativeSize: 1024x1024
+    finalSize: 52x72
+    anchor: feet
+    notes: Level 3 architecture of forge_blast_furnace (P2, 2026-11-10), magenta keyed and reduced to the level-1 width by docs/art-review/levels/make_levels.py; approved by Claude under the owner's delegation
+  - id: building_forge_bombardiers_l2_iso
+    path: public/assets/art/ai-v1/iso/forge_bombardiers_l2.png
+    category: building
+    origin: custom
+    source: docs/art-review/levels/forge_bombardiers/l2/source.png
+    creator: Project owner (OpenAI imagegen via Codex; prompt in docs/art-review/levels/forge_bombardiers/l2/prompt.md)
+    license: project-owned
+    attribution: false
+    redistribute: true
+    evidence: docs/art-review/levels/review.md
+    modified: true
+    nativeSize: 1024x1024
+    finalSize: 68x69
+    anchor: feet
+    notes: Level 2 architecture of forge_bombardiers (P2, 2026-11-10), magenta keyed and reduced to the level-1 width by docs/art-review/levels/make_levels.py; approved by Claude under the owner's delegation
+  - id: building_forge_bombardiers_l3_iso
+    path: public/assets/art/ai-v1/iso/forge_bombardiers_l3.png
+    category: building
+    origin: custom
+    source: docs/art-review/levels/forge_bombardiers/l3/source.png
+    creator: Project owner (OpenAI imagegen via Codex; prompt in docs/art-review/levels/forge_bombardiers/l3/prompt.md)
+    license: project-owned
+    attribution: false
+    redistribute: true
+    evidence: docs/art-review/levels/review.md
+    modified: true
+    nativeSize: 1024x1024
+    finalSize: 68x74
+    anchor: feet
+    notes: Level 3 architecture of forge_bombardiers (P2, 2026-11-10), magenta keyed and reduced to the level-1 width by docs/art-review/levels/make_levels.py; approved by Claude under the owner's delegation
+  - id: building_forge_flame_tower_l2_iso
+    path: public/assets/art/ai-v1/iso/forge_flame_tower_l2.png
+    category: building
+    origin: custom
+    source: docs/art-review/levels/forge_flame_tower/l2/source.png
+    creator: Project owner (OpenAI imagegen via Codex; prompt in docs/art-review/levels/forge_flame_tower/l2/prompt.md)
+    license: project-owned
+    attribution: false
+    redistribute: true
+    evidence: docs/art-review/levels/review.md
+    modified: true
+    nativeSize: 1024x1024
+    finalSize: 70x74
+    anchor: feet
+    notes: Level 2 architecture of forge_flame_tower (P2, 2026-11-10), magenta keyed and reduced to the level-1 width by docs/art-review/levels/make_levels.py; approved by Claude under the owner's delegation
+  - id: building_forge_flame_tower_l3_iso
+    path: public/assets/art/ai-v1/iso/forge_flame_tower_l3.png
+    category: building
+    origin: custom
+    source: docs/art-review/levels/forge_flame_tower/l3/source.png
+    creator: Project owner (OpenAI imagegen via Codex; prompt in docs/art-review/levels/forge_flame_tower/l3/prompt.md)
+    license: project-owned
+    attribution: false
+    redistribute: true
+    evidence: docs/art-review/levels/review.md
+    modified: true
+    nativeSize: 1024x1024
+    finalSize: 70x83
+    anchor: feet
+    notes: Level 3 architecture of forge_flame_tower (P2, 2026-11-10), magenta keyed and reduced to the level-1 width by docs/art-review/levels/make_levels.py; approved by Claude under the owner's delegation
+  - id: building_forge_iron_drake_l2_iso
+    path: public/assets/art/ai-v1/iso/forge_iron_drake_l2.png
+    category: building
+    origin: custom
+    source: docs/art-review/levels/forge_iron_drake/l2/source.png
+    creator: Project owner (OpenAI imagegen via Codex; prompt in docs/art-review/levels/forge_iron_drake/l2/prompt.md)
+    license: project-owned
+    attribution: false
+    redistribute: true
+    evidence: docs/art-review/levels/review.md
+    modified: true
+    nativeSize: 1024x1024
+    finalSize: 71x73
+    anchor: feet
+    notes: Level 2 architecture of forge_iron_drake (P2, 2026-11-10), magenta keyed and reduced to the level-1 width by docs/art-review/levels/make_levels.py; approved by Claude under the owner's delegation
+  - id: building_forge_iron_drake_l3_iso
+    path: public/assets/art/ai-v1/iso/forge_iron_drake_l3.png
+    category: building
+    origin: custom
+    source: docs/art-review/levels/forge_iron_drake/l3/source.png
+    creator: Project owner (OpenAI imagegen via Codex; prompt in docs/art-review/levels/forge_iron_drake/l3/prompt.md)
+    license: project-owned
+    attribution: false
+    redistribute: true
+    evidence: docs/art-review/levels/review.md
+    modified: true
+    nativeSize: 1024x1024
+    finalSize: 71x75
+    anchor: feet
+    notes: Level 3 architecture of forge_iron_drake (P2, 2026-11-10), magenta keyed and reduced to the level-1 width by docs/art-review/levels/make_levels.py; approved by Claude under the owner's delegation
+  - id: building_forge_smithy_l2_iso
+    path: public/assets/art/ai-v1/iso/forge_smithy_l2.png
+    category: building
+    origin: custom
+    source: docs/art-review/levels/forge_smithy/l2/source.png
+    creator: Project owner (OpenAI imagegen via Codex; prompt in docs/art-review/levels/forge_smithy/l2/prompt.md)
+    license: project-owned
+    attribution: false
+    redistribute: true
+    evidence: docs/art-review/levels/review.md
+    modified: true
+    nativeSize: 1024x1024
+    finalSize: 63x70
+    anchor: feet
+    notes: Level 2 architecture of forge_smithy (P2, 2026-11-10), magenta keyed and reduced to the level-1 width by docs/art-review/levels/make_levels.py; approved by Claude under the owner's delegation
+  - id: building_forge_smithy_l3_iso
+    path: public/assets/art/ai-v1/iso/forge_smithy_l3.png
+    category: building
+    origin: custom
+    source: docs/art-review/levels/forge_smithy/l3/source.png
+    creator: Project owner (OpenAI imagegen via Codex; prompt in docs/art-review/levels/forge_smithy/l3/prompt.md)
+    license: project-owned
+    attribution: false
+    redistribute: true
+    evidence: docs/art-review/levels/review.md
+    modified: true
+    nativeSize: 1024x1024
+    finalSize: 63x71
+    anchor: feet
+    notes: Level 3 architecture of forge_smithy (P2, 2026-11-10), magenta keyed and reduced to the level-1 width by docs/art-review/levels/make_levels.py; approved by Claude under the owner's delegation
+  - id: building_forge_swordsmen_l2_iso
+    path: public/assets/art/ai-v1/iso/forge_swordsmen_l2.png
+    category: building
+    origin: custom
+    source: docs/art-review/levels/forge_swordsmen/l2/source.png
+    creator: Project owner (OpenAI imagegen via Codex; prompt in docs/art-review/levels/forge_swordsmen/l2/prompt.md)
+    license: project-owned
+    attribution: false
+    redistribute: true
+    evidence: docs/art-review/levels/review.md
+    modified: true
+    nativeSize: 1024x1024
+    finalSize: 76x65
+    anchor: feet
+    notes: Level 2 architecture of forge_swordsmen (P2, 2026-11-10), magenta keyed and reduced to the level-1 width by docs/art-review/levels/make_levels.py; approved by Claude under the owner's delegation
+  - id: building_forge_swordsmen_l3_iso
+    path: public/assets/art/ai-v1/iso/forge_swordsmen_l3.png
+    category: building
+    origin: custom
+    source: docs/art-review/levels/forge_swordsmen/l3/source.png
+    creator: Project owner (OpenAI imagegen via Codex; prompt in docs/art-review/levels/forge_swordsmen/l3/prompt.md)
+    license: project-owned
+    attribution: false
+    redistribute: true
+    evidence: docs/art-review/levels/review.md
+    modified: true
+    nativeSize: 1024x1024
+    finalSize: 76x76
+    anchor: feet
+    notes: Level 3 architecture of forge_swordsmen (P2, 2026-11-10), magenta keyed and reduced to the level-1 width by docs/art-review/levels/make_levels.py; approved by Claude under the owner's delegation
+  - id: building_forge_throne_l2_iso
+    path: public/assets/art/ai-v1/iso/forge_throne_l2.png
+    category: building
+    origin: custom
+    source: docs/art-review/levels/forge_throne/l2/source.png
+    creator: Project owner (OpenAI imagegen via Codex; prompt in docs/art-review/levels/forge_throne/l2/prompt.md)
+    license: project-owned
+    attribution: false
+    redistribute: true
+    evidence: docs/art-review/levels/review.md
+    modified: true
+    nativeSize: 1024x1024
+    finalSize: 50x65
+    anchor: feet
+    notes: Level 2 architecture of forge_throne (P2, 2026-11-10), magenta keyed and reduced to the level-1 width by docs/art-review/levels/make_levels.py; approved by Claude under the owner's delegation
+  - id: building_forge_throne_l3_iso
+    path: public/assets/art/ai-v1/iso/forge_throne_l3.png
+    category: building
+    origin: custom
+    source: docs/art-review/levels/forge_throne/l3/source.png
+    creator: Project owner (OpenAI imagegen via Codex; prompt in docs/art-review/levels/forge_throne/l3/prompt.md)
+    license: project-owned
+    attribution: false
+    redistribute: true
+    evidence: docs/art-review/levels/review.md
+    modified: true
+    nativeSize: 1024x1024
+    finalSize: 50x76
+    anchor: feet
+    notes: Level 3 architecture of forge_throne (P2, 2026-11-10), magenta keyed and reduced to the level-1 width by docs/art-review/levels/make_levels.py; approved by Claude under the owner's delegation
+  - id: building_clock_bell_tower_l2_iso
+    path: public/assets/art/ai-v1/iso/clock_bell_tower_l2.png
+    category: building
+    origin: custom
+    source: docs/art-review/levels/clock_bell_tower/l2/source.png
+    creator: Project owner (OpenAI imagegen via Codex; prompt in docs/art-review/levels/clock_bell_tower/l2/prompt.md)
+    license: project-owned
+    attribution: false
+    redistribute: true
+    evidence: docs/art-review/levels/review.md
+    modified: true
+    nativeSize: 1024x1024
+    finalSize: 48x90
+    anchor: feet
+    notes: Level 2 architecture of clock_bell_tower (P2, 2026-11-10), magenta keyed and reduced to the level-1 width by docs/art-review/levels/make_levels.py; approved by Claude under the owner's delegation
+  - id: building_clock_bell_tower_l3_iso
+    path: public/assets/art/ai-v1/iso/clock_bell_tower_l3.png
+    category: building
+    origin: custom
+    source: docs/art-review/levels/clock_bell_tower/l3/source.png
+    creator: Project owner (OpenAI imagegen via Codex; prompt in docs/art-review/levels/clock_bell_tower/l3/prompt.md)
+    license: project-owned
+    attribution: false
+    redistribute: true
+    evidence: docs/art-review/levels/review.md
+    modified: true
+    nativeSize: 1024x1024
+    finalSize: 48x96
+    anchor: feet
+    notes: Level 3 architecture of clock_bell_tower (P2, 2026-11-10), magenta keyed and reduced to the level-1 width by docs/art-review/levels/make_levels.py; approved by Claude under the owner's delegation
+  - id: building_clock_colossus_l2_iso
+    path: public/assets/art/ai-v1/iso/clock_colossus_l2.png
+    category: building
+    origin: custom
+    source: docs/art-review/levels/clock_colossus/l2/source.png
+    creator: Project owner (OpenAI imagegen via Codex; prompt in docs/art-review/levels/clock_colossus/l2/prompt.md)
+    license: project-owned
+    attribution: false
+    redistribute: true
+    evidence: docs/art-review/levels/review.md
+    modified: true
+    nativeSize: 1024x1024
+    finalSize: 67x74
+    anchor: feet
+    notes: Level 2 architecture of clock_colossus (P2, 2026-11-10), magenta keyed and reduced to the level-1 width by docs/art-review/levels/make_levels.py; approved by Claude under the owner's delegation
+  - id: building_clock_colossus_l3_iso
+    path: public/assets/art/ai-v1/iso/clock_colossus_l3.png
+    category: building
+    origin: custom
+    source: docs/art-review/levels/clock_colossus/l3/source.png
+    creator: Project owner (OpenAI imagegen via Codex; prompt in docs/art-review/levels/clock_colossus/l3/prompt.md)
+    license: project-owned
+    attribution: false
+    redistribute: true
+    evidence: docs/art-review/levels/review.md
+    modified: true
+    nativeSize: 1024x1024
+    finalSize: 67x76
+    anchor: feet
+    notes: Level 3 architecture of clock_colossus (P2, 2026-11-10), magenta keyed and reduced to the level-1 width by docs/art-review/levels/make_levels.py; approved by Claude under the owner's delegation
+  - id: building_clock_gear_tower_l2_iso
+    path: public/assets/art/ai-v1/iso/clock_gear_tower_l2.png
+    category: building
+    origin: custom
+    source: docs/art-review/levels/clock_gear_tower/l2/source.png
+    creator: Project owner (OpenAI imagegen via Codex; prompt in docs/art-review/levels/clock_gear_tower/l2/prompt.md)
+    license: project-owned
+    attribution: false
+    redistribute: true
+    evidence: docs/art-review/levels/review.md
+    modified: true
+    nativeSize: 1024x1024
+    finalSize: 51x68
+    anchor: feet
+    notes: Level 2 architecture of clock_gear_tower (P2, 2026-11-10), magenta keyed and reduced to the level-1 width by docs/art-review/levels/make_levels.py; approved by Claude under the owner's delegation
+  - id: building_clock_gear_tower_l3_iso
+    path: public/assets/art/ai-v1/iso/clock_gear_tower_l3.png
+    category: building
+    origin: custom
+    source: docs/art-review/levels/clock_gear_tower/l3/source.png
+    creator: Project owner (OpenAI imagegen via Codex; prompt in docs/art-review/levels/clock_gear_tower/l3/prompt.md)
+    license: project-owned
+    attribution: false
+    redistribute: true
+    evidence: docs/art-review/levels/review.md
+    modified: true
+    nativeSize: 1024x1024
+    finalSize: 51x76
+    anchor: feet
+    notes: Level 3 architecture of clock_gear_tower (P2, 2026-11-10), magenta keyed and reduced to the level-1 width by docs/art-review/levels/make_levels.py; approved by Claude under the owner's delegation
+  - id: building_clock_spiders_l2_iso
+    path: public/assets/art/ai-v1/iso/clock_spiders_l2.png
+    category: building
+    origin: custom
+    source: docs/art-review/levels/clock_spiders/l2/source.png
+    creator: Project owner (OpenAI imagegen via Codex; prompt in docs/art-review/levels/clock_spiders/l2/prompt.md)
+    license: project-owned
+    attribution: false
+    redistribute: true
+    evidence: docs/art-review/levels/review.md
+    modified: true
+    nativeSize: 1024x1024
+    finalSize: 65x68
+    anchor: feet
+    notes: Level 2 architecture of clock_spiders (P2, 2026-11-10), magenta keyed and reduced to the level-1 width by docs/art-review/levels/make_levels.py; approved by Claude under the owner's delegation
+  - id: building_clock_spiders_l3_iso
+    path: public/assets/art/ai-v1/iso/clock_spiders_l3.png
+    category: building
+    origin: custom
+    source: docs/art-review/levels/clock_spiders/l3/source.png
+    creator: Project owner (OpenAI imagegen via Codex; prompt in docs/art-review/levels/clock_spiders/l3/prompt.md)
+    license: project-owned
+    attribution: false
+    redistribute: true
+    evidence: docs/art-review/levels/review.md
+    modified: true
+    nativeSize: 1024x1024
+    finalSize: 65x75
+    anchor: feet
+    notes: Level 3 architecture of clock_spiders (P2, 2026-11-10), magenta keyed and reduced to the level-1 width by docs/art-review/levels/make_levels.py; approved by Claude under the owner's delegation
+  - id: building_clock_spring_workshop_l2_iso
+    path: public/assets/art/ai-v1/iso/clock_spring_workshop_l2.png
+    category: building
+    origin: custom
+    source: docs/art-review/levels/clock_spring_workshop/l2/source.png
+    creator: Project owner (OpenAI imagegen via Codex; prompt in docs/art-review/levels/clock_spring_workshop/l2/prompt.md)
+    license: project-owned
+    attribution: false
+    redistribute: true
+    evidence: docs/art-review/levels/review.md
+    modified: true
+    nativeSize: 1024x1024
+    finalSize: 67x73
+    anchor: feet
+    notes: Level 2 architecture of clock_spring_workshop (P2, 2026-11-10), magenta keyed and reduced to the level-1 width by docs/art-review/levels/make_levels.py; approved by Claude under the owner's delegation
+  - id: building_clock_spring_workshop_l3_iso
+    path: public/assets/art/ai-v1/iso/clock_spring_workshop_l3.png
+    category: building
+    origin: custom
+    source: docs/art-review/levels/clock_spring_workshop/l3/source.png
+    creator: Project owner (OpenAI imagegen via Codex; prompt in docs/art-review/levels/clock_spring_workshop/l3/prompt.md)
+    license: project-owned
+    attribution: false
+    redistribute: true
+    evidence: docs/art-review/levels/review.md
+    modified: true
+    nativeSize: 1024x1024
+    finalSize: 67x92
+    anchor: feet
+    notes: Level 3 architecture of clock_spring_workshop (P2, 2026-11-10), magenta keyed and reduced to the level-1 width by docs/art-review/levels/make_levels.py; approved by Claude under the owner's delegation
+  - id: building_clock_steam_cannon_l2_iso
+    path: public/assets/art/ai-v1/iso/clock_steam_cannon_l2.png
+    category: building
+    origin: custom
+    source: docs/art-review/levels/clock_steam_cannon/l2/source.png
+    creator: Project owner (OpenAI imagegen via Codex; prompt in docs/art-review/levels/clock_steam_cannon/l2/prompt.md)
+    license: project-owned
+    attribution: false
+    redistribute: true
+    evidence: docs/art-review/levels/review.md
+    modified: true
+    nativeSize: 1024x1024
+    finalSize: 57x79
+    anchor: feet
+    notes: Level 2 architecture of clock_steam_cannon (P2, 2026-11-10), magenta keyed and reduced to the level-1 width by docs/art-review/levels/make_levels.py; approved by Claude under the owner's delegation
+  - id: building_clock_steam_cannon_l3_iso
+    path: public/assets/art/ai-v1/iso/clock_steam_cannon_l3.png
+    category: building
+    origin: custom
+    source: docs/art-review/levels/clock_steam_cannon/l3/source.png
+    creator: Project owner (OpenAI imagegen via Codex; prompt in docs/art-review/levels/clock_steam_cannon/l3/prompt.md)
+    license: project-owned
+    attribution: false
+    redistribute: true
+    evidence: docs/art-review/levels/review.md
+    modified: true
+    nativeSize: 1024x1024
+    finalSize: 57x80
+    anchor: feet
+    notes: Level 3 architecture of clock_steam_cannon (P2, 2026-11-10), magenta keyed and reduced to the level-1 width by docs/art-review/levels/make_levels.py; approved by Claude under the owner's delegation
+  - id: building_clock_throne_l2_iso
+    path: public/assets/art/ai-v1/iso/clock_throne_l2.png
+    category: building
+    origin: custom
+    source: docs/art-review/levels/clock_throne/l2/source.png
+    creator: Project owner (OpenAI imagegen via Codex; prompt in docs/art-review/levels/clock_throne/l2/prompt.md)
+    license: project-owned
+    attribution: false
+    redistribute: true
+    evidence: docs/art-review/levels/review.md
+    modified: true
+    nativeSize: 1024x1024
+    finalSize: 49x70
+    anchor: feet
+    notes: Level 2 architecture of clock_throne (P2, 2026-11-10), magenta keyed and reduced to the level-1 width by docs/art-review/levels/make_levels.py; approved by Claude under the owner's delegation
+  - id: building_clock_throne_l3_iso
+    path: public/assets/art/ai-v1/iso/clock_throne_l3.png
+    category: building
+    origin: custom
+    source: docs/art-review/levels/clock_throne/l3/source.png
+    creator: Project owner (OpenAI imagegen via Codex; prompt in docs/art-review/levels/clock_throne/l3/prompt.md)
+    license: project-owned
+    attribution: false
+    redistribute: true
+    evidence: docs/art-review/levels/review.md
+    modified: true
+    nativeSize: 1024x1024
+    finalSize: 49x78
+    anchor: feet
+    notes: Level 3 architecture of clock_throne (P2, 2026-11-10), magenta keyed and reduced to the level-1 width by docs/art-review/levels/make_levels.py; approved by Claude under the owner's delegation
+  - id: building_clock_windup_soldiers_l2_iso
+    path: public/assets/art/ai-v1/iso/clock_windup_soldiers_l2.png
+    category: building
+    origin: custom
+    source: docs/art-review/levels/clock_windup_soldiers/l2/source.png
+    creator: Project owner (OpenAI imagegen via Codex; prompt in docs/art-review/levels/clock_windup_soldiers/l2/prompt.md)
+    license: project-owned
+    attribution: false
+    redistribute: true
+    evidence: docs/art-review/levels/review.md
+    modified: true
+    nativeSize: 1024x1024
+    finalSize: 65x68
+    anchor: feet
+    notes: Level 2 architecture of clock_windup_soldiers (P2, 2026-11-10), magenta keyed and reduced to the level-1 width by docs/art-review/levels/make_levels.py; approved by Claude under the owner's delegation
+  - id: building_clock_windup_soldiers_l3_iso
+    path: public/assets/art/ai-v1/iso/clock_windup_soldiers_l3.png
+    category: building
+    origin: custom
+    source: docs/art-review/levels/clock_windup_soldiers/l3/source.png
+    creator: Project owner (OpenAI imagegen via Codex; prompt in docs/art-review/levels/clock_windup_soldiers/l3/prompt.md)
+    license: project-owned
+    attribution: false
+    redistribute: true
+    evidence: docs/art-review/levels/review.md
+    modified: true
+    nativeSize: 1024x1024
+    finalSize: 65x77
+    anchor: feet
+    notes: Level 3 architecture of clock_windup_soldiers (P2, 2026-11-10), magenta keyed and reduced to the level-1 width by docs/art-review/levels/make_levels.py; approved by Claude under the owner's delegation

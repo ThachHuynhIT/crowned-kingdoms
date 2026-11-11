@@ -19,6 +19,21 @@ describe('selectReward', () => {
 });
 
 describe('canConfirmReward', () => {
+  it('merchant_selection_blocks_unaffordable_and_duplicate_submit', () => {
+    const disabled = [false, false, false];
+    const enabled = [true, true, true];
+    expect(selectReward(null, 0, 3, disabled)).toBeNull();
+    expect(selectReward(1, 0, 3, disabled)).toBe(1);
+    expect(selectReward(null, 0, 3, enabled)).toBe(0);
+    for (const index of [-1, 3, 0.5, Number.NaN]) {
+      expect(selectReward(1, index, 3, enabled)).toBe(1);
+    }
+    expect(canConfirmReward(0, 3, false, enabled)).toBe(true);
+    expect(canConfirmReward(0, 3, true, enabled)).toBe(false);
+    expect(canConfirmReward(0, 3, false, disabled)).toBe(false);
+    expect(canConfirmReward(0, 3, false, [])).toBe(false);
+  });
+
   it('needs a valid pick that has not been sent yet', () => {
     expect(canConfirmReward(null, 3, false)).toBe(false);
     expect(canConfirmReward(0, 3, false)).toBe(true);

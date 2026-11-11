@@ -20,10 +20,10 @@ export const BOSS_RULES = {
   },
   /** Nữ Hoàng Ong Bắp Cày. */
   hornet: {
-    swarmEveryTicks: 50, // Đàn Ong
+    swarmEveryTicks: 100, // Đàn Ong (10/11/2026: 50 → 100, quân cận chiến không đánh được ong bay)
     swarmCount: 4,
     landEveryTicks: 150, // Hạ Cánh
-    landTicks: 40,
+    landTicks: 70, // 10/11/2026: 40 → 70, để quân cận chiến có lúc đánh được boss
     landDmgTakenPct: 25, // nhận thêm sát thương khi đáp
   },
   /** Vua Không Ngai. */
@@ -32,7 +32,7 @@ export const BOSS_RULES = {
     mirrorAbovePct: 66,
     shieldBelowPct: 66, // Khiên Ngai Vỡ (33–66%)
     shieldAbovePct: 33,
-    shield: 3000,
+    shield: 1200, // 10/11/2026: 3000 hồi mỗi 100 tick không phá kịp → trận kẹt tới trần (giờ là thua)
     shieldWindowTicks: 100,
     rageBelowPct: 33, // Cuồng Vương
     rageSpeedPct: 50,

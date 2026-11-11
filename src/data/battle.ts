@@ -1,5 +1,6 @@
 /** Hằng số trận (spec §3.6, §7.4, §8.2); hình học ô 64 theo spec 06/11/2026. */
 import { BOARD_ORIGIN, FIELD, PLOT, PORTAL, WALL_Y, cells } from './boardGeometry';
+import type { KingId } from './types';
 
 /** Ngân sách gốc năm 1..30 = round(12 × 1.15^(y−1)), lưu sẵn để không phụ thuộc Math.pow. */
 export const ENEMY_BUDGET = [
@@ -25,7 +26,30 @@ export const ENEMY_LEVEL_STAT = [1, 1.45, 2.1, 3.05, 4.42] as const;
  * HP và sát thương của mọi lính địch nhân thêm hệ số này (cân bằng lại 2026-11-09 sau khi tầm tháp ×3, công trình
  * chặn đường và địch phải phá hết nhà: bot greedy Gai 0 thắng gần 100%; mục tiêu 35–65% mỗi vua).
  */
-export const ENEMY_STAT_MULT = 2.05;
+export const ENEMY_STAT_MULT = 2.15; // 2.05 → 2.15 (11/11/2026): Ngai bắn hết vùng đất, lính tập hợp nhanh
+/**
+ * Máu và sát thương của boss 1/2/3 lúc vào trận, nhân với số trong `BOSSES` (10/11/2026: hết giờ không
+ * còn là thắng, boss phải hạ được). Đo bằng `npm run balance`, xem docs/balance/2026-11-10-draw-one-balance.md.
+ */
+export const BOSS_HP_MULT = [0.9, 0.5, 0.24] as const; // chủ dự án 10/11/2026: boss hơi khó → −10%
+export const BOSS_DMG_MULT = [0.9, 0.58, 0.9] as const;
+/**
+ * Chỉnh sức phe mình theo vua (chủ dự án 10/11/2026, thay hệ số sức địch `FOE_MULT_BY_KING`): % cộng vào máu và sát
+ * thương của mọi công trình, Ngai và lính phe mình khi vào trận (`BattleWorld`, theo `setup.power`). Âm = yếu đi.
+ * Đo bằng `npm run balance`.
+ */
+export const KING_TUNING: Readonly<Record<KingId, { readonly hpPct: number; readonly dmgPct: number }>> = {
+  wheat: { hpPct: 2, dmgPct: 2 },
+  stone: { hpPct: -19, dmgPct: -19 },
+  arcane: { hpPct: -14, dmgPct: -14 },
+  grove: { hpPct: -8, dmgPct: -8 },
+  tide: { hpPct: 5, dmgPct: 5 },
+  forge: { hpPct: -20, dmgPct: -20 },
+  clock: { hpPct: 10, dmgPct: 10 },
+  moon: { hpPct: -4, dmgPct: -4 },
+  nomad: { hpPct: -6, dmgPct: -6 },
+};
+
 export const WAVES = { share: [0.4, 0.35, 0.25], spawnTick: [0, 120, 240] } as const;
 
 /** Hằng hình quạt 45° (cos 45° làm tròn xuống nên đúng 45° vẫn nằm trong quạt); không dùng Math.cos. */
@@ -47,6 +71,39 @@ export const INTERVENTION = {
   firstReadyTick: 30,
 } as const;
 
+/**
+ * Can Thiệp riêng của từng vua (chủ dự án 10/11/2026): cùng điểm rơi, hồi chiêu và sát thương gốc, thêm một hiệu ứng
+ * khi chạm đất. Mọi trường đều tuỳ chọn; vắng = như đá tảng gốc. `dmgPct` / `radiusPct` cộng vào % của sắc lệnh.
+ */
+export interface InterventionPower {
+  /** Tên hiển thị (tiếng Việt). */
+  readonly name: string;
+  /** Mô tả một dòng cho trợ giúp và tooltip. */
+  readonly text: string;
+  readonly dmgPct?: number;
+  readonly radiusPct?: number;
+  readonly knockbackMult?: number;
+  readonly slowPct?: number;
+  readonly slowTicks?: number;
+  readonly stunTicks?: number;
+  readonly burnDps?: number;
+  readonly burnTicks?: number;
+  readonly poisonDps?: number;
+  readonly poisonTicks?: number;
+}
+
+export const INTERVENTION_POWERS: Readonly<Record<KingId, InterventionPower>> = {
+  wheat: { name: 'Bó Lúa Trói Chân', text: 'Địch trúng chậm 40% trong 4 giây.', slowPct: 40, slowTicks: 40 },
+  stone: { name: 'Đá Tảng Núi', text: 'Địch trúng choáng 1 giây.', stunTicks: 10 },
+  arcane: { name: 'Sét Phép', text: '+30% sát thương.', dmgPct: 30 },
+  grove: { name: 'Rễ Quấn', text: 'Rễ cây giữ chân: địch trúng chậm 60% (mức trần) trong 2,5 giây.', slowPct: 60, slowTicks: 25 },
+  tide: { name: 'Sóng Thần', text: 'Đẩy lùi địch xa gấp đôi.', knockbackMult: 2 },
+  forge: { name: 'Thép Nung', text: 'Địch trúng bị bỏng 8/giây trong 4 giây.', burnDps: 8, burnTicks: 40 },
+  clock: { name: 'Ngưng Thời Gian', text: 'Địch trúng choáng 1,8 giây; −10% sát thương.', stunTicks: 18, dmgPct: -10 },
+  moon: { name: 'Lời Nguyền Trăng', text: 'Địch trúng nhiễm độc 6/giây trong 5 giây.', poisonDps: 6, poisonTicks: 50 },
+  nomad: { name: 'Mưa Tên', text: 'Vùng rơi rộng thêm 35%; −15% sát thương.', radiusPct: 35, dmgPct: -15 },
+};
+
 export const BATTLE = {
   field: FIELD,
   plot: PLOT,
@@ -58,7 +115,12 @@ export const BATTLE = {
   tauntRadiusDefault: cells(1.25),
   flyingHitMinRange: 24, // đòn có tầm ≥ 24 (và tháp, pulse, can thiệp) mới đánh được đơn vị bay
   rageTick: 600,
-  hardLimitTick: 900,
+  /** Trần an toàn (chủ dự án 10/11/2026): tới tick này trận chưa xong thì tính THUA; hết giờ không còn là thắng. */
+  hardLimitTick: 3000,
+  /** Từ rageTick, cứ chừng này tick địch thêm một bậc Cuồng Nộ (bậc 1 ngay ở rageTick). */
+  rageStackTicks: 600,
+  /** Mỗi bậc Cuồng Nộ: mọi đòn của địch +% này, cộng dồn. */
+  rageStackDmgPct: 20,
   rageSpeedPct: 50,
   /** Cuồng Nộ: đòn của địch vào công trình (không phải Ngai) thêm % này — địch vẫn phải phá hết nhà trước (2026-11-09). */
   rageStructureDmgPct: 100,
@@ -93,6 +155,8 @@ export const BATTLE = {
   /** Trần đẩy giữa hai đơn vị khác phe: địch chen vào chỉ nhích lính ra, không hất văng. */
   separationPushCross: 0.4,
   knockbackTicks: 3,
+  /** Lính phe mình chạy ra ô đội hình lần đầu nhanh gấp này; tới ô (hoặc gặp địch) thì về tốc độ thường (chủ dự án 11/11/2026). */
+  rallySpeedMult: 2.5,
   maxSlowPct: 60,
   bossStunFactor: 0.5,
   spatialCell: PLOT,

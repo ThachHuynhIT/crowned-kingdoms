@@ -1,25 +1,17 @@
 import { describe, expect, it } from 'vitest';
-import { RULES_G1, RULES_G2 } from '../../data/rules';
+import { RULES_ENDLESS, RULES_FULL } from '../../data/rules';
 import { runState } from '../../game/testing/fixtures';
-import { canFight } from './fightRule';
+import { canFight, planningHint } from './fightRule';
 
-describe('canFight', () => {
-  it('shows Ra trận once the year action is done (manual start)', () => {
-    expect(canFight(runState({ rules: RULES_G2, played: true }))).toBe(true);
+describe('fight rule (owner 2026-11-10: the battle starts by itself)', () => {
+  it('never shows a Ra trận button', () => {
+    expect(canFight(runState({ rules: RULES_FULL, hand: [] }))).toBe(false);
+    expect(canFight(runState({ rules: RULES_FULL, hand: ['wheat_militia', 'wheat_field'] }))).toBe(false);
   });
 
-  it('does not cover a hand the player can still act on', () => {
-    const s = runState({ rules: RULES_G2, played: false });
-    expect(s.hand.length).toBeGreaterThan(0);
-    expect(canFight(s)).toBe(false); // even when no card is playable: it can still be sold
-  });
-
-  it('shows Ra trận when the hand is empty and nothing was played', () => {
-    expect(canFight(runState({ rules: RULES_G2, played: false, hand: [] }))).toBe(true);
-  });
-
-  it('never shows it when battles start automatically, or outside planning', () => {
-    expect(canFight(runState({ rules: RULES_G1, played: true }))).toBe(false);
-    expect(canFight(runState({ rules: RULES_G2, played: true, phase: 'battle' }))).toBe(false);
+  it('planning_hint_uses_final_target: two cards, or none in the last year of a 30-year run', () => {
+    expect(planningHint(runState({ rules: RULES_FULL, year: 12 }))).toContain('còn 2 lá');
+    expect(planningHint(runState({ rules: RULES_FULL, year: 30 }))).toContain('hết bài');
+    expect(planningHint(runState({ rules: RULES_ENDLESS, year: 30, mode: 'endless' }))).toContain('còn 2 lá');
   });
 });

@@ -17,30 +17,30 @@ const hit = (w: BattleWorld, raw: number): void => {
 };
 
 describe('Nữ Hoàng Ong: Đàn Ong', () => {
-  it('summons 4 hornets at tick 170 (boss age 50) and every 50 ticks after', () => {
+  it('summons 4 hornets at tick 220 (boss age 100) and every 100 ticks after (2026-11-10: was 50)', () => {
     const w = bossWorld(2);
-    for (const t of [120, 169]) at(w, t);
+    for (const t of [120, 219]) at(w, t);
     expect(hornets(w)).toBe(0);
-    at(w, 170);
-    expect(hornets(w)).toBe(4);
-    at(w, 171);
-    at(w, 219);
-    expect(hornets(w)).toBe(4);
     at(w, 220);
+    expect(hornets(w)).toBe(4);
+    at(w, 221);
+    at(w, 319);
+    expect(hornets(w)).toBe(4);
+    at(w, 320);
     expect(hornets(w)).toBe(8);
     expect(w.bossSummonsAlive).toBe(8);
   });
 
   it('never exceeds 40 living summons, frees room as they die, and never reuses ids', () => {
     const w = bossWorld(2);
-    for (let swarm = 1; swarm <= 12; swarm++) at(w, 120 + swarm * 50);
+    for (let swarm = 1; swarm <= 12; swarm++) at(w, 120 + swarm * 100);
     expect(hornets(w)).toBe(40);
     expect(w.bossSummonsAlive).toBe(40);
     const before = w.count;
     for (let i = 0; i < w.count; i++) if (w.label[i] === 'hornet' && w.alive[i] === 1) w.hp[i] = 0;
     deathPhase(w);
     expect(w.bossSummonsAlive).toBe(0);
-    at(w, 120 + 13 * 50);
+    at(w, 120 + 13 * 100);
     expect(hornets(w)).toBe(4);
     expect(w.count).toBe(before + 4);
   });
@@ -54,7 +54,7 @@ describe('Nữ Hoàng Ong: Đàn Ong', () => {
 });
 
 describe('Nữ Hoàng Ong: Hạ Cánh', () => {
-  it('lands at 270 (age 150) until 310, flies again, lands again at 420', () => {
+  it('lands at 270 (age 150) until 340 (2026-11-10: 70 ticks, was 40), flies again, lands again at 420', () => {
     const w = bossWorld(2);
     const state = (t: number): [boolean, number] => {
       at(w, t);
@@ -62,11 +62,11 @@ describe('Nữ Hoàng Ong: Hạ Cánh', () => {
     };
     expect(state(269)).toEqual([false, 1]);
     expect(state(270)).toEqual([true, 0]);
-    expect(state(309)).toEqual([true, 0]);
-    expect(state(310)).toEqual([false, 1]);
+    expect(state(339)).toEqual([true, 0]);
+    expect(state(340)).toEqual([false, 1]);
     expect(state(419)).toEqual([false, 1]);
     expect(state(420)).toEqual([true, 0]);
-    expect(state(460)).toEqual([false, 1]);
+    expect(state(490)).toEqual([false, 1]);
   });
 
   it('only a long-range or tower attack can hit her in the air; a melee unit hits only while she is down', () => {
@@ -81,7 +81,7 @@ describe('Nữ Hoàng Ong: Hạ Cánh', () => {
     expect(inRange(w, 1, w.bossId)).toBe(true); // the tower
     at(w, 270);
     expect(inRange(w, melee, w.bossId)).toBe(true);
-    at(w, 310);
+    at(w, 340);
     expect(inRange(w, melee, w.bossId)).toBe(false);
   });
 
@@ -99,7 +99,7 @@ describe('Nữ Hoàng Ong: Hạ Cánh', () => {
     };
     expect(shots(200)).toBe(1);
     expect(shots(280)).toBe(0);
-    expect(shots(311)).toBe(1);
+    expect(shots(341)).toBe(1);
   });
 
   it('takes +25% damage while down, per hit, and never stacks when the tick repeats', () => {
@@ -117,7 +117,7 @@ describe('Nữ Hoàng Ong: Hạ Cánh', () => {
     at(w, 280);
     expect(lost(100)).toBeCloseTo(90 * 1.25);
     expect(lost(100)).toBeCloseTo(90 * 1.25);
-    at(w, 310);
+    at(w, 340);
     expect(lost(100)).toBeCloseTo(90);
   });
 });

@@ -170,7 +170,7 @@ describe('Wheat King (spec §6.3)', () => {
     );
     expect(byRarity('rare').sort()).toEqual(['wheat_granary', 'wheat_peasant_horde'].sort());
     for (const c of wheat.cards) expect(c.id.startsWith('wheat_')).toBe(true);
-    expect(wheat.throne).toMatchObject({ hp: 1100, armor: 0 });
+    expect(wheat.throne).toMatchObject({ hp: 1300, armor: 0 });
     expect(wheat.throne.attack).toMatchObject({ dmg: 8, range: 108, interval: 10, projectileSpeed: 8 * SPEC_MOVE_SCALE }); // 72 × 1,5
   });
 
@@ -265,7 +265,7 @@ describe('Stone King (spec §6.4)', () => {
     expect(ids('uncommon')).toEqual(['stone_wall', 'stone_crystal', 'stone_miners'].sort());
     expect(ids('rare')).toEqual(['stone_rune_carving', 'stone_mountain_heart'].sort());
     for (const c of stone.cards) expect(c.id.startsWith('stone_')).toBe(true);
-    expect(stone.throne).toMatchObject({ id: 'stone_throne', hp: 115, armor: 0.2 });
+    expect(stone.throne).toMatchObject({ id: 'stone_throne', hp: 90, armor: 0.2 });
     expect(stone.throne.attack).toMatchObject({ dmg: 12, type: 'physical', range: 84, interval: 14, projectileSpeed: 6 * SPEC_MOVE_SCALE }); // 56 × 1,5
   });
 
@@ -421,7 +421,7 @@ describe('Arcane King (spec §6.5)', () => {
     expect(ids('uncommon')).toEqual(['arcane_library', 'arcane_frost_mages', 'arcane_mirror'].sort());
     expect(ids('rare')).toEqual(['arcane_ward', 'arcane_archmage'].sort());
     for (const c of arcane.cards) expect(c.id.startsWith('arcane_')).toBe(true);
-    expect(arcane.throne).toMatchObject({ id: 'arcane_throne', hp: 450, armor: 0 });
+    expect(arcane.throne).toMatchObject({ id: 'arcane_throne', hp: 400, armor: 0 });
     expect(arcane.throne.attack).toMatchObject({ dmg: 10, type: 'magic', range: 120, interval: 12, projectileSpeed: 8 * SPEC_MOVE_SCALE }); // 80 × 1,5
   });
 

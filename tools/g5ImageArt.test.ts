@@ -48,9 +48,9 @@ describe('G5 isometric king sets', () => {
 });
 
 describe('card illustrations', () => {
-  it('every wired card picture exists in both sizes and is in the asset manifest', async () => {
+  it('every wired card picture exists in all three sizes and is in the asset manifest', async () => {
     const { CARD_ART_FILES } = await import('../src/ui/cards/cardImage');
-    expect(CARD_ART_FILES.length).toBe(2 * 102); // every card of the registry
+    expect(CARD_ART_FILES.length).toBe(3 * 102); // every card of the registry
     for (const f of CARD_ART_FILES) {
       const path = `public/${f.url}`;
       expect(existsSync(path), path).toBe(true);

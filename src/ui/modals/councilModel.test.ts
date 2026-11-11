@@ -1,5 +1,6 @@
 import { describe, expect, it } from 'vitest';
 import type { DecreeId, QuestId } from '../../data/types';
+import { RUN } from '../../data/run';
 import { CONTENT } from '../../game/cards/registry';
 import type { CouncilSelection, OfferState, RunState } from '../../game/run/state';
 import { runState } from '../../game/testing/fixtures';
@@ -123,7 +124,7 @@ describe('purge decree (0 to 2 cards)', () => {
 
   it('does not let the deck fall under the hand size', () => {
     const base = council('decree_purge');
-    const s = { ...base, deck: base.deck.slice(0, 4) };
+    const s = { ...base, deck: base.deck.slice(0, RUN.handSize + 1) };
     const one = toggleSubselection(s, CONTENT, { deckIndex: 0 });
     expect(one.deckIndices).toEqual([0]);
     expect(toggleSubselection(council('decree_purge', one, { deck: s.deck }), CONTENT, { deckIndex: 1 }).deckIndices).toEqual([0]);

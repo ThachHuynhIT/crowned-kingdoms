@@ -1,3 +1,4 @@
+import { KING_TUNING } from '../../data/battle';
 import { SPEC_MOVE_SCALE } from '../../data/boardGeometry';
 import { describe, expect, it } from 'vitest';
 import { PULSE_RADIUS_BONUS, TOWER_RANGE, TOWER_SHOT_DMG_MULT, TOWER_STD } from '../../data/scaling';
@@ -137,13 +138,15 @@ describe('the nine Tide King cards (spec 6.7)', () => {
 
     it('hits and shoves a foe in range on the pulse tick, and leaves far ones alone', () => {
       const w = createBattle(setupOf(withBuilding(runState(), 6, 'tide_wave_tower', 1)));
+      w.dmg[w.throneId] = 0; // the throne now reaches the whole board (11/11/2026): keep only the pulse on the foe
       const t = structureFoot(6);
       const near = addUnit(w, unitStats({ hp: 100, speed: 0, dmg: 0, interval: 0 }), TEAM_FOE, t.x - 60, t.y - 10, t.x - 60, t.y - 10, -1);
       const far = addUnit(w, unitStats({ hp: 100, speed: 0, dmg: 0, interval: 0 }), TEAM_FOE, 740, 740, 740, 740, -1);
       for (let i = 0; i < 50; i++) stepBattle(w, []);
       expect(w.hp[near]).toBe(100);
       stepBattle(w, []); // tick 50
-      expect(w.hp[near]).toBe(90);
+      // the pulse carries the player king's KING_TUNING (runState is the Wheat king)
+      expect(w.hp[near]).toBeCloseTo(100 - 10 * (1 + KING_TUNING.wheat.dmgPct / 100));
       expect(w.kbTicks[near]).toBeGreaterThan(0);
       expect(Math.sqrt(w.kbX[near]! * w.kbX[near]! + w.kbY[near]! * w.kbY[near]!) * 3).toBeCloseTo(24 * SPEC_MOVE_SCALE);
       expect(w.kbX[near]).toBeLessThan(0); // shoved west, away from the tower

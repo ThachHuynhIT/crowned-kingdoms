@@ -8,7 +8,9 @@
  * splash): a stated limit of the heuristic, not something the rules bend to. It never plays a card that costs a life
  * (lives are not power; without this rule it spent every life on Eclipse Pact and Moon won 2.8%).
  */
-import { GREEDY_MAX_REROLLS } from '../../../data/balance';
+import { canStartBattle } from '../../run/turn';
+import { GREEDY_MAX_REROLLS, GREEDY_MAX_SHOP_PURCHASES, GREEDY_SHOP_RESERVE } from '../../../data/balance';
+import { buyCardIllegal, shopPrice } from '../../run/shop';
 import { ENDLESS_BLESSINGS } from '../../../data/endless';
 import { unlockCost } from '../../../data/run';
 import type { CardDef, CardId } from '../../../data/types';
@@ -128,13 +130,21 @@ const legal = (state: RunState, command: RunCommand, content: Content): boolean 
 
 const planning = (state: RunState, content: Content): RunCommand => {
   if (!state.autoFire) return { type: 'setAutoFire', on: true };
-  if (state.played) return { type: 'startBattle' };
+  // The battle starts by itself at the hand target (10/11/2026): mirror that so bot-driven loops match headless.
+  if (canStartBattle(state)) return { type: 'startBattle' };
   const move = bestFreeMove(state, content);
   if (move !== null) return move.command;
   const play = bestPlay(state, content);
   if (play !== null) return play.command;
   const buy = enablingPlot(state, content);
   if (buy !== null) return buy;
+  // Nothing worth playing: buy a card (bounded per year, a gold reserve kept), then try to play it.
+  if (
+    state.shopPurchasesThisYear < GREEDY_MAX_SHOP_PURCHASES &&
+    buyCardIllegal(state, content) === null &&
+    state.gold - shopPrice(state) >= GREEDY_SHOP_RESERVE
+  )
+    return { type: 'buyCard' };
   const reroll: RunCommand = { type: 'reroll' };
   if (
     state.rerollsThisYear < GREEDY_MAX_REROLLS &&
@@ -142,10 +152,9 @@ const planning = (state: RunState, content: Content): RunCommand => {
     legal(state, reroll, content)
   )
     return reroll;
-  const start: RunCommand = { type: 'startBattle' };
-  if (state.hand.length > 0 && !legal(state, start, content))
-    return { type: 'discard', handIndex: 0 };
-  return start;
+  // Nothing worth playing: sell down to the battle hand (owner 2026-11-10), then fight.
+  if (!canStartBattle(state)) return { type: 'discard', handIndex: 0 };
+  return { type: 'startBattle' };
 };
 
 /** Value of taking `cardId` now: the best play gain it would have on the current board (0 when unplayable). */
@@ -164,6 +173,21 @@ const offerValue = (state: RunState, content: Content, cardId: CardId): number =
 const pick = (state: RunState, content: Content): RunCommand => {
   const offer = cardOffer(state);
   const ids = offer?.cardIds ?? [];
+  // Thương nhân: mua lá giá trị cao nhất nếu sau khi trả vẫn còn GREEDY_SHOP_RESERVE vàng, không thì bỏ qua.
+  if (offer?.kind === 'merchant') {
+    const price = offer.price ?? 0;
+    if (ids.length === 0 || state.gold - price < GREEDY_SHOP_RESERVE) return { type: 'pickOffer', index: null };
+    let bestAt = 0;
+    let bestValue = offerValue(state, content, ids[0]!);
+    for (let i = 1; i < ids.length; i++) {
+      const value = offerValue(state, content, ids[i]!);
+      if (value > bestValue) {
+        bestAt = i;
+        bestValue = value;
+      }
+    }
+    return { type: 'pickOffer', index: bestAt };
+  }
   if (ids.length === 0)
     return {
       type: 'pickOffer',

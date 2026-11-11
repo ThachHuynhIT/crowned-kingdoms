@@ -246,12 +246,13 @@ describe('academy', () => {
 describe('purge_duplicates', () => {
   const M = 'wheat_militia' as CardId;
   const S = 'wheat_scarecrow' as CardId;
+  const C = 'neutral_clear_land' as CardId;
   const deckState = (): RunState =>
     council(['decree_purge', 'decree_moat', 'decree_trade'], {
-      deck: [M, M, S, 'neutral_move' as CardId, 'neutral_barracks' as CardId],
+      deck: [M, M, S, 'neutral_move' as CardId, 'neutral_barracks' as CardId, C, C],
       hand: [M],
       drawPile: [S, M],
-      discardPile: ['neutral_move' as CardId, 'neutral_barracks' as CardId],
+      discardPile: ['neutral_move' as CardId, 'neutral_barracks' as CardId, C, C],
     });
 
   it('removes exactly the two chosen copies, hand first then draw pile; the rest stays', () => {
@@ -259,17 +260,17 @@ describe('purge_duplicates', () => {
     const picked = run(s, { type: 'setCouncilSelection', selection: { ...EMPTY, deckIndices: [1, 0] } });
     expect(offerOf(picked).selection.deckIndices).toEqual([0, 1]); // normalised
     const next = run(picked, { type: 'enactDecree' });
-    expect(next.deck).toEqual([S, 'neutral_move', 'neutral_barracks']);
+    expect(next.deck).toEqual([S, 'neutral_move', 'neutral_barracks', C, C]);
     expect(next.hand).toEqual([]);
     expect(next.drawPile).toEqual([S]);
-    expect(next.discardPile).toEqual(['neutral_move', 'neutral_barracks']);
+    expect(next.discardPile).toEqual(['neutral_move', 'neutral_barracks', C, C]);
     expect([...next.hand, ...next.drawPile, ...next.discardPile].sort()).toEqual([...next.deck].sort());
   });
 
   it('removes only one copy when one is chosen, and zero is legal', () => {
     const s = run(deckState(), { type: 'chooseDecree', index: 0 });
     const one = run(run(s, { type: 'setCouncilSelection', selection: { ...EMPTY, deckIndices: [2] } }), { type: 'enactDecree' });
-    expect(one.deck).toHaveLength(4);
+    expect(one.deck).toHaveLength(6);
     expect(one.deck.filter((c) => c === M)).toHaveLength(2);
     expect(one.deck.filter((c) => c === S)).toHaveLength(0);
     const none = run(s, { type: 'enactDecree' });
@@ -277,21 +278,22 @@ describe('purge_duplicates', () => {
     expect(none.decrees).toEqual(['decree_purge']);
   });
 
-  it('refuses bad indices, more than two, and leaving fewer than 3 cards', () => {
+  it('refuses bad indices, more than two, and leaving fewer than RUN.handSize cards', () => {
     const s = run(deckState(), { type: 'chooseDecree', index: 0 });
-    for (const deckIndices of [[0, 0], [5], [-1], [0, 1, 2], [0.5]]) {
+    for (const deckIndices of [[0, 0], [7], [-1], [0, 1, 2], [0.5]]) {
       expect(setCouncilSelection(s, { ...EMPTY, deckIndices }, CONTENT), JSON.stringify(deckIndices)).toBe('badTarget');
     }
     const small = run(
       council(['decree_purge', 'decree_moat', 'decree_trade'], {
-        deck: [M, S, 'neutral_move' as CardId, 'neutral_barracks' as CardId],
+        deck: [M, S, 'neutral_move' as CardId, 'neutral_barracks' as CardId, C, C],
         hand: [M],
         drawPile: [S],
-        discardPile: ['neutral_move' as CardId, 'neutral_barracks' as CardId],
+        discardPile: ['neutral_move' as CardId, 'neutral_barracks' as CardId, C, C],
       }),
       { type: 'chooseDecree', index: 0 },
     );
-    expect(setCouncilSelection(small, { ...EMPTY, deckIndices: [0, 1] }, CONTENT)).toBe('badTarget'); // would leave 2
+    expect(small.deck).toHaveLength(RUN.handSize + 1);
+    expect(setCouncilSelection(small, { ...EMPTY, deckIndices: [0, 1] }, CONTENT)).toBe('badTarget'); // would leave handSize - 1
     expect(setCouncilSelection(small, { ...EMPTY, deckIndices: [0] }, CONTENT)).not.toBe('badTarget');
   });
 });

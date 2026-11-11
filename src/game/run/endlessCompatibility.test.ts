@@ -1,7 +1,7 @@
 /**
  * Baseline của chế độ thường trước Endless (spec 2026-11-09 §8, plan E1 Task 1 Step 1). Các literal dưới
  * đây ghi lần đầu trên commit 43ad681 TRƯỚC khi sửa mã Endless, rồi ghi lại trên commit 3652e5a (cân bằng G5 `75a1448`:
- * 2 mạng, máu Ngai mới; vẫn KHÔNG có mã Endless) khi gộp `endless-e1` vào G5, rồi ghi lại khi đổi luật trận (2026-11-09, nhánh `battle-field-rework`: địch phá hết công trình rồi mới tới Ngai, rồi tầm tháp ×3, rồi công trình chặn đường + đội hình + giới hạn đi xa, rồi cổng xa 1,5 lần, rồi cân bằng lại `docs/balance/2026-11-09-battle-rework-balance.md`; vẫn KHÔNG có mã Endless); không được ghi lại để test xanh. Nếu dữ liệu cân bằng thay đổi có chủ
+ * 2 mạng, máu Ngai mới; vẫn KHÔNG có mã Endless) khi gộp `endless-e1` vào G5, rồi ghi lại khi đổi luật trận (2026-11-09, nhánh `battle-field-rework`: địch phá hết công trình rồi mới tới Ngai, rồi tầm tháp ×3, rồi công trình chặn đường + đội hình + giới hạn đi xa, rồi cổng xa 1,5 lần, rồi cân bằng lại `docs/balance/2026-11-09-battle-rework-balance.md`; vẫn KHÔNG có mã Endless), rồi ghi lại khi đổi luật lượt và độ dài trận (2026-11-10, spec `2026-11-10-hand-and-battle-length-design.md`: tay 5 lá, chơi/bán nhiều lá rồi Ra trận khi tay ≤ 2, hết giờ là thua ở tick 3000, Cuồng Nộ cộng dồn; bot chơi nhiều lá; vẫn KHÔNG có mã Endless), rồi ghi lại khi đổi luật rút bài (2026-11-10, spec `2026-11-10-draw-one-and-shop-design.md` §3: năm 1 rút 5 lá, từ năm 2 giữ bài và rút thêm 1 lá (2 lá ở năm hội đồng và năm sau boss), không còn đổi tay hết lá chơi được, Đổi bài rút lại đúng số lá đang cầm, trận tự bắt đầu khi tay ≤ 2 (0 ở năm 30), cùng Mua thẻ; số đo bằng `trace()` dưới đây, vẫn KHÔNG có mã Endless), rồi re-recorded 2026-11-10 for the draw-one balance retune (ENEMY_STAT_MULT 1,75, BOSS_HP_MULT/BOSS_DMG_MULT, Cuồng Nộ 600 tick × 20%, khiên Vua Không Ngai 1200, máu Ngai mới; số đo bằng `trace()`, vẫn KHÔNG có mã Endless), rồi ghi lại lần nữa sáng 10/11/2026 (đàn ong mỗi 100 tick, boss đáp 70 tick, ENEMY_STAT_MULT 2,05, BOSS_HP_MULT [1; 0,55; 0,27], hệ số địch theo vua FOE_MULT_BY_KING; số đo bằng `trace()`, vẫn KHÔNG có mã Endless), rồi ghi lại tối 10/11/2026 (Can Thiệp riêng từng vua `setup.power`, `KING_TUNING` thay `FOE_MULT_BY_KING`, boss −10%; số đo bằng `trace()`, vẫn KHÔNG có mã Endless), rồi ghi lại 11/11/2026 (lính tập hợp nhanh `rallySpeedMult`, Ngai bắn hết vùng đất `throneLandRange`, ENEMY_STAT_MULT 2,15, chỉnh `KING_TUNING`; số đo bằng `trace()`, vẫn KHÔNG có mã Endless); không được ghi lại để test xanh. Nếu dữ liệu cân bằng thay đổi có chủ
  * đích (thuế, mạng, máu Ngai…), ghi lại baseline ở một commit riêng KHÔNG chứa thay đổi Endless.
  *
  * Gameplay projection bỏ đúng các trường schema mới của RunState v7 (`version`, `mode`, `endless`,
@@ -54,9 +54,9 @@ function trace(seed: number, kingId: KingId): Trace {
 }
 
 const BASELINE: Record<string, Trace> = {
-  'wheat:1': { commands: 13, commandHash: 1581954539, setupHash: 3562917155, stateHash: 952251615 },
-  'stone:2': { commands: 40, commandHash: 2034665688, setupHash: 4019163375, stateHash: 173118232 },
-  'arcane:3': { commands: 20, commandHash: 435318769, setupHash: 701781265, stateHash: 1112322572 },
+  'wheat:1': { commands: 23, commandHash: 2280636053, setupHash: 991966174, stateHash: 3665192030 },
+  'stone:2': { commands: 9, commandHash: 359010026, setupHash: 1818363658, stateHash: 212073804 },
+  'arcane:3': { commands: 39, commandHash: 4233979727, setupHash: 3494787253, stateHash: 1074085803 },
 };
 
 describe('normal 30-year baseline is unchanged by Endless', () => {

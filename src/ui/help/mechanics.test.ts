@@ -1,4 +1,5 @@
 import { afterEach, describe, expect, it, vi } from 'vitest';
+import { TICKS_PER_SECOND } from '../../core/SimClock';
 import { BATTLE } from '../../data/battle';
 import { RUN } from '../../data/run';
 import { CONTENT } from '../../game/cards/registry';
@@ -15,6 +16,16 @@ const text = (entries: readonly { title: string; lines: readonly string[] }[]): 
 describe('mechanicEntries', () => {
   const entries = mechanicEntries(CONTENT);
   const all = text(entries);
+
+  it('explains the merchant from the data: years, price, one card at most, a free skip', () => {
+    const merchant = entries.find((e) => e.title === 'Thương nhân');
+    expect(merchant).toBeDefined();
+    const lines = merchant!.lines.join(' ');
+    expect(lines).toContain(RUN.merchantYears.join(', '));
+    expect(lines).toContain(`${RUN.merchantPrice} vàng`);
+    expect(lines).toContain('tối đa 1');
+    expect(lines).toContain('miễn phí');
+  });
 
   it('covers every mandatory mechanic', () => {
     const titles = entries.map((e) => e.title).join('|');
@@ -39,7 +50,8 @@ describe('mechanicEntries', () => {
     expect(all).toContain(RUN.councilYears.join(', '));
     expect(all).toContain(RUN.questYears.join(', '));
     expect(all).toContain(RUN.bossYears.join(', '));
-    expect(all).toContain(`${BATTLE.hardLimitTick} tick`);
+    expect(all).toContain(`${BATTLE.hardLimitTick / TICKS_PER_SECOND} giây`);
+    expect(all).toContain(`${BATTLE.rageStackDmgPct}%`);
   });
 
   it('southern_attack: says enemies come only from the front and the north wall has no way through', () => {

@@ -41,15 +41,15 @@ describe('the three bosses (spec 7.3)', () => {
       frogCount: 10,
     });
     expect(BOSS_RULES.hornet).toEqual({
-      swarmEveryTicks: 50,
+      swarmEveryTicks: 100,
       swarmCount: 4,
       landEveryTicks: 150,
-      landTicks: 40,
+      landTicks: 70,
       landDmgTakenPct: 25,
     });
     expect(BOSS_RULES.crownless).toMatchObject({
       mirrorEveryTicks: 100,
-      shield: 3000,
+      shield: 1200,
       shieldWindowTicks: 100,
       rageSpeedPct: 50,
       rageAttackSpeedPct: 50,

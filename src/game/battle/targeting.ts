@@ -80,6 +80,10 @@ export const inRange = (world: BattleWorld, attacker: number, victim: number): b
 /** Cuồng Nộ (§8.8): từ rageTick trở đi. */
 export const isRage = (world: BattleWorld): boolean => world.tick >= world.rageTick;
 
+/** Bậc Cuồng Nộ (10/11/2026): 0 trước rageTick, rồi 1 + một bậc mỗi `BATTLE.rageStackTicks` tick. */
+export const rageStacks = (world: Pick<BattleWorld, 'tick' | 'rageTick'>): number =>
+  world.tick < world.rageTick ? 0 : 1 + Math.floor((world.tick - world.rageTick) / BATTLE.rageStackTicks);
+
 /** Lính phe mình: địch còn sống gần nhất (so bình phương khoảng cách tâm), −1 nếu không còn. */
 const nearestFoe = (w: BattleWorld, self: number): number => {
   const sx = w.x[self]!;

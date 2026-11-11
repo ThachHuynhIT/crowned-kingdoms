@@ -17,7 +17,8 @@ describe('G2 run constants and formulas (spec §3.1)', () => {
       maxLives: 4,
       startGold: 5,
       taxPerYear: 3,
-      handSize: 3,
+      handSize: 5,
+      battleHandMax: 2,
       skipPlayGold: 2,
       skipRewardGold: 3,
       conquestGold: 5,
@@ -50,7 +51,7 @@ describe('run constants', () => {
   it('has G1 rules and run basics', () => {
     expect(RULES_G1.years).toBe(10);
     expect(RUN.startLives).toBe(2);
-    expect(RUN.handSize).toBe(3);
+    expect(RUN.handSize).toBe(5);
     expect(REWARD.choices).toBe(3);
   });
 

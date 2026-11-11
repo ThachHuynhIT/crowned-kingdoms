@@ -3,6 +3,8 @@ import {
   message, groupOptions, sizeText, context2d, queryAll, requireAt, download, errorText,
 } from './common';
 import type { Item, PlannedItem, Team, Animation } from './types';
+import { CODE_FX } from '../../../src/render/codeFx';
+import type { CodeFxDef } from '../../../src/render/codeFx';
 
 interface Player {
   item: Item;
@@ -23,7 +25,8 @@ interface Detail {
   canvas: HTMLCanvasElement;
 }
 
-type CatalogueEntry = { state: 'available'; item: Item } | { state: 'missing'; item: PlannedItem };
+type CatalogueEntry = { state: 'available'; item: Item } | { state: 'missing'; item: PlannedItem }
+  | { state: 'code'; item: PlannedItem; def: CodeFxDef };
 interface CatalogueCategory { id: string; label: string; items: CatalogueEntry[] }
 const [manifest, planned] = await Promise.all([loadManifest(), loadPlanned()]);
 const categoryLabels: Record<string, string> = {
@@ -33,25 +36,31 @@ const categoryLabels: Record<string, string> = {
   menu: 'Nền menu và minh hoạ', release: 'Hình phát hành',
 };
 const availableIds = new Set(manifest.items.map((item) => item.id));
+const codeById = new Map<string, CodeFxDef>();
+for (const def of CODE_FX) for (const id of def.covers ?? []) codeById.set(id, def);
 // Manifest sinh lại có thể đã bổ sung ảnh sau lần sinh planned gần nhất.
-const missing = planned.items.filter((item) => !availableIds.has(item.id));
+const missing = planned.items.filter((item) => !availableIds.has(item.id) && !codeById.has(item.id));
 const categories: CatalogueCategory[] = manifest.categories.map((entry) => ({
   id: entry.id, label: entry.label,
-  items: entry.items.map<CatalogueEntry>((item) => ({ state: 'available', item })),
+  items: entry.items.map<CatalogueEntry>((item) => {
+    const def = codeById.get(item.id), plan = planned.items.find((entry) => entry.id === item.id);
+    return def && plan ? { state: 'code', item: plan, def } : { state: 'available', item };
+  }),
 }));
-for (const item of missing) {
+for (const item of planned.items.filter((entry) => !availableIds.has(entry.id))) {
   let target = categories.find((entry) => entry.id === item.category);
   if (!target) {
     target = { id: item.category, label: categoryLabels[item.category] || `Danh mục ${item.category}`, items: [] };
     categories.push(target);
   }
-  target.items.push({ state: 'missing', item });
+  const def = codeById.get(item.id);
+  target.items.push(def ? { state: 'code', item, def } : { state: 'missing', item });
 }
 const allEntries = categories.flatMap((entry) => entry.items);
 let category: CatalogueEntry[] = [], players: Player[] = [], detail: Detail | null = null;
 let currentCategory = 'all';
 $('load-status', HTMLElement).textContent = [manifest.error, planned.error].filter(Boolean).join(' ');
-$('summary', HTMLElement).textContent = `Tổng toàn bộ: đã có ${manifest.items.length} / cần ${allEntries.length} · còn thiếu ${missing.length}`;
+$('summary', HTMLElement).textContent = `Tổng toàn bộ: đã có ${allEntries.length - missing.length} / cần ${allEntries.length} · còn thiếu ${missing.length}`;
 const exportUnavailable = Boolean(manifest.error || planned.error);
 $('copy-missing', HTMLButtonElement).disabled = exportUnavailable;
 $('download-missing', HTMLButtonElement).disabled = exportUnavailable;
@@ -86,13 +95,24 @@ function missingCard(item: PlannedItem): HTMLElement {
   card.onkeydown = (event) => { if (event.target === card && event.key === 'Enter') showMissingDetail(item); };
   return card;
 }
+function codeCard(item: PlannedItem, def: CodeFxDef): HTMLElement {
+  const card = el('article', undefined, 'card'), stage = el('div', undefined, 'stage');
+  const pixels = def.paint(0), canvas = el('canvas');
+  canvas.width = pixels.width; canvas.height = pixels.height;
+  canvas.style.width = `${pixels.width * 4}px`; canvas.style.height = `${pixels.height * 4}px`;
+  context2d(canvas).putImageData(new ImageData(pixels.data, pixels.width, pixels.height), 0, 0);
+  canvas.setAttribute('aria-label', def.label); stage.append(canvas);
+  const link = el('a', 'Xem hiệu ứng →'); link.href = `/admin/fx#${def.id}`;
+  card.append(stage, el('h3', item.label), el('code', item.id), el('strong', 'Vẽ bằng code'), link);
+  return card;
+}
 function renderTabs(): void {
   try { currentCategory = decodeURIComponent(location.hash.slice(1)) || 'all'; } catch { currentCategory = 'all'; }
   const choices = [{ id: 'all', label: 'Tất cả', items: allEntries }, ...categories];
   const current = choices.find((entry) => entry.id === currentCategory) ?? requireAt(choices, 0);
   currentCategory = current.id;
   $('tabs', HTMLElement).replaceChildren(...choices.map((entry) => {
-    const have = entry.items.filter((item) => item.state === 'available').length;
+    const have = entry.items.filter((item) => item.state !== 'missing').length;
     const control = button(`${entry.label}: đã có ${have} / cần ${entry.items.length}`, () => { location.hash = encodeURIComponent(entry.id); });
     control.classList.toggle('active', entry.id === currentCategory); return control;
   }));
@@ -130,10 +150,11 @@ function render(): void {
   const status = $('availability', HTMLSelectElement).value, priority = $('priority', HTMLSelectElement).value;
   const list = category.filter((entry) => (!group || entry.item.group === group)
     && matches(entry.item, $('search', HTMLInputElement).value)
-    && (!status || entry.state === status)
-    && (!priority || (entry.state === 'missing' && entry.item.priority === priority)));
+    && (!status || (status === 'available' ? entry.state !== 'missing' : entry.state === status))
+    && (!priority || (entry.state !== 'available' && entry.item.priority === priority)));
   $('cards', HTMLElement).replaceChildren();
   for (const entry of list) {
+    if (entry.state === 'code') { $('cards', HTMLElement).append(codeCard(entry.item, entry.def)); continue; }
     if (entry.state === 'missing') { $('cards', HTMLElement).append(missingCard(entry.item)); continue; }
     const item = entry.item;
     const card = el('article', undefined, 'card');

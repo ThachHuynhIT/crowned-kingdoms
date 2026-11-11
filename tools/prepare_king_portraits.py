@@ -1,4 +1,4 @@
-"""Prepare the approved king portraits as 96x144 native pixel art.
+"""Prepare the approved king portraits as 96x144 native pixel art (or another --size, e.g. 144x216).
 
     python tools/prepare_king_portraits.py [--out DIR] [king ...]
 
@@ -54,17 +54,17 @@ def despeckle(grid, w, h):
     return out
 
 
-def prepare(src, palette_hex, smooth=0):
-    """96x144 RGBA picture (alpha 255 everywhere) of `src`, using only the colours of `palette_hex`.
+def prepare(src, palette_hex, smooth=0, size=SIZE):
+    """RGBA picture of `size` (96x144 by default) (alpha 255 everywhere) of `src`, using only the colours of `palette_hex`.
 
     smooth=0 keeps the details (face, crown) sharp but leaves noisy textures; smooth=3 runs a 3x3
     median filter first and removes strays in three passes: calmer pixels, softer faces.
     """
     palette = [hex_rgb(h) for h in palette_hex]
-    small = Image.open(src).convert('RGB').resize(SIZE, Image.BOX)
+    small = Image.open(src).convert('RGB').resize(size, Image.BOX)
     if smooth:
         small = small.filter(ImageFilter.MedianFilter(smooth))
-    w, h = SIZE
+    w, h = size
     cache = {}
     grid = []
     for y in range(h):
@@ -77,7 +77,7 @@ def prepare(src, palette_hex, smooth=0):
         grid.append(row)
     for _ in range(3 if smooth else 1):
         grid = despeckle(grid, w, h)
-    out = Image.new('RGBA', SIZE)
+    out = Image.new('RGBA', size)
     out.putdata([(*c, 255) for row in grid for c in row])
     return out
 
@@ -106,9 +106,12 @@ def main(argv=None):
     ap = argparse.ArgumentParser()
     ap.add_argument('--out', default=str(PORTRAITS / 'native'))
     ap.add_argument('--smooth', type=int, default=0, choices=[0, 3, 5], help='median filter size before snapping (0 = off)')
+    ap.add_argument('--size', default='96x144', help='WxH; other sizes (e.g. 144x216 for the 3x king card) skip the sheet')
+    ap.add_argument('--suffix', default='', help='appended to each file name, e.g. -144')
     ap.add_argument('kings', nargs='*')
     args = ap.parse_args(argv)
     kings = args.kings or KINGS
+    size = tuple(int(v) for v in args.size.split('x'))
     out = Path(args.out)
     out.mkdir(parents=True, exist_ok=True)
     images = {}
@@ -116,10 +119,11 @@ def main(argv=None):
         src = PORTRAITS / k / 'source.png'
         if not src.exists():
             raise SystemExit(f'missing {src}')
-        images[k] = prepare(src, PALETTES[k], args.smooth)
-        images[k].save(out / f'{k}.png')
-        print(out / f'{k}.png')
-    sheet(images, kings).save(out / 'native-sheet.png')
+        images[k] = prepare(src, PALETTES[k], args.smooth, size)
+        images[k].save(out / f'{k}{args.suffix}.png')
+        print(out / f'{k}{args.suffix}.png')
+    if size == SIZE:
+        sheet(images, kings).save(out / 'native-sheet.png')
     return 0
 
 

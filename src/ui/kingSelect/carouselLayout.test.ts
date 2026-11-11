@@ -17,13 +17,13 @@ describe('carouselSlots', () => {
     ['768', NARROW_DESKTOP],
     ['767', NARROW_PHONE],
   ] as const) {
-    it(`centre card is biggest, brightest, in front, 2:3 and inside the area (${name})`, () => {
+    it(`centre card is biggest, brightest, in front, about 2:3 and inside the area (${name})`, () => {
       const slots = carouselSlots(rect, 4, 9);
       const centre = slots[4]!;
       expect(centre.scale).toBe(1);
       expect(centre.brightness).toBe(1);
       expect(centre.visible).toBe(true);
-      expect(Math.abs(centre.rect.w / centre.rect.h - 2 / 3)).toBeLessThan(0.02);
+      expect(Math.abs(centre.rect.w / centre.rect.h - 2 / 3)).toBeLessThan(0.025);
       expect(centre.rect.x).toBeGreaterThanOrEqual(rect.x);
       expect(centre.rect.x + centre.rect.w).toBeLessThanOrEqual(rect.x + rect.w);
       expect(centre.rect.y).toBeGreaterThanOrEqual(rect.y);
@@ -48,16 +48,25 @@ describe('carouselSlots', () => {
     });
   }
 
-  it('desktop: neighbours scale 0.8 / 0.62 and sit 24 / 48 px lower; only ±2 are visible', () => {
+  it('desktop: whole card scales (×3 middle, ×2 others), 20 / 40 px lower; only ±2 are visible', () => {
     const slots = carouselSlots(DESKTOP, 4, 9);
     const c = slots[4]!;
     const mid = (r: Rect): number => r.y + r.h / 2;
-    expect(slots[5]!.scale).toBe(0.8);
-    expect(slots[6]!.scale).toBe(0.62);
-    expect(mid(slots[5]!.rect)).toBe(mid(c.rect) + 24);
-    expect(mid(slots[6]!.rect)).toBe(mid(c.rect) + 48);
+    expect([c.rect.w, c.rect.h]).toEqual([198, 288]);
+    for (const k of [2, 3, 5, 6]) expect([slots[k]!.rect.w, slots[k]!.rect.h]).toEqual([132, 192]);
+    expect(slots[5]!.scale).toBeCloseTo(2 / 3, 12);
+    expect(mid(slots[5]!.rect)).toBe(mid(c.rect) + 20);
+    expect(mid(slots[6]!.rect)).toBe(mid(c.rect) + 40);
     expect(slots.map((s) => s.visible)).toEqual([false, false, true, true, true, true, true, false, false]);
     expect(slots[0]!.brightness).toBeLessThan(slots[3]!.brightness);
+    // about half the old 500 px tall middle card
+    expect(c.rect.h).toBeLessThanOrEqual(300);
+  });
+
+  it('desktop: a tall area draws the middle card ×4 and the others ×3', () => {
+    const slots = carouselSlots({ x: 0, y: 150, w: 1776, h: 880 }, 4, 9);
+    expect([slots[4]!.rect.w, slots[4]!.rect.h]).toEqual([264, 384]);
+    expect([slots[5]!.rect.w, slots[5]!.rect.h]).toEqual([198, 288]);
   });
 
   it('mobile: neighbours sit 16 / 32 px lower', () => {

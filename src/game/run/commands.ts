@@ -1,8 +1,8 @@
 /** Lệnh người chơi lên RunState (spec §5.1, §5.5). Thuần: làm việc trên bản sao, không sửa đầu vào. */
 import { Rng } from '../../core/random';
-import { RUN, START_DECK_G1, battleGold } from '../../data/run';
+import { RUN, battleGold } from '../../data/run';
 import { hasFullCalendar, type RunMode } from '../../data/rules';
-import type { CardDef, CardId, KingId } from '../../data/types';
+import type { CardId, KingId } from '../../data/types';
 import { CUSTOM_TOME_HANDLERS, runAfterMove, runAfterPlay, runBattleEnd } from '../cards/custom';
 import { freeMoveIllegal } from '../cards/custom/nomad';
 import type { Content } from '../cards/registry';
@@ -23,13 +23,16 @@ import { blessingTotal, pickBlessing, plotPurchasePrice, rollBlessingOffer } fro
 import { activeModifier } from './endlessModifiers';
 import { isCouncilYear, isFinalYear } from './endlessRules';
 import { enactDecree, rollCouncil, selectDecree, setCouncilSelection } from './council';
-import { handLimit, rerollPrice, rewardCount } from './decrees';
+import { rerollPrice, rewardCount } from './decrees';
 import { refillHand } from './deck';
 import { cardOffer, enqueueOffers } from './flow';
 import { maxEnchantStacks, perkLossGold, placedAgeBonus } from './perks';
-import { hasPlayableCard, stateRefusal } from './playable';
+import { stateRefusal } from './playable';
+import { canStartBattle } from './turn';
+import { buyCardIllegal, shopPool, shopPrice } from './shop';
 import { answerQuest, recordQuestCommand, settleQuests } from './quests';
-import { neutralRewardPool, rollConquestCards, rollOffers } from './rewards';
+import { rollConquestCards, rollOffers } from './rewards';
+import { merchantPickIllegal, rewardPools, rollMerchantOffer } from './merchant';
 import type { IllegalReason, RunCommand, RunState } from './state';
 import { advanceAfterBattle, finishYear } from './yearEnd';
 
@@ -67,7 +70,6 @@ function applyBase(input: RunState, cmd: RunCommand, content: Content): CommandR
   switch (cmd.type) {
     case 'play': {
       if (state.phase !== 'planning') return fail('wrongPhase');
-      if (state.played) return fail('alreadyPlayed');
       const cardId = state.hand[cmd.handIndex];
       if (!Number.isInteger(cmd.handIndex) || cardId === undefined) return fail('badTarget');
       const card = content.card(cardId);
@@ -154,7 +156,6 @@ function applyBase(input: RunState, cmd: RunCommand, content: Content): CommandR
 
     case 'discard': {
       if (state.phase !== 'planning') return fail('wrongPhase');
-      if (state.played) return fail('alreadyPlayed');
       const { handIndex } = cmd;
       const sold = Number.isInteger(handIndex) ? state.hand[handIndex] : undefined;
       if (sold === undefined) return fail('badTarget');
@@ -172,7 +173,8 @@ function applyBase(input: RunState, cmd: RunCommand, content: Content): CommandR
       const cost = rerollPrice(state);
       if (state.gold < cost) return fail('notEnoughGold');
       const rng = new Rng(state.rng.draw);
-      const piles = refillHand([], state.drawPile, [...state.discardPile, ...state.hand], rng, handLimit(state));
+      // Đổi bài: rút lại đúng số lá đang cầm (10/11/2026), không bù lên.
+      const piles = refillHand([], state.drawPile, [...state.discardPile, ...state.hand], rng, state.hand.length);
       state.hand = piles.hand;
       state.drawPile = piles.drawPile;
       state.discardPile = piles.discardPile;
@@ -181,6 +183,20 @@ function applyBase(input: RunState, cmd: RunCommand, content: Content): CommandR
       else state.paidRerollsThisYear += 1;
       state.rerollsThisYear += 1;
       state.rng.draw = rng.getState();
+      return { state, events };
+    }
+
+    case 'buyCard': {
+      const illegal = buyCardIllegal(state, content);
+      if (illegal !== null) return fail(illegal);
+      const pool = shopPool(state, content);
+      const rng = new Rng(state.rng.shop);
+      const cardId = rng.pick(pool);
+      state.gold -= shopPrice(state);
+      state.shopPurchasesThisYear += 1;
+      state.deck.push(cardId);
+      state.hand.push(cardId);
+      state.rng.shop = rng.getState();
       return { state, events };
     }
 
@@ -218,7 +234,7 @@ function applyBase(input: RunState, cmd: RunCommand, content: Content): CommandR
 
     case 'startBattle':
       if (state.phase !== 'planning') return fail('wrongPhase');
-      if (!state.played && hasPlayableCard(state, content)) return fail('notPlayed');
+      if (!canStartBattle(state)) return fail('handTooBig');
       state.phase = 'battle';
       return { state, events };
 
@@ -295,18 +311,12 @@ function applyBase(input: RunState, cmd: RunCommand, content: Content): CommandR
       if (result.won && !finalYear) {
         const rng = new Rng(s.rng.reward);
         // G1 (lịch toàn Thổ Phỉ) chỉ thưởng các thẻ G1: giao diện G1 chưa chơi được thẻ G2.
-        const g1 = s.rules.calendar === 'raiders';
-        const only = (cards: readonly CardDef[]): readonly CardDef[] =>
-          g1 ? cards.filter((c) => START_DECK_G1.includes(c.id)) : cards;
-        const cardIds = rollOffers(
-          rng,
-          s.year,
-          { king: only(content.king(s.kingId).cards), neutral: only(neutralRewardPool(content.neutralPool(), s.unlockedCards)) },
-          rewardCount(s),
-        );
+        const cardIds = rollOffers(rng, s.year, rewardPools(s, content), rewardCount(s));
         s.rng.reward = rng.getState();
         s = enqueueOffers({ ...s, pendingConquest: conquered }, [{ kind: 'reward', cardIds }]);
       }
+      // Thương nhân sau thưởng (chinh phục chen trước khi đóng thưởng), trước hội đồng (10/11/2026).
+      s = rollMerchantOffer(s, content);
       // Hội đồng sau thắng hay thua (chỉ ván đầy đủ, còn mạng, không phải năm cuối).
       if (isCouncilYear(s)) s = rollCouncil(s);
       // Phúc lành Vô tận sau hội đồng, cả khi thua còn mạng (spec 2026-11-09 §5).
@@ -325,17 +335,25 @@ function applyBase(input: RunState, cmd: RunCommand, content: Content): CommandR
       const offer = cardOffer(state);
       if (offer === null) return fail('wrongPhase');
       const { index } = cmd;
-      // Chỉ thưởng thường được bỏ qua; chinh phục và thưởng nhiệm vụ bắt buộc chọn một thẻ.
-      if (offer.kind !== 'reward' && index === null) return fail('badTarget');
+      // Thưởng thường và thương nhân được bỏ qua; chinh phục và thưởng nhiệm vụ bắt buộc chọn một thẻ.
+      const merchant = offer.kind === 'merchant';
+      if (offer.kind !== 'reward' && !merchant && index === null) return fail('badTarget');
       let { deck, drawPile } = state;
       let gold = state.gold;
       let goldEarned = state.stats.goldEarned;
       if (index === null) {
-        gold += RUN.skipRewardGold;
-        goldEarned += RUN.skipRewardGold;
+        if (!merchant) {
+          gold += RUN.skipRewardGold;
+          goldEarned += RUN.skipRewardGold;
+        }
       } else {
         const picked = Number.isInteger(index) ? offer.cardIds[index] : undefined;
         if (picked === undefined) return fail('badTarget');
+        if (merchant) {
+          const unaffordable = merchantPickIllegal(state, offer);
+          if (unaffordable !== null) return fail(unaffordable);
+          gold -= offer.price ?? RUN.merchantPrice;
+        }
         deck = [...deck, picked];
         // Lên đầu chồng rút: thẻ vừa chọn có ngay trên tay năm sau (không bị chôn trong chồng bỏ).
         drawPile = [picked, ...drawPile];

@@ -6,7 +6,9 @@ import type { CardId } from '../data/types';
 import { KIND_UNIT, TEAM_ALLY, type BattleWorld } from '../game/battle/world';
 import { BUILDING_FOOT_DY } from './BoardRenderer';
 import { ISO_SPRITE_SCALE, iso } from './isoView';
-import { SPRITES_KEY, buildingFrame, fxFrame, imageFrameScale, unitFrame } from './atlas';
+import { SPRITES_KEY, fxFrame, imageFrameScale, pickBuildingFrame, unitFrame } from './atlas';
+import { plotAtWorld } from './endlessBoardModel';
+import type { RunMode } from '../data/rules';
 import type { UnitAnim } from './unitArt';
 
 /** Frames per second of each unit animation (spec §11.3: 6–8 idle/walk, 10–12 attack). */
@@ -24,6 +26,8 @@ interface Slot {
   facingLeft: boolean;
   dead: boolean;
   flashFrames: number;
+  /** Has lost HP at least once this battle: buildings and the throne show their bar only from then on (owner 2026-11-10). */
+  wounded: boolean;
   tint: { colors: [number, number, number, number]; mode: number } | null;
 }
 
@@ -42,10 +46,19 @@ export class UnitRenderer {
   private readonly frameOk = new Map<string, boolean>();
   private readonly warned = new Set<string>();
   private world: BattleWorld | null = null;
+  /** Level of the building on each plot (and the throne's), so structures show their L2/L3 architecture. */
+  private levels: ReadonlyMap<number, number> = new Map();
+  private mode: RunMode = 'normal';
 
   constructor(scene: Phaser.Scene) {
     this.scene = scene;
     this.bars = scene.add.graphics().setDepth(BAR_DEPTH);
+  }
+
+  /** Building levels by plot for the coming battle (render only). */
+  setStructureLevels(levels: ReadonlyMap<number, number>, mode: RunMode): void {
+    this.levels = levels;
+    this.mode = mode;
   }
 
   /** Draw `world` at `alpha` (0..1) of the way from the previous tick to the current one. */
@@ -81,7 +94,8 @@ export class UnitRenderer {
       const sprite = slot.sprite;
       sprite.setPosition(Math.round(p.x), Math.round(foot)).setDepth(foot);
       if (isUnit) this.animate(world, id, slot, now);
-      this.drawBar(world, id, sprite, isUnit);
+      if (world.hp[id]! < world.maxHp[id]!) slot.wounded = true;
+      if (isUnit || slot.wounded) this.drawBar(world, id, sprite, isUnit);
       if (isUnit && world.stunTicks[id]! > 0) this.showStun(sprite);
     }
     for (let i = this.starsUsed; i < this.stars.length; i++) this.stars[i]!.setVisible(false);
@@ -93,6 +107,13 @@ export class UnitRenderer {
     for (const s of this.stars) s.destroy();
     this.stars.length = 0;
     this.world = null;
+  }
+
+  /** A structure's frame: its L2/L3 architecture by the level of the building on its plot, else the base. */
+  private structureFrame(world: BattleWorld, id: number, cardId: CardId): string {
+    const plot = plotAtWorld(world.x[id]!, world.y[id]!, this.mode);
+    const level = plot === null ? 1 : (this.levels.get(plot) ?? 1);
+    return pickBuildingFrame(cardId, level, (f) => this.hasFrame(f));
   }
 
   /** Keep render-frame flashes advancing even after the final simulation tick. */
@@ -107,7 +128,7 @@ export class UnitRenderer {
     const frame =
       world.kind[id] === KIND_UNIT
         ? unitFrame(label, world.team[id] === TEAM_ALLY ? 'ally' : 'foe', 'idle', 0)
-        : buildingFrame(label as CardId);
+        : this.structureFrame(world, id, label as CardId);
     if (label === '' || !this.hasFrame(frame)) {
       this.slots[id] = null;
       return null;
@@ -120,6 +141,7 @@ export class UnitRenderer {
       frame,
       facingLeft: world.team[id] !== TEAM_ALLY,
       dead: false,
+      wounded: false,
       flashFrames: 0,
       tint: null,
     };

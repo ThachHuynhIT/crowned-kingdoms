@@ -236,6 +236,8 @@ export interface ButtonOptions {
   /** Optional pixel-art icon (texture key + frame), drawn above the label at integer scale. */
   icon?: { key: string; frame: string; scale?: number };
   onClick: () => void;
+  /** Explain an unavailable action without executing it. */
+  onDisabledClick?: () => void;
   /** Optional help shown on hover / long-press. */
   tooltip?: TooltipSource;
   /** Colours of the frame (default neutral wood). */
@@ -248,8 +250,8 @@ export interface Button {
   setLabel: (label: string) => void;
   setVisible: (visible: boolean) => void;
   /**
-   * Disabled: dimmed, no hover frame and clicks do nothing — but the tooltip still shows, so
-   * it can say why (e.g. "Không đủ vàng").
+   * Disabled: dimmed, no hover frame; clicks may explain why via `onDisabledClick`.
+   * The tooltip still shows (e.g. "Không đủ vàng").
    */
   setEnabled: (enabled: boolean) => void;
   /** New logical size (e.g. when the layout switches between desktop and phone). */
@@ -273,6 +275,7 @@ export const createButton = (
     fontSize = 15,
     icon,
     onClick,
+    onDisabledClick,
     tooltip,
     skin,
   }: ButtonOptions,
@@ -312,6 +315,7 @@ export const createButton = (
   const press = bindPress(scene, box.image, {
     onClick: () => {
       if (enabled) onClick();
+      else onDisabledClick?.();
     },
     tooltip,
     onState: (next) => {

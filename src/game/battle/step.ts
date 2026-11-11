@@ -32,12 +32,12 @@ const anyFoeAlive = (world: BattleWorld): boolean => {
   return false;
 };
 
-/** Bước 11 (§8.8): thua (Ngai ≤ 0 HP) ưu tiên hơn thắng; hết giờ với Ngai còn HP → thắng. */
+/** Bước 11 (§8.8): thua (Ngai ≤ 0 HP) ưu tiên hơn thắng; chạm trần `hardLimitTick` mà chưa xong → thua (10/11/2026). */
 const checkEnd = (world: BattleWorld): void => {
   let won: boolean | null = null;
   if (world.hp[world.throneId]! <= 0) won = false;
   else if (world.spawnedWaves >= world.setup.waves.length && bossResolved(world) && !anyFoeAlive(world)) won = true;
-  else if (world.tick >= world.hardLimitTick) won = true;
+  else if (world.tick >= world.hardLimitTick) won = false;
   if (won === null) return;
   world.ended = true;
   world.won = won;

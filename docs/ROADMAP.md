@@ -1,87 +1,116 @@
 # Lộ trình — Crowned Kingdoms
 
-Game đổi thể loại từ colony sim sang **roguelite xây vương quốc + tự động đánh**. Toàn bộ thiết kế nằm trong [spec tổng](superpowers/specs/2026-10-16-crowned-kingdoms-design.md); spec chia thành 6 dự án con G0–G5, mỗi dự án con có plan riêng trong `docs/superpowers/plans/` và kết thúc bằng một bản chạy được. Lịch sử colony sim (Phase 0–1) vẫn còn trong git (nhánh `phase1-core-loop` được lưu trữ, không merge).
+Game là **roguelite xây vương quốc + tự động đánh**. Toàn bộ thiết kế nằm trong [spec tổng](superpowers/specs/2026-10-16-crowned-kingdoms-design.md), chia thành 6 dự án con G0–G5; mỗi dự án con có plan riêng trong `docs/superpowers/plans/`. Lịch sử colony sim (Phase 0–1) vẫn còn trong git (nhánh `phase1-core-loop` được lưu trữ, không merge).
 
-Điều kiện chung của mọi "Done khi": `npm run lint && npm run typecheck && npm test && npm run build` exit 0. Thứ tự phụ thuộc: **G0 → G1 → G2 → G3 → G4 → G5**; trong G5, âm thanh và juice có thể làm song song từ sau G2, cân bằng chỉ sau G4.
+Điều kiện chung của mọi việc: `npm run lint && npm run typecheck && npm test && npm run build` exit 0, cộng `python -m unittest discover -s tools -p "test_*.py"` khi đụng tới công cụ art.
 
-| G   | Tên                                                   | Nội dung chính                                                                                                                                                                                                                   | Done khi                                                                                                                                                                            |
-| --- | ----------------------------------------------------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| G0  | Nền UI & dọn dẹp                                      | Xoá colony sim, chuyển hạ tầng sang `src/core`, gỡ `bitecs`; `UI_PALETTE` + art UI, `layout.ts`, texture `ui`, `ContentBox`/`Tooltip`, menu kiểu Stardew; bảng màu Hearth 32; ESLint deterministic; tài liệu                     | Không còn file colony; không import `src/sim`; test `uiArt` + `layout` + `PALETTE` pass; menu đúng §10.2 ở 1280×720 và 375×812; ESLint chặn `phaser`/`Math.random` trong `src/game` |
-| G1  | Lõi chơi được (ván ngắn 10 năm)                       | `RunState` + `applyCommand`, vòng năm, `composeArmy`, trận §8 (trừ boss), can thiệp, Vua Lúa Mì + 4 thẻ trung lập + Thổ Phỉ; `RealmScene`, `PlanningHudScene`, `BattleHudScene`, `RunEndScene` tối giản; headless + bot `random` | Chơi trọn ván 10 năm ở hai bố cục; test deterministic + benchmark pass; headless 3 seed; xem trước đạo quân khớp trận                                                               |
-| G2  | Chiều sâu: bùa, lân cận, cấp, vàng, 3 vua, chinh phục | Cấp, Bùa, lân cận, vàng đầy đủ, đổi bài, mua ô; Vua Lúa Mì/Đá Núi/Phép Thuật; `KingSelectScene`, bảng Bộ bài, lịch + Trinh sát; ván 15 năm, chinh phục                                                                           | Ba vua chơi tới năm 15; mỗi thẻ G2 có test; chinh phục hai vua trong một ván thử; bố cục §10.3–10.6 đúng hai kích thước                                                             |
-| G3  | Ván đầy đủ: hội đồng, nhiệm vụ, boss, 30 năm, lưu ván | Lịch đầy đủ, Liên Quân, sắc lệnh, nhiệm vụ, 3 boss; dữ liệu phía địch và 9 thẻ chinh phục (54 thẻ) của 6 vua còn lại; lưu ván IndexedDB, nút "Tiếp tục"                                                                                                       | Headless 30 năm 3 vua × 3 seed; chơi tay qua boss 1 và một hội đồng; tải lại trang khôi phục đúng §9.3                                                                              |
-| G4  | Đủ 9 vua, perk, meta-progression                      | Ngai, bị động và 27 perk của 6 vua mới, chọn đủ 9 vua, hai thẻ trung lập meta; Điểm Vương Miện, thông thạo, mở khoá, độ khó Gai; `CrownsScene`                                                                                                                  | 9 vua chơi được; Du Mục khoá đúng điều kiện; mở khoá còn sau khi tải lại trang; headless 9 vua × 3 seed                                                                             |
-| G5  | Cân bằng, âm thanh, juice, mobile, đóng gói           | `tools/balance.ts` + bot `greedy`; âm thanh và nhạc sinh bằng code, juice, `SettingsScene`; safe-area, chặn kéo-làm-mới; PWA                                                                                                     | Toàn bộ "Done khi" §1 của spec (tỉ lệ thắng của bot 35–65% mỗi vua, chênh lệch ≤ 15 điểm %)                                                                                         |
+## Trạng thái (09/11/2026)
 
-## Trạng thái
+**G0 ✔ · G1 ✔ · G2 ✔ · G3 ✔ · G4 ✔ · G5 ✔ · Vô tận ✔ · Làm lại chiến trường ✔**: tất cả đã merge vào `develop` (PR #12–#16). `main` chưa nhận bản phát hành nào từ các PR này; phát hành là một PR `develop` → `main`, chỉ làm khi chủ dự án đồng ý.
 
-**G0 ✔ · G1 ✔ · G2 ✔ · G3 ✔ · G4 ✔** — G3 chơi được trong trình duyệt: "Tiếp tục" hoặc "Ván mới" → Chọn vua (Lúa Mì / Đá Núi / Phép Thuật) → ván 30 năm (lịch 6 vua địch, Liên Quân, hội đồng 5 lần, nhiệm vụ, 3 boss ở năm 10/20/30, chinh phục 6 vua), lưu ván IndexedDB, bố cục desktop 1280×720 và mobile 375×812. Tiếp theo: **G5** (cân bằng, âm thanh, juice, mobile, đóng gói).
+Chơi được trong trình duyệt:
+- Ván 30 năm với 9 vua, mỗi vua có Ngai, bị động và 3 perk.
+- Nội dung ván: hội đồng, nhiệm vụ, 3 boss, chinh phục 6 vua địch.
+- Chế độ Vô tận trên bàn 7×7.
+- Meta: Điểm Vương Miện, thông thạo, mở khoá, độ khó Gai 0–5.
+- Lưu ván và tải lại: lưu tự động và nhiều bản lưu có tên.
+- Âm thanh sinh bằng code, màn Cài đặt, PWA chơi offline.
+- Art bằng ảnh cho cả 9 vua.
+- Cân bằng: 59,0–63,6% thắng mỗi vua, chênh lệch 4,6 điểm (bot `greedy`, 500 ván/vua, Gai 0, 11/11/2026); chỉnh theo vua bằng `KING_TUNING` (phe mình), boss −10%, `ENEMY_STAT_MULT` 2,15; Ngai bắn hết vùng đất, lính tập hợp nhanh gấp 2,5.
 
-**G5 (đang làm, nhánh `g5-balance-polish`, plan `docs/superpowers/plans/2026-11-09-g5-balance-polish.md`, 09/11/2026):**
-- **P1 công cụ cân bằng:** xong. Bot `greedy`, lệnh `npm run balance`, CSV trong `tools/out/`.
-- **P2 cân bằng:** xong. Chín vua thắng 44,8–55,6%, chênh lệch 10,8 điểm (500 ván/vua, Gai 0); 2 mạng đầu ván và máu Ngai mới từng vua; báo cáo `docs/balance/2026-11-09-g5-balance-report.md`.
-- **P3 âm thanh, Cài đặt:** xong. Âm thanh và nhạc sinh bằng code, AudioManager, màn Cài đặt (âm lượng, rung, xoá ván); âm thanh trận theo sự kiện trận (`scenes/audioCues.ts`).
-- **P4 juice:** xong. Thẻ bay từ tay xuống ô (`cardFlyModel`), vàng nổi, lính chớp sáng khi trúng đòn.
-- **P5:** xong phần làm được trên máy. PWA chơi offline; safe-area (`index.html`); đo khung hình trên desktop và khi bóp CPU 4× (`docs/balance/2026-11-09-g5-performance.md`); trận ép chạm trần thực thể, lính và đạn (`stress.test.ts`). Chưa đo trên điện thoại thật.
-- **P6 art:**
-  - Art isometric cho cả 9 vua (Ngai, công trình, 4 kiểu ô); lính của cả 9 vua và lính đánh thuê (6 tư thế, hai phe); Thổ Phỉ, quân triệu hồi, 3 boss.
-  - Tranh cho cả 102 thẻ, 14 icon trong game, huy hiệu 9 vua.
-  - Nền menu chính bằng tranh; texture đường đất và cỏ hoa cho mặt đất.
-  - Giữ vẽ bằng code, có lý do ghi trong `docs/art-review/g5/`: FX trận (cỡ 4–16 px) và 90 khung giao diện theo vua.
-- **P7 nghiệm thu:** `docs/balance/2026-11-09-g5-acceptance.md`; chỉ còn đo fps trên điện thoại thật.
-- **Plan tiếp theo:**
-  - Chế độ Vô tận: `docs/superpowers/plans/2026-11-09-endless-mode.md`. Đã gộp vào nhánh G5: E1 (luật, dữ liệu, save v7, meta v2), E2 (hình học trận và vẽ bàn 7×7), E4 (chạy không giao diện, bot greedy sống qua năm 40). E3 (giao diện: chọn chế độ, bảng phúc lành, lịch chia trang, điểm sống sót) và test tải lại ở các năm 30–41 cũng đã xong.
-  - Toàn bộ asset còn thiếu: `docs/superpowers/plans/2026-11-09-missing-art-assets.md`.
+## Việc tiếp theo: phản hồi của chủ dự án, chỉ trên PC (09/11/2026)
 
-**Làm lại chiến trường (nhánh `battle-field-rework`, spec `docs/superpowers/specs/2026-11-09-battle-field-rework-design.md`, 09/11/2026):**
-- **Đường đi:** công trình chặn một khối vuông 36 px giữa ô, cả hai phe đều đi vòng.
-- **Đội hình:** khi rảnh lính phe mình xếp hàng trước bàn cờ (bắn xa sát bàn, cận chiến đứng trước) và không đi quá 4 ô ra ngoài.
-- **Mục tiêu của địch:** phá hết công trình rồi mới đánh Ngai; trong Cuồng Nộ đòn vào công trình +100%.
-- **Tầm và cổng:** tầm bắn của tháp ×3, trừ đẩy lùi và phun quạt; cổng địch xa hơn 1,5 lần.
-- **Lính to:** mọi lính to 1,3 lần, bằng cỡ lính của Trại Lính; khổng lồ cao khoảng 2 lần lính thường.
-- **Lưu ván:** nhiều bản lưu có tên, có màn Tải ván.
-- **Giao diện và art:** khung lấy từ Kenney Pixel Adventure, cả khung theo màu từng vua. Bốn công trình trung lập có art isometric, thẻ vua có nền riêng cho từng vua. FX trận và trời menu đều là ảnh; chỉ còn bóng đá tảng vẽ bằng code.
-- **Âm thanh:** to bằng một nửa.
-- **Cân bằng lại:** `docs/balance/2026-11-09-battle-rework-balance.md` (45,0–55,4%, chênh lệch 10,4).
-- **Hiệu năng:** CPU bóp 4× vẫn khoảng 56 fps (`docs/balance/2026-11-09-g5-performance.md`). `?fps` hiện chỉ số khung hình (bản dev); cấu hình `dev-lan` chạy game cho mạng nội bộ. Chưa có số đo trên điện thoại thật.
+Tất cả là cảm nhận trên PC (desktop ≥ 768 px). Bố cục điện thoại giữ nguyên cho tới khi chủ dự án bảo làm (xem "Để sau"). Mỗi việc đổi hành vi đi theo quy trình: brainstorming → spec + plan → TDD → kiểm trình duyệt.
 
-**G4 (kings và meta, nhánh `g4-kings-meta`, plan `docs/superpowers/plans/2026-11-09-g4-kings-and-meta.md`):** chơi được đủ 9 vua (Lúa Mì, Đá Núi, Phép Thuật, Rừng Xanh, Thuỷ Triều, Lò Rèn, Đồng Hồ, Ánh Trăng, Du Mục), mỗi vua một Ngai, bị động và 3 perk (27 perk), hai thẻ trung lập meta (Nhân Bản, Ấn Triện), lệnh dời trại miễn phí của Du Mục. Meta (`src/game/meta/`): Điểm Vương Miện `round((số năm + 3 × vua chinh phục + 5 × boss + 20 nếu thắng) × (1 + 0,2 × Gai))`, thông thạo từng vua (perk mở ở 10/30/60), mở vua (25/25/40/40/60/80, Du Mục cần thêm ≥ 1 thắng), mở thẻ trung lập (15/20), độ khó Gai 0–5; hồ sơ meta lưu IndexedDB (store `meta`), không bao giờ bị xoá; `RunState` v6 (migrator 5 → 6). `KingSelectScene` có khoá, perk và Gai; `RunEndScene` hiện bảng điểm; `CrownsScene` hiện điểm, thông thạo và mở khoá.
+**Chọn vua**
+1. ✔ Các vua trượt mượt sang trái/phải khi bấm ‹ › (0,24 giây).
+2. ✔ Thẻ vua nhỏ còn khoảng 1/2 trên PC (giữa ×3 = 198×288, hai bên ×2), vẽ ở tỉ lệ nguyên; chân dung thêm bản 144×216 để nét ở ×3.
+3. ✔ Màn sau khi chọn vua: cả khối nằm giữa màn theo hai chiều, 9 lá 116×180 xếp 5 + 4.
 
-**Kiểm "Done khi" G4:** 9 vua chơi được (`kings.*.test.ts`, `perkCoverage.test.ts`, `cardCoverage.test.ts`); Du Mục khoá đúng điều kiện và điểm khớp công thức (`unlocks.test.ts`, `crowns.test.ts`); mở khoá còn sau khi tải lại (`src/platform/resumeIntegration.test.ts`, `codec.test.ts`); headless 9 vua × 3 seed, ván 30 năm thật, deterministic (`fullRun.test.ts`, 27 ván); gate đầy đủ xanh (179 file, 2275 test); mỗi task có kiểm trình duyệt ở 1280×720 và 375×812 (ảnh trong thư mục SDD của PR), console không lỗi.
+**Âm thanh:** ✔ to bằng 1/4 mức gốc (10/11/2026). **Đạn công trình:** ✔ bay ra từ khoảng 80% chiều cao công trình.
 
-**G4 còn lại:** đã xử lý trong G5: cuối ván ghi hồ sơ meta và xoá ván trong một giao dịch (`SaveCoordinator.endRun`), cờ `credited` trên sự kiện `run:ended` (màn cuối ván nói rõ khi điểm không được cộng), `hasPlayableCard` tính các từ chối theo trạng thái (`stateRefusal`). Còn để chủ dự án quyết: khoá vua hiện ẩn danh "Vua của ?".
+**Thẻ bài và lượt chơi**
+4. ✔ Tranh gần kín bề ngang thẻ; trên PC lá bài to hơn: bài trên tay 148×208 (tranh 128×96 mới, thu nhỏ từ ảnh gốc đã duyệt), Bộ bài 116×180, phần thưởng 212×280 (tranh ×2). Bàn cờ ở pha chuẩn bị nhỏ đi một chút (zoom 1,29 → 1,19) để nhường chỗ cho tay bài.
+5. ✔ (thay bằng luật 10/11/2026, spec `2026-11-10-draw-one-and-shop-design.md`) Năm 1 có 5 lá, mỗi năm sau rút 1 lá (2 ở năm 5, 10, 11, 15, 20, 21, 25), bài cũ giữ lại; chơi hoặc bán tới khi còn 2 lá thì trận tự bắt đầu (năm 30: 0 lá); Mua thẻ bằng vàng (5, 8, 11…); save v8.
 
-**Bàn cờ isometric (PR #13, spec `docs/superpowers/specs/2026-11-06-iso-board-redesign-design.md`):** Ngai dời về ô 2 (hàng sau, giữa, tựa núi), chín ô giữa mở sẵn; save 4 → 5. Ô 64 px, sân 768 px, nhà đứng giữa ô, mỗi ô có khu tập kết trước cửa; chỉ lính mình đi xuyên nhà mình; tầm công trình +50%; một con đường duy nhất. Zoom tự do từ mức tổng quan của pha đó (bàn cờ chiếm 65% bề ngang màn hình desktop, 33/32 trên điện thoại) tới 3× (bánh xe, chụm hai ngón), kéo để pan ở mọi mức zoom. Góc nhìn isometric 2:1 (ô = hình thoi 128×64 ở zoom 1), địch vào từ bên phải màn hình; mô phỏng vẫn trên lưới vuông. Bộ art isometric của Lúa Mì (8 công trình, 4 kiểu ô, vách núi), sông và bãi cát có texture liền mạch, 15 vật trang trí hoang dã rải theo seed. Còn lại: lính vẫn vẽ nhìn thẳng, các vua khác chưa có art isometric.
+**Bàn cờ và camera**
+6. Cây và đá trang trí bên ngoài bàn cờ: bỏ viền (✔ 10/11/2026, việc 15), rải dày hơn cho map sinh động.
+7. ✔ Zoom (10/11/2026: zoom out xa hơn 60%, zoom in tối đa = mức xa nhất cũ, kéo ngang hẹp 40%):
+   - zoom out nhỏ nhất rộng thêm 30–40%;
+   - zoom in tối đa bằng mức zoom out lớn nhất hiện nay;
+   - vùng kéo sang trái/phải hẹp lại 40%.
 
-**G3e (giao diện + art, PR #12):** giao diện làm lại (chọn vua, thẻ dọc, màu theo vua, HUD, phần thưởng), chân dung 9 vua, tường núi, và **trọn bộ asset P0 của vua Lúa Mì** trong game: 3 lính × 6 tư thế × 2 phe, 8 công trình góc 45° (gồm Ngai), 10 tranh thẻ 96×72 (+ bản 48×36 cho thẻ nhỏ), ô bàn cờ riêng, huy hiệu vua trên lịch. Thêm lính vua Đá (4 loại × 6 tư thế). Các vua khác vẫn dùng art sinh bằng code; chi tiết và việc còn lại ở `docs/art-review/HANDOFF.md`.
+**Trận**
+8. ✔ Công trình chỉ hiện thanh máu khi đã bị đánh.
+9. ✔ Trận không thắng vì hết giờ; Cuồng Nộ từ 60 giây, mỗi 60 giây +20% sát thương địch; quá 5 phút là thua. **Cân bằng chưa đạt**: `docs/balance/2026-11-10-draw-one-balance.md` (27–83% mỗi vua, độ khó dồn vào boss năm 20).
+10. ✔ Can Thiệp riêng của mỗi vua (10/11/2026): cùng điểm rơi và hồi chiêu, thêm hiệu ứng riêng (`INTERVENTION_POWERS`: chậm, choáng, +sát thương, đẩy xa, bỏng, độc, vùng rộng), vật rơi và vụ nổ vẽ bằng code (`src/render/fx/powers.ts`).
 
-G3 theo plan `docs/superpowers/plans/2026-10-22-g3-full-run.md` (G3a cơ chế ván, G3b nội dung và lịch, G3c boss, G3d lưu ván + giao diện + nghiệm thu). Kiểm "Done khi": 9 ván thật (bot `random`, `RULES_FULL`, 3 vua × seed 1/2/3) đều kết thúc hợp lệ, deterministic khi chạy lại, năm ≤ 30 (`fullRun.test.ts`); luồng năm 30 / 5 hội đồng / ≤ 6 nhiệm vụ / boss 10-20-30 kiểm bằng fixture `orchestration30` (không phải bằng chứng ván thật); ma trận tải lại mọi pha qua IndexedDB giả (`src/platform/resumeIntegration.test.ts`); 54 thẻ chinh phục (`conquestCoverage.test.ts`), 18 sắc lệnh, 13 nhiệm vụ, 3 boss có test; benchmark trận có boss ≈ 0,4 ms/tick.
+**Cân bằng**
+11. Vua Phép Thuật yếu vì không có lính cận chiến chịu đòn: xem lại thẻ và luật của vua này, rồi chạy lại `npm run balance`. (Đo nhanh 10/11: Phép Thuật 57%, giờ không còn là vua yếu nhất; yếu nhất là Thuỷ Triều, Lúa Mì, Ánh Trăng.)
+12. Tham khảo wiki 9 Kings (thẻ, cấp, sự kiện, vua, perk, Merchant, cấu trúc một ván) để rà luật và cân bằng. Ranh giới: chỉ lấy ý tưởng cơ chế chung của thể loại, ví dụ:
+    - vua thuần phép vẫn cần một lớp chịu đòn;
+    - nhịp sự kiện trong ván;
+    - một người bán hàng thỉnh thoảng xuất hiện.
 
-Bằng chứng trình duyệt (preview, 1024×768 và 375×812): chơi tay Đá Núi seed 1 — nhiệm vụ năm 3 nhận qua `QuestModal`, hội đồng năm 5 chọn Đá Tảng Lớn qua `CouncilModal`, boss 1 ở năm 10 (thanh máu, pha kỹ năng), tải lại giữa trận khôi phục trận từ 0:00 với cùng đội hình, trận thắng nhờ hết 900 tick (boss còn sống nên chưa tính boss thắng). Các pha được đẩy tới bằng bot `scripted` qua bus của scene, không bấm từng thẻ.
+    Không chép tên, thẻ, chỉ số, văn bản hay hình của game đó. Ghi chép tóm tắt bằng lời của mình vào `docs/research/`.
 
-Bot `scripted` (Đá Núi, seed 1, `RULES_FULL`) đi hết 30 năm và thắng (0 boss bị hạ), vào trận boss 1. Bot `random` thua sớm hợp lệ ở năm 7–19 (Lúa Mì 7–8, Đá Núi 11–19, Phép Thuật 13–16): cân bằng thật là G5.
+    ✔ Đã làm từ ý "người bán hàng": **Thương nhân** (spec `2026-11-10-merchant-design.md`): sau trận năm 6, 12, 18, 24 (Vô tận: mỗi 6 năm) bày 3 thẻ, mỗi thẻ 3 vàng, mua tối đa 1 hoặc bỏ qua; save v9. Số năm và giá chờ chủ dự án duyệt.
 
-G2 theo plan `docs/superpowers/plans/2026-10-20-g2-depth.md` (G2a lõi, G2b trận + nội dung, G2c giao diện). Kiểm "Done khi": ba vua chạy trọn 15 năm headless (3 vua × 3 seed) và qua `RunController` + bus trong trình duyệt (Đá Núi thắng tới năm 15 và chinh phục một vua; Phép Thuật thua năm 12); mỗi thẻ G2 có test hiệu ứng (`cardCoverage.test.ts` kiểm mọi `CardId` có mặt trong test); chinh phục hai vua ở `conquest.test.ts`; đổi bài và mua ô trừ vàng đúng công thức (`commands.test.ts`); bố cục chọn vua, thưởng, chinh phục, Bộ bài, lịch có test hai kích thước.
+**Phản hồi 10/11/2026 (PC)**
+13. ✔ Bấm nhà chính xác ở mọi mức zoom: bấm vào hình nhà (không chỉ ô đất hình thoi) là mở bảng thông tin, nhà đứng trước được ưu tiên (`src/ui/info/spritePick.ts`, `src/render/pickBoxes.ts`).
+14. ✔ Bấm lính địch trong trận mở bảng thông tin như lính ta: bấm trúng cả hình lính, không chỉ vòng va chạm dưới chân.
+15. ✔ Bỏ viền sẫm của cây, đá, bụi trang trí (`tools/strip_decor_outline.py`, ảnh gốc giữ ở `docs/art-review/decor-outline/originals/`).
+16. ✔ Âm thanh nhỏ còn 1/3 (`MASTER_OUTPUT` 0,25 → 0,083); tiếng đánh, bắn, va chạm trong trận nhỏ thêm một nửa (`BATTLE_HIT_GAIN`).
+22. ✔ Âm thanh hiện đại, êm hơn, nhỏ thêm một nửa (`MASTER_OUTPUT` 0,25/6 ≈ 0,042): bỏ sóng vuông, tiếng sine/triangle + nhiễu lọc, có nén và lọc thấp ở master, vang nhẹ, mỗi lần đánh lệch cao độ chút ít, giới hạn số tiếng trong trận; nhạc chậm và êm hơn (`src/data/sfx.ts`, `src/data/music.ts`, `src/audio/`).
 
-G1 polish đã xong (plan `docs/superpowers/plans/2026-10-20-g2-depth.md`, Phần A): bài chưa dùng ở lại tay (chồng rút/bỏ), `discard` thay `skip`, trận tự bắt đầu sau khi chơi/bán thẻ (`RULES_G1.autoStart`, G2 tắt), Đá Tảng tự bắn (bật/tắt, chung hồi chiêu), Khai Hoang mở ô bất kỳ, camera chung hai pha + nền kín màn hình, nút Địch xem lại các đợt trong trận, bấm nhà/lính xem thông tin.
+**Asset còn thiếu (10/11/2026, Codex vẽ, Claude duyệt theo uỷ quyền; xem `/admin` và `/admin/fx`)**
+17. ✔ Kho asset `/admin` liệt kê mọi PNG của game (`python tools/build_game_assets.py`); trang `/admin/fx` xem hiệu ứng vẽ bằng code.
+18. ✔ P0 đạn (14) và VFX (20) vẽ bằng code (`src/render/codeFx.ts`, `src/render/fx/`), đã gắn vào trận: mỗi lính/công trình bắn đạn riêng (`src/render/projectileFx.ts`), trúng đòn, lính tan, công trình sụp, đá tảng nổ, hồi sinh, vòng lửa Cuồng Nộ. Trạng thái (choáng, vô hiệu, bỏng, độc, chậm) lặp trên lính/công trình đang bị; bàn cờ: đặt, dời, nâng cấp công trình (`src/render/fxCues.ts`).
+19. ✔ P0 icon (27): chỉ số, trạng thái, hành động (`docs/art-review/g3e/icons/review-2026-11-10.md`); hiện ở đầu dòng hộp thông tin.
+20. ✔ P2 đồ trang trí sân (10): thùng, rơm, biển, xe lúa rải trong sân; rào và cổng chỉ ở kho asset.
+21. Kiến trúc cấp 2/3 (dừng theo chủ dự án 10/11): 55/74 công trình và Ngai đã vào game; còn Ánh Trăng, Du Mục, trung lập (`docs/art-review/levels/review.md`). Còn lại (P2): hoạt ảnh công trình và Ngai, bộ frame lính mở rộng (42), mặt nạ nền dual-grid (76), nền menu và màn thắng/thua (6), ảnh phát hành (5).
 
-Việc còn lại / lỗ hổng đã biết từ G1 (làm ở lượt art/G5, không chặn G2):
+## Để sau: điện thoại (chỉ làm khi chủ dự án bảo)
 
-- Nút Can Thiệp đang vuông (chưa có art nút riêng).
-- Cân bằng G1 chưa đo: bot `random` thắng dễ; cân bằng thật thuộc G5 (`tools/balance.ts`).
-- `src/platform` có từ G3 (lưu ván); `src/audio` vẫn chưa tạo (G5 âm thanh).
+- Tải trang và vào map trên điện thoại quá lâu: cần tối ưu (gói atlas, nạp art theo vua, cache PWA).
+- Đo FPS trên điện thoại thật (bản dev có `?fps`, cấu hình `dev-lan` ở cổng 5174).
+- Kéo thả thẻ chưa thử bằng cảm ứng trên máy thật.
+- Áp các thay đổi PC ở trên vào bố cục 375×812.
 
-Lỗ hổng đã biết sau G2 (không chặn G3):
+## Chủ dự án cần quyết
 
-- Art vẫn là placeholder sinh bằng code (chân dung vua, ảnh thẻ chỉ khác nhau bởi dấu hiệu nhỏ); khung panel/nút/thẻ dùng Kenney Pixel UI Pack (CC0), màu ngoài `UI_PALETTE` (ngoại lệ đã đăng ký trong `docs/ART_STYLE.md`).
-- Trận mô phỏng đủ cơ chế G2b nhưng hiệu ứng xung/khiên/choáng mới chỉ xem bằng mắt; chưa có ảnh chụp đối chiếu.
-- Kéo thả thẻ chưa thử bằng cảm ứng thật; cuộn hàng thẻ (Bộ bài, chọn vua) bằng bánh xe/kéo chuột.
-- Minor G2a/G2b còn hoãn: luồng RNG lịch không lưu sau `pickEnemyKings`; bot `random` dùng hành động G2 dưới luật G1; chinh phục ở năm cuối của luật rút gọn không cho thẻ; tooltip Tim Núi chưa tính cấp; khiên yếu có thể ghi đè khiên mạnh; choáng/làm chậm kéo dài N−1 tick.
-- Cân bằng: bot `random` thắng Lúa Mì 0/20, Đá Núi 17/20, Phép Thuật 11/20 — cân bằng thật là G5.
+- ✔ Thẻ vua khoá hiện tên và hình, phủ lớp xám có ổ khoá (chủ dự án 10/11/2026).
+- Khi nào phát hành `develop` → `main`.
 
-G2b (trận và nội dung 3 vua, chưa có giao diện — G2c): ba vua Lúa Mì / Đá Núi / Phép Thuật chạy trọn 15 năm headless (3 vua × 3 seed, deterministic); benchmark `stepBattle` 0,38 ms/tick (chuẩn) và 0,40 ms/tick (có xung, chuỗi, splash, khiên). Chỉ để tham khảo, cân bằng thật là G5: bot `random`, 20 seed mỗi vua ở luật G2, thắng ván Lúa Mì 0/20 (năm trung bình 7,8), Đá Núi 17/20 (14,3), Phép Thuật 11/20 (13,8).
+## Giới hạn và lỗi nhỏ đã biết
 
-## Kiểm thử mỗi G
+- Boss to không lách qua được khe giữa hai công trình sát nhau, phải đi vòng (spec `2026-11-09-battle-field-rework-design.md`).
+- Bóng đá tảng vẫn vẽ bằng code; FX còn lại và trời menu đã là ảnh.
+- Còn hoãn từ G2, chưa kiểm lại:
+  - tooltip Tim Núi chưa tính cấp;
+  - khiên yếu có thể ghi đè khiên mạnh;
+  - choáng/làm chậm kéo dài N−1 tick;
+  - chinh phục ở năm cuối của luật rút gọn (`RULES_G2`) không cho thẻ;
+  - luồng RNG lịch không lưu sau `pickEnemyKings`;
+  - bot `random` dùng hành động G2 dưới luật G1.
+
+## Lịch sử
+
+| G | Tên | Kết quả |
+| --- | --- | --- |
+| G0 | Nền UI & dọn dẹp | Xoá colony sim; hạ tầng trong `src/core`; khung UI, `layout.ts`, `ContentBox`/`Tooltip`; ESLint deterministic |
+| G1 | Lõi chơi được | `RunState` + lệnh, vòng năm, trận, can thiệp, Vua Lúa Mì; headless + bot `random` |
+| G2 | Chiều sâu | Cấp, bùa, lân cận, vàng, đổi bài, mua ô; 3 vua; chọn vua, Bộ bài, lịch, chinh phục (plan `2026-10-20-g2-depth.md`) |
+| G3 | Ván đầy đủ | 30 năm, Liên Quân, hội đồng, sắc lệnh, nhiệm vụ, 3 boss, 54 thẻ chinh phục, lưu ván IndexedDB (plan `2026-10-22-g3-full-run.md`); G3e làm lại giao diện và art Lúa Mì (PR #12) |
+| Iso | Bàn cờ isometric | Ngai ở ô 2, ô 64 px, góc nhìn 2:1, zoom/pan tự do (PR #13, spec `2026-11-06-iso-board-redesign-design.md`) |
+| G4 | 9 vua và meta | 27 perk, thẻ trung lập meta, Điểm Vương Miện, thông thạo, mở khoá, Gai (PR #14, plan `2026-11-09-g4-kings-and-meta.md`) |
+| G5 | Cân bằng và hoàn thiện | Bot `greedy` + `npm run balance`; âm thanh, juice, Cài đặt, PWA; art ảnh cho 9 vua, 102 thẻ (PR #15, plan `2026-11-09-g5-balance-polish.md`, nghiệm thu `docs/balance/2026-11-09-g5-acceptance.md`) |
+| Vô tận | Chế độ Vô tận | Bàn 7×7, phúc lành, sống qua năm 30 (PR #15, plan `2026-11-09-endless-mode.md`) |
+| Chiến trường | Làm lại chiến trường | Công trình chặn đường, đội hình, tầm tháp ×3, cổng xa hơn, nhiều bản lưu, khung Kenney Pixel Adventure (PR #16, spec `2026-11-09-battle-field-rework-design.md`, cân bằng `docs/balance/2026-11-09-battle-rework-balance.md`) |
+
+Chi tiết từng bước và bằng chứng kiểm thử nằm trong plan và báo cáo tương ứng; art còn theo dõi ở `docs/art-review/`.
+
+## Kiểm thử mỗi việc
 
 - Vitest cho dữ liệu, luật và trận (spec §13.1–13.3).
-- Trình duyệt: chụp màn hình các scene mới ở 1280×720 và 375×812; không chữ đè/tràn, vùng chạm ≥ 44 px, console không lỗi (spec §13.4).
+- Trình duyệt: chụp màn hình các scene mới ở 1280×720 (và 375×812 khi làm phần điện thoại); không chữ đè/tràn, vùng chạm ≥ 44 px, console không lỗi (spec §13.4).

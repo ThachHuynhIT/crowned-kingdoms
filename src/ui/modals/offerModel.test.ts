@@ -1,9 +1,25 @@
 import { describe, expect, it } from 'vitest';
 import type { KingId } from '../../data/types';
 import { CONTENT } from '../../game/cards/registry';
-import { offerHeading, offerHeadingFor, offerTitle, rewardRerollView } from './offerModel';
+import { merchantOfferView, offerHeading, offerHeadingFor, offerTitle, rewardRerollView } from './offerModel';
 
 const name = (id: KingId) => CONTENT.king(id).nameVi;
+
+it('merchant_heading_price_and_reason', () => {
+  expect(offerTitle({ kind: 'merchant' }, name)).toBe('Thương nhân ghé qua');
+  expect(offerHeadingFor({ kind: 'merchant' }, name)).toEqual({
+    title: 'THƯƠNG NHÂN GHÉ QUA', subtitle: 'MUA TỐI ĐA 1 THẺ',
+  });
+  expect(merchantOfferView({ price: 3 }, 2)).toEqual({
+    priceLabel: '3 vàng', disabledReason: 'notEnoughGold', canBuy: false,
+  });
+  expect(merchantOfferView({ price: 3 }, 3)).toEqual({
+    priceLabel: '3 vàng', disabledReason: null, canBuy: true,
+  });
+  expect(merchantOfferView({ price: 7 }, 6).priceLabel).toBe('7 vàng');
+  expect(merchantOfferView({ price: 7 }, 6).canBuy).toBe(false);
+  expect(merchantOfferView({ price: 7 }, 7).canBuy).toBe(true);
+});
 
 describe('offerTitle', () => {
   it('names a plain reward', () => {

@@ -1,15 +1,29 @@
 /**
  * Quản lý WebAudio (spec G5 §3): context chỉ được tạo khi `unlock()` (sau cử chỉ đầu tiên), buffer hiệu
- * ứng sinh một lần cho mỗi context, gain master × music/sfx, tối đa 4 tiếng mỗi id và crossfade nhạc 600 ms.
- * Không phụ thuộc Phaser; scene làm adapter.
+ * ứng sinh một lần cho mỗi context, gain master × music/sfx và crossfade nhạc 600 ms. Không phụ thuộc Phaser;
+ * scene làm adapter.
+ *
+ * Graph (owner 10/11/2026: quieter, softer): music bus + sfx bus (+ a shared reverb send) → low-pass → soft-knee
+ * compressor → makeup trim → master (volume × MASTER_OUTPUT) → destination. Each effect voice gets a slight
+ * counter-based pitch/level variation; `VoiceGate` caps voices per id and per battle and spaces repeats of one id.
  */
-import { MUSIC_CROSSFADE_MS, type MusicId } from '../data/music';
+import { MUSIC_BUS_GAIN, MUSIC_CROSSFADE_MS, type MusicId } from '../data/music';
 import type { AudioSettings } from '../data/settings';
 import { DEFAULT_SCREEN_SHAKE, MASTER_OUTPUT, VOLUME_MAX } from '../data/settings';
-import { SFX, SFX_IDS, SFX_MAX_VOICES, type SfxId } from '../data/sfx';
+import {
+  MASTER_COMPRESSOR,
+  MASTER_LOWPASS_HZ,
+  MASTER_LOWPASS_Q,
+  REVERB,
+  SFX,
+  SFX_IDS,
+  type SfxId,
+} from '../data/sfx';
 import { DEFAULT_VOLUME } from '../data/meta';
 import { type LoopHandle, type LoopTimers, scheduleLoop } from './music';
+import { compressorMakeupTrim, reverbImpulse } from './mix';
 import { synthesizeSfx } from './sfx';
+import { playVariation, VoiceGate } from './voices';
 
 export type AudioContextFactory = () => AudioContext;
 
@@ -41,6 +55,9 @@ export class AudioManager {
   private sfxBus: GainNode | null = null;
   private buffers = new Map<SfxId, AudioBuffer>();
   private voices = new Map<SfxId, Set<AudioBufferSourceNode>>();
+  private readonly gate = new VoiceGate();
+  /** Every node of the master chain, disconnected on destroy. */
+  private chain: AudioNode[] = [];
   private unlocking: Promise<void> | null = null;
   private settings: AudioSettings = {
     master: DEFAULT_VOLUME,
@@ -87,9 +104,8 @@ export class AudioManager {
       this.master = ctx.createGain();
       this.master.connect(ctx.destination);
       this.musicBus = ctx.createGain();
-      this.musicBus.connect(this.master);
       this.sfxBus = ctx.createGain();
-      this.sfxBus.connect(this.master);
+      this.buildChain(ctx, this.master, this.musicBus, this.sfxBus);
       for (const id of SFX_IDS) {
         const pcm = synthesizeSfx(SFX[id], ctx.sampleRate);
         const buffer = ctx.createBuffer(1, pcm.length, ctx.sampleRate);
@@ -121,15 +137,23 @@ export class AudioManager {
       active = new Set();
       this.voices.set(id, active);
     }
-    if (active.size >= SFX_MAX_VOICES) return;
+    const now = ctx.currentTime;
+    if (!this.gate.canStart(id, now)) return;
+    const variation = playVariation(id, this.gate.start(id, now));
     const source = ctx.createBufferSource();
     source.buffer = this.buffers.get(id)!;
-    source.connect(this.sfxBus);
+    source.playbackRate.value = variation.rate;
+    const voiceGain = ctx.createGain();
+    voiceGain.gain.value = variation.gain;
+    source.connect(voiceGain);
+    voiceGain.connect(this.sfxBus);
     const slots = active;
     slots.add(source);
     source.onended = () => {
       slots.delete(source);
+      this.gate.end(id);
       source.disconnect();
+      voiceGain.disconnect();
     };
     source.start();
   }
@@ -177,7 +201,10 @@ export class AudioManager {
       slots.clear();
     }
     this.voices.clear();
+    this.gate.clear();
     this.buffers.clear();
+    for (const node of this.chain) node.disconnect();
+    this.chain = [];
     const ctx = this.context;
     this.context = null;
     this.master = this.musicBus = this.sfxBus = null;
@@ -193,8 +220,56 @@ export class AudioManager {
   private applyVolumes(): void {
     if (!this.master || !this.musicBus || !this.sfxBus) return;
     this.master.gain.value = (this.settings.master / VOLUME_MAX) * MASTER_OUTPUT;
-    this.musicBus.gain.value = this.settings.music / VOLUME_MAX;
+    this.musicBus.gain.value = (this.settings.music / VOLUME_MAX) * MUSIC_BUS_GAIN;
     this.sfxBus.gain.value = this.settings.sfx / VOLUME_MAX;
+  }
+
+  /** Buses → low-pass → compressor → makeup trim → master, plus the shared reverb send into the low-pass. */
+  private buildChain(ctx: AudioContext, master: GainNode, musicBus: GainNode, sfxBus: GainNode): void {
+    const lowpass = ctx.createBiquadFilter();
+    lowpass.type = 'lowpass';
+    lowpass.frequency.value = MASTER_LOWPASS_HZ;
+    lowpass.Q.value = MASTER_LOWPASS_Q;
+    const compressor = ctx.createDynamicsCompressor();
+    compressor.threshold.value = MASTER_COMPRESSOR.threshold;
+    compressor.knee.value = MASTER_COMPRESSOR.knee;
+    compressor.ratio.value = MASTER_COMPRESSOR.ratio;
+    compressor.attack.value = MASTER_COMPRESSOR.attack;
+    compressor.release.value = MASTER_COMPRESSOR.release;
+    const trim = ctx.createGain();
+    trim.gain.value = compressorMakeupTrim();
+    musicBus.connect(lowpass);
+    sfxBus.connect(lowpass);
+    lowpass.connect(compressor);
+    compressor.connect(trim);
+    trim.connect(master);
+
+    const [left, right] = reverbImpulse(
+      ctx.sampleRate,
+      REVERB.seconds,
+      REVERB.decay,
+      REVERB.preDelay,
+      REVERB.damping,
+      REVERB.seed,
+    );
+    const impulse = ctx.createBuffer(2, left.length, ctx.sampleRate);
+    impulse.getChannelData(0).set(left);
+    impulse.getChannelData(1).set(right);
+    const convolver = ctx.createConvolver();
+    convolver.buffer = impulse;
+    const sfxSend = ctx.createGain();
+    sfxSend.gain.value = REVERB.sfxSend;
+    const musicSend = ctx.createGain();
+    musicSend.gain.value = REVERB.musicSend;
+    const wet = ctx.createGain();
+    wet.gain.value = REVERB.wet;
+    sfxBus.connect(sfxSend);
+    musicBus.connect(musicSend);
+    sfxSend.connect(convolver);
+    musicSend.connect(convolver);
+    convolver.connect(wet);
+    wet.connect(lowpass);
+    this.chain = [musicBus, sfxBus, lowpass, compressor, trim, master, convolver, sfxSend, musicSend, wet];
   }
 
   private startTrack(track: MusicId, fadeIn: boolean): void {

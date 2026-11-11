@@ -1,7 +1,7 @@
 import Phaser from 'phaser';
 import type { EventBus } from '../core/events';
 import type { GameSpeed } from '../core/SimClock';
-import { INTERVENTION } from '../data/battle';
+import { INTERVENTION, INTERVENTION_POWERS } from '../data/battle';
 import { toCss } from '../data/palette';
 import { UI_PALETTE } from '../data/uiPalette';
 import type { BattleResult } from '../game/battle/types';
@@ -14,6 +14,7 @@ import { SPRITES_KEY, iconFrame } from '../render/atlas';
 import { ToastStack } from '../ui/ToastStack';
 import { Tooltip } from '../ui/Tooltip';
 import {
+  bestStructure,
   foesRemaining,
   interventionCooldown,
   summaryLines,
@@ -46,6 +47,8 @@ import {
 } from '../ui/realm/realmLayout';
 import { overviewView, worldAtView, type CameraView } from '../ui/realm/cameraModel';
 import { unproject } from '../core/iso';
+import { atlasOpacity, battleEntityBoxes } from '../render/pickBoxes';
+import { PICK_SLOP, pickSprite } from '../ui/info/spritePick';
 import {
   addUiText,
   createButton,
@@ -283,8 +286,8 @@ export class BattleHudScene extends Phaser.Scene {
         : undefined,
       onClick: () => this.toggleAim(),
       tooltip: tip([
-        'Can Thiệp (Space / B)',
-        'Thả Đá Tảng Hoàng Gia lên quân địch.',
+        `Can Thiệp: ${INTERVENTION_POWERS[this.controller.state.kingId].name} (Space / B)`,
+        INTERVENTION_POWERS[this.controller.state.kingId].text,
         'Bấm lại để huỷ.',
       ]),
     });
@@ -506,8 +509,10 @@ export class BattleHudScene extends Phaser.Scene {
     const at = this.aimAt;
     if (!this.aiming || !at) return;
     // A world circle of the boulder radius is a 2:1 ellipse on the isometric ground: r·√2 wide, r/√2 tall.
-    const rx = INTERVENTION.radius * Math.SQRT2 * this.view.zoom;
-    const ry = (INTERVENTION.radius / Math.SQRT2) * this.view.zoom;
+    // The battle's own radius (decrees and the king's power change it), else the base one.
+    const radius = this.world?.boulderRadius ?? INTERVENTION.radius;
+    const rx = radius * Math.SQRT2 * this.view.zoom;
+    const ry = (radius / Math.SQRT2) * this.view.zoom;
     const onField = worldAtView(this.view, this.screen(), at) !== null;
     g.lineStyle(3, UI_PALETTE.outline, 0.8);
     g.strokeEllipse(at.x, at.y, rx * 2, ry * 2);
@@ -527,8 +532,7 @@ export class BattleHudScene extends Phaser.Scene {
   private inspectAt(p: Point): void {
     const world = this.world;
     if (!world) return;
-    const at = unproject(screenToWorld(p, this.view.scroll, this.screen(), this.view.zoom));
-    const id = entityAt(world, at.x, at.y);
+    const id = this.entityUnder(world, p);
     if (id === null) {
       this.hideInfo();
       return;
@@ -536,6 +540,19 @@ export class BattleHudScene extends Phaser.Scene {
     this.inspected = id;
     this.bus.emit('ui:range-selection', { target: { kind: 'entity', id }, mode: 'selected' });
     this.showInfo(world, id, p);
+  }
+
+  /**
+   * The entity drawn under screen point `p`, ours or the enemy's (owner 10/11/2026): first by its sprite as drawn
+   * (units by their whole box, buildings by their opaque pixels, the front-most wins), then by its collision circle.
+   */
+  private entityUnder(world: BattleWorld, p: Point): number | null {
+    const cam = screenToWorld(p, this.view.scroll, this.screen(), this.view.zoom);
+    const boxes = battleEntityBoxes(this.textures, world);
+    const art = pickSprite(boxes, cam, PICK_SLOP / this.view.zoom, atlasOpacity(this.textures));
+    if (art !== null) return art;
+    const at = unproject(cam);
+    return entityAt(world, at.x, at.y);
   }
 
   private showInfo(world: BattleWorld, id: number, anchor: Point): void {
@@ -682,8 +699,7 @@ export class BattleHudScene extends Phaser.Scene {
     const world = this.world;
     let id: number | null = null;
     if (world && !this.aiming && !pointer.wasTouch) {
-      const at = unproject(screenToWorld({ x: pointer.x, y: pointer.y }, this.view.scroll, this.screen(), this.view.zoom));
-      id = entityAt(world, at.x, at.y);
+      id = this.entityUnder(world, { x: pointer.x, y: pointer.y });
     }
     if (id === this.hoveredId) return;
     this.hoveredId = id;
@@ -815,7 +831,19 @@ export class BattleHudScene extends Phaser.Scene {
     const result = this.result;
     if (!result) return;
     const overlay = createOverlay(this).setDepth(MODAL_DEPTH);
-    const panel = createPanel(this, 'panel', 320, 240);
+    const state = this.controller.state;
+    const summary = summaryLines({
+      kills: result.kills,
+      throneLostPct: result.throneHpLostPct,
+      best: bestStructure(result.killsBySource, state.plots, CONTENT),
+      lives: state.lives,
+      time: tickClock(result.ticks),
+      goldGain: Math.max(0, state.gold - this.goldAtStart),
+      conquered: state.pendingConquest === null ? null : CONTENT.enemyKing(state.pendingConquest).nameVi,
+    });
+    const inset = frameBorder(this, 'panel') + PAD;
+    const { panel: panelRect } = resultLayout(this.screen(), inset, summary.length, 1);
+    const panel = createPanel(this, 'panel', panelRect.w, panelRect.h);
     panel.image.setDepth(MODAL_DEPTH);
     const title = addUiText(
       this,
@@ -828,14 +856,7 @@ export class BattleHudScene extends Phaser.Scene {
       .setOrigin(0.5)
       .setFontStyle('bold')
       .setDepth(MODAL_DEPTH);
-    const state = this.controller.state;
-    const lines = summaryLines({
-      kills: result.kills,
-      lives: state.lives,
-      time: tickClock(result.ticks),
-      goldGain: Math.max(0, state.gold - this.goldAtStart),
-      conquered: state.pendingConquest === null ? null : CONTENT.enemyKing(state.pendingConquest).nameVi,
-    }).map((line) => addUiText(this, 0, 0, line, 18).setOrigin(0.5).setDepth(MODAL_DEPTH));
+    const lines = summary.map((line) => addUiText(this, 0, 0, line, 18).setOrigin(0.5).setDepth(MODAL_DEPTH));
     const next = createButton(this, 0, 0, 'Tiếp tục', {
       width: RESULT_BUTTON.w,
       height: RESULT_BUTTON.h,
@@ -948,6 +969,7 @@ export class BattleHudScene extends Phaser.Scene {
     s.title.setPosition(l.title.x + l.title.w / 2, l.title.y + l.title.h / 2);
     s.lines.forEach((t, i) => {
       const r = l.lines[i]!;
+      fitTextWidth(t, 18, 11, r.w);
       t.setPosition(r.x + r.w / 2, r.y + r.h / 2);
     });
     const b = l.buttons[0]!;

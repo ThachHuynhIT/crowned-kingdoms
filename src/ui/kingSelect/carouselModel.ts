@@ -3,9 +3,9 @@ import { ALL_KINGS } from '../../data/rules';
 import type { CardId, KingId } from '../../data/types';
 import type { Content } from '../../game/cards/registry';
 import { canUnlockKing, isKingUnlocked, type MetaProfile } from '../../game/meta';
-import { LOCKED_KING_TITLE, kingTitleParts, type KingTitleParts } from './kingTitle';
+import { kingTitleParts, type KingTitleParts } from './kingTitle';
 
-/** One card of the king carousel: an unlocked king with his nine cards, or a locked mystery. */
+/** One card of the king carousel: an unlocked king with his nine cards, or a locked one (name and portrait shown, greyed). */
 export interface KingChoice {
   id: KingId;
   nameVi: string;
@@ -13,10 +13,12 @@ export interface KingChoice {
   playable: boolean;
   /** The king's cards (empty for a locked king). */
   cards: readonly CardId[];
-  /** Two-colour heading: "Vua của" + title, or "Vua của ?" while locked. */
+  /** Two-colour heading: "Vua của" + title, locked or not (owner 2026-11-10: a locked king keeps his name). */
   title: KingTitleParts;
   /** What unlocks a locked king ("Cần 25 điểm Vương Miện"); null when playable. */
   note: string | null;
+  /** The line drawn on a locked card under the padlock ("Mở khoá: 25 điểm Vương Miện"); null when playable. */
+  lockText: string | null;
   /** Price of the unlock when the profile can pay for it right now; null otherwise. */
   unlockCost: number | null;
 }
@@ -28,6 +30,12 @@ const LEADING: readonly KingId[] = ['wheat', 'stone', 'arcane'];
 export const lockNote = (id: KingId): string => {
   const rule = KING_UNLOCK[id];
   return rule.needsWin ? `Cần ${rule.cost} điểm và thắng 1 ván` : `Cần ${rule.cost} điểm Vương Miện`;
+};
+
+/** "Mở khoá: 25 điểm Vương Miện", or "Mở khoá: 80 điểm và thắng 1 ván": the condition written on a locked card. */
+export const lockText = (id: KingId): string => {
+  const rule = KING_UNLOCK[id];
+  return rule.needsWin ? `Mở khoá: ${rule.cost} điểm và thắng 1 ván` : `Mở khoá: ${rule.cost} điểm Vương Miện`;
 };
 
 /** Label of the unlock button. */
@@ -50,6 +58,7 @@ export const kingChoices = (content: Content, profile: MetaProfile): readonly Ki
       cards: k.cards.map((c) => c.id),
       title: kingTitleParts(k.nameVi),
       note: null,
+      lockText: null,
       unlockCost: null,
     };
   });
@@ -58,8 +67,9 @@ export const kingChoices = (content: Content, profile: MetaProfile): readonly Ki
     nameVi: content.king(id).nameVi,
     playable: false,
     cards: [],
-    title: LOCKED_KING_TITLE,
+    title: kingTitleParts(content.king(id).nameVi),
     note: lockNote(id),
+    lockText: lockText(id),
     unlockCost: canUnlockKing(profile, id) ? KING_UNLOCK[id].cost : null,
   }));
   return [...unlocked, ...closed];

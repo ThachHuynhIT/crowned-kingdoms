@@ -1,6 +1,7 @@
 /** Mục "Cơ chế" của Trợ giúp: chữ tiếng Việt, mọi con số đọc từ data/luật (không gõ lại). */
+import { RULES_FULL } from '../../data/rules';
 import { TICKS_PER_SECOND } from '../../core/SimClock';
-import { BATTLE } from '../../data/battle';
+import { BATTLE, INTERVENTION_POWERS } from '../../data/battle';
 import { BOSS_RULES } from '../../data/bosses';
 import { DECREE_RULES } from '../../data/decrees';
 import { BATTLE_DIRECTION_HELP } from '../../data/help';
@@ -49,7 +50,9 @@ export const mechanicEntries = (content: Content): readonly HelpEntry[] => {
   const rerolls = [1, 2, 3].map(rerollCost).join(', ');
   return [
     entry('year', 'Một năm', [
-      `Mỗi năm bạn rút ${RUN.handSize} thẻ và chơi một thẻ lên bàn cờ 5×5 (hoặc bán thẻ lấy ${RUN.skipPlayGold} vàng), rồi quân bạn tự đánh một trận.`,
+      `Năm đầu bạn có ${RUN.handSize} thẻ; mỗi năm sau rút thêm ${RUN.yearDraw} thẻ (năm hội đồng và năm ngay sau trận boss rút ${RUN.bonusYearDraw}), bài cũ được giữ.`,
+      `Chơi thẻ lên bàn cờ 5×5 hoặc bán thẻ (${RUN.skipPlayGold} vàng mỗi thẻ) tới khi trên tay còn ${RUN.battleHandMax} thẻ, rồi trận tự bắt đầu; năm cuối của ván 30 năm phải dùng hết bài.`,
+      `Mua thẻ: ${RUN.shopBaseGold} vàng cho một thẻ ngẫu nhiên của vua bạn, mỗi lần mua thêm trong năm đắt hơn ${RUN.shopStepGold} vàng.`,
       `Đầu năm ${RUN.questYears.join(', ')} có thể có sứ giả đề nghị nhiệm vụ; sau trận bạn nhận thưởng hoặc chinh phục, và năm ${RUN.councilYears.join(', ')} có hội đồng.`,
       `Ván đầy đủ dài ${lastYear} năm; sống qua năm cuối là thắng, hết mạng là thua.`,
     ]),
@@ -87,7 +90,7 @@ export const mechanicEntries = (content: Content): readonly HelpEntry[] => {
     ]),
     entry('boss', 'Boss', [
       `Boss xuất hiện ở các năm ${RUN.bossYears.join(', ')}.`,
-      `Hết ${BATTLE.hardLimitTick} tick mà Ngai còn sống là thắng trận, nhưng chỉ hạ được boss mới tính boss đã thắng.`,
+      'Trận boss chỉ thắng khi hạ được boss và mọi địch còn lại.',
     ]),
     entry('save', 'Lưu ván và tải lại', [
       'Ván được lưu tự động sau mỗi hành động ngoài trận và khi vào/ra trận.',
@@ -95,11 +98,21 @@ export const mechanicEntries = (content: Content): readonly HelpEntry[] => {
     ]),
     entry('result', 'Thắng và thua', [
       `Ngai về 0 máu là thua trận và mất 1 mạng (bắt đầu ${RUN.startLives} mạng); hết mạng là thua ván.`,
-      `Hết ${BATTLE.hardLimitTick} tick (${seconds(BATTLE.hardLimitTick)} giây) mà Ngai còn sống là thắng trận.`,
-      `Vương Miện Vàng chỉ có khi bạn thật sự hạ được boss cuối (năm ${lastYear}), không chỉ sống sót đến hết giờ.`,
+      'Hạ hết mọi đợt địch là thắng trận; sống sót không còn đủ để thắng.',
+      `Từ giây ${seconds(BATTLE.rageTick)} địch Cuồng Nộ, rồi cứ ${seconds(BATTLE.rageStackTicks)} giây đòn của địch mạnh thêm ${BATTLE.rageStackDmgPct}%.`,
+      `Quá ${seconds(BATTLE.hardLimitTick)} giây mà trận chưa xong thì tính thua.`,
+      `Vương Miện Vàng chỉ có khi bạn hạ được boss cuối (năm ${lastYear}).`,
     ]),
     entry('rewards', 'Thẻ thưởng', [
       `Thẻ thưởng cho ${REWARD.choices} lựa chọn (sắc lệnh Giao Thương tăng lên ${DECREE_RULES.reward}).`,
+    ]),
+    entry('powers', 'Can Thiệp riêng của vua', [
+      'Can Thiệp rơi vào chỗ bạn chọn, cùng hồi chiêu và sát thương gốc; mỗi vua thêm một hiệu ứng:',
+      ...content.kings().map((k) => `${k.nameVi}: ${INTERVENTION_POWERS[k.id].name}. ${INTERVENTION_POWERS[k.id].text}`),
+    ]),
+    entry('merchant', 'Thương nhân', [
+      `Sau trận các năm ${RUN.merchantYears.join(', ')} (Vô tận: sau năm ${RULES_FULL.years}, cứ ${RUN.merchantEvery} năm) thương nhân bày ${REWARD.choices} thẻ.`,
+      `Mỗi thẻ ${RUN.merchantPrice} vàng, mua tối đa 1 hoặc bỏ qua miễn phí; thẻ mua có trên tay năm sau như thẻ thưởng.`,
     ]),
   ];
 };

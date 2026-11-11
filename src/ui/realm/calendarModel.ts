@@ -134,10 +134,11 @@ const ILLEGAL_TEXT: Record<IllegalReason, string> = {
   wrongKind: 'Bùa này không gắn được lên loại công trình đó.',
   stacksFull: 'Công trình đã đủ stack Bùa.',
   wrongPhase: 'Lúc này chưa dùng được.',
-  alreadyPlayed: 'Năm nay bạn đã chơi hoặc bỏ thẻ.',
-  notPlayed: 'Hãy chơi hoặc bỏ một thẻ trước.',
+  alreadyPlayed: 'Chỉ đổi bài được trước khi chơi hoặc bán lá đầu tiên của năm.',
+  handTooBig: 'Hãy chơi hoặc bán bài tới khi trên tay còn 2 lá.',
   badTarget: 'Mục tiêu không hợp lệ.',
   lastLife: 'Không thể: bạn chỉ còn 1 mạng.',
   noFreeMove: 'Năm nay đã hết lượt dời miễn phí.',
   wrongKing: 'Chỉ Vua Du Mục được dời miễn phí.',
+  noShopCards: 'Không còn thẻ nào để mua.',
 };

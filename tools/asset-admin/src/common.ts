@@ -1,5 +1,5 @@
 import { isManifest, isPlannedFile, isRecord } from './types';
-import type { Animation, Item, LoadedManifest, LoadedPlanned, Team } from './types';
+import type { Animation, Category, Item, LoadedManifest, LoadedPlanned, Manifest, Team } from './types';
 
 type ElementClass<T extends Element> = { new(): T };
 export function $<T extends HTMLElement>(id: string, expected: ElementClass<T>): T {
@@ -83,14 +83,41 @@ function normalizeManifest(value: unknown): unknown {
   const pixelScale = Number(value.pixelScale) > 0 ? Number(value.pixelScale) : 2;
   return { ...value, categories, pixelScale };
 }
+async function fetchManifest(file: string): Promise<Manifest> {
+  const response = await fetch(`/tools/asset-admin/${file}`, { cache: 'no-store' });
+  if (!response.ok) throw new Error(`Không tìm thấy ${file}`);
+  const parsed: unknown = await response.json();
+  const data = normalizeManifest(parsed);
+  if (!isManifest(data)) throw new Error(`${file} không đúng định dạng version 1`);
+  return data;
+}
+/**
+ * Gộp `manifest.json` (ảnh cắt từ các tờ duyệt tháng 10) với `game-assets.json` (mọi PNG game đang có, sinh bằng
+ * `python tools/build_game_assets.py`): mục cùng id lấy bản trong game-assets, nhóm cùng id gộp làm một.
+ */
+export function mergeManifests(base: Manifest, game: Manifest): Manifest {
+  const gameIds = new Set(game.categories.flatMap((category) => category.items.map((item) => item.id)));
+  const categories: Category[] = base.categories.map((category) => ({
+    ...category, items: category.items.filter((item) => !gameIds.has(item.id)),
+  }));
+  for (const category of game.categories) {
+    const same = categories.find((entry) => entry.id === category.id);
+    if (same) same.items = [...same.items, ...category.items];
+    else categories.push({ ...category, items: [...category.items] });
+  }
+  return { ...base, categories: categories.filter((category) => category.items.length > 0) };
+}
 export async function loadManifest(): Promise<LoadedManifest> {
   try {
-    const response = await fetch('/tools/asset-admin/manifest.json', { cache: 'no-store' });
-    if (!response.ok) throw new Error('Không tìm thấy manifest.json');
-    const parsed: unknown = await response.json();
-    const data = normalizeManifest(parsed);
-    if (!isManifest(data)) throw new Error('Manifest không đúng định dạng version 1');
-    return { ...data, pixelScale: data.pixelScale ?? 2, items: data.categories.flatMap((category) => category.items) };
+    const [base, game] = await Promise.allSettled([fetchManifest('manifest.json'), fetchManifest('game-assets.json')]);
+    if (base.status === 'rejected' && game.status === 'rejected') throw base.reason;
+    const empty: Manifest = { version: 1, pixelScale: 2, categories: [] };
+    const data = mergeManifests(base.status === 'fulfilled' ? base.value : empty, game.status === 'fulfilled' ? game.value : empty);
+    const failed = [base, game].find((result) => result.status === 'rejected');
+    return {
+      ...data, pixelScale: data.pixelScale ?? 2, items: data.categories.flatMap((category) => category.items),
+      ...(failed?.status === 'rejected' ? { error: errorText(failed.reason) } : {}),
+    };
   } catch (error) { return { version: 1, pixelScale: 2, categories: [], items: [], error: errorText(error) }; }
 }
 export async function loadPlanned(): Promise<LoadedPlanned> {

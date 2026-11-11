@@ -38,7 +38,7 @@ export const STONE: KingDef = {
     rarity: 'common',
     tags: [],
     textVi: 'Ngai của Vua Đá Núi: ném đá vào kẻ địch. Núi Che Chở: mọi tháp +{pct}% sát thương.',
-    hp: 115,
+    hp: 90,
     armor: 0.2,
     attack: { dmg: 12, type: 'physical', range: cells(1.3125), interval: 14, projectileSpeed: 12 },
     passive: [

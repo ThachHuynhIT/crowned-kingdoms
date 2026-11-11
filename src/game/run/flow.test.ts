@@ -13,8 +13,10 @@ const multiset = (cards: readonly string[]): string[] => [...cards].sort();
 describe('new run (state 6)', () => {
   it('new_state6_defaults', () => {
     const s = newRun(7, 'wheat', CONTENT, RULES_G2);
-    expect(RUN_SAVE_VERSION).toBe(7);
-    expect(s.version).toBe(7);
+    expect(RUN_SAVE_VERSION).toBe(9);
+    expect(s.version).toBe(9);
+    expect(s.shopPurchasesThisYear).toBe(0);
+    expect(s.rng.shop).toBe(hashSeed('7:shop'));
     expect(s.difficulty).toBe(0);
     expect(s.decrees).toEqual([]);
     expect(s.quests).toEqual([]);

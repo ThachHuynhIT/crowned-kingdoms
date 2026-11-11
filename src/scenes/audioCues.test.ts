@@ -74,7 +74,8 @@ describe('transitionCues', () => {
   });
   it('play, draw, reroll, coin, plot unlock and level up from what changed', () => {
     const s = base();
-    expect(transitionCues(s, { ...s, played: true })).toContain('card_play');
+    expect(transitionCues(s, { ...s, played: true, hand: s.hand.slice(1) })).toContain('card_play');
+    expect(transitionCues(s, { ...s, played: true })).not.toContain('card_play');
     expect(transitionCues(s, { ...s, hand: [...s.hand, s.hand[0]!] })).toContain('card_draw');
     expect(transitionCues(s, { ...s, rerollsThisYear: s.rerollsThisYear + 1 })).toContain('reroll');
     expect(transitionCues(s, { ...s, gold: s.gold + 3 })).toContain('coin');

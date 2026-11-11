@@ -1,4 +1,5 @@
 import { META_SAVE_VERSION } from '../data/meta';
+import { RUN } from '../data/run';
 import { IDBFactory, IDBObjectStore } from 'fake-indexeddb';
 import { describe, expect, it, vi } from 'vitest';
 import {
@@ -101,7 +102,8 @@ const playToEnd = async (session: GameSession, state: RunState) => {
   const ended: { crownPoints: number; unlocks: string[] }[] = [];
   bus.on('run:ended', (e) => ended.push(e));
   if (state.phase === 'battle') controller.kickoff();
-  else bus.emit('ui:command', { command: { type: 'discard', handIndex: 0 } });
+  // G1 auto-start: selling down to RUN.battleHandMax cards starts the battle
+  else for (let i = state.hand.length; i > RUN.battleHandMax; i--) bus.emit('ui:command', { command: { type: 'discard', handIndex: 0 } });
   await controller.whenIdle();
   bus.emit('battle:ended', { result: loss });
   await controller.whenIdle();

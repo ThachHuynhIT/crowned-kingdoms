@@ -8,6 +8,23 @@ import type { RunMode } from '../../data/rules';
 export const geometryFor = (mode: RunMode): BoardGeometryDef =>
   mode === 'endless' ? ENDLESS_GEOMETRY : NORMAL_GEOMETRY;
 
+/**
+ * Tầm bắn của Ngai phủ cả vùng đất của mình (chủ dự án 11/11/2026): khoảng cách từ tâm ô Ngai tới góc xa nhất của bàn
+ * (mọi ô, kể cả vòng ngoài Vô tận). Px thế giới, cùng đơn vị với `cells()`.
+ */
+export const throneLandRange = (mode: RunMode = 'normal', throne: number = 2): number => {
+  const g = geometryFor(mode);
+  const t = g.plotCells[throne]!;
+  let best = 0;
+  for (const c of g.plotCells) {
+    // farthest corner of plot c from the throne plot's centre, in plot units
+    const dx = Math.abs(c.col - t.col) + 0.5;
+    const dy = Math.abs(c.row - t.row) + 0.5;
+    best = Math.max(best, Math.sqrt(dx * dx + dy * dy));
+  }
+  return best * g.plotSize;
+};
+
 /** Chế độ suy từ số ô của bàn (25 → thường, 49 → Vô tận); số khác không thuộc chế độ nào. */
 export const modeForPlotCount = (count: number): RunMode | null =>
   count === NORMAL_GEOMETRY.plotCount ? 'normal' : count === ENDLESS_GEOMETRY.plotCount ? 'endless' : null;
