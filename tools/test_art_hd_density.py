@@ -64,7 +64,7 @@ class HdDensityTest(unittest.TestCase):
     def test_the_runtime_lists_exactly_the_hd_files(self):
         """The HD set is exactly the ai-v1 twins of the listed ids: twelve poses per unit (prefix = unit id), each
         card's base image (`iso/` or `iso-neutral/`) with every published L2/L3, four plot skins per king, and the world
-        pictures of each `IMAGE_ART_HD_WORLD` group."""
+        pictures of each `IMAGE_ART_HD_WORLD` group, and the `IMAGE_ART_HD_FX` battle effects (`fx/fx_<id>`)."""
         text = (ROOT / 'src/render/imageArt.ts').read_text(encoding='utf-8')
 
         def listed(name: str) -> list[str]:
@@ -78,6 +78,7 @@ class HdDensityTest(unittest.TestCase):
             expected |= {f'{bases[0]}/{card}{s}.png' for s in ('', '_l2', '_l3') if (SD / bases[0] / f'{card}{s}.png').exists()}
         expected |= {f'iso/plots/{k}_{s}.png' for k in listed('IMAGE_ART_HD_PLOTS') for s in ('open', 'locked', 'throne', 'built')}
         expected |= world_hd_files(text, listed)
+        expected |= {f'fx/fx_{fx}.png' for fx in listed('IMAGE_ART_HD_FX')}
         found = {f.relative_to(HD).as_posix() for f in hd_files()} - hud_hd_files()
         self.assertEqual(found, expected)
 
@@ -97,9 +98,41 @@ class HdDensityTest(unittest.TestCase):
         expected |= {'menu/sky.png', 'menu/hills_far.png', 'menu/hills_mid.png'}
         self.assertEqual(expected - hud_hd_files(), set())
 
+    def test_atlas_icons_have_their_twin(self):
+        """Each `IMAGE_ART_HD_ICONS` id's 16 px atlas icon (`IMAGE_ICONS`) has its 32 px twin."""
+        text = (ROOT / 'src/render/imageArt.ts').read_text(encoding='utf-8')
+        ids = re.findall(r"'([a-z_]+)'", re.search(r'IMAGE_ART_HD_ICONS[^=]*=\s*\[(.*?)\]', text, re.S).group(1))
+        body = re.search(r'IMAGE_ICONS[^=]*=\s*\{(.*?)\}', text, re.S).group(1)
+        icons = dict(re.findall(r"(\w+): '(icons/icon_[a-z_]+-16)'", body))
+        self.assertTrue(ids)
+        for icon in ids:
+            self.assertIn(icon, icons)
+            self.assertTrue((HD / f'{icons[icon]}.png').exists(), icons[icon])
+
     def test_footman_has_no_hd_twin(self):
         """footman has no pose source (front-view barracks sheet): it stays ai-v1 at every density."""
         self.assertFalse(any(f.name.startswith('footman') for f in hd_files()))
+
+
+
+UHD = ROOT / 'public/assets/art/ai-v1-uhd'
+
+
+class UhdTwinTest(unittest.TestCase):
+    """Close-up art (12/11/2026): every ai-v1-uhd file is its ai-v1 twin at exactly 4x the pixels (2x its HD twin),
+    drawn at scale 0.125, so footprints and feet anchors do not move. Alpha stays 0/255."""
+
+    def test_every_uhd_file_is_four_times_its_twin(self):
+        files = sorted(UHD.rglob('*.png')) if UHD.exists() else []
+        self.assertGreater(len(files), 700)
+        for f in files:
+            rel = f.relative_to(UHD)
+            with self.subTest(rel.as_posix()):
+                with Image.open(f) as u, Image.open(SD / rel) as s, Image.open(HD / rel) as h:
+                    self.assertEqual(u.size, (s.width * 4, s.height * 4))
+                    self.assertEqual(u.size, (h.width * 2, h.height * 2))
+                    alpha = set(u.convert('RGBA').getchannel('A').getdata())
+                    self.assertLessEqual(alpha, {0, 255})
 
 
 if __name__ == '__main__':

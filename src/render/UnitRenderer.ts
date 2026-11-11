@@ -6,7 +6,7 @@ import type { CardId } from '../data/types';
 import { KIND_UNIT, TEAM_ALLY, type BattleWorld } from '../game/battle/world';
 import { BUILDING_FOOT_DY } from './BoardRenderer';
 import { ISO_SPRITE_SCALE, iso } from './isoView';
-import { SPRITES_KEY, fxFrame, imageFrameScale, pickBuildingFrame, unitFrame } from './atlas';
+import { SPRITES_KEY, frameDensityFactor, fxFrame, imageFrameScale, pickBuildingFrame, unitFrame } from './atlas';
 import { plotAtWorld } from './endlessBoardModel';
 import type { RunMode } from '../data/rules';
 import type { UnitAnim } from './unitArt';
@@ -224,7 +224,8 @@ export class UnitRenderer {
   private showStun(sprite: Phaser.GameObjects.Image): void {
     let star = this.stars[this.starsUsed];
     if (!star) {
-      star = this.scene.add.image(0, 0, SPRITES_KEY, fxFrame('stun')).setOrigin(0.5, 1).setDepth(BAR_DEPTH);
+      star = this.scene.add.image(0, 0, SPRITES_KEY, fxFrame('stun')).setOrigin(0.5, 1).setDepth(BAR_DEPTH)
+        .setScale(frameDensityFactor(fxFrame('stun')));
       this.stars.push(star);
     }
     star.setPosition(sprite.x, Math.round(sprite.y - sprite.displayHeight - 2)).setVisible(true);

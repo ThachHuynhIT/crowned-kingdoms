@@ -1,3 +1,4 @@
+import { smoothTextureIfEnabled } from './smoothArt';
 import type { RunMode } from '../data/rules';
 import type Phaser from 'phaser';
 import type { KingId } from '../data/types';
@@ -42,6 +43,9 @@ export class FieldRenderer {
     // The ground tile repeats every (pw × ph) on screen; its pixel (pw/2, 0) is the grass grid origin, so the
     // TileSprite starts a whole number of periods left/up of it: the grass beyond the field lines up with the field's.
     const groundKey = ensureGroundTexture(scene.textures);
+    // Close-up art: the painted field and ground sample smoothly like the pictures (graphics 'high').
+    smoothTextureIfEnabled(scene.textures, this.key, true);
+    smoothTextureIfEnabled(scene.textures, groundKey);
     const scale = groundTextureScale(scene.textures);
     const src = scene.textures.get(groundKey).getSourceImage();
     const pw = src.width * scale;

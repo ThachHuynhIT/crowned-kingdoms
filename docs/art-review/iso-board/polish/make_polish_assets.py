@@ -2,6 +2,7 @@
 
     python docs/art-review/iso-board/polish/make_polish_assets.py <id> [<id> ...] [--publish]
     python docs/art-review/iso-board/polish/make_polish_assets.py --density 4 <id> [<id> ...]   # HiDPI twins
+    python docs/art-review/iso-board/polish/make_polish_assets.py --density 8 <id> [<id> ...]   # close-up twins
 
 Each `<id>/source.png` (a Codex sample or set item, black background) is keyed to alpha 0/255 and box-reduced to its
 target size (`TARGETS`: the portal 112 px wide, a pine 64 px tall). Every world sprite is drawn at one screen pixel
@@ -11,7 +12,8 @@ Reapers barn, on grass green). Prints size and foot row. `--publish` (only after
 the natives to public/assets/art/ai-v1/iso/polish/<id>.png; it never registers anything by itself.
 `--density 4` (11/11/2026, `.superpowers/art-hd-map.md`) writes only the HiDPI twin of each already published id to
 public/assets/art/ai-v1-hd/iso/polish/<id>.png: the same source cut by `reduce_hd` to EXACTLY twice its native (same
-foot and anchor); no native, no review sheet.
+foot and anchor); no native, no review sheet. `--density 8` (12/11/2026, close-up tier) is the same path with
+m = density / 2 = 4: EXACTLY four times the native, into public/assets/art/ai-v1-uhd/iso/polish/<id>.png.
 """
 import shutil
 import sys
@@ -26,6 +28,8 @@ from make_assets import BUILDINGS, REAPERS_WIDTH, keyed, reduce, reduce_hd  # no
 
 OUT = ROOT / 'public/assets/art/ai-v1/iso/polish'
 OUT_HD = ROOT / 'public/assets/art/ai-v1-hd/iso/polish'
+DENSITIES = (2, 4, 8)
+OUT_DIRS = {4: OUT_HD, 8: ROOT / 'public/assets/art/ai-v1-uhd/iso/polish'}
 GRASS = (93, 155, 58, 255)
 
 
@@ -70,19 +74,20 @@ def review(natives: dict[str, Image.Image]) -> None:
 def main(args: list[str]) -> None:
     publish = '--publish' in args
     density = int(args[args.index('--density') + 1]) if '--density' in args else 2
-    if density not in (2, 4):
-        raise SystemExit('--density is 2 or 4')
+    if density not in DENSITIES:
+        raise SystemExit(f'--density is one of {DENSITIES}')
     ids = [a for i, a in enumerate(args) if not a.startswith('--') and (i == 0 or args[i - 1] != '--density')]
     if not ids:
         raise SystemExit('give at least one id')
     k = building_scale()
-    if density == 4:
-        OUT_HD.mkdir(parents=True, exist_ok=True)
+    if density != 2:
+        out_dir = OUT_DIRS[density]
+        out_dir.mkdir(parents=True, exist_ok=True)
         for ident in ids:
             src = keyed(HERE / ident / 'source.png')
-            hd = reduce_hd(src, scale_of(ident, src, k), 2)
-            hd.save(OUT_HD / f'{ident}.png')
-            print(f'{ident}: {hd.width}x{hd.height} (HiDPI)')
+            hd = reduce_hd(src, scale_of(ident, src, k), density // 2)
+            hd.save(out_dir / f'{ident}.png')
+            print(f'{ident}: {hd.width}x{hd.height} (density {density})')
         return
     natives = {}
     for ident in ids:

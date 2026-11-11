@@ -2,6 +2,7 @@
 
     python docs/art-review/g5/recut_border_key.py forge_flame_tower forge_iron_drake forge_bombardiers
     python docs/art-review/g5/recut_border_key.py --density 4 forge_flame_tower forge_iron_drake forge_bombardiers
+    python docs/art-review/g5/recut_border_key.py --density 8 forge_flame_tower forge_iron_drake forge_bombardiers
 
 The G5 cutter keyed every near-black pixel, so dark mortar lines and outlines inside a building became holes (the
 owner saw them as green dotted lines over the grass). This keeps the published image's exact size and footprint: it
@@ -9,7 +10,8 @@ crops the source to the object, box-reduces (mask-weighted, alpha 0/255) to the 
 overwrites it. The old file is kept as `<id>.pre-recut.png` next to the source for rollback.
 
 `--density 4` writes the HiDPI twin instead: the same cut at EXACTLY twice the published density-2 image's size into
-public/assets/art/ai-v1-hd/iso/ (no rollback copy; the density-2 file is not touched).
+public/assets/art/ai-v1-hd/iso/ (no rollback copy; the density-2 file is not touched). `--density 8` writes the
+close-up twin at EXACTLY four times that size into public/assets/art/ai-v1-uhd/iso/.
 """
 import sys
 from pathlib import Path
@@ -19,7 +21,7 @@ from PIL import Image
 
 ROOT = Path(__file__).resolve().parents[3]
 ART = ROOT / 'public/assets/art/ai-v1/iso'
-ART_HD = ROOT / 'public/assets/art/ai-v1-hd/iso'
+ART_SETS = {4: ROOT / 'public/assets/art/ai-v1-hd/iso', 8: ROOT / 'public/assets/art/ai-v1-uhd/iso'}
 
 
 def background(a: np.ndarray) -> np.ndarray:
@@ -47,7 +49,7 @@ def recut(card: str, density: int = 2) -> None:
     if density == 2:
         (src.parent / f'{card}.pre-recut.png').write_bytes(dst.read_bytes())
     else:
-        dst = ART_HD / f'{card}.png'
+        dst = ART_SETS[density] / f'{card}.png'
         dst.parent.mkdir(parents=True, exist_ok=True)
     a = np.array(Image.open(src).convert('RGB')).astype(float)
     solid = ~background(a)
@@ -72,7 +74,7 @@ if __name__ == '__main__':
     if '--density' in args:
         i = args.index('--density')
         density, args = int(args[i + 1]), args[:i] + args[i + 2:]
-    if density not in (2, 4):
-        raise SystemExit('--density must be 2 or 4')
+    if density not in (2, 4, 8):
+        raise SystemExit('--density must be 2, 4 or 8')
     for c in args:
         recut(c, density)

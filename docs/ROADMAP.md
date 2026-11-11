@@ -73,7 +73,8 @@ Tất cả là cảm nhận trên PC (desktop ≥ 768 px). Bố cục điện th
 ## Giai đoạn `enhance-hd-graphics`
 
 1. ✔ HiDPI rendering (11/11/2026): canvas theo DPR thật, chữ rasterise theo mật độ, layout/input giữ logical, art giữ nearest; chưa xuất lại art (bước 2). Spec [`2026-11-11-hidpi-rendering-design.md`](superpowers/specs/2026-11-11-hidpi-rendering-design.md), plan [`2026-11-11-hidpi-rendering.md`](superpowers/plans/2026-11-11-hidpi-rendering.md). Đã kiểm ở DPR thật 1/1,25/2/3; D1 giống hệt từng pixel so với trước.
-2. ✔ Art HD (11/11/2026, chỉ xuất lại từ ảnh nguồn đã duyệt, không vẽ mới): bản 4 px/đơn vị thế giới (gấp đôi) cho lính, nhà, cấp 2/3, ô đất, vách núi, vật hoang dã, rừng, cổng, nền cỏ/địa hình, ảnh thẻ, chân dung, thẻ chọn vua, tranh menu, icon; chỉ tải ở màn mật độ ≥ 2, PWA không cache sẵn (cache khi dùng). Atlas thế giới chia trang ≤ 4096. Còn lại: lính `footman` (không có ảnh nguồn theo tư thế), icon trong atlas `sprites`, fx.
+2. ✔ Art HD (11/11/2026, chỉ xuất lại từ ảnh nguồn đã duyệt, không vẽ mới): bản 4 px/đơn vị thế giới (gấp đôi) cho lính, nhà, cấp 2/3, ô đất, vách núi, vật hoang dã, rừng, cổng, nền cỏ/địa hình, ảnh thẻ, chân dung, thẻ chọn vua, tranh menu, icon; chỉ tải ở màn mật độ ≥ 2, PWA không cache sẵn (cache khi dùng). Atlas thế giới chia trang ≤ 4096. Icon trong atlas `sprites` và ảnh fx cũng có bản HD; không còn tải 32 ảnh tường núi cũ không dùng. Còn lại: lính `footman` (không có ảnh nguồn theo tư thế).
+3. ✔ Ảnh cận cảnh (12/11/2026, chủ dự án: "công trình, map, lính vẫn chưa đẹp"): xuất lại từ ảnh nguồn ở 8 px/đơn vị (gấp 4) cho lính, nhà, cấp 2/3, ô đất, vách núi, vật hoang dã, rừng, cổng (772 file, 53 MB, `ai-v1-uhd/`); "Độ nét: Cao" trên máy tính tải bộ này, lấy mẫu mượt có mipmap (khung UI giữ nét) và cho camera phóng tới 6×. Nền cỏ/địa hình giữ 4 px. Spec [`2026-11-12-close-up-art-design.md`](superpowers/specs/2026-11-12-close-up-art-design.md).
 
 ## Để sau: điện thoại (chỉ làm khi chủ dự án bảo)
 

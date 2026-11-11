@@ -1,6 +1,6 @@
 import { describe, expect, it } from 'vitest';
 import { FIELD_TERRAINS, ROAD_TAIL, generateField, paintField, paintRoadTail } from './fieldArt';
-import { DECOR_APPROVED, FOREST_APPROVED, GROUND_TEXTURES_APPROVED, GROUND_TEXTURE_FILES, PORTAL_ART, decorFile, forestFile, imageArtScale, imageArtTexture, GRASS_FILES, IMAGE_ART_DIR, IMAGE_ART_FILES, IMAGE_ART_HD_DIR, IMAGE_ART_HD_BUILDINGS, IMAGE_ART_HD_FILES, IMAGE_ART_HD_PLOTS, IMAGE_ART_HD_SCALE, IMAGE_ART_HD_UNITS, IMAGE_ART_SCALE, IMAGE_BUILDINGS, IMAGE_PLOTS, IMAGE_UNITS, MENU_IMAGE_LAYERS, POSES, WALL_FILE, imageArtHdKey, imageArtKey, imageArtLoads, menuImageLayers, unitPoseFile, useHdArt } from './imageArt';
+import { DECOR_APPROVED, FOREST_APPROVED, GROUND_TEXTURES_APPROVED, GROUND_TEXTURE_FILES, PORTAL_ART, decorFile, forestFile, imageArtScale, imageArtTexture, GRASS_FILES, IMAGE_ART_DIR, IMAGE_ART_FILES, IMAGE_ART_HD_DIR, IMAGE_ART_HD_BUILDINGS, IMAGE_ART_HD_FILES, IMAGE_ART_HD_PLOTS, IMAGE_ART_HD_SCALE, IMAGE_ART_HD_UNITS, IMAGE_ART_SCALE, IMAGE_BUILDINGS, IMAGE_PLOTS, IMAGE_UNITS, MENU_IMAGE_LAYERS, POSES, WALL_FILE, imageArtHdKey, imageArtKey, imageArtLoads, menuImageLayers, unitPoseFile, densityArtTier, IMAGE_ART_UHD_DIR, IMAGE_ART_UHD_FILES, IMAGE_ART_UHD_SCALE, imageArtUhdKey } from './imageArt';
 import { PixelCanvas, upscale } from './pixel';
 
 describe('image art mapping', () => {
@@ -67,15 +67,18 @@ describe('HD image art (4 art px per world unit)', () => {
   });
 
   it('loads HD twins under their own key only when asked, every other file from ai-v1', () => {
-    const sd = imageArtLoads(false);
-    const hd = imageArtLoads(true);
+    const sd = imageArtLoads('sd');
+    const hd = imageArtLoads('hd');
     expect(sd.length).toBe(IMAGE_ART_FILES.length);
     expect(hd.length).toBe(IMAGE_ART_FILES.length);
     expect(sd.every((l) => l.url.startsWith(IMAGE_ART_DIR))).toBe(true);
     expect(hd).toContainEqual({ key: imageArtHdKey('militia_0'), url: `${IMAGE_ART_HD_DIR}militia_0.png` });
     expect(hd).toContainEqual({ key: imageArtKey('footman_0'), url: `${IMAGE_ART_DIR}footman_0.png` });
     expect(hd).toContainEqual({ key: imageArtHdKey(WALL_FILE), url: `${IMAGE_ART_HD_DIR}${WALL_FILE}.png` });
-    expect(hd).toContainEqual({ key: imageArtKey('icons/icon_gold-16'), url: `${IMAGE_ART_DIR}icons/icon_gold-16.png` });
+    expect(hd).toContainEqual({ key: imageArtHdKey('icons/icon_gold-16'), url: `${IMAGE_ART_HD_DIR}icons/icon_gold-16.png` });
+    expect(hd).toContainEqual({ key: imageArtHdKey('fx/fx_arrow_ne'), url: `${IMAGE_ART_HD_DIR}fx/fx_arrow_ne.png` });
+    // the inspection stat icons keep their ai-v1 atlas load; their HUD twins load beside them (hudArtHd.ts)
+    expect(hd).toContainEqual({ key: imageArtKey('icons/icon_life-16'), url: `${IMAGE_ART_DIR}icons/icon_life-16.png` });
     expect(hd.filter((l) => l.url.startsWith(IMAGE_ART_HD_DIR)).length).toBe(IMAGE_ART_HD_FILES.size);
   });
 
@@ -93,19 +96,37 @@ describe('HD image art (4 art px per world unit)', () => {
 
   it('finds a world picture under its HD key first, then its ai-v1 key; the HD twin draws at half scale', () => {
     const file = decorFile('log');
-    expect(imageArtTexture(() => true, file)).toEqual({ key: imageArtHdKey(file), hd: true });
-    expect(imageArtTexture((k) => k === imageArtKey(file), file)).toEqual({ key: imageArtKey(file), hd: false });
+    expect(imageArtTexture((k) => k !== imageArtUhdKey(file), file)).toEqual({ key: imageArtHdKey(file), factor: 0.5 });
+    expect(imageArtTexture((k) => k === imageArtKey(file), file)).toEqual({ key: imageArtKey(file), factor: 1 });
     expect(imageArtTexture(() => false, file)).toBeNull();
-    expect(imageArtScale(1, false)).toBe(1);
-    expect(imageArtScale(1, true)).toBe(0.5);
-    expect(imageArtScale(IMAGE_ART_SCALE, true)).toBe(IMAGE_ART_HD_SCALE);
+    expect(imageArtScale(1, 1)).toBe(1);
+    expect(imageArtScale(1, 0.5)).toBe(0.5);
+    expect(imageArtScale(IMAGE_ART_SCALE, 0.5)).toBe(IMAGE_ART_HD_SCALE);
   });
 
   it('switches on from display density 2', () => {
-    expect(useHdArt(1)).toBe(false);
-    expect(useHdArt(1.5)).toBe(false);
-    expect(useHdArt(2)).toBe(true);
-    expect(useHdArt(3)).toBe(true);
+    expect(densityArtTier(1)).toBe('sd');
+    expect(densityArtTier(1.5)).toBe('sd');
+    expect(densityArtTier(2)).toBe('hd');
+    expect(densityArtTier(3)).toBe('hd');
+  });
+
+  it('close-up (uhd): world art from ai-v1-uhd, the ground and atlas icons/fx from ai-v1-hd, the rest from ai-v1', () => {
+    const uhd = imageArtLoads('uhd');
+    expect(uhd.length).toBe(IMAGE_ART_FILES.length);
+    expect(uhd).toContainEqual({ key: imageArtUhdKey('militia_0'), url: `${IMAGE_ART_UHD_DIR}militia_0.png` });
+    expect(uhd).toContainEqual({ key: imageArtUhdKey(WALL_FILE), url: `${IMAGE_ART_UHD_DIR}${WALL_FILE}.png` });
+    expect(uhd).toContainEqual({ key: imageArtHdKey(GRASS_FILES[0]!), url: `${IMAGE_ART_HD_DIR}${GRASS_FILES[0]!}.png` });
+    expect(uhd).toContainEqual({ key: imageArtHdKey('icons/icon_gold-16'), url: `${IMAGE_ART_HD_DIR}icons/icon_gold-16.png` });
+    expect(uhd).toContainEqual({ key: imageArtKey('footman_0'), url: `${IMAGE_ART_DIR}footman_0.png` });
+    expect(uhd.filter((l) => l.url.startsWith(IMAGE_ART_UHD_DIR)).length).toBe(IMAGE_ART_UHD_FILES.size);
+    for (const file of IMAGE_ART_UHD_FILES) expect(IMAGE_ART_HD_FILES).toContain(file);
+  });
+
+  it('finds the UHD twin first; it draws at a quarter of the ai-v1 scale', () => {
+    const file = decorFile('log');
+    expect(imageArtTexture(() => true, file)).toEqual({ key: imageArtUhdKey(file), factor: 0.25 });
+    expect(imageArtScale(IMAGE_ART_SCALE, 0.25)).toBe(IMAGE_ART_UHD_SCALE);
   });
 });
 
