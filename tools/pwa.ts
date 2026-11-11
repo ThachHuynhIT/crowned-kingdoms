@@ -1,0 +1,200 @@
+/**
+ * PWA build helpers (G5 P5, spec G5 §6): code-generated crown icons (PNG encoded with node:zlib, no new dependency)
+ * and the hand-written service worker generated from the real build output. Used by `tools/icons.ts` and the
+ * `pwa` plugin in `vite.config.ts`.
+ */
+import { createHash } from 'node:crypto';
+import { readdirSync, readFileSync, statSync, writeFileSync } from 'node:fs';
+import { join, relative, sep } from 'node:path';
+import { deflateSync } from 'node:zlib';
+
+// ---- PNG -----------------------------------------------------------------------------------------------
+
+const CRC_TABLE = (() => {
+  const t = new Uint32Array(256);
+  for (let n = 0; n < 256; n++) {
+    let c = n;
+    for (let k = 0; k < 8; k++) c = c & 1 ? 0xedb88320 ^ (c >>> 1) : c >>> 1;
+    t[n] = c >>> 0;
+  }
+  return t;
+})();
+
+export function crc32(bytes: Uint8Array): number {
+  let c = 0xffffffff;
+  for (const b of bytes) c = CRC_TABLE[(c ^ b) & 0xff]! ^ (c >>> 8);
+  return (c ^ 0xffffffff) >>> 0;
+}
+
+const chunk = (type: string, data: Uint8Array): Buffer => {
+  const head = Buffer.alloc(8);
+  head.writeUInt32BE(data.length, 0);
+  head.write(type, 4, 'ascii');
+  const crc = Buffer.alloc(4);
+  crc.writeUInt32BE(crc32(Buffer.concat([head.subarray(4), data])), 0);
+  return Buffer.concat([head, data, crc]);
+};
+
+/** RGBA8 pixels (row-major, width × height × 4) → PNG bytes. */
+export function encodePng(width: number, height: number, rgba: Uint8Array): Uint8Array {
+  const raw = Buffer.alloc((width * 4 + 1) * height);
+  for (let y = 0; y < height; y++) {
+    raw[y * (width * 4 + 1)] = 0; // filter: none
+    Buffer.from(rgba.buffer, rgba.byteOffset + y * width * 4, width * 4).copy(raw, y * (width * 4 + 1) + 1);
+  }
+  const ihdr = Buffer.alloc(13);
+  ihdr.writeUInt32BE(width, 0);
+  ihdr.writeUInt32BE(height, 4);
+  ihdr[8] = 8; // bit depth
+  ihdr[9] = 6; // RGBA
+  return Buffer.concat([
+    Buffer.from([0x89, 0x50, 0x4e, 0x47, 0x0d, 0x0a, 0x1a, 0x0a]),
+    chunk('IHDR', ihdr),
+    chunk('IDAT', deflateSync(raw)),
+    chunk('IEND', new Uint8Array(0)),
+  ]);
+}
+
+// ---- Crown icon (the 8×8 favicon motif of index.html) --------------------------------------------------
+
+const BG: readonly [number, number, number] = [0x2a, 0x1a, 0x14];
+const GOLD: readonly [number, number, number] = [0xf6, 0xc4, 0x45];
+const RED: readonly [number, number, number] = [0xd0, 0x4a, 0x3a];
+/** 8×8 cells: '.' background, 'g' gold, 'r' red (same rects as the favicon). */
+export const CROWN = [
+  '........',
+  '...gg...',
+  '.g.gg.g.',
+  '.g.gg.g.',
+  '.g.gg.g.',
+  '.ggrrgg.',
+  '.gggggg.',
+  '........',
+] as const;
+
+/** Square crown icon: `size` 192 or 512; `maskable` keeps the crown inside the central 80% safe circle. */
+export function makeIcon(size: 192 | 512, maskable: boolean): Uint8Array {
+  const cell = maskable ? Math.floor((size * 0.6) / 8) : size / 8;
+  const offset = Math.floor((size - cell * 8) / 2);
+  const px = new Uint8Array(size * size * 4);
+  for (let y = 0; y < size; y++) {
+    for (let x = 0; x < size; x++) {
+      const cx = Math.floor((x - offset) / cell);
+      const cy = Math.floor((y - offset) / cell);
+      const ch = cx >= 0 && cx < 8 && cy >= 0 && cy < 8 ? CROWN[cy]![cx] : '.';
+      const rgb = ch === 'g' ? GOLD : ch === 'r' ? RED : BG;
+      const i = (y * size + x) * 4;
+      px[i] = rgb[0];
+      px[i + 1] = rgb[1];
+      px[i + 2] = rgb[2];
+      px[i + 3] = 255;
+    }
+  }
+  return encodePng(size, size, px);
+}
+
+// ---- Service worker --------------------------------------------------------------------------------------
+
+/** Every file under `dir` as a URL path relative to it (forward slashes), sorted; `sw.js` itself excluded. */
+export function listBuildFiles(dir: string): string[] {
+  const out: string[] = [];
+  const walk = (d: string): void => {
+    for (const name of readdirSync(d)) {
+      const p = join(d, name);
+      if (statSync(p).isDirectory()) walk(p);
+      else out.push(relative(dir, p).split(sep).join('/'));
+    }
+  };
+  walk(dir);
+  return out.filter((f) => f !== 'sw.js').sort();
+}
+
+/** Short content digest of the listed files (changes whenever any file changes). */
+export function buildDigest(dir: string, files: readonly string[]): string {
+  const h = createHash('sha256');
+  for (const f of files) {
+    h.update(f);
+    h.update(readFileSync(join(dir, f)));
+  }
+  return h.digest('hex').slice(0, 16);
+}
+
+/**
+ * Build folders NOT precached but cached at runtime, cache-first, on their first fetch: the HiDPI art twins
+ * (`IMAGE_ART_HD_DIR` in src/render/imageArt.ts) are only loaded at display density ≥ 2, so precaching them would make
+ * every density-1 device download art it never shows. A DPR-2 device keeps them offline after its first load.
+ */
+export const RUNTIME_CACHED_DIRS: readonly string[] = ['assets/art/ai-v1-hd/'];
+
+/** Whether build file `file` (relative URL path) is cached at runtime instead of precached. */
+export const isRuntimeCached = (file: string): boolean => RUNTIME_CACHED_DIRS.some((d) => file.startsWith(d));
+
+/**
+ * The service worker source: precache every listed build file (all-or-nothing: a single failed fetch fails the
+ * install and the old worker stays), cache-first for those files, network-first for navigations with the cached index
+ * as the offline fallback, same-origin GET only. Files under `RUNTIME_CACHED_DIRS` are cache-first in their own cache
+ * `runtimeCache` (filled on first fetch, kept across app updates while its name, the digest of those files, holds).
+ * A new worker waits; the page activates it only when asked (no automatic skipWaiting mid-run). Activate deletes only
+ * this app's other caches (prefix `ck-`).
+ */
+export function serviceWorkerSource(files: readonly string[], version: string, runtimeCache = 'ck-hd'): string {
+  const urls = ['./', ...files.filter((f) => !isRuntimeCached(f)).map((f) => `./${f}`)];
+  return `// Generated by tools/pwa.ts at build time; do not edit.
+const CACHE = 'ck-${version}';
+const RUNTIME_CACHE = '${runtimeCache}';
+const URLS = ${JSON.stringify(urls)};
+const RUNTIME_DIRS = ${JSON.stringify(RUNTIME_CACHED_DIRS.map((d) => `./${d}`))};
+self.addEventListener('install', (event) => {
+  event.waitUntil(caches.open(CACHE).then((cache) => cache.addAll(URLS)));
+});
+self.addEventListener('activate', (event) => {
+  event.waitUntil(
+    caches.keys().then((keys) => Promise.all(keys.filter((k) => k.startsWith('ck-') && k !== CACHE && k !== RUNTIME_CACHE).map((k) => caches.delete(k)))),
+  );
+});
+self.addEventListener('message', (event) => {
+  if (event.data === 'skipWaiting') self.skipWaiting();
+});
+const runtimeCached = (url) => RUNTIME_DIRS.some((d) => url.pathname.startsWith(new URL(d, self.registration.scope).pathname));
+self.addEventListener('fetch', (event) => {
+  const req = event.request;
+  const url = new URL(req.url);
+  if (req.method !== 'GET' || url.origin !== self.location.origin) return;
+  if (req.mode === 'navigate') {
+    event.respondWith(fetch(req).catch(() => caches.match('./', { ignoreSearch: true, ignoreVary: true }).then((r) => r || caches.match('./index.html'))));
+    return;
+  }
+  if (runtimeCached(url)) {
+    event.respondWith(
+      caches.open(RUNTIME_CACHE).then((cache) =>
+        cache.match(req, { ignoreSearch: true, ignoreVary: true }).then((hit) =>
+          hit ||
+          fetch(req).then((res) => {
+            if (res.ok) cache.put(req, res.clone());
+            return res;
+          }),
+        ),
+      ),
+    );
+    return;
+  }
+  event.respondWith(caches.match(req, { ignoreSearch: true, ignoreVary: true }).then((hit) => hit || fetch(req)));
+});
+`;
+}
+
+/** Write `outDir/sw.js` for the files of a finished build. */
+export function buildPwa(outDir: string): { files: number; runtimeFiles: number; version: string } {
+  const all = listBuildFiles(outDir);
+  const files = all.filter((f) => !isRuntimeCached(f));
+  const runtime = all.filter(isRuntimeCached);
+  const runtimeCache = `ck-hd-${buildDigest(outDir, runtime)}`;
+  // the worker's own code is part of the version, so a changed worker also gets a fresh cache
+  const version = createHash('sha256')
+    .update(buildDigest(outDir, files))
+    .update(serviceWorkerSource([], '', ''))
+    .digest('hex')
+    .slice(0, 16);
+  writeFileSync(join(outDir, 'sw.js'), serviceWorkerSource(files, version, runtimeCache));
+  return { files: files.length, runtimeFiles: runtime.length, version };
+}

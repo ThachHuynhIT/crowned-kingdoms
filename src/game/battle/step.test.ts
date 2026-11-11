@@ -4,7 +4,10 @@ import { attackStats, battleSetup, structure, throneSetup, unitStats } from '../
 import { hashWorld } from './hash';
 import { battleResult, simulateBattle, stepBattle } from './step';
 import type { BattleEvent, BattleSetup, UnitStats, WaveSetup } from './types';
-import { TEAM_FOE, createBattle, drainEvents, spawnWave, type BattleWorld } from './world';
+import { TEAM_FOE, addUnit, createBattle, drainEvents, spawnWave, structureFoot, type BattleWorld } from './world';
+
+/** Chân Ngai của fixture (plot 12). */
+const T = structureFoot(12);
 
 const wave = (n: number, spawnTick: number, over: Partial<UnitStats> = {}): WaveSetup => ({
   spawnTick,
@@ -57,18 +60,18 @@ describe('stepBattle', () => {
     for (let i = 0; i < 80; i++) {
       stepBattle(a, []);
       // b: lệnh của tick hiện tại (chỉ tick 30 là hợp lệ, sau đó đang hồi chiêu)
-      stepBattle(b, [{ tick: b.tick, x: 100, y: 100 }]);
+      stepBattle(b, [{ tick: b.tick, x: 100, y: 300 }]);
       // c: lệnh lệch tick → bị bỏ qua
-      stepBattle(c, [{ tick: c.tick + 1, x: 100, y: 100 }]);
+      stepBattle(c, [{ tick: c.tick + 1, x: 100, y: 300 }]);
       bEvents.push(...drainEvents(b));
     }
     expect(a.interventionsUsed).toBe(0);
     expect(b.interventionsUsed).toBe(1);
-    expect(b.inputs).toEqual([{ tick: 30, x: 100, y: 100 }]);
+    expect(b.inputs).toEqual([{ tick: 30, x: 100, y: 300 }]);
     expect(b.readyTick).toBe(180);
     expect(bEvents.filter((e) => e.type === 'boulder')).toEqual([
-      { type: 'boulder', phase: 'drop', x: 100, y: 100 },
-      { type: 'boulder', phase: 'impact', x: 100, y: 100 },
+      { type: 'boulder', phase: 'drop', x: 100, y: 300 },
+      { type: 'boulder', phase: 'impact', x: 100, y: 300 },
     ]);
     expect(hashWorld(b)).not.toBe(hashWorld(a));
     expect(c.interventionsUsed).toBe(0);
@@ -79,10 +82,10 @@ describe('stepBattle', () => {
     const w = createBattle(battleSetup({ waves: [wave(1, 0, { speed: 0 })] }));
     for (let i = 0; i < 30; i++) stepBattle(w, []);
     stepBattle(w, [
-      { tick: 30, x: 50, y: 60 },
-      { tick: 30, x: 70, y: 80 },
+      { tick: 30, x: 50, y: 310 },
+      { tick: 30, x: 70, y: 320 },
     ]);
-    expect(w.inputs).toEqual([{ tick: 30, x: 50, y: 60 }]); // lệnh thứ hai gặp hồi chiêu
+    expect(w.inputs).toEqual([{ tick: 30, x: 50, y: 310 }]); // lệnh thứ hai gặp hồi chiêu
     expect(w.interventionsUsed).toBe(1);
   });
 
@@ -108,8 +111,8 @@ describe('end of battle', () => {
     const setup = battleSetup({ throne: instantThrone(100), waves: [wave(1, 0)] });
     const w = createBattle(setup);
     spawnWave(w, 0); // đặt sẵn địch trong tầm Ngai
-    w.x[1] = 192;
-    w.y[1] = 130;
+    w.x[1] = T.x;
+    w.y[1] = T.y - 62;
     stepBattle(w, []);
     const r = battleResult(w);
     expect(r).not.toBeNull();
@@ -125,8 +128,8 @@ describe('end of battle', () => {
       battleSetup({ throne: instantThrone(100), waves: [wave(1, 0), wave(1, 50)] }),
     );
     spawnWave(w, 0);
-    w.x[1] = 192;
-    w.y[1] = 130;
+    w.x[1] = T.x;
+    w.y[1] = T.y - 62;
     stepBattle(w, []);
     expect(battleResult(w)).toBeNull();
   });
@@ -135,8 +138,8 @@ describe('end of battle', () => {
     const setup = battleSetup({ throne: instantThrone(100, 5), waves: [wave(1, 0, { dmg: 5 })] });
     const w = createBattle(setup);
     spawnWave(w, 0);
-    w.x[1] = 192;
-    w.y[1] = 192 - 14 - 4 - 1; // mép–mép 1 ≤ tầm 2
+    w.x[1] = T.x;
+    w.y[1] = T.y - 14 - 4 - 1; // mép–mép 1 ≤ tầm 2
     const events: BattleEvent[] = [];
     stepBattle(w, []);
     events.push(...drainEvents(w));
@@ -148,7 +151,7 @@ describe('end of battle', () => {
     expect(events.filter((e) => e.type === 'ended')).toEqual([{ type: 'ended', won: false }]);
   });
 
-  it('at hardLimitTick with the throne alive and foes left → won; rage once at rageTick', () => {
+  it('at hardLimitTick with the throne alive and foes left → lost; rage once at rageTick', () => {
     const setup = battleSetup({
       throne: throneSetup({ attack: null }),
       waves: [wave(2, 0, { speed: 0 })],
@@ -165,9 +168,9 @@ describe('end of battle', () => {
     }
     expect(rageAt).toBe(BATTLE.rageTick);
     expect(events.filter((e) => e.type === 'rage')).toHaveLength(1);
-    expect(events.filter((e) => e.type === 'ended')).toEqual([{ type: 'ended', won: true }]);
+    expect(events.filter((e) => e.type === 'ended')).toEqual([{ type: 'ended', won: false }]);
     const r = battleResult(w)!;
-    expect(r.won).toBe(true);
+    expect(r.won).toBe(false);
     expect(r.ticks).toBe(BATTLE.hardLimitTick);
     expect(w.alive[1]).toBe(1);
   });
@@ -244,5 +247,34 @@ describe('simulateBattle', () => {
 
   it('is deterministic', () => {
     expect(simulateBattle(setup)).toEqual(simulateBattle(setup));
+  });
+});
+
+describe('stepBattle runs structure pulses at step 3', () => {
+  it('damages and stuns a foe in range on the pulse tick, and not on the tick before', () => {
+    const mk = () => {
+      const w = createBattle(
+        battleSetup({
+          throne: throneSetup({ attack: null }),
+          structures: [
+            structure(6, {
+              pulse: { everyTicks: 40, radius: 48, dmg: 30, dmgType: 'physical', stunTicks: 10 },
+            }),
+          ],
+        }),
+      );
+      const s = structureFoot(6);
+      const f = addUnit(w, unitStats({ hp: 500, speed: 0 }), TEAM_FOE, s.x + 20, s.y, s.x + 20, s.y, -1);
+      return { w, f };
+    };
+    const early = mk();
+    early.w.tick = 39;
+    stepBattle(early.w, []);
+    expect(early.w.hp[early.f]).toBe(500);
+    const on = mk();
+    on.w.tick = 40;
+    stepBattle(on.w, []);
+    expect(on.w.hp[on.f]).toBe(470);
+    expect(on.w.stunTicks[on.f]).toBeGreaterThan(0);
   });
 });

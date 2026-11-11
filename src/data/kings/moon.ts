@@ -1,0 +1,237 @@
+import { cells } from '../boardGeometry';
+import { RUN } from '../run';
+import type { CardDef, EnemyKingDef, KingDef } from '../types';
+import { enemyFromKing } from './enemy';
+
+const dead = { owner: 'moon' as const, tags: ['undead'] as const };
+const plain = { owner: 'moon' as const, tags: [] as const };
+
+/** Đơn vị Thu Hồn (bị động Ngai Nguyệt Thực) triệu hồi tại Ngai. */
+export const SOUL_HARVEST_UNIT = 'wraith';
+
+/** Chín thẻ của Vua Ánh Trăng (spec §6.10), không gồm Ngai; chỉ có được nhờ chinh phục ở G3. */
+export const MOON_CARDS: readonly CardDef[] = [
+  {
+    ...dead,
+    id: 'moon_crypt',
+    nameVi: 'Hầm Mộ',
+    name: 'Crypt',
+    kind: 'troop',
+    rarity: 'common',
+    textVi: 'Sinh {count} bộ xương, mỗi con sống lại một lần với 50% máu.',
+    effects: [{ type: 'spawn', unit: 'skeleton', count: [3, 4, 5, 6, 7] }],
+  },
+  {
+    ...dead,
+    id: 'moon_shadow_spire',
+    nameVi: 'Tháp Bóng Đêm',
+    name: 'Shadow Spire',
+    kind: 'tower',
+    rarity: 'common',
+    textVi: 'Bắn {dmg} sát thương phép; mỗi lần hạ địch triệu hồi 1 bóng ma (tối đa 3/4/5/6/8 mỗi trận).',
+    effects: [
+      {
+        type: 'tower',
+        attack: { dmg: 7, type: 'magic', range: cells(1.6875), interval: 10, projectileSpeed: 16 },
+        targeting: 'closestToThrone',
+      },
+      { type: 'summonOnKill', unit: 'wraith', max: [3, 4, 5, 6, 8] },
+    ],
+  },
+  {
+    owner: 'moon',
+    tags: ['sacrifice'],
+    id: 'moon_blood_pact',
+    nameVi: 'Khế Ước Máu',
+    name: 'Blood Pact',
+    kind: 'tome',
+    rarity: 'common',
+    textVi: 'Hiến tế một công trình (không phải Ngai): nhận 3 vàng mỗi cấp; mọi stack Bùa của nó chuyển sang Ngai.',
+    target: 'building',
+    actions: [{ type: 'custom', id: 'blood_pact', params: { goldPerLevel: 3 } }],
+  },
+  {
+    ...plain,
+    id: 'moon_blood_moon_rune',
+    nameVi: 'Bùa Trăng Máu',
+    name: 'Blood Moon Rune',
+    kind: 'enchantment',
+    rarity: 'common',
+    textVi: 'Mỗi lần gắn: +30% sát thương, −10% máu.',
+    targets: ['troop', 'tower', 'throne'],
+    perStack: [
+      { type: 'stat', scope: 'self', stat: 'dmg', mode: 'pct', value: 30 },
+      { type: 'stat', scope: 'self', stat: 'hp', mode: 'pct', value: -10 },
+      { type: 'stat', scope: 'self', stat: 'structureHp', mode: 'pct', value: -10 },
+    ],
+  },
+  {
+    ...dead,
+    id: 'moon_altar',
+    nameVi: 'Đàn Tế',
+    name: 'Altar',
+    kind: 'support',
+    rarity: 'uncommon',
+    textVi: 'Mỗi khi chơi một thẻ hiến tế, Đàn Tế ghi thêm 1 lễ vật. Đầu trận triệu hồi bóng ma theo số lễ vật.',
+    effects: [{ type: 'altarSummon', unit: 'wraith', perOffering: [1, 1, 2, 2, 3], cap: [12, 14, 16, 18, 20] }],
+  },
+  {
+    ...dead,
+    id: 'moon_vampires',
+    nameVi: 'Lâu Đài Ma Cà Rồng',
+    name: 'Vampire Castle',
+    kind: 'troop',
+    rarity: 'uncommon',
+    textVi: 'Sinh {count} ma cà rồng.',
+    effects: [{ type: 'spawn', unit: 'vampire', count: [2, 3, 3, 4, 5] }],
+  },
+  {
+    ...dead,
+    id: 'moon_summoning_circle',
+    nameVi: 'Vòng Triệu Hồi',
+    name: 'Summoning Circle',
+    kind: 'support',
+    rarity: 'uncommon',
+    textVi: 'Mỗi 80/70/60/50/40 tick triệu hồi 1 bóng ma tại ô (tối đa 8 mỗi trận).',
+    effects: [{ type: 'summonEvery', unit: 'wraith', everyTicks: [80, 70, 60, 50, 40], maxPerBattle: 8 }],
+  },
+  {
+    ...plain,
+    id: 'moon_eclipse_pact',
+    nameVi: 'Giao Ước Nguyệt Thực',
+    name: 'Eclipse Pact',
+    kind: 'tome',
+    rarity: 'rare',
+    textVi: 'Mất 1 mạng (không dùng được khi còn 1 mạng): công trình được chọn +2 cấp, nhận 5 vàng.',
+    target: 'building',
+    actions: [{ type: 'custom', id: 'eclipse_pact', params: { levels: 2, gold: 5 } }],
+  },
+  {
+    ...dead,
+    id: 'moon_reaper_shrine',
+    nameVi: 'Điện Thần Chết',
+    name: 'Reaper Shrine',
+    kind: 'troop',
+    rarity: 'rare',
+    textVi: 'Sinh {count} thần chết trăng.',
+    effects: [{ type: 'spawn', unit: 'moon_reaper', count: [1, 1, 1, 2, 2] }],
+  },
+];
+
+/** Vua Ánh Trăng (spec §6): Ngai, 9 thẻ, đơn vị, cờ hiệu và roster khi làm địch. */
+export const MOON: KingDef = {
+  id: 'moon',
+  nameVi: 'Vua Ánh Trăng',
+  name: 'Moon King',
+  color: 'plum',
+  blurbVi: 'Hiến tế và triệu hồi: gom Hồn, đổi lấy bóng ma. Rủi ro cao.',
+  perks: [
+    {
+      id: 'moon_p1',
+      nameVi: 'Hồn Đói',
+      textVi: 'Thu Hồn cần ít hơn 2 Hồn.',
+      effects: [{ type: 'soulCost', add: -2 }],
+    },
+    {
+      id: 'moon_p2',
+      nameVi: 'Trăng Non',
+      textVi: 'Bộ bài khởi đầu có thêm 1 Khế Ước Máu.',
+      effects: [{ type: 'startDeckCard', card: 'moon_blood_pact' }],
+    },
+    {
+      id: 'moon_p3',
+      nameVi: 'Mạng Thứ Tư',
+      textVi: 'Bắt đầu ván với 4 mạng, nhưng Ngai −20% máu.',
+      effects: [
+        { type: 'startLives', lives: RUN.maxLives },
+        { type: 'stat', filter: { kinds: ['throne'] }, stat: 'structureHp', mode: 'pct', value: -20 },
+      ],
+    },
+  ],
+  throne: {
+    id: 'moon_throne',
+    owner: 'moon',
+    nameVi: 'Ngai Nguyệt Thực',
+    name: 'Eclipse Throne',
+    kind: 'throne',
+    rarity: 'common',
+    tags: [],
+    textVi:
+      'Ngai của Vua Ánh Trăng: bắn phép trong tầm. Thu Hồn: cứ vài Hồn từ lính chết lại triệu hồi một bóng ma tại Ngai (tối đa 20 mỗi trận).',
+    hp: 720,
+    armor: 0,
+    attack: { dmg: 10, type: 'magic', range: cells(1.6875), interval: 12, projectileSpeed: 16 },
+    // Thu Hồn: cứ `souls` Hồn (theo cấp Ngai) triệu hồi 1 `SOUL_HARVEST_UNIT` tại Ngai, tối đa `max` mỗi trận.
+    passive: [{ type: 'custom', id: 'moon_soul_harvest', params: { souls: [6, 6, 5, 5, 4], max: 20 } }],
+  },
+  units: [
+    {
+      id: 'skeleton',
+      nameVi: 'Bộ Xương',
+      hp: 26,
+      attack: { dmg: 6, type: 'physical', range: 2, interval: 10 },
+      speed: 1.8,
+      radius: 4,
+      armor: 0,
+      tags: ['melee', 'undead'],
+      behaviours: [{ type: 'reviveOnce', hpPct: 50 }],
+      enemyCost: 1.1,
+      sprite: { w: 16, h: 16 },
+    },
+    {
+      id: 'wraith',
+      nameVi: 'Bóng Ma',
+      hp: 30,
+      attack: { dmg: 8, type: 'magic', range: 2, interval: 10 },
+      speed: 2.6,
+      radius: 4,
+      armor: 0,
+      tags: ['melee', 'undead'],
+      enemyCost: 1.0,
+      sprite: { w: 16, h: 16 },
+    },
+    {
+      id: 'vampire',
+      nameVi: 'Ma Cà Rồng',
+      hp: 60,
+      attack: { dmg: 10, type: 'physical', range: 2, interval: 10, onHit: [{ type: 'lifesteal', pct: 40 }] },
+      speed: 2.4,
+      radius: 4,
+      armor: 0,
+      tags: ['melee', 'undead'],
+      enemyCost: 2.4,
+      sprite: { w: 16, h: 16 },
+    },
+    {
+      id: 'moon_reaper',
+      nameVi: 'Thần Chết Trăng',
+      hp: 150,
+      attack: { dmg: 25, type: 'physical', range: 3, interval: 14, cleave: 3 },
+      speed: 2,
+      radius: 6,
+      armor: 0.1,
+      tags: ['melee', 'undead'],
+      behaviours: [
+        { type: 'killHeal', hp: 10 },
+        { type: 'soulScaling', pctPerSoul: 2 },
+      ],
+      enemyCost: 9.0,
+      sprite: { w: 24, h: 32 },
+    },
+  ],
+  enemyRoster: [
+    { unit: 'skeleton', weight: 55 },
+    { unit: 'wraith', weight: 25 },
+    { unit: 'vampire', weight: 20 },
+  ],
+  banner: {
+    id: 'moon_banner',
+    nameVi: 'Bất Tử',
+    textVi: '20% địch đầu tiên bị hạ sẽ sống lại một lần với 30% máu.',
+    effects: [{ type: 'undying', pct: 20, hpPct: 30 }],
+  },
+  cards: MOON_CARDS,
+};
+
+/** Phần kẻ địch của moon: cùng dữ liệu, thẻ chinh phục là 9 thẻ của vua. */
+export const MOON_ENEMY: EnemyKingDef = enemyFromKing(MOON);

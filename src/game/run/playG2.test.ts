@@ -4,6 +4,7 @@ import { CUSTOM_TOME_HANDLERS } from '../cards/custom';
 import { contentWith, runState } from '../testing/fixtures';
 import { applyCommand } from './commands';
 import type { BuildingState, IllegalReason, PlayTarget, RunState } from './state';
+import { THRONE_PLOT } from './board';
 
 const base = { owner: 'neutral' as const, name: 'x', rarity: 'common' as const, tags: [], textVi: 'x' };
 const barracks: CardDef = { ...base, id: 'neutral_barracks', nameVi: 'Trại', kind: 'troop', effects: [] };
@@ -37,7 +38,7 @@ const bld = (uid: number, cardId: string, level: Level = 1, enchants: BuildingSt
   level,
   enchants,
   placedYear: 1,
-  permanent: {},
+  permanent: {}, ageBonus: 0, counters: {}, movedYear: null,
 });
 
 /** Planning state holding exactly `hand`, with buildings at the given plots. */
@@ -113,8 +114,8 @@ describe('enchantments', () => {
   });
 
   it('can target the throne when the card allows it', () => {
-    const next = run(state(['neutral_sharpen']), play(0, plot(12)));
-    expect(next.plots[12]!.building!.enchants).toEqual([{ cardId: 'neutral_sharpen', stacks: 1 }]);
+    const next = run(state(['neutral_sharpen']), play(0, plot(THRONE_PLOT)));
+    expect(next.plots[THRONE_PLOT]!.building!.enchants).toEqual([{ cardId: 'neutral_sharpen', stacks: 1 }]);
   });
 });
 
@@ -138,10 +139,11 @@ describe('tomes', () => {
     const b = bld(8, 'neutral_well');
     const s = state(['neutral_move'], [[6, a], [7, b]]);
     const next = run(s, play(0, { kind: 'two', first: 6, second: 7 }));
-    expect(next.plots[7]!.building).toEqual(a);
-    expect(next.plots[6]!.building).toEqual(b);
+    const stamped = <T extends object>(x: T) => ({ ...x, movedYear: s.year });
+    expect(next.plots[7]!.building).toEqual(stamped(a));
+    expect(next.plots[6]!.building).toEqual(stamped(b));
     const toEmpty = run(state(['neutral_move'], [[6, a]]), play(0, { kind: 'two', first: 6, second: 8 }));
-    expect(toEmpty.plots[8]!.building).toEqual(a);
+    expect(toEmpty.plots[8]!.building).toEqual(stamped(a));
     expect(toEmpty.plots[6]!.building).toBeNull();
   });
 

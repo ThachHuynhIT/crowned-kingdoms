@@ -4,6 +4,7 @@ import type { IncomeHandler } from '../cards/custom/types';
 import { contentWith, fakeKing, runState } from '../testing/fixtures';
 import { yearIncome } from './income';
 import type { BuildingState, RunState } from './state';
+import { THRONE_PLOT } from './board';
 
 const economy = (id: string, effects: BuildingCardDef['effects']): CardDef => ({
   id: id as CardDef['id'],
@@ -60,7 +61,7 @@ const at = (
       level: level ?? 1,
       enchants: [],
       placedYear: 1,
-      permanent: {},
+      permanent: {}, ageBonus: 0, counters: {}, movedYear: null,
     };
     plots[plot] = { ...plots[plot]!, unlocked: true, building: b };
   });
@@ -133,7 +134,7 @@ describe('yearIncome', () => {
       ],
     });
     const s = runState({ throneLevel: 3 });
-    s.plots[12]!.building = { ...s.plots[12]!.building!, cardId: 'stone_throne' };
+    s.plots[THRONE_PLOT]!.building = { ...s.plots[THRONE_PLOT]!.building!, cardId: 'stone_throne' };
     expect(yearIncome(s, c, 0).delta).toBe(3);
   });
 

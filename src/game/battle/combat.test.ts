@@ -19,6 +19,7 @@ import {
   addUnit,
   createBattle,
   drainEvents,
+  structureFoot,
   type BattleWorld,
 } from './world';
 
@@ -44,7 +45,8 @@ const fight = (w: BattleWorld): void => {
   deathPhase(w);
 };
 
-/** Tháp Cung ở plot 7 = (192, 160), r 12: dmg 7, tầm 88, đạn 8 px/tick. */
+/** Tháp Cung ở plot 7 (chân `TW`), r 12: dmg 7, tầm 88, đạn 8 px/tick. */
+const TW = structureFoot(7);
 const archerTower = (over: Partial<StructureSetup> = {}): StructureSetup =>
   structure(7, {
     uid: 70,
@@ -65,8 +67,8 @@ describe('mitigate', () => {
 describe('attack cadence', () => {
   it('a unit with interval 10 hits at T and T+10, never T+9 or T+11', () => {
     const w = world();
-    const a = unit(w, TEAM_ALLY, 100, 100, { interval: 10 });
-    const f = unit(w, TEAM_FOE, 110, 100, { hp: 1000, dmg: 0 });
+    const a = unit(w, TEAM_ALLY, 100, 300, { interval: 10 });
+    const f = unit(w, TEAM_FOE, 110, 300, { hp: 1000, dmg: 0 });
     w.target[a] = f;
     const hits: number[] = [];
     for (let t = 0; t < 25; t++) {
@@ -79,8 +81,8 @@ describe('attack cadence', () => {
 
   it('an idle unit strikes once on contact, then waits a full interval (no stored hits)', () => {
     const w = world();
-    const a = unit(w, TEAM_ALLY, 100, 100, { interval: 10 });
-    const f = unit(w, TEAM_FOE, 300, 100, { hp: 1000, dmg: 0 });
+    const a = unit(w, TEAM_ALLY, 100, 300, { interval: 10 });
+    const f = unit(w, TEAM_FOE, 300, 300, { hp: 1000, dmg: 0 });
     w.target[a] = f;
     for (let t = 0; t < 30; t++) fight(w);
     expect(w.hp[f]).toBe(1000);
@@ -96,7 +98,7 @@ describe('attack cadence', () => {
 
   it('structures without an attack never attack', () => {
     const w = world([structure(7)]);
-    unit(w, TEAM_FOE, 192, 140, { hp: 100, dmg: 0 });
+    unit(w, TEAM_FOE, 192, 340, { hp: 100, dmg: 0 });
     for (let t = 0; t < 5; t++) attackPhase(w);
     expect(w.damageQueue).toEqual([]);
     expect(w.projectileCount).toBe(0);
@@ -107,10 +109,10 @@ describe('attack cadence', () => {
 describe('instant melee damage', () => {
   it('footman dmg 7 removes 7 HP at armor 0 and 6.3 at armor 0.1', () => {
     const w = world();
-    const a = unit(w, TEAM_ALLY, 100, 100, { dmg: 7 });
-    const f = unit(w, TEAM_FOE, 110, 100, { hp: 45, dmg: 0 });
-    const g = unit(w, TEAM_FOE, 100, 110, { hp: 45, dmg: 0, armor: 0.1 });
-    const b = unit(w, TEAM_ALLY, 100, 120, { dmg: 7 });
+    const a = unit(w, TEAM_ALLY, 100, 300, { dmg: 7 });
+    const f = unit(w, TEAM_FOE, 110, 300, { hp: 45, dmg: 0 });
+    const g = unit(w, TEAM_FOE, 100, 310, { hp: 45, dmg: 0, armor: 0.1 });
+    const b = unit(w, TEAM_ALLY, 100, 320, { dmg: 7 });
     w.target[a] = f;
     w.target[b] = g;
     attackPhase(w);
@@ -120,13 +122,13 @@ describe('instant melee damage', () => {
     expect(w.hp[g]).toBeCloseTo(45 - 6.3, 10);
     expect(w.damageQueue).toEqual([]);
     const hits = drainEvents(w).filter((e) => e.type === 'hit');
-    expect(hits).toContainEqual({ type: 'hit', id: f, dmg: 7 });
+    expect(hits).toContainEqual({ type: 'hit', id: f, dmg: 7, sourceId: a, dmgType: 'physical' });
   });
 
   it('does not attack a target out of range', () => {
     const w = world();
-    const a = unit(w, TEAM_ALLY, 100, 100, { dmg: 7 });
-    const f = unit(w, TEAM_FOE, 111, 100, { dmg: 0 }); // edge distance 3 > range 2
+    const a = unit(w, TEAM_ALLY, 100, 300, { dmg: 7 });
+    const f = unit(w, TEAM_FOE, 111, 300, { dmg: 0 }); // edge distance 3 > range 2
     w.target[a] = f;
     attackPhase(w);
     expect(w.damageQueue).toEqual([]);
@@ -134,10 +136,10 @@ describe('instant melee damage', () => {
 
   it('cleave 2: primary −9, nearest other −4.5, third untouched', () => {
     const w = world();
-    const r = unit(w, TEAM_ALLY, 100, 100, { dmg: 9, cleave: 2, range: 20 });
-    const main = unit(w, TEAM_FOE, 120, 100, { hp: 50, dmg: 0 });
-    const far = unit(w, TEAM_FOE, 100, 125, { hp: 50, dmg: 0 });
-    const near = unit(w, TEAM_FOE, 100, 112, { hp: 50, dmg: 0 });
+    const r = unit(w, TEAM_ALLY, 100, 300, { dmg: 9, cleave: 2, range: 20 });
+    const main = unit(w, TEAM_FOE, 120, 300, { hp: 50, dmg: 0 });
+    const far = unit(w, TEAM_FOE, 100, 325, { hp: 50, dmg: 0 });
+    const near = unit(w, TEAM_FOE, 100, 312, { hp: 50, dmg: 0 });
     w.target[r] = main;
     attackPhase(w);
     applyDamagePhase(w);
@@ -148,10 +150,10 @@ describe('instant melee damage', () => {
 });
 
 describe('projectiles', () => {
-  /** Tháp id 1 ở (192,160) r12; địch r4 cách mép–mép 80 px → tâm (192, 64). */
+  /** Tháp id 1 ở TW r12; địch r4 cách mép–mép 52 px → tâm 68 px ngay bắc tháp. */
   const setupShot = () => {
     const w = world([archerTower()]);
-    const f = unit(w, TEAM_FOE, 192, 64, { hp: 100, dmg: 0, speed: 0 });
+    const f = unit(w, TEAM_FOE, TW.x, TW.y - 68, { hp: 100, dmg: 0, speed: 0 });
     return { w, f, tower: 1 };
   };
 
@@ -166,15 +168,15 @@ describe('projectiles', () => {
       const py = w.projectiles.py[0]!;
       projectilePhase(w);
       if (t === 0) {
-        expect(w.projectiles.py[0]).toBe(152);
-        expect(py).toBe(160);
+        expect(w.projectiles.py[0]).toBe(TW.y - 8);
+        expect(py).toBe(TW.y);
       }
       const before = w.hp[f]!;
       applyDamagePhase(w);
       if (w.hp[f]! < before) hits.push(t);
     }
-    // tâm cách 96 px → 12 lần bay
-    expect(hits).toEqual([11]);
+    // tâm cách 68 px → 9 lần bay
+    expect(hits).toEqual([8]);
     expect(w.hp[f]).toBe(93);
     expect(w.projectileCount).toBe(0);
   });
@@ -183,17 +185,17 @@ describe('projectiles', () => {
     const { w, f } = setupShot();
     attackPhase(w);
     projectilePhase(w);
-    expect([w.projectiles.px[0], w.projectiles.py[0]]).toEqual([192, 152]);
-    w.x[f] = 192 + 88; // mục tiêu sang ngang: (280, 64) → hướng (88, −88)/√2·88
+    expect([w.projectiles.px[0], w.projectiles.py[0]]).toEqual([TW.x, TW.y - 8]);
+    w.x[f] = TW.x + 60; // mục tiêu sang ngang 60 px → hướng (60, −60)/√2·60
     projectilePhase(w);
     const s = 8 / Math.sqrt(2);
-    expect(w.projectiles.px[0]).toBeCloseTo(192 + s, 10);
-    expect(w.projectiles.py[0]).toBeCloseTo(152 - s, 10);
+    expect(w.projectiles.px[0]).toBeCloseTo(TW.x + s, 10);
+    expect(w.projectiles.py[0]).toBeCloseTo(TW.y - 8 - s, 10);
   });
 
   it('vanishes without damage when its target dies first', () => {
     const { w, f } = setupShot();
-    const other = unit(w, TEAM_FOE, 200, 56, { hp: 100, dmg: 0, speed: 0 }); // ngoài tầm tháp, gần đường đạn
+    const other = unit(w, TEAM_FOE, TW.x + 8, TW.y - 104, { hp: 100, dmg: 0, speed: 0 }); // ngoài tầm tháp, gần đường đạn
     attackPhase(w);
     w.interval[1] = 0; // tháp không bắn thêm
     projectilePhase(w);
@@ -230,7 +232,7 @@ describe('projectiles', () => {
 describe('slow (onHit)', () => {
   const slowed = () => {
     const w = world();
-    const f = unit(w, TEAM_FOE, 100, 100, { hp: 1000 });
+    const f = unit(w, TEAM_FOE, 100, 300, { hp: 1000 });
     return { w, f };
   };
 
@@ -276,8 +278,8 @@ describe('slow (onHit)', () => {
 
   it('an attacker with onHit slow slows its target', () => {
     const w = world();
-    const a = unit(w, TEAM_ALLY, 100, 100, { slowPct: 20, slowTicks: 20 });
-    const f = unit(w, TEAM_FOE, 110, 100, { hp: 1000, dmg: 0 });
+    const a = unit(w, TEAM_ALLY, 100, 300, { slowPct: 20, slowTicks: 20 });
+    const f = unit(w, TEAM_FOE, 110, 300, { hp: 1000, dmg: 0 });
     w.target[a] = f;
     attackPhase(w);
     applyDamagePhase(w);
@@ -291,8 +293,8 @@ describe('slow (onHit)', () => {
 describe('damage queue order', () => {
   it('applies by (source id, victim id, creation order)', () => {
     const w = world();
-    const f = unit(w, TEAM_FOE, 100, 100, { hp: 100 });
-    const g = unit(w, TEAM_FOE, 120, 100, { hp: 100 });
+    const f = unit(w, TEAM_FOE, 100, 300, { hp: 100 });
+    const g = unit(w, TEAM_FOE, 120, 300, { hp: 100 });
     queueDamage(w, g, 1, DMG_PHYSICAL, 9, undefined, 7);
     queueDamage(w, f, 2, DMG_PHYSICAL, 9, undefined, 7);
     queueDamage(w, g, 3, DMG_PHYSICAL, 9, undefined, 3);
@@ -300,10 +302,10 @@ describe('damage queue order', () => {
     applyDamagePhase(w);
     const hits = drainEvents(w).filter((e) => e.type === 'hit');
     expect(hits).toEqual([
-      { type: 'hit', id: g, dmg: 3 },
-      { type: 'hit', id: f, dmg: 2 },
-      { type: 'hit', id: f, dmg: 4 },
-      { type: 'hit', id: g, dmg: 1 },
+      { type: 'hit', id: g, dmg: 3, sourceId: 3, dmgType: 'physical' },
+      { type: 'hit', id: f, dmg: 2, sourceId: 7, dmgType: 'physical' },
+      { type: 'hit', id: f, dmg: 4, sourceId: 7, dmgType: 'physical' },
+      { type: 'hit', id: g, dmg: 1, sourceId: 7, dmgType: 'physical' },
     ]);
   });
 });
@@ -333,6 +335,28 @@ describe('deaths', () => {
     expect(w.kills).toBe(1);
   });
 
+  it('damage_by_source: ally damage to foes is summed per source uid, capped at the HP and shield left', () => {
+    const w = world([structure(6, { uid: 60, spawn: { stats: unitStats({ dmg: 7 }), count: 1 } })]);
+    const f = unit(w, TEAM_FOE, 300, 300, { hp: 10, dmg: 0 });
+    w.shield[f] = 2;
+    queueDamage(w, f, 5, DMG_PHYSICAL, 60, undefined, 3);
+    applyDamagePhase(w);
+    expect(w.damageBySource).toEqual({ 60: 5 });
+    // 7 more against 7 HP left (shield 0): all 7 count; then overkill counts only what was left.
+    queueDamage(w, f, 9, DMG_PHYSICAL, 60, undefined, 3);
+    applyDamagePhase(w);
+    expect(w.damageBySource).toEqual({ 60: 12 });
+    expect(w.interventionDamage).toBe(0);
+  });
+
+  it('damage_by_source ignores damage to our own side and from foes', () => {
+    const w = world([structure(6, { uid: 60, spawn: { stats: unitStats(), count: 1 } })]);
+    const f = unit(w, TEAM_FOE, 300, 300, { hp: 50, dmg: 0 });
+    queueDamage(w, 3, 4, DMG_PHYSICAL, -1, undefined, f);
+    applyDamagePhase(w);
+    expect(w.damageBySource).toEqual({});
+  });
+
   it('counts ally unit deaths in unitsLost, not structure deaths', () => {
     const w = world([structure(7, { spawn: { stats: unitStats(), count: 1 } })]);
     const ally = 2;
@@ -352,9 +376,9 @@ describe('deaths', () => {
     // ids: 0 Ngai, 1 plot 6 trại, 2 plot 7 tháp, 3 lính
     const towerId = 2;
     const soldier = 3;
-    const f = unit(w, TEAM_FOE, 192, 141, { hp: 1000, dmg: 0, speed: 0 });
+    const f = unit(w, TEAM_FOE, TW.x, TW.y - 19, { hp: 1000, dmg: 0, speed: 0 }); // tower edge 3
     retarget(w);
-    expect(w.target[f]).toBe(towerId);
+    expect(w.target[f]).toBe(soldier); // our units before our buildings, even next to the tower (spec 2026-11-08 §2)
     w.hp[towerId] = 0;
     deathPhase(w);
     expect(w.alive[towerId]).toBe(0);
@@ -366,11 +390,439 @@ describe('deaths', () => {
     expect(w.alive[w.target[f]!]).toBe(1);
     // lính của trại vẫn đánh
     w.damageQueue = [];
-    w.x[soldier] = 192;
-    w.y[soldier] = 151;
+    w.x[soldier] = TW.x;
+    w.y[soldier] = TW.y - 9; // edge 2 from the foe
     w.target[soldier] = f;
     w.cooldown[soldier] = 0;
     attackPhase(w);
-    expect(w.damageQueue.map((d) => d.sourceId)).toEqual([soldier]);
+    // the soldier strikes (the foe, now next to it, may strike back; the dead tower never does)
+    expect(w.damageQueue.filter((d) => d.sourceId !== f).map((d) => d.sourceId)).toEqual([soldier]);
+  });
+});
+
+/** HP lost by `id` in each of `ticks` fight ticks. */
+const damageTaken = (w: BattleWorld, id: number, ticks: number): number[] => {
+  const out: number[] = [];
+  for (let t = 0; t < ticks; t++) {
+    const before = w.hp[id]!;
+    fight(w);
+    out.push(before - w.hp[id]!);
+  }
+  return out;
+};
+
+describe('splash', () => {
+  const setup = (over: Partial<UnitStats> = {}) => {
+    const w = world();
+    const a = unit(w, TEAM_ALLY, 100, 300, { dmg: 20, range: 60, splash: 16, ...over });
+    const main = unit(w, TEAM_FOE, 130, 300, { hp: 1000 });
+    const near = unit(w, TEAM_FOE, 140, 300, { hp: 1000 }); // 10 px from the main target
+    const far = unit(w, TEAM_FOE, 160, 300, { hp: 1000 }); // 30 px
+    const friend = unit(w, TEAM_ALLY, 131, 300, { hp: 1000 });
+    w.target[a] = main;
+    return { w, a, main, near, far, friend };
+  };
+
+  it('hits the target for 100% and foes within the radius for 50%, nobody else', () => {
+    const { w, main, near, far, friend } = setup();
+    fight(w);
+    expect(w.hp[main]).toBe(980);
+    expect(w.hp[near]).toBe(990);
+    expect(w.hp[far]).toBe(1000);
+    expect(w.hp[friend]).toBe(1000);
+  });
+
+  it('does nothing extra when splash is 0', () => {
+    const { w, near } = setup({ splash: 0 });
+    fight(w);
+    expect(w.hp[near]).toBe(1000);
+  });
+
+  it('splashes where a projectile lands, and still explodes when the target died first', () => {
+    const { w, a, main, near } = setup({ projectileSpeed: 100, interval: 1000 });
+    attackPhase(w); // fires
+    w.hp[main] = 0; // the target dies before the shell arrives
+    w.alive[main] = 0;
+    projectilePhase(w);
+    applyDamagePhase(w);
+    expect(w.hp[main]).toBe(0);
+    // the shell fell where the target had stood; `near` is 10 px away from that spot
+    expect(w.hp[near]).toBe(990);
+    expect(a).toBeGreaterThan(0);
+  });
+});
+
+describe('chain', () => {
+  const setup = (count: number) => {
+    const w = world();
+    const a = unit(w, TEAM_ALLY, 100, 300, {
+      dmg: 10,
+      range: 60,
+      chain: { count, radius: 32, falloff: 0.6 },
+    });
+    const first = unit(w, TEAM_FOE, 130, 300, { hp: 1000 });
+    const second = unit(w, TEAM_FOE, 150, 300, { hp: 1000 }); // 20 px from the first
+    const third = unit(w, TEAM_FOE, 175, 300, { hp: 1000 }); // 25 px from the second, 45 from the first
+    const outside = unit(w, TEAM_FOE, 130, 360, { hp: 1000 });
+    w.target[a] = first;
+    return { w, first, second, third, outside };
+  };
+
+  it('jumps once to the nearest other foe in range with the falloff', () => {
+    const { w, first, second, third, outside } = setup(1);
+    fight(w);
+    expect(w.hp[first]).toBe(990);
+    expect(w.hp[second]).toBeCloseTo(1000 - 10 * 0.6, 9);
+    expect(w.hp[third]).toBe(1000);
+    expect(w.hp[outside]).toBe(1000);
+  });
+
+  it('keeps jumping count times, multiplying the falloff each time, never hitting a foe twice', () => {
+    const { w, first, second, third } = setup(2);
+    fight(w);
+    expect(w.hp[first]).toBe(990);
+    expect(w.hp[second]).toBeCloseTo(1000 - 6, 9);
+    expect(w.hp[third]).toBeCloseTo(1000 - 3.6, 9);
+  });
+
+  it('does not jump when there is no other foe in range', () => {
+    const w = world();
+    const a = unit(w, TEAM_ALLY, 100, 300, { dmg: 10, range: 60, chain: { count: 1, radius: 32, falloff: 0.6 } });
+    const only = unit(w, TEAM_FOE, 130, 300, { hp: 1000 });
+    w.target[a] = only;
+    fight(w);
+    expect(w.hp[only]).toBe(990);
+  });
+
+  it('breaks ties by the lowest id', () => {
+    const w = world();
+    const a = unit(w, TEAM_ALLY, 100, 300, { dmg: 10, range: 60, chain: { count: 1, radius: 40, falloff: 0.5 } });
+    const first = unit(w, TEAM_FOE, 130, 300, { hp: 1000 });
+    const up = unit(w, TEAM_FOE, 130, 280, { hp: 1000 }); // 20 px from the first
+    const down = unit(w, TEAM_FOE, 130, 320, { hp: 1000 }); // 20 px from the first
+    w.target[a] = first;
+    fight(w);
+    expect(w.hp[up]).toBe(995);
+    expect(w.hp[down]).toBe(1000);
+  });
+});
+
+describe('enemy chain and area hits under "units before buildings" (spec 2026-11-08 §2)', () => {
+  /** A building of ours at plot 7 (id 1, foot TW), a unit of ours just south of it, a chaining foe further south. */
+  const scene = (extra: (w: BattleWorld) => void = () => {}) => {
+    const w = world([structure(7, { uid: 70, hp: 1000 })]);
+    const victim = unit(w, TEAM_ALLY, TW.x, TW.y + 30, { hp: 1000 });
+    const f = unit(w, TEAM_FOE, TW.x, TW.y + 60, { dmg: 10, range: 60, chain: { count: 1, radius: 40, falloff: 0.5 } });
+    extra(w);
+    w.target[f] = victim;
+    return { w, f, victim, building: 1 };
+  };
+
+  it('enemy_chain_jumps_prefer_units_while_units_exist: skips the nearer building for a unit of ours', () => {
+    let other = -1;
+    const { w, victim, building } = scene((ww) => {
+      other = unit(ww, TEAM_ALLY, TW.x + 36, TW.y + 30, { hp: 1000 }); // 36 from the victim; the building is 30
+    });
+    fight(w);
+    expect(w.hp[victim]).toBe(990);
+    expect(w.hp[other]).toBe(995);
+    expect(w.hp[building]).toBe(1000);
+  });
+
+  it('enemy_chain_stops_instead_of_jumping_to_a_building_while units of ours remain', () => {
+    const { w, victim, building } = scene();
+    fight(w);
+    expect(w.hp[victim]).toBe(990);
+    expect(w.hp[building]).toBe(1000);
+  });
+
+  it('enemy_chain_jumps_to_a_building_in_the_rage', () => {
+    const { w, building } = scene();
+    w.tick = BATTLE.rageTick;
+    fight(w);
+    expect(w.hp[building]).toBeLessThan(1000);
+  });
+
+  it('enemy_splash_cleave_cone_still_hit_structures_as_collateral', () => {
+    const splash = world([structure(7, { uid: 70, hp: 1000 })]);
+    const v1 = unit(splash, TEAM_ALLY, TW.x, TW.y + 20, { hp: 1000 });
+    const f1 = unit(splash, TEAM_FOE, TW.x, TW.y + 60, { dmg: 20, range: 60, splash: 40 });
+    splash.target[f1] = v1;
+    fight(splash);
+    expect(splash.hp[1]).toBeLessThan(1000);
+
+    const cleave = world([structure(7, { uid: 70, hp: 1000 })]);
+    // north of the building, so the fixture Ngai (one row south) is not the nearer second victim
+    const v2 = unit(cleave, TEAM_ALLY, TW.x, TW.y - 26, { hp: 1000 });
+    const f2 = unit(cleave, TEAM_FOE, TW.x, TW.y - 36, { dmg: 20, range: 20, cleave: 2 }); // building edge 36 − 16 = 20
+    cleave.target[f2] = v2;
+    fight(cleave);
+    expect(cleave.hp[1]).toBeLessThan(1000);
+  });
+});
+
+describe('same-target ramp', () => {
+  const crystal = () => {
+    const w = world();
+    const a = unit(w, TEAM_ALLY, 100, 300, {
+      dmg: 4,
+      range: 60,
+      interval: 1,
+      rampPctPerHit: 20,
+      rampCapPct: 200,
+    });
+    const f = unit(w, TEAM_FOE, 130, 300, { hp: 100000 });
+    w.target[a] = f;
+    return { w, a, f };
+  };
+
+  it('adds 20% per consecutive hit on the same target up to +200%', () => {
+    const { w, f } = crystal();
+    const dmg = damageTaken(w, f, 13);
+    const expected = [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 10, 10].map((n) => 4 * (1 + Math.min(n * 0.2, 2)));
+    dmg.forEach((d, i) => expect(d).toBeCloseTo(expected[i]!, 9));
+  });
+
+  it('starts over when the shooter switches target', () => {
+    const { w, a, f } = crystal();
+    damageTaken(w, f, 4);
+    const g = unit(w, TEAM_FOE, 140, 300, { hp: 100000 });
+    w.target[a] = g;
+    expect(damageTaken(w, g, 2)).toEqual([4, 4 * 1.2].map((d) => expect.closeTo(d, 9)));
+  });
+
+  it('starts over after the target died', () => {
+    const { w, a, f } = crystal();
+    damageTaken(w, f, 3);
+    w.hp[f] = 0;
+    deathPhase(w);
+    const g = unit(w, TEAM_FOE, 140, 300, { hp: 100000 });
+    w.target[a] = g;
+    expect(damageTaken(w, g, 1)[0]).toBeCloseTo(4, 9);
+  });
+
+  it('never ramps when rampPctPerHit is 0', () => {
+    const w = world();
+    const a = unit(w, TEAM_ALLY, 100, 300, { dmg: 4, range: 60, interval: 1 });
+    const f = unit(w, TEAM_FOE, 130, 300, { hp: 100000 });
+    w.target[a] = f;
+    expect(damageTaken(w, f, 4)).toEqual([4, 4, 4, 4]);
+  });
+});
+
+describe('shields', () => {
+  const hitFor = (shield: number, raw: number, armor = 0) => {
+    const w = world();
+    const f = unit(w, TEAM_FOE, 100, 300, { hp: 100, shield, armor });
+    queueDamage(w, f, raw, DMG_PHYSICAL, -1);
+    applyDamagePhase(w);
+    return { w, f };
+  };
+
+  it('absorbs a smaller hit completely, but still reports the hit', () => {
+    const { w, f } = hitFor(30, 20);
+    expect(w.hp[f]).toBe(100);
+    expect(w.shield[f]).toBe(10);
+    expect(drainEvents(w)).toContainEqual({ type: 'hit', id: f, dmg: 20, sourceId: -1, dmgType: 'physical' });
+  });
+
+  it('lets only the excess through a bigger hit', () => {
+    const { w, f } = hitFor(30, 50);
+    expect(w.shield[f]).toBe(0);
+    expect(w.hp[f]).toBe(80);
+  });
+
+  it('applies armor before the shield', () => {
+    const { w, f } = hitFor(30, 40, 0.5); // 40 × 0.5 = 20 absorbed
+    expect(w.shield[f]).toBe(10);
+    expect(w.hp[f]).toBe(100);
+  });
+
+  it('lets a unit with a shield die only after the shield is gone', () => {
+    const w = world();
+    const f = unit(w, TEAM_FOE, 100, 300, { hp: 10, shield: 10 });
+    queueDamage(w, f, 15, DMG_PHYSICAL, -1);
+    applyDamagePhase(w);
+    deathPhase(w);
+    expect(w.alive[f]).toBe(1);
+    queueDamage(w, f, 6, DMG_PHYSICAL, -1);
+    applyDamagePhase(w);
+    deathPhase(w);
+    expect(w.alive[f]).toBe(0);
+  });
+});
+
+describe('stun', () => {
+  it('is applied by a damage event, keeps the longest, and wears off one tick at a time', () => {
+    const w = world();
+    const f = unit(w, TEAM_FOE, 100, 300, { hp: 100 });
+    queueDamage(w, f, 1, DMG_PHYSICAL, -1, undefined, -1, 10);
+    queueDamage(w, f, 1, DMG_PHYSICAL, -1, undefined, -1, 5);
+    applyDamagePhase(w);
+    expect(w.stunTicks[f]).toBe(11); // 10 ticks + the rest of the tick it landed
+    for (let i = 0; i < 11; i++) statusPhase(w);
+    expect(w.stunTicks[f]).toBe(0);
+  });
+
+  it('keeps the victim locked for exactly the stun ticks that follow the hit', () => {
+    const w = world();
+    const f = unit(w, TEAM_FOE, 100, 300, { hp: 100 });
+    queueDamage(w, f, 1, DMG_PHYSICAL, -1, undefined, -1, 10);
+    applyDamagePhase(w); // tick T: the stun lands after the action steps
+    statusPhase(w); // …and step 9 of the same tick runs
+    let locked = 0;
+    while (w.stunTicks[f]! > 0 && locked < 50) {
+      locked++; // a following tick whose action steps see the stun
+      statusPhase(w);
+    }
+    expect(locked).toBe(10);
+  });
+
+  it('is gained from the onHit stun of the attacker, on the primary target only', () => {
+    const w = world();
+    const a = unit(w, TEAM_ALLY, 100, 300, { dmg: 5, range: 60, stunTicks: 10, splash: 16 });
+    const main = unit(w, TEAM_FOE, 130, 300, { hp: 100 });
+    const other = unit(w, TEAM_FOE, 140, 300, { hp: 100 });
+    w.target[a] = main;
+    attackPhase(w);
+    applyDamagePhase(w);
+    expect(w.stunTicks[main]).toBe(11);
+    expect(w.stunTicks[other]).toBe(0);
+  });
+
+  it('a stunned unit does not attack, but its cooldown keeps running', () => {
+    const w = world();
+    const a = unit(w, TEAM_ALLY, 100, 300, { dmg: 5, interval: 10 });
+    const f = unit(w, TEAM_FOE, 110, 300, { hp: 1000 });
+    w.target[a] = f;
+    w.stunTicks[a] = 5;
+    const hits: number[] = [];
+    for (let t = 0; t < 8; t++) {
+      const before = w.hp[f]!;
+      fight(w);
+      if (w.hp[f]! < before) hits.push(t);
+    }
+    expect(hits).toEqual([5]); // the first strike lands the tick the stun is gone
+  });
+});
+
+describe('death spawns', () => {
+  const rubble = unitStats({ unit: 'rubble', hp: 40 });
+  const miner = (count = 1) => ({ deathSpawn: { stats: rubble, count } });
+
+  it('a dying unit leaves its spawn on the same team near where it fell, after all deaths', () => {
+    const w = world();
+    const m = unit(w, TEAM_FOE, 100, 300, { hp: 10, ...miner() });
+    const before = w.count;
+    w.hp[m] = 0;
+    deathPhase(w);
+    expect(w.alive[m]).toBe(0);
+    expect(w.count).toBe(before + 1);
+    const child = before;
+    expect(w.team[child]).toBe(TEAM_FOE);
+    expect(w.label[child]).toBe('rubble');
+    expect(w.alive[child]).toBe(1);
+    expect(Math.abs(w.x[child]! - 100)).toBeLessThanOrEqual(14);
+    expect(Math.abs(w.y[child]! - 300)).toBeLessThanOrEqual(14);
+    expect(w.kills).toBe(1); // only the miner counted
+    deathPhase(w); // the child does not die in the same tick it was born
+    expect(w.alive[child]).toBe(1);
+  });
+
+  it('spawns `count` children on distinct offsets and inherits the parent source uid and home', () => {
+    const w = world();
+    const m = addUnit(w, unitStats({ hp: 10, ...miner(3) }), TEAM_ALLY, 120, 320, 110, 310, 7);
+    const before = w.count;
+    w.playerUnits = 1;
+    w.hp[m] = 0;
+    deathPhase(w);
+    expect(w.count).toBe(before + 3);
+    const spots = new Set<string>();
+    for (let c = before; c < before + 3; c++) {
+      spots.add(`${w.x[c]},${w.y[c]}`);
+      expect(w.sourceUid[c]).toBe(7);
+      expect(w.homeX[c]).toBe(110);
+      expect(w.homeY[c]).toBe(310);
+    }
+    expect(spots.size).toBe(3);
+    expect(w.playerUnits).toBe(4);
+  });
+
+  it('allied spawns respect playerUnitCap and count what was refused in capped', () => {
+    const w = world();
+    const m = unit(w, TEAM_ALLY, 100, 300, { hp: 10, ...miner(2) });
+    w.playerUnits = BATTLE.playerUnitCap;
+    const before = w.count;
+    w.hp[m] = 0;
+    deathPhase(w);
+    expect(w.count).toBe(before);
+    expect(w.capped).toBe(2);
+  });
+
+  it('never overflows the entity arrays', () => {
+    const w = world();
+    const m = unit(w, TEAM_FOE, 100, 300, { hp: 10, ...miner(5) });
+    while (w.count < BATTLE.entityCap - 1) unit(w, TEAM_FOE, 300, 300, { hp: 1000 });
+    w.hp[m] = 0;
+    expect(() => deathPhase(w)).not.toThrow();
+    expect(w.count).toBe(BATTLE.entityCap);
+  });
+
+  it('does nothing for a unit without a death spawn', () => {
+    const w = world();
+    const f = unit(w, TEAM_FOE, 100, 300, { hp: 10 });
+    const before = w.count;
+    w.hp[f] = 0;
+    deathPhase(w);
+    expect(w.count).toBe(before);
+  });
+});
+
+describe('rage breaks structures faster (2026-11-09)', () => {
+  const hitStructure = (tick: number, team: number): number => {
+    const w = world([structure(4, { hp: 1000 })]);
+    const foe = unit(w, team, 0, 0);
+    w.tick = tick;
+    queueDamage(w, 1, 10, DMG_PHYSICAL, -1, undefined, foe);
+    applyDamagePhase(w);
+    return 1000 - w.hp[1]!;
+  };
+
+  /** Bậc Cuồng Nộ đầu tiên (10/11/2026): mọi đòn của địch +rageStackDmgPct% từ rageTick. */
+  const stack1 = 1 + BATTLE.rageStackDmgPct / 100;
+
+  it(`a foe's hit on a structure deals +${BATTLE.rageStructureDmgPct}% from rageTick on`, () => {
+    expect(hitStructure(BATTLE.rageTick - 1, TEAM_FOE)).toBeCloseTo(10);
+    expect(hitStructure(BATTLE.rageTick, TEAM_FOE)).toBeCloseTo(10 * (1 + BATTLE.rageStructureDmgPct / 100) * stack1);
+    expect(BATTLE.rageStructureDmgPct).toBeGreaterThan(0);
+  });
+
+  it('only foes, only on structures: our hits are normal, the throne only takes the rage stack', () => {
+    expect(hitStructure(BATTLE.rageTick, TEAM_ALLY)).toBeCloseTo(10);
+    const w = world();
+    const foe = unit(w, TEAM_FOE, 0, 0);
+    w.tick = BATTLE.rageTick;
+    const before = w.hp[w.throneId]!;
+    queueDamage(w, w.throneId, 10, DMG_PHYSICAL, -1, undefined, foe);
+    applyDamagePhase(w);
+    expect(before - w.hp[w.throneId]!).toBeCloseTo(10 * stack1);
+  });
+
+  it(`every foe hit gains +${BATTLE.rageStackDmgPct}% per rage stack, a new stack every rageStackTicks`, () => {
+    const hitThrone = (tick: number, team: number): number => {
+      const w = world();
+      const src = unit(w, team, 0, 0);
+      w.tick = tick;
+      const before = w.hp[w.throneId]!;
+      queueDamage(w, w.throneId, 10, DMG_PHYSICAL, -1, undefined, src);
+      applyDamagePhase(w);
+      return before - w.hp[w.throneId]!;
+    };
+    const pct = BATTLE.rageStackDmgPct / 100;
+    expect(hitThrone(BATTLE.rageTick - 1, TEAM_FOE)).toBeCloseTo(10);
+    expect(hitThrone(BATTLE.rageTick + BATTLE.rageStackTicks - 1, TEAM_FOE)).toBeCloseTo(10 * (1 + pct));
+    expect(hitThrone(BATTLE.rageTick + BATTLE.rageStackTicks, TEAM_FOE)).toBeCloseTo(10 * (1 + 2 * pct));
+    expect(hitThrone(BATTLE.rageTick + 2 * BATTLE.rageStackTicks, TEAM_FOE)).toBeCloseTo(10 * (1 + 3 * pct));
+    expect(hitThrone(BATTLE.rageTick + 2 * BATTLE.rageStackTicks, TEAM_ALLY)).toBeCloseTo(10);
   });
 });

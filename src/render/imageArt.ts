@@ -1,0 +1,588 @@
+/**
+ * Hand-picked image art (G3e, `ai-v1`): AI-assisted PNGs sliced by `docs/art-review/g3e/ai-v1/make_assets.py`.
+ * Density is 2 art px per world unit, so these frames are drawn at scale 0.5 (camera zoom 2 → 1:1 screen pixels).
+ * Files with an HD twin (`IMAGE_ART_HD_FILES`) may load at 4 art px per world unit instead, drawn at 0.25.
+ * Anything not listed here keeps its generated art at scale 1.
+ */
+import type { KingId } from '../data/types';
+import type { UnitAnim } from './unitArt';
+
+export const IMAGE_ART_DIR = 'assets/art/ai-v1/';
+/** World units per art pixel. */
+export const IMAGE_ART_SCALE = 0.5;
+
+export const imageArtKey = (file: string): string => `imgart-${file}`;
+
+/**
+ * HiDPI art (11/11/2026, `.superpowers/art-hd-map.md`): the same approved sources re-exported at 4 art px per world
+ * unit into `ai-v1-hd/` under the same file names, drawn at `IMAGE_ART_HD_SCALE` so every world size and anchor stays
+ * identical (each HD file is exactly twice its `ai-v1` twin). Only files in `IMAGE_ART_HD_FILES` have an HD twin; they
+ * are loaded instead of the `ai-v1` file when the display density is at least `HD_ART_MIN_DENSITY` (at density 1 the
+ * extra pixels would only be dropped by nearest sampling). HD files feed only the `sprites` atlas (unit poses,
+ * buildings and plots), which reads the density back from the texture key (`imageArtHdKey`). Wall, wilds, forest,
+ * portal, grass and terrain stay ai-v1: they are drawn outside the atlas at a fixed scale (see `.superpowers/art-hd-map.md`).
+ */
+export const IMAGE_ART_HD_DIR = 'assets/art/ai-v1-hd/';
+/** World units per art pixel of an HD file (4 art px per world unit). */
+export const IMAGE_ART_HD_SCALE = 0.25;
+export const HD_ART_MIN_DENSITY = 2;
+export const imageArtHdKey = (file: string): string => `imgart-hd-${file}`;
+/**
+ * Units with an HD twin (11/11/2026: every unit, enemy and boss with a pose source). `footman` has none: its ai-v1
+ * frames were cut from the old front-view barracks sheet (`docs/art-review/g3e/batch-01-barracks`), not from a pose
+ * source, so it keeps its ai-v1 frames at every density. Rollback of a group = remove its ids.
+ */
+export const IMAGE_ART_HD_UNITS: readonly string[] = [
+  'militia', 'reaper', 'peasant', 'golem', 'miner', 'rubble', 'slinger', 'apprentice', 'frost_mage', 'archmage',
+  'construct', 'wolf', 'bear', 'treant', 'stag', 'dryad', 'pirate', 'hookman', 'musketeer', 'swordsman',
+  'bombardier', 'shieldbearer', 'iron_drake', 'tin_soldier', 'spider', 'gear_gunner', 'colossus', 'skeleton',
+  'wraith', 'vampire', 'moon_reaper', 'rider', 'horse_archer', 'khan_guard', 'mercenary', 'bandit', 'bandit_archer',
+  'boar_rider', 'ogre', 'frog', 'hornet', 'boss_bog_ogre', 'boss_hornet_queen', 'boss_crownless_king',
+];
+/** Building cards with an HD twin of their base image and of each listed L2/L3 image (`IMAGE_BUILDING_LEVELS`). */
+export const IMAGE_ART_HD_BUILDINGS: readonly string[] = [
+  // wheat
+  'wheat_throne', 'wheat_field', 'wheat_windmill', 'wheat_granary', 'wheat_peasant_horde', 'wheat_militia',
+  'wheat_reapers', 'wheat_scarecrow',
+  // stone
+  'stone_throne', 'stone_catapult', 'stone_crystal', 'stone_golem_forge', 'stone_miners', 'stone_mountain_heart',
+  'stone_quarry', 'stone_wall',
+  // arcane
+  'arcane_throne', 'arcane_apprentices', 'arcane_archmage', 'arcane_frost_mages', 'arcane_library',
+  'arcane_mage_tower', 'arcane_ward',
+  // grove
+  'grove_throne', 'grove_bear_cave', 'grove_sapling', 'grove_spirit_stags', 'grove_spring', 'grove_thorn_tower',
+  'grove_treant', 'grove_wolf_den',
+  // tide
+  'tide_throne', 'tide_cannon', 'tide_harbor', 'tide_hookmen', 'tide_kraken', 'tide_pirates', 'tide_treasure',
+  'tide_wave_tower',
+  // forge
+  'forge_throne', 'forge_armory', 'forge_blast_furnace', 'forge_bombardiers', 'forge_flame_tower',
+  'forge_iron_drake', 'forge_smithy', 'forge_swordsmen',
+  // clock
+  'clock_throne', 'clock_bell_tower', 'clock_colossus', 'clock_gear_tower', 'clock_spiders', 'clock_spring_workshop',
+  'clock_steam_cannon', 'clock_windup_soldiers',
+  // moon
+  'moon_throne', 'moon_altar', 'moon_crypt', 'moon_reaper_shrine', 'moon_shadow_spire', 'moon_summoning_circle',
+  'moon_vampires',
+  // nomad
+  'nomad_throne', 'nomad_bazaar', 'nomad_caravan', 'nomad_horse_archers', 'nomad_khan_guard', 'nomad_riders',
+  'nomad_stables', 'nomad_watchtower',
+  // neutral
+  'neutral_barracks', 'neutral_archer_tower', 'neutral_well', 'neutral_mercenary_camp',
+];
+/** Kings whose four plot skins (`IMAGE_PLOTS`) have an HD twin. */
+export const IMAGE_ART_HD_PLOTS: readonly string[] = [
+  'wheat', 'stone', 'arcane', 'grove', 'tide', 'forge', 'clock', 'moon', 'nomad',
+];
+
+/**
+ * Units drawn from image art: unit id → file prefix of its six poses (`<prefix>_<i>`, `<prefix>_foe_<i>`).
+ * The Wheat (militia, reaper, peasant) and Stone (golem, miner, rubble, slinger) units come from
+ * `docs/art-review/g3e/units/make_poses.py --export` (approved 2026-11-06); the militia's replace the first
+ * `spearman` sheet.
+ */
+export const IMAGE_UNITS: Readonly<Record<string, string>> = {
+  militia: 'militia',
+  reaper: 'reaper',
+  peasant: 'peasant',
+  golem: 'golem',
+  miner: 'miner',
+  rubble: 'rubble',
+  slinger: 'slinger',
+  footman: 'footman',
+  // Arcane (2026-11-09, missing-art plan Task 2; approved by Claude under the owner's delegation)
+  apprentice: 'apprentice',
+  frost_mage: 'frost_mage',
+  archmage: 'archmage',
+  construct: 'construct',
+  // Grove, Tide, Forge (2026-11-09, same pipeline and approval)
+  wolf: 'wolf',
+  bear: 'bear',
+  treant: 'treant',
+  stag: 'stag',
+  dryad: 'dryad',
+  pirate: 'pirate',
+  hookman: 'hookman',
+  musketeer: 'musketeer',
+  swordsman: 'swordsman',
+  bombardier: 'bombardier',
+  shieldbearer: 'shieldbearer',
+  iron_drake: 'iron_drake',
+  // Clock, Moon, Nomad and the neutral mercenary (2026-11-09, same pipeline and approval)
+  tin_soldier: 'tin_soldier',
+  spider: 'spider',
+  gear_gunner: 'gear_gunner',
+  colossus: 'colossus',
+  skeleton: 'skeleton',
+  wraith: 'wraith',
+  vampire: 'vampire',
+  moon_reaper: 'moon_reaper',
+  rider: 'rider',
+  horse_archer: 'horse_archer',
+  khan_guard: 'khan_guard',
+  mercenary: 'mercenary',
+  // raiders, boss summons and the three bosses (2026-11-09; the Crownless King from its second drawing)
+  bandit: 'bandit',
+  bandit_archer: 'bandit_archer',
+  boar_rider: 'boar_rider',
+  ogre: 'ogre',
+  frog: 'frog',
+  hornet: 'hornet',
+  boss_bog_ogre: 'boss_bog_ogre',
+  boss_hornet_queen: 'boss_hornet_queen',
+  boss_crownless_king: 'boss_crownless_king',
+};
+
+const POSE_INDEXES = [0, 1, 2, 3, 4, 5];
+
+/**
+ * Buildings drawn from image art: card id → file. The eight Wheat buildings (throne included) are the isometric
+ * set (approved 2026-11-06) cut by `docs/art-review/iso-board/make_assets.py` into `iso/` at one shared scale (the
+ * Reapers barn is 64 px wide); they replace the earlier 45-degree front-view set.
+ */
+/**
+ * G5 isometric sets of the six new kings (`docs/art-review/g5`, cut by `docs/art-review/g5/make_assets.py`), one entry
+ * per king whose whole group was approved: its throne and building cards (`iso/<cardId>`) and four plot skins
+ * (`iso/plots/<king>_<state>`). Approved 2026-11-09 by Claude under the owner's delegation. Kings not listed keep the
+ * code-drawn art.
+ */
+export const G5_ART_APPROVED: Readonly<Record<string, readonly string[]>> = {
+  grove: [
+    'grove_throne',
+    'grove_bear_cave',
+    'grove_sapling',
+    'grove_spirit_stags',
+    'grove_spring',
+    'grove_thorn_tower',
+    'grove_treant',
+    'grove_wolf_den',
+  ],
+  tide: [
+    'tide_throne',
+    'tide_cannon',
+    'tide_harbor',
+    'tide_hookmen',
+    'tide_kraken',
+    'tide_pirates',
+    'tide_treasure',
+    'tide_wave_tower',
+  ],
+  forge: [
+    'forge_throne',
+    'forge_armory',
+    'forge_blast_furnace',
+    'forge_bombardiers',
+    'forge_flame_tower',
+    'forge_iron_drake',
+    'forge_smithy',
+    'forge_swordsmen',
+  ],
+  clock: [
+    'clock_throne',
+    'clock_bell_tower',
+    'clock_colossus',
+    'clock_gear_tower',
+    'clock_spiders',
+    'clock_spring_workshop',
+    'clock_steam_cannon',
+    'clock_windup_soldiers',
+  ],
+  moon: [
+    'moon_throne',
+    'moon_altar',
+    'moon_crypt',
+    'moon_reaper_shrine',
+    'moon_shadow_spire',
+    'moon_summoning_circle',
+    'moon_vampires',
+  ],
+  stone: [
+    'stone_throne',
+    'stone_catapult',
+    'stone_crystal',
+    'stone_golem_forge',
+    'stone_miners',
+    'stone_mountain_heart',
+    'stone_quarry',
+    'stone_wall',
+  ],
+  arcane: [
+    'arcane_throne',
+    'arcane_apprentices',
+    'arcane_archmage',
+    'arcane_frost_mages',
+    'arcane_library',
+    'arcane_mage_tower',
+    'arcane_ward',
+  ],
+  nomad: [
+    'nomad_throne',
+    'nomad_bazaar',
+    'nomad_caravan',
+    'nomad_horse_archers',
+    'nomad_khan_guard',
+    'nomad_riders',
+    'nomad_stables',
+    'nomad_watchtower',
+  ],
+};
+
+export const IMAGE_BUILDINGS: Readonly<Record<string, string>> = {
+  ...Object.fromEntries(
+    Object.values(G5_ART_APPROVED).flatMap((cards) => cards.map((card) => [card, `iso/${card}`])),
+  ),
+  wheat_throne: 'iso/wheat_throne',
+  wheat_field: 'iso/wheat_field',
+  wheat_windmill: 'iso/wheat_windmill',
+  wheat_granary: 'iso/wheat_granary',
+  wheat_peasant_horde: 'iso/wheat_peasant_horde',
+  wheat_militia: 'iso/wheat_militia',
+  wheat_reapers: 'iso/wheat_reapers',
+  wheat_scarecrow: 'iso/wheat_scarecrow',
+  // Neutral buildings, isometric (2026-11-09, docs/art-review/neutral-iso/review.md; the old 45° barracks retired).
+  neutral_barracks: 'iso-neutral/neutral_barracks',
+  neutral_archer_tower: 'iso-neutral/neutral_archer_tower',
+  neutral_well: 'iso-neutral/neutral_well',
+  neutral_mercenary_camp: 'iso-neutral/neutral_mercenary_camp',
+};
+/**
+ * Architecture per building level (10/11/2026, P2 `building_<card>_l2/_l3`): level 1 shows the base image, level 2
+ * its L2 and levels 3–5 its L3 (levels 4 and 5 are told apart by the stars). Only the levels listed here are loaded;
+ * a missing level falls back to the next lower one, then to the base image. Files sit next to the base image.
+ */
+export const IMAGE_BUILDING_LEVELS: Readonly<Partial<Record<string, readonly (2 | 3)[]>>> = {
+  arcane_apprentices: [2, 3],
+  arcane_archmage: [2, 3],
+  arcane_frost_mages: [2, 3],
+  arcane_library: [2, 3],
+  arcane_mage_tower: [2, 3],
+  arcane_throne: [2, 3],
+  arcane_ward: [2, 3],
+  clock_bell_tower: [2, 3],
+  clock_colossus: [2, 3],
+  clock_gear_tower: [2, 3],
+  clock_spiders: [2, 3],
+  clock_spring_workshop: [2, 3],
+  clock_steam_cannon: [2, 3],
+  clock_throne: [2, 3],
+  clock_windup_soldiers: [2, 3],
+  forge_armory: [2, 3],
+  forge_blast_furnace: [2, 3],
+  forge_bombardiers: [2, 3],
+  forge_flame_tower: [2, 3],
+  forge_iron_drake: [2, 3],
+  forge_smithy: [2, 3],
+  forge_swordsmen: [2, 3],
+  forge_throne: [2, 3],
+  grove_bear_cave: [2, 3],
+  grove_sapling: [2, 3],
+  grove_spirit_stags: [2, 3],
+  grove_spring: [2, 3],
+  grove_thorn_tower: [2, 3],
+  grove_throne: [2, 3],
+  grove_treant: [2, 3],
+  grove_wolf_den: [2, 3],
+  stone_catapult: [2, 3],
+  stone_crystal: [2, 3],
+  stone_golem_forge: [2, 3],
+  stone_miners: [2, 3],
+  stone_mountain_heart: [2, 3],
+  stone_quarry: [2, 3],
+  stone_throne: [2, 3],
+  stone_wall: [2, 3],
+  tide_cannon: [2, 3],
+  tide_harbor: [2, 3],
+  tide_hookmen: [2, 3],
+  tide_kraken: [2, 3],
+  tide_pirates: [2, 3],
+  tide_throne: [2, 3],
+  tide_treasure: [2, 3],
+  tide_wave_tower: [2, 3],
+  wheat_field: [2, 3],
+  wheat_granary: [2, 3],
+  wheat_militia: [2, 3],
+  wheat_peasant_horde: [2, 3],
+  wheat_reapers: [2, 3],
+  wheat_scarecrow: [2, 3],
+  wheat_throne: [2, 3],
+  wheat_windmill: [2, 3],
+};
+
+/** Which architecture a building level shows: 1 (base), 2 or 3. */
+export const levelArt = (level: number): 1 | 2 | 3 => (level >= 3 ? 3 : level === 2 ? 2 : 1);
+
+/** File of the L2/L3 image of `card` (base file + `_l2` / `_l3`). */
+export const buildingLevelFile = (card: string, art: 2 | 3): string | null => {
+  const base = IMAGE_BUILDINGS[card];
+  return base === undefined ? null : `${base}_l${art}`;
+};
+
+export const GRASS_FILES: readonly string[] = ['grass_0', 'grass_1', 'grass_2'];
+
+/**
+ * Plot skins per king: king id → file prefix of its `_open`, `_locked`, `_throne`, `_built` plots. Wheat's are the
+ * isometric diamonds (approved 2026-11-06), 128 px wide with the diamond's centre on the middle row
+ * (`docs/art-review/iso-board/make_assets.py`). Kings not listed keep the shared plots (resampled into diamonds).
+ */
+export const IMAGE_PLOTS: Readonly<Record<string, string>> = {
+  wheat: 'iso/plots/wheat',
+  ...Object.fromEntries(Object.keys(G5_ART_APPROVED).map((king) => [king, `iso/plots/${king}`])),
+};
+export const PLOT_STATES = ['open', 'locked', 'throne', 'built'] as const;
+
+/** The isometric mountain cliff segment (approved 2026-11-06, foot sheared to 2:1), tiled along the north edge. */
+export const WALL_FILE = 'iso/wall_cliff';
+
+/**
+ * The wild objects of `docs/art-review/g3e/batch-06-wilds` cut by `docs/art-review/iso-board/wilds/make_wilds.py`
+ * (spec 2026-11-06 §5): tall ones stand outside the field, low ones inside it; `radius` is their world footprint.
+ * Only the ids in `DECOR_APPROVED` (each approved by the owner) are loaded and drawn.
+ */
+export const DECOR_CATALOG: readonly { id: string; tall: boolean; radius: number }[] = [
+  { id: 'tree_pine_dark', tall: true, radius: 18 },
+  { id: 'tree_pine_light', tall: true, radius: 18 },
+  { id: 'tree_oak', tall: true, radius: 24 },
+  { id: 'tree_autumn', tall: true, radius: 24 },
+  { id: 'mountain_snow', tall: true, radius: 32 },
+  { id: 'cliff_mossy', tall: true, radius: 30 },
+  { id: 'boulders_big', tall: true, radius: 32 },
+  { id: 'bush_green', tall: false, radius: 10 },
+  { id: 'bush_berry', tall: false, radius: 10 },
+  { id: 'bush_dry', tall: false, radius: 10 },
+  { id: 'rock_large', tall: false, radius: 13 },
+  { id: 'rock_medium', tall: false, radius: 9 },
+  { id: 'rock_small', tall: false, radius: 7 },
+  { id: 'stump', tall: false, radius: 10 },
+  { id: 'log', tall: false, radius: 16 },
+  // small farm decoration (P2, 10/11/2026, `docs/art-review/iso-board/decor`; Claude under the owner's delegation)
+  { id: 'barrel', tall: false, radius: 7 },
+  { id: 'haystack', tall: false, radius: 12 },
+  { id: 'sign', tall: false, radius: 7 },
+  { id: 'wheat_cart', tall: false, radius: 16 },
+];
+/** Approved wild objects (the fifteen of 2026-11-06 plus the four farm pieces of 2026-11-10). */
+export const DECOR_APPROVED: readonly string[] = DECOR_CATALOG.map((d) => d.id);
+/** File of an approved wild object. */
+export const decorFile = (id: string): string => `iso/wilds/${id}`;
+
+/**
+ * Seamless ground textures that colour the river and its sand banks (`docs/art-review/iso-board/terrain`,
+ * 128 px, density 2). Only the terrains in `GROUND_TEXTURES_APPROVED` are loaded (water and sand: owner, 2026-11-06; path and flowers: Claude under the owner's delegation, 2026-11-09).
+ */
+export const GROUND_TEXTURE_FILES = {
+  water: 'iso/terrain/water',
+  sand: 'iso/terrain/sand',
+  path: 'iso/terrain/path',
+  flowers: 'iso/terrain/flowers',
+} as const;
+export const GROUND_TEXTURES_APPROVED: readonly (keyof typeof GROUND_TEXTURE_FILES)[] = [
+  'water',
+  'sand',
+  'path',
+  'flowers',
+];
+
+/**
+ * The forest behind the mountain cliff (spec 2026-11-08 §6, Q5): drawn by `docs/art-review/iso-board/polish`, each kind
+ * approved by the owner from one sample first. Only the ids in `FOREST_APPROVED` are loaded and drawn.
+ */
+export const FOREST_CATALOG: readonly { id: string; tall: boolean; radius: number }[] = [
+  { id: 'forest_pine_a', tall: true, radius: 20 },
+  { id: 'forest_pine_b', tall: true, radius: 18 },
+  { id: 'forest_rock', tall: true, radius: 24 },
+];
+/** Owner-approved forest objects (the pine sample approved 2026-11-08, pine_b and the rock 2026-11-09). */
+export const FOREST_APPROVED: readonly string[] = ['forest_pine_a', 'forest_pine_b', 'forest_rock'];
+/** File of an approved forest object. */
+export const forestFile = (id: string): string => `iso/polish/${id}`;
+
+/**
+ * The enemy portal art (spec 2026-11-08 §3/§6), cut by `docs/art-review/iso-board/polish/make_polish_assets.py`; `foot`
+ * is the centre of its base diamond (where `ENEMY_PORTAL` stands) in native px. Loaded and drawn only once the owner
+ * approved it (`PORTAL_APPROVED`); until then the code-drawn portal stands there.
+ */
+export const PORTAL_ART = {
+  file: 'iso/polish/enemy_portal',
+  width: 112,
+  height: 99,
+  foot: { x: 58, y: 71.5 },
+} as const;
+/** Approved by the owner 2026-11-08. */
+export const PORTAL_APPROVED = true;
+
+/**
+ * In-game icons drawn from image art (G5, 2026-11-09): icon id → 16 px cut of an approved icon source
+ * (`docs/art-review/g3e/icons/make_assets.py` writes `icons/icon_<name>-16.png`). The frames stay 16×16, so every
+ * place that draws an icon keeps its size; icons not listed keep the generated art.
+ */
+export const IMAGE_ICONS: Readonly<Record<string, string>> = {
+  troop: 'icons/icon_troop-16',
+  tower: 'icons/icon_tower-16',
+  tome: 'icons/icon_tome-16',
+  throne: 'icons/icon_throne-16',
+  gold: 'icons/icon_gold-16',
+  level: 'icons/icon_level-16',
+  enchant: 'icons/icon_enchant_stack-16',
+  crown: 'icons/icon_crown-16',
+  boulder: 'icons/icon_boulder-16',
+  skull: 'icons/icon_skull-16',
+  reroll: 'icons/icon_reroll-16',
+  sell: 'icons/icon_sell-16',
+  lock: 'icons/icon_lock-16',
+  conquer: 'icons/icon_conquer-16',
+};
+
+/** Inspection stat icons, loaded as separate native 16×16 textures. */
+export const STAT_ICONS: Readonly<Record<string, string>> = {
+  life: 'icons/icon_life-16',
+  attack: 'icons/icon_attack-16',
+  range: 'icons/icon_range-16',
+  speed: 'icons/icon_speed-16',
+  cooldown: 'icons/icon_cooldown-16',
+  armor: 'icons/icon_armor-16',
+  shield: 'icons/icon_shield-16',
+  heal: 'icons/icon_heal-16',
+  burn: 'icons/icon_burn-16',
+  poison: 'icons/icon_poison-16',
+  slow: 'icons/icon_slow-16',
+  stun: 'icons/icon_stun-16',
+  flying: 'icons/icon_flying-16',
+  disabled: 'icons/icon_disabled-16',
+  revive: 'icons/icon_revive-16',
+  sacrifice: 'icons/icon_sacrifice-16',
+  move: 'icons/icon_move-16',
+  upgrade: 'icons/icon_upgrade-16',
+  unlock: 'icons/icon_unlock-16',
+  quest: 'icons/icon_quest-16',
+  decree: 'icons/icon_decree-16',
+  pause: 'icons/icon_pause-16',
+  save: 'icons/icon_save-16',
+  economy: 'icons/icon_economy-16',
+  enchantment: 'icons/icon_enchantment-16',
+  soul: 'icons/icon_soul-16',
+  support: 'icons/icon_support-16',
+};
+
+/**
+ * Battle effects drawn as pictures (G5, `docs/art-review/g5/fx/review.md`): fx id → file, at 2 art px per world px like
+ * units. The eight arrows come from one sheet with each direction drawn separately (sprites never rotate); only the
+ * boulder's translucent shadow stays painted in code.
+ */
+export const IMAGE_FX: Readonly<Record<string, string>> = {
+  boulder: 'fx/fx_boulder',
+  pulse: 'fx/fx_pulse',
+  shield: 'fx/fx_shield',
+  stun: 'fx/fx_stun',
+  spark: 'fx/fx_spark',
+  // eight arrows, each drawn for its own direction on one sheet (sprites never rotate)
+  arrow_e: 'fx/fx_arrow_e',
+  arrow_ne: 'fx/fx_arrow_ne',
+  arrow_n: 'fx/fx_arrow_n',
+  arrow_nw: 'fx/fx_arrow_nw',
+  arrow_w: 'fx/fx_arrow_w',
+  arrow_sw: 'fx/fx_arrow_sw',
+  arrow_s: 'fx/fx_arrow_s',
+  arrow_se: 'fx/fx_arrow_se',
+};
+
+/**
+ * King-select card backgrounds drawn as pictures (G5, `docs/art-review/g5/king-cards/`), 66×96 each; only the kings
+ * listed here are loaded, the others keep the painted card. The portrait window and the corner glyphs are always
+ * drawn over the picture (`paintKingCard`).
+ */
+export const KING_CARDS_APPROVED: readonly KingId[] = ['wheat', 'stone', 'arcane', 'grove', 'tide', 'forge', 'clock', 'moon', 'nomad'];
+export const kingCardFile = (king: KingId): string => `king-cards/${king}`;
+
+/**
+ * Main-menu backdrop drawn as pictures (G5, `docs/art-review/g5/menu/`): strips far → near, each repeating
+ * left-to-right in front of the code sky, drifting at `parallax` screen px per second. The middle strip is a whole
+ * countryside down to the screen's bottom edge, so it replaces both nearer code hill layers.
+ */
+export const MENU_IMAGE_LAYERS: readonly { readonly file: string; readonly parallax: number }[] = [
+  { file: 'menu/hills_far', parallax: 4 },
+  { file: 'menu/hills_mid', parallax: 10 },
+];
+
+/** The dusk sky behind the strips as a picture (384×256, repeats left to right); null keeps the painted bands. */
+export const MENU_SKY_FILE: string | null = 'menu/sky';
+
+/** The picture strips when every one of them loaded, else null (the menu keeps its painted hills). */
+export const menuImageLayers = (
+  loaded: (file: string) => boolean,
+): readonly { readonly file: string; readonly parallax: number }[] | null =>
+  MENU_IMAGE_LAYERS.every((layer) => loaded(layer.file)) ? MENU_IMAGE_LAYERS : null;
+
+/** Every PNG of the set (file name without `.png`). */
+export const IMAGE_ART_FILES: readonly string[] = [
+  ...Object.values(IMAGE_UNITS).flatMap((prefix) => [
+    ...POSE_INDEXES.map((i) => `${prefix}_${i}`),
+    ...POSE_INDEXES.map((i) => `${prefix}_foe_${i}`),
+  ]),
+  ...Object.values(IMAGE_BUILDINGS),
+  ...Object.entries(IMAGE_BUILDING_LEVELS).flatMap(([card, arts]) =>
+    (arts ?? []).flatMap((art) => {
+      const file = buildingLevelFile(card, art);
+      return file === null ? [] : [file];
+    }),
+  ),
+  ...Object.values(IMAGE_ICONS),
+  ...Object.values(STAT_ICONS),
+  ...MENU_IMAGE_LAYERS.map((layer) => layer.file),
+  ...(MENU_SKY_FILE ? [MENU_SKY_FILE] : []),
+  ...Object.values(IMAGE_FX),
+  ...KING_CARDS_APPROVED.map(kingCardFile),
+  ...Object.values(IMAGE_PLOTS).flatMap((prefix) => PLOT_STATES.map((s) => `${prefix}_${s}`)),
+  ...GRASS_FILES,
+  WALL_FILE,
+  ...DECOR_APPROVED.map(decorFile),
+  ...FOREST_APPROVED.map(forestFile),
+  ...(PORTAL_APPROVED ? [PORTAL_ART.file] : []),
+  ...GROUND_TEXTURES_APPROVED.map((t) => GROUND_TEXTURE_FILES[t]),
+];
+
+/**
+ * Files with an HD twin in `IMAGE_ART_HD_DIR`: the twelve poses of each HD unit, each HD building's base, L2 and L3, the
+ * four plot skins of each HD king.
+ */
+export const IMAGE_ART_HD_FILES: ReadonlySet<string> = new Set([
+  ...IMAGE_ART_HD_UNITS.flatMap((unit) => {
+    const prefix = IMAGE_UNITS[unit];
+    return prefix === undefined ? [] : POSE_INDEXES.flatMap((i) => [`${prefix}_${i}`, `${prefix}_foe_${i}`]);
+  }),
+  ...IMAGE_ART_HD_BUILDINGS.flatMap((card) => {
+    const base = IMAGE_BUILDINGS[card];
+    if (base === undefined) return [];
+    return [base, ...(IMAGE_BUILDING_LEVELS[card] ?? []).flatMap((art) => buildingLevelFile(card, art) ?? [])];
+  }),
+  ...IMAGE_ART_HD_PLOTS.flatMap((king) => {
+    const prefix = IMAGE_PLOTS[king];
+    return prefix === undefined ? [] : PLOT_STATES.map((s) => `${prefix}_${s}`);
+  }),
+]);
+
+/** Whether HD art is loaded at display density `density`. */
+export const useHdArt = (density: number): boolean => density >= HD_ART_MIN_DENSITY;
+
+/** What to load for every image-art file: its HD twin (under the HD key) when `hd` and it has one, else the `ai-v1` file. */
+export const imageArtLoads = (hd: boolean): readonly { key: string; url: string }[] =>
+  IMAGE_ART_FILES.map((file) =>
+    hd && IMAGE_ART_HD_FILES.has(file)
+      ? { key: imageArtHdKey(file), url: `${IMAGE_ART_HD_DIR}${file}.png` }
+      : { key: imageArtKey(file), url: `${IMAGE_ART_DIR}${file}.png` },
+  );
+
+/** Pose index of each animation frame (the sheets are drawn idle0 idle1 walk0 walk1 attack0 attack1). */
+export const POSES: Record<UnitAnim, readonly [number, number]> = {
+  idle: [0, 1],
+  walk: [2, 3],
+  attack: [4, 5],
+};
+
+/** File of pose `n` (0/1) of `anim` for image-art unit `unit`. */
+export const unitPoseFile = (
+  unit: string,
+  team: 'ally' | 'foe',
+  anim: UnitAnim,
+  n: number,
+): string => `${IMAGE_UNITS[unit]}_${team === 'foe' ? 'foe_' : ''}${POSES[anim][n === 0 ? 0 : 1]}`;

@@ -67,3 +67,15 @@ export const pixelHash = (x: number, y: number, seed: number): number => {
   h ^= h >>> 16;
   return (h >>> 0) / 4294967296;
 };
+
+/** `art` enlarged `k` times with nearest-neighbour (each pixel becomes a k × k block). */
+export const upscale = (art: PixelCanvas, k: number): PixelCanvas => {
+  const out = new PixelCanvas(art.width * k, art.height * k);
+  for (let y = 0; y < out.height; y++)
+    for (let x = 0; x < out.width; x++) {
+      const si = (Math.floor(y / k) * art.width + Math.floor(x / k)) * 4;
+      const di = (y * out.width + x) * 4;
+      for (let c = 0; c < 4; c++) out.data[di + c] = art.data[si + c]!;
+    }
+  return out;
+};

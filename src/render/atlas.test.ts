@@ -1,11 +1,16 @@
 import { describe, expect, it } from 'vitest';
+import { ALL_KINGS } from '../data/rules';
+import { CONTENT } from '../game/cards/registry';
 import {
   buildingFrame,
   cardArtFrame,
   fieldKey,
   fxFrame,
   iconFrame,
+  kingPlotFrame,
+  packSpritePages,
   plotFrame,
+  spriteList,
   unitFrame,
 } from './atlas';
 
@@ -22,5 +27,116 @@ describe('atlas frame names', () => {
     expect(fxFrame('arrow_ne')).toBe('fx_arrow_ne');
     expect(fxFrame('boulder_shadow')).toBe('fx_boulder_shadow');
     expect(fieldKey(42)).toBe('field-42');
+  });
+});
+
+describe('spriteList for the content', () => {
+  const names = new Set(spriteList(CONTENT).map((s) => s.name));
+
+  it('has card art for every card and a building frame for every placeable building', () => {
+    for (const card of CONTENT.allCards()) {
+      expect(names.has(cardArtFrame(card.id)), card.id).toBe(true);
+      if (['throne', 'troop', 'tower', 'economy', 'support'].includes(card.kind))
+        expect(names.has(buildingFrame(card.id)), card.id).toBe(true);
+    }
+  });
+
+  it('has idle, walk and attack frames of every unit for both teams', () => {
+    for (const unit of CONTENT.allUnits())
+      for (const team of ['ally', 'foe'] as const)
+        for (const anim of ['idle', 'walk', 'attack'] as const)
+          expect(names.has(unitFrame(unit.id, team, anim, 0)), `${unit.id} ${team} ${anim}`).toBe(true);
+  });
+
+  it('every king has its own plot skin (Wheat since G3e, the other eight since G5, 2026-11-09)', () => {
+    for (const king of ['wheat', 'stone', 'arcane', 'grove', 'tide', 'forge', 'clock', 'moon', 'nomad'] as const)
+      for (const state of ['open', 'locked', 'throne'] as const) {
+        expect(kingPlotFrame(king, state)).toBe(`plot_${king}_${state}`);
+        expect(names.has(kingPlotFrame(king, state)), `${king} ${state}`).toBe(true);
+      }
+    expect(plotFrame('open')).not.toBe(kingPlotFrame('stone', 'open')); // the shared plot stays as the fallback
+  });
+
+  it('has the pulse, shield and stun effect frames', () => {
+    for (const name of ['pulse', 'shield', 'stun']) expect(names.has(fxFrame(name)), name).toBe(true);
+  });
+
+  it('has the G2 icons', () => {
+    for (const id of ['gold', 'level', 'enchant', 'reroll', 'sell', 'lock', 'conquer'] as const)
+      expect(names.has(iconFrame(id)), id).toBe(true);
+  });
+});
+
+describe('the G3 content in the atlas', () => {
+  const list = spriteList(CONTENT);
+  const byName = new Map(list.map((s) => [s.name, s]));
+
+  it('has no duplicate frame names', () => {
+    expect(byName.size).toBe(list.length);
+  });
+
+  it('draws every registered unit at exactly its UnitDef sprite size (bosses included)', () => {
+    for (const unit of CONTENT.allUnits()) {
+      for (const team of ['ally', 'foe'] as const) {
+        const art = byName.get(unitFrame(unit.id, team, 'idle', 0))!.art;
+        expect([art.width, art.height], `${unit.id} ${team}`).toEqual([unit.sprite.w, unit.sprite.h]);
+      }
+    }
+    const bossDef = CONTENT.unit('boss_bog_ogre');
+    const boss = byName.get(unitFrame('boss_bog_ogre', 'foe', 'idle', 0))!.art;
+    expect([boss.width, boss.height]).toEqual([bossDef.sprite.w, bossDef.sprite.h]);
+  });
+
+  it('has the three bosses, the frog and the hornet', () => {
+    for (const id of ['boss_bog_ogre', 'boss_hornet_queen', 'boss_crownless_king', 'frog', 'hornet'] as const) {
+      expect(byName.has(unitFrame(id, 'foe', 'attack', 1)), id).toBe(true);
+    }
+  });
+
+  it('has art for all 9 cards of each of the 9 kings and the neutral pool', () => {
+    for (const king of ALL_KINGS) {
+      const cards = CONTENT.allCards().filter((c) => c.owner === king && c.kind !== 'throne');
+      expect(cards, king).toHaveLength(9);
+      for (const card of cards) expect(byName.has(cardArtFrame(card.id)), card.id).toBe(true);
+    }
+    expect(CONTENT.allCards().filter((c) => c.owner !== 'neutral' && c.kind !== 'throne')).toHaveLength(81);
+    for (const card of CONTENT.neutralPool()) expect(byName.has(cardArtFrame(card.id)), card.id).toBe(true);
+  });
+
+  it('packs the generated sprites onto pages that each fit a 4096 texture', () => {
+    const pages = packSpritePages(list);
+    for (const page of pages) {
+      expect(page.width).toBeLessThanOrEqual(4096);
+      expect(page.height).toBeLessThanOrEqual(4096);
+    }
+    expect(pages.flatMap((p) => p.placed.map((s) => s.name)).sort()).toEqual(list.map((s) => s.name).sort());
+  });
+});
+
+describe('packSpritePages', () => {
+  const box = (name: string, width: number, height: number) => ({ name, art: { width, height } });
+
+  it('starts a new page when the next shelf would pass the page height, frames never overlap', () => {
+    const sprites = Array.from({ length: 20 }, (_, i) => box(`s${i}`, 30, 30 + (i % 3)));
+    const pages = packSpritePages(sprites, 64, 100);
+    expect(pages.length).toBeGreaterThan(1);
+    for (const page of pages) {
+      expect(page.height).toBeLessThanOrEqual(100);
+      for (const a of page.placed) {
+        expect(a.x + a.art.width).toBeLessThanOrEqual(64);
+        expect(a.y + a.art.height).toBeLessThanOrEqual(page.height);
+        for (const b of page.placed)
+          if (a !== b)
+            expect(
+              a.x + a.art.width <= b.x || b.x + b.art.width <= a.x || a.y + a.art.height <= b.y || b.y + b.art.height <= a.y,
+              `${a.name} / ${b.name}`,
+            ).toBe(true);
+      }
+    }
+    expect(pages.reduce((n, p) => n + p.placed.length, 0)).toBe(20);
+  });
+
+  it('rejects a sprite larger than a page', () => {
+    expect(() => packSpritePages([box('huge', 10, 200)], 64, 100)).toThrow(/huge/);
   });
 });

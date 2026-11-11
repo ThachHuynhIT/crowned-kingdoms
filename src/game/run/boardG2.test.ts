@@ -60,7 +60,7 @@ const bld = (
   level,
   enchants,
   placedYear: 1,
-  permanent: {},
+  permanent: {}, ageBonus: 0, counters: {}, movedYear: null,
 });
 
 const throne = (): PlotState[] =>
@@ -91,7 +91,7 @@ describe('building cards: placing and levelling by playing a duplicate', () => {
   });
 
   it('still rejects the throne and locked plots', () => {
-    expect(play(plots, barracks, plot(12))).toBe('throne');
+    expect(play(plots, barracks, plot(THRONE_PLOT))).toBe('throne');
     expect(play(plots, barracks, plot(0))).toBe('locked');
   });
 
@@ -139,9 +139,9 @@ describe('enchantment cards', () => {
   });
 
   it('targets the throne only when the card lists it', () => {
-    expect(play(plots, sharpen, plot(12))).toBeNull();
+    expect(play(plots, sharpen, plot(THRONE_PLOT))).toBeNull();
     const noThrone: CardDef = { ...sharpen, targets: ['troop'] } as CardDef;
-    expect(play(plots, noThrone, plot(12))).toBe('throne');
+    expect(play(plots, noThrone, plot(THRONE_PLOT))).toBe('throne');
   });
 
   it('has no target on an empty board of the right kinds', () => {
@@ -162,14 +162,14 @@ describe('tome cards', () => {
   it('building tomes: promote needs a non-throne building below level 5', () => {
     expect(play(plots, promote, plot(6))).toBeNull();
     expect(play(plots, promote, plot(7))).toBe('maxLevel');
-    expect(play(plots, promote, plot(12))).toBe('throne');
+    expect(play(plots, promote, plot(THRONE_PLOT))).toBe('throne');
     expect(play(plots, promote, plot(11))).toBe('noBuilding');
     expect(play(plots, promote, plot(0))).toBe('locked');
   });
 
   it('demolish works at any level but not on the throne', () => {
     expect(play(plots, demolish, plot(7))).toBeNull();
-    expect(play(plots, demolish, plot(12))).toBe('throne');
+    expect(play(plots, demolish, plot(THRONE_PLOT))).toBe('throne');
   });
 
   it('promote has no target when every building is at level 5 (but demolish still does)', () => {
@@ -188,13 +188,13 @@ describe('tome cards', () => {
   it('building-then-building needs two different buildings (the throne counts)', () => {
     expect(targetCount(mirror)).toBe(2);
     expect(play(plots, mirror, two(6, 7))).toBeNull();
-    expect(play(plots, mirror, two(12, 6))).toBeNull();
+    expect(play(plots, mirror, two(THRONE_PLOT, 6))).toBeNull();
     expect(play(plots, mirror, two(6, 6))).toBe('badTarget');
     expect(play(plots, mirror, two(6, 11))).toBe('noBuilding');
     expect(play(plots, mirror, two(0, 6))).toBe('locked');
     expect(play(plots, mirror, plot(6))).toBe('badTarget');
     expect(hasAnyTarget(throne(), mirror, content)).toBe(false);
-    expect(play(throne(), mirror, two(12, 6))).toBe('noTarget');
+    expect(play(throne(), mirror, two(THRONE_PLOT, 6))).toBe('noTarget');
   });
 
   it('keeps clear land free of the adjacency rule', () => {

@@ -1,8 +1,8 @@
 import { describe, expect, it } from 'vitest';
 import { Rng } from '../../core/random';
-import type { CardDef } from '../../data/types';
+import type { CardDef, CardId } from '../../data/types';
 import { CONTENT } from '../cards/registry';
-import { rollConquestOffers, rollOffers, type RewardPools } from './rewards';
+import { neutralRewardPool, rollConquestOffers, rollOffers, type RewardPools } from './rewards';
 
 const king = CONTENT.king('wheat').cards;
 const neutral = CONTENT.neutralPool();
@@ -102,5 +102,17 @@ describe('rollConquestOffers', () => {
   it('returns every card when the king has 3 or fewer', () => {
     expect(rollConquestOffers(new Rng(1), king(2))).toHaveLength(2);
     expect(rollConquestOffers(new Rng(1), king(0))).toEqual([]);
+  });
+});
+
+describe('neutralRewardPool', () => {
+  const pool = CONTENT.neutralPool();
+  it('hides meta-locked cards until unlocked', () => {
+    const ids = (unlocked: CardId[]) => neutralRewardPool(pool, unlocked).map((c) => c.id);
+    expect(ids([])).not.toContain('neutral_duplicate');
+    expect(ids([])).not.toContain('neutral_royal_seal');
+    expect(ids([])).toContain('neutral_move');
+    expect(ids(['neutral_duplicate' as CardId])).toContain('neutral_duplicate');
+    expect(ids(['neutral_duplicate' as CardId])).not.toContain('neutral_royal_seal');
   });
 });

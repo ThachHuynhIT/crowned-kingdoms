@@ -1,8 +1,10 @@
 /** Lệnh người chơi lên RunState (spec §5.1, §5.5). Thuần: làm việc trên bản sao, không sửa đầu vào. */
 import { Rng } from '../../core/random';
-import { RUN, battleGold, rerollCost, unlockCost } from '../../data/run';
+import { RUN, battleGold } from '../../data/run';
+import { hasFullCalendar, type RunMode } from '../../data/rules';
 import type { CardId, KingId } from '../../data/types';
-import { CUSTOM_TOME_HANDLERS } from '../cards/custom';
+import { CUSTOM_TOME_HANDLERS, runAfterMove, runAfterPlay, runBattleEnd } from '../cards/custom';
+import { freeMoveIllegal } from '../cards/custom/nomad';
 import type { Content } from '../cards/registry';
 import {
   adjacentToUnlocked,
@@ -13,14 +15,26 @@ import {
   placeBuilding,
   plotCol,
   plotRow,
+  raiseThrone,
   sacrificeBuilding,
   unlockPlot,
 } from './board';
+import { blessingTotal, pickBlessing, plotPurchasePrice, rollBlessingOffer } from './endlessBlessings';
+import { activeModifier } from './endlessModifiers';
+import { isCouncilYear, isFinalYear } from './endlessRules';
+import { enactDecree, rollCouncil, selectDecree, setCouncilSelection } from './council';
+import { rerollPrice, rewardCount } from './decrees';
 import { refillHand } from './deck';
-import { hasPlayableCard } from './playable';
-import { rollConquestOffers, rollOffers } from './rewards';
+import { cardOffer, enqueueOffers } from './flow';
+import { maxEnchantStacks, perkLossGold, placedAgeBonus } from './perks';
+import { stateRefusal } from './playable';
+import { canStartBattle } from './turn';
+import { buyCardIllegal, shopPool, shopPrice } from './shop';
+import { answerQuest, recordQuestCommand, settleQuests } from './quests';
+import { rollConquestCards, rollOffers } from './rewards';
+import { merchantPickIllegal, rewardPools, rollMerchantOffer } from './merchant';
 import type { IllegalReason, RunCommand, RunState } from './state';
-import { startYear } from './yearFlow';
+import { advanceAfterBattle, finishYear } from './yearEnd';
 
 export type RunEvent =
   | { type: 'cardPlayed'; cardId: CardId }
@@ -32,27 +46,47 @@ export type CommandResult = { state: RunState; events: RunEvent[] } | { error: I
 
 const fail = (error: IllegalReason): CommandResult => ({ error });
 
-const manhattan = (a: number, b: number): number =>
-  Math.abs(plotCol(a) - plotCol(b)) + Math.abs(plotRow(a) - plotRow(b));
+const manhattan = (a: number, b: number, mode: RunMode): number =>
+  Math.abs(plotCol(a, mode) - plotCol(b, mode)) + Math.abs(plotRow(a, mode) - plotRow(b, mode));
 
-function begin(state: RunState, content: Content, events: RunEvent[]): RunState {
-  const next = startYear(state, content);
-  events.push({ type: 'yearStarted', year: next.year });
+/** Ghi sự kiện năm mới / hết ván do bước vừa rồi gây ra; trả lại `next`. */
+function settledEvents(before: RunState, next: RunState, events: RunEvent[]): RunState {
+  if (next.year !== before.year) events.push({ type: 'yearStarted', year: next.year });
+  if (next.phase === 'ended' && before.phase !== 'ended') events.push({ type: 'runEnded', won: next.won === true });
   return next;
 }
 
+/** Lệnh người chơi; lệnh thành công còn ghi tiến độ nhiệm vụ đang chạy (G3). */
+/** Sát thương theo uid, làm tròn về điểm nguyên, khoá tăng dần (JSON thuần, tất định); không có thì `{}`. */
+function wholeDamage(damage: Readonly<Record<number, number>> | undefined): Record<number, number> {
+  const out: Record<number, number> = {};
+  if (damage === undefined) return out;
+  const uids = Object.keys(damage)
+    .map(Number)
+    .sort((a, b) => a - b);
+  for (const uid of uids) out[uid] = Math.round(damage[uid]!);
+  return out;
+}
+
 export function applyCommand(input: RunState, cmd: RunCommand, content: Content): CommandResult {
+  const result = applyBase(input, cmd, content);
+  if ('error' in result) return result;
+  return { ...result, state: recordQuestCommand(input, result.state, cmd, content) };
+}
+
+function applyBase(input: RunState, cmd: RunCommand, content: Content): CommandResult {
   const state = structuredClone(input);
   const events: RunEvent[] = [];
 
   switch (cmd.type) {
     case 'play': {
       if (state.phase !== 'planning') return fail('wrongPhase');
-      if (state.played) return fail('alreadyPlayed');
       const cardId = state.hand[cmd.handIndex];
       if (!Number.isInteger(cmd.handIndex) || cardId === undefined) return fail('badTarget');
       const card = content.card(cardId);
-      const illegal = checkPlay(state.plots, card, cmd.target, content);
+      const refused = stateRefusal(state, card);
+      if (refused !== null) return fail(refused);
+      const illegal = checkPlay(state.plots, card, cmd.target, content, maxEnchantStacks(state, content));
       if (illegal !== null) return fail(illegal);
 
       const target = cmd.target;
@@ -70,7 +104,12 @@ export function applyCommand(input: RunState, cmd: RunCommand, content: Content)
             case 'move': {
               if (target.kind !== 'two') return fail('badTarget');
               state.plots = moveBuilding(state.plots, target.first, target.second);
-              const far = manhattan(target.first, target.second) >= 2;
+              for (const plot of [target.first, target.second]) {
+                const moved = state.plots[plot]!.building;
+                if (moved !== null) moved.movedYear = state.year; // dời xong thì công trình "vừa dời" năm nay
+              }
+              Object.assign(state, runAfterMove(state, target.first, target.second, content));
+              const far = manhattan(target.first, target.second, state.mode) >= 2;
               if (far && action.levelIfFar > 0) {
                 state.plots = levelUpBuilding(state.plots, target.second, action.levelIfFar);
               }
@@ -98,7 +137,7 @@ export function applyCommand(input: RunState, cmd: RunCommand, content: Content)
       } else if (target.kind !== 'plot') {
         return fail('badTarget');
       } else if (card.kind === 'enchantment') {
-        state.plots = attachEnchant(state.plots, target.plot, card.id, RUN.maxEnchantStacks);
+        state.plots = attachEnchant(state.plots, target.plot, card.id, maxEnchantStacks(state, content));
       } else {
         const here = state.plots[target.plot]!.building;
         if (here === null) {
@@ -108,6 +147,9 @@ export function applyCommand(input: RunState, cmd: RunCommand, content: Content)
             level: 1,
             enchants: [],
             placedYear: state.year,
+            ageBonus: placedAgeBonus(state, content, card), // perk Rễ Từ Trước
+            counters: {},
+            movedYear: null,
             permanent: {},
           });
           state.nextUid += 1;
@@ -118,13 +160,13 @@ export function applyCommand(input: RunState, cmd: RunCommand, content: Content)
       state.hand.splice(cmd.handIndex, 1);
       state.discardPile.push(cardId);
       state.played = true;
+      Object.assign(state, runAfterPlay(input, state, card, target, content));
       events.push({ type: 'cardPlayed', cardId });
       return { state, events };
     }
 
     case 'discard': {
       if (state.phase !== 'planning') return fail('wrongPhase');
-      if (state.played) return fail('alreadyPlayed');
       const { handIndex } = cmd;
       const sold = Number.isInteger(handIndex) ? state.hand[handIndex] : undefined;
       if (sold === undefined) return fail('badTarget');
@@ -139,16 +181,33 @@ export function applyCommand(input: RunState, cmd: RunCommand, content: Content)
     case 'reroll': {
       if (state.phase !== 'planning') return fail('wrongPhase');
       if (state.played) return fail('alreadyPlayed');
-      const cost = rerollCost(state.rerollsThisYear + 1);
+      const cost = rerollPrice(state);
       if (state.gold < cost) return fail('notEnoughGold');
       const rng = new Rng(state.rng.draw);
-      const piles = refillHand([], state.drawPile, [...state.discardPile, ...state.hand], rng, RUN.handSize);
+      // Đổi bài: rút lại đúng số lá đang cầm (10/11/2026), không bù lên.
+      const piles = refillHand([], state.drawPile, [...state.discardPile, ...state.hand], rng, state.hand.length);
       state.hand = piles.hand;
       state.drawPile = piles.drawPile;
       state.discardPile = piles.discardPile;
       state.gold -= cost;
+      if (state.freeRerollsLeft > 0) state.freeRerollsLeft -= 1;
+      else state.paidRerollsThisYear += 1;
       state.rerollsThisYear += 1;
       state.rng.draw = rng.getState();
+      return { state, events };
+    }
+
+    case 'buyCard': {
+      const illegal = buyCardIllegal(state, content);
+      if (illegal !== null) return fail(illegal);
+      const pool = shopPool(state, content);
+      const rng = new Rng(state.rng.shop);
+      const cardId = rng.pick(pool);
+      state.gold -= shopPrice(state);
+      state.shopPurchasesThisYear += 1;
+      state.deck.push(cardId);
+      state.hand.push(cardId);
+      state.rng.shop = rng.getState();
       return { state, events };
     }
 
@@ -158,11 +217,24 @@ export function applyCommand(input: RunState, cmd: RunCommand, content: Content)
       if (!Number.isInteger(plot) || plot < 0 || plot >= state.plots.length) return fail('badTarget');
       if (state.plots[plot]!.unlocked) return fail('badTarget');
       if (!adjacentToUnlocked(state.plots, plot)) return fail('notAdjacent');
-      const cost = unlockCost(state.purchasedPlots);
+      const cost = plotPurchasePrice(state, plot);
       if (state.gold < cost) return fail('notEnoughGold');
       state.plots = unlockPlot(state.plots, plot);
       state.gold -= cost;
       state.purchasedPlots += 1;
+      return { state, events };
+    }
+
+    case 'freeMove': {
+      const illegal = freeMoveIllegal(state, content, cmd.from, cmd.to);
+      if (illegal !== null) return fail(illegal);
+      state.plots = moveBuilding(state.plots, cmd.from, cmd.to);
+      for (const plot of [cmd.from, cmd.to]) {
+        const moved = state.plots[plot]!.building;
+        if (moved !== null) moved.movedYear = state.year;
+      }
+      state.freeMovesUsed += 1;
+      Object.assign(state, runAfterMove(state, cmd.from, cmd.to, content));
       return { state, events };
     }
 
@@ -173,32 +245,48 @@ export function applyCommand(input: RunState, cmd: RunCommand, content: Content)
 
     case 'startBattle':
       if (state.phase !== 'planning') return fail('wrongPhase');
-      if (!state.played && hasPlayableCard(state, content)) return fail('notPlayed');
+      if (!canStartBattle(state)) return fail('handTooBig');
       state.phase = 'battle';
       return { state, events };
 
     case 'battleResult': {
       if (state.phase !== 'battle') return fail('wrongPhase');
       const { result } = cmd;
+      const full = hasFullCalendar(state.rules);
       state.stats.kills += result.kills;
+      state.stats.completedYears += 1;
+      state.lastBattleDamage = wholeDamage(result.damageBySource);
       events.push({ type: 'battleEnded', won: result.won });
+      // Vàng trong trận trước, rồi vàng thắng trận (§5.5 bước 9); vàng không âm.
+      state.gold = Math.max(0, state.gold + (result.goldDelta ?? 0));
       if (result.won) {
         state.stats.battlesWon += 1;
-        const prize = battleGold(state.year);
+        // Năm boss: vàng thắng trận nhân đôi (§3.3).
+        // Kho bạc (Vô tận) cộng sau hệ số vàng boss.
+        const prize =
+          battleGold(state.year) * (state.army?.boss !== undefined ? RUN.bossGoldMult : 1) +
+          blessingTotal(state, 'battleGoldFlat') +
+          (activeModifier(state)?.battleGoldFlat ?? 0);
         state.gold += prize;
         state.stats.goldEarned += prize;
-      }
-      else {
+      } else {
         state.stats.battlesLost += 1;
         state.lives -= 1;
+        // Perk Chuộc Tù: thua vẫn nhận một phần vàng trận (không nhân hệ số năm boss).
+        const ransom = perkLossGold(state, content, battleGold(state.year));
+        state.gold += ransom;
+        state.stats.goldEarned += ransom;
       }
 
       // Chinh phục (spec §3.7): lần tấn công thứ 3 của một vua — thắng thì bị chinh phục, thua thì rút lui.
       let conquered: KingId | null = null;
-      const attacker = state.army?.attacker;
-      const enemy = attacker && attacker !== 'raiders' ? state.enemies[attacker] : undefined;
-      if (attacker && attacker !== 'raiders' && enemy) {
-        enemy.attacks += 1;
+      const raw = state.army?.attacker;
+      // Thổ Phỉ, Liên Quân và boss không tính vào lần tấn công của vua nào (§3.7).
+      const attacker = raw && raw !== 'raiders' && raw !== 'coalition' && raw !== 'boss' ? raw : undefined;
+      const enemy = attacker ? state.enemies[attacker] : undefined;
+      if (attacker && enemy) {
+        // Vô tận: vua đã chinh phục / rút lui vẫn xuất quân theo lịch, bộ đếm kẹp ở 3 (spec 2026-11-09 §3).
+        enemy.attacks = Math.min(3, enemy.attacks + 1);
         if (enemy.attacks >= 3 && enemy.status === 'pending') {
           if (result.won) {
             enemy.status = 'conquered';
@@ -212,74 +300,124 @@ export function applyCommand(input: RunState, cmd: RunCommand, content: Content)
         }
       }
 
-      const finalYear = state.year >= state.rules.years;
-      if (state.lives <= 0 || finalYear) {
-        // §3.10: sau trận năm cuối, còn mạng thì thắng ván (thắng hay thua trận đều vậy).
-        state.lives = Math.max(state.lives, 0);
-        state.phase = 'ended';
-        state.won = state.lives > 0;
-        state.offers = null;
-        events.push({ type: 'runEnded', won: state.won });
-      } else if (result.won) {
-        const rng = new Rng(state.rng.reward);
-        const cardIds = rollOffers(rng, state.year, {
-          king: content.king(state.kingId).cards,
-          neutral: content.neutralPool(),
-        });
-        state.rng.reward = rng.getState();
-        state.offers = { kind: 'reward', cardIds };
-        state.pendingConquest = conquered;
-        state.phase = 'reward';
-      } else {
-        state.offers = null;
-        state.phase = 'yearEnd';
+      // Nhiệm vụ (theo thứ tự nhận); thưởng chọn thẻ đã nằm trong hàng đợi.
+      // Chỉ boss thật sự bị hạ mới tính vào thống kê (hết giờ khi boss còn sống thì không).
+      if (result.bossDefeated !== undefined) {
+        state.stats.bossesWon += 1;
+        if (!state.stats.bossesDefeated.includes(result.bossDefeated)) state.stats.bossesDefeated.push(result.bossDefeated);
       }
-      return { state, events };
+      let s = settleQuests(runBattleEnd(state, result, content), result, 'afterBattle', content);
+      // §4.2, §5.5 bước 9 (sau khi kiểm nhiệm vụ): thắng boss 1 hoặc boss 2 thì Ngai +1 cấp (tối đa 5).
+      const ordinal = state.army?.bossOrdinal;
+      if (result.won && (ordinal === 1 || ordinal === 2)) {
+        s = raiseThrone(s);
+      }
+      const finalYear = isFinalYear(s);
+      if (s.lives <= 0 || (finalYear && !full)) {
+        // §3.10: hết mạng thì thua ngay; sau trận năm cuối còn mạng thì thắng ván (luật G1/G2: không thưởng).
+        s.lives = Math.max(s.lives, 0);
+        s = { ...s, phase: 'ended', won: s.lives > 0, offers: null, pendingOffers: [], pendingConquest: null };
+        events.push({ type: 'runEnded', won: s.won === true });
+        return { state: s, events };
+      }
+      if (result.won && !finalYear) {
+        const rng = new Rng(s.rng.reward);
+        // G1 (lịch toàn Thổ Phỉ) chỉ thưởng các thẻ G1: giao diện G1 chưa chơi được thẻ G2.
+        const cardIds = rollOffers(rng, s.year, rewardPools(s, content), rewardCount(s));
+        s.rng.reward = rng.getState();
+        s = enqueueOffers({ ...s, pendingConquest: conquered }, [{ kind: 'reward', cardIds }]);
+      }
+      // Thương nhân sau thưởng (chinh phục chen trước khi đóng thưởng), trước hội đồng (10/11/2026).
+      s = rollMerchantOffer(s, content);
+      // Hội đồng sau thắng hay thua (chỉ ván đầy đủ, còn mạng, không phải năm cuối).
+      if (isCouncilYear(s)) s = rollCouncil(s);
+      // Phúc lành Vô tận sau hội đồng, cả khi thua còn mạng (spec 2026-11-09 §5).
+      s = rollBlessingOffer(s);
+      if (s.offers === null) {
+        // Không còn bước nào: năm cuối kết thúc ván ngay, còn lại nghỉ ở yearEnd chờ `advance`.
+        s = finalYear ? finishYear(s, content) : { ...s, phase: 'yearEnd' };
+      }
+      return { state: settledEvents(input, s, events), events };
     }
 
     case 'pickOffer': {
       if ((state.phase !== 'reward' && state.phase !== 'conquest') || state.offers === null) {
         return fail('wrongPhase');
       }
+      const offer = cardOffer(state);
+      if (offer === null) return fail('wrongPhase');
       const { index } = cmd;
-      const conquest = state.phase === 'conquest';
-      if (conquest && index === null) return fail('badTarget'); // bắt buộc chọn một thẻ
+      // Thưởng thường và thương nhân được bỏ qua; chinh phục và thưởng nhiệm vụ bắt buộc chọn một thẻ.
+      const merchant = offer.kind === 'merchant';
+      if (offer.kind !== 'reward' && !merchant && index === null) return fail('badTarget');
       let { deck, drawPile } = state;
       let gold = state.gold;
       let goldEarned = state.stats.goldEarned;
       if (index === null) {
-        gold += RUN.skipRewardGold;
-        goldEarned += RUN.skipRewardGold;
+        if (!merchant) {
+          gold += RUN.skipRewardGold;
+          goldEarned += RUN.skipRewardGold;
+        }
       } else {
-        const picked = Number.isInteger(index) ? state.offers.cardIds[index] : undefined;
+        const picked = Number.isInteger(index) ? offer.cardIds[index] : undefined;
         if (picked === undefined) return fail('badTarget');
+        if (merchant) {
+          const unaffordable = merchantPickIllegal(state, offer);
+          if (unaffordable !== null) return fail(unaffordable);
+          gold -= offer.price ?? RUN.merchantPrice;
+        }
         deck = [...deck, picked];
         // Lên đầu chồng rút: thẻ vừa chọn có ngay trên tay năm sau (không bị chôn trong chồng bỏ).
         drawPile = [picked, ...drawPile];
       }
-      const stats = { ...state.stats, goldEarned };
-      const picked = { ...state, deck, drawPile, gold, stats };
-      if (!conquest && state.pendingConquest !== null) {
-        // Sau thưởng tới chinh phục: ba thẻ của vua bại trận, bắt buộc chọn một.
-        const king = content.king(state.pendingConquest);
+      let next: RunState = {
+        ...state,
+        deck,
+        drawPile,
+        gold,
+        stats: { ...state.stats, goldEarned },
+        offers: null,
+      };
+      if (offer.kind === 'reward' && state.pendingConquest !== null) {
+        // Sau thưởng tới chinh phục: ba thẻ của vua bại trận, bắt buộc chọn một; đứng trước các bước còn lại.
+        const king = content.enemyKing(state.pendingConquest);
         const rng = new Rng(state.rng.reward);
-        const cardIds = rollConquestOffers(rng, king);
-        return {
-          state: {
-            ...picked,
-            phase: 'conquest',
-            pendingConquest: null,
-            offers: { kind: 'conquest', cardIds, king: king.id },
-            rng: { ...state.rng, reward: rng.getState() },
-          },
-          events,
+        const cardIds = rollConquestCards(rng, content.conquestCards(king.id));
+        next = {
+          ...next,
+          pendingConquest: null,
+          pendingOffers: [{ kind: 'conquest', cardIds, king: king.id }, ...next.pendingOffers],
+          rng: { ...state.rng, reward: rng.getState() },
         };
       }
-      return { state: begin({ ...picked, pendingConquest: null }, content, events), events };
+      return { state: settledEvents(input, advanceAfterBattle(next, content), events), events };
+    }
+
+    case 'chooseDecree':
+    case 'setCouncilSelection':
+    case 'enactDecree': {
+      const r =
+        cmd.type === 'chooseDecree'
+          ? selectDecree(state, cmd.index)
+          : cmd.type === 'setCouncilSelection'
+            ? setCouncilSelection(state, cmd.selection, content)
+            : enactDecree(state, content);
+      return typeof r === 'string' ? fail(r) : { state: r, events };
+    }
+
+    case 'answerQuest': {
+      const r = answerQuest(state, cmd.accept, content);
+      return typeof r === 'string' ? fail(r) : { state: r, events };
+    }
+
+    case 'pickBlessing': {
+      const next = pickBlessing(state, cmd.index);
+      if (typeof next === 'string') return fail(next);
+      return { state: settledEvents(input, next, events), events };
     }
 
     case 'advance':
       if (state.phase !== 'yearEnd') return fail('wrongPhase');
-      return { state: begin(state, content, events), events };
+      return { state: settledEvents(input, finishYear(state, content), events), events };
   }
 }

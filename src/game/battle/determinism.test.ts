@@ -1,7 +1,12 @@
 /** Deterministic (spec §13.2): băm từng tick, đổi lệnh can thiệp, đổi thứ tự công trình. */
 import { describe, expect, it } from 'vitest';
 import { BATTLE } from '../../data/battle';
-import { attackStats, battleSetup, structure, unitStats } from '../testing/fixtures';
+import { SPEC_MOVE_SCALE } from '../../data/boardGeometry';
+import { RULES_FULL } from '../../data/rules';
+import { CONTENT } from '../cards/registry';
+import { buildBattleSetup } from '../run/battleSetup';
+import { newRun, startYear } from '../run/yearFlow';
+import { attackStats, battleSetup, structure, unitStats, withBuilding } from '../testing/fixtures';
 import { hashWorld } from './hash';
 import { battleResult, simulateBattle, stepBattle } from './step';
 import type {
@@ -15,10 +20,11 @@ import type {
 } from './types';
 import { createBattle, drainEvents, type BattleWorld } from './world';
 
-const militia = unitStats({ unit: 'militia', hp: 32, dmg: 5, speed: 1 });
-const bandit = unitStats({ unit: 'bandit', hp: 30, dmg: 5, speed: 0.9 });
-/** Kỵ nhanh để đợt đầu đã tới vùng tảng đá (192, 100) ở tick 36. */
-const boar = unitStats({ unit: 'boar_rider', hp: 50, dmg: 8, speed: 3, radius: 5, armor: 0.1 });
+/** Tốc độ theo bảng spec gốc (ô 32 px) nhân SPEC_MOVE_SCALE, như dữ liệu thật trên ô 64 px. */
+const militia = unitStats({ unit: 'militia', hp: 32, dmg: 5, speed: 1 * SPEC_MOVE_SCALE });
+const bandit = unitStats({ unit: 'bandit', hp: 30, dmg: 5, speed: 0.9 * SPEC_MOVE_SCALE });
+/** Kỵ nhanh để đợt đầu (xuất từ phía nam, y ≈ field + spawnOutside) đã tới vùng tảng đá `INPUTS[0]` ở tick 36. */
+const boar = unitStats({ unit: 'boar_rider', hp: 50, dmg: 8, speed: 3 * SPEC_MOVE_SCALE, radius: 5, armor: 0.1 });
 
 const troop = (plot: number): StructureSetup =>
   structure(plot, { cardId: 'wheat_militia', spawn: { stats: militia, count: 5 } });
@@ -26,7 +32,7 @@ const tower = (plot: number): StructureSetup =>
   structure(plot, {
     cardId: 'neutral_archer_tower',
     kind: 'tower',
-    attack: attackStats({ dmg: 7, range: 88, interval: 12, projectileSpeed: 8 }),
+    attack: attackStats({ dmg: 7, range: 88, interval: 12, projectileSpeed: 8 * SPEC_MOVE_SCALE }),
     targeting: 'closestToThrone',
   });
 
@@ -54,10 +60,14 @@ const STRUCTURES: readonly StructureSetup[] = [
 const SETUP: BattleSetup = battleSetup({
   year: 3,
   structures: STRUCTURES,
-  waves: [wave(0, 'N', 'E'), wave(120, 'S', 'W')],
+  waves: [wave(0, 'S', 'S'), wave(120, 'S', 'S')],
 });
 
-const INPUTS: readonly BattleInput[] = [{ tick: 30, x: 192, y: 100 }];
+/**
+ * Giữa sân (y 580): kỵ lợn (6 px/tick) ra từ cổng y 916 (cổng xa 1,5 lần từ 2026-11-09) tới đây quanh tick 56, nên
+ * tảng đá thả ở tick 50 rơi xuống (6 tick sau) đúng lúc chúng tới (bản ô 32: (192, 290)).
+ */
+const INPUTS: readonly BattleInput[] = [{ tick: 50, x: BATTLE.field / 2, y: 290 * SPEC_MOVE_SCALE }];
 
 const step = (w: BattleWorld, inputs: readonly BattleCommand[]): void => {
   const tick = w.tick;
@@ -130,5 +140,133 @@ describe('battle determinism', () => {
     const reversed: BattleSetup = { ...SETUP, structures: [...STRUCTURES].reverse() };
     expect(finalHash(reversed, INPUTS)).toBe(finalHash(SETUP, INPUTS));
     expect(simulateBattle(reversed, INPUTS)).toEqual(simulateBattle(SETUP, INPUTS));
+  });
+});
+
+describe('hash covers the G2 mechanics', () => {
+  it('differs when a pulse, taunt, shield or splash value differs', () => {
+    const plain = hashWorld(createBattle(battleSetup({ structures: [structure(6)] })));
+    const variants = [
+      structure(6, { pulse: { everyTicks: 40, radius: 48, dmg: 30, dmgType: 'physical', stunTicks: 10 } }),
+      structure(6, { pulse: { everyTicks: 41, radius: 48, dmg: 30, dmgType: 'physical', stunTicks: 10 } }),
+      structure(6, { taunt: 40 }),
+      structure(6, { shieldPulse: { everyTicks: 50, radius: 64, amount: 20 } }),
+      structure(6, { kind: 'tower', attack: attackStats({ splash: 16 }) }),
+    ];
+    const hashes = variants.map((s) => hashWorld(createBattle(battleSetup({ structures: [s] }))));
+    for (const h of hashes) expect(h).not.toBe(plain);
+    expect(new Set(hashes).size).toBe(hashes.length);
+  });
+
+  it('is equal for identical setups', () => {
+    const make = () =>
+      hashWorld(
+        createBattle(battleSetup({ structures: [structure(6, { taunt: 40 })] })),
+      );
+    expect(make()).toBe(make());
+  });
+});
+
+describe('G3 behaviours stay deterministic', () => {
+  const colossus = unitStats({
+    unit: 'colossus',
+    hp: 300,
+    dmg: 12,
+    speed: 0.6,
+    behaviours: [{ type: 'stepBuff', everyTicks: 100, dmgPct: 20, speedPct: 10, maxStacks: 6 }],
+  });
+  const skeleton = unitStats({
+    unit: 'skeleton',
+    hp: 40,
+    dmg: 6,
+    speed: 1,
+    behaviours: [{ type: 'reviveOnce', hpPct: 50 }, { type: 'rampDmg', pctPerSecond: 2, cap: 80 }],
+    onHit: [{ type: 'lifesteal', pct: 30 }],
+  });
+  const bear = unitStats({
+    unit: 'bear',
+    hp: 160,
+    dmg: 16,
+    speed: 1,
+    behaviours: [{ type: 'enrage', belowHpPct: 50, dmgPct: 50 }, { type: 'charge', dmgMult: 2, knockback: 8, stunTicks: 10 }],
+    onHit: [{ type: 'poison', dps: 2, ticks: 30, maxStacks: 3 }, { type: 'pull', px: 16, every: 4 }],
+  });
+  const flame = (plot: number): StructureSetup =>
+    structure(plot, {
+      cardId: 'forge_flame_tower',
+      kind: 'tower',
+      attack: attackStats({
+        dmg: 4,
+        range: 80,
+        interval: 4,
+        cone: { range: 80, halfAngleCos: 0.7071 },
+        onHit: [{ type: 'burn', dps: 2, ticks: 30 }],
+      }),
+      targeting: 'closestToThrone',
+    });
+  const setup: BattleSetup = battleSetup({
+    year: 4,
+    structures: [
+      structure(6, { cardId: 'wheat_militia', spawn: { stats: skeleton, count: 6 } }),
+      structure(8, { cardId: 'wheat_militia', spawn: { stats: bear, count: 2 } }),
+      flame(2),
+      flame(14),
+    ],
+    waves: [
+      {
+        spawnTick: 0,
+        spawns: Array.from({ length: 24 }, (_, i) => ({
+          stats: (i % 4 === 0 ? colossus : i % 2 === 0 ? bear : skeleton) as UnitStats,
+          edge: (i % 2 === 0 ? 'N' : 'E') as Edge,
+        })),
+      },
+    ],
+  });
+
+  const trace = (): number[] => {
+    const w = createBattle(setup);
+    const hashes: number[] = [];
+    for (let i = 0; i <= BATTLE.hardLimitTick && battleResult(w) === null; i++) {
+      step(w, []);
+      hashes.push(hashWorld(w));
+    }
+    return hashes;
+  };
+
+  it('two runs of a battle with every new behaviour give the same hash on every tick', () => {
+    const a = trace();
+    expect(a.length).toBeGreaterThan(100);
+    expect(trace()).toEqual(a);
+  });
+});
+
+describe('full_hash_determinism: bosses and the six king rosters', () => {
+  const real = (year: number): BattleSetup => {
+    const base = newRun(5, 'wheat', CONTENT, RULES_FULL);
+    let s = startYear({ ...base, year: year - 1 }, CONTENT);
+    s = withBuilding(withBuilding(withBuilding(s, 6, 'wheat_militia', 3), 7, 'neutral_archer_tower', 2), 8, 'neutral_barracks', 2);
+    return buildBattleSetup({ ...s, phase: 'battle' }, CONTENT);
+  };
+  const trace = (setup: BattleSetup, ticks: number): number[] => {
+    const w = createBattle(setup);
+    const out: number[] = [];
+    for (let i = 0; i < ticks && battleResult(w) === null; i++) {
+      stepBattle(w, []);
+      drainEvents(w);
+      out.push(hashWorld(w));
+    }
+    return out;
+  };
+
+  it.each([10, 20, 30])('boss year %i: two worlds hash alike on every tick', (year) => {
+    const a = trace(real(year), 420);
+    expect(a.length).toBeGreaterThan(50);
+    expect(trace(real(year), 420)).toEqual(a);
+  });
+
+  it.each([3, 4, 7, 12, 15, 18])('year %i (first attack of one of the six kings): identical on every tick', (year) => {
+    const a = trace(real(year), 300);
+    expect(a.length).toBeGreaterThan(50);
+    expect(trace(real(year), 300)).toEqual(a);
   });
 });

@@ -1,36 +1,59 @@
 import Phaser from 'phaser';
 import type { EventBus } from '../core/events';
 import type { GameSpeed } from '../core/SimClock';
-import { INTERVENTION } from '../data/battle';
+import { INTERVENTION, INTERVENTION_POWERS } from '../data/battle';
 import { toCss } from '../data/palette';
 import { UI_PALETTE } from '../data/uiPalette';
 import type { BattleResult } from '../game/battle/types';
-import type { BattleWorld } from '../game/battle/world';
+import { KIND_UNIT, TEAM_FOE, type BattleWorld } from '../game/battle/world';
+import type { RunState } from '../game/run/state';
 import { CONTENT } from '../game/cards/registry';
 import type { GameEvents } from '../game/events';
 import type { RunController } from '../game/run/RunController';
 import { SPRITES_KEY, iconFrame } from '../render/atlas';
 import { ToastStack } from '../ui/ToastStack';
 import { Tooltip } from '../ui/Tooltip';
-import { foesRemaining, interventionCooldown, throneHpFraction } from '../ui/battle/battleReadout';
-import { InfoPanel } from '../ui/info/InfoPanel';
-import { entityAt, entityInfoLines } from '../ui/info/infoLines';
+import {
+  bestStructure,
+  foesRemaining,
+  interventionCooldown,
+  summaryLines,
+} from '../ui/battle/battleReadout';
+import { InspectionView } from '../ui/info/InspectionView';
+import { entityAt } from '../ui/info/infoLines';
+import { buildingInfoModel, plotOfEntity, unitInfoModel } from '../ui/info/inspectionModel';
+import { battleControls } from '../ui/info/inspectionReserved';
+import { resolveShortcut, shortcutFlags, shortcutLabel } from '../ui/input/shortcuts';
+import { openHelp } from './helpLauncher';
+import { openSettings } from './SettingsScene';
+import { bossReadout, type BossReadout } from '../ui/battle/battleReadout';
+import { bindSceneDisplay, logicalPointer, logicalPointerDistance, logicalSize } from '../ui/displayRuntime';
 import { DRAG_SLOP, GAP, MARGIN, textContent, type Point, type Rect } from '../ui/hud/layout';
+import { ENEMY_ARMY_TOOLTIP, armyHealth, healthText, throneHealth } from '../ui/hud/armyHealth';
+import { HealthBarView } from '../ui/hud/HealthBarView';
+import { kingTheme } from '../ui/kingSelect/kingTheme';
+import { CalendarModal } from '../ui/modals/CalendarModal';
+import { CalendarStrip } from '../ui/planning/CalendarStrip';
+import { allyStatusText, foeStatusText } from '../ui/planning/statusText';
+import { calendarCells, yearLabel } from '../ui/realm/calendarModel';
 import { RESULT_BUTTON, centredPanel, resultLayout } from '../ui/modals/modalLayout';
+import { fitTextWidth } from '../ui/modals/fitText';
 import { createOverlay, fitOverlay } from '../ui/modals/overlay';
 import { ScoutPanel, tickClock } from '../ui/planning/ScoutPanel';
 import {
   battleLayout,
-  battleCamera,
-  battleWorldAt,
-  battleZoom,
   screenToWorld,
   isDesktop,
   type BattleLayout,
 } from '../ui/realm/realmLayout';
+import { overviewView, worldAtView, type CameraView } from '../ui/realm/cameraModel';
+import { unproject } from '../core/iso';
+import { atlasOpacity, battleEntityBoxes } from '../render/pickBoxes';
+import { PICK_SLOP, pickSprite } from '../ui/info/spritePick';
 import {
   addUiText,
   createButton,
+  textStyle,
   createPanel,
   frameBorder,
   type Button,
@@ -51,8 +74,6 @@ const SPEEDS: readonly { speed: GameSpeed; label: string; tip: string[] }[] = [
 const BANNER_MS = 1200;
 const WIN_TEXT = 'Chiến thắng!';
 const LOSS_TEXT = 'Ngai thất thủ!';
-/** HP bar inside the clock panel: left of it the "m:ss" clock. */
-const CLOCK_TEXT_W = 64;
 const BAR_H = 16;
 const DOT_R = 4;
 const DOT_GAP = 14;
@@ -105,20 +126,35 @@ export class BattleHudScene extends Phaser.Scene {
   private livesBox!: UiBox;
   private livesIcon: Phaser.GameObjects.Image | null = null;
   private livesText!: Phaser.GameObjects.Text;
-  private clockBox!: UiBox;
+  private goldBox!: UiBox;
+  private goldIcon: Phaser.GameObjects.Image | null = null;
+  private goldText!: Phaser.GameObjects.Text;
   private clockText!: Phaser.GameObjects.Text;
-  private hpBar!: UiBox;
-  private hpFill!: Phaser.GameObjects.Graphics;
+  private yearText!: Phaser.GameObjects.Text;
+  private calendar!: CalendarStrip;
+  private calendarModal: CalendarModal | null = null;
+  private allyBar!: HealthBarView;
+  private foeBar!: HealthBarView;
+  private tick = 0;
+  private paused = false;
+  /** The boss bar under the clock: shown while a boss is alive. */
+  private bossBar!: UiBox;
+  private bossFill!: Phaser.GameObjects.Graphics;
+  private bossText!: Phaser.GameObjects.Text;
+  private bossShown = false;
   private foesBox!: UiBox;
   private foesText!: Phaser.GameObjects.Text;
   private dots!: Phaser.GameObjects.Graphics;
   private speedButtons: Button[] = [];
   private intervene!: Button;
   /** Info box of a tapped building or unit (§10.7), and the entity it describes. */
-  private info!: InfoPanel;
+  private info!: InspectionView;
   private inspected: number | null = null;
+  private hoveredId: number | null = null;
   private autoBtn!: Button;
   private wavesBtn!: Button;
+  private helpBtn!: Button;
+  private settingsBtn!: Button;
   private scoutModal: {
     root: Phaser.GameObjects.Container;
     overlay: Phaser.GameObjects.Rectangle;
@@ -137,11 +173,16 @@ export class BattleHudScene extends Phaser.Scene {
   private banner: { box: UiBox; text: Phaser.GameObjects.Text } | null = null;
   private bannerTimer: Phaser.Time.TimerEvent | null = null;
   private summary: Summary | null = null;
+  /** Gold when the battle began, to show what it paid in the summary. */
+  private goldAtStart = 0;
   private result: BattleResult | null = null;
 
   constructor() {
     super(SCENES.battleHud);
   }
+
+  /** The realm camera as RealmScene last set it (`realm:view`): aim and taps map to the world through it. */
+  private view: CameraView = { zoom: 1, scroll: { x: 0, y: 0 } };
 
   create(data: RealmHudData): void {
     // Scene instances are reused: reset every per-battle field first.
@@ -159,13 +200,22 @@ export class BattleHudScene extends Phaser.Scene {
     this.bannerTimer = null;
     this.summary = null;
     this.result = null;
+    this.goldAtStart = this.controller.state.gold;
     this.scoutModal = null;
+    this.calendarModal = null;
+    this.tick = 0;
+    this.paused = false;
     this.inspected = null;
+    this.hoveredId = null;
     this.lay = this.currentLayout();
+    this.view = overviewView(this.screen(), 'battle', this.controller.state.mode);
 
     this.tooltip = new Tooltip(this);
     this.toasts = new ToastStack(this, TOAST_DEPTH);
-    this.info = new InfoPanel(this, MODAL_DEPTH - 50);
+    this.info = new InspectionView(this, MODAL_DEPTH - 50, () => {
+      this.inspected = null;
+      this.bus.emit('ui:range-selection', { target: null, mode: 'selected' });
+    });
     const tip = (lines: string[]): TooltipSource => ({
       host: this.tooltip,
       content: () => textContent(lines),
@@ -179,12 +229,39 @@ export class BattleHudScene extends Phaser.Scene {
         ? this.add.image(0, 0, SPRITES_KEY, iconFrame('crown')).setScale(2).setOrigin(0, 0.5)
         : null;
     this.livesText = addUiText(this, 0, 0, '', 18).setOrigin(0, 0.5).setFontStyle('bold');
+    // Gold, right of the lives (as in planning).
+    this.goldBox = createPanel(this, 'panel', this.lay.gold.w, this.lay.gold.h);
+    this.goldIcon =
+      tex.exists(SPRITES_KEY) && tex.get(SPRITES_KEY).has(iconFrame('gold'))
+        ? this.add.image(0, 0, SPRITES_KEY, iconFrame('gold')).setScale(2).setOrigin(0, 0.5)
+        : null;
+    this.goldText = addUiText(this, 0, 0, '', 18).setOrigin(0, 0.5).setFontStyle('bold');
 
-    // Top centre: clock + throne HP.
-    this.clockBox = createPanel(this, 'panel', this.lay.clock.w, this.lay.clock.h);
-    this.clockText = addUiText(this, 0, 0, tickClock(0), 20).setOrigin(0, 0.5).setFontStyle('bold');
-    this.hpBar = createPanel(this, 'bar', 100, BAR_H);
-    this.hpFill = this.add.graphics();
+    // Top centre: the five-year strip, the year and the clock (floating over the field).
+    const floating = (size: number): Phaser.GameObjects.Text =>
+      this.add
+        .text(0, 0, '', textStyle(size, UI_PALETTE.creamLight))
+        .setOrigin(0.5)
+        .setFontStyle('bold')
+        .setShadow(2, 2, toCss(UI_PALETTE.outline), 0, false, true);
+    this.calendar = new CalendarStrip(this, CONTENT, this.tooltip, () => this.openCalendar());
+    this.yearText = floating(16);
+    this.clockText = floating(20);
+    this.showClock();
+    // Bottom corners: the throne's health (left), the enemy units' health (right).
+    this.allyBar = new HealthBarView(this, 'left');
+    this.foeBar = new HealthBarView(this, 'right', {
+      host: this.tooltip,
+      content: { title: 'Máu quân địch', lines: [[{ text: ENEMY_ARMY_TOOLTIP }]] },
+    });
+    this.bossBar = createPanel(this, 'bar', 100, BAR_H);
+    this.bossFill = this.add.graphics();
+    this.bossText = addUiText(this, 0, 0, '', 12, UI_PALETTE.creamLight)
+      .setOrigin(0.5, 0)
+      .setFontStyle('bold')
+      .setShadow(1, 1, toCss(UI_PALETTE.outline), 0, false, true);
+    this.bossShown = false;
+    this.drawBoss(null);
 
     // Top right: enemies left + wave dots.
     this.foesBox = createPanel(this, 'panel', this.lay.foes.w, this.lay.foes.h);
@@ -210,8 +287,8 @@ export class BattleHudScene extends Phaser.Scene {
         : undefined,
       onClick: () => this.toggleAim(),
       tooltip: tip([
-        'Can Thiệp (Space / B)',
-        'Thả Đá Tảng Hoàng Gia lên quân địch.',
+        `Can Thiệp: ${INTERVENTION_POWERS[this.controller.state.kingId].name} (Space / B)`,
+        INTERVENTION_POWERS[this.controller.state.kingId].text,
         'Bấm lại để huỷ.',
       ]),
     });
@@ -234,6 +311,20 @@ export class BattleHudScene extends Phaser.Scene {
       onClick: () => (this.scoutModal ? this.closeScout() : this.openScout()),
       tooltip: tip(['Các đợt địch', 'Xem lại đạo quân năm nay.']),
     });
+    this.helpBtn = createButton(this, 0, 0, '?', {
+      width: this.lay.help.w,
+      height: this.lay.help.h,
+      fontSize: 22,
+      onClick: () => this.bus.emit('ui:help', { open: true }),
+      tooltip: tip([`Trợ giúp (${shortcutLabel('help')})`, 'Thẻ bài, cơ chế, phím tắt...']),
+    });
+    this.settingsBtn = createButton(this, 0, 0, '⚙', {
+      width: 48,
+      height: 48,
+      fontSize: 22,
+      onClick: () => openSettings(this, this.bus, this.controller.runner?.clock.speed),
+      tooltip: tip(['Cài đặt']),
+    });
     this.cooldown = this.add.graphics();
     this.cooldownText = addUiText(this, 0, 0, '', 22, UI_PALETTE.creamLight)
       .setOrigin(0.5)
@@ -243,26 +334,41 @@ export class BattleHudScene extends Phaser.Scene {
 
     const bus = this.bus;
     this.offs.push(
-      bus.on('battle:tick', ({ tick }) => this.clockText.setText(tickClock(tick))),
+      bus.on('battle:tick', ({ tick }) => {
+        this.tick = tick;
+        this.showClock();
+      }),
       bus.on('clock:speed', ({ speed }) => this.showSpeed(speed)),
       bus.on('run:state', ({ state }) => {
         this.livesText.setText(`× ${state.lives}`);
+        this.goldText.setText(`${state.gold}`);
         this.autoBtn.setLabel(autoLabel(state.autoFire));
         this.autoBtn.setActive(state.autoFire);
+        this.showYear(state);
       }),
       bus.on('log', ({ text }) => this.toasts.push(text)),
+      bus.on('realm:view', (view) => {
+        this.view = view;
+        this.drawRing();
+      }),
       bus.on('battle:ended', ({ result }) => this.onEnded(result)),
+      bus.on('ui:help', ({ open, tab }) => {
+        if (open) openHelp(this, this.bus, this.controller.runner?.clock.speed ?? null, tab);
+      }),
     );
 
     this.input.keyboard?.on(Phaser.Input.Keyboard.Events.ANY_KEY_DOWN, this.onKey, this);
     this.input.on(Phaser.Input.Events.POINTER_MOVE, this.onPointerMove, this);
     this.input.on(Phaser.Input.Events.POINTER_DOWN, this.onPointerDown, this);
     this.input.on(Phaser.Input.Events.POINTER_UP, this.onPointerUp, this);
-    this.scale.on(Phaser.Scale.Events.RESIZE, this.layout, this);
+    bindSceneDisplay(this, () => this.layout());
     this.events.once(Phaser.Scenes.Events.SHUTDOWN, this.teardown, this);
 
     this.livesText.setText(`× ${this.controller.state.lives}`);
+    this.goldText.setText(`${this.controller.state.gold}`);
     this.showSpeed(this.controller.runner?.clock.speed ?? 1);
+    this.showYear(this.controller.state);
+    this.applySkin();
     this.layout();
     this.refresh();
   }
@@ -278,7 +384,8 @@ export class BattleHudScene extends Phaser.Scene {
   private refresh(): void {
     const world = this.world;
     if (!world) return;
-    this.drawHp(throneHpFraction(world));
+    this.drawBars(world);
+    this.drawBoss(bossReadout(world));
     this.foesText.setText(`Địch còn: ${foesRemaining(world)}`);
     this.drawDots(world.setup.waves.length, world.spawnedWaves);
     this.drawCooldown();
@@ -286,17 +393,75 @@ export class BattleHudScene extends Phaser.Scene {
     this.refreshInfo(world);
   }
 
-  private drawHp(fraction: number): void {
-    const bar = this.hpBar.image;
-    const b = frameBorder(this, 'bar');
-    const innerW = this.hpBar.width - 2 * b;
-    const color =
-      fraction > 0.5 ? UI_PALETTE.good : fraction > 0.25 ? UI_PALETTE.warn : UI_PALETTE.bad;
-    const g = this.hpFill;
+  /** The boss bar: name · phase above, HP fill below; hidden while there is no live boss. */
+  private drawBoss(boss: BossReadout | null): void {
+    const g = this.bossFill;
     g.clear();
-    if (fraction <= 0) return;
-    g.fillStyle(color, 1);
+    this.bossBar.image.setVisible(boss !== null);
+    this.bossText.setVisible(boss !== null);
+    if (boss === null) {
+      if (this.bossShown) {
+        this.bossShown = false;
+        this.placeToasts();
+      }
+      return;
+    }
+    if (!this.bossShown) {
+      this.bossShown = true;
+      this.placeToasts();
+    }
+    this.bossText.setText(`${boss.nameVi} · ${boss.phase}  ${boss.hp}/${boss.maxHp}`);
+    const bar = this.bossBar.image;
+    const b = frameBorder(this, 'bar');
+    const innerW = this.bossBar.width - 2 * b;
+    const fraction = boss.maxHp > 0 ? Math.min(1, boss.hp / boss.maxHp) : 0;
+    g.fillStyle(UI_PALETTE.bad, 1);
     g.fillRect(bar.x + b, bar.y + b, Math.max(1, Math.round(innerW * fraction)), BAR_H - 2 * b);
+  }
+
+  private placeToasts(): void {
+    const bs = this.lay.bossStatus;
+    const below = this.bossShown ? bs.y + bs.h + GAP : this.lay.clock.y + this.lay.clock.h + GAP * 2;
+    this.toasts.setAnchor(this.screen().w / 2, below, this.screen().w - 2 * MARGIN);
+  }
+
+  /** The two bottom bars: the throne (accent of the playing king) and the enemy units on the field. */
+  private drawBars(world: BattleWorld): void {
+    const state = this.controller.state;
+    const theme = kingTheme(state.kingId);
+    const throne = throneHealth(world);
+    this.allyBar.set(allyStatusText(state.kingId, CONTENT), throne, healthText(throne), theme.accent, state.kingId);
+    const army = armyHealth(world, TEAM_FOE);
+    const next = calendarCells(state, 1)[0];
+    this.foeBar.set(foeStatusText(next, CONTENT), army, healthText(army), UI_PALETTE.bad, state.kingId);
+  }
+
+  private showClock(): void {
+    this.clockText.setText(this.paused ? `${tickClock(this.tick)}  TẠM DỪNG` : tickClock(this.tick));
+  }
+
+  private showYear(state: RunState): void {
+    this.yearText.setText(yearLabel(state));
+    fitTextWidth(this.yearText, isDesktop(this.screen().w) ? 18 : 15, 11, this.lay.year.w);
+    this.calendar.setCells(calendarCells(state, 5));
+  }
+
+  /** The playing king's colours on every button and panel of the HUD. */
+  private applySkin(): void {
+    const skin = this.controller.state.kingId;
+    for (const b of [...this.speedButtons, this.intervene, this.autoBtn, this.wavesBtn, this.helpBtn]) b.setSkin(skin);
+    for (const box of [this.livesBox, this.goldBox, this.foesBox]) box.setSkin(skin);
+  }
+
+  private openCalendar(): void {
+    if (this.calendarModal || this.scoutModal || this.ended) return;
+    this.setAiming(false);
+    this.calendarModal = new CalendarModal(this, CONTENT, this.controller.state, this.tooltip, () => this.closeCalendar(), this.controller.state.kingId).setDepth(MODAL_DEPTH);
+  }
+
+  private closeCalendar(): void {
+    this.calendarModal?.destroy();
+    this.calendarModal = null;
   }
 
   private drawDots(waves: number, spawned: number): void {
@@ -344,16 +509,22 @@ export class BattleHudScene extends Phaser.Scene {
     g.clear();
     const at = this.aimAt;
     if (!this.aiming || !at) return;
-    const radius = INTERVENTION.radius * battleZoom(this.scale.width, this.scale.height);
-    const onField = battleWorldAt(at, this.screen()) !== null;
+    // A world circle of the boulder radius is a 2:1 ellipse on the isometric ground: r·√2 wide, r/√2 tall.
+    // The battle's own radius (decrees and the king's power change it), else the base one.
+    const radius = this.world?.boulderRadius ?? INTERVENTION.radius;
+    const rx = radius * Math.SQRT2 * this.view.zoom;
+    const ry = (radius / Math.SQRT2) * this.view.zoom;
+    const onField = worldAtView(this.view, this.screen(), at) !== null;
     g.lineStyle(3, UI_PALETTE.outline, 0.8);
-    g.strokeCircle(at.x, at.y, radius);
+    g.strokeEllipse(at.x, at.y, rx * 2, ry * 2);
     g.lineStyle(2, onField ? UI_PALETTE.gold : UI_PALETTE.bad, 1);
-    g.strokeCircle(at.x, at.y, radius);
+    g.strokeEllipse(at.x, at.y, rx * 2, ry * 2);
   }
 
   private showSpeed(speed: GameSpeed): void {
     this.speedButtons.forEach((b, i) => b.setActive(SPEEDS[i]!.speed === speed));
+    this.paused = speed === 0;
+    this.showClock();
   }
 
   // ---- bảng thông tin nhà / lính (§10.7) ---------------------------------------------------
@@ -362,19 +533,57 @@ export class BattleHudScene extends Phaser.Scene {
   private inspectAt(p: Point): void {
     const world = this.world;
     if (!world) return;
-    const { zoom, scroll } = battleCamera(this.screen());
-    const at = screenToWorld(p, scroll, this.screen(), zoom);
-    const id = entityAt(world, at.x, at.y);
+    const id = this.entityUnder(world, p);
     if (id === null) {
       this.hideInfo();
       return;
     }
     this.inspected = id;
-    this.info.show(entityInfoLines(world, id, CONTENT), p, this.screen());
+    this.bus.emit('ui:range-selection', { target: { kind: 'entity', id }, mode: 'selected' });
+    this.showInfo(world, id, p);
+  }
+
+  /**
+   * The entity drawn under screen point `p`, ours or the enemy's (owner 10/11/2026): first by its sprite as drawn
+   * (units by their whole box, buildings by their opaque pixels, the front-most wins), then by its collision circle.
+   */
+  private entityUnder(world: BattleWorld, p: Point): number | null {
+    const cam = screenToWorld(p, this.view.scroll, this.screen(), this.view.zoom);
+    const boxes = battleEntityBoxes(this.textures, world);
+    const art = pickSprite(boxes, cam, PICK_SLOP / this.view.zoom, atlasOpacity(this.textures));
+    if (art !== null) return art;
+    const at = unproject(cam);
+    return entityAt(world, at.x, at.y);
+  }
+
+  private showInfo(world: BattleWorld, id: number, anchor: Point): void {
+    const state = this.controller.state;
+    const reserved = battleControls(battleLayout(this.screen(), this.controller.state.mode));
+    if (world.kind[id] === KIND_UNIT) {
+      const unit = unitInfoModel(world, id, state, CONTENT);
+      if (unit) this.info.showUnit(unit, anchor, this.screen(), reserved);
+      return;
+    }
+    const plot = plotOfEntity(world, id, state);
+    const model = plot === null ? null : buildingInfoModel(state, plot, CONTENT, { hp: world.hp[id]!, maxHp: world.maxHp[id]! });
+    if (model) this.info.showBuilding(model, anchor, this.screen(), reserved);
+  }
+
+  private updateInfo(world: BattleWorld, id: number): void {
+    const state = this.controller.state;
+    if (world.kind[id] === KIND_UNIT) {
+      const unit = unitInfoModel(world, id, state, CONTENT);
+      if (unit) this.info.setUnit(unit);
+      return;
+    }
+    const plot = plotOfEntity(world, id, state);
+    const model = plot === null ? null : buildingInfoModel(state, plot, CONTENT, { hp: world.hp[id]!, maxHp: world.maxHp[id]! });
+    if (model) this.info.setBuilding(model);
   }
 
   private hideInfo(): void {
     this.inspected = null;
+    this.bus.emit('ui:range-selection', { target: null, mode: 'selected' });
     this.info.hide();
   }
 
@@ -383,7 +592,7 @@ export class BattleHudScene extends Phaser.Scene {
     const id = this.inspected;
     if (id === null) return;
     if (world.alive[id] !== 1) this.hideInfo();
-    else this.info.setLines(entityInfoLines(world, id, CONTENT));
+    else this.updateInfo(world, id);
   }
 
   // ---- Tự bắn / các đợt địch -----------------------------------------------------------------
@@ -445,9 +654,12 @@ export class BattleHudScene extends Phaser.Scene {
 
   private setAiming(on: boolean): void {
     this.aiming = on;
+    if (on) {
+      this.hoveredId = null;
+      this.bus.emit('ui:range-selection', { target: null, mode: 'hover' });
+    }
     if (on && !this.aimAt) {
-      const p = this.input.activePointer;
-      this.aimAt = { x: p.x, y: p.y };
+      this.aimAt = logicalPointer(this, this.input.activePointer);
     }
     this.drawCooldown();
     this.drawRing();
@@ -455,7 +667,7 @@ export class BattleHudScene extends Phaser.Scene {
 
   /** Drop the boulder at screen point `p` (ignored off the field: keep aiming). */
   private drop(p: Point): void {
-    const world = battleWorldAt(p, this.screen());
+    const world = worldAtView(this.view, this.screen(), p);
     if (!world || !this.isReady()) return;
     this.bus.emit('ui:intervene', { x: world.x, y: world.y });
     this.setAiming(false);
@@ -464,7 +676,7 @@ export class BattleHudScene extends Phaser.Scene {
   // ---- input ---------------------------------------------------------------------------------
 
   private onPointerMove(pointer: Phaser.Input.Pointer): void {
-    const p = { x: pointer.x, y: pointer.y };
+    const p = logicalPointer(this, pointer);
     const press = this.press;
     // Dragging out of the button aims (§10.7: drag from the button and release on the field).
     if (
@@ -472,17 +684,33 @@ export class BattleHudScene extends Phaser.Scene {
       pointer.id === press.id &&
       !this.aiming &&
       !inside(this.lay.intervene, p) &&
-      pointer.getDistance() > DRAG_SLOP &&
+      logicalPointerDistance(this, pointer) > DRAG_SLOP &&
       this.isReady()
     ) {
       this.setAiming(true);
     }
     this.aimAt = p;
     if (this.aiming) this.drawRing();
+    this.hoverRange(pointer);
+  }
+
+  /** Mouse over a live entity shows its rings (not while aiming the boulder or on a touch screen). */
+  private hoverRange(pointer: Phaser.Input.Pointer): void {
+    const world = this.world;
+    let id: number | null = null;
+    if (world && !this.aiming && !pointer.wasTouch) {
+      id = this.entityUnder(world, logicalPointer(this, pointer));
+    }
+    if (id === this.hoveredId) return;
+    this.hoveredId = id;
+    this.bus.emit('ui:range-selection', {
+      target: id === null ? null : { kind: 'entity', id },
+      mode: 'hover',
+    });
   }
 
   private onPointerDown(pointer: Phaser.Input.Pointer): void {
-    const p = { x: pointer.x, y: pointer.y };
+    const p = logicalPointer(this, pointer);
     this.press = { id: pointer.id, fromButton: inside(this.lay.intervene, p), ...p };
     this.aimAt = p;
     if (this.aiming) this.drawRing();
@@ -493,7 +721,7 @@ export class BattleHudScene extends Phaser.Scene {
     if (!press || press.id !== pointer.id) return;
     this.press = null;
     if (this.ended) return;
-    const p = { x: pointer.x, y: pointer.y };
+    const p = logicalPointer(this, pointer);
     if (!this.aiming) {
       const moved = (p.x - press.x) ** 2 + (p.y - press.y) ** 2 > DRAG_SLOP * DRAG_SLOP;
       if (!press.fromButton && !moved && over.length === 0) this.inspectAt(p);
@@ -511,31 +739,48 @@ export class BattleHudScene extends Phaser.Scene {
   }
 
   private onKey(event: KeyboardEvent): void {
-    if (event.repeat) return; // a held key acts once
+    const action = resolveShortcut(
+      event.key,
+      'battle',
+      shortcutFlags(event, {
+        sideModalOpen: this.scoutModal !== null || this.calendarModal !== null,
+        summaryOpen: this.ended && this.summary !== null,
+      }),
+    );
+    if (action === null) return;
+    if (action === 'help.toggle') {
+      event.preventDefault();
+      this.bus.emit('ui:help', { open: true });
+      return;
+    }
+    if (this.calendarModal) {
+      if (action === 'cancel' || action === 'calendar') this.closeCalendar();
+      return;
+    }
     if (this.scoutModal) {
-      if (event.key === 'Escape') this.closeScout();
+      if (action === 'cancel') this.closeScout();
       return;
     }
     if (this.ended) {
-      if (this.summary && (event.key === 'Enter' || event.key === ' ')) this.continueRun();
+      if (this.summary && action === 'confirm') this.continueRun();
       return;
     }
-    switch (event.key) {
-      case 'p':
-      case 'P':
+    switch (action) {
+      case 'pause':
         this.bus.emit('ui:toggle-pause', {});
         break;
-      case '1':
-      case '2':
-      case '3':
-        this.bus.emit('ui:set-speed', { speed: Number(event.key) as GameSpeed });
+      case 'speed.1':
+      case 'speed.2':
+      case 'speed.3':
+        this.bus.emit('ui:set-speed', { speed: Number(action.slice(-1)) as GameSpeed });
         break;
-      case ' ':
-      case 'b':
-      case 'B':
+      case 'intervene':
         this.toggleAim();
         break;
-      case 'Escape':
+      case 'calendar':
+        this.openCalendar();
+        break;
+      case 'cancel':
         if (this.aiming) this.setAiming(false);
         break;
     }
@@ -547,6 +792,8 @@ export class BattleHudScene extends Phaser.Scene {
     if (this.ended) return;
     this.ended = true;
     this.result = result;
+    this.closeCalendar(); // a side panel must not hide the banner and the summary
+    this.closeScout();
     this.setAiming(false);
     this.intervene.setEnabled(false);
     this.autoBtn.setEnabled(false);
@@ -584,7 +831,19 @@ export class BattleHudScene extends Phaser.Scene {
     const result = this.result;
     if (!result) return;
     const overlay = createOverlay(this).setDepth(MODAL_DEPTH);
-    const panel = createPanel(this, 'panel', 320, 240);
+    const state = this.controller.state;
+    const summary = summaryLines({
+      kills: result.kills,
+      throneLostPct: result.throneHpLostPct,
+      best: bestStructure(result.killsBySource, state.plots, CONTENT),
+      lives: state.lives,
+      time: tickClock(result.ticks),
+      goldGain: Math.max(0, state.gold - this.goldAtStart),
+      conquered: state.pendingConquest === null ? null : CONTENT.enemyKing(state.pendingConquest).nameVi,
+    });
+    const inset = frameBorder(this, 'panel') + PAD;
+    const { panel: panelRect } = resultLayout(this.screen(), inset, summary.length, 1);
+    const panel = createPanel(this, 'panel', panelRect.w, panelRect.h);
     panel.image.setDepth(MODAL_DEPTH);
     const title = addUiText(
       this,
@@ -597,11 +856,7 @@ export class BattleHudScene extends Phaser.Scene {
       .setOrigin(0.5)
       .setFontStyle('bold')
       .setDepth(MODAL_DEPTH);
-    const lines = [
-      `Địch đã hạ: ${result.kills}`,
-      `Mạng còn: ${this.controller.state.lives}`,
-      `Thời gian: ${tickClock(result.ticks)}`,
-    ].map((line) => addUiText(this, 0, 0, line, 18).setOrigin(0.5).setDepth(MODAL_DEPTH));
+    const lines = summary.map((line) => addUiText(this, 0, 0, line, 18).setOrigin(0.5).setDepth(MODAL_DEPTH));
     const next = createButton(this, 0, 0, 'Tiếp tục', {
       width: RESULT_BUTTON.w,
       height: RESULT_BUTTON.h,
@@ -623,16 +878,16 @@ export class BattleHudScene extends Phaser.Scene {
   // ---- layout -------------------------------------------------------------------------------
 
   private screen(): { w: number; h: number } {
-    return { w: this.scale.width, h: this.scale.height };
+    return logicalSize(this);
   }
 
   private currentLayout(): BattleLayout {
-    return battleLayout(this.screen());
+    return battleLayout(this.screen(), this.controller.state.mode);
   }
 
   private layout(): void {
     const l = (this.lay = this.currentLayout());
-    const desktop = isDesktop(this.scale.width);
+    const desktop = isDesktop(this.screen().w);
 
     this.livesBox.resize(l.lives.w, l.lives.h);
     this.livesBox.image.setPosition(l.lives.x, l.lives.y);
@@ -640,15 +895,19 @@ export class BattleHudScene extends Phaser.Scene {
     const iconX = l.lives.x + 12;
     this.livesIcon?.setPosition(iconX, midY);
     this.livesText.setPosition(iconX + (this.livesIcon ? 36 : 0), midY);
+    this.goldBox.resize(l.gold.w, l.gold.h);
+    this.goldBox.image.setPosition(l.gold.x, l.gold.y);
+    this.goldIcon?.setPosition(l.gold.x + 12, l.gold.y + l.gold.h / 2);
+    this.goldText.setPosition(l.gold.x + 12 + (this.goldIcon ? 36 : 0), l.gold.y + l.gold.h / 2);
 
     const c = l.clock;
-    this.clockBox.resize(c.w, c.h);
-    this.clockBox.image.setPosition(c.x, c.y);
-    const inset = frameBorder(this, 'panel') + 4;
-    this.clockText.setPosition(c.x + inset + 4, c.y + c.h / 2);
-    const barX = c.x + inset + CLOCK_TEXT_W;
-    this.hpBar.resize(c.x + c.w - inset - barX, BAR_H);
-    this.hpBar.image.setPosition(barX, Math.round(c.y + (c.h - BAR_H) / 2));
+    this.clockText.setPosition(c.x + c.w / 2, c.y + c.h / 2);
+    this.clockText.setFontSize(desktop ? 20 : 16);
+    this.yearText.setPosition(l.year.x + l.year.w / 2, l.year.y + l.year.h / 2);
+    fitTextWidth(this.yearText, desktop ? 18 : 15, 11, l.year.w);
+    this.calendar.layout(l.calendar, l.calendarLinks);
+    this.allyBar.layout(l.allyStatus);
+    this.foeBar.layout(l.foeStatus);
 
     const f = l.foes;
     this.foesBox.resize(f.w, f.h);
@@ -667,10 +926,19 @@ export class BattleHudScene extends Phaser.Scene {
     this.autoBtn.container.setPosition(au.x + au.w / 2, au.y + au.h / 2);
     const wv = l.waves;
     this.wavesBtn.container.setPosition(wv.x + wv.w / 2, wv.y + wv.h / 2);
+    this.helpBtn.container.setPosition(l.help.x + l.help.w / 2, l.help.y + l.help.h / 2);
+    this.settingsBtn.container.setPosition(
+      l.help.x + 24,
+      desktop ? l.help.y + l.help.h + 32 : l.bossStatus.y + l.bossStatus.h + 32,
+    );
     this.layoutScout();
-    this.info.layout(this.screen());
+    this.info.layout(this.screen(), battleControls(l));
 
-    this.toasts.setAnchor(this.scale.width / 2, c.y + c.h + GAP * 2, this.scale.width - 2 * MARGIN);
+    const bs = l.bossStatus;
+    this.bossBar.resize(bs.w, BAR_H);
+    this.bossBar.image.setPosition(bs.x, bs.y + 14 + GAP);
+    this.bossText.setPosition(bs.x + bs.w / 2, bs.y + GAP);
+    this.placeToasts();
     this.tooltip.refresh();
     this.layoutBanner();
     this.layoutSummary();
@@ -681,7 +949,7 @@ export class BattleHudScene extends Phaser.Scene {
     const banner = this.banner;
     if (!banner) return;
     const w = Math.min(
-      this.scale.width - 2 * MARGIN,
+      this.screen().w - 2 * MARGIN,
       Math.ceil(banner.text.width) + 2 * (PAD + 12),
     );
     const r = centredPanel(this.screen(), w, 72);
@@ -701,6 +969,7 @@ export class BattleHudScene extends Phaser.Scene {
     s.title.setPosition(l.title.x + l.title.w / 2, l.title.y + l.title.h / 2);
     s.lines.forEach((t, i) => {
       const r = l.lines[i]!;
+      fitTextWidth(t, 18, 11, r.w);
       t.setPosition(r.x + r.w / 2, r.y + r.h / 2);
     });
     const b = l.buttons[0]!;
@@ -708,13 +977,16 @@ export class BattleHudScene extends Phaser.Scene {
   }
 
   private teardown(): void {
+    this.closeCalendar();
+    this.calendar.destroy();
+    this.allyBar.destroy();
+    this.foeBar.destroy();
     for (const off of this.offs) off();
     this.offs = [];
     this.input.keyboard?.off(Phaser.Input.Keyboard.Events.ANY_KEY_DOWN, this.onKey, this);
     this.input.off(Phaser.Input.Events.POINTER_MOVE, this.onPointerMove, this);
     this.input.off(Phaser.Input.Events.POINTER_DOWN, this.onPointerDown, this);
     this.input.off(Phaser.Input.Events.POINTER_UP, this.onPointerUp, this);
-    this.scale.off(Phaser.Scale.Events.RESIZE, this.layout, this);
     this.bannerTimer?.remove(false);
     this.bannerTimer = null;
     this.closeScout();

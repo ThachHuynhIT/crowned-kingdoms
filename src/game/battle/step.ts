@@ -3,10 +3,13 @@
  * → (hook, chưa có) → chọn mục tiêu → di chuyển → đánh → đạn → áp sát thương → trạng thái →
  * chết → kiểm tra kết thúc, rồi `tick += 1`. Không dùng Rng.
  */
-import { BATTLE } from '../../data/battle';
+import { bannerPhase, settleBattleGold, tickBehaviours } from './behaviours';
+import { spawnBossDue, tickBosses } from './bosses';
 import { applyDamagePhase, attackPhase, deathPhase, projectilePhase, statusPhase } from './combat';
 import { autoFirePhase, boulderPhase, setAutoFire, tryIntervene } from './intervention';
 import { moveEntities } from './movement';
+import { tickStatuses } from './statuses';
+import { bellPhase, pulsePhase, respawnPhase, shieldPulsePhase, soulHarvestPhase, summonPhase } from './structures';
 import { retarget } from './targeting';
 import type { BattleCommand, BattleResult, BattleSetup } from './types';
 import { TEAM_FOE, createBattle, spawnWave, type BattleWorld } from './world';
@@ -19,6 +22,9 @@ const spawnDueWaves = (world: BattleWorld): void => {
   }
 };
 
+/** Thắng cần boss (nếu có) đã xuất hiện; boss còn sống thì `anyFoeAlive` giữ trận lại. */
+const bossResolved = (world: BattleWorld): boolean => world.setup.boss === undefined || world.bossSpawned;
+
 const anyFoeAlive = (world: BattleWorld): boolean => {
   for (let i = 0; i < world.count; i++) {
     if (world.alive[i] === 1 && world.team[i] === TEAM_FOE) return true;
@@ -26,12 +32,12 @@ const anyFoeAlive = (world: BattleWorld): boolean => {
   return false;
 };
 
-/** Bước 11 (§8.8): thua (Ngai ≤ 0 HP) ưu tiên hơn thắng; hết giờ với Ngai còn HP → thắng. */
+/** Bước 11 (§8.8): thua (Ngai ≤ 0 HP) ưu tiên hơn thắng; chạm trần `hardLimitTick` mà chưa xong → thua (10/11/2026). */
 const checkEnd = (world: BattleWorld): void => {
   let won: boolean | null = null;
   if (world.hp[world.throneId]! <= 0) won = false;
-  else if (world.spawnedWaves >= world.setup.waves.length && !anyFoeAlive(world)) won = true;
-  else if (world.tick >= BATTLE.hardLimitTick) won = true;
+  else if (world.spawnedWaves >= world.setup.waves.length && bossResolved(world) && !anyFoeAlive(world)) won = true;
+  else if (world.tick >= world.hardLimitTick) won = false;
   if (won === null) return;
   world.ended = true;
   world.won = won;
@@ -44,7 +50,8 @@ export const stepBattle = (world: BattleWorld, inputs: readonly BattleCommand[])
   if (world.ended) return;
   // (1) xuất đợt
   spawnDueWaves(world);
-  if (world.tick === BATTLE.rageTick) world.events.push({ type: 'rage' });
+  spawnBossDue(world);
+  if (world.tick === world.rageTick) world.events.push({ type: 'rage' });
   // (2) can thiệp: lệnh của tick này theo thứ tự nhận (lệnh tick khác bị bỏ), rồi tảng đá đến hạn rơi.
   for (const input of inputs) {
     if (input.tick !== world.tick) continue;
@@ -53,15 +60,26 @@ export const stepBattle = (world: BattleWorld, inputs: readonly BattleCommand[])
   }
   autoFirePhase(world);
   boulderPhase(world);
-  // (3) hook onBattleTick — chưa có ở G1.
+  // (3) hook onBattleTick: xung vòng tròn và xung khiên của công trình.
+  pulsePhase(world);
+  shieldPulsePhase(world);
+  tickBosses(world);
+  bellPhase(world);
+  respawnPhase(world);
+  summonPhase(world);
+  tickBehaviours(world); // hành vi tăng tiến tính lại từ chỉ số gốc
   retarget(world); // (4)
   moveEntities(world); // (5)
   attackPhase(world); // (6)
   projectilePhase(world); // (7)
   applyDamagePhase(world); // (8)
   statusPhase(world); // (9)
+  tickStatuses(world); // bỏng, độc, hồi máu theo giây
   deathPhase(world); // (10)
+  soulHarvestPhase(world); // Thu Hồn của Ngai theo Hồn vừa có
+  bannerPhase(world); // cờ hiệu theo dõi HP Ngai
   checkEnd(world); // (11)
+  if (world.ended) settleBattleGold(world);
   world.tick += 1;
 };
 
@@ -76,10 +94,16 @@ export const battleResult = (world: BattleWorld): BattleResult | null => {
     throneHpLostPct: maxHp > 0 ? Math.round((1 - hp / maxHp) * 100) : 100,
     kills: world.kills,
     killsBySource: { ...world.killsBySource },
+    damageBySource: roundedDamage(world.damageBySource),
+    interventionDamage: Math.round(world.interventionDamage),
     interventionsUsed: world.interventionsUsed,
     unitsLost: world.unitsLost,
     capped: world.capped,
     inputs: world.inputs.map((i) => ({ ...i })),
+    ...(world.goldDelta !== 0 ? { goldDelta: world.goldDelta } : {}),
+    ...(world.setup.boss !== undefined && world.bossSpawned && world.alive[world.bossId] === 0
+      ? { bossDefeated: world.setup.boss.id }
+      : {}),
   };
 };
 
@@ -92,7 +116,7 @@ export const simulateBattle = (
   inputs: readonly BattleCommand[] = [],
 ): BattleResult => {
   const world = createBattle(setup);
-  const maxSteps = BATTLE.hardLimitTick + 1;
+  const maxSteps = world.hardLimitTick + 1;
   for (let step = 0; step < maxSteps; step++) {
     const tick = world.tick;
     stepBattle(
@@ -103,4 +127,11 @@ export const simulateBattle = (
     if (result !== null) return result;
   }
   throw new Error(`simulateBattle: no result after ${maxSteps} ticks`);
+};
+
+/** Per-source damage rounded to whole points, sources sorted by uid (statistics, owner 11/11/2026). */
+const roundedDamage = (by: Record<number, number>): Record<number, number> => {
+  const out: Record<number, number> = {};
+  for (const uid of Object.keys(by).map(Number).sort((a, b) => a - b)) out[uid] = Math.round(by[uid]!);
+  return out;
 };

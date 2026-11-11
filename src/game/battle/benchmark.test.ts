@@ -5,6 +5,7 @@
  */
 import { describe, expect, it } from 'vitest';
 import { attackStats, battleSetup, structure, unitStats } from '../testing/fixtures';
+import { realBoss } from './bossKit';
 import { battleResult, stepBattle } from './step';
 import type { BattleSetup, Edge } from './types';
 import { createBattle, drainEvents } from './world';
@@ -26,7 +27,8 @@ const archer = unitStats({
   projectileSpeed: 7,
   speed: 0.8,
 });
-const EDGES: readonly Edge[] = ['N', 'E', 'S', 'W'];
+/** Địch chỉ tiến từ phía trước; mép khác chỉ còn trong test hình học của world. */
+const EDGES: readonly Edge[] = ['S'];
 
 const standardSetup = (): BattleSetup =>
   battleSetup({
@@ -49,7 +51,7 @@ const standardSetup = (): BattleSetup =>
       {
         spawnTick: 0,
         spawns: EDGES.flatMap((edge) =>
-          Array.from({ length: 30 }, (_, i) => ({ stats: i % 4 === 0 ? archer : bandit, edge })),
+          Array.from({ length: 120 }, (_, i) => ({ stats: i % 4 === 0 ? archer : bandit, edge })),
         ),
       },
     ],
@@ -87,5 +89,112 @@ describe('battle benchmark (§8.10)', () => {
     const avgMs = Number(ns) / TICKS / 1e6;
     console.info(`[benchmark] stepBattle avg ${avgMs.toFixed(3)} ms/tick over ${TICKS} ticks`);
     expect(avgMs).toBeLessThanOrEqual(LIMIT_MS);
+  });
+
+  it(`G2 scenario (pulses, chains, splash, shields, taunt) averages ≤ ${LIMIT_MS} ms per tick`, () => {
+    const g2 = (): BattleSetup => {
+      const base = standardSetup();
+      return {
+        ...base,
+        structures: [
+          ...base.structures.slice(0, 8),
+          structure(2, {
+            cardId: 'stone_mountain_heart',
+            kind: 'tower',
+            pulse: { everyTicks: 40, radius: 48, dmg: 30, dmgType: 'physical', stunTicks: 10 },
+          }),
+          structure(10, { cardId: 'stone_wall', kind: 'tower', taunt: 40 }),
+          structure(22, {
+            cardId: 'arcane_ward',
+            kind: 'tower',
+            shieldPulse: { everyTicks: 50, radius: 64, amount: 20 },
+          }),
+          structure(1, {
+            cardId: 'arcane_mage_tower',
+            kind: 'tower',
+            attack: attackStats({
+              dmg: 9,
+              range: 80,
+              interval: 14,
+              projectileSpeed: 8,
+              chain: { count: 1, radius: 32, falloff: 0.6 },
+            }),
+          }),
+          structure(3, {
+            cardId: 'stone_catapult',
+            kind: 'tower',
+            attack: attackStats({ dmg: 14, range: 96, minRange: 24, interval: 25, projectileSpeed: 5, splash: 16 }),
+          }),
+        ],
+      };
+    };
+    const once = (): bigint => {
+      const w = createBattle(g2());
+      let ns = 0n;
+      for (let i = 0; i < TICKS; i++) {
+        const t0 = process.hrtime.bigint();
+        stepBattle(w, []);
+        ns += process.hrtime.bigint() - t0;
+        drainEvents(w);
+      }
+      return ns;
+    };
+    once();
+    const avgMs = Number(once()) / TICKS / 1e6;
+    console.info(`[benchmark] G2 stepBattle avg ${avgMs.toFixed(3)} ms/tick over ${TICKS} ticks`);
+    expect(avgMs).toBeLessThanOrEqual(LIMIT_MS);
+  });
+
+  it(`G3 scenario (boss, summons, burn, poison, heal auras, ramps) averages <= ${LIMIT_MS} ms per tick`, () => {
+    const colossus = unitStats({
+      unit: 'colossus',
+      hp: 300,
+      dmg: 10,
+      speed: 0.5,
+      behaviours: [{ type: 'stepBuff', everyTicks: 100, dmgPct: 20, speedPct: 10, maxStacks: 6 }],
+    });
+    const spider = unitStats({
+      unit: 'spider',
+      hp: 28,
+      dmg: 6,
+      speed: 1.5,
+      onHit: [{ type: 'poison', dps: 2, ticks: 30, maxStacks: 3 }],
+      behaviours: [{ type: 'rampDmg', pctPerSecond: 2, cap: 80 }],
+    });
+    const setup = battleSetup({
+      year: 20,
+      boss: realBoss(2),
+      structures: [
+        ...[6, 7, 8, 11, 13, 16, 17, 18].map((plot) =>
+          structure(plot, { cardId: 'wheat_militia', spawn: { stats: spider, count: 20 } }),
+        ),
+        ...[2, 10, 22].map((plot) =>
+          structure(plot, {
+            cardId: 'neutral_archer_tower',
+            kind: 'tower',
+            attack: attackStats({ dmg: 7, range: 88, interval: 12, projectileSpeed: 8, onHit: [{ type: 'burn', dps: 2, ticks: 30 }] }),
+            targeting: 'closestToThrone',
+            healAura: { radius: 64, hps: 3 },
+          }),
+        ),
+      ],
+      waves: [
+        {
+          spawnTick: 0,
+          spawns: EDGES.flatMap((edge) => Array.from({ length: 120 }, (_, i) => ({ stats: i % 4 === 0 ? colossus : bandit, edge }))),
+        },
+      ],
+    });
+    const w = createBattle(setup);
+    const start = process.hrtime.bigint();
+    let steps = 0;
+    for (let i = 0; i < 300 && battleResult(w) === null; i++) {
+      stepBattle(w, []);
+      drainEvents(w);
+      steps += 1;
+    }
+    const meanMs = Number(process.hrtime.bigint() - start) / 1e6 / Math.max(steps, 1);
+    expect(steps).toBeGreaterThan(100);
+    expect(meanMs).toBeLessThanOrEqual(LIMIT_MS);
   });
 });

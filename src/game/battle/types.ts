@@ -1,4 +1,15 @@
-import type { CardId, DamageType, KingId, TargetMode, UnitId } from '../../data/types';
+import type {
+  BannerDef,
+  BossId,
+  CardId,
+  DamageType,
+  KingId,
+  OnHitDef,
+  TargetMode,
+  UnitBehaviourDef,
+  UnitId,
+  UnitTag,
+} from '../../data/types';
 
 /** Mép sân nơi quân địch xuất hiện. */
 export type Edge = 'N' | 'E' | 'S' | 'W';
@@ -15,8 +26,13 @@ export interface ArmyWave {
 
 /** Đạo quân địch đã bốc sẵn ở đầu năm (spec §3.6). */
 export interface ArmyPlan {
-  /** Thổ Phỉ hoặc id vua địch (G2). */
-  attacker: 'raiders' | KingId;
+  /** Thổ Phỉ, id vua địch, Liên Quân hai vua hoặc boss. */
+  attacker: 'raiders' | 'coalition' | 'boss' | KingId;
+  /** Hai vua của Liên Quân (chỉ có ở `coalition`). */
+  kings?: readonly KingId[];
+  /** Boss và thứ tự của nó (chỉ có ở `boss`). */
+  boss?: BossId;
+  bossOrdinal?: 1 | 2 | 3;
   /** Lần tấn công thứ mấy (1..3) của vua địch; không có với Thổ Phỉ. */
   attackNo?: 1 | 2 | 3;
   /** id cờ hiệu của vua địch, nếu có. */
@@ -50,10 +66,18 @@ export interface BattleResult {
   throneHpLostPct: number;
   kills: number;
   killsBySource: Record<number, number>;
+  /** Damage our side dealt to foes per source building uid (towers and their units), whole points (owner 11/11/2026). */
+  damageBySource?: Record<number, number>;
+  /** Damage the intervention dealt to foes, whole points. */
+  interventionDamage?: number;
   interventionsUsed: number;
   unitsLost: number;
   capped: number;
   inputs: BattleCommand[];
+  /** Vàng thu/chi trong trận (cướp biển, hiến vàng…); mặc định 0, áp trước vàng thắng trận (§5.5). */
+  goldDelta?: number;
+  /** Boss đã chết thật trong trận (kể cả khi Ngai gục cùng lúc); vắng khi không có boss hoặc boss còn sống. */
+  bossDefeated?: BossId;
 }
 
 /** Chỉ số đòn đánh đã giải (cấp, bùa…) dùng trong trận. */
@@ -72,6 +96,19 @@ export interface AttackStats {
   /** chậm gây ra khi trúng (%), 0 = không */
   slowPct: number;
   slowTicks: number;
+  /** bán kính nổ; địch khác trong bán kính quanh mục tiêu nhận 50%; 0 = không */
+  splash: number;
+  /** nảy sang `count` địch kế tiếp trong `radius` quanh mục tiêu trước, mỗi lần × `falloff` */
+  chain: { count: number; radius: number; falloff: number } | null;
+  /** choáng gây ra khi trúng (tick); 0 = không */
+  stunTicks: number;
+  /** mỗi đòn liên tiếp vào cùng mục tiêu cộng thêm % sát thương, tối đa `rampCapPct`; 0 = không */
+  rampPctPerHit: number;
+  rampCapPct: number;
+  /** Hiệu ứng trúng ngoài chậm/choáng/tăng dần (bỏng, độc, đẩy, kéo, hút máu, hồi đồng minh). */
+  onHit?: readonly OnHitDef[];
+  /** Đòn hình quạt: địch khác trong quạt cũng nhận trọn sát thương. */
+  cone?: { range: number; halfAngleCos: number } | null;
 }
 
 /** Chỉ số một đơn vị lúc xuất quân. */
@@ -84,6 +121,16 @@ export interface UnitStats extends AttackStats {
   armor: number;
   siege: boolean;
   sprite: { w: number; h: number };
+  /** khiên lúc xuất hiện (HP ảo hấp thụ trước máu) */
+  shield: number;
+  /** khi chết sinh `count` đơn vị `stats` cùng phe tại chỗ */
+  deathSpawn: { stats: UnitStats; count: number } | null;
+  tags?: readonly UnitTag[];
+  behaviours?: readonly UnitBehaviourDef[];
+  /** Vị trí đơn vị trong danh sách id đã sắp của registry: khoá bỏng/độc của quân địch. */
+  defIndex?: number;
+  /** Giây "lên dây trước" cộng vào đồng hồ tăng tiến (§8.6). */
+  prewind?: number;
 }
 
 /** Một công trình (hoặc Ngai) trên bàn cờ lúc vào trận. */
@@ -99,11 +146,71 @@ export interface StructureSetup {
   attack: AttackStats | null;
   targeting: TargetMode;
   spawn: { stats: UnitStats; count: number } | null;
+  /** xung vòng tròn: mỗi `everyTicks` tick gây `dmg` cho mọi địch trong `radius`, kèm choáng */
+  pulse: {
+    everyTicks: number;
+    radius: number;
+    dmg: number;
+    dmgType: DamageType;
+    stunTicks: number;
+    /** đẩy lùi ra xa tháp (px); 0 = không */
+    knockback?: number;
+  } | null;
+  /** lính cùng phe trong `radius` hồi `hps` máu mỗi giây */
+  healAura?: { radius: number; hps: number } | null;
+  /** mỗi lần hạ địch triệu hồi 1 `stats` tại công trình, tối đa `max` mỗi trận */
+  summonOnKill?: { stats: UnitStats; max: number } | null;
+  /** mỗi `everyTicks` tick triệu hồi 1 `stats` tại ô, tối đa `max` mỗi trận */
+  summonEvery?: { everyTicks: number; stats: UnitStats; max: number } | null;
+  /** đầu trận triệu hồi `count` lính `stats` quanh ô công trình */
+  startSummon?: { stats: UnitStats; count: number } | null;
+  /** giây lên dây trước cho tăng tiến của công trình (§8.6) */
+  prewind?: number;
+  /** công trình tự đánh nhanh dần: `pps`% mỗi giây, tối đa `cap`% */
+  rampAs?: { pps: number; cap: number } | null;
+  /** Tháp Chuông: mỗi `everyTicks` tick lính mình trong `radius` đánh nhanh thêm `pct`% trong `ticks` tick, địch choáng `stun` tick */
+  bell?: { everyTicks: number; radius: number; pct: number; ticks: number; stun: number } | null;
+  /** Ổ Nhện: mỗi `everyTicks` tick, nếu lính còn ít hơn `count` thì sinh lại 1 */
+  respawn?: { everyTicks: number; stats: UnitStats; count: number } | null;
+  /** đánh `count` mục tiêu khác nhau mỗi nhịp (Vực Kraken) */
+  multiAttack?: number;
+  /** mỗi `every` địch do lính của công trình này hạ (`all`: mọi địch bị hạ trong trận): +`gold` vàng, tối đa `max` mỗi trận */
+  killGold?: { every: number; gold: number; max: number; all?: boolean } | null;
+  /** Thu Hồn (chỉ Ngai): cứ `every` Hồn phe mình triệu hồi 1 `stats` tại Ngai, tối đa `max` mỗi trận */
+  soulSummon?: { every: number; max: number; stats: UnitStats } | null;
+  /** lính triệu hồi thêm tại Ngai đầu trận (Hợp Đồng Lính Đánh Thuê) */
+  spawnAtThrone?: { stats: UnitStats; count: number } | null;
+  /** bán kính khiêu khích: địch trong vòng này phải đánh công trình này trước; 0 = không */
+  taunt: number;
+  /** xung khiên: mỗi `everyTicks` tick lính mình trong `radius` nhận `amount` khiên (tối đa 2×) */
+  shieldPulse: { everyTicks: number; radius: number; amount: number } | null;
+}
+
+/** Boss của trận: chỉ số đã giải, nơi và lúc xuất hiện, quân triệu hồi và Bóng Gương (spec §7.3). */
+export interface BossSetup {
+  id: BossId;
+  ordinal: 1 | 2 | 3;
+  /** Tick xuất hiện (`WAVES.spawnTick[1]`). */
+  spawnTick: number;
+  /** Mép đầu tiên của đợt 2. */
+  edge: Edge;
+  stats: UnitStats;
+  /** Chỉ số quân triệu hồi theo id đơn vị (`frog`, `hornet`), để trận không tra registry. */
+  summons: Readonly<Record<string, UnitStats>>;
+  /** Lính của Bóng Gương: loại của công trình lính cấp cao nhất; null nếu không có công trình lính. */
+  mirror: { stats: UnitStats; count: number } | null;
+  /**
+   * Sát thương kỹ năng riêng đã giải sẵn (Vô tận: gốc × hệ số boss × biến thể, spec 2026-11-09 §3).
+   * Vắng ở ván thường: trận dùng số gốc của `BOSS_RULES`.
+   */
+  specialDamage?: { mud: number };
 }
 
 export interface WaveSetup {
   spawnTick: number;
   spawns: readonly { stats: UnitStats; edge: Edge }[];
+  /** Số hàng dàn quân ở mép (runtime, không lưu vào ArmyPlan/RunState); vắng = 1 hàng. */
+  formationRows?: number;
 }
 
 /** Mọi thứ trận cần biết, dựng từ RunState (Task 9). */
@@ -112,16 +219,47 @@ export interface BattleSetup {
   throne: StructureSetup;
   structures: readonly StructureSetup[];
   waves: readonly WaveSetup[];
+  /** Boss của trận (năm 10, 20, 30); vắng ở mọi trận khác. */
+  boss?: BossSetup;
+  /** Cờ hiệu của vua tấn công (chỉ hiệu ứng cần logic trong trận); vắng với Thổ Phỉ, Liên Quân, boss. */
+  banner?: BannerDef;
   /** Đá Tảng tự bắn ngay từ đầu trận (mặc định tắt). */
   autoFire?: boolean;
+  /** Vua của người chơi: chọn hiệu ứng Can Thiệp riêng (`INTERVENTION_POWERS`); vắng = đá tảng gốc. */
+  power?: KingId;
+  /** Apply `ALLY_ROLE_TUNING` to our units and towers (set for every run battle; bare test setups stay untuned). */
+  roleTuning?: boolean;
+  /** Can Thiệp đã chốt cho trận (sắc lệnh + nhiệm vụ); vắng = số gốc §7.4. */
+  intervention?: { dmgPct: number; radius: number; cooldownTicks: number };
+  /** Mod trận của perk (dữ liệu thuần, không tham chiếu RunState); vắng khi perk không đổi gì trong trận. */
+  perk?: PerkBattleMods;
+  /**
+   * Hình học bàn của trận (spec 2026-11-09 §4): `'endless'` = bàn 49 ô, tường 112; vắng = bàn thường.
+   * Chỉ ván Vô tận đặt trường này, nên setup và băm của trận thường giữ nguyên từng byte.
+   */
+  geometry?: 'endless';
+}
+
+/** Phần perk mà trận đọc (spec §6.6, §6.9): giá trị hiệu lực, trường vắng = số gốc. */
+export interface PerkBattleMods {
+  /** Ngai hồi `throneRegenPct`% HP tối đa mỗi giây (Đất Lành). */
+  throneRegenPct?: number;
+  /** Tick bắt đầu Cuồng Nộ thay cho `BATTLE.rageTick` (Giờ Vàng). */
+  rageTick?: number;
+  /** Tick hết trận thay cho `BATTLE.hardLimitTick` (Giờ Vàng). */
+  hardLimitTick?: number;
 }
 
 /** Sự kiện cho render, rút ra bằng drainEvents. */
 export type BattleEvent =
   | { type: 'spawn'; id: number }
-  | { type: 'hit'; id: number; dmg: number }
+  /** `sourceId` = striking entity (−1: none, e.g. a damage-over-time tick); `dmgType` for sounds and FX only. */
+  | { type: 'hit'; id: number; dmg: number; sourceId: number; dmgType: DamageType }
   | { type: 'death'; id: number }
   | { type: 'boulder'; phase: 'drop' | 'impact'; x: number; y: number }
   | { type: 'waveSpawned'; index: number; edges: readonly Edge[] }
   | { type: 'rage' }
+  | { type: 'pulse'; id: number }
+  | { type: 'shield'; id: number }
+  | { type: 'revive'; id: number }
   | { type: 'ended'; won: boolean };

@@ -4,27 +4,35 @@
  * rồi xử lý chết theo id tăng dần. Không dùng Rng; mọi lựa chọn hoà theo id.
  */
 import { BATTLE } from '../../data/battle';
-import type { DamageType } from '../../data/types';
-import { edgeDistance, inRange, pickShotTarget } from './targeting';
+import { deathBehaviours, hitBehaviours } from './behaviours';
+import { afterBossDamage } from './bosses';
+import { mitigate } from './damage';
+import { BOSS_RULES } from '../../data/bosses';
+import { allowsFoeStructureTarget, canHit, edgeDistance, inRange, isRage, pickShotTarget, pickShotTargets, rageStacks } from './targeting';
 import {
+  DMG_NAME,
   DMG_FIRE,
   DMG_MAGIC,
+  KIND_STRUCTURE,
   KIND_UNIT,
   TEAM_ALLY,
   TEAM_FOE,
+  creditDamage,
+  addUnit,
+  bossImmune,
+  heal,
+  joinFormation,
+  spawnOffset,
+  stunFor,
   type BattleWorld,
   type QueuedDamage,
 } from './world';
 
-/** Đòn phụ của cleave nhận 50% (§8.5). */
+/** Đòn phụ của cleave và của splash nhận 50% (§8.5). */
 const CLEAVE_SECONDARY = 0.5;
+const SPLASH_SECONDARY = 0.5;
 
-/** Sát thương sau giáp (§8.5): vật lý `raw × (1 − giáp)`, lửa `raw × (1 − giáp/2)`, phép `raw`. */
-export const mitigate = (raw: number, type: DamageType, armor: number): number => {
-  if (type === 'magic') return raw;
-  if (type === 'fire') return raw * (1 - armor / 2);
-  return raw * (1 - armor);
-};
+export { mitigate };
 
 const mitigateCode = (raw: number, code: number, armor: number): number => {
   if (code === DMG_MAGIC) return raw;
@@ -44,6 +52,8 @@ export const queueDamage = (
   sourceUid: number,
   slow?: { pct: number; ticks: number },
   sourceId = -1,
+  stunTicks = 0,
+  knock = 0,
 ): void => {
   world.damageQueue.push({
     victim,
@@ -53,6 +63,8 @@ export const queueDamage = (
     slowPct: slow?.pct ?? 0,
     slowTicks: slow?.ticks ?? 0,
     sourceId,
+    stunTicks,
+    knock,
   });
 };
 
@@ -68,9 +80,152 @@ const queueHit = (w: BattleWorld, attacker: number, victim: number, raw: number)
   );
 };
 
+/**
+ * Hệ số của đòn tăng dần (`rampPct`, §6.4 Tháp Pha Lê): đòn đầu vào mục tiêu mới nhân 1, mỗi đòn
+ * liên tiếp vào cùng mục tiêu cộng `rampPct`%, tối đa `rampCap`%. Đổi mục tiêu (hoặc mục tiêu
+ * chết, id không tái dùng) thì đếm lại. Ghi nhớ mục tiêu và số đòn vào thế giới.
+ */
+const rampMultiplier = (w: BattleWorld, attacker: number, victim: number): number => {
+  const pct = w.rampPct[attacker]!;
+  if (pct <= 0) return 1;
+  const cap = w.rampCap[attacker]!;
+  const stacks =
+    w.rampTarget[attacker] === victim
+      ? Math.min(w.rampStacks[attacker]! + 1, Math.floor(cap / pct))
+      : 0;
+  w.rampTarget[attacker] = victim;
+  w.rampStacks[attacker] = stacks;
+  return 1 + Math.min(stacks * pct, cap) / 100;
+};
+
+/** Mọi thực thể sống khác phe `attacker` có tâm cách (cx, cy) tối đa `radius`, theo id tăng dần. */
+const foesNear = (
+  w: BattleWorld,
+  attacker: number,
+  cx: number,
+  cy: number,
+  radius: number,
+  skip: readonly number[],
+): number[] => {
+  const out: number[] = [];
+  const r2 = radius * radius;
+  for (let j = 0; j < w.count; j++) {
+    if (w.alive[j] === 0 || w.team[j] === w.team[attacker] || skip.includes(j)) continue;
+    const dx = w.x[j]! - cx;
+    const dy = w.y[j]! - cy;
+    if (dx * dx + dy * dy <= r2) out.push(j);
+  }
+  return out;
+};
+
+/** Splash: địch khác trong `splash` quanh (cx, cy) nhận 50% (không gồm `skip`). */
+const splashAround = (
+  w: BattleWorld,
+  attacker: number,
+  cx: number,
+  cy: number,
+  skip: readonly number[],
+  raw: number,
+): void => {
+  if (w.splash[attacker]! <= 0) return;
+  for (const j of foesNear(w, attacker, cx, cy, w.splash[attacker]!, skip)) {
+    queueDamage(w, j, raw * SPLASH_SECONDARY, w.dmgType[attacker]!, w.sourceUid[attacker]!, undefined, attacker);
+  }
+};
+
+/**
+ * Chain: nhảy `count` lần sang địch gần nhất chưa trúng trong `radius`, mỗi lần × falloff (hòa → id nhỏ).
+ * Chain của địch chọn nạn nhân mới theo luật "đánh hết lính rồi mới đánh nhà" (spec 2026-11-08 §2): khi
+ * `allowsFoeStructureTarget` sai, chỉ nhảy sang lính phe mình đánh được; không còn lính như vậy trong bán
+ * kính thì dừng.
+ */
+const chainFrom = (w: BattleWorld, attacker: number, victim: number, raw: number): void => {
+  const jumps = w.chainCount[attacker]!;
+  if (jumps <= 0) return;
+  const unitsOnly = w.team[attacker] === TEAM_FOE && !allowsFoeStructureTarget(w, attacker);
+  const hit = [victim];
+  let from = victim;
+  let dmg = raw;
+  for (let k = 0; k < jumps; k++) {
+    const cx = w.x[from]!;
+    const cy = w.y[from]!;
+    let best = -1;
+    let bestD2 = Infinity;
+    for (const j of foesNear(w, attacker, cx, cy, w.chainRadius[attacker]!, hit)) {
+      if (unitsOnly && (w.kind[j] !== KIND_UNIT || !canHit(w, attacker, j))) continue;
+      const dx = w.x[j]! - cx;
+      const dy = w.y[j]! - cy;
+      const d2 = dx * dx + dy * dy;
+      if (d2 < bestD2) {
+        best = j;
+        bestD2 = d2;
+      }
+    }
+    if (best < 0) return;
+    dmg *= w.chainFalloff[attacker]!;
+    queueDamage(w, best, dmg, w.dmgType[attacker]!, w.sourceUid[attacker]!, undefined, attacker);
+    hit.push(best);
+    from = best;
+  }
+};
+
+/**
+ * Một đòn đã trúng `victim`: sát thương chính (nhân hệ số tăng dần) kèm làm chậm, rồi splash
+ * quanh mục tiêu và chain sang địch kế tiếp.
+ */
+const landStrike = (
+  w: BattleWorld,
+  attacker: number,
+  victim: number,
+  base: number,
+  slow: { pct: number; ticks: number },
+): void => {
+  let raw = base * rampMultiplier(w, attacker, victim);
+  let stun = w.onHitStunTicks[attacker]!;
+  let knock = 0;
+  if (w.chargeReady[attacker] === 1) {
+    // Xung phong (§5.1): đòn đầu tiên nhân sát thương, đẩy lùi và choáng, một lần mỗi đơn vị.
+    w.chargeReady[attacker] = 0;
+    raw *= w.chargeMult[attacker]!;
+    stun = Math.max(stun, w.chargeStun[attacker]!);
+    knock = w.chargeKb[attacker]!;
+  }
+  queueDamage(w, victim, raw, w.dmgType[attacker]!, w.sourceUid[attacker]!, slow, attacker, stun, knock);
+  splashAround(w, attacker, w.x[victim]!, w.y[victim]!, [victim], raw);
+  chainFrom(w, attacker, victim, raw);
+  coneAround(w, attacker, victim, raw);
+};
+
+/**
+ * Hình quạt (§8.5, không lượng giác): mọi địch khác trong `coneRange` quanh người đánh mà
+ * `dot(hướng tới mục tiêu, hướng tới địch) ≥ halfAngleCos × |hướng tới địch|` nhận trọn sát thương.
+ */
+const coneAround = (w: BattleWorld, attacker: number, victim: number, raw: number): void => {
+  const range = w.coneRange[attacker]!;
+  if (range <= 0) return;
+  const ax = w.x[attacker]!;
+  const ay = w.y[attacker]!;
+  const dx = w.x[victim]! - ax;
+  const dy = w.y[victim]! - ay;
+  const dl = Math.sqrt(dx * dx + dy * dy);
+  if (dl <= 0) return;
+  for (let j = 0; j < w.count; j++) {
+    if (j === victim || w.alive[j] === 0 || w.team[j] === w.team[attacker]) continue;
+    const ex = w.x[j]! - ax;
+    const ey = w.y[j]! - ay;
+    const el = Math.sqrt(ex * ex + ey * ey);
+    if (el - w.radius[j]! > range) continue;
+    if ((dx * ex + dy * ey) / dl < w.coneCos[attacker]! * el) continue;
+    queueDamage(w, j, raw, w.dmgType[attacker]!, w.sourceUid[attacker]!, undefined, attacker);
+  }
+};
+
 /** Đòn trúng ngay: mục tiêu chính 100%, rồi `cleave − 1` địch khác trong tầm gần nhất 50%. */
 const strikeInstant = (w: BattleWorld, attacker: number, victim: number): void => {
-  queueHit(w, attacker, victim, w.dmg[attacker]!);
+  landStrike(w, attacker, victim, w.dmg[attacker]!, {
+    pct: w.onHitSlowPct[attacker]!,
+    ticks: w.onHitSlowTicks[attacker]!,
+  });
   const extra = w.cleave[attacker]! - 1;
   if (extra < 1) return;
   const team = w.team[attacker]!;
@@ -119,12 +274,21 @@ export const attackPhase = (world: BattleWorld): void => {
     if (world.alive[i] === 0 || world.interval[i]! <= 0) continue;
     const cd = Math.max(world.cooldown[i]! - 1, 0);
     world.cooldown[i] = cd;
-    if (cd > 0) continue;
+    if (world.tick < world.disabledUntil[i]!) continue; // tháp bị Ném Bùn vô hiệu
+    if (i === world.bossId && world.bossLanded) continue; // Nữ Hoàng đáp xuống không tấn công
+    if (cd > 0 || world.stunTicks[i]! > 0) continue; // choáng: không đánh, cooldown vẫn giảm (§8.6)
     let t: number;
     if (world.kind[i] === KIND_UNIT) {
       t = world.target[i]!;
       if (t < 0 || world.alive[t] === 0 || world.team[t] === world.team[i]) continue;
       if (!inRange(world, i, t)) continue;
+    } else if (world.multiCount[i]! > 1) {
+      // Nhiều xúc tu: mỗi nhịp đánh tối đa `multiCount` mục tiêu khác nhau.
+      const targets = pickShotTargets(world, i, world.multiCount[i]!);
+      if (targets.length === 0) continue;
+      for (const each of targets) fire(world, i, each);
+      world.cooldown[i] = cd + world.interval[i]!;
+      continue;
     } else {
       t = pickShotTarget(world, i);
       if (t < 0) continue;
@@ -146,6 +310,8 @@ export const projectilePhase = (world: BattleWorld): void => {
     if (p.alive[k] === 0) continue;
     const t = p.targetId[k]!;
     if (world.alive[t] === 0) {
+      // Mục tiêu chết trước khi trúng: đạn rơi tại chỗ nó đứng, splash vẫn nổ (§8.5).
+      splashAround(world, p.sourceId[k]!, world.x[t]!, world.y[t]!, [t], p.dmg[k]!);
       p.alive[k] = 0;
       continue;
     }
@@ -157,15 +323,7 @@ export const projectilePhase = (world: BattleWorld): void => {
       p.px[k] = world.x[t]!;
       p.py[k] = world.y[t]!;
       p.alive[k] = 0;
-      queueDamage(
-        world,
-        t,
-        p.dmg[k]!,
-        p.dmgType[k]!,
-        p.sourceUid[k]!,
-        { pct: p.slowPct[k]!, ticks: p.slowTicks[k]! },
-        p.sourceId[k]!,
-      );
+      landStrike(world, p.sourceId[k]!, t, p.dmg[k]!, { pct: p.slowPct[k]!, ticks: p.slowTicks[k]! });
       continue;
     }
     p.px[k] = p.px[k]! + (dx / d) * s;
@@ -196,10 +354,11 @@ export const projectilePhase = (world: BattleWorld): void => {
 
 /** Chậm (§8.6): lấy mạnh nhất, làm mới thời gian, tối đa maxSlowPct. */
 const applySlow = (w: BattleWorld, id: number, pct: number, ticks: number): void => {
-  if (pct <= 0 || ticks <= 0) return;
+  if (pct <= 0 || ticks <= 0 || bossImmune(w, id)) return;
   w.slowPct[id] = Math.min(Math.max(w.slowPct[id]!, pct), BATTLE.maxSlowPct);
   w.slowTicks[id] = Math.max(w.slowTicks[id]!, ticks);
 };
+
 
 /**
  * Bước 8: áp hàng đợi theo (id nguồn, id mục tiêu, thứ tự tạo). Mục tiêu đã chết (alive 0 hoặc
@@ -209,6 +368,10 @@ const applySlow = (w: BattleWorld, id: number, pct: number, ticks: number): void
 export const applyDamagePhase = (world: BattleWorld): void => {
   const queue = world.damageQueue;
   world.damageQueue = [];
+  // Cuồng Nộ: đòn của địch vào công trình nặng hơn (Ngai không tính).
+  const rageMult = isRage(world) ? 1 + BATTLE.rageStructureDmgPct / 100 : 1;
+  // Cuồng Nộ cộng dồn: mọi đòn của địch mạnh thêm mỗi bậc (10/11/2026).
+  const stackMult = 1 + (BATTLE.rageStackDmgPct * rageStacks(world)) / 100;
   const order = queue.map((_, i) => i);
   order.sort((a, b) => {
     const qa = queue[a]!;
@@ -219,18 +382,38 @@ export const applyDamagePhase = (world: BattleWorld): void => {
     const q: QueuedDamage = queue[i]!;
     const v = q.victim;
     if (world.alive[v] === 0 || world.hp[v]! <= 0) continue;
-    const dmg = Math.max(0, mitigateCode(q.raw, q.type, world.armor[v]!));
-    world.hp[v] = world.hp[v]! - dmg;
-    world.events.push({ type: 'hit', id: v, dmg });
-    if (world.hp[v]! <= 0) world.killerUid[v] = q.sourceUid;
-    else applySlow(world, v, q.slowPct, q.slowTicks);
+    // Nữ Hoàng đáp xuống nhận thêm sát thương (tính mỗi đòn, không chồng theo tick).
+    const landed = v === world.bossId && world.bossLanded ? 1 + BOSS_RULES.hornet.landDmgTakenPct / 100 : 1;
+    const raging =
+      rageMult !== 1 && q.sourceId >= 0 && world.team[q.sourceId] === TEAM_FOE && world.kind[v] === KIND_STRUCTURE;
+    const foeHit = q.sourceId >= 0 && world.team[q.sourceId] === TEAM_FOE;
+    const dmg = Math.max(0, mitigateCode(q.raw, q.type, world.armor[v]!)) * landed * (raging ? rageMult : 1) * (foeHit ? stackMult : 1);
+    creditDamage(world, v, q.sourceUid, dmg);
+    // Khiên hấp thụ trước HP, sau giáp (§8.5).
+    const absorbed = Math.min(world.shield[v]!, dmg);
+    world.shield[v] = world.shield[v]! - absorbed;
+    world.hp[v] = world.hp[v]! - (dmg - absorbed);
+    world.events.push({ type: 'hit', id: v, dmg, sourceId: q.sourceId, dmgType: DMG_NAME[q.type]! });
+    if (world.hp[v]! <= 0) {
+      world.killerUid[v] = q.sourceUid;
+      world.killerId[v] = q.sourceId;
+    } else {
+      applySlow(world, v, q.slowPct, q.slowTicks);
+      // +1: step 9 of this very tick decrements it, so the victim stays locked `stunTicks` ticks after this one.
+      const stun = stunFor(world, v, q.stunTicks);
+      if (stun > 0) world.stunTicks[v] = Math.max(world.stunTicks[v]!, stun + 1);
+    }
+    if (q.sourceId >= 0) hitBehaviours(world, q.sourceId, v, dmg, q.knock);
+    if (v === world.bossId) afterBossDamage(world, v);
   }
 };
 
 /** Bước 9: chậm hết hạn sau `slowTicks` tick. (Bỏng/độc/hồi máu chưa có ở G1.) */
 export const statusPhase = (world: BattleWorld): void => {
   for (let i = 0; i < world.count; i++) {
-    if (world.alive[i] === 0 || world.slowTicks[i]! <= 0) continue;
+    if (world.alive[i] === 0) continue;
+    if (world.stunTicks[i]! > 0) world.stunTicks[i] = world.stunTicks[i]! - 1;
+    if (world.slowTicks[i]! <= 0) continue;
     world.slowTicks[i] = world.slowTicks[i]! - 1;
     if (world.slowTicks[i] === 0) world.slowPct[i] = 0;
   }
@@ -241,17 +424,71 @@ export const statusPhase = (world: BattleWorld): void => {
  * chết → `kills`, và `killsBySource[killerUid]` nếu nguồn là công trình phe mình (uid ≥ 0);
  * lính phe mình chết → `unitsLost`.
  */
+/** Công trình `killer` còn sống và có `summonOnKill`: triệu hồi 1 lính tại ô, tới giới hạn mỗi trận. */
+const summonForKill = (world: BattleWorld, killer: number): void => {
+  const stats = world.killSummonStats[killer];
+  if (!stats || world.alive[killer] === 0 || world.killSummonDone[killer]! >= world.killSummonMax[killer]!) return;
+  if (world.playerUnits >= BATTLE.playerUnitCap) {
+    world.capped += 1;
+    return;
+  }
+  const o = spawnOffset(world.killSummonDone[killer]!);
+  const id = addUnit(world, stats, TEAM_ALLY, world.homeX[killer]! + o.dx, world.homeY[killer]! + o.dy, world.homeX[killer]!, world.homeY[killer]!, world.sourceUid[killer]!);
+  joinFormation(world, id);
+  world.killSummonDone[killer] = world.killSummonDone[killer]! + 1;
+  if (id < 0) world.capped += 1;
+  else world.playerUnits += 1;
+};
+
 export const deathPhase = (world: BattleWorld): void => {
+  const parents: number[] = [];
   for (let i = 0; i < world.count; i++) {
     if (world.alive[i] === 0 || world.hp[i]! > 0) continue;
+    if (deathBehaviours(world, i)) continue; // sống lại: không chết, không tính hạ gục
     world.alive[i] = 0;
+    if (world.isBossSummon[i] === 1) world.bossSummonsAlive -= 1;
+    if (world.deathSpawn[i]) parents.push(i);
     world.events.push({ type: 'death', id: i });
+    if (world.kind[i] === KIND_UNIT) world.souls[world.team[i] === TEAM_FOE ? TEAM_FOE : TEAM_ALLY] += 1;
+    const killer = world.killerId[i]!;
+    if (killer >= 0 && world.alive[killer] === 1 && world.killHealHp[killer]! > 0) {
+      heal(world, killer, world.killHealHp[killer]!);
+    }
+    if (killer >= 0 && world.team[i] === TEAM_FOE) summonForKill(world, killer);
     if (world.team[i] === TEAM_FOE) {
       world.kills += 1;
       const uid = world.killerUid[i]!;
       if (uid >= 0) world.killsBySource[uid] = (world.killsBySource[uid] ?? 0) + 1;
     } else if (world.team[i] === TEAM_ALLY && world.kind[i] === KIND_UNIT) {
       world.unitsLost += 1;
+    }
+  }
+  // Đẻ khi chết (§8.9 bước 10): sau khi xử lý hết các ca chết, theo id cha tăng dần, nên con
+  // không chết trong cùng tick. Phe mình bị trần playerUnitCap; hết entityCap thì bỏ phần thiếu.
+  for (const i of parents) {
+    const spawn = world.deathSpawn[i]!;
+    const team = world.team[i]!;
+    for (let k = 0; k < spawn.count; k++) {
+      if (team === TEAM_ALLY && world.playerUnits >= BATTLE.playerUnitCap) {
+        world.capped += 1;
+        continue;
+      }
+      const o = spawnOffset(k);
+      const id = addUnit(
+        world,
+        spawn.stats,
+        team,
+        world.x[i]! + o.dx,
+        world.y[i]! + o.dy,
+        world.homeX[i]!,
+        world.homeY[i]!,
+        world.sourceUid[i]!,
+      );
+      if (id < 0) {
+        if (team === TEAM_ALLY) world.capped += 1;
+        break;
+      }
+      if (team === TEAM_ALLY) world.playerUnits += 1;
     }
   }
 };

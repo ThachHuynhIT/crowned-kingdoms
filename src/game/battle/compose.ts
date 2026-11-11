@@ -1,7 +1,8 @@
 import { ENEMY_BUDGET, ENEMY_CAP, ENEMY_LEVEL_COST, WAVES } from '../../data/battle';
+import { RUN } from '../../data/run';
 import type { UnitId } from '../../data/types';
 import { Rng, hashSeed } from '../../core/random';
-import type { ArmySpawn, ArmyPlan, ArmyWave, Edge } from './types';
+import type { ArmySpawn, ArmyPlan, ArmyWave } from './types';
 
 export interface ComposeEntry {
   unit: UnitId;
@@ -10,13 +11,12 @@ export interface ComposeEntry {
   enemyCost: number;
 }
 
-const EDGES: readonly Edge[] = ['N', 'E', 'S', 'W'];
 const LEVELS = [1, 2, 3, 4, 5] as const;
 
 /** Ngân sách EP của một đạo quân (độ khó Gai 0): round(ENEMY_BUDGET[year−1] × slot). */
-export const armyBudget = (year: number, slot: number): number => {
+export const armyBudget = (year: number, slot: number, difficulty = 0): number => {
   const idx = Math.min(Math.max(year, 1), ENEMY_BUDGET.length) - 1;
-  return Math.round(ENEMY_BUDGET[idx]! * slot);
+  return Math.round(ENEMY_BUDGET[idx]! * slot * (1 + RUN.difficultyBudgetStep * difficulty));
 };
 
 /** Chọn theo trọng số trong `pool` (thứ tự cố định, không phụ thuộc Map/Set). */
@@ -37,13 +37,23 @@ export const composeArmy = (
   budget: number,
   year: number,
   seed: number,
-  meta: { attacker?: ArmyPlan['attacker']; attackNo?: 1 | 2 | 3; banner?: string } = {},
+  meta: {
+    attacker?: ArmyPlan['attacker'];
+    attackNo?: 1 | 2 | 3;
+    banner?: string;
+    kings?: ArmyPlan['kings'];
+    boss?: ArmyPlan['boss'];
+    bossOrdinal?: ArmyPlan['bossOrdinal'];
+    /** Giữ cho nơi gọi cũ; không còn tác dụng ở đây (cờ Đột Kích thêm hàng dàn quân trong buildBattleSetup). */
+    extraEdges?: number;
+  } = {},
 ): ArmyPlan => {
   const rng = new Rng(hashSeed(`${seed}:army:${year}`));
 
   let weightSum = 0;
   let costSum = 0;
   for (const e of roster) {
+    if (e.enemyCost <= 0) continue; // EP 0 = không bao giờ được chọn (lính triệu hồi, boss)
     weightSum += e.weight;
     costSum += e.weight * e.enemyCost;
   }
@@ -62,7 +72,7 @@ export const composeArmy = (
   let spent = 0;
   while (chosen.length < ENEMY_CAP) {
     const remaining = budget - spent;
-    const pool = roster.filter((e) => e.weight > 0 && e.enemyCost * levelCost <= remaining);
+    const pool = roster.filter((e) => e.weight > 0 && e.enemyCost > 0 && e.enemyCost * levelCost <= remaining);
     if (pool.length === 0) break;
     const e = pickWeighted(pool, rng);
     chosen.push(e.unit);
@@ -75,21 +85,20 @@ export const composeArmy = (
   const sizes = [Math.floor(n * WAVES.share[0]), Math.floor(n * WAVES.share[1]), 0];
   sizes[2] = n - sizes[0]! - sizes[1]!;
 
-  const dual = year >= 10;
   const waves: ArmyWave[] = [];
   let cursor = 0;
   for (let w = 0; w < WAVES.share.length; w++) {
-    const edgeA = rng.pick(EDGES);
-    const edgeB = dual ? rng.pick(EDGES.filter((e) => e !== edgeA)) : edgeA;
+    // Địch chỉ tiến từ phía trước (mép S, spec 26/10/2026); cờ `extraEdges` và năm muộn chỉ thêm hàng dàn quân.
     const units: ArmySpawn[] = [];
-    for (let i = 0; i < sizes[w]!; i++) {
-      units.push({ unit: chosen[cursor++]!, edge: i % 2 === 0 ? edgeA : edgeB });
-    }
+    for (let i = 0; i < sizes[w]!; i++) units.push({ unit: chosen[cursor++]!, edge: 'S' });
     waves.push({ spawnTick: WAVES.spawnTick[w]!, units });
   }
 
   const plan: ArmyPlan = { attacker: meta.attacker ?? 'raiders', budget, level, statMult, waves };
   if (meta.attackNo !== undefined) plan.attackNo = meta.attackNo;
   if (meta.banner !== undefined) plan.banner = meta.banner;
+  if (meta.kings !== undefined) plan.kings = meta.kings;
+  if (meta.boss !== undefined) plan.boss = meta.boss;
+  if (meta.bossOrdinal !== undefined) plan.bossOrdinal = meta.bossOrdinal;
   return plan;
 };

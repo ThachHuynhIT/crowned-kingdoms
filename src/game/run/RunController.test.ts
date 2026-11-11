@@ -1,7 +1,9 @@
 import { describe, expect, it } from 'vitest';
 import { RULES_G1 } from '../../data/rules';
+import { RUN } from '../../data/run';
 import { CONTENT } from '../cards/registry';
 import { createGameBus } from '../events';
+import { crownPoints } from '../meta';
 import { runState } from '../testing/fixtures';
 import { RunController } from './RunController';
 import type { BattleResult } from '../battle/types';
@@ -19,8 +21,15 @@ const setup = (initial: RunState = runState()) => {
 const runBattle = (bus: ReturnType<typeof createGameBus>, controller: RunController): number => {
   let ended = 0;
   bus.on('battle:ended', () => (ended += 1));
-  for (let i = 0; i < 1000 && ended === 0; i++) controller.update(100);
+  for (let i = 0; i < 4000 && ended === 0; i++) controller.update(100);
   return ended;
+};
+
+/** Bán lá đầu tay cho tới khi tay còn ≤ `RUN.battleHandMax` (mọi luật tự vào trận lúc đó). */
+const sellDown = (bus: ReturnType<typeof createGameBus>, controller: RunController): void => {
+  while (controller.state.phase === 'planning' && controller.state.hand.length > RUN.battleHandMax) {
+    bus.emit('ui:command', { command: { type: 'discard', handIndex: 0 } });
+  }
 };
 
 const allOpenHand = (): RunState => {
@@ -29,17 +38,24 @@ const allOpenHand = (): RunState => {
 };
 
 describe('RunController auto-start', () => {
-  it('starts the battle right after the action when rules.autoStart is on', () => {
+  it('does not start the battle after one sale while the hand still holds more than battleHandMax cards', () => {
+    const { bus, controller } = setup();
+    expect(controller.state.hand.length).toBeGreaterThan(RUN.battleHandMax + 1);
+    bus.emit('ui:command', { command: { type: 'discard', handIndex: 0 } });
+    expect(controller.state.phase).toBe('planning'); // one sale is not enough with a full hand
+  });
+
+  it('starts the battle right after the last needed sale', () => {
     const { bus, controller } = setup();
     const started: number[] = [];
     bus.on('battle:started', (p) => started.push(p.setup.year));
-    bus.emit('ui:command', { command: { type: 'discard', handIndex: 0 } });
+    sellDown(bus, controller);
     expect(started).toEqual([1]);
     expect(controller.state.phase).toBe('battle');
     expect(controller.runner).not.toBeNull();
   });
 
-  it('waits for startBattle when rules.autoStart is off', () => {
+  it('starts the battle by itself at the hand target even when the old rules.autoStart flag is off', () => {
     const bus = createGameBus();
     const controller = new RunController(
       bus,
@@ -48,16 +64,17 @@ describe('RunController auto-start', () => {
     );
     const started: number[] = [];
     bus.on('battle:started', (p) => started.push(p.setup.year));
-    bus.emit('ui:command', { command: { type: 'discard', handIndex: 0 } });
-    expect(started).toEqual([]);
-    expect(controller.state.phase).toBe('planning');
-    controller.kickoff();
-    expect(started).toEqual([]);
-    bus.emit('ui:command', { command: { type: 'startBattle' } });
+    for (let i = controller.state.hand.length; i > RUN.battleHandMax; i--) {
+      bus.emit('ui:command', { command: { type: 'discard', handIndex: 0 } });
+    }
+    expect(controller.state.hand.length).toBe(RUN.battleHandMax);
     expect(started).toEqual([1]);
+    expect(controller.state.phase).toBe('battle');
+    controller.kickoff();
+    expect(started).toEqual([1]); // no second start
   });
 
-  it('kickoff starts a battle once when no card in hand has a target', () => {
+  it('kickoff starts a battle once when the hand is small enough', () => {
     const bus = createGameBus();
     const controller = new RunController(bus, CONTENT, allOpenHand());
     const started: number[] = [];
@@ -68,9 +85,13 @@ describe('RunController auto-start', () => {
     expect(controller.state.phase).toBe('battle');
   });
 
-  it('kickoff does nothing while some card is playable', () => {
+  it('kickoff does nothing while the hand holds more than battleHandMax cards', () => {
     const bus = createGameBus();
-    const controller = new RunController(bus, CONTENT, runState({ hand: ['wheat_militia'] }));
+    const controller = new RunController(
+      bus,
+      CONTENT,
+      runState({ hand: ['wheat_militia', 'neutral_barracks', 'neutral_move'] }),
+    );
     const started: number[] = [];
     bus.on('battle:started', () => started.push(1));
     controller.kickoff();
@@ -80,7 +101,7 @@ describe('RunController auto-start', () => {
 
   it('forwards setAutoFire to the running battle and records it in the state', () => {
     const { bus, controller } = setup();
-    bus.emit('ui:command', { command: { type: 'discard', handIndex: 0 } });
+    sellDown(bus, controller);
     bus.emit('ui:command', { command: { type: 'setAutoFire', on: true } });
     expect(controller.state.autoFire).toBe(true);
     for (let i = 0; i < 40; i++) controller.update(100);
@@ -98,11 +119,15 @@ describe('RunController', () => {
         command: { type: 'play', handIndex: 0, target: { kind: 'plot', plot } },
       });
     }
-    // with autoStart (G1) the play is followed by the battle starting
-    expect(states).toHaveLength(2);
+    // a play alone does not start the battle while the hand still holds more than battleHandMax cards
+    expect(states).toHaveLength(1);
     expect(states[0]!.played).toBe(true);
-    expect(states[1]!.phase).toBe('battle');
-    expect(controller.state).toBe(states[1]);
+    expect(states[0]!.phase).toBe('planning');
+    expect(controller.state).toBe(states[0]);
+    // with autoStart (G1) selling down to battleHandMax is followed by the battle starting
+    sellDown(bus, controller);
+    expect(states.at(-1)!.phase).toBe('battle');
+    expect(controller.state).toBe(states.at(-1));
   });
 
   it('illegal command emits run:illegal and keeps state', () => {
@@ -111,7 +136,7 @@ describe('RunController', () => {
     const reasons: string[] = [];
     bus.on('run:illegal', (p) => reasons.push(p.reason));
     bus.emit('ui:command', { command: { type: 'startBattle' } });
-    expect(reasons).toEqual(['notPlayed']);
+    expect(reasons).toEqual(['handTooBig']);
     expect(controller.state).toBe(before);
     expect(states).toHaveLength(0);
   });
@@ -120,7 +145,7 @@ describe('RunController', () => {
     const { bus, controller } = setup();
     const years: number[] = [];
     bus.on('battle:started', (p) => years.push(p.setup.year));
-    bus.emit('ui:command', { command: { type: 'discard', handIndex: 0 } });
+    sellDown(bus, controller);
     expect(years).toEqual([1]);
     expect(controller.runner).not.toBeNull();
     expect(controller.state.phase).toBe('battle');
@@ -128,16 +153,16 @@ describe('RunController', () => {
 
   it('runs a battle to the end and applies the result', () => {
     const { bus, controller, states } = setup();
-    bus.emit('ui:command', { command: { type: 'discard', handIndex: 0 } });
+    sellDown(bus, controller);
     expect(runBattle(bus, controller)).toBe(1);
     expect(['reward', 'yearEnd', 'ended']).toContain(states[states.length - 1]!.phase);
     expect(controller.runner).toBeNull();
   });
 
   it('losing the last life emits run:ended { won: false } after run:state', () => {
-    // Phụ thuộc vào bố trí này: năm 5, 1 mạng, bàn trống — Ngai một mình không thể thắng.
+    // Phụ thuộc vào bố trí này: năm 9, 1 mạng, bàn trống — Ngai một mình không thể thắng (năm 5 đã sát nút từ 2026-11-09).
     // Cân bằng lại đạo quân năm 5 hoặc chỉ số Ngai có thể làm test này hỏng.
-    const { bus, controller } = setup(startYear(runState({ lives: 1, year: 4 }), CONTENT));
+    const { bus, controller } = setup(startYear(runState({ lives: 1, year: 8 }), CONTENT));
     const order: string[] = [];
     const ended: { won: boolean; crownPoints: number; unlocks: string[] }[] = [];
     bus.on('run:state', () => order.push('state'));
@@ -145,11 +170,12 @@ describe('RunController', () => {
       order.push('ended');
       ended.push(p);
     });
-    bus.emit('ui:command', { command: { type: 'discard', handIndex: 0 } });
+    sellDown(bus, controller);
     runBattle(bus, controller);
     expect(controller.state.phase).toBe('ended');
     expect(order.slice(-2)).toEqual(['state', 'ended']);
-    expect(ended).toEqual([{ won: false, crownPoints: 0, unlocks: [] }]);
+    const breakdown = crownPoints(controller.state);
+    expect(ended).toEqual([{ won: false, crownPoints: breakdown.total, breakdown, unlocks: [], credited: null }]);
   });
 
   it('dispose stops handling ui:command', () => {
@@ -168,11 +194,11 @@ describe('RunController', () => {
     const { bus, controller, states } = setup();
     let result: BattleResult | null = null;
     bus.on('battle:ended', (p) => (result = p.result));
-    bus.emit('ui:command', { command: { type: 'discard', handIndex: 0 } });
+    sellDown(bus, controller);
     runBattle(bus, controller);
     // thu một kết quả thật rồi dựng lại ván đang đánh
     const { bus: bus2, controller: c2, states: s2 } = setup();
-    bus2.emit('ui:command', { command: { type: 'discard', handIndex: 0 } });
+    sellDown(bus2, c2);
     const runner = c2.runner!;
     const before = c2.state;
     const n = s2.length;
@@ -183,6 +209,46 @@ describe('RunController', () => {
     expect(s2).toHaveLength(n);
     expect(runner.clock.speed).toBe(1);
     expect(states.length).toBeGreaterThan(0);
+  });
+
+  it('remembers the damage per building of the last battle (none before the first)', () => {
+    const { bus, controller } = setup();
+    expect(controller.lastBattleDamage).toBeNull();
+    let result: BattleResult | null = null;
+    bus.on('battle:ended', (p) => (result = p.result));
+    sellDown(bus, controller);
+    runBattle(bus, controller);
+    expect(result!.damageBySource).toBeDefined();
+    expect(controller.lastBattleDamage).toEqual(result!.damageBySource);
+    // Kept in the run state (saved), so a controller built from a reloaded state still has it.
+    expect(controller.state.lastBattleDamage).toEqual(result!.damageBySource);
+    const reloaded = new RunController(createGameBus(), CONTENT, structuredClone(controller.state));
+    expect(reloaded.lastBattleDamage).toEqual(result!.damageBySource);
+    reloaded.dispose();
+  });
+
+  it('keeps the speed chosen in one battle for the next battle and for a fresh controller', () => {
+    const { bus, controller } = setup();
+    sellDown(bus, controller);
+    bus.emit('ui:set-speed', { speed: 3 });
+    expect(controller.runner!.clock.speed).toBe(3);
+    runBattle(bus, controller);
+    const { bus: bus2, controller: c2 } = setup();
+    sellDown(bus2, c2);
+    expect(c2.runner!.clock.speed).toBe(3);
+    bus2.emit('ui:set-speed', { speed: 1 });
+  });
+
+  it('does not carry a pause into the next battle', () => {
+    const { bus, controller } = setup();
+    sellDown(bus, controller);
+    bus.emit('ui:set-speed', { speed: 2 });
+    bus.emit('ui:toggle-pause', {});
+    expect(controller.runner!.clock.speed).toBe(0);
+    const { bus: bus2, controller: c2 } = setup();
+    sellDown(bus2, c2);
+    expect(c2.runner!.clock.speed).toBe(2);
+    bus.emit('ui:set-speed', { speed: 1 });
   });
 
   it('ignores a stray battle:ended when no battle is active', () => {

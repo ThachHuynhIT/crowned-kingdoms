@@ -12,8 +12,10 @@ import { applyCommand } from './commands';
 import type { CommandResult } from './commands';
 import type { IllegalReason, PlayTarget, RunCommand, RunState } from './state';
 import { refillHand } from './deck';
+import { cardOffer } from './flow';
 import { startDeck } from './calendar';
 import { newRun } from './yearFlow';
+import { THRONE_PLOT } from './board';
 
 const sorted = (arr: readonly CardId[]): CardId[] => [...arr].sort();
 
@@ -79,7 +81,7 @@ describe('newRun under the G2 rules', () => {
   });
 
   it('gives the throne an empty enchant list and no permanent bonuses', () => {
-    expect(s.plots[12]!.building).toMatchObject({ enchants: [], permanent: {} });
+    expect(s.plots[THRONE_PLOT]!.building).toMatchObject({ enchants: [], permanent: {} });
   });
 
   it('is deterministic per seed', () => {
@@ -99,16 +101,16 @@ describe('newRun', () => {
     const s = newRun(7, 'wheat', CONTENT);
     expect(s.year).toBe(1);
     expect(s.phase).toBe('planning');
-    expect(s.lives).toBe(3);
-    expect(s.plots.filter((p) => p.unlocked)).toHaveLength(9);
-    expect(s.plots[12]!.building!.cardId).toBe('wheat_throne');
-    expect(s.plots[12]!.building!.uid).toBe(0);
+    expect(s.lives).toBe(RUN.startLives);
+    expect(s.plots.filter((p) => p.unlocked)).toHaveLength(10);
+    expect(s.plots[THRONE_PLOT]!.building!.cardId).toBe('wheat_throne');
+    expect(s.plots[THRONE_PLOT]!.building!.uid).toBe(0);
     expect(s.deck).toEqual([...START_DECK_G1]);
-    expect(s.hand).toHaveLength(3);
+    expect(s.hand).toHaveLength(RUN.handSize);
     for (const c of s.hand) expect(s.deck).toContain(c);
     expect(sorted([...s.hand, ...s.drawPile, ...s.discardPile])).toEqual(sorted(s.deck));
     expect(s.discardPile).toEqual([]);
-    expect(s.drawPile).toHaveLength(s.deck.length - 3);
+    expect(s.drawPile).toHaveLength(s.deck.length - RUN.handSize);
     expect(s.played).toBe(false);
     expect(s.nextUid).toBe(1);
     expect(s.won).toBeNull();
@@ -145,7 +147,7 @@ describe('play / discard', () => {
       uid: 1,
       cardId: 'wheat_militia',
       level: 1,
-      enchants: [], placedYear: s.year, permanent: {}
+      enchants: [], placedYear: s.year, permanent: {}, ageBonus: 0, counters: {}, movedYear: null
     });
     expect(r.state.nextUid).toBe(2);
     expect(r.state.hand).toEqual(['neutral_barracks', 'neutral_move']);
@@ -171,18 +173,19 @@ describe('play / discard', () => {
 
   it('move relocates and swaps', () => {
     const base = runState({ hand: ['neutral_move'] });
-    const b7 = { uid: 1, cardId: 'wheat_militia' as CardId, level: 1 as const, enchants: [], placedYear: 1, permanent: {} };
-    const b6 = { uid: 2, cardId: 'neutral_barracks' as CardId, level: 1 as const, enchants: [], placedYear: 1, permanent: {} };
+    const b7 = { uid: 1, cardId: 'wheat_militia' as CardId, level: 1 as const, enchants: [], placedYear: 1, permanent: {}, ageBonus: 0, counters: {}, movedYear: null };
+    const b6 = { uid: 2, cardId: 'neutral_barracks' as CardId, level: 1 as const, enchants: [], placedYear: 1, permanent: {}, ageBonus: 0, counters: {}, movedYear: null };
     const plots = structuredClone(base.plots);
     plots[7]!.building = b7;
     const moved = ok(applyCommand({ ...base, plots }, play(0, two(7, 6)), CONTENT));
-    expect(moved.state.plots[6]!.building).toEqual(b7);
+    const stamped = (b: typeof b7) => ({ ...b, movedYear: base.year }); // moving records the year (spec 6.11)
+    expect(moved.state.plots[6]!.building).toEqual(stamped(b7));
     expect(moved.state.plots[7]!.building).toBeNull();
 
     plots[6]!.building = b6;
     const swapped = ok(applyCommand({ ...base, plots }, play(0, two(7, 6)), CONTENT));
-    expect(swapped.state.plots[6]!.building).toEqual(b7);
-    expect(swapped.state.plots[7]!.building).toEqual(b6);
+    expect(swapped.state.plots[6]!.building).toEqual(stamped(b7));
+    expect(swapped.state.plots[7]!.building).toEqual(stamped(b6));
   });
 
   it('discard sells exactly the chosen card, keeps the others and counts as the action', () => {
@@ -196,12 +199,21 @@ describe('play / discard', () => {
     expect(r.state.plots).toEqual(s.plots);
   });
 
-  it('discard rejects a bad index, a second action and a wrong phase', () => {
+  it('play and discard can be used again and again in the same year', () => {
+    let s = runState({ hand, gold: 0 });
+    s = ok(applyCommand(s, play(0, plot(6)), CONTENT)).state;
+    s = ok(applyCommand(s, play(0, plot(7)), CONTENT)).state;
+    expect(s.played).toBe(true);
+    s = ok(applyCommand(s, { type: 'discard', handIndex: 0 }, CONTENT)).state;
+    expect(s.hand).toEqual([]);
+    expect(s.gold).toBe(RUN.skipPlayGold);
+    expect(s.plots[6]!.building!.cardId).toBe('wheat_militia');
+    expect(s.plots[7]!.building!.cardId).toBe('neutral_barracks');
+  });
+
+  it('discard rejects a bad index and a wrong phase', () => {
     expect(errorOf(runState({ hand }), { type: 'discard', handIndex: 3 })).toBe('badTarget');
     expect(errorOf(runState({ hand }), { type: 'discard', handIndex: -1 })).toBe('badTarget');
-    expect(errorOf(runState({ hand, played: true }), { type: 'discard', handIndex: 0 })).toBe(
-      'alreadyPlayed',
-    );
     expect(errorOf(runState({ hand, phase: 'reward' }), { type: 'discard', handIndex: 0 })).toBe(
       'wrongPhase',
     );
@@ -211,10 +223,9 @@ describe('play / discard', () => {
 describe('errors', () => {
   const hand: CardId[] = ['wheat_militia', 'neutral_barracks', 'neutral_move'];
 
-  it('phase and played errors', () => {
-    expect(errorOf(runState({ hand: [], played: true }), play(0, plot(6)))).toBe('alreadyPlayed');
+  it('phase and hand-size errors', () => {
     expect(errorOf(runState({ hand, phase: 'battle' }), play(0, plot(6)))).toBe('wrongPhase');
-    expect(errorOf(runState({ hand }), { type: 'startBattle' })).toBe('notPlayed');
+    expect(errorOf(runState({ hand }), { type: 'startBattle' })).toBe('handTooBig');
     expect(errorOf(runState({ hand }), { type: 'pickOffer', index: 0 })).toBe('wrongPhase');
     expect(errorOf(runState({ hand }), { type: 'advance' })).toBe('wrongPhase');
     expect(errorOf(runState({ hand }), { type: 'battleResult', result: result(true) })).toBe(
@@ -242,11 +253,11 @@ describe('errors', () => {
   it('checkPlay reasons', () => {
     const s = runState({ hand });
     expect(errorOf(s, play(0, plot(0)))).toBe('locked');
-    expect(errorOf(s, play(0, plot(12)))).toBe('throne');
+    expect(errorOf(s, play(0, plot(THRONE_PLOT)))).toBe('throne');
     expect(errorOf(s, play(0, { kind: 'none' }))).toBe('badTarget');
     expect(errorOf(s, play(2, two(7, 6)))).toBe('noTarget');
     const occ = runState({ hand });
-    occ.plots[6]!.building = { uid: 1, cardId: 'wheat_scarecrow', level: 1, enchants: [], placedYear: 1, permanent: {} };
+    occ.plots[6]!.building = { uid: 1, cardId: 'wheat_scarecrow', level: 1, enchants: [], placedYear: 1, permanent: {}, ageBonus: 0, counters: {}, movedYear: null };
     expect(errorOf(occ, play(0, plot(6)))).toBe('occupied');
     expect(errorOf(occ, play(2, two(7, 6)))).toBe('noBuilding');
     const clear = runState({ hand: ['neutral_clear_land'] });
@@ -279,15 +290,15 @@ describe('gold', () => {
       expect(s.gold).toBe(before - cost);
     }
     expect(s.rerollsThisYear).toBe(3);
-    expect(s.hand).toHaveLength(3);
+    expect(s.hand).toHaveLength(RUN.handSize);
     expect(sorted([...s.hand, ...s.drawPile, ...s.discardPile])).toEqual(sorted(s.deck));
-    expect(oldHand).toHaveLength(3);
+    expect(oldHand).toHaveLength(RUN.handSize);
     expect(rerollCost(s.rerollsThisYear + 1)).toBe(8);
   });
 
   it('reroll is refused without enough gold, after the action and outside planning', () => {
     expect(errorOf(rich({ gold: 0 }), { type: 'reroll' })).toBe('notEnoughGold');
-    expect(errorOf(rich({ gold: 3, rerollsThisYear: 2 }), { type: 'reroll' })).toBe('notEnoughGold');
+    expect(errorOf(rich({ gold: 3, rerollsThisYear: 2, paidRerollsThisYear: 2 }), { type: 'reroll' })).toBe('notEnoughGold');
     expect(errorOf(rich({ played: true }), { type: 'reroll' })).toBe('alreadyPlayed');
     expect(errorOf(rich({ phase: 'battle' }), { type: 'reroll' })).toBe('wrongPhase');
   });
@@ -306,7 +317,7 @@ describe('gold', () => {
     expect(s.gold).toBe(20 - unlockCost(0));
     expect(s.purchasedPlots).toBe(1);
     expect(s.played).toBe(false);
-    s = ok(applyCommand(s, { type: 'unlockPlot', plot: 2 }, CONTENT)).state;
+    s = ok(applyCommand(s, { type: 'unlockPlot', plot: 3 }, CONTENT)).state;
     expect(s.gold).toBe(20 - unlockCost(0) - unlockCost(1));
     expect(s.purchasedPlots).toBe(2);
   });
@@ -354,7 +365,7 @@ describe('gold', () => {
       level: 3,
       enchants: [],
       placedYear: 1,
-      permanent: {},
+      permanent: {}, ageBonus: 0, counters: {}, movedYear: null,
     };
     const next = ok(applyCommand(s, { type: 'advance' }, c)).state;
     expect(next.gold).toBe(10 + RUN.taxPerYear + 3);
@@ -368,13 +379,20 @@ describe('startBattle legality and auto-fire setting', () => {
     return { ...s, plots: s.plots.map((p) => ({ ...p, unlocked: true })) };
   };
 
-  it('is allowed without an action when no card in hand has a target', () => {
+  it('is allowed without an action once the hand holds at most battleHandMax cards', () => {
     const r = ok(applyCommand(allOpen(), { type: 'startBattle' }, CONTENT));
     expect(r.state.phase).toBe('battle');
+    const two = runState({ hand: ['wheat_militia', 'neutral_barracks'] });
+    expect(two.hand.length).toBe(RUN.battleHandMax);
+    expect(ok(applyCommand(two, { type: 'startBattle' }, CONTENT)).state.phase).toBe('battle');
   });
 
-  it('still needs an action while some card in hand is playable', () => {
-    expect(errorOf(runState({ hand: ['wheat_militia'] }), { type: 'startBattle' })).toBe('notPlayed');
+  it('is refused with handTooBig while the hand holds more than battleHandMax cards', () => {
+    const three = runState({ hand: ['wheat_militia', 'neutral_barracks', 'neutral_move'] });
+    expect(errorOf(three, { type: 'startBattle' })).toBe('handTooBig');
+    expect(errorOf({ ...three, played: true }, { type: 'startBattle' })).toBe('handTooBig');
+    const sold = ok(applyCommand(three, { type: 'discard', handIndex: 2 }, CONTENT)).state;
+    expect(ok(applyCommand(sold, { type: 'startBattle' }, CONTENT)).state.phase).toBe('battle');
   });
 
   it('setAutoFire flips the flag in any phase except ended and survives the next year', () => {
@@ -409,25 +427,25 @@ describe('a hand with no playable card', () => {
       played: true,
     });
     const plots = s.plots.map((p, i) =>
-      p.unlocked && i !== 12
-        ? { ...p, building: { uid: i + 10, cardId: 'wheat_scarecrow' as const, level: 1 as const, enchants: [], placedYear: 1, permanent: {} } }
+      p.unlocked && i !== THRONE_PLOT
+        ? { ...p, building: { uid: i + 10, cardId: 'wheat_scarecrow' as const, level: 1 as const, enchants: [], placedYear: 1, permanent: {}, ageBonus: 0, counters: {}, movedYear: null } }
         : p,
     );
     return {
       ...s,
       plots,
-      drawPile: ['neutral_clear_land', 'neutral_move', 'wheat_scarecrow'],
+      drawPile: ['neutral_clear_land', 'neutral_move', 'wheat_scarecrow', 'neutral_clear_land', 'neutral_move'],
       discardPile: [],
     };
   };
 
-  it('is recycled into the discard pile at the next year so other cards can reach the hand', () => {
+  it('is kept in hand at the next year (to be sold) and the year draw is added on top', () => {
     const s = stuck();
     const next = ok(applyCommand(s, { type: 'advance' }, CONTENT)).state;
-    expect(sorted(next.hand)).toEqual(sorted(['neutral_clear_land', 'neutral_move', 'wheat_scarecrow']));
-    expect(sorted(next.discardPile)).toEqual(
-      sorted(['wheat_militia', 'neutral_barracks', 'neutral_archer_tower']),
-    );
+    expect(next.hand.slice(0, 3)).toEqual(['wheat_militia', 'neutral_barracks', 'neutral_archer_tower']);
+    expect(next.hand).toHaveLength(3 + RUN.yearDraw);
+    expect(next.hand.slice(3)).toEqual(s.drawPile.slice(0, RUN.yearDraw));
+    expect(next.discardPile).toEqual([]);
     expect(sorted([...next.hand, ...next.drawPile, ...next.discardPile])).toEqual(
       sorted([...s.hand, ...s.drawPile, ...s.discardPile]),
     );
@@ -454,7 +472,7 @@ describe('battle flow', () => {
     const s = planned({ phase: 'battle', year: 3 });
     const r = ok(applyCommand(s, { type: 'battleResult', result: result(true, 7) }, CONTENT));
     expect(r.state.phase).toBe('reward');
-    expect(r.state.offers!.cardIds).toHaveLength(3);
+    expect(cardOffer(r.state)!.cardIds).toHaveLength(3);
     expect(r.state.stats.battlesWon).toBe(1);
     expect(r.state.stats.kills).toBe(7);
     expect(r.state.rng.reward).not.toBe(s.rng.reward);
@@ -462,7 +480,7 @@ describe('battle flow', () => {
   });
 
   it('loss with 3 lives goes to yearEnd then advance', () => {
-    const s = planned({ phase: 'battle' });
+    const s = planned({ phase: 'battle', lives: 3 });
     const r = ok(applyCommand(s, { type: 'battleResult', result: result(false) }, CONTENT));
     expect(r.state.lives).toBe(2);
     expect(r.state.phase).toBe('yearEnd');
@@ -471,7 +489,7 @@ describe('battle flow', () => {
     const n = ok(applyCommand(r.state, { type: 'advance' }, CONTENT));
     expect(n.state.year).toBe(s.year + 1);
     expect(n.state.phase).toBe('planning');
-    expect(n.state.hand).toHaveLength(3);
+    expect(n.state.hand).toHaveLength(RUN.yearDraw);
     expect(n.state.played).toBe(false);
     expect(n.state.army).toEqual(
       composeArmy(roster, armyBudget(2, SLOT_MULT.raiders), 2, s.seed),
@@ -524,8 +542,8 @@ describe('rewards', () => {
     const s = reward();
     const r = ok(applyCommand(s, { type: 'pickOffer', index: 0 }, CONTENT));
     expect(r.state.deck).toHaveLength(12);
-    expect(r.state.deck[11]).toBe(s.offers!.cardIds[0]);
-    const picked = s.offers!.cardIds[0]!;
+    expect(r.state.deck[11]).toBe(cardOffer(s)!.cardIds[0]);
+    const picked = cardOffer(s)!.cardIds[0]!;
     expect(
       [...r.state.hand, ...r.state.drawPile, ...r.state.discardPile].filter((c) => c === picked),
     ).toHaveLength(r.state.deck.filter((c) => c === picked).length);
@@ -537,11 +555,33 @@ describe('rewards', () => {
   it('the chosen reward is in the next hand right away, not buried in the discard pile', () => {
     for (const index of [0, 1, 2]) {
       const s = reward();
-      const chosen = s.offers!.cardIds[index]!;
+      const chosen = cardOffer(s)!.cardIds[index]!;
       const next = ok(applyCommand(s, { type: 'pickOffer', index }, CONTENT)).state;
       expect(next.hand).toContain(chosen);
-      expect(next.hand).toHaveLength(3);
+      expect(next.hand).toHaveLength(RUN.yearDraw);
       expect(sorted([...next.hand, ...next.drawPile, ...next.discardPile])).toEqual(sorted(next.deck));
+    }
+  });
+
+  it('under the G1 rules the reward cards come only from the G1 card set', () => {
+    const g1 = new Set<string>(START_DECK_G1);
+    for (let year = 1; year <= 9; year++) {
+      for (let seed = 1; seed <= 6; seed++) {
+        const s = ok(
+          applyCommand(
+            runState({
+              phase: 'battle',
+              hand: [],
+              played: true,
+              year,
+              rng: { draw: seed, reward: seed * 7919, calendar: 1, council: 2, quest: 3, blessing: 4, shop: 5 },
+            }),
+            { type: 'battleResult', result: result(true) },
+            CONTENT,
+          ),
+        ).state;
+        for (const id of cardOffer(s)!.cardIds) expect(g1.has(id), `${id} in G1 rewards`).toBe(true);
+      }
     }
   });
 
@@ -564,7 +604,7 @@ describe('full run', () => {
     };
     for (let guard = 0; guard < 100 && s.phase !== 'ended'; guard++) {
       if (s.phase === 'planning') {
-        step({ type: 'discard', handIndex: 0 });
+        while (s.hand.length > RUN.battleHandMax) step({ type: 'discard', handIndex: 0 });
         step({ type: 'startBattle' });
       } else if (s.phase === 'battle') {
         step({ type: 'battleResult', result: result(true) });
@@ -626,21 +666,21 @@ describe('rng persistence', () => {
 
   it('next hand equals refillHand from the persisted state', () => {
     const ye = lostBattle();
-    const expected = refillHand(ye.hand, ye.drawPile, ye.discardPile, new Rng(ye.rng.draw), 3);
+    const expected = refillHand(ye.hand, ye.drawPile, ye.discardPile, new Rng(ye.rng.draw), ye.hand.length + RUN.yearDraw);
     const adv = ok(applyCommand(ye, { type: 'advance' }, CONTENT)).state;
     expect(adv.hand).toEqual(expected.hand);
     expect(adv.drawPile).toEqual(expected.drawPile);
     expect(adv.discardPile).toEqual(expected.discardPile);
   });
 
-  it('keeps an unplayed card in hand into the next year and only tops the hand up', () => {
+  it('keeps unplayed cards in hand into the next year and draws the year draw on top', () => {
     let s = runState({ hand: ['wheat_militia', 'neutral_barracks', 'neutral_move'] });
     s = ok(applyCommand(s, play(0, plot(6)), CONTENT)).state;
     s = ok(applyCommand(s, { type: 'startBattle' }, CONTENT)).state;
     s = ok(applyCommand(s, { type: 'battleResult', result: result(false) }, CONTENT)).state;
     const next = ok(applyCommand(s, { type: 'advance' }, CONTENT)).state;
     expect(next.hand.slice(0, 2)).toEqual(['neutral_barracks', 'neutral_move']);
-    expect(next.hand).toHaveLength(3);
+    expect(next.hand).toHaveLength(2 + RUN.yearDraw);
   });
 });
 
@@ -671,5 +711,39 @@ describe('extra error branches', () => {
     const b = ok(applyCommand(s, cmd, CONTENT));
     expect(a).toEqual(b);
     expect(a.state.offers).toEqual(b.state.offers);
+  });
+});
+
+describe('G3 commands and offers outside their phase', () => {
+  const cmds: RunCommand[] = [
+    { type: 'chooseDecree', index: 0 },
+    { type: 'setCouncilSelection', selection: { plots: [], cardId: null, deckIndices: [] } },
+    { type: 'enactDecree' },
+    { type: 'answerQuest', accept: true },
+  ];
+
+  it.each(cmds)('%j is wrongPhase while planning', (cmd) => {
+    expect(applyCommand(runState(), cmd, CONTENT)).toEqual({ error: 'wrongPhase' });
+  });
+
+  it('pickOffer refuses a council or quest offer', () => {
+    const base = runState();
+    const council = {
+      ...base,
+      phase: 'reward' as const,
+      offers: {
+        kind: 'council' as const,
+        decreeIds: ['decree_treasury' as const],
+        selected: null,
+        selection: { plots: [], cardId: null, deckIndices: [] },
+      },
+    };
+    expect(applyCommand(council, { type: 'pickOffer', index: 0 }, CONTENT)).toEqual({ error: 'wrongPhase' });
+    const quest = {
+      ...base,
+      phase: 'reward' as const,
+      offers: { kind: 'quest' as const, questId: 'quest_untouched' as const },
+    };
+    expect(applyCommand(quest, { type: 'pickOffer', index: null }, CONTENT)).toEqual({ error: 'wrongPhase' });
   });
 });

@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest';
-import { MENU_BUTTON, MENU_FOOTER_H, layoutMenu } from './menuLayout';
+import { MENU_BUTTON, MENU_FOOTER_H, MENU_ITEMS, layoutMenu, visibleMenuItems } from './menuLayout';
 
 /** Logo board size measured in the browser: 2× borders on desktop, 1× on phones. */
 const DESKTOP_LOGO = { w: 520, h: 150 };
@@ -30,6 +30,12 @@ describe('layoutMenu', () => {
     expect(m.footer).toEqual({ x: 640, y: 720 - MENU_FOOTER_H / 2 });
   });
 
+  it('keeps three buttons (with Trợ giúp) clear of the logo and footer on PC and phones', () => {
+    check({ w: 1280, h: 720 }, DESKTOP_LOGO, 3);
+    check({ w: 1920, h: 1080 }, DESKTOP_LOGO, 3);
+    check({ w: 375, h: 812 }, PHONE_LOGO, 3);
+  });
+
   it('fits a 375×812 phone', () => {
     check({ w: 375, h: 812 }, PHONE_LOGO, 1);
   });
@@ -53,5 +59,30 @@ describe('layoutMenu', () => {
 
   it('returns no buttons when none are visible', () => {
     expect(layoutMenu({ w: 375, h: 812 }, PHONE_LOGO, 0).buttons).toEqual([]);
+  });
+});
+
+describe('menu items', () => {
+  it('lists Tải ván after Ván mới, then Vương Miện, then the visible Cài đặt button', () => {
+    const ids = MENU_ITEMS.map((m) => m.id);
+    expect(ids.indexOf('saves')).toBe(ids.indexOf('newRun') + 1);
+    expect(ids.indexOf('crowns')).toBe(ids.indexOf('saves') + 1);
+    expect(ids.indexOf('settings')).toBe(ids.indexOf('crowns') + 1);
+    expect(MENU_ITEMS.find((m) => m.id === 'crowns')).toMatchObject({ label: 'Vương Miện', visible: true });
+    expect(MENU_ITEMS.find((m) => m.id === 'settings')!.visible).toBe(true);
+    expect(visibleMenuItems().map((m) => m.label)).toEqual([
+      'Tiếp tục',
+      'Ván mới',
+      'Tải ván',
+      'Vương Miện',
+      'Cài đặt',
+      'Trợ giúp',
+    ]);
+  });
+
+  it('the five visible buttons fit without overlapping on desktop and on a phone', () => {
+    const n = visibleMenuItems().length;
+    check({ w: 1280, h: 720 }, DESKTOP_LOGO, n);
+    check({ w: 375, h: 812 }, PHONE_LOGO, n);
   });
 });

@@ -2,7 +2,8 @@ import type Phaser from 'phaser';
 import { toCss } from '../data/palette';
 import { UI_PALETTE } from '../data/uiPalette';
 import { UI_KEY } from '../render/atlas';
-import { UI_FRAMES, type UiFrame } from '../render/uiArt';
+import type { AnyUiFrame, UiFrame } from '../render/uiArt';
+import { uiFrameDef } from '../render/uiKit';
 import {
   DRAG_SLOP,
   LONG_PRESS_MS,
@@ -11,6 +12,8 @@ import {
   type Rect,
   type TooltipContent,
 } from './hud/layout';
+import { logicalPointerDistance, logicalSize } from './displayRuntime';
+import { skinFrame, type UiSkin } from './skin';
 
 export { TOUCH_TARGET };
 
@@ -50,12 +53,14 @@ export const addUiText = (
     .setShadow(1, 1, toCss(UI_PALETTE.textShadow), 0, false, true);
 
 /** Border pixel scale for this scene's viewport (1× on phones, 2× otherwise). */
-export const uiScale = (scene: Phaser.Scene): 1 | 2 =>
-  uiScaleFor(scene.scale.width, scene.scale.height);
+export const uiScale = (scene: Phaser.Scene): 1 | 2 => {
+  const { w, h } = logicalSize(scene);
+  return uiScaleFor(w, h);
+};
 
 /** Screen px of a frame's decorative edge at the current uiScale. */
-export const frameBorder = (scene: Phaser.Scene, frame: UiFrame): number =>
-  UI_FRAMES[frame].border * uiScale(scene);
+export const frameBorder = (scene: Phaser.Scene, frame: AnyUiFrame): number =>
+  uiFrameDef(frame).border * uiScale(scene);
 
 export interface UiBox {
   readonly image: Phaser.GameObjects.NineSlice;
@@ -64,8 +69,10 @@ export interface UiBox {
   readonly height: number;
   /** Set the logical size; also picks up a uiScale change. */
   resize: (width: number, height: number) => void;
-  /** Swap to another frame of the same source size (hover/pressed/selected states). */
+  /** Swap to another frame of the same source size (hover/pressed/selected states), in the current skin. */
   setFrame: (frame: UiFrame) => void;
+  /** Repaint in another skin (a king's colours); the frame state stays. */
+  setSkin: (skin: UiSkin) => void;
 }
 
 /**
@@ -79,13 +86,16 @@ export const createPanel = (
   height: number,
   originX = 0,
   originY = 0,
+  skin: UiSkin = 'neutral',
 ): UiBox => {
-  const { slice } = UI_FRAMES[frame];
+  const { slice } = uiFrameDef(skinFrame(frame, skin));
+  let current = frame;
+  let currentSkin = skin;
   let w = width;
   let h = height;
   const s = uiScale(scene);
   const image = scene.add
-    .nineslice(0, 0, UI_KEY, frame, w / s, h / s, slice, slice, slice, slice)
+    .nineslice(0, 0, UI_KEY, skinFrame(frame, skin), w / s, h / s, slice, slice, slice, slice)
     .setOrigin(originX, originY)
     .setScale(s);
   return {
@@ -99,11 +109,19 @@ export const createPanel = (
     resize: (nextW, nextH) => {
       w = nextW;
       h = nextH;
+      // A scale 'resize' listener can still fire after its scene shut down and destroyed the slice: skip it.
+      if (!image.scene) return;
       const scale = uiScale(scene);
       image.setSize(w / scale, h / scale).setScale(scale);
     },
     setFrame: (next) => {
-      image.setFrame(next, false, false);
+      current = next;
+      image.setFrame(skinFrame(next, currentSkin), false, false);
+      image.updateUVs();
+    },
+    setSkin: (next) => {
+      currentSkin = next;
+      image.setFrame(skinFrame(current, next), false, false);
       image.updateUVs();
     },
   };
@@ -195,7 +213,7 @@ export const bindPress = (
       });
     })
     .on('pointermove', (pointer: Phaser.Input.Pointer) => {
-      if (down && pointer.getDistance() > DRAG_SLOP) stopTimer();
+      if (down && logicalPointerDistance(scene, pointer) > DRAG_SLOP) stopTimer();
     })
     .on('pointerup', (pointer: Phaser.Input.Pointer) => {
       stopTimer();
@@ -208,7 +226,7 @@ export const bindPress = (
         tooltip?.host.hide(owner);
         return;
       }
-      if (wasDown && pointer.getDistance() <= DRAG_SLOP) onClick();
+      if (wasDown && logicalPointerDistance(scene, pointer) <= DRAG_SLOP) onClick();
     })
     .once('destroy', cancel);
   return { cancel };
@@ -221,8 +239,12 @@ export interface ButtonOptions {
   /** Optional pixel-art icon (texture key + frame), drawn above the label at integer scale. */
   icon?: { key: string; frame: string; scale?: number };
   onClick: () => void;
+  /** Explain an unavailable action without executing it. */
+  onDisabledClick?: () => void;
   /** Optional help shown on hover / long-press. */
   tooltip?: TooltipSource;
+  /** Colours of the frame (default neutral wood). */
+  skin?: UiSkin;
 }
 
 export interface Button {
@@ -230,8 +252,15 @@ export interface Button {
   setActive: (active: boolean) => void;
   setLabel: (label: string) => void;
   setVisible: (visible: boolean) => void;
-  /** Disabled: dimmed, ignores hover and clicks (e.g. a feature that is not built yet). */
+  /**
+   * Disabled: dimmed, no hover frame; clicks may explain why via `onDisabledClick`.
+   * The tooltip still shows (e.g. "Không đủ vàng").
+   */
   setEnabled: (enabled: boolean) => void;
+  /** New logical size (e.g. when the layout switches between desktop and phone). */
+  resize: (width: number, height: number) => void;
+  /** Repaint the button in another skin (a king's colours). */
+  setSkin: (skin: UiSkin) => void;
 }
 
 /** Opacity of a disabled button. */
@@ -244,15 +273,19 @@ export const createButton = (
   y: number,
   label: string,
   {
-    width = TOUCH_TARGET,
-    height = TOUCH_TARGET,
+    width: initialWidth = TOUCH_TARGET,
+    height: initialHeight = TOUCH_TARGET,
     fontSize = 15,
     icon,
     onClick,
+    onDisabledClick,
     tooltip,
+    skin,
   }: ButtonOptions,
 ): Button => {
-  const box = createPanel(scene, 'button', width, height, 0.5, 0.5);
+  let width = initialWidth;
+  let height = initialHeight;
+  const box = createPanel(scene, 'button', width, height, 0.5, 0.5, skin);
   const children: Phaser.GameObjects.GameObject[] = [box.image];
   let text: Phaser.GameObjects.Text;
   if (icon) {
@@ -283,10 +316,13 @@ export const createButton = (
     );
   };
   const press = bindPress(scene, box.image, {
-    onClick,
+    onClick: () => {
+      if (enabled) onClick();
+      else onDisabledClick?.();
+    },
     tooltip,
     onState: (next) => {
-      state = next;
+      state = enabled ? next : 'idle';
       refresh();
     },
   });
@@ -303,9 +339,15 @@ export const createButton = (
       refresh();
     },
     setLabel: (value) => text.setText(value),
+    resize: (w, h) => {
+      width = w;
+      height = h;
+      box.resize(w, h);
+      container.setSize(w, h);
+    },
     setVisible: (value) => {
       container.setVisible(value);
-      if (value && enabled) {
+      if (value) {
         box.image.setInteractive();
       } else {
         box.image.disableInteractive();
@@ -317,14 +359,9 @@ export const createButton = (
     setEnabled: (value) => {
       enabled = value;
       container.setAlpha(value ? 1 : DISABLED_ALPHA);
-      if (value && container.visible) {
-        box.image.setInteractive();
-      } else {
-        box.image.disableInteractive();
-        press.cancel();
-        state = 'idle';
-        refresh();
-      }
+      if (!value) state = 'idle';
+      refresh();
     },
+    setSkin: (value) => box.setSkin(value),
   };
 };

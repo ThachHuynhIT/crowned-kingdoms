@@ -49,7 +49,7 @@ describe('runHeadless', () => {
     for (let seed = 100; seed < 120; seed++) {
       expect(() => runHeadless({ seed, kingId: 'wheat' })).not.toThrow();
     }
-  });
+  }, 60_000); // twenty whole runs: ~1.3 s alone, but over the 5 s default when the full suite runs in parallel
 
   it('throws when a bot emits an illegal command', () => {
     expect(() => runHeadless({ seed: 1, kingId: 'wheat', bot: () => ({ type: 'advance' }) })).toThrow(
@@ -95,4 +95,22 @@ describe('runHeadless under the G2 rules', () => {
     expect(earned).toBeGreaterThan(0);
     expect(bought).toBeGreaterThan(0);
   });
+});
+
+describe('runHeadless with the real G2 content (3 kings × 3 seeds)', () => {
+  for (const kingId of ['wheat', 'stone', 'arcane'] as const) {
+    for (const seed of [1, 2, 3]) {
+      it(`${kingId} seed ${seed} finishes 15 years, deterministically`, () => {
+        const a = runHeadless({ seed, kingId, rules: RULES_G2 });
+        const b = runHeadless({ seed, kingId, rules: RULES_G2 });
+        expect(a.state.phase).toBe('ended');
+        expect(a.state.year).toBeLessThanOrEqual(RULES_G2.years);
+        expect(a.state.gold).toBeGreaterThanOrEqual(0);
+        expect(a.state.enemyKings).not.toContain(kingId);
+        expect(JSON.stringify(a.state)).toBe(JSON.stringify(b.state));
+        const all = [...a.state.hand, ...a.state.drawPile, ...a.state.discardPile].sort();
+        expect(all).toEqual([...a.state.deck].sort());
+      });
+    }
+  }
 });

@@ -4,6 +4,7 @@ import { CUSTOM_INCOME_HANDLERS } from '../cards/custom';
 import type { IncomeHandler, StatCtx } from '../cards/custom/types';
 import type { Content } from '../cards/registry';
 import { THRONE_PLOT, neighbours } from './board';
+import { decree } from './decrees';
 import { collectStatSheet } from './modifiers';
 import type { RunState } from './state';
 
@@ -17,10 +18,10 @@ export interface YearIncome {
   idleUids: number[];
 }
 
-/** Ngai trước, rồi plot 0..24 (bỏ Ngai), theo spec §5.5. */
-const plotOrder = (): number[] => {
+/** Ngai trước, rồi các ô theo id tăng dần (bỏ Ngai), theo spec §5.5. */
+const plotOrder = (count: number): number[] => {
   const order = [THRONE_PLOT];
-  for (let plot = 0; plot < 25; plot++) if (plot !== THRONE_PLOT) order.push(plot);
+  for (let plot = 0; plot < count; plot++) if (plot !== THRONE_PLOT) order.push(plot);
   return order;
 };
 
@@ -29,18 +30,22 @@ const plotOrder = (): number[] => {
  * khi vàng đang có (`goldBefore` trừ các phí đã trả, chưa tính thuế/thu nhập) đủ; không đủ thì vào
  * `idleUids` và bị bỏ qua cả năm. Hiệu ứng `gold` và `goldPerNeighbour` cộng theo cấp.
  */
-export function yearIncome(
+/**
+ * `yearIncome` kèm `afterUpkeep`: vàng còn lại sau mọi phí duy trì đã trả, trước thuế và thu nhập
+ * (gốc tính lãi Vô tận, spec 2026-11-09 §5).
+ */
+export function yearIncomeDetail(
   state: RunState,
   content: Content,
   goldBefore: number,
   handlers: Partial<Record<CustomEffectId, IncomeHandler>> = CUSTOM_INCOME_HANDLERS,
-): YearIncome {
+): YearIncome & { afterUpkeep: number } {
   // Phí duy trì được kiểm với vàng có trước thuế và thu nhập (spec §5.5: bước 2 trước bước 4).
   let spendable = goldBefore;
   let delta = 0;
   const idleUids: number[] = [];
 
-  for (const plot of plotOrder()) {
+  for (const plot of plotOrder(state.plots.length)) {
     const building = state.plots[plot]!.building;
     if (building === null) continue;
     const card = content.card(building.cardId);
@@ -70,7 +75,7 @@ export function yearIncome(
     for (const e of effects) {
       if (e.type === 'gold') gained += resolve(e.amount, level);
       else if (e.type === 'goldPerNeighbour') {
-        const count = neighbours(plot).filter(
+        const count = neighbours(plot, state.mode).filter(
           (n) => state.plots[n]!.building?.cardId === e.cardId,
         ).length;
         gained += resolve(e.amount, level) * count;
@@ -80,5 +85,20 @@ export function yearIncome(
     delta += gained;
     spendable += upkeep;
   }
+  // Sắc lệnh cộng vàng đầu năm (Thuế Mùa Màng), sau phí duy trì của công trình.
+  for (const id of state.decrees) {
+    for (const e of decree(id).effects) if (e.type === 'gold') delta += resolve(e.amount, 1);
+  }
+  return { delta, idleUids, afterUpkeep: spendable };
+}
+
+/** Như `yearIncome` nhưng chỉ trả `delta` và `idleUids` (hợp đồng cũ). */
+export function yearIncome(
+  state: RunState,
+  content: Content,
+  goldBefore: number,
+  handlers: Partial<Record<CustomEffectId, IncomeHandler>> = CUSTOM_INCOME_HANDLERS,
+): YearIncome {
+  const { delta, idleUids } = yearIncomeDetail(state, content, goldBefore, handlers);
   return { delta, idleUids };
 }

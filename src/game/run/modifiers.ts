@@ -18,7 +18,10 @@ import type {
 import { CUSTOM_STAT_HANDLERS } from '../cards/custom';
 import type { StatCtx, StatHandler } from '../cards/custom/types';
 import type { Content } from '../cards/registry';
+import { endlessStatBonuses } from './endlessModifiers';
 import { THRONE_PLOT, neighbours } from './board';
+import { decree } from './decrees';
+import { perkEffects } from './perks';
 import type { BuildingState, RunState } from './state';
 
 export interface StatCell {
@@ -41,6 +44,9 @@ const STAT_KEYS: readonly StatKey[] = [
   'knockback',
   'burnDps',
   'gold',
+  'prewind',
+  'rampAs',
+  'rampAsCap',
 ];
 
 export const emptySheet = (): StatSheet =>
@@ -62,12 +68,15 @@ const add = (sheet: StatSheet, stat: StatKey, mode: StatMode, value: number): vo
 
 const kindOf = (card: CardDef): BuildingKind => card.kind as BuildingKind;
 
-const matches = (filter: Filter | undefined, card: CardDef, unit: UnitDef | undefined): boolean => {
+const matches = (filter: Filter | undefined, card: CardDef, unit: UnitDef | undefined, level: Level): boolean => {
   if (!filter) return true;
+  if (filter.minLevel !== undefined && level < filter.minLevel) return false;
   if (filter.kinds && !filter.kinds.includes(kindOf(card))) return false;
   if (filter.cardIds && !filter.cardIds.includes(card.id)) return false;
   if (filter.tags && !filter.tags.some((t) => card.tags.includes(t))) return false;
   if (filter.unitTags && (!unit || !filter.unitTags.some((t) => unit.tags.includes(t)))) return false;
+  if (filter.unitIds && (!unit || !filter.unitIds.includes(unit.id))) return false;
+  if (filter.unitsOnly && !unit) return false;
   return true;
 };
 
@@ -81,10 +90,10 @@ const effectsOf = (card: CardDef): readonly EffectDef[] => {
 const levelOf = (state: RunState, plot: number, b: BuildingState): Level =>
   plot === THRONE_PLOT ? state.throneLevel : b.level;
 
-/** Ngai trước, rồi plot 0..24 (bỏ Ngai). */
-const sourcePlots = (): number[] => {
+/** Ngai trước, rồi các ô theo id tăng dần (bỏ Ngai). */
+const sourcePlots = (count: number): number[] => {
   const out = [THRONE_PLOT];
-  for (let plot = 0; plot < 25; plot++) if (plot !== THRONE_PLOT) out.push(plot);
+  for (let plot = 0; plot < count; plot++) if (plot !== THRONE_PLOT) out.push(plot);
   return out;
 };
 
@@ -105,6 +114,7 @@ export function collectStatSheet(
   const target = state.plots[plot]?.building ?? null;
   if (target === null) return sheet;
   const targetCard = content.card(target.cardId);
+  const targetLevel = levelOf(state, plot, target);
 
   const applySource = (srcPlot: number, src: BuildingState): void => {
     const srcCard = content.card(src.cardId);
@@ -115,9 +125,9 @@ export function collectStatSheet(
           e.scope === 'self'
             ? srcPlot === plot
             : e.scope === 'neighbours'
-              ? neighbours(srcPlot).includes(plot)
+              ? neighbours(srcPlot, state.mode).includes(plot)
               : true;
-        if (related && matches(e.filter, targetCard, unit)) {
+        if (related && matches(e.filter, targetCard, unit, targetLevel)) {
           add(sheet, e.stat, e.mode, resolve(e.value, level));
         }
       } else if (e.type === 'custom') {
@@ -140,19 +150,46 @@ export function collectStatSheet(
     const card = content.card(entry.cardId);
     if (card.kind !== 'enchantment') continue;
     for (const e of card.perStack) {
-      if (e.type === 'stat' && matches(e.filter, targetCard, unit)) {
-        add(sheet, e.stat, e.mode, resolve(e.value, 1) * entry.stacks);
+      if (e.type === 'stat' && matches(e.filter, targetCard, unit, targetLevel)) {
+        // Bùa Gió Thảo Nguyên: nhân lên nếu công trình vừa được dời trong năm nay.
+        const mult = card.movedYearMult !== undefined && target.movedYear === state.year ? card.movedYearMult : 1;
+        add(sheet, e.stat, e.mode, resolve(e.value, 1) * entry.stacks * mult);
       }
     }
   }
-  for (const srcPlot of sourcePlots()) {
+  for (const srcPlot of sourcePlots(state.plots.length)) {
     // (c)(d)
     const src = state.plots[srcPlot]!.building;
     if (src === null || srcPlot === plot) continue;
     applySource(srcPlot, src);
   }
+  for (const id of state.decrees) {
+    // Sắc lệnh: sau công trình và Ngai, trước `permanent` (§5.3); mỗi sắc lệnh là một nguồn.
+    for (const e of decree(id).effects) {
+      if (e.type === 'stat' && matches(e.filter, targetCard, unit, targetLevel)) {
+        add(sheet, e.stat, e.mode, resolve(e.value, 1));
+      }
+    }
+  }
+  for (const e of perkEffects(state, content)) {
+    // (f) perk: sau sắc lệnh, trước `permanent` (§5.3); luôn áp cho cả bàn cờ.
+    if (e.type === 'stat' && matches(e.filter, targetCard, unit, targetLevel)) add(sheet, e.stat, e.mode, e.value);
+  }
   for (const [stat, value] of Object.entries(target.permanent) as [StatKey, number][]) {
     add(sheet, stat, 'pct', value); // (g)
   }
+  // Vô tận (spec 2026-11-09 §5, §6): phúc lành và biến thể cộng % vào sheet trước `finalStat`.
+  if (state.endless !== null) {
+    const groups: ('unit' | 'tower' | 'structure')[] = ['structure'];
+    if (targetCard.kind === 'troop') groups.push('unit');
+    else if (targetCard.kind === 'tower') groups.push('tower');
+    for (const group of groups) {
+      for (const [stat, value] of Object.entries(endlessStatBonuses(state, group)) as [StatKey, number][]) {
+        add(sheet, stat, 'pct', value);
+      }
+    }
+  }
+  // Tua Ngược: số giây lên dây trước vĩnh viễn nằm trong `counters.prewind` của công trình.
+  if ((target.counters.prewind ?? 0) > 0) add(sheet, 'prewind', 'flat', target.counters.prewind!);
   return sheet;
 }

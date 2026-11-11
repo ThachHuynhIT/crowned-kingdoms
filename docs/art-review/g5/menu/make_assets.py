@@ -1,0 +1,72 @@
+"""Cut an approved menu layer source (flat magenta sky) into its native strip.
+
+    python docs/art-review/g5/menu/make_assets.py hills_mid [...]
+
+Keys out the magenta, takes the bottom `height * 6` source rows (the band is reduced 1536 → 256, 6 source px per art
+px), box-reduces it (mask-weighted, alpha 0/255) to 256 × height and reports the seam: how far the ridge at the left
+edge is from the ridge at the right edge. Output: public/assets/art/ai-v1/menu/<id>.png. Preview:
+docs/art-review/g5/menu/<id>/preview.png (two copies side by side over the code sky, 3x, so the seam shows).
+"""
+import sys
+from pathlib import Path
+
+import numpy as np
+from PIL import Image
+
+ROOT = Path(__file__).resolve().parents[4]
+P = ROOT / 'docs/art-review/g5/menu'
+OUT = ROOT / 'public/assets/art/ai-v1/menu'
+WIDTH = 256
+HEIGHTS = {'hills_far': 120, 'hills_mid': 90, 'hills_near': 60}
+SKY = [(0xF6, 0xB2, 0x6B), (0xF0, 0x8A, 0x5D), (0xB8, 0x5C, 0x7A), (0x6B, 0x4A, 0x8A)]
+
+
+def strip(src, height):
+    img = Image.open(src).convert('RGB')
+    if img.width != 1536:
+        img = img.resize((1536, round(img.height * 1536 / img.width)), Image.NEAREST)
+    a = np.array(img).astype(float)
+    r, g, b = a[..., 0], a[..., 1], a[..., 2]
+    solid = ~((r > 150) & (b > 150) & (g < 110))
+    rows = height * 6
+    a, solid = a[-rows:], solid[-rows:]
+    mm = np.array(Image.fromarray(solid.astype(np.float32), mode='F').resize((WIDTH, height), Image.BOX))
+    out = np.zeros((height, WIDTH, 4), dtype=np.uint8)
+    for k in range(3):
+        wk = np.array(Image.fromarray((a[..., k] * solid).astype(np.float32), mode='F').resize((WIDTH, height), Image.BOX))
+        out[..., k] = np.clip(np.round(wk / np.maximum(mm, 1e-6)), 0, 255).astype(np.uint8)
+    out[..., 3] = np.where(mm >= 0.5, 255, 0)
+    out[out[..., 3] == 0] = 0
+    return out
+
+
+def ridge(out):
+    """First opaque row of every column (height when the column is empty)."""
+    solid = out[..., 3] > 0
+    return np.where(solid.any(axis=0), solid.argmax(axis=0), out.shape[0])
+
+
+def preview(out, path):
+    h = out.shape[0]
+    sky_h = max(h + 40, 160)
+    prev = Image.new('RGBA', (WIDTH * 2, sky_h), SKY[-1] + (255,))
+    for i, c in enumerate(SKY):
+        prev.paste(Image.new('RGBA', (WIDTH * 2, sky_h // 4 + 1), c + (255,)), (0, i * sky_h // 4))
+    layer = Image.fromarray(out, 'RGBA')
+    prev.alpha_composite(layer, (0, sky_h - h))
+    prev.alpha_composite(layer, (WIDTH, sky_h - h))
+    prev.resize((WIDTH * 2 * 3, sky_h * 3), Image.NEAREST).save(path)
+
+
+def main(ids):
+    OUT.mkdir(parents=True, exist_ok=True)
+    for layer in ids:
+        out = strip(P / layer / 'source.png', HEIGHTS[layer])
+        top = ridge(out)
+        Image.fromarray(out, 'RGBA').save(OUT / f'{layer}.png')
+        preview(out, P / layer / 'preview.png')
+        print(layer, 'seam', abs(int(top[0]) - int(top[-1])), 'px; ridge', int(top.min()), '..', int(top.max()))
+
+
+if __name__ == '__main__':
+    main(sys.argv[1:])

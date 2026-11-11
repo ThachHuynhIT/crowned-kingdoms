@@ -1,0 +1,226 @@
+import { cells } from '../boardGeometry';
+import type { CardDef, EnemyKingDef, KingDef } from '../types';
+import { enemyFromKing } from './enemy';
+
+const horse = { owner: 'nomad' as const, tags: ['cavalry'] as const };
+const plain = { owner: 'nomad' as const, tags: [] as const };
+
+/** Chín thẻ của Vua Du Mục (spec §6.11), không gồm Ngai; chỉ có được nhờ chinh phục ở G3. */
+export const NOMAD_CARDS: readonly CardDef[] = [
+  {
+    ...horse,
+    id: 'nomad_riders',
+    nameVi: 'Trại Kỵ Binh',
+    name: 'Rider Camp',
+    kind: 'troop',
+    rarity: 'common',
+    textVi: 'Sinh {count} kỵ binh xung phong.',
+    effects: [{ type: 'spawn', unit: 'rider', count: [2, 3, 4, 5, 6] }],
+  },
+  {
+    ...horse,
+    id: 'nomad_horse_archers',
+    nameVi: 'Trại Cung Kỵ',
+    name: 'Horse Archer Camp',
+    kind: 'troop',
+    rarity: 'common',
+    textVi: 'Sinh {count} cung kỵ.',
+    effects: [{ type: 'spawn', unit: 'horse_archer', count: [2, 3, 4, 5, 6] }],
+  },
+  {
+    ...plain,
+    id: 'nomad_stables',
+    nameVi: 'Chuồng Ngựa',
+    name: 'Stables',
+    kind: 'support',
+    rarity: 'common',
+    textVi: 'Lân cận: lính kỵ binh +{pct}% tốc độ và sát thương.',
+    effects: [
+      { type: 'stat', scope: 'neighbours', filter: { unitTags: ['cavalry'] }, stat: 'speed', mode: 'pct', value: [15, 20, 25, 30, 35] },
+      { type: 'stat', scope: 'neighbours', filter: { unitTags: ['cavalry'] }, stat: 'dmg', mode: 'pct', value: [15, 20, 25, 30, 35] },
+    ],
+  },
+  {
+    ...plain,
+    id: 'nomad_relocate',
+    nameVi: 'Nhổ Trại',
+    name: 'Break Camp',
+    kind: 'tome',
+    rarity: 'common',
+    textVi: 'Dời một công trình sang ô đã mở khác (đổi chỗ nếu có); nếu cách xa từ 2 ô trở lên thì +1 cấp.',
+    target: 'buildingThenPlot',
+    actions: [{ type: 'move', levelIfFar: 1 }],
+  },
+  {
+    ...plain,
+    id: 'nomad_bazaar',
+    nameVi: 'Chợ Phiên',
+    name: 'Bazaar',
+    kind: 'economy',
+    rarity: 'uncommon',
+    textVi: 'Đầu năm +{gold} vàng, thêm +1 vàng cho mỗi loại công trình khác nhau ở lân cận.',
+    effects: [
+      { type: 'gold', amount: [1, 1, 2, 2, 3] },
+      { type: 'custom', id: 'bazaar_kinds' },
+    ],
+  },
+  {
+    ...plain,
+    id: 'nomad_wind_rune',
+    nameVi: 'Bùa Gió Thảo Nguyên',
+    name: 'Steppe Wind Rune',
+    kind: 'enchantment',
+    rarity: 'uncommon',
+    textVi: 'Mỗi lần gắn: +10% tốc độ và +10% sát thương; nhân đôi trong năm công trình vừa được dời.',
+    targets: ['troop', 'tower'],
+    movedYearMult: 2,
+    perStack: [
+      { type: 'stat', scope: 'self', stat: 'speed', mode: 'pct', value: 10 },
+      { type: 'stat', scope: 'self', stat: 'dmg', mode: 'pct', value: 10 },
+    ],
+  },
+  {
+    ...plain,
+    id: 'nomad_watchtower',
+    nameVi: 'Chòi Canh Thảo Nguyên',
+    name: 'Steppe Watchtower',
+    kind: 'tower',
+    rarity: 'uncommon',
+    textVi: 'Bắn {dmg} sát thương, tầm xa; +20% sát thương cho mỗi ô lân cận đã mở mà còn trống.',
+    effects: [
+      {
+        type: 'tower',
+        attack: { dmg: 7, type: 'physical', range: cells(2.25), interval: 12, projectileSpeed: 18 },
+        targeting: 'closestToThrone',
+      },
+      { type: 'custom', id: 'watchtower_open', params: { pct: 20 } },
+    ],
+  },
+  {
+    ...plain,
+    id: 'nomad_caravan',
+    nameVi: 'Đoàn Lữ Hành',
+    name: 'Caravan',
+    kind: 'economy',
+    rarity: 'rare',
+    textVi: 'Đầu năm +{gold} vàng. Mỗi lần một công trình được dời: +1 vàng ngay (tối đa 3 mỗi năm).',
+    effects: [{ type: 'gold', amount: [2, 3, 3, 4, 5] }],
+  },
+  {
+    ...horse,
+    id: 'nomad_khan_guard',
+    nameVi: 'Ngự Lâm Thiết Kỵ',
+    name: 'Khan Guard',
+    kind: 'troop',
+    rarity: 'rare',
+    textVi: 'Sinh {count} thiết kỵ.',
+    effects: [{ type: 'spawn', unit: 'khan_guard', count: [2, 2, 3, 3, 4] }],
+  },
+];
+
+/** Vua Du Mục (spec §6): Ngai, 9 thẻ, đơn vị, cờ hiệu và roster khi làm địch. */
+export const NOMAD: KingDef = {
+  id: 'nomad',
+  nameVi: 'Vua Du Mục',
+  name: 'Nomad King',
+  color: 'sand',
+  blurbVi: 'Dời công trình mỗi năm, kỵ binh xung phong.',
+  perks: [
+    {
+      id: 'nomad_p1',
+      nameVi: 'Vó Ngựa',
+      textVi: 'Kỵ binh +10% tốc độ và +10% sát thương.',
+      effects: [
+        { type: 'stat', filter: { unitTags: ['cavalry'] }, stat: 'speed', mode: 'pct', value: 10 },
+        { type: 'stat', filter: { unitTags: ['cavalry'] }, stat: 'dmg', mode: 'pct', value: 10 },
+      ],
+    },
+    {
+      id: 'nomad_p2',
+      nameVi: 'Thảo Nguyên Rộng',
+      textVi: 'Bắt đầu ván với hai ô giữa mép tây và mép đông đã mở.',
+      // Spec ghi (2,0) và (2,4), nhưng (2,0) giờ là ô Ngai: chọn hai ô giữa mép tây/đông (plot 10, 14).
+      effects: [{ type: 'startUnlocked', plots: [10, 14] }],
+    },
+    {
+      id: 'nomad_p3',
+      nameVi: 'Nhổ Trại Nhanh',
+      textVi: 'Lều Di Động thêm 1 lượt dời miễn phí mỗi năm.',
+      effects: [{ type: 'freeMoves', add: 1 }],
+    },
+  ],
+  throne: {
+    id: 'nomad_throne',
+    owner: 'nomad',
+    nameVi: 'Ngai Lều Vàng',
+    name: 'Golden Tent Throne',
+    kind: 'throne',
+    rarity: 'common',
+    tags: [],
+    textVi:
+      'Ngai của Vua Du Mục: bắn trong tầm. Lều Di Động: mỗi năm được dời miễn phí 1 công trình (từ Ngai cấp 3: 2 lần), không cần chơi thẻ.',
+    hp: 600,
+    armor: 0,
+    attack: { dmg: 9, type: 'physical', range: cells(1.6875), interval: 10, projectileSpeed: 16 },
+    passive: [{ type: 'custom', id: 'nomad_mobile_camp', params: { moves: [1, 1, 2, 2, 2] } }],
+  },
+  units: [
+    {
+      id: 'rider',
+      nameVi: 'Kỵ Binh',
+      hp: 50,
+      attack: { dmg: 9, type: 'physical', range: 2, interval: 10 },
+      speed: 4,
+      radius: 5,
+      armor: 0.05,
+      tags: ['melee', 'cavalry'],
+      behaviours: [{ type: 'charge', dmgMult: 2, knockback: 16, stunTicks: 0 }],
+      enemyCost: 2.0,
+      sprite: { w: 24, h: 24 },
+    },
+    {
+      id: 'horse_archer',
+      nameVi: 'Cung Kỵ',
+      hp: 34,
+      attack: { dmg: 6, type: 'physical', range: 56, interval: 12, projectileSpeed: 16 },
+      speed: 3.6,
+      radius: 5,
+      armor: 0,
+      tags: ['ranged', 'cavalry'],
+      behaviours: [{ type: 'kite', distance: 24 }],
+      enemyCost: 1.8,
+      sprite: { w: 24, h: 24 },
+    },
+    {
+      id: 'khan_guard',
+      nameVi: 'Thiết Kỵ',
+      hp: 90, // 110 → 90 (cân bằng 2026-11-09)
+      attack: { dmg: 14, type: 'physical', range: 2, interval: 12 },
+      speed: 3.2,
+      radius: 6,
+      armor: 0.2,
+      tags: ['melee', 'cavalry'],
+      behaviours: [{ type: 'charge', dmgMult: 2, knockback: 0, stunTicks: 10 }],
+      enemyCost: 4.5,
+      sprite: { w: 24, h: 24 },
+    },
+  ],
+  enemyRoster: [
+    { unit: 'rider', weight: 45 },
+    { unit: 'horse_archer', weight: 40 },
+    { unit: 'khan_guard', weight: 15 },
+  ],
+  banner: {
+    id: 'nomad_banner',
+    nameVi: 'Đột Kích',
+    textVi: 'Địch +25% tốc; mỗi đợt dàn thêm 1 hàng dàn quân phía trước.',
+    effects: [
+      { type: 'enemyStat', stat: 'speed', pct: 25 },
+      { type: 'extraEdge', count: 1 },
+    ],
+  },
+  cards: NOMAD_CARDS,
+};
+
+/** Phần kẻ địch của nomad: cùng dữ liệu, thẻ chinh phục là 9 thẻ của vua. */
+export const NOMAD_ENEMY: EnemyKingDef = enemyFromKing(NOMAD);

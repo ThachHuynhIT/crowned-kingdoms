@@ -1,43 +1,61 @@
 /** Luật bàn cờ 5×5 (spec §4.1, §4.4). Hàm thuần, trả mảng mới, không sửa đầu vào. */
+import { THRONE_PLOT } from '../../data/boardGeometry';
+import type { RunMode } from '../../data/rules';
 import { RUN } from '../../data/run';
 import type { BuildingKind, CardDef, CardId, Level, TomeCardDef } from '../../data/types';
 import { CONTENT, type Content } from '../cards/registry';
-import type { BuildingState, IllegalReason, PlayTarget, PlotState } from './state';
+import { geometryFor, isPlotId, modeForPlotCount, plotAtCell, plotCoords } from './boardGeometry';
+import type { BuildingState, IllegalReason, PlayTarget, PlotState, RunState } from './state';
 
-const SIZE = 5;
-const COUNT = SIZE * SIZE;
-export const THRONE_PLOT = 12;
+/** Ngai đứng ở ô giữa hàng sau cùng (hàng 0, cột 2), sau khu 3×3 xây nhà (spec 06/11/2026). */
+export { THRONE_PLOT } from '../../data/boardGeometry';
 
-export const plotCol = (plot: number): number => plot - Math.floor(plot / SIZE) * SIZE;
-export const plotRow = (plot: number): number => Math.floor(plot / SIZE);
+/** Cột / hàng của ô trên hệ bàn trong (vòng ngoài Vô tận có -1 và 5). */
+export const plotCol = (plot: number, mode: RunMode = 'normal'): number => plotCoords(plot, mode).col;
+export const plotRow = (plot: number, mode: RunMode = 'normal'): number => plotCoords(plot, mode).row;
 
-const validPlot = (plot: number): boolean => Number.isInteger(plot) && plot >= 0 && plot < COUNT;
+/**
+ * Chế độ của một mảng ô (adapter cho các hàm chỉ nhận `plots`): 25 → thường, 49 → Vô tận; độ dài khác
+ * là dữ liệu hỏng.
+ */
+const modeOfPlots = (plots: readonly PlotState[]): RunMode => {
+  const mode = modeForPlotCount(plots.length);
+  if (mode === null) throw new Error(`board: unexpected plot count ${plots.length}`);
+  return mode;
+};
+
+const validPlotOn = (plots: readonly PlotState[], plot: number): boolean => isPlotId(plot, modeOfPlots(plots));
 
 /** Bắc, Đông, Nam, Tây; bỏ ô ngoài bàn. */
-export function neighbours(plot: number): number[] {
-  const c = plotCol(plot);
-  const r = plotRow(plot);
+export function neighbours(plot: number, mode: RunMode = 'normal'): number[] {
+  const { row, col } = plotCoords(plot, mode);
   const out: number[] = [];
-  if (r > 0) out.push(plot - SIZE);
-  if (c < SIZE - 1) out.push(plot + 1);
-  if (r < SIZE - 1) out.push(plot + SIZE);
-  if (c > 0) out.push(plot - 1);
+  for (const [dr, dc] of [
+    [-1, 0],
+    [0, 1],
+    [1, 0],
+    [0, -1],
+  ] as const) {
+    const n = plotAtCell(row + dr, col + dc, mode);
+    if (n !== null) out.push(n);
+  }
   return out;
 }
 
-export function initialPlots(): PlotState[] {
+/** Bàn mới: Ngai và chín ô giữa mở; vòng ngoài của Vô tận khoá hết (spec 2026-11-09 §4). */
+export function initialPlots(mode: RunMode = 'normal'): PlotState[] {
   const plots: PlotState[] = [];
-  for (let i = 0; i < COUNT; i++) {
-    const c = plotCol(i);
-    const r = plotRow(i);
-    plots.push({ unlocked: c >= 1 && c <= 3 && r >= 1 && r <= 3, building: null });
+  const count = geometryFor(mode).plotCount;
+  for (let i = 0; i < count; i++) {
+    const { row: r, col: c } = plotCoords(i, mode);
+    plots.push({ unlocked: i === THRONE_PLOT || (c >= 1 && c <= 3 && r >= 1 && r <= 3), building: null });
   }
   return plots;
 }
 
 /** Ô khoá kề (Bắc/Đông/Nam/Tây) một ô đã mở — luật mua ô bằng vàng (spec §3.11), không áp cho Khai Hoang. */
 export const adjacentToUnlocked = (plots: readonly PlotState[], plot: number): boolean =>
-  neighbours(plot).some((n) => plots[n]!.unlocked);
+  neighbours(plot, modeOfPlots(plots)).some((n) => plots[n]!.unlocked);
 
 const stacksOf = (b: BuildingState): number => b.enchants.reduce((n, e) => n + e.stacks, 0);
 
@@ -55,10 +73,34 @@ export const targetCount = (card: CardDef): 0 | 1 | 2 => {
   return card.target === 'buildingThenPlot' || card.target === 'buildingThenBuilding' ? 2 : 1;
 };
 
+const hasCustom = (card: TomeCardDef, id: string): boolean =>
+  card.actions.some((a) => a.type === 'custom' && a.id === id);
+
+/**
+ * Ngai +1 cấp (kẹp `RUN.maxLevel`): nâng `throneLevel` và công trình Ngai cùng một giá trị (bộ giải mã lưu
+ * đòi hai số bằng nhau). Cách duy nhất để lên cấp Ngai: thắng boss, sắc lệnh Đăng Quang, Ấn Triện.
+ */
+export function raiseThrone(state: RunState): RunState {
+  const throneLevel = Math.min(RUN.maxLevel, state.throneLevel + 1) as RunState['throneLevel'];
+  const plots = clonePlots(state.plots);
+  plots[THRONE_PLOT]!.building!.level = throneLevel;
+  return { ...state, throneLevel, plots };
+}
+
+/** Nhân Bản: `first` là công trình (không phải Ngai), `second` là ô trống đã mở (không phải Ngai). */
+export const duplicateIllegal = (plots: readonly PlotState[], first: number, second: number): IllegalReason | null => {
+  if (first === THRONE_PLOT || second === THRONE_PLOT) return 'throne';
+  if (!plots[first]!.unlocked || !plots[second]!.unlocked) return 'locked';
+  if (plots[first]!.building === null) return 'noBuilding';
+  if (second === first) return 'badTarget';
+  return plots[second]!.building === null ? null : 'occupied';
+};
+
 export function hasAnyTarget(
   plots: readonly PlotState[],
   card: CardDef,
   content: Content = CONTENT,
+  maxStacks: number = RUN.maxEnchantStacks,
 ): boolean {
   switch (card.kind) {
     case 'throne':
@@ -79,7 +121,7 @@ export function hasAnyTarget(
           p.unlocked &&
           p.building !== null &&
           card.targets.includes(kindOf(p.building, content)) &&
-          stacksOf(p.building) < RUN.maxEnchantStacks,
+          stacksOf(p.building) < maxStacks,
       );
     case 'tome':
       switch (card.target) {
@@ -98,6 +140,12 @@ export function hasAnyTarget(
               (!hasAction(card, 'levelUp') || p.building.level < RUN.maxLevel),
           );
         case 'buildingThenPlot':
+          if (hasCustom(card, 'duplicate_building')) {
+            return (
+              plots.some((p, i) => p.unlocked && p.building !== null && i !== THRONE_PLOT) &&
+              plots.some((p, i) => p.unlocked && p.building === null && i !== THRONE_PLOT)
+            );
+          }
           return (
             plots.some((p, i) => p.building !== null && i !== THRONE_PLOT) &&
             plots.filter((p) => p.unlocked).length >= 2
@@ -113,6 +161,7 @@ export function checkPlay(
   card: CardDef,
   target: PlayTarget,
   content: Content = CONTENT,
+  maxStacks: number = RUN.maxEnchantStacks,
 ): IllegalReason | null {
   if (card.kind === 'throne') return 'badTarget';
   const count = targetCount(card);
@@ -120,12 +169,12 @@ export function checkPlay(
     if (target.kind !== 'none') return 'badTarget';
   } else if (count === 2) {
     if (target.kind !== 'two') return 'badTarget';
-    if (!validPlot(target.first) || !validPlot(target.second)) return 'badTarget';
+    if (!validPlotOn(plots, target.first) || !validPlotOn(plots, target.second)) return 'badTarget';
   } else {
     if (target.kind !== 'plot') return 'badTarget';
-    if (!validPlot(target.plot)) return 'badTarget';
+    if (!validPlotOn(plots, target.plot)) return 'badTarget';
   }
-  if (!hasAnyTarget(plots, card, content)) return 'noTarget';
+  if (!hasAnyTarget(plots, card, content, maxStacks)) return 'noTarget';
 
   if (target.kind === 'plot') {
     const plot = target.plot;
@@ -149,7 +198,7 @@ export function checkPlay(
       if (!card.targets.includes(kindOf(p.building, content))) {
         return plot === THRONE_PLOT ? 'throne' : 'wrongKind';
       }
-      return stacksOf(p.building) >= RUN.maxEnchantStacks ? 'stacksFull' : null;
+      return stacksOf(p.building) >= maxStacks ? 'stacksFull' : null;
     }
     if (plot === THRONE_PLOT) return 'throne';
     if (p.building === null) return null;
@@ -158,6 +207,7 @@ export function checkPlay(
   }
   if (target.kind === 'two') {
     const { first, second } = target;
+    if (card.kind === 'tome' && hasCustom(card, 'duplicate_building')) return duplicateIllegal(plots, first, second);
     const anyBuilding = card.kind === 'tome' && card.target === 'buildingThenBuilding';
     if (!anyBuilding && first === THRONE_PLOT) return 'throne';
     if (!plots[first]!.unlocked) return 'locked';
@@ -185,25 +235,26 @@ export function checkTargetStep(
   chosen: readonly number[],
   plot: number,
   content: Content = CONTENT,
+  maxStacks: number = RUN.maxEnchantStacks,
 ): IllegalReason | null {
   const count = targetCount(card);
-  if (count === 0) return checkPlay(plots, card, { kind: 'none' }, content);
-  if (count === 1) return checkPlay(plots, card, { kind: 'plot', plot }, content);
+  if (count === 0) return checkPlay(plots, card, { kind: 'none' }, content, maxStacks);
+  if (count === 1) return checkPlay(plots, card, { kind: 'plot', plot }, content, maxStacks);
   const first = chosen[0];
-  if (first !== undefined) return checkPlay(plots, card, { kind: 'two', first, second: plot }, content);
-  for (let second = 0; second < COUNT; second++) {
+  if (first !== undefined) return checkPlay(plots, card, { kind: 'two', first, second: plot }, content, maxStacks);
+  for (let second = 0; second < plots.length; second++) {
     if (second === plot) continue;
-    if (checkPlay(plots, card, { kind: 'two', first: plot, second }, content) === null) return null;
+    if (checkPlay(plots, card, { kind: 'two', first: plot, second }, content, maxStacks) === null) return null;
   }
   // No second plot works: report why `plot` fails as a first pick ('badTarget' if it is
   // a fine first pick with nowhere to go).
-  return checkPlay(plots, card, { kind: 'two', first: plot, second: plot }, content);
+  return checkPlay(plots, card, { kind: 'two', first: plot, second: plot }, content, maxStacks);
 }
 
 const cloneBuilding = (b: BuildingState | null): BuildingState | null =>
   b ? { ...b, enchants: b.enchants.map((e) => ({ ...e })), permanent: { ...b.permanent } } : null;
 
-const clonePlots = (plots: readonly PlotState[]): PlotState[] =>
+export const clonePlots = (plots: readonly PlotState[]): PlotState[] =>
   plots.map((p) => ({ unlocked: p.unlocked, building: cloneBuilding(p.building) }));
 
 export function placeBuilding(
@@ -262,17 +313,22 @@ export function sacrificeBuilding(plots: readonly PlotState[], plot: number): Pl
   return next;
 }
 
-/** Chép mọi stack Bùa từ `from` sang `to` theo thứ tự gắn, dừng khi `to` đủ `maxStacks`. */
+/**
+ * Chép mọi stack Bùa từ `from` sang `to` theo thứ tự gắn, dừng khi `to` đủ `maxStacks`.
+ * `accepts(cardId)` (nếu có) loại các Bùa mà công trình đích không được phép gắn (§4.3).
+ */
 export function copyEnchants(
   plots: readonly PlotState[],
   from: number,
   to: number,
   maxStacks: number,
+  accepts: (cardId: CardId) => boolean = () => true,
 ): PlotState[] {
   const source = plots[from]?.building;
   let next = clonePlots(plots);
   if (!source) return next;
   for (const entry of source.enchants) {
+    if (!accepts(entry.cardId)) continue;
     for (let i = 0; i < entry.stacks; i++) {
       const target = next[to]!.building;
       if (target === null || stacksOf(target) >= maxStacks) return next;

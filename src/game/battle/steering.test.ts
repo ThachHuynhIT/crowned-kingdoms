@@ -251,3 +251,75 @@ describe('separationPush between teams', () => {
     expect([outX[0]! + 0, outX[1]! + 0]).toEqual([-3, 3]);
   });
 });
+
+describe('separationPush pass-through team (spec 06/11/2026, D)', () => {
+  const withPass = (list: readonly Body[], passTeam: number | undefined): [number, number][] => {
+    const outX = new Float64Array(list.length);
+    const outY = new Float64Array(list.length);
+    separationPush({ ...bodies(list), passTeam }, 10, outX, outY, 0.2);
+    return list.map((_, i) => [outX[i]! + 0, outY[i]! + 0]);
+  };
+  // A radius-12 structure of team 0 at x 0 and a radius-4 unit 6 px east: overlap 10.
+  const building = { x: 0, r: 12, fixed: true, team: 0 };
+
+  it('lets a unit of the pass team walk through a structure of the same team', () => {
+    expect(withPass([building, { x: 6, r: 4, team: 0 }], 0)).toEqual([[0, 0], [0, 0]]);
+  });
+
+  it('still pushes a foe out of that structure', () => {
+    expect(withPass([building, { x: 6, r: 4, team: 1 }], 0)).toEqual([[0, 0], [10, 0]]);
+  });
+
+  it('gives no passage to a team that is not the pass team, even past its own structure', () => {
+    expect(withPass([{ ...building, team: 1 }, { x: 6, r: 4, team: 1 }], 0)).toEqual([[0, 0], [10, 0]]);
+  });
+
+  it('keeps the old push without a pass team', () => {
+    expect(withPass([building, { x: 6, r: 4, team: 0 }], undefined)).toEqual([[0, 0], [10, 0]]);
+  });
+});
+
+describe('separationPush: a structure is a square footprint (2026-11-09)', () => {
+  it('pushes a unit off a corner of the square, where a circle of the same radius would not reach', () => {
+    const [dx, dy] = push([
+      { x: 0, r: 12, fixed: true },
+      { x: 13, y: 13, r: 4 },
+    ])[1]!;
+    const out = 4 - Math.sqrt(2); // closest point (12, 12)
+    expect(dx).toBeCloseTo(out / Math.sqrt(2), 9);
+    expect(dy).toBeCloseTo(out / Math.sqrt(2), 9);
+  });
+
+  it('pushes a unit inside the square out along the axis of least overlap', () => {
+    expect(
+      push([
+        { x: 0, r: 12, fixed: true },
+        { x: 10, y: 5, r: 4 },
+      ]),
+    ).toEqual([
+      [0, 0],
+      [6, 0],
+    ]);
+    expect(
+      push([
+        { x: 0, r: 12, fixed: true },
+        { x: -3, y: -11, r: 4 },
+      ]),
+    ).toEqual([
+      [0, 0],
+      [0, -5],
+    ]);
+  });
+
+  it('leaves a unit just outside a side alone', () => {
+    expect(
+      push([
+        { x: 0, r: 12, fixed: true },
+        { x: 5, y: 16, r: 4 },
+      ]),
+    ).toEqual([
+      [0, 0],
+      [0, 0],
+    ]);
+  });
+});

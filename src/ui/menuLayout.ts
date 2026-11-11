@@ -2,6 +2,27 @@ import type { Point, Size } from './hud/layout';
 
 /** Main menu buttons (spec §10.2). */
 export const MENU_BUTTON = { w: 200, h: 52, gap: 12 } as const;
+export type MenuItemId = 'continue' | 'newRun' | 'saves' | 'crowns' | 'settings' | 'help';
+
+export interface MenuItem {
+  readonly id: MenuItemId;
+  readonly label: string;
+  /** Hidden until the feature exists. */
+  readonly visible: boolean;
+}
+
+/** The §10.2 buttons, top to bottom. "Tiếp tục" is listed always and enabled once a saved run loads. */
+export const MENU_ITEMS: readonly MenuItem[] = [
+  { id: 'continue', label: 'Tiếp tục', visible: true },
+  { id: 'newRun', label: 'Ván mới', visible: true },
+  { id: 'saves', label: 'Tải ván', visible: true },
+  { id: 'crowns', label: 'Vương Miện', visible: true },
+  { id: 'settings', label: 'Cài đặt', visible: true },
+  { id: 'help', label: 'Trợ giúp', visible: true },
+];
+
+export const visibleMenuItems = (): readonly MenuItem[] => MENU_ITEMS.filter((m) => m.visible);
+
 /** Height kept free at the bottom for the version footer. */
 export const MENU_FOOTER_H = 28;
 

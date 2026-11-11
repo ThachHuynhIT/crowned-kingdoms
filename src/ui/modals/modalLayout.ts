@@ -22,53 +22,192 @@ export const centredPanel = (screen: Size, w: number, h: number): Rect => {
 };
 
 export interface RewardLayout {
+  /** The area the picker takes (headings, cards, reroll line and Nhận), padded by `inset`. */
   panel: Rect;
+  /** Big heading ("CHIẾN THẮNG"). */
   title: Rect;
-  /** Card slots at rest; a selected card lifts 12 px into the gap above. */
+  /** Second heading ("CHỌN PHẦN THƯỞNG"). */
+  subtitle: Rect;
+  /** Clips the card grid (including the 12 px a selected card lifts); taller grids scroll inside it. */
+  viewport: Rect;
+  /** Card slots at rest, scrolled by the `scroll` argument; a selected card lifts 12 px into the gap above. */
   cards: readonly Rect[];
-  skip: Rect;
+  /** The disabled "ĐỔI THƯỞNG" line under the cards. */
+  reroll: Rect;
   take: Rect;
+  /** How far the cards can scroll (0 when they all fit). */
+  scrollMax: number;
 }
 
-const TITLE_H = 28;
-const GAP_ABOVE_CARDS = 8;
-const GAP_BELOW_CARDS = 16;
+const TITLE_H = 32;
+const SUBTITLE_H = 26;
+const HEADING_GAP = 4;
+const GAP_ABOVE_CARDS = 12;
+const GAP_BELOW_CARDS = 12;
+const REROLL_GAP = 8;
 const BUTTON_GAP = 16;
 
-/** "Bỏ qua" / "Nhận" (the same size in both layouts). */
+/** "Nhận" (the same size in both layouts). */
 export const REWARD_BUTTON = { w: 150, h: 48 } as const;
-const REWARD_DESK = { card: { w: 150, h: 210, gap: 16 }, button: REWARD_BUTTON } as const;
-const REWARD_PHONE = { card: { w: 108, h: 152, gap: 5 }, button: REWARD_BUTTON } as const;
+/** Desktop reward cards (2026-11-10): a 192 px picture window, the 96×72 picture at scale 2. */
+const REWARD_DESK = { card: { w: 212, h: 280, gap: 24 }, reroll: { w: 240, h: 44 } } as const;
+const REWARD_PHONE = { card: { w: 108, h: 180, gap: 5 }, reroll: { w: 220, h: 44 } } as const;
 
-/** §10.6 reward picker: title, `count` cards in a row, then "Bỏ qua" and "Nhận". */
-export const rewardLayout = (screen: Size, inset: number, count = 3): RewardLayout => {
-  const spec = isDesktop(screen.w) ? REWARD_DESK : REWARD_PHONE;
-  const { card, button } = spec;
-  const n = Math.max(1, count);
-  const row = n * card.w + (n - 1) * card.gap;
-  const buttons = 2 * button.w + BUTTON_GAP;
-  const w = Math.max(row, buttons) + 2 * inset;
-  const h =
-    inset + TITLE_H + GAP_ABOVE_CARDS + CARD_LIFT + card.h + GAP_BELOW_CARDS + button.h + inset;
-  const panel = centredPanel(screen, w, h);
-  const title = { x: panel.x + inset, y: panel.y + inset, w: panel.w - 2 * inset, h: TITLE_H };
-  const cardY = title.y + TITLE_H + GAP_ABOVE_CARDS + CARD_LIFT;
+/**
+ * §10.6 reward picker: two headings, `count` vertical cards, the disabled reroll line, then
+ * "Nhận", centred as one block. Cards share one row, except on a phone with 4 or more cards,
+ * which wrap into rows of two; if the screen is still too short, the card grid scrolls inside
+ * `viewport` (`scroll` px, clamped) and `scrollMax` says how far.
+ */
+export const rewardLayout = (screen: Size, inset: number, count = 3, scroll = 0): RewardLayout => {
+  const desktop = isDesktop(screen.w);
+  const { card, reroll } = desktop ? REWARD_DESK : REWARD_PHONE;
+  const n = Math.max(0, count);
+  const slots = Math.max(1, n);
+  const cols = !desktop && slots >= 4 ? 2 : slots;
+  const rows = Math.ceil(slots / cols);
+  const row = cols * card.w + (cols - 1) * card.gap;
+  const grid = rows * card.h + (rows - 1) * card.gap;
+  const fixed = TITLE_H + HEADING_GAP + SUBTITLE_H + GAP_ABOVE_CARDS + CARD_LIFT + GAP_BELOW_CARDS + reroll.h + REROLL_GAP + REWARD_BUTTON.h;
+  const room = screen.h - 2 * MARGIN - 2 * inset - fixed;
+  const visible = Math.max(card.h, Math.min(grid, room));
+  const scrollMax = Math.max(0, grid - visible);
+  const at = Math.max(0, Math.min(scroll, scrollMax));
+  const w = Math.max(row, reroll.w, REWARD_BUTTON.w) + 2 * inset;
+  const panel = centredPanel(screen, w, fixed + visible + 2 * inset);
+  const x = panel.x + inset;
+  const innerW = panel.w - 2 * inset;
+  const title = { x, y: panel.y + inset, w: innerW, h: TITLE_H };
+  const subtitle = { x, y: title.y + TITLE_H + HEADING_GAP, w: innerW, h: SUBTITLE_H };
+  const vy = subtitle.y + SUBTITLE_H + GAP_ABOVE_CARDS;
   const x0 = Math.round(panel.x + (panel.w - row) / 2);
+  const viewport = { x: x0, y: vy, w: row, h: CARD_LIFT + visible };
+  const cardTop = vy + CARD_LIFT;
   const cards = Array.from({ length: n }, (_, i) => ({
-    x: x0 + i * (card.w + card.gap),
-    y: cardY,
+    x: x0 + (i % cols) * (card.w + card.gap),
+    y: cardTop + Math.floor(i / cols) * (card.h + card.gap) - at,
     w: card.w,
     h: card.h,
   }));
-  const by = cardY + card.h + GAP_BELOW_CARDS;
-  const bx = Math.round(panel.x + (panel.w - buttons) / 2);
+  const ry = vy + viewport.h + GAP_BELOW_CARDS;
+  const centreX = (w: number): number => Math.round(panel.x + (panel.w - w) / 2);
   return {
     panel,
     title,
+    subtitle,
+    viewport,
     cards,
-    skip: { x: bx, y: by, w: button.w, h: button.h },
-    take: { x: bx + button.w + BUTTON_GAP, y: by, w: button.w, h: button.h },
+    reroll: { x: centreX(reroll.w), y: ry, w: reroll.w, h: reroll.h },
+    take: { x: centreX(REWARD_BUTTON.w), y: ry + reroll.h + REROLL_GAP, w: REWARD_BUTTON.w, h: REWARD_BUTTON.h },
+    scrollMax,
   };
+};
+
+/** Which reward cards lie fully inside the scrolling viewport (all of them when nothing scrolls). */
+export const visibleRewardCards = (l: RewardLayout): boolean[] =>
+  l.cards.map((r) => r.y >= l.viewport.y && r.y + r.h <= l.viewport.y + l.viewport.h);
+
+export interface CouncilLayout {
+  panel: Rect;
+  title: Rect;
+  /** The three decree cards: a row on desktop, a column on phones. */
+  choices: readonly Rect[];
+  /** Detail of the chosen decree and its extra step (plots, cards, deck). */
+  area: Rect;
+  /** "Ban hành". */
+  enact: Rect;
+}
+
+const COUNCIL_DESK = { choice: { w: 300, h: 120 }, gap: 12, area: 260 } as const;
+const COUNCIL_PHONE = { choice: { w: 355, h: 110 }, gap: 6, area: 260 } as const;
+const COUNCIL_TITLE_H = 36;
+/** "Ban hành", "Nhận" and "Từ chối". */
+export const COUNCIL_BUTTON = { w: 150, h: 48 } as const;
+
+/** Height of the header line of the council's detail area ("Chọn 3 ô khoá để mở …"). */
+export const COUNCIL_HEADER_H = 24;
+const COUNCIL_CELL = { size: 44, min: 36, gap: 2 } as const;
+
+/**
+ * Side of the plot cells of the council's unlock decree: a 44 px touch target whenever the detail
+ * area (`areaH`) has room for five rows under its header, down to 36 px on a very short screen.
+ */
+export const councilPlotSide = (areaH: number): number => {
+  const room = Math.floor((areaH - COUNCIL_HEADER_H - 4 - 4 * COUNCIL_CELL.gap) / 5);
+  return Math.max(COUNCIL_CELL.min, Math.min(COUNCIL_CELL.size, room));
+};
+
+/** §3.9 royal council: title, three decrees, the chosen decree's detail area, then "Ban hành". */
+export const councilLayout = (screen: Size, inset: number): CouncilLayout => {
+  const desktop = isDesktop(screen.w);
+  const spec = desktop ? COUNCIL_DESK : COUNCIL_PHONE;
+  const inner = desktop ? 3 * spec.choice.w + 2 * spec.gap : spec.choice.w;
+  const w = inner + 2 * inset;
+  const fixed = 2 * inset + COUNCIL_TITLE_H + 3 * GAP_ABOVE_CARDS + COUNCIL_BUTTON.h;
+  const room = screen.h - 2 * MARGIN - fixed; // what the choices and the detail area may share
+  // A short screen first squeezes the phone's stacked decree cards (down to 64), then the detail area.
+  let choiceH: number = spec.choice.h;
+  let areaH: number = spec.area;
+  const stackOf = (ch: number): number => (desktop ? ch : 3 * ch + 2 * spec.gap);
+  if (stackOf(choiceH) + areaH > room) {
+    if (!desktop) choiceH = Math.max(64, Math.min(choiceH, Math.floor((room - areaH - 2 * spec.gap) / 3)));
+    if (stackOf(choiceH) + areaH > room) areaH = Math.max(200, room - stackOf(choiceH));
+  }
+  const stack = stackOf(choiceH);
+  const h = fixed + stack + areaH;
+  const panel = centredPanel(screen, w, h);
+  const innerW = panel.w - 2 * inset;
+  const title = { x: panel.x + inset, y: panel.y + inset, w: innerW, h: COUNCIL_TITLE_H };
+  const y0 = title.y + COUNCIL_TITLE_H + GAP_ABOVE_CARDS;
+  const choiceW = desktop
+    ? Math.min(spec.choice.w, Math.floor((innerW - 2 * spec.gap) / 3))
+    : Math.min(spec.choice.w, innerW);
+  const used = desktop ? 3 * choiceW + 2 * spec.gap : choiceW;
+  const x0 = Math.round(panel.x + (panel.w - used) / 2);
+  const choices = Array.from({ length: 3 }, (_, i) => ({
+    x: desktop ? x0 + i * (choiceW + spec.gap) : x0,
+    y: desktop ? y0 : y0 + i * (choiceH + spec.gap),
+    w: choiceW,
+    h: choiceH,
+  }));
+  const areaY = y0 + stack + GAP_ABOVE_CARDS;
+  const area = { x: panel.x + inset, y: areaY, w: innerW, h: areaH };
+  const enact = {
+    x: Math.round(panel.x + (panel.w - COUNCIL_BUTTON.w) / 2),
+    y: areaY + areaH + GAP_ABOVE_CARDS,
+    w: COUNCIL_BUTTON.w,
+    h: COUNCIL_BUTTON.h,
+  };
+  return { panel, title, choices, area, enact };
+};
+
+export interface QuestLayout {
+  panel: Rect;
+  title: Rect;
+  body: Rect;
+  accept: Rect;
+  decline: Rect;
+  /** "Xem cách làm": opens the quests tab of Help. */
+  help: Rect;
+}
+
+const QUEST = { w: 440, body: 230, titleH: 36 } as const;
+
+/** §3.10 quest offer: a title, the condition / deadline / reward text, then "Nhận" and "Từ chối". */
+export const questLayout = (screen: Size, inset: number): QuestLayout => {
+  const row = 2 * COUNCIL_BUTTON.w + BUTTON_GAP;
+  const w = Math.max(QUEST.w, row + 2 * inset);
+  const h = inset + QUEST.titleH + GAP_ABOVE_CARDS + QUEST.body + GAP_ABOVE_CARDS + COUNCIL_BUTTON.h + inset;
+  const panel = centredPanel(screen, w, h);
+  const innerW = panel.w - 2 * inset;
+  const title = { x: panel.x + inset, y: panel.y + inset, w: innerW, h: QUEST.titleH };
+  const body = { x: title.x, y: title.y + QUEST.titleH + GAP_ABOVE_CARDS, w: innerW, h: QUEST.body };
+  const by = body.y + QUEST.body + GAP_ABOVE_CARDS;
+  const bx = Math.round(panel.x + (panel.w - row) / 2);
+  const accept = { x: bx, y: by, w: COUNCIL_BUTTON.w, h: COUNCIL_BUTTON.h };
+  const decline = { x: bx + COUNCIL_BUTTON.w + BUTTON_GAP, y: by, w: COUNCIL_BUTTON.w, h: COUNCIL_BUTTON.h };
+  const help = { x: body.x + body.w - 150, y: body.y + body.h - 44, w: 150, h: 44 };
+  return { panel, title, body, accept, decline, help };
 };
 
 export interface ResultLayout {
@@ -124,4 +263,140 @@ export const resultLayout = (
     h: RESULT_BUTTON.h,
   }));
   return { panel, title, lines, buttons };
+};
+
+export interface CalendarModalLayout {
+  panel: Rect;
+  title: Rect;
+  close: Rect;
+  /** Every year, row-major (5 columns up to 15 years, 6 beyond). */
+  cells: readonly Rect[];
+  /** Endless pages (only with `pager`): ‹ and › (44×44) either side of the page label under the grid. */
+  pager: { prev: Rect; label: Rect; next: Rect } | null;
+}
+
+const PAGER_H = 44;
+
+/**
+ * Whole-run calendar (§10.4 "L"): one cell per year, 5 columns for up to 15 years, 6 beyond. With
+ * `pager` (Endless, spec 2026-11-09 §7) a row of page buttons follows the grid.
+ */
+export const calendarModalLayout = (screen: Size, inset: number, years = 15, pager = false): CalendarModalLayout => {
+  const desktop = isDesktop(screen.w);
+  const cols = years > 15 ? 6 : 5;
+  const rows = Math.ceil(years / cols);
+  const cell = desktop ? 72 : years > 15 ? 48 : 56;
+  const gap = desktop ? 8 : 4;
+  const gridW = cols * cell + (cols - 1) * gap;
+  const gridH = rows * cell + (rows - 1) * gap;
+  const w = gridW + 2 * inset;
+  const h = inset + CLOSE_BUTTON + GAP_ABOVE_CARDS + gridH + (pager ? GAP_ABOVE_CARDS + PAGER_H : 0) + inset;
+  const panel = centredPanel(screen, w, h);
+  const innerX = panel.x + inset;
+  const innerW = panel.w - 2 * inset;
+  const close = { x: innerX + innerW - CLOSE_BUTTON, y: panel.y + inset, w: CLOSE_BUTTON, h: CLOSE_BUTTON };
+  const title = {
+    x: innerX,
+    y: panel.y + inset,
+    w: Math.max(0, innerW - CLOSE_BUTTON - BUTTON_GAP),
+    h: CLOSE_BUTTON,
+  };
+  const y0 = panel.y + inset + CLOSE_BUTTON + GAP_ABOVE_CARDS;
+  const x0 = Math.round(panel.x + (panel.w - gridW) / 2);
+  const cells = Array.from({ length: years }, (_, i) => ({
+    x: x0 + (i % cols) * (cell + gap),
+    y: y0 + Math.floor(i / cols) * (cell + gap),
+    w: cell,
+    h: cell,
+  }));
+  const py = y0 + gridH + GAP_ABOVE_CARDS;
+  const pagerRects = pager
+    ? {
+        prev: { x: x0, y: py, w: PAGER_H, h: PAGER_H },
+        label: { x: x0 + PAGER_H + 8, y: py, w: Math.max(0, gridW - 2 * PAGER_H - 16), h: PAGER_H },
+        next: { x: x0 + gridW - PAGER_H, y: py, w: PAGER_H, h: PAGER_H },
+      }
+    : null;
+  return { panel, title, close, cells, pager: pagerRects };
+};
+
+export interface DeckModalLayout {
+  panel: Rect;
+  title: Rect;
+  close: Rect;
+  /** Filter tabs (All, buildings, enchantments, tomes), left to right. */
+  tabs: readonly Rect[];
+  /** The scrolling area: only cards fully inside it are shown. */
+  viewport: Rect;
+  cols: number;
+  /** Every card slot at its scrolled position (some are outside the viewport). */
+  cards: readonly Rect[];
+  scroll: number;
+  maxScroll: number;
+  /** Distance between two rows: the scroll step. */
+  rowStep: number;
+  /** Indices of the cards fully inside the viewport. */
+  visible: readonly number[];
+}
+
+/** Deck card on phones; desktop cards (2026-11-10) are bigger so the 96×72 picture fills the card's width. */
+export const DECK_CARD = { w: 96, h: 144 } as const;
+export const DECK_CARD_DESK = { w: 116, h: 180 } as const;
+export const deckCardSize = (screen: Size): { w: number; h: number } => (isDesktop(screen.w) ? DECK_CARD_DESK : DECK_CARD);
+export const DECK_TAB_COUNT = 4;
+const DECK_GAP = 8;
+const DECK_TAB_H = 44;
+
+/** Deck viewer (§10.4 "Bộ bài"): 6 columns on desktop, 3 on phones; `scroll` is clamped. */
+export const deckModalLayout = (
+  screen: Size,
+  inset: number,
+  count: number,
+  scroll: number,
+): DeckModalLayout => {
+  const cols = isDesktop(screen.w) ? 6 : 3;
+  const card = deckCardSize(screen);
+  const gridW = cols * card.w + (cols - 1) * DECK_GAP;
+  const panelW = gridW + 2 * inset;
+  const panelH = Math.min(640, screen.h - 2 * MARGIN);
+  const panel = centredPanel(screen, panelW, panelH);
+  const innerX = panel.x + inset;
+  const innerW = panel.w - 2 * inset;
+  const close = { x: innerX + innerW - CLOSE_BUTTON, y: panel.y + inset, w: CLOSE_BUTTON, h: CLOSE_BUTTON };
+  const title = {
+    x: innerX,
+    y: panel.y + inset,
+    w: Math.max(0, innerW - CLOSE_BUTTON - BUTTON_GAP),
+    h: CLOSE_BUTTON,
+  };
+  const tabY = panel.y + inset + CLOSE_BUTTON + DECK_GAP;
+  const tabW = Math.floor((innerW - (DECK_TAB_COUNT - 1) * DECK_GAP) / DECK_TAB_COUNT);
+  const tabs = Array.from({ length: DECK_TAB_COUNT }, (_, i) => ({
+    x: innerX + i * (tabW + DECK_GAP),
+    y: tabY,
+    w: tabW,
+    h: DECK_TAB_H,
+  }));
+  const vy = tabY + DECK_TAB_H + DECK_GAP;
+  const viewport = {
+    x: Math.round(panel.x + (panel.w - gridW) / 2),
+    y: vy,
+    w: gridW,
+    h: Math.max(0, panel.y + panel.h - inset - vy),
+  };
+  const rowStep = card.h + DECK_GAP;
+  const rows = Math.ceil(count / cols);
+  const contentH = rows === 0 ? 0 : rows * rowStep - DECK_GAP;
+  const maxScroll = Math.max(0, contentH - viewport.h);
+  const at = Math.max(0, Math.min(scroll, maxScroll));
+  const cards = Array.from({ length: count }, (_, i) => ({
+    x: viewport.x + (i % cols) * (card.w + DECK_GAP),
+    y: viewport.y + Math.floor(i / cols) * rowStep - at,
+    w: card.w,
+    h: card.h,
+  }));
+  const visible = cards.flatMap((c, i) =>
+    c.y >= viewport.y && c.y + c.h <= viewport.y + viewport.h ? [i] : [],
+  );
+  return { panel, title, close, tabs, viewport, cols, cards, scroll: at, maxScroll, rowStep, visible };
 };

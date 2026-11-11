@@ -1,11 +1,13 @@
+import { throneLandRange } from './boardGeometry';
 import { describe, expect, it } from 'vitest';
 import { RULES_G1 } from '../../data/rules';
-import { ENEMY_LEVEL_STAT } from '../../data/battle';
-import { STRUCT_HP } from '../../data/scaling';
+import { WHEAT } from '../../data/kings/wheat';
+import { ENEMY_LEVEL_STAT, ENEMY_STAT_MULT } from '../../data/battle';
+import { STRUCT_HP, TOWER_SHOT_DMG_MULT } from '../../data/scaling';
 import { composeArmy, armyBudget } from '../battle/compose';
 import type { ArmyPlan } from '../battle/types';
 import { CONTENT } from '../cards/registry';
-import { initialPlots } from './board';
+import { THRONE_PLOT, initialPlots } from './board';
 import { buildBattleSetup } from './battleSetup';
 import type { RunState } from './state';
 
@@ -17,13 +19,15 @@ const roster = CONTENT.raiderRoster().map((r) => ({
 
 function makeState(army: ArmyPlan | null): RunState {
   const plots = initialPlots();
-  plots[12]!.building = { uid: 0, cardId: 'wheat_throne', level: 1, enchants: [], placedYear: 1, permanent: {} };
-  plots[7]!.building = { uid: 3, cardId: 'wheat_militia', level: 1, enchants: [], placedYear: 1, permanent: {} };
-  plots[11]!.building = { uid: 5, cardId: 'neutral_archer_tower', level: 1, enchants: [], placedYear: 1, permanent: {} };
-  plots[13]!.building = { uid: 4, cardId: 'neutral_barracks', level: 1, enchants: [], placedYear: 2, permanent: {} };
+  plots[THRONE_PLOT]!.building = { uid: 0, cardId: 'wheat_throne', level: 1, enchants: [], placedYear: 1, permanent: {}, ageBonus: 0, counters: {}, movedYear: null };
+  plots[7]!.building = { uid: 3, cardId: 'wheat_militia', level: 1, enchants: [], placedYear: 1, permanent: {}, ageBonus: 0, counters: {}, movedYear: null };
+  plots[11]!.building = { uid: 5, cardId: 'neutral_archer_tower', level: 1, enchants: [], placedYear: 1, permanent: {}, ageBonus: 0, counters: {}, movedYear: null };
+  plots[13]!.building = { uid: 4, cardId: 'neutral_barracks', level: 1, enchants: [], placedYear: 2, permanent: {}, ageBonus: 0, counters: {}, movedYear: null };
   return {
     version: 1,
     rules: RULES_G1,
+    mode: 'normal',
+    endless: null,
     seed: 42,
     kingId: 'wheat',
     year: 1,
@@ -38,6 +42,8 @@ function makeState(army: ArmyPlan | null): RunState {
     autoFire: false,
     gold: 0,
     rerollsThisYear: 0,
+    paidRerollsThisYear: 0,
+    shopPurchasesThisYear: 0,
     purchasedPlots: 0,
     idleUids: [],
     enemyKings: [],
@@ -46,8 +52,20 @@ function makeState(army: ArmyPlan | null): RunState {
     played: true,
     army,
     offers: null,
-    rng: { draw: 1, reward: 2, calendar: 3 },
-    stats: { kills: 0, battlesWon: 0, battlesLost: 0, goldEarned: 0, conquered: 0 },
+    pendingOffers: [],
+    decrees: [],
+    quests: [],
+    offeredQuestIds: [],
+    freeRerollsLeft: 0,
+    interventionDmgPct: 0,
+    difficulty: 0,
+    perk: null,
+    unlockedCards: [],
+    freeMovesUsed: 0,
+    yearStartPendingDraw: false,
+    rng: { draw: 1, reward: 2, calendar: 3, council: 4, quest: 5, blessing: 6, shop: 7 },
+    stats: { kills: 0, battlesWon: 0, battlesLost: 0, goldEarned: 0, conquered: 0, bossesWon: 0, bossesDefeated: [], completedYears: 0 },
+    lastBattleDamage: null,
     nextUid: 6,
     won: null,
   };
@@ -84,9 +102,9 @@ describe('buildBattleSetup', () => {
     const t = setup.structures[1]!;
     expect(t.kind).toBe('tower');
     expect(t.hp).toBe(220);
-    expect(t.attack!.dmg).toBe(7);
-    expect(t.attack!.range).toBe(88);
-    expect(t.attack!.projectileSpeed).toBe(8);
+    expect(t.attack!.dmg).toBe(7 * TOWER_SHOT_DMG_MULT);
+    expect(t.attack!.range).toBe(132 * 3); // 88 × 1,5, ×3 (2026-11-09)
+    expect(t.attack!.projectileSpeed).toBe(16); // 8 × 2 (spec 06/11/2026)
     expect(t.attack!.slowPct).toBe(0);
     expect(t.targeting).toBe('closestToThrone');
     expect(t.spawn).toBeNull();
@@ -94,18 +112,18 @@ describe('buildBattleSetup', () => {
 
   it('maps slow on-hit for the scarecrow', () => {
     const s = makeState(army1);
-    s.plots[7]!.building = { uid: 9, cardId: 'wheat_scarecrow', level: 1, enchants: [], placedYear: 1, permanent: {} };
+    s.plots[7]!.building = { uid: 9, cardId: 'wheat_scarecrow', level: 1, enchants: [], placedYear: 1, permanent: {}, ageBonus: 0, counters: {}, movedYear: null };
     const t = buildBattleSetup(s, CONTENT).structures[0]!;
     expect(t.attack!.slowPct).toBe(20);
     expect(t.attack!.slowTicks).toBe(20);
   });
 
   it('maps the throne', () => {
-    expect(setup.throne.hp).toBe(300);
-    expect(setup.throne.plot).toBe(12);
+    expect(setup.throne.hp).toBe(WHEAT.throne.hp);
+    expect(setup.throne.plot).toBe(THRONE_PLOT);
     expect(setup.throne.uid).toBe(0);
     expect(setup.throne.kind).toBe('throne');
-    expect(setup.throne.attack!.range).toBe(72);
+    expect(setup.throne.attack!.range).toBeCloseTo(throneLandRange('normal'), 9); // the throne covers its whole land (owner 11/11/2026)
     expect(setup.throne.targeting).toBe('nearest');
   });
 
@@ -116,7 +134,7 @@ describe('buildBattleSetup', () => {
     expect(total).toBe(army1.waves.reduce((n, w) => n + w.units.length, 0));
   });
 
-  it('scales foe hp and dmg by level and statMult', () => {
+  it('scales foe hp and dmg by level, statMult and ENEMY_STAT_MULT', () => {
     const army: ArmyPlan = {
       attacker: 'raiders',
       budget: 10,
@@ -125,9 +143,9 @@ describe('buildBattleSetup', () => {
       waves: [{ spawnTick: 0, units: [{ unit: 'bandit', edge: 'N' }] }],
     };
     const s = buildBattleSetup(makeState(army), CONTENT).waves[0]!.spawns[0]!.stats;
-    expect(s.hp).toBeCloseTo(30 * ENEMY_LEVEL_STAT[1]! * 1.5, 6);
-    expect(s.hp).toBeCloseTo(65.25, 6);
-    expect(s.dmg).toBeCloseTo(5 * 1.45 * 1.5, 6);
+    expect(s.hp).toBeCloseTo(30 * ENEMY_LEVEL_STAT[1]! * 1.5 * ENEMY_STAT_MULT, 6);
+    expect(s.hp).toBeCloseTo(30 * 1.45 * 1.5 * 1.5, 6); // 30 × 1.45 × 1.5 × ENEMY_STAT_MULT 1.5 (pinned 11/11/2026 after the intervention nerf; no per-king enemy multiplier)
+    expect(s.dmg).toBeCloseTo(5 * 1.45 * 1.5 * ENEMY_STAT_MULT, 6);
   });
 
   it('is pure and deterministic', () => {
