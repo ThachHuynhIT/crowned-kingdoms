@@ -1,3 +1,4 @@
+import { logicalPointerDistance } from '../displayRuntime';
 import type Phaser from 'phaser';
 import type { KingId } from '../../data/types';
 import { describeCard } from '../../game/cards/describe';
@@ -47,7 +48,7 @@ export class KingPortraitView {
     this.card = scene.add.image(0, 0, '__DEFAULT').setOrigin(0, 0).setVisible(false);
     this.card.setInteractive({ useHandCursor: true });
     this.card.on('pointerup', (p: Phaser.Input.Pointer) => {
-      if (p.getDistance() <= TAP_PX) this.handler?.();
+      if (logicalPointerDistance(scene, p) <= TAP_PX) this.handler?.();
     });
     this.card.on('pointerover', () => {
       const content = this.tooltipContent();

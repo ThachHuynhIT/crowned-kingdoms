@@ -1,4 +1,5 @@
 import Phaser from 'phaser';
+import { bindSceneDisplay, logicalSize } from '../ui/displayRuntime';
 import type { EventBus } from '../core/events';
 import type { GameSpeed } from '../core/SimClock';
 import { DISCARD_MEMORY_ONLY_TEXT, SETTINGS_SAVE_FAILED_TEXT } from '../data/save';
@@ -84,6 +85,7 @@ export class SettingsScene extends Phaser.Scene {
   }
 
   create(data: SettingsLaunch): void {
+    bindSceneDisplay(this, () => this.layout());
     // Scene instances are reused; no state from the previous visit survives.
     this.launch = data;
     this.settings = {
@@ -144,7 +146,6 @@ export class SettingsScene extends Phaser.Scene {
     });
     this.close = this.button('Đóng', () => this.leave());
     this.input.keyboard?.on('keydown-ESC', this.onEscape, this);
-    this.scale.on(Phaser.Scale.Events.RESIZE, this.layout, this);
     this.events.once(Phaser.Scenes.Events.SHUTDOWN, this.teardown, this);
     this.refresh();
     void this.loadSaved(this.visit);
@@ -284,7 +285,7 @@ export class SettingsScene extends Phaser.Scene {
   }
 
   private layout(): void {
-    const l = settingsLayout({ w: this.scale.width, h: this.scale.height });
+    const l = settingsLayout(logicalSize(this));
     fitOverlay(this, this.overlay);
     this.panel.resize(l.panel.w, l.panel.h);
     this.panel.image.setPosition(l.panel.x, l.panel.y);
@@ -331,7 +332,6 @@ export class SettingsScene extends Phaser.Scene {
   private teardown(): void {
     this.visit += 1;
     this.input.keyboard?.off('keydown-ESC', this.onEscape, this);
-    this.scale.off(Phaser.Scale.Events.RESIZE, this.layout, this);
     this.message.destroy();
     this.tooltip.destroy();
     const data = this.launch;

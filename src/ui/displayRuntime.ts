@@ -17,7 +17,13 @@
  */
 import type Phaser from 'phaser';
 import type { Point, Size } from './hud/layout';
-import { makeDisplayMetrics, resolveDensity, toLogicalPoint, type DisplayMetrics } from './displayMetrics';
+import {
+  logicalPressDistance,
+  makeDisplayMetrics,
+  resolveDensity,
+  toLogicalPoint,
+  type DisplayMetrics,
+} from './displayMetrics';
 
 /** Rollout switch (plan Task 6 flips it): false = density 1 unless a DEV `?density=` override is given. */
 export const HIDPI_ENABLED = false;
@@ -252,3 +258,15 @@ export const bindSceneDisplay = (
 /** See `DisplayRuntime.setWorldTextZoom`. */
 export const setWorldTextZoom = (scene: Phaser.Scene, logicalZoom: number): void =>
   runtimeOf(scene)?.setWorldTextZoom(scene, logicalZoom);
+
+/**
+ * `pointer.getDistance()` in logical px: from the press point to the current point while down, or to the release
+ * point after it went up (Phaser's own semantics), each axis by its own ratio.
+ */
+export const logicalPointerDistance = (
+  scene: Phaser.Scene,
+  pointer: { x: number; y: number; downX: number; downY: number; upX: number; upY: number; isDown: boolean },
+): number => {
+  const now = pointer.isDown ? { x: pointer.x, y: pointer.y } : { x: pointer.upX, y: pointer.upY };
+  return logicalPressDistance(now, { x: pointer.downX, y: pointer.downY }, displayMetrics(scene));
+};

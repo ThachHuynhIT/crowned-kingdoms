@@ -1,3 +1,4 @@
+import { logicalPointer, logicalSize } from '../displayRuntime';
 import Phaser from 'phaser';
 import { HELP_TABS, type HelpTab } from '../../data/help';
 import { UI_PALETTE } from '../../data/uiPalette';
@@ -47,14 +48,17 @@ export class HelpModal {
   private dragFrom: { y: number; applied: number } | null = null;
 
   private readonly onWheel = (p: Phaser.Input.Pointer, _o: unknown, _dx: number, dy: number): void => {
-    if (this.showsText() && inside(this.lay.wide, p)) this.list.scrollBy(scrollLinesForWheel(dy));
+    const point = logicalPointer(this.scene, p);
+    if (this.showsText() && inside(this.lay.wide, point)) this.list.scrollBy(scrollLinesForWheel(dy));
   };
   private readonly onDown = (p: Phaser.Input.Pointer): void => {
-    this.dragFrom = this.showsText() && inside(this.lay.wide, p) ? { y: p.y, applied: 0 } : null;
+    const point = logicalPointer(this.scene, p);
+    this.dragFrom = this.showsText() && inside(this.lay.wide, point) ? { y: point.y, applied: 0 } : null;
   };
   private readonly onMove = (p: Phaser.Input.Pointer): void => {
     if (!this.dragFrom || !p.isDown) return;
-    const step = scrollLinesForDrag(0, p.y - this.dragFrom.y);
+    const point = logicalPointer(this.scene, p);
+    const step = scrollLinesForDrag(0, point.y - this.dragFrom.y);
     if (!step.dragging) return;
     this.list.scrollBy(step.lines - this.dragFrom.applied);
     this.dragFrom.applied = step.lines;
@@ -72,7 +76,7 @@ export class HelpModal {
   ) {
     this.catalog = buildHelpCatalog(content);
     this.state = initialHelpView(tab);
-    this.lay = helpLayout({ w: scene.scale.width, h: scene.scale.height });
+    this.lay = helpLayout(logicalSize(scene));
     this.overlay = createOverlay(scene);
     this.box = createPanel(scene, 'panel', 64, 64);
     this.box.image.setInteractive(); // a click on the panel never reaches anything below
@@ -177,7 +181,7 @@ export class HelpModal {
   }
 
   private refresh(): void {
-    const { width, height } = this.scene.scale;
+    const { w: width, h: height } = logicalSize(this.scene);
     const l = (this.lay = helpLayout({ w: width, h: height }));
     fitOverlay(this.scene, this.overlay);
     this.box.resize(l.panel.w, l.panel.h);

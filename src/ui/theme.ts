@@ -12,7 +12,7 @@ import {
   type Rect,
   type TooltipContent,
 } from './hud/layout';
-import { logicalSize } from './displayRuntime';
+import { logicalPointerDistance, logicalSize } from './displayRuntime';
 import { skinFrame, type UiSkin } from './skin';
 
 export { TOUCH_TARGET };
@@ -213,7 +213,7 @@ export const bindPress = (
       });
     })
     .on('pointermove', (pointer: Phaser.Input.Pointer) => {
-      if (down && pointer.getDistance() > DRAG_SLOP) stopTimer();
+      if (down && logicalPointerDistance(scene, pointer) > DRAG_SLOP) stopTimer();
     })
     .on('pointerup', (pointer: Phaser.Input.Pointer) => {
       stopTimer();
@@ -226,7 +226,7 @@ export const bindPress = (
         tooltip?.host.hide(owner);
         return;
       }
-      if (wasDown && pointer.getDistance() <= DRAG_SLOP) onClick();
+      if (wasDown && logicalPointerDistance(scene, pointer) <= DRAG_SLOP) onClick();
     })
     .once('destroy', cancel);
   return { cancel };

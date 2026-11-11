@@ -1,4 +1,5 @@
 import Phaser from 'phaser';
+import { bindSceneDisplay, logicalSize, logicalPointer } from '../ui/displayRuntime';
 import { toCss } from '../data/palette';
 import type { RunMode } from '../data/rules';
 import type { KingId, PerkId } from '../data/types';
@@ -120,6 +121,7 @@ export class KingSelectScene extends Phaser.Scene {
   }
 
   create(data: KingSelectData = {}): void {
+    bindSceneDisplay(this, () => this.layout());
     // Scene instances are reused: reset every per-visit field first.
     this.profile = getSession(this)?.meta() ?? defaultProfile();
     this.runMode = 'normal';
@@ -235,7 +237,6 @@ export class KingSelectScene extends Phaser.Scene {
     this.input.keyboard?.on(Phaser.Input.Keyboard.Events.ANY_KEY_DOWN, this.onKey, this);
     this.input.on(Phaser.Input.Events.POINTER_DOWN, this.onDown, this);
     this.input.on(Phaser.Input.Events.POINTER_UP, this.onUp, this);
-    this.scale.on(Phaser.Scale.Events.RESIZE, this.layout, this);
     this.events.once(Phaser.Scenes.Events.SHUTDOWN, this.teardown, this);
 
     this.refresh();
@@ -293,7 +294,7 @@ export class KingSelectScene extends Phaser.Scene {
 
   private select(index: number): void {
     if (index === this.selected || this.choices[index] === undefined) return;
-    const area = carouselScreen({ w: this.scale.width, h: this.scale.height }).area;
+    const area = carouselScreen(logicalSize(this)).area;
     const from = carouselSlots(area, this.selected, this.choices.length);
     this.selected = index;
     this.perk = null; // perks belong to one king
@@ -487,7 +488,7 @@ export class KingSelectScene extends Phaser.Scene {
   }
 
   private layout(): void {
-    const screen = { w: this.scale.width, h: this.scale.height };
+    const screen = logicalSize(this);
     const carousel = this.mode === 'carousel';
     const detail = !carousel;
     const cs = carouselScreen(screen);
@@ -581,13 +582,14 @@ export class KingSelectScene extends Phaser.Scene {
   // ---- input ---------------------------------------------------------------------------------
 
   private inArea(x: number, y: number): boolean {
-    const a = carouselScreen({ w: this.scale.width, h: this.scale.height }).area;
+    const a = carouselScreen(logicalSize(this)).area;
     return x >= a.x && x <= a.x + a.w && y >= a.y && y <= a.y + a.h;
   }
 
   private onDown(pointer: Phaser.Input.Pointer): void {
     if (this.unlocking || this.perkDialog) return;
-    if (this.mode === 'carousel' && this.inArea(pointer.x, pointer.y)) this.swipe = { id: pointer.id, x: pointer.x };
+    const point = logicalPointer(this, pointer);
+    if (this.mode === 'carousel' && this.inArea(point.x, point.y)) this.swipe = { id: pointer.id, x: point.x };
   }
 
   private onUp(pointer: Phaser.Input.Pointer): void {
@@ -595,7 +597,8 @@ export class KingSelectScene extends Phaser.Scene {
     if (!swipe || swipe.id !== pointer.id) return;
     this.swipe = null;
     if (this.mode !== 'carousel') return;
-    this.select(swipeTarget(this.selected, pointer.x - swipe.x, this.choices.length));
+    const point = logicalPointer(this, pointer);
+    this.select(swipeTarget(this.selected, point.x - swipe.x, this.choices.length));
   }
 
   private onKey(event: KeyboardEvent): void {
@@ -631,7 +634,6 @@ export class KingSelectScene extends Phaser.Scene {
     this.input.keyboard?.off(Phaser.Input.Keyboard.Events.ANY_KEY_DOWN, this.onKey, this);
     this.input.off(Phaser.Input.Events.POINTER_DOWN, this.onDown, this);
     this.input.off(Phaser.Input.Events.POINTER_UP, this.onUp, this);
-    this.scale.off(Phaser.Scale.Events.RESIZE, this.layout, this);
     for (const v of this.views) v.destroy();
     this.detailView.destroy();
     for (const c of this.grid) c.destroy();

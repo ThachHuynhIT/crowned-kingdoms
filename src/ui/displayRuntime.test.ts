@@ -53,7 +53,7 @@ const Phaser = (await import('phaser')).default as unknown as {
   Emitter: new () => { emit: (e: string, ...a: unknown[]) => void; count: (e: string) => number };
   GameObjects: { Text: new () => { style: { resolution: number }; destroy(): void } };
 };
-const { DisplayRuntime, worldTextBucket } = await import('./displayRuntime');
+const { DisplayRuntime, logicalPointerDistance, worldTextBucket } = await import('./displayRuntime');
 const { makeDisplayMetrics } = await import('./displayMetrics');
 
 const host = () => {
@@ -214,5 +214,19 @@ describe('DisplayRuntime', () => {
 describe('worldTextBucket', () => {
   it('is 1 up to zoom 1, then the zoom rounded up, capped at 3', () => {
     expect([0.8, 1, 1.0000000001, 1.2, 2, 2.01, 3, 4].map(worldTextBucket)).toEqual([1, 1, 1, 2, 2, 3, 3, 3]);
+  });
+});
+
+describe('logicalPointerDistance', () => {
+
+  const sceneAt = (d: number) =>
+    ({ registry: { get: () => new DisplayRuntime(host(), m(1280, 720, d)) }, scale: { width: 1, height: 1 } }) as never;
+  it('press_release_uses_up_position: down → current while down, down → up after release, in logical px', () => {
+    const s = sceneAt(2);
+    expect(logicalPointerDistance(s, { x: 16, y: 0, downX: 0, downY: 0, upX: 0, upY: 0, isDown: true })).toBe(8);
+    expect(logicalPointerDistance(s, { x: 999, y: 999, downX: 0, downY: 0, upX: 12, upY: 16, isDown: false })).toBe(10);
+  });
+  it('equals getDistance at D1', () => {
+    expect(logicalPointerDistance(sceneAt(1), { x: 6, y: 8, downX: 0, downY: 0, upX: 0, upY: 0, isDown: true })).toBe(10);
   });
 });
