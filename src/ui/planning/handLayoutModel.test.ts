@@ -118,6 +118,9 @@ describe('battle HUD on landscape phones (night 12/11/2026)', () => {
     { w: 844, h: 390 },
     { w: 915, h: 412 },
     { w: 932, h: 430 },
+    { w: 960, h: 540 },
+    { w: 1024, h: 600 },
+    { w: 1024, h: 768 },
     { w: 1280, h: 720 },
   ]) {
     it(`${screen.w}×${screen.h}: speed buttons, year, clock and panels do not overlap and stay on screen`, () => {
@@ -139,6 +142,9 @@ describe('planning HUD on landscape phones (night 12/11/2026)', () => {
     { w: 667, h: 375 },
     { w: 844, h: 390 },
     { w: 932, h: 430 },
+    { w: 960, h: 540 },
+    { w: 1024, h: 600 },
+    { w: 1024, h: 768 },
     { w: 1280, h: 720 },
   ]) {
     it(`${screen.w}×${screen.h}: top HUD, hint and actions do not overlap`, () => {
