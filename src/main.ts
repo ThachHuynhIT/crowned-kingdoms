@@ -65,7 +65,9 @@ const game = new Phaser.Game({
 if (import.meta.env.DEV) {
   (window as unknown as { game: Phaser.Game }).game = game;
   void import('./dev/registerPreview').then((m) => m.registerPreview(game));
-  void import('./dev/fpsOverlay').then((m) => m.startFpsOverlay());
+  void Promise.all([import('./dev/fpsOverlay'), import('./ui/displayRuntime')]).then(([fps, display]) =>
+    fps.startFpsOverlay(() => display.devDisplaySnapshot(game)),
+  );
 }
 
 void registerPwa();

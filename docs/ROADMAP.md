@@ -70,6 +70,10 @@ Tất cả là cảm nhận trên PC (desktop ≥ 768 px). Bố cục điện th
 20. ✔ P2 đồ trang trí sân (10): thùng, rơm, biển, xe lúa rải trong sân; rào và cổng chỉ ở kho asset.
 21. Kiến trúc cấp 2/3 (dừng theo chủ dự án 10/11): 55/74 công trình và Ngai đã vào game; còn Ánh Trăng, Du Mục, trung lập (`docs/art-review/levels/review.md`). Còn lại (P2): hoạt ảnh công trình và Ngai, bộ frame lính mở rộng (42), mặt nạ nền dual-grid (76), nền menu và màn thắng/thua (6), ảnh phát hành (5).
 
+## Giai đoạn `enhance-hd-graphics`
+
+1. ✔ HiDPI rendering (11/11/2026): canvas theo DPR thật, chữ rasterise theo mật độ, layout/input giữ logical, art giữ nearest; chưa xuất lại art (bước 2). Spec [`2026-11-11-hidpi-rendering-design.md`](superpowers/specs/2026-11-11-hidpi-rendering-design.md), plan [`2026-11-11-hidpi-rendering.md`](superpowers/plans/2026-11-11-hidpi-rendering.md). Đã kiểm ở DPR thật 1/1,25/2/3; D1 giống hệt từng pixel so với trước.
+
 ## Để sau: điện thoại (chỉ làm khi chủ dự án bảo)
 
 - Tải trang và vào map trên điện thoại quá lâu: cần tối ưu (gói atlas, nạp art theo vua, cache PWA).
