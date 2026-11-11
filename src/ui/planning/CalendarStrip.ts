@@ -5,7 +5,7 @@ import { PALETTE } from '../../data/palette';
 import { RUN } from '../../data/run';
 import { UI_PALETTE } from '../../data/uiPalette';
 import type { Content } from '../../game/cards/registry';
-import { SPRITES_KEY, iconFrame } from '../../render/atlas';
+import { SPRITES_KEY, frameDensityFactor, iconFrame } from '../../render/atlas';
 import { hudTexture } from '../../render/hudArtHd';
 import { displayMetrics } from '../displayRuntime';
 import type { Rect } from '../hud/layout';
@@ -134,7 +134,7 @@ export class CalendarCellView {
     const skull = (): void => {
       const tex = this.scene.textures;
       if (tex.exists(SPRITES_KEY) && tex.get(SPRITES_KEY).has(iconFrame('skull'))) {
-        this.add(this.scene.add.image(cx, cy, SPRITES_KEY, iconFrame('skull')).setOrigin(0.5));
+        this.add(this.scene.add.image(cx, cy, SPRITES_KEY, iconFrame('skull')).setOrigin(0.5).setScale(frameDensityFactor(iconFrame('skull'))));
       }
     };
     this.markers(cell, w);
@@ -183,7 +183,7 @@ export class CalendarCellView {
     let x = w - 3;
     for (const [on, icon] of [[cell.council, 'crown'], [cell.blessing === true, 'enchant']] as const) {
       if (!on || !atlas.has(iconFrame(icon))) continue;
-      this.add(this.scene.add.image(x, 3, SPRITES_KEY, iconFrame(icon)).setOrigin(1, 0).setScale(0.75));
+      this.add(this.scene.add.image(x, 3, SPRITES_KEY, iconFrame(icon)).setOrigin(1, 0).setScale(0.75 * frameDensityFactor(iconFrame(icon))));
       x -= 13;
     }
   }

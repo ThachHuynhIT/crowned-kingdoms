@@ -84,7 +84,11 @@ export interface WallImageSpec {
 
 const WALL_KINGS = ['wheat', 'stone', 'arcane', 'grove', 'tide', 'forge', 'clock', 'moon', 'nomad'] as const;
 
-/** Every approved image; keep in sync with the catalog (wallImages.test.ts checks it). */
+/**
+ * Every approved image; keep in sync with the catalog (wallImages.test.ts checks it). Not loaded since 11/11/2026:
+ * `MountainWallRenderer` is not drawn anywhere (the board uses `IsoWallRenderer`), so `PreloadScene` no longer queues
+ * these files under `wallImageKey`; queue them again before using the renderer. The files stay in the repo.
+ */
 export const WALL_IMAGES: readonly WallImageSpec[] = [
   ...WALL_KINGS.map(
     (king): WallImageSpec => ({ id: `terrain_mountain_wall_mid_${king}`, role: 'middle', king, w: 384, h: 192, baseline: 192 }),

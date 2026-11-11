@@ -3,7 +3,6 @@ import { ALL_KINGS } from '../data/rules';
 import { UI_PALETTE } from '../data/uiPalette';
 import { CONTENT } from '../game/cards/registry';
 import { buildSpritesTexture, buildUiTexture } from '../render/atlas';
-import { WALL_IMAGES, WALL_IMAGE_DIR, wallImageKey } from '../render/mountainWallAssets';
 import { imageArtLoads, useHdArt } from '../render/imageArt';
 import { PORTRAIT_ASSETS, PORTRAIT_DIR, portraitLargeTextureKey, portraitTextureKey } from '../render/portraitAssets';
 import type { UiFrame } from '../render/uiArt';
@@ -42,8 +41,6 @@ export class PreloadScene extends Phaser.Scene {
     // Image art (G3e ai-v1; its HD twins from ai-v1-hd at density ≥ 2); a file that fails to load leaves the generated
     // art in its place.
     for (const { key, url } of imageArtLoads(useHdArt(displayMetrics(this).density))) this.load.image(key, url);
-    // Mountain wall backdrop per king (G3e); a file that fails to load leaves the placeholder wall.
-    for (const s of WALL_IMAGES) this.load.image(wallImageKey(s.id), `${WALL_IMAGE_DIR}${s.id}.png`);
     // King portraits (G3e), 96×144 each; a file that fails to load leaves the generated placeholder portrait.
     for (const id of ALL_KINGS) {
       this.load.image(portraitTextureKey(id), `${PORTRAIT_DIR}${PORTRAIT_ASSETS[id].file}`);

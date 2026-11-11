@@ -7,7 +7,7 @@ import { CONTENT } from '../../game/cards/registry';
 import { geometryFor } from '../../game/run/boardGeometry';
 import type { GameEvents } from '../../game/events';
 import type { CouncilSelection, RunCommand, RunState } from '../../game/run/state';
-import { SPRITES_KEY, iconFrame } from '../../render/atlas';
+import { SPRITES_KEY, frameDensityFactor, iconFrame } from '../../render/atlas';
 import { CardView } from '../cards/CardView';
 import type { Rect } from '../hud/layout';
 import { addUiText, createButton, createPanel, frameBorder, type Button, type TooltipHost, type UiBox } from '../theme';
@@ -71,7 +71,7 @@ export class CouncilModal {
       box.image.on('pointerup', (p: Phaser.Input.Pointer) => {
         if (logicalPointerDistance(this.scene, p) <= 8) this.choose(i);
       });
-      const icon = scene.add.image(0, 0, SPRITES_KEY, iconFrame('crown')).setOrigin(0, 0).setScale(2);
+      const icon = scene.add.image(0, 0, SPRITES_KEY, iconFrame('crown')).setOrigin(0, 0).setScale(2 * frameDensityFactor(iconFrame('crown')));
       const name = addUiText(scene, 0, 0, '', 15).setFontStyle('bold');
       const text = addUiText(scene, 0, 0, '', 12);
       this.choices.push({ box, icon, name, text });

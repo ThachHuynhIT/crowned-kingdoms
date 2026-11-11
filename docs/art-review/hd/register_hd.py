@@ -34,6 +34,13 @@ IMAGE_ART_HD_WORLD):
   forest, portal  docs/art-review/iso-board/polish/make_polish_assets.py --density 4 <id> ...
   terrain    docs/art-review/iso-board/terrain/make_textures.py --density 4
   grass      docs/art-review/g3e/ai-v1/make_assets.py --density 4
+
+Atlas icons and battle effects (twice the pixels, packed into the `sprites` atlas and drawn at half the scale through
+imageFrameScale / frameDensityFactor; src/render/imageArt.ts IMAGE_ART_HD_ICONS, IMAGE_ART_HD_FX):
+  icons      docs/art-review/g3e/icons/make_assets.py --density 2 icon_troop icon_tower ... (the IMAGE_ICONS sources;
+             only the -16 twins are kept: the atlas uses no other size)
+  fx         docs/art-review/g5/fx/make_assets.py --density 2 boulder pulse shield stun spark
+  arrows     docs/art-review/g5/fx/make_arrows.py --density 2
 """
 import re
 import sys
@@ -102,6 +109,23 @@ def world_exporter(rel: str) -> str | None:
     return None
 
 
+ATLAS_ICONS = {'troop', 'tower', 'tome', 'throne', 'gold', 'level', 'enchant_stack', 'crown', 'boulder', 'skull',
+               'reroll', 'sell', 'lock', 'conquer'}
+
+
+def atlas_exporter(rel: str) -> str | None:
+    """Export command of an atlas icon or battle effect twin (twice the pixels, in the `sprites` atlas), or None."""
+    folder, _, name = rel.partition('/')
+    name = name.removesuffix('.png')
+    if folder == 'fx':
+        if name.startswith('fx_arrow_'):
+            return 'docs/art-review/g5/fx/make_arrows.py --density 2'
+        return f'docs/art-review/g5/fx/make_assets.py --density 2 {name.removeprefix("fx_")}'
+    if folder == 'icons' and name.removeprefix('icon_').removesuffix('-16') in ATLAS_ICONS:
+        return f'docs/art-review/g3e/icons/make_assets.py --density 2 {name.removesuffix("-16")}'
+    return None
+
+
 def exported_by(rel: str) -> str:
     return exporter(rel) + ('' if '/' not in rel else ', pinholes closed by docs/art-review/hd/fill_pinholes.py')
 
@@ -116,6 +140,12 @@ def hd_note(rel: str) -> str:
         return (f'HiDPI twin of {SD}{rel}: same approved source and pipeline at 4 art px per world unit, exactly 2x its '
                 f'twin (same footprint and anchor), by {world} (11/11/2026); loaded instead of the twin at display '
                 f'density >= 2 and {how}')
+    atlas = atlas_exporter(rel)
+    if atlas is not None:
+        return (f'HiDPI twin of {SD}{rel}: same approved source and pipeline at twice the pixels, exactly 2x its twin, '
+                f'by {atlas} (11/11/2026); loaded instead of the twin at display density >= 2, packed into the sprites '
+                f'atlas and drawn at half its scale (src/render/imageArt.ts IMAGE_ART_HD_ICONS / IMAGE_ART_HD_FX, '
+                f'src/render/atlas.ts frameDensityFactor), so its size on screen is unchanged')
     hud = hud_exporter(rel)
     if hud is not None:
         return (f'HiDPI twin of {SD}{rel}: same approved source and pipeline at twice the pixels, exactly 2x its twin, '
