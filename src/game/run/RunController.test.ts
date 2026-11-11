@@ -220,6 +220,11 @@ describe('RunController', () => {
     runBattle(bus, controller);
     expect(result!.damageBySource).toBeDefined();
     expect(controller.lastBattleDamage).toEqual(result!.damageBySource);
+    // Kept in the run state (saved), so a controller built from a reloaded state still has it.
+    expect(controller.state.lastBattleDamage).toEqual(result!.damageBySource);
+    const reloaded = new RunController(createGameBus(), CONTENT, structuredClone(controller.state));
+    expect(reloaded.lastBattleDamage).toEqual(result!.damageBySource);
+    reloaded.dispose();
   });
 
   it('keeps the speed chosen in one battle for the next battle and for a fresh controller', () => {

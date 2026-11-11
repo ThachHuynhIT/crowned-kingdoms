@@ -57,6 +57,17 @@ function settledEvents(before: RunState, next: RunState, events: RunEvent[]): Ru
 }
 
 /** Lệnh người chơi; lệnh thành công còn ghi tiến độ nhiệm vụ đang chạy (G3). */
+/** Sát thương theo uid, làm tròn về điểm nguyên, khoá tăng dần (JSON thuần, tất định); không có thì `{}`. */
+function wholeDamage(damage: Readonly<Record<number, number>> | undefined): Record<number, number> {
+  const out: Record<number, number> = {};
+  if (damage === undefined) return out;
+  const uids = Object.keys(damage)
+    .map(Number)
+    .sort((a, b) => a - b);
+  for (const uid of uids) out[uid] = Math.round(damage[uid]!);
+  return out;
+}
+
 export function applyCommand(input: RunState, cmd: RunCommand, content: Content): CommandResult {
   const result = applyBase(input, cmd, content);
   if ('error' in result) return result;
@@ -244,6 +255,7 @@ function applyBase(input: RunState, cmd: RunCommand, content: Content): CommandR
       const full = hasFullCalendar(state.rules);
       state.stats.kills += result.kills;
       state.stats.completedYears += 1;
+      state.lastBattleDamage = wholeDamage(result.damageBySource);
       events.push({ type: 'battleEnded', won: result.won });
       // Vàng trong trận trước, rồi vàng thắng trận (§5.5 bước 9); vàng không âm.
       state.gold = Math.max(0, state.gold + (result.goldDelta ?? 0));

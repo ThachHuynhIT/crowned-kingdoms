@@ -4,7 +4,7 @@ import type { RunMode, Rules } from '../../data/rules';
 import type { BossId, CardId, DecreeId, KingId, Level, PerkId, QuestId, StatKey } from '../../data/types';
 import type { ArmyPlan, BattleResult } from '../battle/types';
 
-export const RUN_SAVE_VERSION = 9;
+export const RUN_SAVE_VERSION = 10;
 
 export interface BuildingState {
   uid: number;
@@ -164,6 +164,11 @@ export interface RunState {
   yearStartPendingDraw: boolean;
   rng: Record<RngStream, number>;
   stats: RunStats;
+  /**
+   * Sát thương mỗi công trình (theo uid, điểm nguyên) trong trận gần nhất, từ `BattleResult.damageBySource`;
+   * `null` trước trận đầu. Ghi đè ở mỗi `battleResult`, được lưu nên còn sau khi tải lại (state 10).
+   */
+  lastBattleDamage: Record<number, number> | null;
   nextUid: number;
   won: boolean | null;
 }

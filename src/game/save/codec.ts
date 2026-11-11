@@ -458,6 +458,15 @@ function validate(raw: unknown, content: Content): asserts raw is RunState {
     'bossesDefeated',
   );
   ensure(arr(s.idleUids, 'idleUids').every(isInt), 'idleUids');
+  // Sát thương trận gần nhất: null, hoặc uid (số nguyên ≥ 0) → điểm nguyên ≥ 0. Uid có thể là công trình đã bán.
+  ensure(
+    s.lastBattleDamage === null ||
+      (isObject(s.lastBattleDamage) &&
+        Object.entries(s.lastBattleDamage).every(
+          ([uid, dmg]) => /^(0|[1-9]\d*)$/.test(uid) && isInt(dmg) && (dmg as number) >= 0,
+        )),
+    'lastBattleDamage',
+  );
 
   // Pha khớp với dữ liệu đi kèm.
   const phase = s.phase as RunPhase;

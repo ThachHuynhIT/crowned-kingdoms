@@ -8,7 +8,7 @@ import type { RunState } from '../run/state';
 import { newRun } from '../run/yearFlow';
 import { decodeRun } from './codec';
 
-const env = (state: unknown) => ({ formatVersion: 1, version: 9, contentHash: 1, state });
+const env = (state: unknown) => ({ formatVersion: 1, version: 10, contentHash: 1, state });
 const kind = (state: unknown): string => decodeRun(env(state), CONTENT).kind;
 
 /** An Endless run at `year` (planning), consistent with its modifier block. */

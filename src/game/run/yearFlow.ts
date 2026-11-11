@@ -155,6 +155,7 @@ export function newRun(
       bossesDefeated: [],
       completedYears: 0,
     },
+    lastBattleDamage: null,
     nextUid: 1,
     won: null,
   };

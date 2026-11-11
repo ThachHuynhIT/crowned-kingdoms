@@ -65,6 +65,7 @@ function makeState(army: ArmyPlan | null): RunState {
     yearStartPendingDraw: false,
     rng: { draw: 1, reward: 2, calendar: 3, council: 4, quest: 5, blessing: 6, shop: 7 },
     stats: { kills: 0, battlesWon: 0, battlesLost: 0, goldEarned: 0, conquered: 0, bossesWon: 0, bossesDefeated: [], completedYears: 0 },
+    lastBattleDamage: null,
     nextUid: 6,
     won: null,
   };

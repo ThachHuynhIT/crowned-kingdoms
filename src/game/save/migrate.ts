@@ -1,5 +1,5 @@
 /**
- * Nâng cấp RunState đã lưu lên phiên bản hiện tại (thuần, không sửa đầu vào): state 3 → 4 → 5 → 6 → 7 → 8 → 9.
+ * Nâng cấp RunState đã lưu lên phiên bản hiện tại (thuần, không sửa đầu vào): state 3 → 4 → 5 → 6 → 7 → 8 → 9 → 10.
  * State 1 và 2 chưa từng có định dạng trên đĩa; phiên bản khác được trả nguyên để `decodeRun` từ chối.
  */
 import { hashSeed } from '../../core/random';
@@ -102,6 +102,9 @@ const v7to8 = (raw: Loose): Loose => {
 /** State 8 → 9 (Thương nhân, spec 2026-11-10-merchant-design): loại offer mới, không thêm trường nào. */
 const v8to9 = (raw: Loose): Loose => ({ ...raw, version: 9 });
 
+/** State 9 → 10: sát thương mỗi công trình của trận gần nhất được lưu; save cũ chưa có số liệu nên là `null`. */
+const v9to10 = (raw: Loose): Loose => ({ ...raw, version: 10, lastBattleDamage: null });
+
 export function migrateRunState(raw: unknown): unknown {
   if (!isObject(raw)) return raw;
   let out = raw;
@@ -111,5 +114,6 @@ export function migrateRunState(raw: unknown): unknown {
   if (out.version === 6) out = v6to7(out);
   if (out.version === 7) out = v7to8(out);
   if (out.version === 8) out = v8to9(out);
+  if (out.version === 9) out = v9to10(out);
   return out;
 }
