@@ -520,7 +520,7 @@ export class PlanningHudScene extends Phaser.Scene {
     this.calendar.setCells(calendarCells(state, 5));
     this.scout.setPlan(state.army);
     if (this.inspected !== null) {
-      const model = buildingInfoModel(state, this.inspected, CONTENT);
+      const model = buildingInfoModel(state, this.inspected, CONTENT, undefined, this.controller.lastBattleDamage);
       if (model === null || state.phase !== 'planning') this.inspect(null, { x: 0, y: 0 });
       else this.info.setBuilding(model);
     }
@@ -1069,7 +1069,7 @@ export class PlanningHudScene extends Phaser.Scene {
     const model =
       plot === null || this.modalOpen()
         ? null
-        : buildingInfoModel(this.controller.state, plot, CONTENT);
+        : buildingInfoModel(this.controller.state, plot, CONTENT, undefined, this.controller.lastBattleDamage);
     if (plot === null || model === null) {
       this.inspected = null;
       this.info.hide();

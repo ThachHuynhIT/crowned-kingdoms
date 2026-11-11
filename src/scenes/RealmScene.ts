@@ -414,7 +414,7 @@ export class RealmScene extends Phaser.Scene {
       this.fx = new FxRenderer(this);
       this.board?.setBuildingsVisible(true);
     }
-    this.board?.render(state);
+    this.board?.render(state, this.controller.lastBattleDamage);
     const edges = new Set<Edge>();
     for (const wave of state.army?.waves ?? []) for (const u of wave.units) edges.add(u.edge);
     this.board?.setEdgeArrows([...edges].sort());

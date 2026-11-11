@@ -335,6 +335,28 @@ describe('deaths', () => {
     expect(w.kills).toBe(1);
   });
 
+  it('damage_by_source: ally damage to foes is summed per source uid, capped at the HP and shield left', () => {
+    const w = world([structure(6, { uid: 60, spawn: { stats: unitStats({ dmg: 7 }), count: 1 } })]);
+    const f = unit(w, TEAM_FOE, 300, 300, { hp: 10, dmg: 0 });
+    w.shield[f] = 2;
+    queueDamage(w, f, 5, DMG_PHYSICAL, 60, undefined, 3);
+    applyDamagePhase(w);
+    expect(w.damageBySource).toEqual({ 60: 5 });
+    // 7 more against 7 HP left (shield 0): all 7 count; then overkill counts only what was left.
+    queueDamage(w, f, 9, DMG_PHYSICAL, 60, undefined, 3);
+    applyDamagePhase(w);
+    expect(w.damageBySource).toEqual({ 60: 12 });
+    expect(w.interventionDamage).toBe(0);
+  });
+
+  it('damage_by_source ignores damage to our own side and from foes', () => {
+    const w = world([structure(6, { uid: 60, spawn: { stats: unitStats(), count: 1 } })]);
+    const f = unit(w, TEAM_FOE, 300, 300, { hp: 50, dmg: 0 });
+    queueDamage(w, 3, 4, DMG_PHYSICAL, -1, undefined, f);
+    applyDamagePhase(w);
+    expect(w.damageBySource).toEqual({});
+  });
+
   it('counts ally unit deaths in unitsLost, not structure deaths', () => {
     const w = world([structure(7, { spawn: { stats: unitStats(), count: 1 } })]);
     const ally = 2;

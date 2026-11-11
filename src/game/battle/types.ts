@@ -66,6 +66,10 @@ export interface BattleResult {
   throneHpLostPct: number;
   kills: number;
   killsBySource: Record<number, number>;
+  /** Damage our side dealt to foes per source building uid (towers and their units), whole points (owner 11/11/2026). */
+  damageBySource?: Record<number, number>;
+  /** Damage the intervention dealt to foes, whole points. */
+  interventionDamage?: number;
   interventionsUsed: number;
   unitsLost: number;
   capped: number;
@@ -223,6 +227,8 @@ export interface BattleSetup {
   autoFire?: boolean;
   /** Vua của người chơi: chọn hiệu ứng Can Thiệp riêng (`INTERVENTION_POWERS`); vắng = đá tảng gốc. */
   power?: KingId;
+  /** Apply `ALLY_ROLE_TUNING` to our units and towers (set for every run battle; bare test setups stay untuned). */
+  roleTuning?: boolean;
   /** Can Thiệp đã chốt cho trận (sắc lệnh + nhiệm vụ); vắng = số gốc §7.4. */
   intervention?: { dmgPct: number; radius: number; cooldownTicks: number };
   /** Mod trận của perk (dữ liệu thuần, không tham chiếu RunState); vắng khi perk không đổi gì trong trận. */

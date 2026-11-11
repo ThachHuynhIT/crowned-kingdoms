@@ -191,11 +191,17 @@ export const crownTally = (state: RunState, tally: RunEndTally): TallyLine[] => 
 
 const num = (n: number): string => String(Math.round(n * 100) / 100);
 
+/** Whole points with Vietnamese thousands dots: 12345 → "12.345". */
+export const groupThousands = (n: number): string => String(Math.max(0, Math.round(n))).replace(/\B(?=(\d{3})+(?!\d))/g, '.');
+
 /** Dòng chữ của model nhà (chỉ định dạng; số liệu đã hiệu dụng trong model). Không gồm khối chỉ số lính. */
 export const buildingModelLines = (m: BuildingInfoModel): readonly string[] => [
   m.title,
   m.stars.label,
   m.liveHp ? `Máu: ${m.liveHp.hp} / ${m.liveHp.maxHp}` : `Máu: ${num(m.hp)}`,
+  ...(m.lastBattleDamage !== undefined && m.lastBattleDamage !== null
+    ? [`Sát thương trận trước: ${groupThousands(m.lastBattleDamage)}`]
+    : []),
   ...m.description,
   ...(m.age ? [`Tuổi: ${m.age.years} năm${m.age.bonus > 0 ? ` (thêm ${m.age.bonus})` : ''}`] : []),
   ...m.enchants.map((e) => `Bùa: ${e}`),

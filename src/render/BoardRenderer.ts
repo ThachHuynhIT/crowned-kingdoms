@@ -1,4 +1,5 @@
 import type Phaser from 'phaser';
+import { plotDamageLabels } from '../ui/info/damageLabels';
 import { BATTLE } from '../data/battle';
 import { toCss } from '../data/palette';
 import { UI_PALETTE } from '../data/uiPalette';
@@ -84,6 +85,8 @@ export class BoardRenderer {
   private readonly marks: Phaser.GameObjects.Graphics;
   /** "4"-style gold price on every locked plot next to an open one. */
   private readonly prices: Phaser.GameObjects.Text[] = [];
+  /** Damage each building dealt in the last battle, under its plot (owner 11/11/2026). */
+  private readonly damage: Phaser.GameObjects.Text[] = [];
   private buildingsVisible = true;
 
   constructor(scene: Phaser.Scene, content: Content, private readonly mode: RunMode = 'normal') {
@@ -102,8 +105,11 @@ export class BoardRenderer {
     this.marks = scene.add.graphics().setDepth(MARK_DEPTH);
   }
 
-  /** Redraw plots and buildings from the run state. */
-  render(state: RunState): void {
+  /**
+   * Redraw plots and buildings from the run state. `damage` = damage per building uid in the last battle (from
+   * `RunController.lastBattleDamage`), drawn small under each building; null before the first battle.
+   */
+  render(state: RunState, damage: Readonly<Record<number, number>> | null = null): void {
     const throneId = this.throneCard(state);
     for (let p = 0; p < geometryFor(this.mode).plotCount; p++) {
       const plot = state.plots[p];
@@ -119,6 +125,30 @@ export class BoardRenderer {
     }
     this.drawMarks(state);
     this.drawPrices(state);
+    this.drawDamage(state, damage);
+  }
+
+  private drawDamage(state: RunState, damage: Readonly<Record<number, number>> | null): void {
+    const labels = plotDamageLabels(state, damage);
+    labels.forEach((l, i) => {
+      let text = this.damage[i];
+      if (!text) {
+        text = this.scene.add
+          .text(0, 0, '', { fontFamily: FONT_UI, fontSize: '10px', fontStyle: 'bold', color: toCss(UI_PALETTE.creamLight) })
+          .setStroke(toCss(UI_PALETTE.outline), 3)
+          .setOrigin(0.5, 1)
+          .setDepth(MARK_DEPTH + 1);
+        this.damage.push(text);
+      }
+      // Just above the diamond's front (south) corner, under the building's feet.
+      const c = iso(plotCenter(l.plot, this.mode));
+      text
+        .setText(l.text)
+        .setPosition(Math.round(c.x), Math.round(c.y + ISO.plotH / 2 - 2))
+        .setData('on', true)
+        .setVisible(this.buildingsVisible);
+    });
+    for (let i = labels.length; i < this.damage.length; i++) this.damage[i]!.setData('on', false).setVisible(false);
   }
 
   /** Hide buildings while the battle renders them as structures (UnitRenderer). */
@@ -127,6 +157,7 @@ export class BoardRenderer {
     this.buildings.forEach((b, p) => b?.setVisible(visible && this.cards[p] !== null));
     this.marks.setVisible(visible);
     for (const t of this.prices) t.setVisible(visible && t.getData('on') === true);
+    for (const t of this.damage) t.setVisible(visible && t.getData('on') === true);
   }
 
   /** Outline plots in UI_PALETTE.good / bad, picked ones in gold; an empty map clears them. */

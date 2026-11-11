@@ -3,7 +3,7 @@
  * BATTLE.entityCap thực thể + pool BATTLE.projectileCap đạn. Id = chỉ số mảng, cấp tăng dần
  * theo thứ tự tạo, không tái dùng. Không dùng Rng; mọi thứ tự theo plot / thứ tự setup.
  */
-import { BATTLE, INTERVENTION, INTERVENTION_POWERS, KING_TUNING, SPAWN_OFFSETS } from '../../data/battle';
+import { ALLY_ROLE_TUNING, BATTLE, INTERVENTION, INTERVENTION_POWERS, KING_TUNING, SPAWN_OFFSETS } from '../../data/battle';
 import { BUILDING_FOOT_OFFSET } from '../../data/boardGeometry';
 import type { RunMode } from '../../data/rules';
 import { plotCoords } from '../run/boardGeometry';
@@ -346,6 +346,13 @@ export class BattleWorld {
   capped = 0;
   interventionsUsed = 0;
   killsBySource: Record<number, number> = {};
+  /**
+   * Damage our side dealt to foes, per source uid (the building whose tower or units hit), counted up to the HP and
+   * shield the foe had left (no overkill). Statistics only: nothing in the battle reads it (owner 11/11/2026).
+   */
+  damageBySource: Record<number, number> = {};
+  /** Damage the intervention (boulder and its burn/poison) dealt to foes, counted the same way. */
+  interventionDamage = 0;
   inputs: BattleCommand[] = [];
 
   /** Số đợt địch đã xuất hiện. */
@@ -542,12 +549,23 @@ const setAttack = (w: BattleWorld, id: number, a: AttackStats | null): void => {
 
 /** Phe mình: máu và sát thương nhân `KING_TUNING` của vua (không đổi gì khi hệ số là 1). */
 const tuneAlly = (w: BattleWorld, id: number): void => {
-  if (w.allyHpMult !== 1) {
-    w.hp[id] = w.hp[id]! * w.allyHpMult;
-    w.maxHp[id] = w.maxHp[id]! * w.allyHpMult;
-    w.baseMaxHp[id] = w.baseMaxHp[id]! * w.allyHpMult;
+  const unit = w.kind[id] === KIND_UNIT && w.setup.roleTuning === true;
+  const hpMult = w.allyHpMult * (unit ? 1 + ALLY_ROLE_TUNING.unitHpPct / 100 : 1);
+  const dmgMult = roleDmgMult(w, id);
+  if (hpMult !== 1) {
+    w.hp[id] = w.hp[id]! * hpMult;
+    w.maxHp[id] = w.maxHp[id]! * hpMult;
+    w.baseMaxHp[id] = w.baseMaxHp[id]! * hpMult;
   }
-  if (w.allyDmgMult !== 1) w.dmg[id] = w.dmg[id]! * w.allyDmgMult;
+  if (dmgMult !== 1) w.dmg[id] = w.dmg[id]! * dmgMult;
+};
+
+/** Damage multiplier of ally `id`: the king's tuning times its role's (`ALLY_ROLE_TUNING`, 11/11/2026). */
+const roleDmgMult = (w: BattleWorld, id: number): number => {
+  if (w.setup.roleTuning !== true) return w.allyDmgMult;
+  const role =
+    w.kind[id] === KIND_UNIT ? ALLY_ROLE_TUNING.unitDmgPct : w.kind[id] === KIND_STRUCTURE ? ALLY_ROLE_TUNING.towerDmgPct : 0;
+  return w.allyDmgMult * (1 + role / 100);
 };
 
 const place = (w: BattleWorld, id: number, x: number, y: number): void => {
@@ -580,7 +598,7 @@ const addStructure = (w: BattleWorld, s: StructureSetup, isThrone: boolean): num
   if (s.pulse) {
     w.pulseEvery[id] = s.pulse.everyTicks;
     w.pulseRadius[id] = s.pulse.radius;
-    w.pulseDmg[id] = s.pulse.dmg * w.allyDmgMult;
+    w.pulseDmg[id] = s.pulse.dmg * roleDmgMult(w, id);
     w.pulseDmgType[id] = dmgTypeCode(s.pulse.dmgType);
     w.pulseStun[id] = s.pulse.stunTicks;
     w.pulseKnock[id] = s.pulse.knockback ?? 0;
@@ -869,3 +887,17 @@ export const drainEvents = (world: BattleWorld): BattleEvent[] => {
   world.events = [];
   return out;
 };
+
+/**
+ * Statistics (owner 11/11/2026): damage to a foe, up to the HP and shield it has left, credited to the source
+ * building (`uid` ≥ 0) or to the intervention (`BOULDER_UID`). Call before the damage is applied.
+ */
+export const creditDamage = (w: BattleWorld, victim: number, uid: number, dmg: number): void => {
+  if (w.team[victim] !== TEAM_FOE || dmg <= 0) return;
+  const dealt = Math.min(dmg, Math.max(0, w.hp[victim]!) + w.shield[victim]!);
+  if (uid >= 0) w.damageBySource[uid] = (w.damageBySource[uid] ?? 0) + dealt;
+  else if (uid === BOULDER_UID) w.interventionDamage += dealt;
+};
+
+/** The intervention's source uid (same value as `BOULDER_SOURCE` in intervention.ts). */
+export const BOULDER_UID = -2;

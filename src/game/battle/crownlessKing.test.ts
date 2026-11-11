@@ -1,5 +1,9 @@
 import { describe, expect, it } from 'vitest';
+import { INTERVENTION } from '../../data/battle';
 import { BOSS_RULES } from '../../data/bosses';
+
+/** Year-30 boulder base damage. */
+const Y30 = INTERVENTION.dmgBase + INTERVENTION.dmgPerYear * 29;
 import { SPEC_MOVE_SCALE } from '../../data/boardGeometry';
 import type { BossSetup } from './types';
 import { bossWorld, realBoss } from './bossKit';
@@ -186,29 +190,29 @@ describe('Đá Tảng Hoàng Gia on the Crownless King', () => {
   const scene = (over: { intervention?: { dmgPct: number; radius: number; cooldownTicks: number } }) =>
     bossWorld(3, [], undefined, realBoss(3), { year: 30, ...over });
 
-  it('hits for x3: year 30 base 330 -> 990', () => {
+  it('hits for x3 the year-30 base', () => {
     const w = scene({});
     const hp = w.hp[w.bossId]!;
     boulderAt(w);
-    expect(hp - w.hp[w.bossId]!).toBe(990);
+    expect(hp - w.hp[w.bossId]!).toBeCloseTo(Y30 * 3, 9);
   });
 
-  it('adds the decree and quest percentages before the x3: 330 x 1.7 x 3 = 1683', () => {
+  it('adds the decree and quest percentages before the x3: base x 1.7 x 3', () => {
     const w = scene({ intervention: { dmgPct: 70, radius: 24, cooldownTicks: 150 } });
     const hp = w.hp[w.bossId]!;
     boulderAt(w);
-    expect(hp - w.hp[w.bossId]!).toBeCloseTo(1683);
+    expect(hp - w.hp[w.bossId]!).toBeCloseTo(Y30 * 1.7 * 3, 9);
   });
 
   it('never multiplies the blast on ordinary foes or on the other bosses', () => {
     const w = scene({});
     const foe = addUnit(w, unitStats({ hp: 5000, speed: 0, dmg: 0, interval: 0 }), TEAM_FOE, w.x[w.bossId]! + 5, w.y[w.bossId]!, 0, 0, -1);
     boulderAt(w);
-    expect(5000 - w.hp[foe]!).toBe(330);
+    expect(5000 - w.hp[foe]!).toBeCloseTo(Y30, 9);
     const b2 = bossWorld(2, [], undefined, realBoss(2), { year: 30 });
     const hp2 = b2.hp[b2.bossId]!;
     boulderAt(b2);
-    expect(hp2 - b2.hp[b2.bossId]!).toBe(330);
+    expect(hp2 - b2.hp[b2.bossId]!).toBeCloseTo(Y30, 9);
   });
 
   it('does not push any boss back', () => {

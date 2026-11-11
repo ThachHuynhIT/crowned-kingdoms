@@ -32,6 +32,8 @@ export class RunController {
   private queue: Promise<void> = Promise.resolve();
   private disposed = false;
 
+  private lastDamage: Readonly<Record<number, number>> | null = null;
+
   constructor(
     private readonly bus: EventBus<GameEvents>,
     private readonly content: Content,
@@ -46,6 +48,7 @@ export class RunController {
       }),
       bus.on('battle:ended', ({ result }) => {
         if (this.active === null) return; // stray event: no battle in progress
+        this.lastDamage = { ...(result.damageBySource ?? {}) };
         this.active?.dispose();
         this.active = null;
         this.handle({ type: 'battleResult', result });
@@ -55,6 +58,14 @@ export class RunController {
 
   get state(): RunState {
     return this.current;
+  }
+
+  /**
+   * Damage per building uid in the last battle of this session (owner 11/11/2026: shown under buildings and in the
+   * info box); null before the first battle. In memory only: a reload starts without it.
+   */
+  get lastBattleDamage(): Readonly<Record<number, number>> | null {
+    return this.lastDamage;
   }
 
   get runner(): BattleRunner | null {

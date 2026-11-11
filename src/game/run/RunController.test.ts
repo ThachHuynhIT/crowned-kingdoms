@@ -211,6 +211,17 @@ describe('RunController', () => {
     expect(states.length).toBeGreaterThan(0);
   });
 
+  it('remembers the damage per building of the last battle (none before the first)', () => {
+    const { bus, controller } = setup();
+    expect(controller.lastBattleDamage).toBeNull();
+    let result: BattleResult | null = null;
+    bus.on('battle:ended', (p) => (result = p.result));
+    sellDown(bus, controller);
+    runBattle(bus, controller);
+    expect(result!.damageBySource).toBeDefined();
+    expect(controller.lastBattleDamage).toEqual(result!.damageBySource);
+  });
+
   it('keeps the speed chosen in one battle for the next battle and for a fresh controller', () => {
     const { bus, controller } = setup();
     sellDown(bus, controller);
