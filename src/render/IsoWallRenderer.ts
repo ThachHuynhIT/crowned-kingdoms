@@ -4,7 +4,7 @@ import type Phaser from 'phaser';
 import { project } from '../core/iso';
 import { BATTLE } from '../data/battle';
 import { PALETTE } from '../data/palette';
-import { WALL_FILE, imageArtKey } from './imageArt';
+import { WALL_FILE, imageArtScale, imageArtTexture } from './imageArt';
 import { pixelHash } from './pixel';
 
 /** How far the cliff runs past each side of the field (world px). */
@@ -44,9 +44,9 @@ export class IsoWallRenderer {
     const q = project({ x: BATTLE.field + ISO_WALL_EXTENT, y: geometryFor(mode).wallY });
     // a = the left end on screen, b = the right end (the line's direction depends on the projection)
     const [a, b] = p.x <= q.x ? [p, q] : [q, p];
-    const key = imageArtKey(WALL_FILE);
-    if (scene.textures.exists(key)) {
-      this.tileArt(scene, key, a, b);
+    const art = imageArtTexture((k) => scene.textures.exists(k), WALL_FILE);
+    if (art) {
+      this.tileArt(scene, art.key, imageArtScale(1, art.hd), a, b);
       return;
     }
     const h = ISO_WALL_HEIGHT;
@@ -74,22 +74,29 @@ export class IsoWallRenderer {
   /**
    * The approved cliff segments end to end along the projected wall line: each segment's foot runs at 2:1 and its
    * right foot is its bottom row, so a segment placed at screen x `sx` stands with its bottom-left corner on the line
-   * below x `sx + width`. Behind them the ground grass shows (spec 2026-11-08 §5; the forest art comes in Q5).
+   * below x `sx + width`. Behind them the ground grass shows (spec 2026-11-08 §5; the forest art comes in Q5). `scale`
+   * is 1 for the ai-v1 segment and 0.5 for its HD twin (twice the pixels): every length here is on screen at zoom 1.
    */
-  private tileArt(scene: Phaser.Scene, key: string, a: { x: number; y: number }, b: { x: number; y: number }): void {
+  private tileArt(
+    scene: Phaser.Scene,
+    key: string,
+    scale: number,
+    a: { x: number; y: number },
+    b: { x: number; y: number },
+  ): void {
     const frame = scene.textures.get(key).get();
-    const w = frame.width;
+    const w = frame.width * scale;
     const slope = (b.y - a.y) / (b.x - a.x);
     const lineY = (x: number): number => a.y + (x - a.x) * slope;
     // The art's foot runs down to the right; with the wall line running down to the left (the enemy comes
     // from the right, src/core/iso.ts) the segments are mirrored (a horizontal flip, never a rotation).
     const flip = slope < 0;
-    this.top = frame.height - w / 2; // face height above the foot at its higher end
+    this.top = frame.height * scale - w / 2; // face height above the foot at its higher end
     for (let sx = Math.min(a.x, b.x); sx < Math.max(a.x, b.x); sx += w) {
       // bottom row = the lower end of this segment's foot
       const bottom = Math.max(lineY(sx), lineY(sx + w));
       this.images.push(
-        scene.add.image(sx + w / 2, bottom, key).setOrigin(0.5, 1).setFlipX(flip).setDepth(DEPTH + 0.01),
+        scene.add.image(sx + w / 2, bottom, key).setOrigin(0.5, 1).setScale(scale).setFlipX(flip).setDepth(DEPTH + 0.01),
       );
     }
   }

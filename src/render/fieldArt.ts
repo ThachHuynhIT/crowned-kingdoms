@@ -17,6 +17,8 @@ import { PixelCanvas, pixelHash, upscale } from './pixel';
 export const FIELD_TERRAINS = ['grass', 'flowers', 'path', 'sand', 'water'] as const;
 
 const TILE = 16;
+/** World px per field tile: the grass art is one tile, so its width / FIELD_TILE is the field's art density. */
+export const FIELD_TILE = TILE;
 /** Data cells per side: the 768 px field in 16 px cells (spec 06/11/2026: 64 px plots). */
 const N = FIELD / TILE;
 const [GRASS, FLOWERS, PATH, SAND, WATER] = [0, 1, 2, 3, 4];
@@ -149,7 +151,10 @@ export const paintFieldTile = (terrain: number, mask: number, seed: number): Pix
  * The whole 768x768 field: 48x48 data cells blended through the dual grid. The 49x49 display
  * tiles are drawn half a tile up-left so the picture is cropped to the data grid.
  */
-/** Optional seamless ground textures (art px, density 2) that colour the water, sand, road and flower tiles. */
+/**
+ * Optional seamless ground textures that colour the water, sand, road and flower tiles, at the density of the grass
+ * art (2 art px per world unit, or 4 for the HD twins).
+ */
 export interface GroundTextures {
   readonly water?: PixelCanvas;
   readonly sand?: PixelCanvas;
@@ -196,9 +201,9 @@ export const paintField = (
       data[Math.min(N - 1, Math.max(0, cy)) * N + Math.min(N - 1, Math.max(0, cx))]!,
   };
   const dual = computeDualGrid(source, (t) => t);
-  // With grass art (2 art px per world unit) the whole field is painted at twice the density:
-  // the grass comes from the art, every other tile is the generated one enlarged 2×.
-  const k = grass && grass.length > 0 ? 2 : 1;
+  // With grass art (2 art px per world unit, 4 for the HD twins) the whole field is painted at that density:
+  // the grass comes from the art, every other tile is the generated one enlarged k×.
+  const k = grass && grass.length > 0 ? grass[0]!.width / TILE : 1;
   const out = new PixelCanvas(N * TILE * k, N * TILE * k);
   const terrains = [...dual.layers.keys()].sort((a, b) => a - b);
   for (const t of terrains) {
@@ -210,12 +215,12 @@ export const paintField = (
         const tileSeed = seed + tx * 7919 + ty * 104729;
         const ox = (tx * TILE - TILE / 2) * k;
         const oy = (ty * TILE - TILE / 2) * k;
-        const tex = k === 2 ? textureOf(t, textures) : undefined;
+        const tex = k > 1 ? textureOf(t, textures) : undefined;
         const tile =
-          k === 2 && grass && t === 0 && mask === 15
+          k > 1 && grass && t === 0 && mask === 15
             ? grass[Math.floor(pixelHash(tx, ty, seed) * grass.length)]!
-            : k === 2
-              ? upscale(paintFieldTile(t, mask, tileSeed), 2)
+            : k > 1
+              ? upscale(paintFieldTile(t, mask, tileSeed), k)
               : paintFieldTile(t, mask, tileSeed);
         out.blit(tex ? textureTile(tile, tex, ox, oy) : tile, ox, oy);
       }
@@ -231,16 +236,16 @@ export const paintField = (
  */
 const ROAD_TAIL_ROWS = Math.ceil((PORTAL.y + TILE - FIELD) / TILE);
 export const ROAD_TAIL = { x: ROAD_COLS[0] * TILE, y: FIELD, size: ROAD_TAIL_ROWS * TILE, rows: ROAD_TAIL_ROWS } as const;
-export const paintRoadTail = (k: 1 | 2, path?: PixelCanvas): PixelCanvas => {
+export const paintRoadTail = (k: number, path?: PixelCanvas): PixelCanvas => {
   const c = new PixelCanvas(ROAD_TAIL.size * k, ROAD_TAIL.size * k);
   for (let j = 0; j < ROAD_TAIL.rows; j++)
     for (let i = 0; i < 2; i++) {
       const t = paintFieldTile(PATH, 15, 9100 + i * 7 + j * 13);
-      const tile = k === 2 ? upscale(t, 2) : t;
+      const tile = k > 1 ? upscale(t, k) : t;
       // The road texture is read at the same world position as on the field, so the tail continues the road.
       const ox = (ROAD_TAIL.x + i * TILE) * k;
       const oy = (ROAD_TAIL.y + j * TILE) * k;
-      c.blit(k === 2 && path ? textureTile(tile, path, ox, oy) : tile, i * TILE * k, j * TILE * k);
+      c.blit(k > 1 && path ? textureTile(tile, path, ox, oy) : tile, i * TILE * k, j * TILE * k);
     }
   return c;
 };

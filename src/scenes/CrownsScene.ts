@@ -1,5 +1,5 @@
 import Phaser from 'phaser';
-import { bindSceneDisplay, logicalSize, logicalPointer } from '../ui/displayRuntime';
+import { bindSceneDisplay, displayMetrics, logicalSize, logicalPointer } from '../ui/displayRuntime';
 import { toCss } from '../data/palette';
 import type { CardId, KingId } from '../data/types';
 import { UI_PALETTE } from '../data/uiPalette';
@@ -7,6 +7,7 @@ import { describeCard } from '../game/cards/describe';
 import { CONTENT } from '../game/cards/registry';
 import { defaultProfile, type MetaProfile } from '../game/meta';
 import { addPixelTexture } from '../render/atlas';
+import { hudTexture } from '../render/hudArtHd';
 import { paintPortrait } from '../render/portraitArt';
 import { portraitTextureKey } from '../render/portraitAssets';
 import { CROWNS, clampScroll, crownsLayout, type CrownsLayout, type CrownsRow } from '../ui/crowns/crownsLayout';
@@ -153,7 +154,14 @@ export class CrownsScene extends Phaser.Scene {
     }
     const real = portraitTextureKey(target.id);
     if (this.textures.exists(real)) {
-      const chip = this.add.image(0, 0, real).setOrigin(0, 0).setCrop(FACE_CROP.x, FACE_CROP.y, FACE_CROP.w, FACE_CROP.h);
+      // At display density >= 2 the HD twin when it loaded: crop in its px (×2), drawn at half the scale (same face).
+      const tex = hudTexture(this.textures, real, displayMetrics(this).density);
+      const f = tex.factor;
+      const chip = this.add
+        .image(0, 0, tex.key)
+        .setOrigin(0, 0)
+        .setCrop(FACE_CROP.x * f, FACE_CROP.y * f, FACE_CROP.w * f, FACE_CROP.h * f)
+        .setScale(1 / f);
       return { chip, chipOffset: { x: -FACE_CROP.x, y: -FACE_CROP.y } };
     }
     const key = `portrait-${target.id}`;

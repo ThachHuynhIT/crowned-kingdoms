@@ -1,11 +1,15 @@
 """Cut the seamless ground textures (2026-11-06) and draw their review sheet.
 
     python docs/art-review/iso-board/terrain/make_textures.py [--publish]
+    python docs/art-review/iso-board/terrain/make_textures.py --density 4   # HiDPI twins -> ai-v1-hd/iso/terrain/
 
 Each 1024 px Codex source (`<id>/source.png`) is box-reduced 8x to a 128 px tile. 1024 / 8 is whole, so a seamless
 source stays seamless. The tile is written next to the source as `<id>/texture.png`. The sheet `sheet.png` shows
 each tile repeated 3x3 (any seam would show as a straight line) and a strip of river: water between two sand banks.
 `--publish` (only after the owner's approval) copies the tiles to public/assets/art/ai-v1/iso/terrain/.
+`--density 4` (11/11/2026, `.superpowers/art-hd-map.md`) writes only the HiDPI twins of the published tiles: the same
+sources box-reduced 4x to 256 px (4 art px per world unit) into public/assets/art/ai-v1-hd/iso/terrain/. 1024 / 4 is
+whole too, so they stay seamless (the wrap step is printed next to the inner step); no texture.png, no sheet.
 """
 import shutil
 import sys
@@ -16,16 +20,34 @@ from PIL import Image
 ROOT = Path(__file__).resolve().parents[4]
 D = Path(__file__).resolve().parent
 OUT = ROOT / 'public/assets/art/ai-v1/iso/terrain'
+OUT_HD = ROOT / 'public/assets/art/ai-v1-hd/iso/terrain'
 IDS = {'terrain_water': 'water', 'terrain_sand': 'sand', 'terrain_path': 'path', 'terrain_flowers': 'flowers'}
 FACTOR = 8
 
 
-def cut(ident: str) -> Image.Image:
+def reduced(ident: str, factor: int = FACTOR) -> Image.Image:
     src = Image.open(D / ident / 'source.png').convert('RGB')
     w, h = src.size
-    tile = src.resize((w // FACTOR, h // FACTOR), Image.Resampling.BOX)
+    assert w % factor == 0 and h % factor == 0, f'{ident}: {w}x{h} is not a whole multiple of {factor}'
+    return src.resize((w // factor, h // factor), Image.Resampling.BOX)
+
+
+def cut(ident: str) -> Image.Image:
+    tile = reduced(ident)
     tile.save(D / ident / 'texture.png')
     return tile
+
+
+def export_hd() -> None:
+    """HiDPI twins (factor FACTOR / 2) of the published tiles, straight into OUT_HD."""
+    OUT_HD.mkdir(parents=True, exist_ok=True)
+    for ident, name in IDS.items():
+        if not (OUT / f'{name}.png').exists():
+            continue
+        tile = reduced(ident, FACTOR // 2)
+        tile.save(OUT_HD / f'{name}.png')
+        wrap, inner = seam(tile)
+        print(f'{ident}: {tile.size} wrap step {wrap:.1f}, inner step {inner:.1f} (HiDPI)')
 
 
 def seam(tile: Image.Image) -> tuple[float, float]:
@@ -78,4 +100,9 @@ def main() -> None:
 
 
 if __name__ == '__main__':
-    main()
+    if '--density' in sys.argv:
+        if sys.argv[sys.argv.index('--density') + 1] != '4':
+            raise SystemExit('usage: make_textures.py [--publish] | --density 4')
+        export_hd()
+    else:
+        main()

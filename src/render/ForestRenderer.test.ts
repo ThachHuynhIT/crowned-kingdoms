@@ -17,7 +17,12 @@ class FakeImage {
   depth = 0;
   destroyed = false;
   constructor(readonly x: number, readonly y: number, readonly key: string) {}
+  scale = 1;
   setOrigin(): this {
+    return this;
+  }
+  setScale(s: number): this {
+    this.scale = s;
     return this;
   }
   setDepth(d: number): this {
@@ -56,6 +61,20 @@ describe('ForestRenderer (spec 2026-11-08 §6)', () => {
     r.destroy();
     r.destroy();
     expect(images.every((i) => i.destroyed)).toBe(true);
+  });
+
+  it('draws the HD twin (density >= 2) at half scale on the same raised foot', () => {
+    const sd = scene((key) => !key.startsWith('imgart-hd-'));
+    const hd = scene((key) => key.startsWith('imgart-hd-'));
+    new ForestRenderer(sd.s, 9, 150);
+    new ForestRenderer(hd.s, 9, 150);
+    expect(hd.images.length).toBe(sd.images.length);
+    sd.images.forEach((a, i) => {
+      const b = hd.images[i]!;
+      expect([b.x, b.y, b.depth]).toEqual([a.x, a.y, a.depth]);
+      expect([a.scale, b.scale]).toEqual([1, 0.5]);
+      expect(b.key).toBe(a.key.replace('imgart-', 'imgart-hd-'));
+    });
   });
 
   it('missing_png_is_safe: an approved object whose PNG did not load is not drawn', () => {

@@ -6,6 +6,8 @@ import { RUN } from '../../data/run';
 import { UI_PALETTE } from '../../data/uiPalette';
 import type { Content } from '../../game/cards/registry';
 import { SPRITES_KEY, iconFrame } from '../../render/atlas';
+import { hudTexture } from '../../render/hudArtHd';
+import { displayMetrics } from '../displayRuntime';
 import type { Rect } from '../hud/layout';
 import type { KingId } from '../../data/types';
 import type { CalendarCell } from '../realm/calendarModel';
@@ -163,7 +165,11 @@ export class CalendarCellView {
   /** The king's badge image when it has one and it loaded, else its colour square of `side` px. */
   private kingMark(king: KingId, x: number, y: number, side: number): Phaser.GameObjects.GameObject {
     const art = kingBadge(king, side);
-    if (art && this.scene.textures.exists(art.key)) return this.scene.add.image(x, y, art.key).setOrigin(0.5);
+    if (art && this.scene.textures.exists(art.key)) {
+      // The HD twin (twice the pixels, half the scale) at display density >= 2 when it loaded; same logical size.
+      const tex = hudTexture(this.scene.textures, art.key, displayMetrics(this.scene).density);
+      return this.scene.add.image(x, y, tex.key).setOrigin(0.5).setScale(1 / tex.factor);
+    }
     return this.scene.add
       .rectangle(x, y, side, side, PALETTE[this.content.enemyKing(king).color])
       .setStrokeStyle(2, UI_PALETTE.outline);

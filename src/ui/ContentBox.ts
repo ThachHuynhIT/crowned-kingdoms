@@ -8,6 +8,8 @@ const PAD = 6;
 const LINE_GAP = 2;
 const PART_GAP = 6;
 const ICON_SCALE = 2;
+/** Logical size of a leading line icon (a 16 px icon at scale 1, or its 32 px HD twin at 0.5). */
+const LEADING_ICON = 16;
 
 interface Row {
   top: number;
@@ -19,7 +21,7 @@ export interface ContentBoxOptions {
   fontSize?: number;
   /** Make the frame interactive so clicks on it never reach the map. */
   blocking?: boolean;
-  /** Optional native 16 px leading icon; missing textures leave the row unchanged. */
+  /** Optional leading icon texture (16 px, or its 32 px HD twin), shown 16 logical px wide; missing textures leave the row unchanged. */
   lineIcon?: (text: string) => string | null;
 }
 
@@ -142,8 +144,9 @@ export class ContentBox {
       const row: Row = { top: y, h: 0, items: [] };
       const iconKey = this.lineIcon?.(line.map((part) => part.text).join(''));
       const leadingIcon = iconKey && this.scene.textures.exists(iconKey)
-        ? this.scene.add.image(Math.round(x), Math.round(y), iconKey).setOrigin(0, 0).setScale(1)
+        ? this.scene.add.image(Math.round(x), Math.round(y), iconKey).setOrigin(0, 0)
         : null;
+      leadingIcon?.setScale(LEADING_ICON / Math.max(1, leadingIcon.width));
       if (leadingIcon) {
         this.add(leadingIcon);
         x += 20;

@@ -10,6 +10,7 @@ import type { UiFrame } from '../render/uiArt';
 import { UI_KIT_DIR, UI_KIT_FILES, kitTextureKey } from '../render/uiKit';
 import { CARD_ART_FILES } from '../ui/cards/cardImage';
 import { KING_BADGE_FILES } from '../ui/realm/kingBadge';
+import { queueHudArtHd } from '../render/hudArtHd';
 import { bindSceneDisplay, displayMetrics, logicalSize } from '../ui/displayRuntime';
 import { textStyle } from '../ui/theme';
 import { SCENES } from './keys';
@@ -52,6 +53,8 @@ export class PreloadScene extends Phaser.Scene {
     for (const f of CARD_ART_FILES) this.load.image(f.key, f.url);
     // King badges on the calendar (G3e, 32 + 16 px); a file that fails to load leaves the colour square.
     for (const f of KING_BADGE_FILES) this.load.image(f.key, f.url);
+    // HD twins of the HUD art (cards, portraits, king cards, menu, icons) on density ≥ 2 screens (11/11/2026).
+    queueHudArtHd(this.load, displayMetrics(this).density);
     // Real assets (atlases, audio) will be queued here with this.load.*.
   }
 

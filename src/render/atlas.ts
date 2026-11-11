@@ -10,7 +10,7 @@ import { KING_THEMES } from '../data/uiPalette';
 import type { Content } from '../game/cards/registry';
 import { paintBuilding, paintThrone } from './buildingArt';
 import { paintCardArt } from './cardArt';
-import { paintField, paintGroundTile, paintRoadTail, type GroundTextures } from './fieldArt';
+import { FIELD_TILE, paintField, paintGroundTile, paintRoadTail, type GroundTextures } from './fieldArt';
 import { groundPatch, isoGroundTile } from './groundArt';
 import { paintPortal } from './portalArt';
 import {
@@ -45,7 +45,7 @@ import {
 } from './imageArt';
 import { ART_POLICY } from './artPolicy';
 import { squareToIso } from './isoArt';
-import { PixelCanvas } from './pixel';
+import { PixelCanvas, upscale } from './pixel';
 import { paintPlot, type PlotState } from './plotArt';
 import {
   UI_DECOR_IDS,
@@ -408,17 +408,32 @@ export const withImageArtFrom = (
   return out;
 };
 
-/** The three grass PNGs as pixels, or null unless all loaded. */
+/**
+ * The three grass PNGs as pixels, all at one density: the HD twins (64 px, 4 art px per world unit) when all three
+ * loaded, else the ai-v1 tiles (32 px); null unless one full set loaded.
+ */
 export const grassArt = (textures: Phaser.Textures.TextureManager): PixelCanvas[] | null => {
-  const tiles = GRASS_FILES.map((f) => imageFile(textures, f));
-  return tiles.every((t) => t !== null) ? (tiles as PixelCanvas[]) : null;
+  for (const key of [imageArtHdKey, imageArtKey]) {
+    const tiles = GRASS_FILES.map((f) => textureArt(textures, key(f)));
+    if (tiles.every((t) => t !== null)) return tiles as PixelCanvas[];
+  }
+  return null;
 };
 
-/** The approved, loaded ground textures (a missing one keeps the generated look). */
-export const groundTextures = (textures: Phaser.Textures.TextureManager): GroundTextures => {
+/** Art px per world unit of the painted field and ground: the grass art's (2, or 4 for its HD twins), else 1. */
+export const groundDensity = (grass: readonly PixelCanvas[] | null): number =>
+  grass && grass.length > 0 ? grass[0]!.width / FIELD_TILE : 1;
+
+/**
+ * The approved, loaded ground textures at the field's art `density` (a missing one keeps the generated look): at 4 the
+ * HD twin, else the ai-v1 texture enlarged 2× (nearest); at 2 the ai-v1 texture only.
+ */
+export const groundTextures = (textures: Phaser.Textures.TextureManager, density = 2): GroundTextures => {
   const out: { -readonly [K in keyof GroundTextures]: GroundTextures[K] } = {};
   for (const t of GROUND_TEXTURES_APPROVED) {
-    const art = imageFile(textures, GROUND_TEXTURE_FILES[t]);
+    const file = GROUND_TEXTURE_FILES[t];
+    const sd = (): PixelCanvas | null => imageFile(textures, file);
+    const art = density === 4 ? (textureArt(textures, imageArtHdKey(file)) ?? (sd() && upscale(sd()!, 2))) : sd();
     if (art) out[t] = art;
   }
   return out;
@@ -488,25 +503,34 @@ export const ROAD_TAIL_KEY = 'field-road-tail';
 
 /** The road's last stretch to the portal, laid onto the iso ground (painted once, never removed). */
 export const ensureRoadTailTexture = (textures: Phaser.Textures.TextureManager): string => {
-  if (!textures.exists(ROAD_TAIL_KEY))
-    addPixelTexture(
-      textures,
-      ROAD_TAIL_KEY,
-      squareToIso(paintRoadTail(grassArt(textures) ? 2 : 1, groundTextures(textures).path)),
-    );
+  if (!textures.exists(ROAD_TAIL_KEY)) {
+    const k = groundDensity(grassArt(textures));
+    addPixelTexture(textures, ROAD_TAIL_KEY, squareToIso(paintRoadTail(k, groundTextures(textures, k).path)));
+  }
   return ROAD_TAIL_KEY;
 };
 
 /**
- * Display scale of the painted field (`field-<seed>`), an isometric diamond 2 × field wide at
- * zoom 1: 0.5 when it was painted from the 2×-density grass art.
+ * The frames of the painted field (`field-<seed>`) left to right: one `__BASE` frame, or `field_0`, `field_1` … when
+ * the diamond was wider than one texture may be (`ART_POLICY.maxAtlasSide`) and was split into strips.
+ */
+export const fieldTextureFrames = (textures: Phaser.Textures.TextureManager, key: string): readonly Phaser.Textures.Frame[] => {
+  const texture = textures.get(key);
+  const strips: Phaser.Textures.Frame[] = [];
+  for (let i = 0; texture.has(`field_${i}`); i++) strips.push(texture.get(`field_${i}`));
+  return strips.length > 0 ? strips : [texture.get()];
+};
+
+/**
+ * Display scale of the painted field (`field-<seed>`), an isometric diamond 2 × field wide at zoom 1: 1, 0.5 when it
+ * was painted from the 2×-density grass art, 0.25 from its HD twins.
  */
 export const fieldTextureScale = (textures: Phaser.Textures.TextureManager, key: string): number =>
-  textures.get(key).getSourceImage().width > 2 * BATTLE.field ? IMAGE_ART_SCALE : 1;
+  (2 * BATTLE.field) / fieldTextureFrames(textures, key).reduce((w, f) => w + f.width, 0);
 
-/** Display scale of the tiling ground: 0.5 when it is the grass art. */
+/** Display scale of the tiling ground: 1 / its art density (0.5 for the grass art, 0.25 for its HD twins). */
 export const groundTextureScale = (textures: Phaser.Textures.TextureManager): number =>
-  grassArt(textures) === null ? 1 : IMAGE_ART_SCALE;
+  1 / groundDensity(grassArt(textures));
 
 /**
  * Make sure the painted field for `seed` exists (painted only if missing) and return its
@@ -521,8 +545,23 @@ export const ensureFieldTexture = (
   const key = fieldKey(seed, mode);
   // The square field laid onto the isometric ground (spec 2026-11-06): a diamond, top corner = world (0, 0).
   if (!textures.exists(key)) {
-    const field = paintField(seed, grassArt(textures) ?? undefined, groundTextures(textures), mode);
-    addPixelTexture(textures, key, squareToIso(field));
+    const grass = grassArt(textures);
+    const field = paintField(seed, grass ?? undefined, groundTextures(textures, groundDensity(grass)), mode);
+    // At 4 art px per world unit (HD grass) the diamond is 6144 px wide: it goes up in strips of at most
+    // `ART_POLICY.maxAtlasSide`, one texture source and one frame (`field_<i>`) each.
+    const width = 2 * field.width;
+    const strips = Math.ceil(width / ART_POLICY.maxAtlasSide);
+    if (strips <= 1) {
+      addPixelTexture(textures, key, squareToIso(field));
+    } else {
+      const step = Math.ceil(width / strips);
+      const canvases = Array.from({ length: strips }, (_, i) =>
+        toCanvas(squareToIso(field, i * step, Math.min(width, (i + 1) * step))),
+      );
+      const texture = textures.create(key, canvases);
+      if (!texture) throw new Error(`Failed to create texture ${key}`);
+      canvases.forEach((c, i) => texture.add(`field_${i}`, i, 0, 0, c.width, c.height));
+    }
   }
   return key;
 };

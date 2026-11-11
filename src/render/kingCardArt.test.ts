@@ -1,7 +1,7 @@
 import { describe, expect, it } from 'vitest';
 import { ALL_KINGS } from '../data/rules';
 import { KING_THEMES } from '../data/uiPalette';
-import { KING_CARD_NATIVE, KING_CARD_WINDOW, LOCKED_SHADE, kingSuit, lockedShade, paintKingCard } from './kingCardArt';
+import { KING_CARD_NATIVE, KING_CARD_WINDOW, LOCKED_SHADE, kingCardDensity, kingSuit, lockedShade, paintKingCard } from './kingCardArt';
 import { PixelCanvas } from './pixel';
 
 const colorAt = (c: PixelCanvas, x: number, y: number): number => {
@@ -112,5 +112,46 @@ describe('king card from an approved picture (2026-11-09)', () => {
     expect(locked.data[i]).toBe(locked.data[i + 1]);
     expect(locked.data[i + 1]).toBe(locked.data[i + 2]);
     expect(paintKingCard('wheat', false, new PixelCanvas(10, 10)).data).toEqual(paintKingCard('wheat').data);
+  });
+});
+
+describe('paintKingCard over the HD background twin', () => {
+  /** A flat background of `w`×`h` with a distinct colour at every pixel row, opaque. */
+  const background = (w: number, h: number): PixelCanvas => {
+    const c = new PixelCanvas(w, h);
+    for (let y = 0; y < h; y++) c.fillRect(0, y, w, 1, 0x101010 + y);
+    return c;
+  };
+
+  it('paints a 132×192 card whose glyphs and window are the 66×96 ones at 2×2 px', () => {
+    const sd = paintKingCard('stone', false, background(66, 96));
+    const hdBg = background(132, 192);
+    const hd = paintKingCard('stone', false, hdBg);
+    expect([hd.width, hd.height]).toEqual([132, 192]);
+    expect(kingCardDensity(hdBg)).toBe(2);
+    expect(kingCardDensity(background(66, 96))).toBe(1);
+    expect(kingCardDensity(null)).toBe(1);
+    const t = KING_THEMES.stone;
+    for (const colour of [t.bgDark, t.bgMid]) {
+      const small = cells(sd, colour, 0, 0, 66, 96);
+      const big = cells(hd, colour, 0, 0, 132, 192);
+      const expected = new Set<string>();
+      for (const key of small) {
+        const [x, y] = key.split(',').map(Number) as [number, number];
+        for (const [dx, dy] of [[0, 0], [1, 0], [0, 1], [1, 1]]) expected.add(`${x * 2 + dx!},${y * 2 + dy!}`);
+      }
+      // Every SD mark pixel is a 2×2 block in the HD card (the background rows never use the theme colours).
+      for (const key of expected) expect(big.has(key), key).toBe(true);
+    }
+  });
+
+  it('keeps the background picture outside the marks', () => {
+    const hd = paintKingCard('wheat', false, background(132, 192));
+    // Right edge, middle height: no glyph or window there.
+    expect(colorAt(hd, 130, 100)).toBe(0x101010 + 100);
+  });
+
+  it('falls back to the painted 66×96 card for a background of any other size', () => {
+    expect(paintKingCard('wheat', false, background(100, 100)).width).toBe(66);
   });
 });

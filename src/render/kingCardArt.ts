@@ -82,29 +82,37 @@ export const lockedShade = (art: PixelCanvas): PixelCanvas => {
  * King card art; `locked` is the same card in dark greys (`lockedShade`; the scene draws the portrait, the padlock and
  * the unlock condition over it, owner 2026-11-10). With `background` (the
  * approved 66×96 picture of that king's card, 2026-11-09) the picture replaces the painted paper, smoke and frame;
- * the portrait window and the corner glyphs are still drawn over it, so their layout never changes.
+ * the portrait window and the corner glyphs are still drawn over it, so their layout never changes. A background of
+ * exactly twice that size (its 132×192 HD twin, 2026-11-11) gives a 132×192 card: the same glyphs and window, each card
+ * px drawn as 2×2 (`kingCardDensity` reads it back; draw it at half the usual scale).
  */
 export const paintKingCard = (king: KingId, locked = false, background: PixelCanvas | null = null): PixelCanvas => {
   const card = paintOpenCard(king, background);
   return locked ? lockedShade(card) : card;
 };
 
+/** Art px per card px of a card painted over `background`: 2 for the 132×192 HD twin, else 1. */
+export const kingCardDensity = (background: { width: number; height: number } | null): 1 | 2 =>
+  background !== null && background.width === W * 2 && background.height === H * 2 ? 2 : 1;
+
 const paintOpenCard = (king: KingId, background: PixelCanvas | null): PixelCanvas => {
   const t: KingTheme = KING_THEMES[king];
   const seed = hashSeed(king);
-  const c = new PixelCanvas(W, H);
-  if (background && background.width === W && background.height === H) {
+  const s = kingCardDensity(background);
+  if (background && background.width === W * s && background.height === H * s) {
+    const c = new PixelCanvas(W * s, H * s);
     const art = background;
     c.blit(art, 0, 0);
     // The glyphs sit on a patch of the picture's own paper (its centre, which the portrait covers anyway), so they
     // read even where the picture's ornament reaches into the corners.
-    const i = ((WIN.y + WIN.h / 2) * W + W / 2) * 4;
+    const i = ((WIN.y + WIN.h / 2) * s * W * s + (W / 2) * s) * 4;
     const paper = (art.data[i]! << 16) | (art.data[i + 1]! << 8) | art.data[i + 2]!;
-    c.fillRect(1, 1, 7, 16, paper);
-    c.fillRect(W - 8, H - 17, 7, 16, paper);
-    drawFaceMarks(c, king, t);
+    c.fillRect(s, s, 7 * s, 16 * s, paper);
+    c.fillRect((W - 8) * s, (H - 17) * s, 7 * s, 16 * s, paper);
+    drawFaceMarks(c, king, t, s);
     return c;
   }
+  const c = new PixelCanvas(W, H);
   c.fillRect(0, 0, W, H, t.panel);
 
   // Smoky edge: 2×2 blocks of light and shade that thin out towards the middle.
@@ -134,15 +142,15 @@ const paintOpenCard = (king: KingId, background: PixelCanvas | null): PixelCanva
   return c;
 };
 
-/** Portrait window (outline, then a flat fill the portrait is drawn over) and the corner glyphs. */
-const drawFaceMarks = (c: PixelCanvas, king: KingId, t: KingTheme): void => {
-  c.fillRect(WIN.x - 1, WIN.y - 1, WIN.w + 2, WIN.h + 2, t.bgDark);
-  c.fillRect(WIN.x, WIN.y, WIN.w, WIN.h, t.bgMid);
+/** Portrait window (outline, then a flat fill the portrait is drawn over) and the corner glyphs; `s` art px per card px. */
+const drawFaceMarks = (c: PixelCanvas, king: KingId, t: KingTheme, s = 1): void => {
+  c.fillRect((WIN.x - 1) * s, (WIN.y - 1) * s, (WIN.w + 2) * s, (WIN.h + 2) * s, t.bgDark);
+  c.fillRect(WIN.x * s, WIN.y * s, WIN.w * s, WIN.h * s, t.bgMid);
 
   // Corner marks: K over the suit top-left; their own upside-down bitmaps bottom-right.
   const suit = GLYPH_SUIT[kingSuit(king)];
-  blit(c, GLYPH_K, 2, 2, t.bgMid);
-  blit(c, suit, 2, 11, t.bgMid);
-  blit(c, upsideDown(GLYPH_K), W - 7, H - 2 - GLYPH_K.length, t.bgMid);
-  blit(c, upsideDown(suit), W - 7, H - 11 - suit.length, t.bgMid);
+  blit(c, GLYPH_K, 2 * s, 2 * s, t.bgMid, s);
+  blit(c, suit, 2 * s, 11 * s, t.bgMid, s);
+  blit(c, upsideDown(GLYPH_K), (W - 7) * s, (H - 2 - GLYPH_K.length) * s, t.bgMid, s);
+  blit(c, upsideDown(suit), (W - 7) * s, (H - 11 - suit.length) * s, t.bgMid, s);
 };

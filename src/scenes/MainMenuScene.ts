@@ -1,9 +1,10 @@
 import Phaser from 'phaser';
-import { bindSceneDisplay, logicalSize } from '../ui/displayRuntime';
+import { bindSceneDisplay, displayMetrics, logicalSize } from '../ui/displayRuntime';
 import { toCss } from '../data/palette';
 import { UI_PALETTE } from '../data/uiPalette';
 import type { RunState } from '../game/run/state';
 import { UI_KEY, addPixelTexture } from '../render/atlas';
+import { hudTexture } from '../render/hudArtHd';
 import { MENU_SKY_FILE, imageArtKey, menuImageLayers } from '../render/imageArt';
 import { HILL_LAYERS, MENU_SKY_H, menuPixelScale, paintHills, paintSky } from '../render/uiArt';
 import { resolveShortcut, shortcutFlags } from '../ui/input/shortcuts';
@@ -55,6 +56,9 @@ export class MainMenuScene extends Phaser.Scene {
   private pix = 2;
   private sky!: Phaser.GameObjects.TileSprite;
   private hills: Phaser.GameObjects.TileSprite[] = [];
+  /** Texture px per art px of the sky and of each hill strip: 2 for an HD twin (drawn at half the scale), else 1. */
+  private skyFactor = 1;
+  private hillFactors: number[] = [];
   /** Drift speed of each entry of `hills` (screen px per second). */
   private parallax: number[] = [];
   private fireflies: Phaser.GameObjects.Image[] = [];
@@ -76,6 +80,7 @@ export class MainMenuScene extends Phaser.Scene {
   create(): void {
     bindSceneDisplay(this, () => this.layout());
     this.hills = [];
+    this.hillFactors = [];
     this.fireflies = [];
     this.buttons = [];
     this.pix = menuPixelScale(logicalSize(this).h);
@@ -84,19 +89,26 @@ export class MainMenuScene extends Phaser.Scene {
     // Dithered dusk sky, three drifting hill silhouettes, fireflies.
     addPixelTexture(this.textures, SKY_KEY, paintSky());
     // The approved dusk-sky picture when it loaded (G5), else the painted bands; both are MENU_SKY_H tall.
-    const skyKey = MENU_SKY_FILE && this.textures.exists(imageArtKey(MENU_SKY_FILE)) ? imageArtKey(MENU_SKY_FILE) : SKY_KEY;
-    this.sky = this.add.tileSprite(0, 0, 4, MENU_SKY_H, skyKey).setOrigin(0, 0);
+    // At display density >= 2 each picture's HD twin when it loaded (twice the pixels, drawn at half the scale).
+    const density = displayMetrics(this).density;
+    const sky = MENU_SKY_FILE && this.textures.exists(imageArtKey(MENU_SKY_FILE))
+      ? hudTexture(this.textures, imageArtKey(MENU_SKY_FILE), density)
+      : { key: SKY_KEY, factor: 1 };
+    this.skyFactor = sky.factor;
+    this.sky = this.add.tileSprite(0, 0, 4, MENU_SKY_H * sky.factor, sky.key).setOrigin(0, 0);
     // Picture strips (G5) when they all loaded, else the painted hill silhouettes.
     const pictures = menuImageLayers((file) => this.textures.exists(imageArtKey(file)));
     if (pictures !== null) {
       this.parallax = pictures.map((layer) => layer.parallax);
-      this.hills = pictures.map((layer) => {
-        const key = imageArtKey(layer.file);
-        return this.add.tileSprite(0, 0, 4, this.textures.getFrame(key).height, key).setOrigin(0, 1);
-      });
+      const textures = pictures.map((layer) => hudTexture(this.textures, imageArtKey(layer.file), density));
+      this.hillFactors = textures.map((tex) => tex.factor);
+      this.hills = textures.map(({ key }) =>
+        this.add.tileSprite(0, 0, 4, this.textures.getFrame(key).height, key).setOrigin(0, 1),
+      );
     } else {
       HILL_LAYERS.forEach((_, i) => addPixelTexture(this.textures, hillKey(i), paintHills(i)));
       this.parallax = [...PARALLAX];
+      this.hillFactors = HILL_LAYERS.map(() => 1);
       this.hills = HILL_LAYERS.map((layer, i) =>
         this.add.tileSprite(0, 0, 4, layer.height, hillKey(i)).setOrigin(0, 1),
       );
@@ -189,7 +201,7 @@ export class MainMenuScene extends Phaser.Scene {
 
   update(_time: number, delta: number): void {
     this.hills.forEach((hill, i) => {
-      hill.tilePositionX += ((this.parallax[i] ?? 0) * delta) / 1000 / this.pix;
+      hill.tilePositionX += ((this.parallax[i] ?? 0) * delta * (this.hillFactors[i] ?? 1)) / 1000 / this.pix;
     });
   }
 
@@ -198,8 +210,11 @@ export class MainMenuScene extends Phaser.Scene {
 
     this.pix = menuPixelScale(height);
     const texW = Math.ceil(width / this.pix) + 1;
-    this.sky.setSize(texW, MENU_SKY_H).setScale(this.pix);
-    for (const hill of this.hills) hill.setSize(texW, hill.height).setScale(this.pix).setPosition(0, height);
+    this.sky.setSize(texW * this.skyFactor, MENU_SKY_H * this.skyFactor).setScale(this.pix / this.skyFactor);
+    this.hills.forEach((hill, i) => {
+      const f = this.hillFactors[i] ?? 1;
+      hill.setSize(texW * f, hill.height).setScale(this.pix / f).setPosition(0, height);
+    });
     for (const fly of this.fireflies) fly.setScale(this.pix);
 
     // Logo board size from its text (title size: same clamp as before).

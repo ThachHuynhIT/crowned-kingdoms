@@ -33,4 +33,16 @@ describe('squareToIso (nearest sampling, no texture rotation)', () => {
     expect(iso.alphaAt(4, 2)).toBe(255);
     for (let i = 3; i < iso.data.length; i += 4) expect([0, 255]).toContain(iso.data[i]);
   });
+
+  it('cuts column strips [u0, u1) that put side by side give the whole diamond (the HD field, 11/11/2026)', () => {
+    const left = squareToIso(src, 0, 3);
+    const right = squareToIso(src, 3, 8);
+    expect([left.width, right.width, left.height, right.height]).toEqual([3, 5, 4, 4]);
+    for (let y = 0; y < 4; y++)
+      for (let x = 0; x < 8; x++) {
+        const strip = x < 3 ? left : right;
+        const sx = x < 3 ? x : x - 3;
+        expect([rgbAt(strip, sx, y), strip.alphaAt(sx, y)]).toEqual([rgbAt(iso, x, y), iso.alphaAt(x, y)]);
+      }
+  });
 });

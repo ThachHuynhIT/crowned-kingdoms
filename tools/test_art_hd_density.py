@@ -18,6 +18,34 @@ def hd_files() -> list[Path]:
     return sorted(HD.rglob('*.png')) if HD.exists() else []
 
 
+HUD_DIRS = ('cards', 'portraits', 'king-cards', 'menu', 'icons')
+
+
+def hud_hd_files() -> set[str]:
+    """HD twins of HUD pictures (src/render/hudArtHd.ts), relative to ai-v1-hd."""
+    return {f.relative_to(HD).as_posix() for f in hd_files() if f.relative_to(HD).parts[0] in HUD_DIRS}
+
+
+def world_hd_files(text: str, listed) -> set[str]:
+    """The world pictures drawn outside the atlas, per `IMAGE_ART_HD_WORLD` group (wall, decor, forest, portal, ground)."""
+    groups = set(listed('IMAGE_ART_HD_WORLD'))
+    out = set()
+    if 'wall' in groups:
+        out.add('iso/wall_cliff.png')
+    if 'decor' in groups:
+        catalog = re.search(r'DECOR_CATALOG[^=]*=\s*\[(.*?)\];', text, re.S).group(1)
+        out |= {f'iso/wilds/{i}.png' for i in re.findall(r"id: '([a-z_]+)'", catalog)}
+    if 'forest' in groups:
+        out |= {f'iso/polish/{i}.png' for i in listed('FOREST_APPROVED')}
+    if 'portal' in groups:
+        out.add('iso/polish/enemy_portal.png')
+    if 'ground' in groups:
+        grass = re.search(r'GRASS_FILES[^=]*=\s*\[(.*?)\]', text, re.S).group(1)
+        out |= {f'{g}.png' for g in re.findall(r"'([a-z_0-9]+)'", grass)}
+        out |= {f'iso/terrain/{t}.png' for t in listed('GROUND_TEXTURES_APPROVED')}
+    return out
+
+
 class HdDensityTest(unittest.TestCase):
     def test_every_hd_file_is_twice_its_twin(self):
         for f in hd_files():
@@ -35,7 +63,8 @@ class HdDensityTest(unittest.TestCase):
 
     def test_the_runtime_lists_exactly_the_hd_files(self):
         """The HD set is exactly the ai-v1 twins of the listed ids: twelve poses per unit (prefix = unit id), each
-        card's base image (`iso/` or `iso-neutral/`) with every published L2/L3, four plot skins per king."""
+        card's base image (`iso/` or `iso-neutral/`) with every published L2/L3, four plot skins per king, and the world
+        pictures of each `IMAGE_ART_HD_WORLD` group."""
         text = (ROOT / 'src/render/imageArt.ts').read_text(encoding='utf-8')
 
         def listed(name: str) -> list[str]:
@@ -48,8 +77,25 @@ class HdDensityTest(unittest.TestCase):
             self.assertEqual(len(bases), 1, f'{card}: no single ai-v1 base image')
             expected |= {f'{bases[0]}/{card}{s}.png' for s in ('', '_l2', '_l3') if (SD / bases[0] / f'{card}{s}.png').exists()}
         expected |= {f'iso/plots/{k}_{s}.png' for k in listed('IMAGE_ART_HD_PLOTS') for s in ('open', 'locked', 'throne', 'built')}
-        found = {f.relative_to(HD).as_posix() for f in hd_files()}
+        expected |= world_hd_files(text, listed)
+        found = {f.relative_to(HD).as_posix() for f in hd_files()} - hud_hd_files()
         self.assertEqual(found, expected)
+
+    def test_hud_twins_cover_the_hud_runtime(self):
+        """HUD twins (src/render/hudArtHd.ts, 2x of the HUD pictures, drawn at half the scale): every card illustration
+        size, every king portrait copy, every king card, the menu sky and hills, each STAT_ICONS 16 px icon and both king
+        badge sizes has its HD file."""
+        text = (ROOT / 'src/render/imageArt.ts').read_text(encoding='utf-8')
+        stat = re.findall(r"'(icons/icon_[a-z_]+-16)'", re.search(r'STAT_ICONS[^=]*=\s*\{(.*?)\}', text, re.S).group(1))
+        kings = ['wheat', 'stone', 'arcane', 'grove', 'tide', 'forge', 'clock', 'moon', 'nomad']
+        cards = {f.name[:-len('-128.png')] for f in (SD / 'cards').glob('*-128.png')}
+        expected = {f'{s}.png' for s in stat}
+        expected |= {f'cards/{c}{s}.png' for c in cards for s in ('', '-48', '-128')}
+        expected |= {f'portraits/{k}{s}.png' for k in kings for s in ('', '-144')}
+        expected |= {f'king-cards/{k}.png' for k in kings}
+        expected |= {f'icons/icon_king_{k}{s}.png' for k in kings for s in ('', '-16')}
+        expected |= {'menu/sky.png', 'menu/hills_far.png', 'menu/hills_mid.png'}
+        self.assertEqual(expected - hud_hd_files(), set())
 
     def test_footman_has_no_hd_twin(self):
         """footman has no pose source (front-view barracks sheet): it stays ai-v1 at every density."""
