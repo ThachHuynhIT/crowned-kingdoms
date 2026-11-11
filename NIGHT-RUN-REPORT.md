@@ -4,24 +4,36 @@ Nhánh `feature/close-up-art` (PR #22, chưa merge). Đêm nay không push, khô
 Plan: `docs/plans/2026-11-12-night-plan.md`.
 
 ## Tóm tắt buổi sáng
-Đêm 12/11 (02:00 → khoảng 03:05): 14 commit trên `feature/close-up-art`. Không push, không PR, không dùng Codex. Gate (lint, typecheck, 3095 test, build) qua trước mỗi commit.
+**Lượt 2 (04:30 →): điện thoại màn ngang đã chơi được trọn ván.**
 
-**Đã làm:**
-1. **Sửa lỗi Thương nhân "mất 1 thẻ"** (`365bc30`).
-   - Nguyên nhân: thẻ mua được đặt lên đầu chồng rút; mỗi năm chỉ rút 1 lá, nên lá rút chính là thẻ vừa mua, trả 3 vàng mà tay không thêm lá nào.
-   - Giờ thẻ mua vào thẳng tay, như "Mua thẻ". Có test tái hiện: chạy cả ván 30 năm, kiểm bộ bài sau mỗi lệnh.
-2. **Vào game nhanh hơn** (`03305be`): từ lúc tải xong ảnh tới khi vào menu, máy tính 1032 → khoảng 620 ms, điện thoại 403 → khoảng 290 ms. Khung hình vốn chỉ khoảng 1 ms.
-3. **Cài đặt trên màn ngang thấp** (`ecb00be`): trước bị cắt mất nút Đóng; giờ bảng hai cột.
-4. **Điện thoại chỉ chơi ngang** (`2edb562`): cầm dọc thì hiện "Xoay ngang điện thoại để chơi" và game dừng; trình duyệt cho phép thì khoá màn ngang.
-5. **Bộ lọc Trợ giúp thành dropdown** (`aec1152`, Esc đóng dropdown trước: `b5acca1`).
-6. **Chữ xanh/đỏ đạt WCAG AA** trên nền kem (`9c149a5`).
-7. **Trợ giúp ghi đúng luật thương nhân** (`6a7f73f`); **trang admin** có đủ nhà cấp 2/3 và tốc độ hoạt hình như game (`d20e567`).
-8. **Spec asset lính** theo hướng đi chéo (`6adfebc`): chỉ tài liệu, chưa tạo ảnh.
+Lượt 1 chỉ sửa bảng Cài đặt. Lượt 2 rà mọi màn ở 667×375, 844×390, 915×412 và 932×430, tìm thấy 5 chỗ chặn người chơi và đã sửa cả 5:
+1. **Không vào được ván mới:** nút "CHƠI" ở màn chọn vua nằm ngoài màn hình (`556528d`).
+2. **Không nhận được thẻ thưởng sau trận:** nút "Nhận" nằm ngoài màn hình (`06e0380`).
+3. **Hội đồng không ban hành được sắc lệnh:** nút "Ban hành" nằm ngoài màn hình (`4b4fe54`). Cùng commit sửa Lịch các năm mất 5 năm cuối.
+4. **Bàn cờ bị lá bài che gần hết khi lập kế hoạch** (`b234a4e`):
+   - lá bài co theo chiều cao màn;
+   - mọi màn ngang rộng từ 640 px dùng bố cục máy tính;
+   - máy tính 1280×720 và máy tính bảng 1024×768 không đổi.
+5. **Bảng kết quả trận và kết thúc ván** có thể đẩy nút ra ngoài màn (`d92105c`).
+
+Mỗi bản sửa có test bố cục cho các cỡ màn ngang và đã chụp ảnh kiểm sau một trận thật (ảnh trong `.superpowers/night-shots/`: `land2-*`, `land3-*`, `fix-*`, `ks-*`).
+
+**Lượt 1 (02:00 → 03:05):**
+- sửa lỗi Thương nhân "mất 1 thẻ" (`365bc30`);
+- vào game nhanh hơn khoảng 40% (`03305be`);
+- Cài đặt hai cột trên màn thấp (`ecb00be`);
+- điện thoại chỉ chơi ngang (`2edb562`);
+- bộ lọc Trợ giúp thành dropdown (`aec1152`, `b5acca1`);
+- chữ xanh/đỏ đạt WCAG AA (`9c149a5`);
+- Trợ giúp và trang admin cập nhật (`6a7f73f`, `d20e567`);
+- spec asset lính (`6adfebc`).
+
+Không push, không PR, không dùng Codex. Gate (lint, typecheck, 3118 test, build) qua trước mỗi commit.
 
 **Cần bạn quyết:**
 1. **Thẻ thưởng, thẻ chinh phục, thẻ thưởng nhiệm vụ** có nên vào thẳng tay như thương nhân không? Hiện chúng thay cho lá rút năm sau.
-2. **HUD lập kế hoạch trên điện thoại ngang:** lá bài che gần hết bàn cờ (ảnh `.superpowers/night-shots/sheet-land-realm.png`). Cần duyệt hướng thiết kế trước khi làm.
-3. **Spec asset lính** (`docs/superpowers/specs/2026-11-12-unit-asset-rules-design.md`): duyệt rồi mới vẽ thử Dân Quân.
+2. **Spec asset lính** (`docs/superpowers/specs/2026-11-12-unit-asset-rules-design.md`): duyệt rồi mới vẽ thử Dân Quân.
+3. **Kiểm trên điện thoại thật:** mọi kiểm tra đêm nay đều chạy trên Chromium giả lập.
 
 ## Phase 1: chọn, mua, bỏ qua thẻ — XONG
 - **Tái hiện lỗi:**
