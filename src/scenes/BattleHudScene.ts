@@ -43,7 +43,7 @@ import { ScoutPanel, tickClock } from '../ui/planning/ScoutPanel';
 import {
   battleLayout,
   screenToWorld,
-  isDesktop,
+  isWideLayout,
   type BattleLayout,
 } from '../ui/realm/realmLayout';
 import { overviewView, worldAtView, type CameraView } from '../ui/realm/cameraModel';
@@ -442,7 +442,7 @@ export class BattleHudScene extends Phaser.Scene {
 
   private showYear(state: RunState): void {
     this.yearText.setText(yearLabel(state));
-    fitTextWidth(this.yearText, isDesktop(this.screen().w) ? 18 : 15, 11, this.lay.year.w);
+    fitTextWidth(this.yearText, isWideLayout(this.screen()) ? 18 : 15, 11, this.lay.year.w);
     this.calendar.setCells(calendarCells(state, 5));
   }
 
@@ -887,7 +887,7 @@ export class BattleHudScene extends Phaser.Scene {
 
   private layout(): void {
     const l = (this.lay = this.currentLayout());
-    const desktop = isDesktop(this.screen().w);
+    const desktop = isWideLayout(this.screen());
 
     this.livesBox.resize(l.lives.w, l.lives.h);
     this.livesBox.image.setPosition(l.lives.x, l.lives.y);

@@ -1,5 +1,5 @@
 import { bindSceneDisplay, logicalSize, logicalPointer, logicalPointerDistance } from '../ui/displayRuntime';
-import { HAND_STEP, handWindow } from '../ui/planning/handLayoutModel';
+import { handWindow } from '../ui/planning/handLayoutModel';
 import { shopPrice, buyCardIllegal } from '../game/run/shop';
 import Phaser from 'phaser';
 import type { EventBus } from '../core/events';
@@ -63,7 +63,7 @@ import {
 import { calendarCells, illegalText, yearLabel } from '../ui/realm/calendarModel';
 import {
   centerHand,
-  isDesktop,
+  isWideLayout,
   confirmFor,
   planningLayout,
   screenToWorld,
@@ -436,10 +436,10 @@ export class PlanningHudScene extends Phaser.Scene {
 
   private onHandWheel(pointer: Phaser.Input.Pointer, _over: unknown, dx: number, dy: number): void {
     if (!this.lay.desktop || this.modalOpen() || this.controller.state.phase !== 'planning') return;
-    const { viewport, scroll } = handWindow(logicalSize(this), this.handCount, this.handScroll);
+    const { viewport, scroll, step } = handWindow(logicalSize(this), this.handCount, this.handScroll);
     const point = logicalPointer(this, pointer);
     if (point.x < viewport.x || point.x > viewport.x + viewport.w || point.y < viewport.y - 12 || point.y > viewport.y + viewport.h) return;
-    this.handScroll = scroll + Math.sign(dx || dy) * HAND_STEP;
+    this.handScroll = scroll + Math.sign(dx || dy) * step;
     this.placeHand();
   }
   /** A card-sized panel flies from hand slot `index` to `plot` in CARD_FLY_MS, shrinking and fading (juice §11.5). */
@@ -514,7 +514,7 @@ export class PlanningHudScene extends Phaser.Scene {
       this.floatGold(state.gold - this.lastGold);
     this.lastGold = state.gold;
     this.yearText.setText(yearLabel(state));
-    fitTextWidth(this.yearText, isDesktop(logicalSize(this).w) ? 18 : 15, 11, this.lay.year.w);
+    fitTextWidth(this.yearText, isWideLayout(logicalSize(this)) ? 18 : 15, 11, this.lay.year.w);
     this.allyText.setText(allyStatusText(state.kingId, CONTENT));
     this.foeText.setText(foeStatusText(calendarCells(state, 1)[0], CONTENT));
     this.calendar.setCells(calendarCells(state, 5));

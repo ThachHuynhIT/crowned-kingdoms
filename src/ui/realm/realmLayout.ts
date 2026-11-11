@@ -1,7 +1,7 @@
 import { clampView } from './cameraBounds';
 import { project, unproject } from '../../core/iso';
 import { RUN } from '../../data/run';
-import { handWindow } from '../planning/handLayoutModel';
+import { handCardSize, handWindow } from '../planning/handLayoutModel';
 import { BATTLE } from '../../data/battle';
 import type { RunMode } from '../../data/rules';
 import { geometryFor, plotAtCell, plotCoords } from '../../game/run/boardGeometry';
@@ -17,6 +17,12 @@ import { calendarStripLayout } from '../planning/calendarStripLayout';
 
 /** §10.1: from 768 px wide the desktop layout is used. */
 export const isDesktop = (width: number): boolean => width >= 768;
+
+/**
+ * The realm (board, planning and battle HUD) uses the desktop layout from 768 px wide, and on any landscape screen
+ * from 640 px wide (night 12/11/2026: phones play in landscape only; the phone layout is built for a tall screen).
+ */
+export const isWideLayout = (screen: Size): boolean => isDesktop(screen.w) || (screen.w > screen.h && screen.w >= 640);
 
 /**
  * Farthest zoom-out on a phone (spec 2026-11-08 §4): a plot diamond 128z × 64z holds an axis-aligned square of side
@@ -52,9 +58,11 @@ export const legacyOverviewZoom = (
   handSize = 3,
   mode: RunMode = 'normal',
 ): number => {
-  if (!isDesktop(screen.w)) return PLANNING_ZOOM;
+  if (!isWideLayout(screen)) return PLANNING_ZOOM;
   const bottom =
-    phase === 'planning' ? handRow(screen, DESK.card, handSize)[0]!.y - DESK_HAND_GAP : screen.h - DESK_BATTLE_BOTTOM;
+    phase === 'planning'
+      ? handRow(screen, { ...handCardSize(screen), gap: DESK.card.gap }, handSize)[0]!.y - DESK_HAND_GAP
+      : screen.h - DESK_BATTLE_BOTTOM;
   const room = Math.max(1, bottom - DESK_TOP_HUD);
   return Math.max(0.25, Math.min((OVERVIEW_BOARD_SHARE * screen.w) / boardWidth(mode), room / boardHeight(mode), ZOOM_MAX));
 };
@@ -66,7 +74,7 @@ export const realmZoomLimits = (
   mode: RunMode = 'normal',
   closeUpMax: number | null = null,
 ): { min: number; max: number } => {
-  if (!isDesktop(screen.w)) return { min: PLANNING_ZOOM, max: Math.max(ZOOM_MAX, closeUpMax ?? 0) };
+  if (!isWideLayout(screen)) return { min: PLANNING_ZOOM, max: Math.max(ZOOM_MAX, closeUpMax ?? 0) };
   const max = legacyOverviewZoom(screen, phase, RUN.handSize, mode);
   // Close-up art (12/11/2026): the camera may zoom on to `closeUpMax`; the overview zoom (`min`) does not move.
   return { min: max / 1.6, max: Math.max(max, closeUpMax ?? 0) };
@@ -405,7 +413,7 @@ export const planningLayout = (
   handSize = 3,
   mode: RunMode = 'normal',
 ): PlanningLayout =>
-  isDesktop(screen.w) ? desktopLayout(screen, handSize, mode) : mobileLayout(screen, handSize, mode);
+  isWideLayout(screen) ? desktopLayout(screen, handSize, mode) : mobileLayout(screen, handSize, mode);
 
 /**
  * Bounding box of `plot`'s diamond inside the board box `board` (isometric, src/core/iso.ts: plot 0
@@ -505,7 +513,7 @@ const HP_BAR = { desktop: { w: 300, h: 44 }, phone: { h: 40 } } as const;
  */
 export const battleLayout = (screen: Size, mode: RunMode = 'normal'): BattleLayout => {
   const { w, h } = screen;
-  const desktop = isDesktop(w);
+  const desktop = isWideLayout(screen);
   const plan = planningLayout(screen, 3, mode);
   const { lives, gold, help, calendar, calendarLinks } = plan;
   const speedW = 4 * BUTTON + 3 * SPEED_GAP;
@@ -602,7 +610,7 @@ export const battleCamera = (
     screen,
     zoom,
   );
-  return isDesktop(screen.w) ? clampView({ zoom, scroll }, screen, mode) : { zoom, scroll };
+  return isWideLayout(screen) ? clampView({ zoom, scroll }, screen, mode) : { zoom, scroll };
 };
 
 /** World point under screen point `p` in the battle view (through the isometric projection), null outside the field. */
@@ -644,7 +652,7 @@ export const realmCamera = (
 ): { zoom: number; scroll: Point } => {
   const a = anchorOf(screen, phase, mode);
   const view = { zoom: a.zoom, scroll: cameraScroll(BOARD_CENTRE, a.point, screen, a.zoom) };
-  return isDesktop(screen.w) ? clampView(view, screen, mode) : view;
+  return isWideLayout(screen) ? clampView(view, screen, mode) : view;
 };
 
 /** The camera `k` (0..1) of the way from `from` to `to`: zoom and the throne's screen point ease linearly. */
@@ -663,5 +671,5 @@ export const realmCameraMix = (
     y: a.point.y + (b.point.y - a.point.y) * k,
   };
   const view = { zoom, scroll: cameraScroll(BOARD_CENTRE, point, screen, zoom) };
-  return isDesktop(screen.w) ? clampView(view, screen, mode) : view;
+  return isWideLayout(screen) ? clampView(view, screen, mode) : view;
 };

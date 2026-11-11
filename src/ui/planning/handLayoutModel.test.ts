@@ -52,3 +52,43 @@ describe('desktop hand window', () => {
     });
   }
 });
+
+describe('landscape phones (night 12/11/2026)', () => {
+  const inside = (r: { x: number; y: number; w: number; h: number }, s: { w: number; h: number }): boolean =>
+    r.x >= 0 && r.y >= 0 && r.x + r.w <= s.w && r.y + r.h <= s.h;
+  const overlaps = (a: { x: number; y: number; w: number; h: number }, b: { x: number; y: number; w: number; h: number }): boolean =>
+    a.x < b.x + b.w && b.x < a.x + a.w && a.y < b.y + b.h && b.y < a.y + a.h;
+
+  for (const screen of [
+    { w: 667, h: 375 },
+    { w: 844, h: 390 },
+    { w: 915, h: 412 },
+    { w: 932, h: 430 },
+    { w: 960, h: 540 },
+  ]) {
+    it(`${screen.w}×${screen.h}: desktop layout, shorter cards, the board clear of the hand and the actions`, () => {
+      const layout = planningLayout(screen, 5);
+      expect(layout.desktop).toBe(true);
+      const { cards, viewport } = handWindow(screen, 5, 0);
+      expect(cards[0]!.h).toBeLessThan(208);
+      expect(cards[0]!.h).toBeGreaterThanOrEqual(112);
+      expect(viewport.y + viewport.h).toBeLessThanOrEqual(screen.h);
+      // the board keeps a usable height between the top HUD and the hand
+      expect(layout.board.h).toBeGreaterThanOrEqual(70);
+      expect(layout.board.y + layout.board.h).toBeLessThanOrEqual(viewport.y);
+      for (const action of [layout.shop, layout.reroll, layout.sell, layout.deck]) {
+        expect(inside(action, screen), JSON.stringify(action)).toBe(true);
+        expect(action.h).toBeGreaterThanOrEqual(44);
+        // cards scrolled out of the hand window are hidden (HandView), only the visible ones count
+        for (const card of cards.filter((c) => c.x >= viewport.x && c.x + c.w <= viewport.x + viewport.w))
+          expect(overlaps(action, card)).toBe(false);
+      }
+    });
+  }
+
+  it('keeps full-size cards from 650 px tall', () => {
+    for (const screen of [{ w: 1280, h: 720 }, { w: 1024, h: 768 }, { w: 1100, h: 650 }]) {
+      expect(handWindow(screen, 3, 0).cards[0]).toMatchObject({ w: 148, h: 208 });
+    }
+  });
+});
