@@ -7,6 +7,7 @@ import { plotCoords } from '../../game/run/boardGeometry';
 import { plotAtWorld } from '../../render/endlessBoardModel';
 import { snapTranslation } from '../displayMetrics';
 import type { Point, Rect, Size } from '../hud/layout';
+import { artQuality } from '../../render/artQuality';
 import { ZOOM_MAX, cameraScroll, realmZoomLimits, realmCamera, screenToWorld, type RealmPhase } from './realmLayout';
 
 /**
@@ -36,7 +37,7 @@ export const zoomLimits = (
   phase: RealmPhase,
   mode: RunMode = 'normal',
 ): { min: number; max: number } => {
-  return realmZoomLimits(screen, phase, mode);
+  return realmZoomLimits(screen, phase, mode, artQuality().zoomMax);
 };
 
 /** Zoom after one wheel event of delta `dy` (up = negative = in): a ratio, at most ±10% per event. */

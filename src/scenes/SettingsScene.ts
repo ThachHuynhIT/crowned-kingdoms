@@ -1,3 +1,5 @@
+import { artQuality } from '../render/artQuality';
+import { ART_RELOAD_TEXT, deviceArtQuality, sameArtQuality } from './artSession';
 import Phaser from 'phaser';
 import { bindSceneDisplay, logicalSize, setDisplayDensityCap } from '../ui/displayRuntime';
 import type { EventBus } from '../core/events';
@@ -204,7 +206,10 @@ export class SettingsScene extends Phaser.Scene {
       if (visit !== this.visit) return;
       if (result.ok) {
         this.settings = result.profile.settings;
-        this.showMessage(this.confirming ? DISCARD_WARNING : '');
+        // Close-up art: a graphics change that would load other art applies after a reload.
+        const reload =
+          patch.graphics !== undefined && !sameArtQuality(deviceArtQuality(this, patch.graphics), artQuality());
+        this.showMessage(this.confirming ? DISCARD_WARNING : reload ? ART_RELOAD_TEXT : '');
       } else this.showMessage(result.message);
     } catch {
       if (visit === this.visit) this.showMessage(SETTINGS_SAVE_FAILED_TEXT);

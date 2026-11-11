@@ -1,10 +1,12 @@
 import Phaser from 'phaser';
+import { setArtQuality } from '../render/artQuality';
 import { AudioManager } from '../audio/AudioManager';
 import { CONTENT } from '../game/cards/registry';
 import { browserIdbFactory, createSession } from '../platform/session';
 import { SCENES } from './keys';
 import { GRAPHICS_DENSITY_CAP } from '../data/settings';
 import { setDisplayDensityCap } from '../ui/displayRuntime';
+import { deviceArtQuality } from './artSession';
 import { setSession, setStorageWarning } from './sessionRegistry';
 import { getAudio, setAudio } from './audioRegistry';
 
@@ -48,7 +50,10 @@ export class BootScene extends Phaser.Scene {
       .then((session) => {
         setSession(game, session);
         manager.setVolumes(session.meta().settings);
-        setDisplayDensityCap(game, GRAPHICS_DENSITY_CAP[session.meta().settings.graphics]);
+        const graphics = session.meta().settings.graphics;
+        setDisplayDensityCap(game, GRAPHICS_DENSITY_CAP[graphics]);
+        // Close-up art (12/11/2026): chosen once per session from the setting and the device.
+        setArtQuality(deviceArtQuality(this, graphics));
         this.scene.start(SCENES.preload);
       });
   }

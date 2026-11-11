@@ -5,6 +5,7 @@
  * Anything not listed here keeps its generated art at scale 1.
  */
 import type { KingId } from '../data/types';
+import type { ArtTier } from './artQuality';
 import type { UnitAnim } from './unitArt';
 
 export const IMAGE_ART_DIR = 'assets/art/ai-v1/';
@@ -28,6 +29,16 @@ export const IMAGE_ART_HD_DIR = 'assets/art/ai-v1-hd/';
 export const IMAGE_ART_HD_SCALE = 0.25;
 export const HD_ART_MIN_DENSITY = 2;
 export const imageArtHdKey = (file: string): string => `imgart-hd-${file}`;
+
+/**
+ * Close-up art (12/11/2026, spec `2026-11-12-close-up-art-design.md`): the same approved sources re-exported at 8 art
+ * px per world unit into `ai-v1-uhd/` (each file exactly 4× its `ai-v1` twin), drawn at `IMAGE_ART_UHD_SCALE`. Loaded
+ * only for the 'uhd' art tier (`artQuality.ts`: graphics 'high' on a desktop).
+ */
+export const IMAGE_ART_UHD_DIR = 'assets/art/ai-v1-uhd/';
+/** World units per art pixel of a UHD file (8 art px per world unit). */
+export const IMAGE_ART_UHD_SCALE = 0.125;
+export const imageArtUhdKey = (file: string): string => `imgart-uhd-${file}`;
 /**
  * Units with an HD twin (11/11/2026: every unit, enemy and boss with a pose source). `footman` has none: its ai-v1
  * frames were cut from the old front-view barracks sheet (`docs/art-review/g3e/batch-01-barracks`), not from a pose
@@ -602,31 +613,57 @@ export const IMAGE_ART_HD_FILES: ReadonlySet<string> = new Set([
   ...IMAGE_ART_HD_FX.flatMap((fx) => IMAGE_FX[fx] ?? []),
 ]);
 
+/** The world pictures drawn whole outside the atlas (wall, wilds, forest, portal): smooth sampling mipmaps them. */
+export const WORLD_PICTURE_FILES: readonly string[] = [
+  ...HD_WORLD_FILES.wall,
+  ...HD_WORLD_FILES.decor,
+  ...HD_WORLD_FILES.forest,
+  ...HD_WORLD_FILES.portal,
+];
+
 /**
- * The loaded texture of a world picture drawn outside the atlas: its HD twin (`hd`, 4 art px per world unit, so the
- * caller draws it at half its usual scale) when that loaded, else the `ai-v1` file; null when neither loaded.
+ * Files with a UHD twin in `IMAGE_ART_UHD_DIR`: every HD unit pose, building (base, L2, L3) and plot skin, and the wall,
+ * wilds, forest and portal. Not the ground (the painted field would pass the 4096 px texture limit at 8 art px per
+ * world unit, so it stays at density 4), nor the HUD-sized atlas icons and effects.
+ */
+export const IMAGE_ART_UHD_FILES: ReadonlySet<string> = new Set(
+  [...IMAGE_ART_HD_FILES].filter(
+    (file) =>
+      !HD_WORLD_FILES.ground.includes(file) &&
+      !IMAGE_ART_HD_ICONS.some((icon) => IMAGE_ICONS[icon] === file) &&
+      !IMAGE_ART_HD_FX.some((fx) => IMAGE_FX[fx] === file),
+  ),
+);
+
+/**
+ * The loaded texture of a world picture drawn outside the atlas: its UHD or HD twin when that loaded, else the `ai-v1`
+ * file; null when none loaded. `factor` is the twin's scale against the `ai-v1` file (1, 0.5 for HD, 0.25 for UHD).
  */
 export const imageArtTexture = (
   exists: (key: string) => boolean,
   file: string,
-): { readonly key: string; readonly hd: boolean } | null => {
-  if (exists(imageArtHdKey(file))) return { key: imageArtHdKey(file), hd: true };
-  return exists(imageArtKey(file)) ? { key: imageArtKey(file), hd: false } : null;
+): { readonly key: string; readonly factor: number } | null => {
+  if (exists(imageArtUhdKey(file))) return { key: imageArtUhdKey(file), factor: IMAGE_ART_UHD_SCALE / IMAGE_ART_SCALE };
+  if (exists(imageArtHdKey(file))) return { key: imageArtHdKey(file), factor: IMAGE_ART_HD_SCALE / IMAGE_ART_SCALE };
+  return exists(imageArtKey(file)) ? { key: imageArtKey(file), factor: 1 } : null;
 };
 
-/** Display scale of a world picture drawn at `scale` from its `ai-v1` file: halved for the HD twin. */
-export const imageArtScale = (scale: number, hd: boolean): number => (hd ? scale * (IMAGE_ART_HD_SCALE / IMAGE_ART_SCALE) : scale);
+/** Display scale of a world picture drawn at `scale` from its `ai-v1` file, for a twin of scale `factor`. */
+export const imageArtScale = (scale: number, factor: number): number => scale * factor;
 
-/** Whether HD art is loaded at display density `density`. */
-export const useHdArt = (density: number): boolean => density >= HD_ART_MIN_DENSITY;
+/** The art tier of a display density without close-up: HD from `HD_ART_MIN_DENSITY`. */
+export const densityArtTier = (density: number): ArtTier => (density >= HD_ART_MIN_DENSITY ? 'hd' : 'sd');
 
-/** What to load for every image-art file: its HD twin (under the HD key) when `hd` and it has one, else the `ai-v1` file. */
-export const imageArtLoads = (hd: boolean): readonly { key: string; url: string }[] =>
-  IMAGE_ART_FILES.map((file) =>
-    hd && IMAGE_ART_HD_FILES.has(file)
-      ? { key: imageArtHdKey(file), url: `${IMAGE_ART_HD_DIR}${file}.png` }
-      : { key: imageArtKey(file), url: `${IMAGE_ART_DIR}${file}.png` },
-  );
+/**
+ * What to load for every image-art file at art tier `tier`: its UHD twin ('uhd' and it has one), else its HD twin
+ * ('hd' or 'uhd' and it has one), else the `ai-v1` file; each under its own key.
+ */
+export const imageArtLoads = (tier: ArtTier): readonly { key: string; url: string }[] =>
+  IMAGE_ART_FILES.map((file) => {
+    if (tier === 'uhd' && IMAGE_ART_UHD_FILES.has(file)) return { key: imageArtUhdKey(file), url: `${IMAGE_ART_UHD_DIR}${file}.png` };
+    if (tier !== 'sd' && IMAGE_ART_HD_FILES.has(file)) return { key: imageArtHdKey(file), url: `${IMAGE_ART_HD_DIR}${file}.png` };
+    return { key: imageArtKey(file), url: `${IMAGE_ART_DIR}${file}.png` };
+  });
 
 /** Pose index of each animation frame (the sheets are drawn idle0 idle1 walk0 walk1 attack0 attack1). */
 export const POSES: Record<UnitAnim, readonly [number, number]> = {

@@ -3,7 +3,9 @@ import { ALL_KINGS } from '../data/rules';
 import { UI_PALETTE } from '../data/uiPalette';
 import { CONTENT } from '../game/cards/registry';
 import { buildSpritesTexture, buildUiTexture } from '../render/atlas';
-import { imageArtLoads, useHdArt } from '../render/imageArt';
+import { WORLD_PICTURE_FILES, imageArtHdKey, imageArtKey, imageArtLoads, imageArtUhdKey } from '../render/imageArt';
+import { artQuality } from '../render/artQuality';
+import { smoothLoadedTextures } from '../render/smoothArt';
 import { PORTRAIT_ASSETS, PORTRAIT_DIR, portraitLargeTextureKey, portraitTextureKey } from '../render/portraitAssets';
 import type { UiFrame } from '../render/uiArt';
 import { UI_KIT_DIR, UI_KIT_FILES, kitTextureKey } from '../render/uiKit';
@@ -38,9 +40,9 @@ export class PreloadScene extends Phaser.Scene {
     for (const [frame, file] of Object.entries(UI_KIT_FILES) as [UiFrame, string][]) {
       this.load.image(kitTextureKey(frame), UI_KIT_DIR + file);
     }
-    // Image art (G3e ai-v1; its HD twins from ai-v1-hd at density ≥ 2); a file that fails to load leaves the generated
-    // art in its place.
-    for (const { key, url } of imageArtLoads(useHdArt(displayMetrics(this).density))) this.load.image(key, url);
+    // Image art (G3e ai-v1; its HD twins from ai-v1-hd, its close-up twins from ai-v1-uhd, by the session's art tier,
+    // `artQuality.ts`); a file that fails to load leaves the generated art in its place.
+    for (const { key, url } of imageArtLoads(artQuality().tier)) this.load.image(key, url);
     // King portraits (G3e), 96×144 each; a file that fails to load leaves the generated placeholder portrait.
     for (const id of ALL_KINGS) {
       this.load.image(portraitTextureKey(id), `${PORTRAIT_DIR}${PORTRAIT_ASSETS[id].file}`);
@@ -59,6 +61,11 @@ export class PreloadScene extends Phaser.Scene {
     buildUiTexture(this.textures);
     // World sprites, card pictures and icons: built once, shared by every scene.
     buildSpritesTexture(this.textures, CONTENT);
+    // Close-up art: smooth sampling with mipmaps for every picture but the UI frames (graphics 'high').
+    smoothLoadedTextures(
+      this.game,
+      new Set(WORLD_PICTURE_FILES.flatMap((f) => [imageArtKey(f), imageArtHdKey(f), imageArtUhdKey(f)])),
+    );
     this.scene.start(SCENES.mainMenu);
   }
 }
