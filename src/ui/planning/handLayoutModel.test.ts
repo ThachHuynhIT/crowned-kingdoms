@@ -1,6 +1,6 @@
 import { describe, expect, it } from 'vitest';
 import { handWindow } from './handLayoutModel';
-import { battleLayout, planningLayout } from '../realm/realmLayout';
+import { battleLayout, planningLayout, underHelpRow } from '../realm/realmLayout';
 
 describe('desktop hand window', () => {
   for (const count of [0, 3, 5, 6, 9, 12]) {
@@ -154,6 +154,8 @@ describe('planning HUD on landscape phones (night 12/11/2026)', () => {
         shop: l.shop, reroll: l.reroll, sell: l.sell, deck: l.deck,
         ...Object.fromEntries(l.calendar.map((c, i) => [`cal${i}`, c])),
       };
+      // the ⚙ button under help (normal mode; the Endless button beside it only shows in Endless)
+      if (l.desktop) rects.gear = { ...underHelpRow(l.help), w: 48 };
       if (l.scoutButton) rects.scout = l.scoutButton;
       if (l.decreeButton) rects.decree = l.decreeButton;
       const entries = Object.entries(rects);

@@ -247,6 +247,12 @@ const DECREE_PANEL_W = 260;
 /** Help button next to the gold box (same height); 52 wide, so it is a comfortable touch target too. */
 const helpRect = (gold: Rect): Rect => ({ x: gold.x + gold.w + GAP, y: gold.y, w: 52, h: gold.h });
 
+/**
+ * The row under the help button on desktop: the ⚙ settings button (48 px) and, in Endless, its 96 px panel button
+ * (PlanningHudScene places both from `help`). The play hint keeps clear of it.
+ */
+export const underHelpRow = (help: Rect): Rect => ({ x: help.x, y: help.y + help.h + 8, w: 56 + 96, h: 48 });
+
 const desktopLayout = (screen: Size, handSize: number, mode: RunMode): PlanningLayout => {
   const { w, h } = screen;
   const zoom = planningZoom(screen, handSize, mode);
@@ -336,13 +342,18 @@ const desktopLayout = (screen: Size, handSize: number, mode: RunMode): PlanningL
     ...besidePlot(centrePlot, screen),
     // The shared hint belongs in the top HUD band, above the board; on a narrow screen (night 12/11/2026: 667×375)
     // it starts right of the decree button instead of covering it.
-    hint: hintRect(w, year.y + year.h + GAP, wide ? MARGIN : MARGIN + DESK.button.w + GAP),
+    hint: hintRect(w, year.y + year.h + GAP, wide ? MARGIN : MARGIN + DESK.button.w + GAP, underHelpRow(helpRect(gold))),
   };
 };
 
-/** The desktop play hint: 480 px centred, moved right of `minX` and narrowed to the screen when needed. */
-const hintRect = (w: number, y: number, minX: number): Rect => {
-  const x = Math.max(minX, Math.round(w / 2 - 240));
+/**
+ * The desktop play hint: 480 px centred, moved right of `minX` and of the row under the help button (`under`) when
+ * it would cover them, and narrowed to the screen when needed.
+ */
+const hintRect = (w: number, y: number, minX: number, under: Rect): Rect => {
+  let x = Math.max(minX, Math.round(w / 2 - 240));
+  const sameRow = y < under.y + under.h && y + HINT_H > under.y;
+  if (sameRow && x < under.x + under.w + GAP) x = under.x + under.w + GAP;
   return { x, y, w: Math.max(0, Math.min(480, w - MARGIN - x)), h: HINT_H };
 };
 
