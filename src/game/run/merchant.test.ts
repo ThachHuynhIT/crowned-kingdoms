@@ -50,7 +50,9 @@ describe('Thương nhân (spec 2026-11-10-merchant-design)', () => {
     if ('error' in bought) throw new Error(bought.error);
     expect(bought.state.gold).toBe(0);
     expect(bought.state.deck).toEqual([...s.deck, 'wheat_militia']);
-    expect(bought.state.drawPile[0]).toBe('wheat_militia');
+    // straight into the hand like Mua thẻ, so the next year's single draw is still a new card (bug 12/11/2026)
+    expect(bought.state.hand).toEqual([...s.hand, 'wheat_militia']);
+    expect(bought.state.drawPile).toEqual(s.drawPile);
     expect(bought.state.stats.goldEarned).toBe(s.stats.goldEarned);
     expect(bought.state.shopPurchasesThisYear).toBe(s.shopPurchasesThisYear);
 

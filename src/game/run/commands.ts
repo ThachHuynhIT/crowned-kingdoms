@@ -350,7 +350,7 @@ function applyBase(input: RunState, cmd: RunCommand, content: Content): CommandR
       // Thưởng thường và thương nhân được bỏ qua; chinh phục và thưởng nhiệm vụ bắt buộc chọn một thẻ.
       const merchant = offer.kind === 'merchant';
       if (offer.kind !== 'reward' && !merchant && index === null) return fail('badTarget');
-      let { deck, drawPile } = state;
+      let { deck, drawPile, hand } = state;
       let gold = state.gold;
       let goldEarned = state.stats.goldEarned;
       if (index === null) {
@@ -367,13 +367,20 @@ function applyBase(input: RunState, cmd: RunCommand, content: Content): CommandR
           gold -= offer.price ?? RUN.merchantPrice;
         }
         deck = [...deck, picked];
-        // Lên đầu chồng rút: thẻ vừa chọn có ngay trên tay năm sau (không bị chôn trong chồng bỏ).
-        drawPile = [picked, ...drawPile];
+        if (merchant) {
+          // Mua ở thương nhân: thẳng lên tay như Mua thẻ (sửa lỗi 12/11/2026). Đặt lên đầu chồng rút thì lá rút duy
+          // nhất của năm sau chính là thẻ vừa mua: trả 3 vàng mà tay không thêm lá nào.
+          hand = [...hand, picked];
+        } else {
+          // Lên đầu chồng rút: thẻ vừa chọn có ngay trên tay năm sau (không bị chôn trong chồng bỏ).
+          drawPile = [picked, ...drawPile];
+        }
       }
       let next: RunState = {
         ...state,
         deck,
         drawPile,
+        hand,
         gold,
         stats: { ...state.stats, goldEarned },
         offers: null,
