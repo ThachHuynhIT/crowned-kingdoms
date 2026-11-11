@@ -1,3 +1,4 @@
+import { logicalSize, logicalPointer } from '../displayRuntime';
 import Phaser from 'phaser';
 import { toCss } from '../../data/palette';
 import { UI_PALETTE } from '../../data/uiPalette';
@@ -151,7 +152,7 @@ export class BlessingModal {
   }
 
   layout(): void {
-    const { width, height } = this.scene.scale;
+    const { w: width, h: height } = logicalSize(this.scene);
     const desktop = width >= 768;
     const inset = frameBorder(this.scene, 'panel') + (desktop ? PAD_DESKTOP : PAD_MOBILE);
     let l = blessingLayout({ w: width, h: height }, inset, this.choices.length || 3, this.scroll);
@@ -240,20 +241,22 @@ export class BlessingModal {
   };
 
   private readonly onDown = (p: Phaser.Input.Pointer): void => {
+    const point = logicalPointer(this.scene, p);
     const vp = this.lay?.viewport;
     if (!vp || (this.lay?.scrollMax ?? 0) === 0) {
       this.drag = null;
       return;
     }
-    const inside = p.x >= vp.x && p.x <= vp.x + vp.w && p.y >= vp.y && p.y <= vp.y + vp.h;
-    this.drag = inside ? { id: p.id, y: p.y, scroll: this.scroll, moved: false } : null;
+    const inside = point.x >= vp.x && point.x <= vp.x + vp.w && point.y >= vp.y && point.y <= vp.y + vp.h;
+    this.drag = inside ? { id: p.id, y: point.y, scroll: this.scroll, moved: false } : null;
   };
 
   private readonly onMove = (p: Phaser.Input.Pointer): void => {
+    const point = logicalPointer(this.scene, p);
     const d = this.drag;
     if (!d || d.id !== p.id || !p.isDown) return;
-    if (Math.abs(p.y - d.y) > DRAG_SLOP) d.moved = true;
-    if (d.moved) this.scrollTo(d.scroll - (p.y - d.y));
+    if (Math.abs(point.y - d.y) > DRAG_SLOP) d.moved = true;
+    if (d.moved) this.scrollTo(d.scroll - (point.y - d.y));
   };
 
   private readonly onUp = (p: Phaser.Input.Pointer): void => {

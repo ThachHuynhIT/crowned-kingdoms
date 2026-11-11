@@ -1,3 +1,4 @@
+import { logicalSize } from '../displayRuntime';
 import Phaser from 'phaser';
 import { modeForRules } from '../../data/rules';
 import type { Content } from '../../game/cards/registry';
@@ -108,7 +109,7 @@ export class CalendarModal {
   }
 
   layout(): void {
-    const { width, height } = this.scene.scale;
+    const { w: width, h: height } = logicalSize(this.scene);
     const inset = frameBorder(this.scene, 'panel') + (width >= 768 ? PAD_DESKTOP : PAD_MOBILE);
     const l = calendarModalLayout({ w: width, h: height }, inset, this.cells.length, this.paged);
     fitOverlay(this.scene, this.overlay);

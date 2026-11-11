@@ -1,3 +1,4 @@
+import { logicalSize } from '../displayRuntime';
 import type Phaser from 'phaser';
 import type { EventBus } from '../../core/events';
 import type { GameEvents } from '../../game/events';
@@ -91,7 +92,7 @@ export class QuestModal {
   layout(): void {
     const view = questOfferView(this.state);
     if (view === null) return;
-    const { width, height } = this.scene.scale;
+    const { w: width, h: height } = logicalSize(this.scene);
     const desktop = width >= 768;
     const inset = frameBorder(this.scene, 'panel') + (desktop ? PAD_DESKTOP : PAD_MOBILE);
     const l = questLayout({ w: width, h: height }, inset);

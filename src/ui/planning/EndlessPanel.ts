@@ -1,3 +1,4 @@
+import { logicalSize, logicalPointer } from '../displayRuntime';
 import Phaser from 'phaser';
 import type { RunState } from '../../game/run/state';
 import { ContentBox } from '../ContentBox';
@@ -101,7 +102,7 @@ export class EndlessPanel {
 
   layout(): void {
     if (!this.open) return;
-    const { width, height } = this.scene.scale;
+    const { w: width, h: height } = logicalSize(this.scene);
     fitOverlay(this.scene, this.overlay);
     this.box.setMaxWidth(Math.min(PANEL_W, width - 2 * MARGIN));
     this.box.setMaxHeight(height - 2 * MARGIN - CLOSE.h - GAP);
@@ -128,13 +129,15 @@ export class EndlessPanel {
   };
 
   private readonly onDown = (p: Phaser.Input.Pointer): void => {
-    this.drag = this.open ? { id: p.id, y: p.y } : null;
+    const point = logicalPointer(this.scene, p);
+    this.drag = this.open ? { id: p.id, y: point.y } : null;
   };
 
   private readonly onMove = (p: Phaser.Input.Pointer): void => {
+    const point = logicalPointer(this.scene, p);
     const d = this.drag;
     if (!d || d.id !== p.id || !p.isDown) return;
-    const lines = Math.trunc((d.y - p.y) / DRAG_LINE);
+    const lines = Math.trunc((d.y - point.y) / DRAG_LINE);
     if (lines !== 0) {
       this.box.scrollBy(lines);
       d.y -= lines * DRAG_LINE;

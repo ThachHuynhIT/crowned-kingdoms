@@ -1,3 +1,4 @@
+import { logicalSize } from '../displayRuntime';
 import type Phaser from 'phaser';
 import { UI_PALETTE } from '../../data/uiPalette';
 
@@ -19,14 +20,16 @@ export interface OverlayOptions {
 export const createOverlay = (
   scene: Phaser.Scene,
   { alpha = OVERLAY_ALPHA, color = UI_PALETTE.outline }: OverlayOptions = {},
-): Phaser.GameObjects.Rectangle =>
-  scene.add
-    .rectangle(0, 0, scene.scale.width, scene.scale.height, color, alpha)
+): Phaser.GameObjects.Rectangle => {
+  const { w, h } = logicalSize(scene);
+  return scene.add
+    .rectangle(0, 0, w, h, color, alpha)
     .setOrigin(0, 0)
     .setInteractive();
+};
 
 export const fitOverlay = (scene: Phaser.Scene, overlay: Phaser.GameObjects.Rectangle): void => {
-  const { width, height } = scene.scale;
+  const { w: width, h: height } = logicalSize(scene);
   overlay.setSize(width, height);
   if (overlay.input) overlay.input.hitArea.setSize(width, height);
 };
