@@ -15,6 +15,11 @@ Lượt 1 chỉ sửa bảng Cài đặt. Lượt 2 rà mọi màn ở 667×375,
    - mọi màn ngang rộng từ 640 px dùng bố cục máy tính;
    - máy tính 1280×720 và máy tính bảng 1024×768 không đổi.
 5. **Bảng kết quả trận và kết thúc ván** có thể đẩy nút ra ngoài màn (`d92105c`).
+6. **Menu chính mất nút "Cài đặt" và "Trợ giúp"** (`00e9854`): giờ xếp hai cột trên màn ngang.
+
+Thêm trong lượt 2:
+- chữ nổi trên bàn cờ có viền tối, đọc được trên cỏ (`219b44c`);
+- dropdown Trợ giúp dùng được bằng phím mũi tên và Enter (`95c95d2`).
 
 Mỗi bản sửa có test bố cục cho các cỡ màn ngang và đã chụp ảnh kiểm sau một trận thật (ảnh trong `.superpowers/night-shots/`: `land2-*`, `land3-*`, `fix-*`, `ks-*`).
 
@@ -125,6 +130,26 @@ Không push, không PR, không dùng Codex. Gate (lint, typecheck, 3118 test, bu
   - cổng duyệt: vẽ thử một lính Dân Quân trước.
 - ART_STYLE dẫn tới spec này. **Chưa tạo ảnh nào.**
 
+## Lượt 2 (04:30 →): điện thoại màn ngang, chi tiết
+**Cách rà:** chụp và kiểm từng màn ở 667×375, 844×390, 915×412, 932×430 và 960×540 (Chromium giả lập cảm ứng, DPR 2–3); viết test bố cục cho từng chỗ sửa. Ảnh nằm trong `.superpowers/night-shots/`.
+
+| Chỗ hỏng | Trước | Sau | Commit | Ảnh |
+|---|---|---|---|---|
+| Bàn cờ khi lập kế hoạch | lá bài 208 px che gần hết; 667×375 dùng bố cục điện thoại dọc | lá bài cao tối đa 32% màn (112–208 px), bố cục máy tính từ 640 px ngang | `b234a4e` | trước `sheet-land-realm.png`, sau `sheet-land2-realm.png`, `land3-*` |
+| Hội đồng | nút "Ban hành" ngoài màn | hai cột | `4b4fe54` | trước `sheet-modals2-land.png`, sau `sheet-fix-modals.png` |
+| Lịch các năm | mất hàng 25–30 | ô co lại (≥ 44 px) | `4b4fe54` | như trên |
+| Thẻ thưởng (sau mỗi trận) | nút "Nhận" ngoài màn | một hàng thẻ co lại, hai nút cạnh nhau | `06e0380` | `fix-*-reward2.png` |
+| Kết quả trận / kết thúc ván | 10 dòng đẩy nút ra ngoài | dòng co lại (≥ 20 px) | `d92105c` | `sw-*-runend.png` |
+| Chọn vua | nút "CHƠI" ở y = 500–728, ngoài màn | ảnh vua và lưới bên trái, điều khiển bên phải | `556528d` | `ks-*-detail.png` |
+| Hộp đặc quyền | hàng tràn ở 667×375 | hàng co lại (≥ 60 px) | `556528d` | `sw-*-perks.png` |
+| Menu chính | mất "Cài đặt", "Trợ giúp" | hai cột | `00e9854` | trước `sheet-land-menu.png`, sau `sheet-menu2.png` |
+
+- **Không đổi trên máy tính:** 1280×720 và 1024×768 giữ nguyên bố cục (có test).
+- **Hiệu năng điện thoại** (844×390, DPR 3 giả lập, trận năm 1, 2 lần mỗi cấu hình):
+  - mật độ 3: khoảng 56 khung/giây, 2,13–2,14 ms mỗi khung (p95 4,6–4,7);
+  - mật độ 2: 1,73–2,09 ms (p95 4,2–4,4).
+  - Chênh lệch nằm trong độ nhiễu, nên mình **không** đổi mặc định "Độ nét: Cao". Người cần nhẹ hơn chọn "Vừa" (tối đa mật độ 2). Đo trên máy thật mới thấy được tải GPU.
+
 ## Quyết định kèm lý do
 - **Chỉ sửa thương nhân, không sửa thẻ thưởng:**
   - Test `commands.test.ts` ghi rõ thẻ thưởng là lá rút của năm sau (tay năm sau có đúng 1 lá, chính là thẻ thưởng).
@@ -156,5 +181,4 @@ Không push, không PR, không dùng Codex. Gate (lint, typecheck, 3118 test, bu
 1. **HUD lập kế hoạch cho điện thoại ngang** (đề xuất 3): chờ bạn duyệt hướng thiết kế.
 2. **Thẻ thưởng vào tay** (đề xuất 1): chờ quyết định, sau đó đo lại cân bằng.
 3. **Vẽ thử Dân Quân** theo spec asset lính mới: chờ duyệt spec.
-4. **Chưa đo độ tương phản** của chữ đặt trực tiếp trên bàn cờ (tên vua, "Địch: …").
-5. **Bàn phím:** dropdown mới chỉ có Esc, chưa đi chọn bằng phím mũi tên.
+4. **Kiểm trên điện thoại thật:** tất cả kiểm tra đêm nay chạy trên Chromium giả lập.
