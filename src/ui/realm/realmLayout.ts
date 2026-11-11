@@ -253,6 +253,16 @@ const helpRect = (gold: Rect): Rect => ({ x: gold.x + gold.w + GAP, y: gold.y, w
  */
 export const underHelpRow = (help: Rect): Rect => ({ x: help.x, y: help.y + help.h + 8, w: 56 + 96, h: 48 });
 
+/**
+ * The Endless panel button on desktop: right of the ⚙ under the help button, or under the ⚙ when that spot would
+ * cover the year label (night 12/11/2026: landscape phones).
+ */
+export const endlessButtonRect = (help: Rect, year: Rect): Rect => {
+  const beside = { x: help.x + 56, y: help.y + help.h + 8, w: 96, h: 48 };
+  const covers = beside.x < year.x + year.w && year.x < beside.x + beside.w && beside.y < year.y + year.h && year.y < beside.y + beside.h;
+  return covers ? { x: help.x, y: beside.y + 48 + 8, w: 96, h: 48 } : beside;
+};
+
 const desktopLayout = (screen: Size, handSize: number, mode: RunMode): PlanningLayout => {
   const { w, h } = screen;
   const zoom = planningZoom(screen, handSize, mode);

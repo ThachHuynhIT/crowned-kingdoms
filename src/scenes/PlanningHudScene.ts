@@ -63,6 +63,7 @@ import {
 import { calendarCells, illegalText, yearLabel } from '../ui/realm/calendarModel';
 import {
   centerHand,
+  endlessButtonRect,
   isWideLayout,
   confirmFor,
   planningLayout,
@@ -1261,7 +1262,7 @@ export class PlanningHudScene extends Phaser.Scene {
     );
     this.endlessPanel.layoutButton(
       l.desktop
-        ? { x: l.help.x + 56, y: l.help.y + l.help.h + 8, w: 96, h: 48 }
+        ? endlessButtonRect(l.help, l.year)
         : { x: MARGIN + 56, y: l.calendar[0]!.y + l.calendar[0]!.h + 8, w: 96, h: 48 },
     );
     this.endlessPanel.layout();

@@ -1,6 +1,6 @@
 import { describe, expect, it } from 'vitest';
 import { handWindow } from './handLayoutModel';
-import { battleLayout, planningLayout, underHelpRow } from '../realm/realmLayout';
+import { battleLayout, endlessButtonRect, planningLayout, underHelpRow } from '../realm/realmLayout';
 
 describe('desktop hand window', () => {
   for (const count of [0, 3, 5, 6, 9, 12]) {
@@ -163,6 +163,21 @@ describe('planning HUD on landscape phones (night 12/11/2026)', () => {
         expect(r.x >= 0 && r.y >= 0 && r.x + r.w <= screen.w && r.y + r.h <= screen.h, `${name} on screen`).toBe(true);
         for (const [other, o] of entries.slice(i + 1)) expect(overlaps(r, o), `${name} × ${other}`).toBe(false);
       }
+    });
+  }
+});
+
+describe('Endless panel button (night 12/11/2026)', () => {
+  const overlaps = (a: { x: number; y: number; w: number; h: number }, b: { x: number; y: number; w: number; h: number }): boolean =>
+    a.x < b.x + b.w && b.x < a.x + a.w && a.y < b.y + b.h && b.y < a.y + a.h;
+  for (const screen of [{ w: 667, h: 375 }, { w: 844, h: 390 }, { w: 932, h: 430 }, { w: 1280, h: 720 }]) {
+    it(`${screen.w}×${screen.h}: clear of the year label, the gear and the hint`, () => {
+      const l = planningLayout(screen, 5, 'endless');
+      const b = endlessButtonRect(l.help, l.year);
+      const gear = { ...underHelpRow(l.help), w: 48 };
+      expect(overlaps(b, l.year)).toBe(false);
+      expect(overlaps(b, gear)).toBe(false);
+      expect(overlaps(b, l.hint)).toBe(false);
     });
   }
 });
