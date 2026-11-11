@@ -138,6 +138,7 @@ describe('the nine Tide King cards (spec 6.7)', () => {
 
     it('hits and shoves a foe in range on the pulse tick, and leaves far ones alone', () => {
       const w = createBattle(setupOf(withBuilding(runState(), 6, 'tide_wave_tower', 1)));
+      w.dmg[w.throneId] = 0; // the throne now reaches the whole board (11/11/2026): keep only the pulse on the foe
       const t = structureFoot(6);
       const near = addUnit(w, unitStats({ hp: 100, speed: 0, dmg: 0, interval: 0 }), TEAM_FOE, t.x - 60, t.y - 10, t.x - 60, t.y - 10, -1);
       const far = addUnit(w, unitStats({ hp: 100, speed: 0, dmg: 0, interval: 0 }), TEAM_FOE, 740, 740, 740, 740, -1);

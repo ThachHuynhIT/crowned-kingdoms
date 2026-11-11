@@ -29,6 +29,7 @@ import type {
   WaveSetup,
 } from '../battle/types';
 import { THRONE_PLOT } from './board';
+import { throneLandRange } from './boardGeometry';
 import { foeSpeedMult, interventionStats } from './decrees';
 import { activeModifier } from './endlessModifiers';
 import { endlessBossScale } from './endlessRules';
@@ -248,6 +249,17 @@ const soulSummonOf = (
   return { soulSummon: { every, max, stats: summonStats(state, content, THRONE_PLOT, SOUL_HARVEST_UNIT, level) } };
 };
 
+/**
+ * Ngai bắn tới hết vùng đất của mình (chủ dự án 11/11/2026): tầm gốc của thẻ Ngai được thay bằng `throneLandRange`,
+ * phần cộng thêm (sắc lệnh Cung Thủ Hoàng Gia…) vẫn cộng lên trên.
+ */
+const throneAttack = (
+  a: ReturnType<typeof attackStats>,
+  baseRange: number,
+  mode: RunState['mode'],
+): ReturnType<typeof attackStats> =>
+  a === null ? a : { ...a, range: Math.max(a.range, throneLandRange(mode, THRONE_PLOT) + (a.range - baseRange)) };
+
 /** Công trình/Ngai ở `plot` đúng như vào trận (range/radius theo px thế giới, interval theo tick); UI dùng lại, không tính lại. */
 export const structureFor = (state: RunState, plot: number, content: Content): StructureSetup => {
   const b = state.plots[plot]!.building!;
@@ -261,7 +273,7 @@ export const structureFor = (state: RunState, plot: number, content: Content): S
       kind: 'throne',
       hp: Math.max(finalStat(card.hp * mult, sheet.structureHp), card.hp * mult * 0.3),
       armor: clamp(finalStat(card.armor, sheet.armor), 0, 0.75),
-      attack: attackStats(card.attack, mult, 0, sheet),
+      attack: throneAttack(attackStats(card.attack, mult, 0, sheet), card.attack?.range ?? 0, state.mode),
       targeting: 'nearest',
       spawn: null,
       pulse: null,

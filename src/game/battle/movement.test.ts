@@ -115,6 +115,7 @@ describe('moveEntities — walking to a target', () => {
     const f = unit(w, TEAM_FOE, 100, 300, { speed: 0 });
     w.target[a] = f;
     w.alive[f] = 0;
+    w.rallied[a] = 1; // already at its formation once: the normal pace, not the first rally sprint
     moveEntities(w);
     expect(w.x[a]).toBe(59);
   });
@@ -292,5 +293,46 @@ describe('moveEntities — walking round buildings (2026-11-09)', () => {
     const f = addUnit(w, unitStats({ speed: 4 }), TEAM_FOE, far - 2, 300, far + 200, 300, -1);
     for (let t = 0; t < 20; t++) moveEntities(w);
     expect(w.x[f]).toBeGreaterThan(far + 20); // foes are not leashed
+  });
+});
+
+describe('moveEntities — rallying to the formation (owner 11/11/2026)', () => {
+  /** An ally with no target, 200 px west of its formation slot on an open row. */
+  const rally = () => {
+    const w = world();
+    const a = addUnit(w, unitStats({ speed: 1 }), TEAM_ALLY, 100, Y, 300, Y, -1);
+    return { w, a };
+  };
+
+  it('walks to its slot at rallySpeedMult times its speed the first time', () => {
+    const { w, a } = rally();
+    moveEntities(w);
+    expect(w.x[a]! - 100).toBeCloseTo(BATTLE.rallySpeedMult, 9);
+    expect(w.rallied[a]).toBe(0);
+  });
+
+  it('is rallied once at the slot, then walks home at its normal speed', () => {
+    const { w, a } = rally();
+    for (let t = 0; t < 200 && w.rallied[a] === 0; t++) moveEntities(w);
+    expect(w.rallied[a]).toBe(1);
+    expect(w.x[a]).toBeCloseTo(300, 9);
+    w.x[a] = 250; // pushed away (knockback, a chase): back at the normal pace
+    moveEntities(w);
+    expect(w.x[a]! - 250).toBeCloseTo(1, 9);
+  });
+
+  it('a unit that meets an enemy first counts as rallied and keeps its normal speed', () => {
+    const { w, a, f } = approach();
+    expect(w.rallied[a]).toBe(0);
+    moveEntities(w);
+    expect(w.rallied[a]).toBe(1);
+    expect(w.rallied[f]).toBe(0); // only our side rallies
+  });
+
+  it('enemies never rally faster', () => {
+    const w = world();
+    const e = addUnit(w, unitStats({ speed: 1 }), TEAM_FOE, 100, Y, 300, Y, -1);
+    moveEntities(w);
+    expect(w.x[e]! - 100).toBeCloseTo(1, 9);
   });
 });

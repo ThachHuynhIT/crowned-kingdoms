@@ -50,6 +50,7 @@ describe('projectile source rendering', () => {
         p.px[1] = 300;
         p.py[1] = 300;
         const renderer = new FxRenderer(scene);
+        images.length = 0; // drop the pre-created Rage / status pools: images[0] is then the projectile
         const before = hashWorld(world);
         renderer.sync(world, [], 1);
         expect(hashWorld(world)).toBe(before);

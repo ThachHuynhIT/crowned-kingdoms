@@ -66,3 +66,15 @@ Chủ dự án: boss hơi khó; bỏ hệ số sức địch theo vua, chỉnh p
 **Kết quả cuối (500 ván/vua, seeds 1–500): ĐẠT.** phép 59,2% · đồng hồ 60,0% · lò rèn 60,2% · rừng 58,8% · trăng 62,4% · du mục 58,8% · đá 59,6% · thuỷ triều 56,6% · lúa 57,4%. Chênh lệch 5,8 điểm. `KING_TUNING`: lúa +2, đá −19, phép −14, rừng −2, thuỷ triều +9, lò rèn −21, đồng hồ +10, trăng −1, du mục −6.
 
 Ghi chú: `KING_TUNING` là một % chung cho cả bộ thẻ của vua. Chỉnh từng lá riêng lẻ là bước sau nếu cần.
+
+## Lượt 5 (11/11/2026): Ngai bắn hết vùng đất, lính tập hợp nhanh
+
+Chủ dự án: lính ra đội hình nhanh hơn (`BATTLE.rallySpeedMult` 2,5 tới khi tới ô đội hình hoặc gặp địch); Ngai bắn tới hết vùng đất của mình (`throneLandRange`). Hai thay đổi làm ván dễ hơn.
+
+| Lượt | Kết quả |
+|---|---|
+| 100 ván, chưa chỉnh | 58–72% |
+| 500 ván, `ENEMY_STAT_MULT` 2,05 → 2,15, chỉnh đá/thuỷ triều/lò rèn/trăng | 59,6–69,0% (rừng 69,0, lò rèn 66,4 vượt trần) |
+| 500 ván, rừng −2 → −8, lò rèn −17 → −20 | rừng 60,0%, lò rèn 59,0% |
+
+**Kết quả cuối (500 ván/vua, seeds 1–500): ĐẠT.** phép 63,0% · đồng hồ 60,0% · lò rèn 59,0% · rừng 60,0% · trăng 63,6% · du mục 63,2% · đá 63,0% · thuỷ triều 62,6% · lúa 59,6%. Chênh lệch 4,6 điểm. `KING_TUNING`: lúa +2, đá −19, phép −14, rừng −8, thuỷ triều +5, lò rèn −20, đồng hồ +10, trăng −4, du mục −6.

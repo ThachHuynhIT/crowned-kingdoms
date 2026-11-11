@@ -177,6 +177,8 @@ export class BattleWorld {
   /** uid công trình (công trình: uid của chính nó; địch: −1). */
   readonly sourceUid = new Int32Array(BATTLE.entityCap);
   readonly kbTicks = new Int32Array(BATTLE.entityCap);
+  /** 1 = lính phe mình đã tới ô đội hình hoặc đã gặp địch: từ đó đi với tốc độ thường (`BATTLE.rallySpeedMult`). */
+  readonly rallied = new Uint8Array(BATTLE.entityCap);
   /** TARGET_* (0 nearest, 1 closestToThrone, 2 lowestHp, 3 highestHp). */
   readonly targeting = new Int32Array(BATTLE.entityCap);
   /** sourceUid của đòn đưa HP về ≤ 0 trong tick (thống kê killsBySource); −1 = chưa có. */
@@ -664,6 +666,7 @@ export const addUnit = (
   setAttack(w, id, stats);
   w.shield[id] = stats.shield;
   w.deathSpawn[id] = stats.deathSpawn;
+  w.rallied[id] = 0;
   initBehaviours(w, id, stats);
   if (team === TEAM_ALLY) tuneAlly(w, id);
   w.events.push({ type: 'spawn', id });

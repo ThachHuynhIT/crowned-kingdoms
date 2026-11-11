@@ -167,6 +167,7 @@ const steer = (w: BattleWorld, i: number, rage: boolean): void => {
   const py = w.prevY[i]!;
   const t = w.target[i]!;
   if (t >= 0 && w.alive[t] === 1) {
+    if (w.team[i] === TEAM_ALLY) w.rallied[i] = 1; // met the enemy before the slot: no rally sprint from now on
     const dx = w.prevX[t]! - px;
     const dy = w.prevY[t]! - py;
     const d = Math.sqrt(dx * dx + dy * dy);
@@ -189,12 +190,15 @@ const steer = (w: BattleWorld, i: number, rage: boolean): void => {
     } else stepToward(w, i, px, py, wayX, wayY, step);
     return;
   }
+  // First walk out to the formation slot: faster (owner 11/11/2026); normal speed once there.
+  if (w.team[i] === TEAM_ALLY && w.rallied[i] === 0) step *= BATTLE.rallySpeedMult;
   const dx = w.homeX[i]! - px;
   const dy = w.homeY[i]! - py;
   const d = Math.sqrt(dx * dx + dy * dy);
   if (d < SNAP || (step > 0 && d <= step)) {
     w.x[i] = w.homeX[i]!;
     w.y[i] = w.homeY[i]!;
+    if (w.team[i] === TEAM_ALLY) w.rallied[i] = 1;
     return;
   }
   if (step <= 0) return;

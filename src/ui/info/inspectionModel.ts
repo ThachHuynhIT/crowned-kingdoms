@@ -145,7 +145,12 @@ export const buildingInfoModel = (
     liveHp: live ? { hp: Math.ceil(Math.max(live.hp, 0)), maxHp: Math.round(live.maxHp) } : null,
     description: describeCard(card, level).lines,
     next,
-    enchants: b.enchants.map((e) => `${content.card(e.cardId).nameVi} ×${e.stacks}`),
+    // Tên, số chồng và tác dụng của bùa (chủ dự án 11/11/2026: bấm nhà phải biết bùa làm gì).
+    enchants: b.enchants.map((e) => {
+      const card = content.card(e.cardId);
+      const what = describeCard(card).lines.join(' ');
+      return `${card.nameVi} ×${e.stacks}${what ? ` — ${what}` : ''}`;
+    }),
     age: hasAge ? { years: ageOf(b, state.year), bonus: b.ageBonus } : null,
     spawn: setup.spawn && spawnDef ? unitPreviewModel(setup.spawn.stats, spawnDef, level) : null,
   };

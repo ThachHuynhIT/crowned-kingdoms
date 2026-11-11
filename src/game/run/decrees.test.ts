@@ -1,3 +1,4 @@
+import { throneLandRange } from './boardGeometry';
 import { describe, expect, it } from 'vitest';
 import { INTERVENTION } from '../../data/battle';
 import { DECREES, DECREE_RULES } from '../../data/decrees';
@@ -114,8 +115,9 @@ describe('decree_stat_matrix', () => {
     const after = withBoard(['decree_royal_archers']);
     expect(structure(before, 8).attack!.range).toBeCloseTo(132 * 3); // ×3 (2026-11-09); the decree stays a flat +18
     expect(structure(after, 8).attack!.range).toBeCloseTo(132 * 3 + 18);
-    expect(structure(before, 12).attack!.range).toBeCloseTo(108);
-    expect(structure(after, 12).attack!.range).toBeCloseTo(126);
+    // the throne's base range now covers its whole land (owner 11/11/2026); the decree still adds its +18
+    expect(structure(before, 12).attack!.range).toBeCloseTo(throneLandRange('normal'));
+    expect(structure(after, 12).attack!.range).toBeCloseTo(throneLandRange('normal') + 18);
     // troop buildings are not towers
     expect(collectStatSheet(after, CONTENT, 6).range.flat).toBe(0);
   });

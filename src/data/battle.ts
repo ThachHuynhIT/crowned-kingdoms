@@ -26,7 +26,7 @@ export const ENEMY_LEVEL_STAT = [1, 1.45, 2.1, 3.05, 4.42] as const;
  * HP và sát thương của mọi lính địch nhân thêm hệ số này (cân bằng lại 2026-11-09 sau khi tầm tháp ×3, công trình
  * chặn đường và địch phải phá hết nhà: bot greedy Gai 0 thắng gần 100%; mục tiêu 35–65% mỗi vua).
  */
-export const ENEMY_STAT_MULT = 2.05;
+export const ENEMY_STAT_MULT = 2.15; // 2.05 → 2.15 (11/11/2026): Ngai bắn hết vùng đất, lính tập hợp nhanh
 /**
  * Máu và sát thương của boss 1/2/3 lúc vào trận, nhân với số trong `BOSSES` (10/11/2026: hết giờ không
  * còn là thắng, boss phải hạ được). Đo bằng `npm run balance`, xem docs/balance/2026-11-10-draw-one-balance.md.
@@ -42,11 +42,11 @@ export const KING_TUNING: Readonly<Record<KingId, { readonly hpPct: number; read
   wheat: { hpPct: 2, dmgPct: 2 },
   stone: { hpPct: -19, dmgPct: -19 },
   arcane: { hpPct: -14, dmgPct: -14 },
-  grove: { hpPct: -2, dmgPct: -2 },
-  tide: { hpPct: 9, dmgPct: 9 },
-  forge: { hpPct: -21, dmgPct: -21 },
+  grove: { hpPct: -8, dmgPct: -8 },
+  tide: { hpPct: 5, dmgPct: 5 },
+  forge: { hpPct: -20, dmgPct: -20 },
   clock: { hpPct: 10, dmgPct: 10 },
-  moon: { hpPct: -1, dmgPct: -1 },
+  moon: { hpPct: -4, dmgPct: -4 },
   nomad: { hpPct: -6, dmgPct: -6 },
 };
 
@@ -155,6 +155,8 @@ export const BATTLE = {
   /** Trần đẩy giữa hai đơn vị khác phe: địch chen vào chỉ nhích lính ra, không hất văng. */
   separationPushCross: 0.4,
   knockbackTicks: 3,
+  /** Lính phe mình chạy ra ô đội hình lần đầu nhanh gấp này; tới ô (hoặc gặp địch) thì về tốc độ thường (chủ dự án 11/11/2026). */
+  rallySpeedMult: 2.5,
   maxSlowPct: 60,
   bossStunFactor: 0.5,
   spatialCell: PLOT,

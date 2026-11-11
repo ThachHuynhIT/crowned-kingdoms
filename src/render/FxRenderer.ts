@@ -28,6 +28,8 @@ const SHADOW_DEPTH = 3;
 const SHOT_POOL = 96;
 /** At most this many Rage auras (one per enemy unit) are drawn. */
 const AURA_POOL = 60;
+/** Status loops and the Rage ring are drawn at half the effect scale, low at the feet (owner 11/11/2026). */
+const STATUS_SCALE = 1;
 /** At most this many status effects are drawn at once. */
 const STATUS_POOL = 80;
 const RING_MS = 320;
@@ -74,6 +76,12 @@ export class FxRenderer {
   constructor(scene: Phaser.Scene) {
     this.scene = scene;
     this.ringGfx = scene.add.graphics().setDepth(RING_DEPTH);
+    // Pre-create the Rage and status pools: making ~40 images in the frame the rage starts made that frame stutter
+    // (owner 11/11/2026).
+    const aura = FX_BY_ID.get('rageAura');
+    if (aura) for (let i = 0; i < AURA_POOL; i++) this.image(this.auras, i, codeFxFrame(aura.id, 0)).setVisible(false);
+    const burn = FX_BY_ID.get('fx_burn');
+    if (burn) for (let i = 0; i < STATUS_POOL; i++) this.image(this.statuses, i, codeFxFrame(burn.id, 0)).setVisible(false);
   }
 
   sync(world: BattleWorld, events: readonly BattleEvent[], alpha: number): void {
@@ -123,14 +131,13 @@ export class FxRenderer {
       const fx = statusFxFor(world, id);
       const def = fx === null ? undefined : FX_BY_ID.get(fx);
       if (def === undefined) continue;
-      const r = world.radius[id]!;
+      // Small and low at the feet, drawn under the unit so it never hides it (owner 11/11/2026).
       const { x, y } = iso({ x: world.x[id]!, y: world.y[id]! });
-      const feet = def.anchor === 'feet';
       this.image(this.statuses, used, codeFxFrame(def.id, codeFxFrameAt(def.frameMs, now, true) ?? 0))
-        .setScale(ISO_SPRITE_SCALE)
-        .setOrigin(0.5, feet ? 1 : 0.5)
-        .setPosition(Math.round(x), Math.round(feet ? y + 2 : y - r))
-        .setDepth(y + r + 3);
+        .setScale(STATUS_SCALE)
+        .setOrigin(0.5, 1)
+        .setPosition(Math.round(x), Math.round(y + 3))
+        .setDepth(y - 1);
       used += 1;
     }
     for (let i = used; i < this.statuses.length; i++) this.statuses[i]!.setVisible(false);
@@ -329,9 +336,9 @@ export class FxRenderer {
         if (world.alive[id] === 0 || world.team[id] !== TEAM_FOE || world.kind[id] !== KIND_UNIT) continue;
         const { x, y } = iso({ x: world.x[id]!, y: world.y[id]! });
         this.image(this.auras, used, codeFxFrame(def.id, f))
-          .setScale(ISO_SPRITE_SCALE)
+          .setScale(STATUS_SCALE)
           .setOrigin(0.5, 1)
-          .setPosition(Math.round(x), Math.round(y + 4))
+          .setPosition(Math.round(x), Math.round(y + 3))
           .setDepth(y - 1);
         used += 1;
       }

@@ -1,3 +1,4 @@
+import { throneLandRange } from './boardGeometry';
 import { describe, expect, it } from 'vitest';
 import { RULES_G1 } from '../../data/rules';
 import { WHEAT } from '../../data/kings/wheat';
@@ -121,7 +122,7 @@ describe('buildBattleSetup', () => {
     expect(setup.throne.plot).toBe(THRONE_PLOT);
     expect(setup.throne.uid).toBe(0);
     expect(setup.throne.kind).toBe('throne');
-    expect(setup.throne.attack!.range).toBe(108); // 72 × 1,5
+    expect(setup.throne.attack!.range).toBeCloseTo(throneLandRange('normal'), 9); // the throne covers its whole land (owner 11/11/2026)
     expect(setup.throne.targeting).toBe('nearest');
   });
 
@@ -142,7 +143,7 @@ describe('buildBattleSetup', () => {
     };
     const s = buildBattleSetup(makeState(army), CONTENT).waves[0]!.spawns[0]!.stats;
     expect(s.hp).toBeCloseTo(30 * ENEMY_LEVEL_STAT[1]! * 1.5 * ENEMY_STAT_MULT, 6);
-    expect(s.hp).toBeCloseTo(30 * 1.45 * 1.5 * 2.05, 6); // 30 × 1.45 × 1.5 × ENEMY_STAT_MULT 2.05 (pinned; no per-king enemy multiplier since 10/11/2026)
+    expect(s.hp).toBeCloseTo(30 * 1.45 * 1.5 * 2.15, 6); // 30 × 1.45 × 1.5 × ENEMY_STAT_MULT 2.15 (pinned 11/11/2026; no per-king enemy multiplier)
     expect(s.dmg).toBeCloseTo(5 * 1.45 * 1.5 * ENEMY_STAT_MULT, 6);
   });
 

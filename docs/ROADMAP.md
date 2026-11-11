@@ -16,7 +16,7 @@ Chơi được trong trình duyệt:
 - Lưu ván và tải lại: lưu tự động và nhiều bản lưu có tên.
 - Âm thanh sinh bằng code, màn Cài đặt, PWA chơi offline.
 - Art bằng ảnh cho cả 9 vua.
-- Cân bằng: 56,6–62,4% thắng mỗi vua, chênh lệch 5,8 điểm (bot `greedy`, 500 ván/vua, Gai 0, 10/11/2026); chỉnh theo vua bằng `KING_TUNING` (phe mình), boss −10%.
+- Cân bằng: 59,0–63,6% thắng mỗi vua, chênh lệch 4,6 điểm (bot `greedy`, 500 ván/vua, Gai 0, 11/11/2026); chỉnh theo vua bằng `KING_TUNING` (phe mình), boss −10%, `ENEMY_STAT_MULT` 2,15; Ngai bắn hết vùng đất, lính tập hợp nhanh gấp 2,5.
 
 ## Việc tiếp theo: phản hồi của chủ dự án, chỉ trên PC (09/11/2026)
 
