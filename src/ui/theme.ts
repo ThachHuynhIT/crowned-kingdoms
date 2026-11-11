@@ -27,6 +27,8 @@ export { TOUCH_TARGET };
 export const FONT_UI =
   '"Palatino Linotype", "Book Antiqua", "Noto Serif", "Times New Roman", Tinos, serif';
 export const FONT_TITLE = FONT_UI;
+/** Outline width (px) of the cream labels floating over the field (year, clock, kings): keeps them readable on grass. */
+export const FLOATING_TEXT_STROKE = 3;
 export const FONT_DEBUG = 'ui-monospace, Consolas, monospace';
 
 export const textStyle = (

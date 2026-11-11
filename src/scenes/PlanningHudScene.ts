@@ -80,6 +80,7 @@ import {
   type Button,
   type TooltipSource,
   type UiBox,
+  FLOATING_TEXT_STROKE,
 } from '../ui/theme';
 import { SCENES } from './keys';
 import type { RealmHudData } from './RealmScene';
@@ -242,6 +243,8 @@ export class PlanningHudScene extends Phaser.Scene {
         .text(0, 0, '', textStyle(16, UI_PALETTE.creamLight))
         .setOrigin(origin, 0.5)
         .setFontStyle('bold')
+        // Dark outline (night 12/11/2026): cream on grass alone is about 3.9:1, under WCAG AA for 16 px text.
+        .setStroke(toCss(UI_PALETTE.outline), FLOATING_TEXT_STROKE)
         .setShadow(2, 2, toCss(UI_PALETTE.outline), 0, false, true);
     this.yearText = floating(0.5);
     this.allyText = floating(0);

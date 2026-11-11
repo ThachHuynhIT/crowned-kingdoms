@@ -59,6 +59,7 @@ import {
   type Button,
   type TooltipSource,
   type UiBox,
+  FLOATING_TEXT_STROKE,
 } from '../ui/theme';
 import { SCENES } from './keys';
 import type { RealmHudData } from './RealmScene';
@@ -243,6 +244,8 @@ export class BattleHudScene extends Phaser.Scene {
         .text(0, 0, '', textStyle(size, UI_PALETTE.creamLight))
         .setOrigin(0.5)
         .setFontStyle('bold')
+        // Dark outline (night 12/11/2026): cream on grass alone is about 3.9:1, under WCAG AA for 16 px text.
+        .setStroke(toCss(UI_PALETTE.outline), FLOATING_TEXT_STROKE)
         .setShadow(2, 2, toCss(UI_PALETTE.outline), 0, false, true);
     this.calendar = new CalendarStrip(this, CONTENT, this.tooltip, () => this.openCalendar());
     this.yearText = floating(16);
