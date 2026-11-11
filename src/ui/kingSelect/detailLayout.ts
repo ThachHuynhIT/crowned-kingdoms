@@ -84,9 +84,63 @@ const gridCards = (x: number, y: number, g: GridSpec): Rect[] => {
   });
 };
 
+/** Card grid of the short landscape layout (3 columns of the nine kings). */
+const CARD_SHORT = { w: 56, h: 86, gap: 6, cols: 3 } as const;
+
+/**
+ * Short landscape screens (night 12/11/2026: on 844×390 and 667×375 "Chơi" was below the screen, so no run could
+ * start): the king card and the grid on the left, then a column on the right with the modes, the seed, the perk and
+ * difficulty row and Chơi at the bottom.
+ */
+const shortLandscapeLayout = (screen: Size, margin: number): KingDetailLayout => {
+  const { w, h } = screen;
+  const back = { x: margin, y: margin, w: 96, h: 44 };
+  const title = { x: back.x + back.w + margin, y: margin, w: Math.max(0, w - 2 * (back.x + back.w + margin)), h: 44 };
+  const top = back.y + back.h + 8;
+  const bottom = h - margin;
+  const grid = gridSize(CARD_SHORT);
+  const portraitW = KING_CARD.w * 2;
+  const portraitH = KING_CARD.h * 2;
+  const portrait = { x: margin, y: top + Math.max(0, Math.round((bottom - top - portraitH) / 2)), w: portraitW, h: portraitH };
+  const gridX = portrait.x + portraitW + 12;
+  const gridY = top + Math.max(0, Math.round((bottom - top - grid.h) / 2));
+  const colX = gridX + grid.w + 16;
+  const colW = w - margin - colX;
+  const modeW = Math.min(MODE_BUTTON.w, Math.floor((colW - MODE_GAP) / 2));
+  const play = { x: colX, y: bottom - 56, w: colW, h: 56 };
+  const rowY = play.y - 8 - 48;
+  const seedY = rowY - 22 - 8 - 44;
+  const modeY = top;
+  const nextX = colX + colW - 44;
+  // "ĐẶC QUYỀN" needs 140 px to clear the frame when the column has room.
+  const perksW = colW >= 420 ? 140 : 100;
+  return {
+    desktop: false,
+    title,
+    back,
+    cards: gridCards(gridX, gridY, CARD_SHORT),
+    portrait,
+    perks: { x: colX, y: rowY, w: perksW, h: 48 },
+    perkName: { x: colX, y: rowY - 22, w: colW, h: 20 },
+    previous: { x: colX + perksW + 8, y: rowY, w: 44, h: 48 },
+    difficulty: { x: colX + perksW + 52, y: rowY, w: Math.max(44, nextX - (colX + perksW + 52)), h: 48 },
+    next: { x: nextX, y: rowY, w: 44, h: 48 },
+    play,
+    seed: { x: colX, y: seedY, w: colW - 8 - 120, h: 44 },
+    reroll: { x: colX + colW - 120, y: seedY, w: 120, h: 44 },
+    modes: [
+      { x: colX, y: modeY, w: modeW, h: MODE_BUTTON.h },
+      { x: colX + modeW + MODE_GAP, y: modeY, w: modeW, h: MODE_BUTTON.h },
+    ],
+    modeNote: { x: colX, y: modeY + MODE_BUTTON.h + 4, w: colW, h: Math.max(20, seedY - 4 - (modeY + MODE_BUTTON.h + 4)) },
+  };
+};
+
 export const detailLayout = (screen: Size, inset: number): KingDetailLayout => {
   const { w } = screen;
   const margin = Math.max(MARGIN, inset);
+  // Landscape and too short for the desktop block (grid, footer, seed and mode rows) or the tall phone column.
+  if (w > screen.h && w >= 640 && screen.h < 560) return shortLandscapeLayout(screen, margin);
   const desktop = isDesktop(w);
 
   if (desktop) {
@@ -192,8 +246,13 @@ const ROW_GAP = 8;
 /** `inset` is the panel border plus padding (screen px). Phones get taller rows for wrapped text. */
 export const perkDialogLayout = (screen: Size, inset: number): PerkDialogLayout => {
   const desktop = isDesktop(screen.w);
-  const rowH = desktop ? 80 : 100;
-  const width = desktop ? 560 : screen.w - 2 * MARGIN;
+  // Short screens (night 12/11/2026: the rows ran off a 375 px landscape phone): rows close up, never under 60 px.
+  const fit = Math.floor(
+    (screen.h - 2 * MARGIN - 2 * inset - CLOSE_BUTTON - ROW_GAP - (PERK_ROWS - 1) * ROW_GAP) / PERK_ROWS,
+  );
+  const rowH = Math.max(60, Math.min(desktop ? 80 : 100, fit));
+  const wide = desktop || (screen.w > screen.h && screen.w >= 640);
+  const width = wide ? Math.min(560, screen.w - 2 * MARGIN) : screen.w - 2 * MARGIN;
   const height = 2 * inset + CLOSE_BUTTON + ROW_GAP + PERK_ROWS * rowH + (PERK_ROWS - 1) * ROW_GAP;
   const panel = centredPanel(screen, width, height);
   const innerX = panel.x + inset;
