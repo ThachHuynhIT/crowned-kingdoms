@@ -2,7 +2,7 @@ import Phaser from 'phaser';
 import { ALL_KINGS } from '../data/rules';
 import { UI_PALETTE } from '../data/uiPalette';
 import { CONTENT } from '../game/cards/registry';
-import { buildSpritesTexture, buildUiTexture } from '../render/atlas';
+import { atlasSourceKeys, buildSpritesTexture, buildUiTexture } from '../render/atlas';
 import { WORLD_PICTURE_FILES, imageArtHdKey, imageArtKey, imageArtLoads, imageArtUhdKey } from '../render/imageArt';
 import { artQuality } from '../render/artQuality';
 import { smoothLoadedTextures } from '../render/smoothArt';
@@ -65,6 +65,7 @@ export class PreloadScene extends Phaser.Scene {
     smoothLoadedTextures(
       this.game,
       new Set(WORLD_PICTURE_FILES.flatMap((f) => [imageArtKey(f), imageArtHdKey(f), imageArtUhdKey(f)])),
+      atlasSourceKeys(),
     );
     this.scene.start(SCENES.mainMenu);
   }

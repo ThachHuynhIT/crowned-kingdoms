@@ -69,15 +69,20 @@ export const padToPowerOfTwo = (textures: Phaser.Textures.TextureManager, key: s
 export const keepsNearest = (key: string): boolean => key === UI_KEY || key.startsWith('ui-kit-') || key.startsWith('__');
 
 /**
- * Smooth every loaded texture but the UI frames, when the session's art quality asks for it. On WebGL1 the textures in
+ * Smooth every loaded texture but the UI frames and `skipKeys` (pictures only copied into the atlas: mipmapping them
+ * cost start-up time for nothing), when the session's art quality asks for it. On WebGL1 the textures in
  * `padKeys` (world pictures drawn whole, far below their size at the overview zoom) are first padded to a power of two
  * so they get mipmaps; the others are sampled LINEAR only.
  */
-export const smoothLoadedTextures = (game: Phaser.Game, padKeys: ReadonlySet<string> = new Set()): void => {
+export const smoothLoadedTextures = (
+  game: Phaser.Game,
+  padKeys: ReadonlySet<string> = new Set(),
+  skipKeys: ReadonlySet<string> = new Set(),
+): void => {
   if (!artQuality().smooth) return;
   const webgl2 = isWebGL2(game.renderer);
   for (const key of game.textures.getTextureKeys()) {
-    if (keepsNearest(key)) continue;
+    if (keepsNearest(key) || skipKeys.has(key)) continue;
     if (!webgl2 && padKeys.has(key)) padToPowerOfTwo(game.textures, key);
     applySmoothFilter(game.renderer, game.textures.get(key));
   }

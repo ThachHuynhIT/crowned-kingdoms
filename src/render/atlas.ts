@@ -348,18 +348,43 @@ export const imageFile = (textures: Phaser.Textures.TextureManager, file: string
   textureArt(textures, imageArtKey(file));
 
 /**
- * Pixels of a loaded image-art file with the display scale of its density: the HD twin (`imageArtHdKey`, 4 art px per
- * world unit) when that loaded, else the `ai-v1` file (2 art px per world unit); null when neither loaded.
+ * Image-art frames drawn straight from their loaded picture when the `sprites` pages are built (night 12/11/2026):
+ * reading 772 close-up pictures back as pixels and copying them pixel by pixel took about 0.8 s at start-up. The
+ * stand-in only carries the size (its pixel buffer is empty); `buildSpritesTexture` draws the picture itself.
+ */
+const IMAGE_SOURCES = new WeakMap<PixelCanvas, CanvasImageSource>();
+/** Keys of the loaded textures copied into the `sprites` atlas: drawn only through the atlas, never on their own. */
+const ATLAS_SOURCE_KEYS = new Set<string>();
+/** The loaded textures copied into the `sprites` atlas (smooth sampling skips them: nothing draws them directly). */
+export const atlasSourceKeys = (): ReadonlySet<string> => ATLAS_SOURCE_KEYS;
+
+/** A size-only stand-in for the loaded texture `key`, drawn from its picture; null when the texture is missing. */
+const imageStandIn = (textures: Phaser.Textures.TextureManager, key: string): PixelCanvas | null => {
+  if (!textures.exists(key)) return null;
+  const image = textures.get(key).getSourceImage() as CanvasImageSource & { width: number; height: number };
+  const art = Object.assign(Object.create(PixelCanvas.prototype) as PixelCanvas, {
+    width: image.width,
+    height: image.height,
+    data: new Uint8ClampedArray(0),
+  });
+  IMAGE_SOURCES.set(art, image);
+  ATLAS_SOURCE_KEYS.add(key);
+  return art;
+};
+
+/**
+ * A loaded image-art file with the display scale of its density: the UHD twin (8 art px per world unit), else the HD
+ * twin (4), else the `ai-v1` file (2); null when none loaded. Its art is a size-only stand-in drawn from the picture.
  */
 export const imageFileScaled = (
   textures: Phaser.Textures.TextureManager,
   file: string,
 ): { art: PixelCanvas; scale: number } | null => {
-  const uhd = textureArt(textures, imageArtUhdKey(file));
+  const uhd = imageStandIn(textures, imageArtUhdKey(file));
   if (uhd !== null) return { art: uhd, scale: IMAGE_ART_UHD_SCALE };
-  const hd = textureArt(textures, imageArtHdKey(file));
+  const hd = imageStandIn(textures, imageArtHdKey(file));
   if (hd !== null) return { art: hd, scale: IMAGE_ART_HD_SCALE };
-  const art = imageFile(textures, file);
+  const art = imageStandIn(textures, imageArtKey(file));
   return art === null ? null : { art, scale: IMAGE_ART_SCALE };
 };
 
@@ -471,8 +496,14 @@ export const buildSpritesTexture = (
     // Smooth sampling (graphics 'high') mipmaps the pages: a power-of-two height lets WebGL1 do it too.
     const height = Math.max(1, page.height);
     const sheet = new PixelCanvas(page.width, artQuality().smooth ? nextPow2(height) : height);
-    for (const p of page.placed) sheet.blit(p.art, p.x, p.y);
-    return toCanvas(sheet);
+    for (const p of page.placed) if (!IMAGE_SOURCES.has(p.art)) sheet.blit(p.art, p.x, p.y);
+    const canvas = toCanvas(sheet);
+    const ctx = canvas.getContext('2d');
+    for (const p of page.placed) {
+      const source = IMAGE_SOURCES.get(p.art);
+      if (source) ctx?.drawImage(source, p.x, p.y);
+    }
+    return canvas;
   });
   const texture = textures.create(SPRITES_KEY, canvases);
   if (!texture) throw new Error('Failed to create sprites texture');
