@@ -11,13 +11,18 @@ vi.mock('./imageArt', async (orig) => {
 import { project } from '../core/iso';
 import { DecorationRenderer } from './DecorationRenderer';
 import { layoutDecorations } from './decorationModel';
-import { DECOR_CATALOG } from './imageArt';
+import { DECOR_CATALOG, decorFile, imageArtHdKey, imageArtKey } from './imageArt';
 
 class FakeImage {
   depth = 0;
   destroyed = false;
   constructor(readonly x: number, readonly y: number, readonly key: string) {}
+  scale = 1;
   setOrigin(): this {
+    return this;
+  }
+  setScale(s: number): this {
+    this.scale = s;
     return this;
   }
   setDepth(d: number): this {
@@ -59,5 +64,20 @@ describe('DecorationRenderer', () => {
     new DecorationRenderer(s, 9);
     expect(images.some((i) => i.key.includes('tree_oak'))).toBe(false);
     expect(images.length).toBeGreaterThan(0);
+  });
+
+  it('draws the ai-v1 PNG at scale 1 and its HD twin (density >= 2) at 0.5, on the same foot', () => {
+    const sd = scene((key) => !key.startsWith('imgart-hd-'));
+    const hd = scene((key) => key.startsWith('imgart-hd-'));
+    new DecorationRenderer(sd.s, 9);
+    new DecorationRenderer(hd.s, 9);
+    expect(hd.images.length).toBe(sd.images.length);
+    sd.images.forEach((a, i) => {
+      const b = hd.images[i]!;
+      expect([b.x, b.y, b.depth]).toEqual([a.x, a.y, a.depth]);
+      expect(a.scale).toBe(1);
+      expect(b.scale).toBe(0.5);
+      expect(DECOR_CATALOG.some((d) => a.key === imageArtKey(decorFile(d.id)) && b.key === imageArtHdKey(decorFile(d.id)))).toBe(true);
+    });
   });
 });

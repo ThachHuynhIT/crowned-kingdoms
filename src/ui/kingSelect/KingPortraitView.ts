@@ -1,11 +1,12 @@
-import { logicalPointerDistance } from '../displayRuntime';
+import { displayMetrics, logicalPointerDistance } from '../displayRuntime';
 import type Phaser from 'phaser';
 import type { KingId } from '../../data/types';
 import { describeCard } from '../../game/cards/describe';
 import type { Content } from '../../game/cards/registry';
 import { addPixelTexture, iconFrame, imageFile, SPRITES_KEY, textureArt } from '../../render/atlas';
-import { kingCardFile } from '../../render/imageArt';
-import { KING_CARD_NATIVE, KING_CARD_WINDOW, lockedShade, paintKingCard } from '../../render/kingCardArt';
+import { hudTexture } from '../../render/hudArtHd';
+import { imageArtKey, kingCardFile } from '../../render/imageArt';
+import { KING_CARD_NATIVE, KING_CARD_WINDOW, kingCardDensity, lockedShade, paintKingCard } from '../../render/kingCardArt';
 import { paintPortrait, PORTRAIT_SIZE } from '../../render/portraitArt';
 import { PORTRAIT_ASSETS, pickPortraitCopy, portraitLargeTextureKey, portraitPlacement, portraitTextureKey } from '../../render/portraitAssets';
 import type { Rect, TooltipContent } from '../hud/layout';
@@ -13,7 +14,7 @@ import type { TooltipHost } from '../theme';
 import type { KingChoice } from './carouselModel';
 import { lockedCardLayout } from './lockedCardLayout';
 
-const cardKey = (id: KingId, locked: boolean): string => `king-card-${id}${locked ? '-locked' : ''}`;
+const cardKey = (id: KingId, locked: boolean, factor: number): string => `king-card-${id}${locked ? '-locked' : ''}${factor === 2 ? '-hd' : ''}`;
 const portraitKey = (id: KingId): string => `portrait-${id}`;
 const lockedKey = (key: string): string => `${key}-locked`;
 /** A tap, not a drag: the pointer moved at most this many px. */
@@ -31,6 +32,8 @@ export class KingPortraitView {
   private portrait: Phaser.GameObjects.Image | null = null;
   private lock: Phaser.GameObjects.Image | null = null;
   private portraitArt = { w: PORTRAIT_SIZE, h: PORTRAIT_SIZE };
+  /** Art px per card px of the card texture: 2 for the HD card (drawn at half the scale), else 1. */
+  private cardFactor: 1 | 2 = 1;
   private choice: KingChoice | null = null;
   private rect: Rect = { x: 0, y: 0, w: KING_CARD_NATIVE.w, h: KING_CARD_NATIVE.h };
   private handler: (() => void) | null = null;
@@ -69,9 +72,13 @@ export class KingPortraitView {
     this.choice = choice;
     const locked = !choice.playable;
     // The approved card picture when it loaded (2026-11-09), else the painted card; glyphs and window drawn on top either way.
-    const picture = imageFile(this.scene.textures, kingCardFile(choice.id));
-    addPixelTexture(this.scene.textures, cardKey(choice.id, locked), paintKingCard(choice.id, locked, picture));
-    this.card.setTexture(cardKey(choice.id, locked)).setVisible(this.shown);
+    // At display density >= 2 its HD twin when that loaded: a 132×192 card drawn at half the scale (same logical size).
+    const hd = hudTexture(this.scene.textures, imageArtKey(kingCardFile(choice.id)), displayMetrics(this.scene).density);
+    const picture = hd.factor === 2 ? textureArt(this.scene.textures, hd.key) : imageFile(this.scene.textures, kingCardFile(choice.id));
+    this.cardFactor = kingCardDensity(picture);
+    const key = cardKey(choice.id, locked, this.cardFactor);
+    addPixelTexture(this.scene.textures, key, paintKingCard(choice.id, locked, picture));
+    this.card.setTexture(key).setVisible(this.shown);
     this.portrait?.destroy();
     this.lock?.destroy();
     this.lock = null;
@@ -79,8 +86,8 @@ export class KingPortraitView {
     const real = this.scene.textures.exists(portraitTextureKey(choice.id));
     if (!real) addPixelTexture(this.scene.textures, portraitKey(choice.id), paintPortrait(this.content.king(choice.id)));
     this.portraitArt = real ? { w: PORTRAIT_ASSETS[choice.id].width, h: PORTRAIT_ASSETS[choice.id].height } : { w: PORTRAIT_SIZE, h: PORTRAIT_SIZE };
-    const key = this.shaded(real ? portraitTextureKey(choice.id) : portraitKey(choice.id), locked);
-    this.portrait = this.scene.add.image(0, 0, key).setOrigin(0, 0).setTint(this.brightness).setDepth(this.depth + 0.5).setVisible(this.shown);
+    const portraitTex = this.shaded(real ? portraitTextureKey(choice.id) : portraitKey(choice.id), locked);
+    this.portrait = this.scene.add.image(0, 0, portraitTex).setOrigin(0, 0).setTint(this.brightness).setDepth(this.depth + 0.5).setVisible(this.shown);
     const atlas = this.scene.textures.exists(SPRITES_KEY) ? this.scene.textures.get(SPRITES_KEY) : null;
     if (locked && atlas?.has(iconFrame('lock'))) {
       this.lock = this.scene.add.image(0, 0, SPRITES_KEY, iconFrame('lock')).setOrigin(0, 0).setTint(this.brightness).setDepth(this.depth + 0.6).setVisible(this.shown);
@@ -145,7 +152,7 @@ export class KingPortraitView {
 
   private place(): void {
     const scale = this.exact ? this.rect.w / KING_CARD_NATIVE.w : Math.max(1, Math.floor(this.rect.w / KING_CARD_NATIVE.w));
-    this.card.setPosition(this.rect.x, this.rect.y).setScale(scale);
+    this.card.setPosition(this.rect.x, this.rect.y).setScale(scale / this.cardFactor);
     if (this.lock) {
       const at = lockedCardLayout({ x: this.rect.x, y: this.rect.y, w: KING_CARD_NATIVE.w * scale, h: KING_CARD_NATIVE.h * scale }).lock;
       this.lock.setPosition(at.x, at.y).setScale(at.scale);
@@ -156,15 +163,20 @@ export class KingPortraitView {
     this.portrait.setPosition(this.rect.x + at.x, this.rect.y + at.y).setScale(at.scale);
   }
 
-  /** The approved portrait in the copy that is sharp at this card scale (only while it is at rest on a whole scale). */
+  /**
+   * The approved portrait in the copy that is sharp at this card scale (only while it is at rest on a whole scale); at
+   * display density >= 2 that copy's HD twin when it loaded (twice the pixels, so `portraitPlacement` halves its scale).
+   */
   private pickPortraitTexture(scale: number): void {
     const c = this.choice;
     if (!this.portrait || !c || !this.scene.textures.exists(portraitTextureKey(c.id))) return;
     const large = pickPortraitCopy(scale) === 'large' && this.scene.textures.exists(portraitLargeTextureKey(c.id));
     const asset = PORTRAIT_ASSETS[c.id];
-    const key = this.shaded(large ? portraitLargeTextureKey(c.id) : portraitTextureKey(c.id), !c.playable);
+    const tex = hudTexture(this.scene.textures, large ? portraitLargeTextureKey(c.id) : portraitTextureKey(c.id), displayMetrics(this.scene).density);
+    const key = this.shaded(tex.key, !c.playable);
     if (this.portrait.texture.key !== key) this.portrait.setTexture(key);
-    this.portraitArt = large ? { w: asset.large.width, h: asset.large.height } : { w: asset.width, h: asset.height };
+    const art = large ? { w: asset.large.width, h: asset.large.height } : { w: asset.width, h: asset.height };
+    this.portraitArt = { w: art.w * tex.factor, h: art.h * tex.factor };
   }
 
   /** `key`, or for a locked king its dark-grey copy (made once from the texture's pixels; `key` itself if that fails). */

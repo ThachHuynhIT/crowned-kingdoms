@@ -7,7 +7,15 @@ Only writes under docs/art-review/iso-board/wilds/ (no runtime asset, no other b
 tools/slice_art_batches.py rewrites every batch at once). Objects are found as connected pieces on the flat black
 background (same rule as that tool), keyed to alpha 0/255 and box-reduced 4x (the trees come out about 95 px tall,
 next to 54-71 px isometric Wheat buildings).
+
+    python docs/art-review/iso-board/wilds/make_wilds.py --density 4   # HiDPI twins -> public/assets/art/ai-v1-hd/iso/wilds/
+
+`--density 4` (11/11/2026, `.superpowers/art-hd-map.md`) writes the runtime HiDPI twins of the shipped wilds instead:
+the same pieces box-reduced 2x (not 4x) to EXACTLY twice the density-2 cut (`cut_hd`: twice its uncropped size, cut to
+twice its crop box, so the foot and the footprint do not move), then the dark rim peeled by
+`tools/strip_decor_outline.py` with twice its passes (the rim is twice as wide), as the shipped wilds were.
 """
+import sys
 from collections import deque
 from pathlib import Path
 
@@ -23,6 +31,7 @@ NAMES = ['tree_pine_dark', 'tree_pine_light', 'tree_oak', 'tree_autumn', 'mounta
 # Tall pieces may hide units: the decor layout keeps them outside the battlefield.
 TALL = {'tree_pine_dark', 'tree_pine_light', 'tree_oak', 'tree_autumn', 'mountain_snow', 'cliff_mossy', 'boulders_big'}
 REDUCE = 4
+OUT_HD = ROOT / 'public/assets/art/ai-v1-hd/iso/wilds'
 
 
 def components(img: np.ndarray) -> list[tuple[int, int, int, int]]:
@@ -52,18 +61,42 @@ def components(img: np.ndarray) -> list[tuple[int, int, int, int]]:
     return out
 
 
-def cut(img: np.ndarray, box: tuple[int, int, int, int]) -> Image.Image:
+def reduced(img: np.ndarray, box: tuple[int, int, int, int], m: int = 1) -> Image.Image:
+    """The piece in `box` keyed and box-reduced to m x its density-2 size (uncropped), alpha 0/255."""
     x0, y0, x1, y1 = box
     sub = img[y0:y1, x0:x1].astype(np.uint8)
     alpha = np.where(img[y0:y1, x0:x1].max(axis=2) > 28, 255, 0).astype(np.uint8)
     rgba = Image.fromarray(np.dstack([sub, alpha]), 'RGBA')
-    size = (max(1, round((x1 - x0) / REDUCE)), max(1, round((y1 - y0) / REDUCE)))
+    size = (max(1, round((x1 - x0) / REDUCE)) * m, max(1, round((y1 - y0) / REDUCE)) * m)
     small = rgba.convert('RGBa').resize(size, Image.BOX).convert('RGBA')
     arr = np.array(small)
     arr[..., 3] = np.where(arr[..., 3] >= 128, 255, 0)
     arr[arr[..., 3] == 0] = 0
-    out = Image.fromarray(arr, 'RGBA')
+    return Image.fromarray(arr, 'RGBA')
+
+
+def cut(img: np.ndarray, box: tuple[int, int, int, int]) -> Image.Image:
+    out = reduced(img, box)
     return out.crop(out.getbbox())
+
+
+def cut_hd(img: np.ndarray, box: tuple[int, int, int, int], m: int = 2) -> Image.Image:
+    """`cut` at m times the pixels and EXACTLY m times its size (m x the density-2 crop box)."""
+    bbox = reduced(img, box).getbbox()
+    return reduced(img, box, m).crop(tuple(v * m for v in bbox))
+
+
+def export_hd() -> None:
+    """The HiDPI twins of the shipped wilds: `cut_hd`, then the dark rim peeled like the shipped files."""
+    sys.path.insert(0, str(ROOT / 'tools'))
+    from strip_decor_outline import DEFAULT_PASSES, strip_outline
+
+    img = np.array(Image.open(SRC).convert('RGB')).astype(int)
+    OUT_HD.mkdir(parents=True, exist_ok=True)
+    for name, box in zip(NAMES, components(img)):
+        out, removed = strip_outline(cut_hd(img, box), 2 * DEFAULT_PASSES)
+        out.save(OUT_HD / f'{name}.png')
+        print(f'{name}: {out.width}x{out.height}, {removed} outline px removed')
 
 
 def main() -> None:
@@ -112,4 +145,9 @@ def main() -> None:
 
 
 if __name__ == '__main__':
-    main()
+    if '--density' in sys.argv:
+        if sys.argv[sys.argv.index('--density') + 1] != '4':
+            raise SystemExit('usage: make_wilds.py [--density 4]')
+        export_hd()
+    else:
+        main()

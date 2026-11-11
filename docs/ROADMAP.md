@@ -73,6 +73,7 @@ Tất cả là cảm nhận trên PC (desktop ≥ 768 px). Bố cục điện th
 ## Giai đoạn `enhance-hd-graphics`
 
 1. ✔ HiDPI rendering (11/11/2026): canvas theo DPR thật, chữ rasterise theo mật độ, layout/input giữ logical, art giữ nearest; chưa xuất lại art (bước 2). Spec [`2026-11-11-hidpi-rendering-design.md`](superpowers/specs/2026-11-11-hidpi-rendering-design.md), plan [`2026-11-11-hidpi-rendering.md`](superpowers/plans/2026-11-11-hidpi-rendering.md). Đã kiểm ở DPR thật 1/1,25/2/3; D1 giống hệt từng pixel so với trước.
+2. ✔ Art HD (11/11/2026, chỉ xuất lại từ ảnh nguồn đã duyệt, không vẽ mới): bản 4 px/đơn vị thế giới (gấp đôi) cho lính, nhà, cấp 2/3, ô đất, vách núi, vật hoang dã, rừng, cổng, nền cỏ/địa hình, ảnh thẻ, chân dung, thẻ chọn vua, tranh menu, icon; chỉ tải ở màn mật độ ≥ 2, PWA không cache sẵn (cache khi dùng). Atlas thế giới chia trang ≤ 4096. Còn lại: lính `footman` (không có ảnh nguồn theo tư thế), icon trong atlas `sprites`, fx.
 
 ## Để sau: điện thoại (chỉ làm khi chủ dự án bảo)
 

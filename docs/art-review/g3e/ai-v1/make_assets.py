@@ -3,12 +3,21 @@
 Steps: block-downsample (7 px blocks -> 1 px), threshold alpha to 0/255, pad the spearman poses onto one
 feet-aligned canvas, make the red 'foe' recolour, and shrink the cottage to ~64 px wide (nearest-safe resize).
 Run from the repo root: python docs/art-review/g3e/ai-v1/make_assets.py
+
+`--density 4` (11/11/2026, `.superpowers/art-hd-map.md`) writes only the HiDPI twins of the three grass tiles into
+public/assets/art/ai-v1-hd/: the same sheet regions box-reduced to EXACTLY twice the density-2 size (3.5 px blocks),
+cut and edge-padded the same way to 64x64. The spearman and the cottage have no twin.
 """
 from PIL import Image
-import numpy as np, os
+import numpy as np, os, sys
+
+DENSITY = int(sys.argv[sys.argv.index('--density') + 1]) if '--density' in sys.argv else 2
+if DENSITY not in (2, 4):
+    raise SystemExit('usage: make_assets.py [--density 4]')
+M = DENSITY // 2
 
 SRC = 'docs/art-review/g3e/ai-v1/source-sheet.webp'
-OUT = 'public/assets/art/ai-v1'
+OUT = 'public/assets/art/ai-v1' if DENSITY == 2 else 'public/assets/art/ai-v1-hd'
 B = 7
 os.makedirs(OUT, exist_ok=True)
 a = np.array(Image.open(SRC).convert('RGBA'))
@@ -21,15 +30,34 @@ def clean(arr):
     return arr
 
 
-def block_down(x0, y0, x1, y1, opaque=False):
+def block_down(x0, y0, x1, y1, opaque=False, m=1):
+    """B px blocks -> 1 px (m = 1); m = 2 gives EXACTLY twice that size (the HiDPI twin)."""
     sub = a[y0:y1, x0:x1].copy()
     if not opaque:
         ys, xs = np.where(sub[..., 3] > 200)
         sub = sub[ys.min():ys.max() + 1, xs.min():xs.max() + 1]
     h, w = sub.shape[:2]
-    im = Image.fromarray(sub).resize((max(1, round(w / B)), max(1, round(h / B))), Image.BOX)
+    im = Image.fromarray(sub).resize((max(1, round(w / B)) * m, max(1, round(h / B)) * m), Image.BOX)
     return clean(np.array(im))
 
+
+def grass(m):
+    """The three grass tiles at m x 32 px (m = 1 shipped, 2 HiDPI), padded by repeating the last row / column."""
+    n = 32 * m
+    for i, (x0, x1) in enumerate([(730, 957), (994, 1219), (1261, 1481)]):
+        t = block_down(x0, 650, x1, 865, opaque=True, m=m)
+        t = t[:n, :n]
+        pad = np.zeros((n, n, 4), dtype=np.uint8)
+        pad[:t.shape[0], :t.shape[1]] = t
+        pad[t.shape[0]:, :] = pad[t.shape[0] - 1:t.shape[0], :]
+        pad[:, t.shape[1]:] = pad[:, t.shape[1] - 1:t.shape[1]]
+        Image.fromarray(pad).save(f'{OUT}/grass_{i}.png')
+
+
+if DENSITY == 4:
+    grass(M)
+    print('done: HiDPI grass')
+    raise SystemExit(0)
 
 # --- spearman poses -------------------------------------------------------------------------------
 segs = [(87, 244), (305, 476), (552, 713), (756, 915), (975, 1158), (1212, 1508)]
@@ -82,12 +110,5 @@ s = clean(np.array(small))
 Image.fromarray(s).save(f'{OUT}/cottage.png')
 
 # --- grass tiles, padded to exactly 32x32 ----------------------------------------------------------------------
-for i, (x0, x1) in enumerate([(730, 957), (994, 1219), (1261, 1481)]):
-    t = block_down(x0, 650, x1, 865, opaque=True)
-    t = t[:32, :32]
-    pad = np.zeros((32, 32, 4), dtype=np.uint8)
-    pad[:t.shape[0], :t.shape[1]] = t
-    pad[t.shape[0]:, :] = pad[t.shape[0] - 1:t.shape[0], :]
-    pad[:, t.shape[1]:] = pad[:, t.shape[1] - 1:t.shape[1]]
-    Image.fromarray(pad).save(f'{OUT}/grass_{i}.png')
+grass(1)
 print('done', th)

@@ -1,10 +1,11 @@
-import { logicalPointer, logicalPointerDistance } from '../displayRuntime';
+import { displayMetrics, logicalPointer, logicalPointerDistance } from '../displayRuntime';
 import type Phaser from 'phaser';
 import type { CardDef, CardId, KingId } from '../../data/types';
 import { UI_PALETTE } from '../../data/uiPalette';
 import { describeCard } from '../../game/cards/describe';
 import type { Content } from '../../game/cards/registry';
 import { SPRITES_KEY, iconFrame } from '../../render/atlas';
+import { hudTexture } from '../../render/hudArtHd';
 import type { IconId } from '../../render/iconArt';
 import type { UiFrame } from '../../render/uiArt';
 import { CARD_LIFT, DRAG_SLOP, type Rect, type Size, type TooltipContent } from '../hud/layout';
@@ -270,7 +271,9 @@ export class CardView {
     const ref = pickCardImage(l.art, resolveCardImage(def.id, VERTICAL_CARD_ART));
     const fit = fitArt(l.art, ref);
     if (this.scene.textures.exists(ref.key) && this.scene.textures.get(ref.key).has(ref.frame)) {
-      this.add(this.scene.add.image(fit.x, fit.y, ref.key, ref.frame).setOrigin(0, 0).setScale(fit.scale));
+      // The HD twin (twice the pixels, half the scale) at display density >= 2 when it loaded; same logical size.
+      const tex = ref.frame === '__BASE' ? hudTexture(this.scene.textures, ref.key, displayMetrics(this.scene).density) : { key: ref.key, factor: 1 };
+      this.add(this.scene.add.image(fit.x, fit.y, tex.key, ref.frame).setOrigin(0, 0).setScale(fit.scale / tex.factor));
     }
 
     if (this.badge) {

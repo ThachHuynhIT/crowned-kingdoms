@@ -5,6 +5,12 @@
 Keys out the magenta, crops to the object, and box-reduces it (mask-weighted, alpha 0/255) into a centred 32x32 and
 16x16 square: public/assets/art/ai-v1/icons/<id>.png and <id>-16.png. The 16 px copy is for small calendar cells
 (the game never scales by a fraction). Preview: docs/art-review/g3e/icons/<id>/preview.png (both at 4x on cream).
+
+    python docs/art-review/g3e/icons/make_assets.py --density 2 icon_life [...]
+
+HiDPI twins (2026-11-11): the same cut at twice the pixels (64x64 and 32x32) under the same names in
+public/assets/art/ai-v1-hd/icons/ (no preview). The game draws them at half the scale at display density >= 2
+(src/render/hudArtHd.ts). Without --density the output is unchanged.
 """
 import sys
 from pathlib import Path
@@ -15,6 +21,7 @@ from PIL import Image
 ROOT = Path(__file__).resolve().parents[4]
 P = ROOT / 'docs/art-review/g3e/icons'
 OUT = ROOT / 'public/assets/art/ai-v1/icons'
+OUT_HD = ROOT / 'public/assets/art/ai-v1-hd/icons'
 
 
 def cut(src):
@@ -44,7 +51,27 @@ def reduce(sq, m, n):
     return Image.fromarray(out, 'RGBA')
 
 
-def main(ids):
+def density_arg(args):
+    """(density, the other args): `--density N` anywhere in args, 1 when absent; only 1 and 2 are allowed."""
+    if '--density' not in args:
+        return 1, list(args)
+    i = args.index('--density')
+    density = int(args[i + 1])
+    if density not in (1, 2):
+        raise SystemExit('--density must be 1 or 2')
+    return density, list(args[:i]) + list(args[i + 2:])
+
+
+def main(args):
+    density, ids = density_arg(args)
+    if density != 1:
+        OUT_HD.mkdir(parents=True, exist_ok=True)
+        for icon in ids:
+            sq, m = cut(P / icon / 'source.png')
+            reduce(sq, m, 32 * density).save(OUT_HD / f'{icon}.png')
+            reduce(sq, m, 16 * density).save(OUT_HD / f'{icon}-16.png')
+            print(icon, 'hd ok')
+        return
     OUT.mkdir(parents=True, exist_ok=True)
     for icon in ids:
         sq, m = cut(P / icon / 'source.png')

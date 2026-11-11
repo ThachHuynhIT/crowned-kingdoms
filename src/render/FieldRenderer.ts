@@ -6,7 +6,14 @@ import { DecorationRenderer } from './DecorationRenderer';
 import { EnemyPortalRenderer } from './EnemyPortalRenderer';
 import { ForestRenderer } from './ForestRenderer';
 import { IsoWallRenderer } from './IsoWallRenderer';
-import { ensureFieldTexture, ensureGroundTexture, ensureRoadTailTexture, fieldTextureScale, groundTextureScale } from './atlas';
+import {
+  ensureFieldTexture,
+  ensureGroundTexture,
+  ensureRoadTailTexture,
+  fieldTextureFrames,
+  fieldTextureScale,
+  groundTextureScale,
+} from './atlas';
 import { ROAD_TAIL } from './fieldArt';
 
 /** The ground covers at least this many projected px each way around the origin (any view of the map). */
@@ -21,7 +28,7 @@ const TILE_GRID_Y = -8;
 export class FieldRenderer {
   private readonly textures: Phaser.Textures.TextureManager;
   private readonly key: string;
-  private image: Phaser.GameObjects.Image | null;
+  private images: Phaser.GameObjects.Image[] | null;
   private ground: Phaser.GameObjects.TileSprite | null;
   private roadTail: Phaser.GameObjects.Image | null;
   private wall: IsoWallRenderer | null;
@@ -46,18 +53,22 @@ export class FieldRenderer {
       .setOrigin(0, 0)
       .setTileScale(scale)
       .setDepth(-1);
-    // The isometric field: its top corner is world (0, 0), projected (0, 0).
-    this.image = scene.add
-      .image(0, 0, this.key)
-      .setOrigin(0.5, 0)
-      .setScale(fieldTextureScale(scene.textures, this.key))
-      .setDepth(0);
+    // The isometric field: its top corner is world (0, 0), projected (0, 0). Painted from the HD grass it comes in
+    // vertical strips (`fieldTextureFrames`), laid side by side from its left corner.
+    const fieldScale = fieldTextureScale(scene.textures, this.key);
+    const frames = fieldTextureFrames(scene.textures, this.key);
+    let left = -(frames.reduce((w, f) => w + f.width, 0) * fieldScale) / 2;
+    this.images = frames.map((f) => {
+      const image = scene.add.image(left, 0, this.key, f.name).setOrigin(0, 0).setScale(fieldScale).setDepth(0);
+      left += f.width * fieldScale;
+      return image;
+    });
     // The road's last stretch from the field's edge to the enemy portal.
     const tail = project({ x: ROAD_TAIL.x, y: ROAD_TAIL.y });
     this.roadTail = scene.add
       .image(tail.x, tail.y, ensureRoadTailTexture(scene.textures))
       .setOrigin(0.5, 0)
-      .setScale(fieldTextureScale(scene.textures, this.key))
+      .setScale(fieldScale)
       .setDepth(0.01);
     // Isometric cliff drawn in code until the isometric wall art (Task 11); the king skin waits for it.
     void kingId;
@@ -69,7 +80,7 @@ export class FieldRenderer {
 
   /** Destroys the images, then removes the `field-<seed>` texture (nothing else uses it). */
   destroy(): void {
-    if (this.image === null) return;
+    if (this.images === null) return;
     this.wall?.destroy();
     this.wall = null;
     this.decor?.destroy();
@@ -82,8 +93,8 @@ export class FieldRenderer {
     this.ground = null;
     this.roadTail?.destroy();
     this.roadTail = null;
-    this.image.destroy();
-    this.image = null;
+    for (const image of this.images) image.destroy();
+    this.images = null;
     if (this.textures.exists(this.key)) this.textures.remove(this.key);
   }
 }

@@ -14,7 +14,8 @@ run to some of buildings, plots, wall (default all three).
   and right corners are) is the image's middle row; the game anchors plots at their centre.
 - Wall: the cliff foot is measured column by column and every column shifted down so the foot runs at exactly 2:1
   (owner: "sửa dốc tường sau"; vertical edges stay vertical, nothing is rotated), then reduced to 480 px wide; the
-  foot at the right edge is the bottom row.
+  foot at the right edge is the bottom row. At `--density 4` the wall is cut by `reduce_hd` (exactly 2x the shipped
+  480 px segment, same foot line), like the buildings.
 Reduction is a premultiplied box filter; alpha is snapped back to 0/255.
 """
 from pathlib import Path
@@ -154,7 +155,6 @@ def parse_args(argv: list[str]) -> tuple[int, tuple[str, ...]]:
 
 def main(density: int = 2, parts: tuple[str, ...] = PARTS) -> None:
     out_dir = OUT if density == 2 else OUT_HD
-    m = density / 2
     (out_dir / 'plots').mkdir(parents=True, exist_ok=True)
     if 'buildings' in parts:
         sources = {k: keyed(p) for k, p in BUILDINGS.items()}
@@ -175,7 +175,8 @@ def main(density: int = 2, parts: tuple[str, ...] = PARTS) -> None:
             print(f'plots/{name}: {out.width}x{out.height}')
     if 'wall' in parts:
         wall, slope = shear_wall(keyed(WALL))
-        out = reduce(wall, WALL_WIDTH * m / wall.width)
+        k = WALL_WIDTH / wall.width
+        out = reduce(wall, k) if density == 2 else reduce_hd(wall, k, density // 2)
         out.save(out_dir / 'wall_cliff.png')
         print(f'wall_cliff: {out.width}x{out.height} (source foot slope {slope:.3f} -> 0.5)')
 

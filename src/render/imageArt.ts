@@ -18,9 +18,10 @@ export const imageArtKey = (file: string): string => `imgart-${file}`;
  * unit into `ai-v1-hd/` under the same file names, drawn at `IMAGE_ART_HD_SCALE` so every world size and anchor stays
  * identical (each HD file is exactly twice its `ai-v1` twin). Only files in `IMAGE_ART_HD_FILES` have an HD twin; they
  * are loaded instead of the `ai-v1` file when the display density is at least `HD_ART_MIN_DENSITY` (at density 1 the
- * extra pixels would only be dropped by nearest sampling). HD files feed only the `sprites` atlas (unit poses,
- * buildings and plots), which reads the density back from the texture key (`imageArtHdKey`). Wall, wilds, forest,
- * portal, grass and terrain stay ai-v1: they are drawn outside the atlas at a fixed scale (see `.superpowers/art-hd-map.md`).
+ * extra pixels would only be dropped by nearest sampling). Unit poses, buildings and plots feed the `sprites` atlas,
+ * which reads the density back from the texture key (`imageArtHdKey`). The world pictures drawn outside the atlas
+ * (`IMAGE_ART_HD_WORLD`: wall, wilds, forest, portal, grass and terrain) find their texture through `imageArtTexture`
+ * and halve their own scale when it is the HD twin.
  */
 export const IMAGE_ART_HD_DIR = 'assets/art/ai-v1-hd/';
 /** World units per art pixel of an HD file (4 art px per world unit). */
@@ -513,6 +514,24 @@ export const menuImageLayers = (
 ): readonly { readonly file: string; readonly parallax: number }[] | null =>
   MENU_IMAGE_LAYERS.every((layer) => loaded(layer.file)) ? MENU_IMAGE_LAYERS : null;
 
+/**
+ * World pictures drawn outside the atlas that have an HD twin (11/11/2026), by group: `wall` the cliff segment
+ * (`IsoWallRenderer`), `decor` the approved wild objects (`DecorationRenderer`), `forest` the forest behind the cliff
+ * (`ForestRenderer`), `portal` the enemy portal (`EnemyPortalRenderer`), `ground` the three grass tiles and the
+ * approved terrain textures, painted into the field and the ground around it at 4 art px per world unit
+ * (`ensureFieldTexture`, `ensureGroundTexture`, `ensureRoadTailTexture`). Rollback of a group = remove it.
+ */
+export const IMAGE_ART_HD_WORLD: readonly ('wall' | 'decor' | 'forest' | 'portal' | 'ground')[] = [
+  'wall', 'decor', 'forest', 'portal', 'ground',
+];
+const HD_WORLD_FILES: Readonly<Record<(typeof IMAGE_ART_HD_WORLD)[number], readonly string[]>> = {
+  wall: [WALL_FILE],
+  decor: DECOR_APPROVED.map(decorFile),
+  forest: FOREST_APPROVED.map(forestFile),
+  portal: PORTAL_APPROVED ? [PORTAL_ART.file] : [],
+  ground: [...GRASS_FILES, ...GROUND_TEXTURES_APPROVED.map((t) => GROUND_TEXTURE_FILES[t])],
+};
+
 /** Every PNG of the set (file name without `.png`). */
 export const IMAGE_ART_FILES: readonly string[] = [
   ...Object.values(IMAGE_UNITS).flatMap((prefix) => [
@@ -543,7 +562,7 @@ export const IMAGE_ART_FILES: readonly string[] = [
 
 /**
  * Files with an HD twin in `IMAGE_ART_HD_DIR`: the twelve poses of each HD unit, each HD building's base, L2 and L3, the
- * four plot skins of each HD king.
+ * four plot skins of each HD king, the world pictures of each `IMAGE_ART_HD_WORLD` group.
  */
 export const IMAGE_ART_HD_FILES: ReadonlySet<string> = new Set([
   ...IMAGE_ART_HD_UNITS.flatMap((unit) => {
@@ -559,7 +578,23 @@ export const IMAGE_ART_HD_FILES: ReadonlySet<string> = new Set([
     const prefix = IMAGE_PLOTS[king];
     return prefix === undefined ? [] : PLOT_STATES.map((s) => `${prefix}_${s}`);
   }),
+  ...IMAGE_ART_HD_WORLD.flatMap((group) => HD_WORLD_FILES[group]),
 ]);
+
+/**
+ * The loaded texture of a world picture drawn outside the atlas: its HD twin (`hd`, 4 art px per world unit, so the
+ * caller draws it at half its usual scale) when that loaded, else the `ai-v1` file; null when neither loaded.
+ */
+export const imageArtTexture = (
+  exists: (key: string) => boolean,
+  file: string,
+): { readonly key: string; readonly hd: boolean } | null => {
+  if (exists(imageArtHdKey(file))) return { key: imageArtHdKey(file), hd: true };
+  return exists(imageArtKey(file)) ? { key: imageArtKey(file), hd: false } : null;
+};
+
+/** Display scale of a world picture drawn at `scale` from its `ai-v1` file: halved for the HD twin. */
+export const imageArtScale = (scale: number, hd: boolean): number => (hd ? scale * (IMAGE_ART_HD_SCALE / IMAGE_ART_SCALE) : scale);
 
 /** Whether HD art is loaded at display density `density`. */
 export const useHdArt = (density: number): boolean => density >= HD_ART_MIN_DENSITY;

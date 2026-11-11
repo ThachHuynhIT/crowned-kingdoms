@@ -7,6 +7,11 @@ shrinks the whole picture (no crop) to 96x144 by averaging, snaps every pixel to
 explicit palette (no dithering, open colours: not forced into the Hearth 32), removes single stray
 pixels, and writes <out>/<king>.png plus <out>/native-sheet.png (1x, 2x and 24x36 thumbnails).
 Default out: docs/art-review/g3e/portraits/native. Nothing is copied into public/ or src/.
+
+HiDPI twins (2026-11-11): `--density 2` multiplies --size by 2 (192x288, or 288x432 with --size 144x216) from the same
+source and palette, e.g. `--density 2 --out public/assets/art/ai-v1-hd/portraits` and again with
+`--size 144x216 --suffix -144`. The game draws them at half the scale at display density >= 2
+(src/render/hudArtHd.ts). Without --density the output is unchanged.
 """
 import argparse
 import sys
@@ -108,10 +113,11 @@ def main(argv=None):
     ap.add_argument('--smooth', type=int, default=0, choices=[0, 3, 5], help='median filter size before snapping (0 = off)')
     ap.add_argument('--size', default='96x144', help='WxH; other sizes (e.g. 144x216 for the 3x king card) skip the sheet')
     ap.add_argument('--suffix', default='', help='appended to each file name, e.g. -144')
+    ap.add_argument('--density', type=int, default=1, choices=[1, 2], help='multiplies --size (2 = HiDPI twin)')
     ap.add_argument('kings', nargs='*')
     args = ap.parse_args(argv)
     kings = args.kings or KINGS
-    size = tuple(int(v) for v in args.size.split('x'))
+    size = tuple(int(v) * args.density for v in args.size.split('x'))
     out = Path(args.out)
     out.mkdir(parents=True, exist_ok=True)
     images = {}

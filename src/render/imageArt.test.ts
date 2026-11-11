@@ -1,6 +1,6 @@
 import { describe, expect, it } from 'vitest';
 import { FIELD_TERRAINS, ROAD_TAIL, generateField, paintField, paintRoadTail } from './fieldArt';
-import { GRASS_FILES, IMAGE_ART_DIR, IMAGE_ART_FILES, IMAGE_ART_HD_DIR, IMAGE_ART_HD_BUILDINGS, IMAGE_ART_HD_FILES, IMAGE_ART_HD_PLOTS, IMAGE_ART_HD_SCALE, IMAGE_ART_HD_UNITS, IMAGE_ART_SCALE, IMAGE_BUILDINGS, IMAGE_PLOTS, IMAGE_UNITS, MENU_IMAGE_LAYERS, POSES, WALL_FILE, imageArtHdKey, imageArtKey, imageArtLoads, menuImageLayers, unitPoseFile, useHdArt } from './imageArt';
+import { DECOR_APPROVED, FOREST_APPROVED, GROUND_TEXTURES_APPROVED, GROUND_TEXTURE_FILES, PORTAL_ART, decorFile, forestFile, imageArtScale, imageArtTexture, GRASS_FILES, IMAGE_ART_DIR, IMAGE_ART_FILES, IMAGE_ART_HD_DIR, IMAGE_ART_HD_BUILDINGS, IMAGE_ART_HD_FILES, IMAGE_ART_HD_PLOTS, IMAGE_ART_HD_SCALE, IMAGE_ART_HD_UNITS, IMAGE_ART_SCALE, IMAGE_BUILDINGS, IMAGE_PLOTS, IMAGE_UNITS, MENU_IMAGE_LAYERS, POSES, WALL_FILE, imageArtHdKey, imageArtKey, imageArtLoads, menuImageLayers, unitPoseFile, useHdArt } from './imageArt';
 import { PixelCanvas, upscale } from './pixel';
 
 describe('image art mapping', () => {
@@ -74,8 +74,31 @@ describe('HD image art (4 art px per world unit)', () => {
     expect(sd.every((l) => l.url.startsWith(IMAGE_ART_DIR))).toBe(true);
     expect(hd).toContainEqual({ key: imageArtHdKey('militia_0'), url: `${IMAGE_ART_HD_DIR}militia_0.png` });
     expect(hd).toContainEqual({ key: imageArtKey('footman_0'), url: `${IMAGE_ART_DIR}footman_0.png` });
-    expect(hd).toContainEqual({ key: imageArtKey(WALL_FILE), url: `${IMAGE_ART_DIR}${WALL_FILE}.png` });
+    expect(hd).toContainEqual({ key: imageArtHdKey(WALL_FILE), url: `${IMAGE_ART_HD_DIR}${WALL_FILE}.png` });
+    expect(hd).toContainEqual({ key: imageArtKey('icons/icon_gold-16'), url: `${IMAGE_ART_DIR}icons/icon_gold-16.png` });
     expect(hd.filter((l) => l.url.startsWith(IMAGE_ART_HD_DIR)).length).toBe(IMAGE_ART_HD_FILES.size);
+  });
+
+  it('has HD twins of the world pictures drawn outside the atlas (wall, wilds, forest, portal, grass, terrain)', () => {
+    const world = [
+      WALL_FILE,
+      PORTAL_ART.file,
+      ...GRASS_FILES,
+      ...DECOR_APPROVED.map(decorFile),
+      ...FOREST_APPROVED.map(forestFile),
+      ...GROUND_TEXTURES_APPROVED.map((t) => GROUND_TEXTURE_FILES[t]),
+    ];
+    for (const file of world) expect(IMAGE_ART_HD_FILES, file).toContain(file);
+  });
+
+  it('finds a world picture under its HD key first, then its ai-v1 key; the HD twin draws at half scale', () => {
+    const file = decorFile('log');
+    expect(imageArtTexture(() => true, file)).toEqual({ key: imageArtHdKey(file), hd: true });
+    expect(imageArtTexture((k) => k === imageArtKey(file), file)).toEqual({ key: imageArtKey(file), hd: false });
+    expect(imageArtTexture(() => false, file)).toBeNull();
+    expect(imageArtScale(1, false)).toBe(1);
+    expect(imageArtScale(1, true)).toBe(0.5);
+    expect(imageArtScale(IMAGE_ART_SCALE, true)).toBe(IMAGE_ART_HD_SCALE);
   });
 
   it('switches on from display density 2', () => {
@@ -116,6 +139,36 @@ describe('paintField with grass art', () => {
       if (c === 0x112233 || c === 0x223344 || c === 0x334455) artPixels++;
     }
     expect(artPixels).toBeGreaterThan(1000);
+  });
+});
+
+describe('paintField with HD grass art (4 art px per world unit, 11/11/2026)', () => {
+  const grass = (n: number) =>
+    [0x112233, 0x223344, 0x334455].map((c) => {
+      const t = new PixelCanvas(n, n);
+      t.fillRect(0, 0, n, n, c);
+      return t;
+    });
+
+  it('is four times as dense as the plain field and lays every cell exactly where the density-2 field does', () => {
+    const sd = paintField(2, grass(32));
+    const hd = paintField(2, grass(64));
+    expect([hd.width, hd.height]).toEqual([sd.width * 2, sd.height * 2]);
+    // the 64 px grass tiles are the 32 px ones twice as dense: the field downsampled 2× is the density-2 field
+    for (let y = 0; y < sd.height; y += 5)
+      for (let x = 0; x < sd.width; x += 5) {
+        const i = (y * sd.width + x) * 4;
+        const j = (2 * y * hd.width + 2 * x) * 4;
+        expect([hd.data[j], hd.data[j + 1], hd.data[j + 2], hd.data[j + 3]]).toEqual([sd.data[i], sd.data[i + 1], sd.data[i + 2], sd.data[i + 3]]);
+      }
+  });
+
+  it('paints the road tail at the same density', () => {
+    const sd = paintRoadTail(2);
+    const hd = paintRoadTail(4);
+    expect([hd.width, hd.height]).toEqual([sd.width * 2, sd.height * 2]);
+    for (const [x, y] of [[0, 0], [17, 5], [40, 33], [63, 63]] as const)
+      expect(hd.data[(2 * y * hd.width + 2 * x) * 4]).toBe(sd.data[(y * sd.width + x) * 4]);
   });
 });
 

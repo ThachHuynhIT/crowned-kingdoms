@@ -1,9 +1,10 @@
-import { logicalPointer } from '../displayRuntime';
+import { displayMetrics, logicalPointer } from '../displayRuntime';
 import Phaser from 'phaser';
 import { ContentBox } from '../ContentBox';
 import type { Point, Rect, Size } from '../hud/layout';
 import { createButton, type Button } from '../theme';
 import { buildingModelLines, infoContent, lineIcon, unitModelLines } from './infoLines';
+import { hudTexture } from '../../render/hudArtHd';
 import { imageArtKey, STAT_ICONS } from '../../render/imageArt';
 import type { BuildingInfoModel, UnitInfoModel } from './inspectionModel';
 import { inspectionLayout, scrollLinesForDrag, scrollLinesForWheel } from './inspectionLayout';
@@ -40,7 +41,8 @@ export class InspectionView {
       lineIcon: (text) => {
         const id = lineIcon(text);
         const file = id === null ? undefined : STAT_ICONS[id];
-        return file ? imageArtKey(file) : null;
+        // The 32 px HD twin at display density >= 2 when it loaded (ContentBox shows it 16 logical px wide).
+        return file ? hudTexture(scene.textures, imageArtKey(file), displayMetrics(scene).density).key : null;
       },
     });
     this.box.container.setDepth(depth);

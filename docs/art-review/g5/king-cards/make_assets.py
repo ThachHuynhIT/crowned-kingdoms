@@ -5,6 +5,13 @@
 Keys out the magenta, crops to the card, box-reduces it (mask-weighted, alpha 0/255) to 66x96 and writes
 public/assets/art/ai-v1/king-cards/<king>.png. Preview: docs/art-review/g5/king-cards/<king>/preview.png at 4x on the
 king-select background colour.
+
+    python docs/art-review/g5/king-cards/make_assets.py --density 2 wheat [...]
+
+HiDPI twins (2026-11-11): the same cut at twice the pixels (132x192) under the same names in
+public/assets/art/ai-v1-hd/king-cards/ (no preview). The game paints the corner glyphs at 2 px per card px over it and
+draws the card at half the scale at display density >= 2 (src/render/hudArtHd.ts). Without --density the output is
+unchanged.
 """
 import sys
 from pathlib import Path
@@ -15,10 +22,11 @@ from PIL import Image
 ROOT = Path(__file__).resolve().parents[4]
 P = ROOT / 'docs/art-review/g5/king-cards'
 OUT = ROOT / 'public/assets/art/ai-v1/king-cards'
+OUT_HD = ROOT / 'public/assets/art/ai-v1-hd/king-cards'
 W, H = 66, 96
 
 
-def cut(src):
+def cut(src, W=W, H=H):
     a = np.array(Image.open(src).convert('RGB')).astype(float)
     r, g, b = a[..., 0], a[..., 1], a[..., 2]
     solid = ~((r > 150) & (b > 150) & (g < 110))
@@ -35,7 +43,25 @@ def cut(src):
     return Image.fromarray(out, 'RGBA')
 
 
-def main(ids):
+def density_arg(args):
+    """(density, the other args): `--density N` anywhere in args, 1 when absent; only 1 and 2 are allowed."""
+    if '--density' not in args:
+        return 1, list(args)
+    i = args.index('--density')
+    density = int(args[i + 1])
+    if density not in (1, 2):
+        raise SystemExit('--density must be 1 or 2')
+    return density, list(args[:i]) + list(args[i + 2:])
+
+
+def main(args):
+    density, ids = density_arg(args)
+    if density != 1:
+        OUT_HD.mkdir(parents=True, exist_ok=True)
+        for king in ids:
+            cut(P / king / 'source.png', W * density, H * density).save(OUT_HD / f'{king}.png')
+            print(king, 'hd ok')
+        return
     OUT.mkdir(parents=True, exist_ok=True)
     for king in ids:
         img = cut(P / king / 'source.png')
