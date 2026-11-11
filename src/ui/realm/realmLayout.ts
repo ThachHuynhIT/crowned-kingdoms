@@ -334,14 +334,16 @@ const desktopLayout = (screen: Size, handSize: number, mode: RunMode): PlanningL
     freeMove: { ...deck, y: reroll.y },
     shop: { ...sell, y: reroll.y - GAP * 2 - DESK.button.h },
     ...besidePlot(centrePlot, screen),
-    // The shared hint belongs in the top HUD band, above the board.
-    hint: {
-      x: Math.round(w / 2 - 240),
-      y: year.y + year.h + GAP,
-      w: 480,
-      h: HINT_H,
-    },
+    // The shared hint belongs in the top HUD band, above the board; on a narrow screen (night 12/11/2026: 667×375)
+    // it starts right of the decree button instead of covering it.
+    hint: hintRect(w, year.y + year.h + GAP, wide ? MARGIN : MARGIN + DESK.button.w + GAP),
   };
+};
+
+/** The desktop play hint: 480 px centred, moved right of `minX` and narrowed to the screen when needed. */
+const hintRect = (w: number, y: number, minX: number): Rect => {
+  const x = Math.max(minX, Math.round(w / 2 - 240));
+  return { x, y, w: Math.max(0, Math.min(480, w - MARGIN - x)), h: HINT_H };
 };
 
 const mobileLayout = (screen: Size, handSize: number, mode: RunMode): PlanningLayout => {

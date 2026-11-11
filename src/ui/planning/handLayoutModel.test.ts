@@ -131,3 +131,30 @@ describe('battle HUD on landscape phones (night 12/11/2026)', () => {
     });
   }
 });
+
+describe('planning HUD on landscape phones (night 12/11/2026)', () => {
+  const overlaps = (a: { x: number; y: number; w: number; h: number }, b: { x: number; y: number; w: number; h: number }): boolean =>
+    a.x < b.x + b.w && b.x < a.x + a.w && a.y < b.y + b.h && b.y < a.y + a.h;
+  for (const screen of [
+    { w: 667, h: 375 },
+    { w: 844, h: 390 },
+    { w: 932, h: 430 },
+    { w: 1280, h: 720 },
+  ]) {
+    it(`${screen.w}×${screen.h}: top HUD, hint and actions do not overlap`, () => {
+      const l = planningLayout(screen, 5);
+      const rects: Record<string, { x: number; y: number; w: number; h: number }> = {
+        lives: l.lives, gold: l.gold, help: l.help, year: l.year, hint: l.hint,
+        shop: l.shop, reroll: l.reroll, sell: l.sell, deck: l.deck,
+        ...Object.fromEntries(l.calendar.map((c, i) => [`cal${i}`, c])),
+      };
+      if (l.scoutButton) rects.scout = l.scoutButton;
+      if (l.decreeButton) rects.decree = l.decreeButton;
+      const entries = Object.entries(rects);
+      for (const [i, [name, r]] of entries.entries()) {
+        expect(r.x >= 0 && r.y >= 0 && r.x + r.w <= screen.w && r.y + r.h <= screen.h, `${name} on screen`).toBe(true);
+        for (const [other, o] of entries.slice(i + 1)) expect(overlaps(r, o), `${name} × ${other}`).toBe(false);
+      }
+    });
+  }
+});
