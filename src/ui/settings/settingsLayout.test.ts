@@ -9,12 +9,22 @@ describe('settingsLayout', () => {
   for (const screen of [
     { w: 1280, h: 720 },
     { w: 375, h: 812 },
+    // short landscape screens (night 12/11/2026): the panel used to lose its title and Đóng
+    { w: 960, h: 540 },
+    { w: 1024, h: 600 },
+    { w: 932, h: 430 },
+    { w: 915, h: 412 },
+    { w: 844, h: 390 },
+    { w: 667, h: 375 },
   ]) {
     it(`fits all controls without overlaps at ${screen.w}×${screen.h}`, () => {
       const l = settingsLayout(screen);
       const buttons = [
         ...l.rows.flatMap((r) => [r.minus, r.plus]),
         l.shake,
+        l.effects,
+        l.graphics,
+        l.damageNumbers,
         l.discard,
         l.confirm,
         l.cancel,
