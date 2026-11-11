@@ -533,7 +533,7 @@ describe('more modals on landscape phones (night 12/11/2026)', () => {
       expect(on(r.reroll, screen), 'reward reroll').toBe(true);
       const q = questLayout(screen, 16);
       for (const b of [q.accept, q.decline, q.help]) expect(on(b, screen), `quest ${JSON.stringify(b)}`).toBe(true);
-      for (const lines of [3, 6]) {
+      for (const lines of [3, 6, 10]) {
         const res = resultLayout(screen, 16, lines, 2);
         for (const b of res.buttons) expect(on(b, screen), `result ${lines} lines`).toBe(true);
       }

@@ -303,6 +303,8 @@ export interface ResultLayout {
 /** Buttons of the result panels ("Tiếp tục", "Về menu", "Ván mới"). */
 export const RESULT_BUTTON = { w: 140, h: 52 } as const;
 const RESULT = { w: 420, titleH: 40, lineH: 26, gapAboveLines: 8, gapAboveButtons: 20 } as const;
+/** Closest rows a result panel uses on a short screen. */
+const RESULT_MIN_LINE_H = 20;
 
 /**
  * A result panel (battle summary §10.7, run end §10.8): a title, `lineCount` text rows and
@@ -317,25 +319,25 @@ export const resultLayout = (
   const n = Math.max(1, buttonCount);
   const row = n * RESULT_BUTTON.w + (n - 1) * BUTTON_GAP;
   const w = Math.max(RESULT.w, row + 2 * inset);
-  const h =
-    inset +
-    RESULT.titleH +
-    RESULT.gapAboveLines +
-    lineCount * RESULT.lineH +
-    RESULT.gapAboveButtons +
-    RESULT_BUTTON.h +
-    inset;
+  const chrome = 2 * inset + RESULT.titleH + RESULT.gapAboveLines + RESULT.gapAboveButtons + RESULT_BUTTON.h;
+  // Short screens (night 12/11/2026: the run-end tally pushed its buttons off a 390 px landscape phone): the rows
+  // close up to fit, never under RESULT_MIN_LINE_H.
+  const lineH =
+    lineCount > 0
+      ? Math.max(RESULT_MIN_LINE_H, Math.min(RESULT.lineH, Math.floor((screen.h - 2 * MARGIN - chrome) / lineCount)))
+      : RESULT.lineH;
+  const h = chrome + lineCount * lineH;
   const panel = centredPanel(screen, w, h);
   const innerW = panel.w - 2 * inset;
   const title = { x: panel.x + inset, y: panel.y + inset, w: innerW, h: RESULT.titleH };
   const y0 = title.y + title.h + RESULT.gapAboveLines;
   const lines = Array.from({ length: lineCount }, (_, i) => ({
     x: title.x,
-    y: y0 + i * RESULT.lineH,
+    y: y0 + i * lineH,
     w: innerW,
-    h: RESULT.lineH,
+    h: lineH,
   }));
-  const by = y0 + lineCount * RESULT.lineH + RESULT.gapAboveButtons;
+  const by = y0 + lineCount * lineH + RESULT.gapAboveButtons;
   const bx = Math.round(panel.x + (panel.w - row) / 2);
   const buttons = Array.from({ length: n }, (_, i) => ({
     x: bx + i * (RESULT_BUTTON.w + BUTTON_GAP),
