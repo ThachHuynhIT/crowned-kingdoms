@@ -41,6 +41,35 @@ Run `npm run lint && npm run typecheck && npm test && npm run build` before call
 
 `main` is release-only: it only receives a **release PR from `develop`**. Flow: feature branch → PR into `develop` → (when releasing) PR `develop` → `main`. Never open a feature PR against `main`, and never push directly to `main` or `develop`. Branch feature work from `develop`; after a release merge `develop` already contains `main`, so keep `develop` ahead of or equal to `main`.
 
+### Naming (owner 11/11/2026)
+
+- **Branches:** `<type>/<topic>`, lowercase ASCII words joined by `-`, at most ~40 characters, no dates or personal names. Types:
+  - `feature/` new gameplay, UI or systems;
+  - `fix/` bug fixes;
+  - `art/` image/asset batches;
+  - `balance/` tuning-only changes;
+  - `refactor/` code moves with no behaviour change;
+  - `docs/` documentation only;
+  - `chore/` tooling, CI, dependencies.
+
+  A whole phase gets one branch named after it (`feature/enhance-hd-graphics`). Work inside a phase goes on that branch unless the owner asks for a side branch. Never reuse a merged branch: start a new one from `origin/develop`.
+- **Commits:** `<type>(<scope>): <summary>` in English, imperative or descriptive, first line ≤ ~100 characters.
+  - Types: `feat`, `fix`, `art`, `balance`, `refactor`, `test`, `docs`, `chore`, `audio`.
+  - Scope is the area: `battle`, `ui`, `render`, `run`, `meta`, `save`, `art`, `scenes`…
+  - Numbers that matter go in the body (balance results, sizes).
+  - End with the attribution line the harness gives.
+- **Pull requests:**
+  - Feature PRs: base `develop`. Title `<Phase or topic>: <what it delivers>` in English, ≤ ~70 characters (e.g. `Enhance HD graphics: sharp rendering on high-DPI screens`).
+  - Body sections:
+    - **Summary** (bullets);
+    - **Owner feedback** (when a round answers owner requests);
+    - **Balance** (when numbers changed);
+    - **Test plan**: the gate `npm run lint && npm run typecheck && npm test && npm run build`, plus what was checked in the browser.
+  - End with the attribution line.
+  - Merge with a merge commit (`gh pr merge --merge`), only after the owner says yes.
+  - Release PR: `develop` → `main`, title `Release <YYYY-MM-DD>: <headline>`, body lists the merged PRs.
+- **Specs and plans:** `docs/superpowers/specs/YYYY-MM-DD-<topic>-design.md` and `docs/superpowers/plans/YYYY-MM-DD-<topic>.md` (same date and topic). Balance reports: `docs/balance/YYYY-MM-DD-<topic>-balance.md`. Art review logs: `docs/art-review/<phase>/<group>/`.
+
 ## Phaser 4 notes
 
 Official Phaser 4 agent skills live in `.claude/skills/*/SKILL.md` (also shipped in `node_modules/phaser/skills/`) — v3→v4 migration, cameras, input, tilemaps, sprites (NineSlice)… Read those instead of relying on Phaser 3 knowledge, and check signatures in `node_modules/phaser/types/phaser.d.ts`. Notable: `roundPixels` defaults false (set via `pixelArt: true`), FX/masks are now filters, `Geom.Point` → `Vector2`, `TileSprite` was rewritten (no texture cropping, supports atlas frames).
