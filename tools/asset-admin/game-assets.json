@@ -1957,6 +1957,30 @@
      ]
     },
     {
+     "id": "building_arcane_apprentices_l2",
+     "label": "arcane apprentices l2",
+     "src": "/public/assets/art/ai-v1/iso/arcane_apprentices_l2.png",
+     "w": 69,
+     "h": 71,
+     "kind": "object",
+     "group": "arcane",
+     "tags": [
+      "arcane_apprentices_l2"
+     ]
+    },
+    {
+     "id": "building_arcane_apprentices_l3",
+     "label": "arcane apprentices l3",
+     "src": "/public/assets/art/ai-v1/iso/arcane_apprentices_l3.png",
+     "w": 69,
+     "h": 88,
+     "kind": "object",
+     "group": "arcane",
+     "tags": [
+      "arcane_apprentices_l3"
+     ]
+    },
+    {
      "id": "building_arcane_archmage",
      "label": "Tháp Đại Pháp Sư",
      "src": "/public/assets/art/ai-v1/iso/arcane_archmage.png",
@@ -1966,6 +1990,30 @@
      "group": "arcane",
      "tags": [
       "arcane_archmage"
+     ]
+    },
+    {
+     "id": "building_arcane_archmage_l2",
+     "label": "arcane archmage l2",
+     "src": "/public/assets/art/ai-v1/iso/arcane_archmage_l2.png",
+     "w": 34,
+     "h": 69,
+     "kind": "object",
+     "group": "arcane",
+     "tags": [
+      "arcane_archmage_l2"
+     ]
+    },
+    {
+     "id": "building_arcane_archmage_l3",
+     "label": "arcane archmage l3",
+     "src": "/public/assets/art/ai-v1/iso/arcane_archmage_l3.png",
+     "w": 34,
+     "h": 77,
+     "kind": "object",
+     "group": "arcane",
+     "tags": [
+      "arcane_archmage_l3"
      ]
     },
     {
@@ -1981,6 +2029,30 @@
      ]
     },
     {
+     "id": "building_arcane_frost_mages_l2",
+     "label": "arcane frost mages l2",
+     "src": "/public/assets/art/ai-v1/iso/arcane_frost_mages_l2.png",
+     "w": 55,
+     "h": 84,
+     "kind": "object",
+     "group": "arcane",
+     "tags": [
+      "arcane_frost_mages_l2"
+     ]
+    },
+    {
+     "id": "building_arcane_frost_mages_l3",
+     "label": "arcane frost mages l3",
+     "src": "/public/assets/art/ai-v1/iso/arcane_frost_mages_l3.png",
+     "w": 55,
+     "h": 97,
+     "kind": "object",
+     "group": "arcane",
+     "tags": [
+      "arcane_frost_mages_l3"
+     ]
+    },
+    {
      "id": "building_arcane_library",
      "label": "Thư Viện",
      "src": "/public/assets/art/ai-v1/iso/arcane_library.png",
@@ -1990,6 +2062,30 @@
      "group": "arcane",
      "tags": [
       "arcane_library"
+     ]
+    },
+    {
+     "id": "building_arcane_library_l2",
+     "label": "arcane library l2",
+     "src": "/public/assets/art/ai-v1/iso/arcane_library_l2.png",
+     "w": 71,
+     "h": 73,
+     "kind": "object",
+     "group": "arcane",
+     "tags": [
+      "arcane_library_l2"
+     ]
+    },
+    {
+     "id": "building_arcane_library_l3",
+     "label": "arcane library l3",
+     "src": "/public/assets/art/ai-v1/iso/arcane_library_l3.png",
+     "w": 71,
+     "h": 84,
+     "kind": "object",
+     "group": "arcane",
+     "tags": [
+      "arcane_library_l3"
      ]
     },
     {
@@ -2005,6 +2101,30 @@
      ]
     },
     {
+     "id": "building_arcane_mage_tower_l2",
+     "label": "arcane mage tower l2",
+     "src": "/public/assets/art/ai-v1/iso/arcane_mage_tower_l2.png",
+     "w": 49,
+     "h": 71,
+     "kind": "object",
+     "group": "arcane",
+     "tags": [
+      "arcane_mage_tower_l2"
+     ]
+    },
+    {
+     "id": "building_arcane_mage_tower_l3",
+     "label": "arcane mage tower l3",
+     "src": "/public/assets/art/ai-v1/iso/arcane_mage_tower_l3.png",
+     "w": 49,
+     "h": 90,
+     "kind": "object",
+     "group": "arcane",
+     "tags": [
+      "arcane_mage_tower_l3"
+     ]
+    },
+    {
      "id": "building_arcane_throne",
      "label": "Ngai Tinh Tú",
      "src": "/public/assets/art/ai-v1/iso/arcane_throne.png",
@@ -2014,6 +2134,30 @@
      "group": "arcane",
      "tags": [
       "arcane_throne"
+     ]
+    },
+    {
+     "id": "building_arcane_throne_l2",
+     "label": "arcane throne l2",
+     "src": "/public/assets/art/ai-v1/iso/arcane_throne_l2.png",
+     "w": 34,
+     "h": 70,
+     "kind": "object",
+     "group": "arcane",
+     "tags": [
+      "arcane_throne_l2"
+     ]
+    },
+    {
+     "id": "building_arcane_throne_l3",
+     "label": "arcane throne l3",
+     "src": "/public/assets/art/ai-v1/iso/arcane_throne_l3.png",
+     "w": 34,
+     "h": 81,
+     "kind": "object",
+     "group": "arcane",
+     "tags": [
+      "arcane_throne_l3"
      ]
     },
     {
@@ -2029,6 +2173,30 @@
      ]
     },
     {
+     "id": "building_arcane_ward_l2",
+     "label": "arcane ward l2",
+     "src": "/public/assets/art/ai-v1/iso/arcane_ward_l2.png",
+     "w": 56,
+     "h": 54,
+     "kind": "object",
+     "group": "arcane",
+     "tags": [
+      "arcane_ward_l2"
+     ]
+    },
+    {
+     "id": "building_arcane_ward_l3",
+     "label": "arcane ward l3",
+     "src": "/public/assets/art/ai-v1/iso/arcane_ward_l3.png",
+     "w": 56,
+     "h": 52,
+     "kind": "object",
+     "group": "arcane",
+     "tags": [
+      "arcane_ward_l3"
+     ]
+    },
+    {
      "id": "building_clock_bell_tower",
      "label": "Tháp Chuông",
      "src": "/public/assets/art/ai-v1/iso/clock_bell_tower.png",
@@ -2038,6 +2206,30 @@
      "group": "clock",
      "tags": [
       "clock_bell_tower"
+     ]
+    },
+    {
+     "id": "building_clock_bell_tower_l2",
+     "label": "clock bell tower l2",
+     "src": "/public/assets/art/ai-v1/iso/clock_bell_tower_l2.png",
+     "w": 48,
+     "h": 90,
+     "kind": "object",
+     "group": "clock",
+     "tags": [
+      "clock_bell_tower_l2"
+     ]
+    },
+    {
+     "id": "building_clock_bell_tower_l3",
+     "label": "clock bell tower l3",
+     "src": "/public/assets/art/ai-v1/iso/clock_bell_tower_l3.png",
+     "w": 48,
+     "h": 96,
+     "kind": "object",
+     "group": "clock",
+     "tags": [
+      "clock_bell_tower_l3"
      ]
     },
     {
@@ -2053,6 +2245,30 @@
      ]
     },
     {
+     "id": "building_clock_colossus_l2",
+     "label": "clock colossus l2",
+     "src": "/public/assets/art/ai-v1/iso/clock_colossus_l2.png",
+     "w": 67,
+     "h": 74,
+     "kind": "object",
+     "group": "clock",
+     "tags": [
+      "clock_colossus_l2"
+     ]
+    },
+    {
+     "id": "building_clock_colossus_l3",
+     "label": "clock colossus l3",
+     "src": "/public/assets/art/ai-v1/iso/clock_colossus_l3.png",
+     "w": 67,
+     "h": 76,
+     "kind": "object",
+     "group": "clock",
+     "tags": [
+      "clock_colossus_l3"
+     ]
+    },
+    {
      "id": "building_clock_gear_tower",
      "label": "Tháp Bánh Răng",
      "src": "/public/assets/art/ai-v1/iso/clock_gear_tower.png",
@@ -2062,6 +2278,30 @@
      "group": "clock",
      "tags": [
       "clock_gear_tower"
+     ]
+    },
+    {
+     "id": "building_clock_gear_tower_l2",
+     "label": "clock gear tower l2",
+     "src": "/public/assets/art/ai-v1/iso/clock_gear_tower_l2.png",
+     "w": 51,
+     "h": 68,
+     "kind": "object",
+     "group": "clock",
+     "tags": [
+      "clock_gear_tower_l2"
+     ]
+    },
+    {
+     "id": "building_clock_gear_tower_l3",
+     "label": "clock gear tower l3",
+     "src": "/public/assets/art/ai-v1/iso/clock_gear_tower_l3.png",
+     "w": 51,
+     "h": 76,
+     "kind": "object",
+     "group": "clock",
+     "tags": [
+      "clock_gear_tower_l3"
      ]
     },
     {
@@ -2077,6 +2317,30 @@
      ]
     },
     {
+     "id": "building_clock_spiders_l2",
+     "label": "clock spiders l2",
+     "src": "/public/assets/art/ai-v1/iso/clock_spiders_l2.png",
+     "w": 65,
+     "h": 68,
+     "kind": "object",
+     "group": "clock",
+     "tags": [
+      "clock_spiders_l2"
+     ]
+    },
+    {
+     "id": "building_clock_spiders_l3",
+     "label": "clock spiders l3",
+     "src": "/public/assets/art/ai-v1/iso/clock_spiders_l3.png",
+     "w": 65,
+     "h": 75,
+     "kind": "object",
+     "group": "clock",
+     "tags": [
+      "clock_spiders_l3"
+     ]
+    },
+    {
      "id": "building_clock_spring_workshop",
      "label": "Xưởng Lò Xo",
      "src": "/public/assets/art/ai-v1/iso/clock_spring_workshop.png",
@@ -2086,6 +2350,30 @@
      "group": "clock",
      "tags": [
       "clock_spring_workshop"
+     ]
+    },
+    {
+     "id": "building_clock_spring_workshop_l2",
+     "label": "clock spring workshop l2",
+     "src": "/public/assets/art/ai-v1/iso/clock_spring_workshop_l2.png",
+     "w": 67,
+     "h": 73,
+     "kind": "object",
+     "group": "clock",
+     "tags": [
+      "clock_spring_workshop_l2"
+     ]
+    },
+    {
+     "id": "building_clock_spring_workshop_l3",
+     "label": "clock spring workshop l3",
+     "src": "/public/assets/art/ai-v1/iso/clock_spring_workshop_l3.png",
+     "w": 67,
+     "h": 92,
+     "kind": "object",
+     "group": "clock",
+     "tags": [
+      "clock_spring_workshop_l3"
      ]
     },
     {
@@ -2101,6 +2389,30 @@
      ]
     },
     {
+     "id": "building_clock_steam_cannon_l2",
+     "label": "clock steam cannon l2",
+     "src": "/public/assets/art/ai-v1/iso/clock_steam_cannon_l2.png",
+     "w": 57,
+     "h": 79,
+     "kind": "object",
+     "group": "clock",
+     "tags": [
+      "clock_steam_cannon_l2"
+     ]
+    },
+    {
+     "id": "building_clock_steam_cannon_l3",
+     "label": "clock steam cannon l3",
+     "src": "/public/assets/art/ai-v1/iso/clock_steam_cannon_l3.png",
+     "w": 57,
+     "h": 80,
+     "kind": "object",
+     "group": "clock",
+     "tags": [
+      "clock_steam_cannon_l3"
+     ]
+    },
+    {
      "id": "building_clock_throne",
      "label": "Ngai Bánh Răng",
      "src": "/public/assets/art/ai-v1/iso/clock_throne.png",
@@ -2110,6 +2422,30 @@
      "group": "clock",
      "tags": [
       "clock_throne"
+     ]
+    },
+    {
+     "id": "building_clock_throne_l2",
+     "label": "clock throne l2",
+     "src": "/public/assets/art/ai-v1/iso/clock_throne_l2.png",
+     "w": 49,
+     "h": 70,
+     "kind": "object",
+     "group": "clock",
+     "tags": [
+      "clock_throne_l2"
+     ]
+    },
+    {
+     "id": "building_clock_throne_l3",
+     "label": "clock throne l3",
+     "src": "/public/assets/art/ai-v1/iso/clock_throne_l3.png",
+     "w": 49,
+     "h": 78,
+     "kind": "object",
+     "group": "clock",
+     "tags": [
+      "clock_throne_l3"
      ]
     },
     {
@@ -2125,6 +2461,30 @@
      ]
     },
     {
+     "id": "building_clock_windup_soldiers_l2",
+     "label": "clock windup soldiers l2",
+     "src": "/public/assets/art/ai-v1/iso/clock_windup_soldiers_l2.png",
+     "w": 65,
+     "h": 68,
+     "kind": "object",
+     "group": "clock",
+     "tags": [
+      "clock_windup_soldiers_l2"
+     ]
+    },
+    {
+     "id": "building_clock_windup_soldiers_l3",
+     "label": "clock windup soldiers l3",
+     "src": "/public/assets/art/ai-v1/iso/clock_windup_soldiers_l3.png",
+     "w": 65,
+     "h": 77,
+     "kind": "object",
+     "group": "clock",
+     "tags": [
+      "clock_windup_soldiers_l3"
+     ]
+    },
+    {
      "id": "building_forge_armory",
      "label": "Kho Giáp",
      "src": "/public/assets/art/ai-v1/iso/forge_armory.png",
@@ -2134,6 +2494,30 @@
      "group": "forge",
      "tags": [
       "forge_armory"
+     ]
+    },
+    {
+     "id": "building_forge_armory_l2",
+     "label": "forge armory l2",
+     "src": "/public/assets/art/ai-v1/iso/forge_armory_l2.png",
+     "w": 72,
+     "h": 73,
+     "kind": "object",
+     "group": "forge",
+     "tags": [
+      "forge_armory_l2"
+     ]
+    },
+    {
+     "id": "building_forge_armory_l3",
+     "label": "forge armory l3",
+     "src": "/public/assets/art/ai-v1/iso/forge_armory_l3.png",
+     "w": 72,
+     "h": 77,
+     "kind": "object",
+     "group": "forge",
+     "tags": [
+      "forge_armory_l3"
      ]
     },
     {
@@ -2149,6 +2533,30 @@
      ]
     },
     {
+     "id": "building_forge_blast_furnace_l2",
+     "label": "forge blast furnace l2",
+     "src": "/public/assets/art/ai-v1/iso/forge_blast_furnace_l2.png",
+     "w": 52,
+     "h": 70,
+     "kind": "object",
+     "group": "forge",
+     "tags": [
+      "forge_blast_furnace_l2"
+     ]
+    },
+    {
+     "id": "building_forge_blast_furnace_l3",
+     "label": "forge blast furnace l3",
+     "src": "/public/assets/art/ai-v1/iso/forge_blast_furnace_l3.png",
+     "w": 52,
+     "h": 72,
+     "kind": "object",
+     "group": "forge",
+     "tags": [
+      "forge_blast_furnace_l3"
+     ]
+    },
+    {
      "id": "building_forge_bombardiers",
      "label": "Đội Ném Lửa",
      "src": "/public/assets/art/ai-v1/iso/forge_bombardiers.png",
@@ -2158,6 +2566,30 @@
      "group": "forge",
      "tags": [
       "forge_bombardiers"
+     ]
+    },
+    {
+     "id": "building_forge_bombardiers_l2",
+     "label": "forge bombardiers l2",
+     "src": "/public/assets/art/ai-v1/iso/forge_bombardiers_l2.png",
+     "w": 68,
+     "h": 69,
+     "kind": "object",
+     "group": "forge",
+     "tags": [
+      "forge_bombardiers_l2"
+     ]
+    },
+    {
+     "id": "building_forge_bombardiers_l3",
+     "label": "forge bombardiers l3",
+     "src": "/public/assets/art/ai-v1/iso/forge_bombardiers_l3.png",
+     "w": 68,
+     "h": 74,
+     "kind": "object",
+     "group": "forge",
+     "tags": [
+      "forge_bombardiers_l3"
      ]
     },
     {
@@ -2173,6 +2605,30 @@
      ]
     },
     {
+     "id": "building_forge_flame_tower_l2",
+     "label": "forge flame tower l2",
+     "src": "/public/assets/art/ai-v1/iso/forge_flame_tower_l2.png",
+     "w": 70,
+     "h": 74,
+     "kind": "object",
+     "group": "forge",
+     "tags": [
+      "forge_flame_tower_l2"
+     ]
+    },
+    {
+     "id": "building_forge_flame_tower_l3",
+     "label": "forge flame tower l3",
+     "src": "/public/assets/art/ai-v1/iso/forge_flame_tower_l3.png",
+     "w": 70,
+     "h": 83,
+     "kind": "object",
+     "group": "forge",
+     "tags": [
+      "forge_flame_tower_l3"
+     ]
+    },
+    {
      "id": "building_forge_iron_drake",
      "label": "Tổ Rồng Sắt",
      "src": "/public/assets/art/ai-v1/iso/forge_iron_drake.png",
@@ -2182,6 +2638,30 @@
      "group": "forge",
      "tags": [
       "forge_iron_drake"
+     ]
+    },
+    {
+     "id": "building_forge_iron_drake_l2",
+     "label": "forge iron drake l2",
+     "src": "/public/assets/art/ai-v1/iso/forge_iron_drake_l2.png",
+     "w": 71,
+     "h": 73,
+     "kind": "object",
+     "group": "forge",
+     "tags": [
+      "forge_iron_drake_l2"
+     ]
+    },
+    {
+     "id": "building_forge_iron_drake_l3",
+     "label": "forge iron drake l3",
+     "src": "/public/assets/art/ai-v1/iso/forge_iron_drake_l3.png",
+     "w": 71,
+     "h": 75,
+     "kind": "object",
+     "group": "forge",
+     "tags": [
+      "forge_iron_drake_l3"
      ]
     },
     {
@@ -2197,6 +2677,30 @@
      ]
     },
     {
+     "id": "building_forge_smithy_l2",
+     "label": "forge smithy l2",
+     "src": "/public/assets/art/ai-v1/iso/forge_smithy_l2.png",
+     "w": 63,
+     "h": 70,
+     "kind": "object",
+     "group": "forge",
+     "tags": [
+      "forge_smithy_l2"
+     ]
+    },
+    {
+     "id": "building_forge_smithy_l3",
+     "label": "forge smithy l3",
+     "src": "/public/assets/art/ai-v1/iso/forge_smithy_l3.png",
+     "w": 63,
+     "h": 71,
+     "kind": "object",
+     "group": "forge",
+     "tags": [
+      "forge_smithy_l3"
+     ]
+    },
+    {
      "id": "building_forge_swordsmen",
      "label": "Doanh Trại Kiếm Sĩ",
      "src": "/public/assets/art/ai-v1/iso/forge_swordsmen.png",
@@ -2206,6 +2710,30 @@
      "group": "forge",
      "tags": [
       "forge_swordsmen"
+     ]
+    },
+    {
+     "id": "building_forge_swordsmen_l2",
+     "label": "forge swordsmen l2",
+     "src": "/public/assets/art/ai-v1/iso/forge_swordsmen_l2.png",
+     "w": 76,
+     "h": 65,
+     "kind": "object",
+     "group": "forge",
+     "tags": [
+      "forge_swordsmen_l2"
+     ]
+    },
+    {
+     "id": "building_forge_swordsmen_l3",
+     "label": "forge swordsmen l3",
+     "src": "/public/assets/art/ai-v1/iso/forge_swordsmen_l3.png",
+     "w": 76,
+     "h": 76,
+     "kind": "object",
+     "group": "forge",
+     "tags": [
+      "forge_swordsmen_l3"
      ]
     },
     {
@@ -2221,6 +2749,30 @@
      ]
     },
     {
+     "id": "building_forge_throne_l2",
+     "label": "forge throne l2",
+     "src": "/public/assets/art/ai-v1/iso/forge_throne_l2.png",
+     "w": 50,
+     "h": 65,
+     "kind": "object",
+     "group": "forge",
+     "tags": [
+      "forge_throne_l2"
+     ]
+    },
+    {
+     "id": "building_forge_throne_l3",
+     "label": "forge throne l3",
+     "src": "/public/assets/art/ai-v1/iso/forge_throne_l3.png",
+     "w": 50,
+     "h": 76,
+     "kind": "object",
+     "group": "forge",
+     "tags": [
+      "forge_throne_l3"
+     ]
+    },
+    {
      "id": "building_grove_bear_cave",
      "label": "Hang Gấu",
      "src": "/public/assets/art/ai-v1/iso/grove_bear_cave.png",
@@ -2230,6 +2782,30 @@
      "group": "grove",
      "tags": [
       "grove_bear_cave"
+     ]
+    },
+    {
+     "id": "building_grove_bear_cave_l2",
+     "label": "grove bear cave l2",
+     "src": "/public/assets/art/ai-v1/iso/grove_bear_cave_l2.png",
+     "w": 66,
+     "h": 68,
+     "kind": "object",
+     "group": "grove",
+     "tags": [
+      "grove_bear_cave_l2"
+     ]
+    },
+    {
+     "id": "building_grove_bear_cave_l3",
+     "label": "grove bear cave l3",
+     "src": "/public/assets/art/ai-v1/iso/grove_bear_cave_l3.png",
+     "w": 66,
+     "h": 73,
+     "kind": "object",
+     "group": "grove",
+     "tags": [
+      "grove_bear_cave_l3"
      ]
     },
     {
@@ -2245,6 +2821,30 @@
      ]
     },
     {
+     "id": "building_grove_sapling_l2",
+     "label": "grove sapling l2",
+     "src": "/public/assets/art/ai-v1/iso/grove_sapling_l2.png",
+     "w": 32,
+     "h": 46,
+     "kind": "object",
+     "group": "grove",
+     "tags": [
+      "grove_sapling_l2"
+     ]
+    },
+    {
+     "id": "building_grove_sapling_l3",
+     "label": "grove sapling l3",
+     "src": "/public/assets/art/ai-v1/iso/grove_sapling_l3.png",
+     "w": 32,
+     "h": 45,
+     "kind": "object",
+     "group": "grove",
+     "tags": [
+      "grove_sapling_l3"
+     ]
+    },
+    {
      "id": "building_grove_spirit_stags",
      "label": "Đàn Hươu Thần",
      "src": "/public/assets/art/ai-v1/iso/grove_spirit_stags.png",
@@ -2254,6 +2854,30 @@
      "group": "grove",
      "tags": [
       "grove_spirit_stags"
+     ]
+    },
+    {
+     "id": "building_grove_spirit_stags_l2",
+     "label": "grove spirit stags l2",
+     "src": "/public/assets/art/ai-v1/iso/grove_spirit_stags_l2.png",
+     "w": 59,
+     "h": 69,
+     "kind": "object",
+     "group": "grove",
+     "tags": [
+      "grove_spirit_stags_l2"
+     ]
+    },
+    {
+     "id": "building_grove_spirit_stags_l3",
+     "label": "grove spirit stags l3",
+     "src": "/public/assets/art/ai-v1/iso/grove_spirit_stags_l3.png",
+     "w": 59,
+     "h": 77,
+     "kind": "object",
+     "group": "grove",
+     "tags": [
+      "grove_spirit_stags_l3"
      ]
     },
     {
@@ -2269,6 +2893,30 @@
      ]
     },
     {
+     "id": "building_grove_spring_l2",
+     "label": "grove spring l2",
+     "src": "/public/assets/art/ai-v1/iso/grove_spring_l2.png",
+     "w": 52,
+     "h": 55,
+     "kind": "object",
+     "group": "grove",
+     "tags": [
+      "grove_spring_l2"
+     ]
+    },
+    {
+     "id": "building_grove_spring_l3",
+     "label": "grove spring l3",
+     "src": "/public/assets/art/ai-v1/iso/grove_spring_l3.png",
+     "w": 52,
+     "h": 60,
+     "kind": "object",
+     "group": "grove",
+     "tags": [
+      "grove_spring_l3"
+     ]
+    },
+    {
      "id": "building_grove_thorn_tower",
      "label": "Tháp Gai",
      "src": "/public/assets/art/ai-v1/iso/grove_thorn_tower.png",
@@ -2278,6 +2926,30 @@
      "group": "grove",
      "tags": [
       "grove_thorn_tower"
+     ]
+    },
+    {
+     "id": "building_grove_thorn_tower_l2",
+     "label": "grove thorn tower l2",
+     "src": "/public/assets/art/ai-v1/iso/grove_thorn_tower_l2.png",
+     "w": 41,
+     "h": 61,
+     "kind": "object",
+     "group": "grove",
+     "tags": [
+      "grove_thorn_tower_l2"
+     ]
+    },
+    {
+     "id": "building_grove_thorn_tower_l3",
+     "label": "grove thorn tower l3",
+     "src": "/public/assets/art/ai-v1/iso/grove_thorn_tower_l3.png",
+     "w": 41,
+     "h": 69,
+     "kind": "object",
+     "group": "grove",
+     "tags": [
+      "grove_thorn_tower_l3"
      ]
     },
     {
@@ -2293,6 +2965,30 @@
      ]
     },
     {
+     "id": "building_grove_throne_l2",
+     "label": "grove throne l2",
+     "src": "/public/assets/art/ai-v1/iso/grove_throne_l2.png",
+     "w": 62,
+     "h": 75,
+     "kind": "object",
+     "group": "grove",
+     "tags": [
+      "grove_throne_l2"
+     ]
+    },
+    {
+     "id": "building_grove_throne_l3",
+     "label": "grove throne l3",
+     "src": "/public/assets/art/ai-v1/iso/grove_throne_l3.png",
+     "w": 62,
+     "h": 81,
+     "kind": "object",
+     "group": "grove",
+     "tags": [
+      "grove_throne_l3"
+     ]
+    },
+    {
      "id": "building_grove_treant",
      "label": "Cổ Thụ Thức Tỉnh",
      "src": "/public/assets/art/ai-v1/iso/grove_treant.png",
@@ -2305,6 +3001,30 @@
      ]
     },
     {
+     "id": "building_grove_treant_l2",
+     "label": "grove treant l2",
+     "src": "/public/assets/art/ai-v1/iso/grove_treant_l2.png",
+     "w": 70,
+     "h": 77,
+     "kind": "object",
+     "group": "grove",
+     "tags": [
+      "grove_treant_l2"
+     ]
+    },
+    {
+     "id": "building_grove_treant_l3",
+     "label": "grove treant l3",
+     "src": "/public/assets/art/ai-v1/iso/grove_treant_l3.png",
+     "w": 70,
+     "h": 79,
+     "kind": "object",
+     "group": "grove",
+     "tags": [
+      "grove_treant_l3"
+     ]
+    },
+    {
      "id": "building_grove_wolf_den",
      "label": "Hang Sói",
      "src": "/public/assets/art/ai-v1/iso/grove_wolf_den.png",
@@ -2314,6 +3034,30 @@
      "group": "grove",
      "tags": [
       "grove_wolf_den"
+     ]
+    },
+    {
+     "id": "building_grove_wolf_den_l2",
+     "label": "grove wolf den l2",
+     "src": "/public/assets/art/ai-v1/iso/grove_wolf_den_l2.png",
+     "w": 71,
+     "h": 61,
+     "kind": "object",
+     "group": "grove",
+     "tags": [
+      "grove_wolf_den_l2"
+     ]
+    },
+    {
+     "id": "building_grove_wolf_den_l3",
+     "label": "grove wolf den l3",
+     "src": "/public/assets/art/ai-v1/iso/grove_wolf_den_l3.png",
+     "w": 71,
+     "h": 76,
+     "kind": "object",
+     "group": "grove",
+     "tags": [
+      "grove_wolf_den_l3"
      ]
     },
     {
@@ -2509,6 +3253,30 @@
      ]
     },
     {
+     "id": "building_stone_catapult_l2",
+     "label": "stone catapult l2",
+     "src": "/public/assets/art/ai-v1/iso/stone_catapult_l2.png",
+     "w": 58,
+     "h": 70,
+     "kind": "object",
+     "group": "stone",
+     "tags": [
+      "stone_catapult_l2"
+     ]
+    },
+    {
+     "id": "building_stone_catapult_l3",
+     "label": "stone catapult l3",
+     "src": "/public/assets/art/ai-v1/iso/stone_catapult_l3.png",
+     "w": 58,
+     "h": 74,
+     "kind": "object",
+     "group": "stone",
+     "tags": [
+      "stone_catapult_l3"
+     ]
+    },
+    {
      "id": "building_stone_crystal",
      "label": "Tháp Pha Lê",
      "src": "/public/assets/art/ai-v1/iso/stone_crystal.png",
@@ -2518,6 +3286,30 @@
      "group": "stone",
      "tags": [
       "stone_crystal"
+     ]
+    },
+    {
+     "id": "building_stone_crystal_l2",
+     "label": "stone crystal l2",
+     "src": "/public/assets/art/ai-v1/iso/stone_crystal_l2.png",
+     "w": 37,
+     "h": 64,
+     "kind": "object",
+     "group": "stone",
+     "tags": [
+      "stone_crystal_l2"
+     ]
+    },
+    {
+     "id": "building_stone_crystal_l3",
+     "label": "stone crystal l3",
+     "src": "/public/assets/art/ai-v1/iso/stone_crystal_l3.png",
+     "w": 37,
+     "h": 71,
+     "kind": "object",
+     "group": "stone",
+     "tags": [
+      "stone_crystal_l3"
      ]
     },
     {
@@ -2533,6 +3325,30 @@
      ]
     },
     {
+     "id": "building_stone_golem_forge_l2",
+     "label": "stone golem forge l2",
+     "src": "/public/assets/art/ai-v1/iso/stone_golem_forge_l2.png",
+     "w": 67,
+     "h": 71,
+     "kind": "object",
+     "group": "stone",
+     "tags": [
+      "stone_golem_forge_l2"
+     ]
+    },
+    {
+     "id": "building_stone_golem_forge_l3",
+     "label": "stone golem forge l3",
+     "src": "/public/assets/art/ai-v1/iso/stone_golem_forge_l3.png",
+     "w": 67,
+     "h": 78,
+     "kind": "object",
+     "group": "stone",
+     "tags": [
+      "stone_golem_forge_l3"
+     ]
+    },
+    {
      "id": "building_stone_miners",
      "label": "Đội Thợ Mỏ",
      "src": "/public/assets/art/ai-v1/iso/stone_miners.png",
@@ -2542,6 +3358,30 @@
      "group": "stone",
      "tags": [
       "stone_miners"
+     ]
+    },
+    {
+     "id": "building_stone_miners_l2",
+     "label": "stone miners l2",
+     "src": "/public/assets/art/ai-v1/iso/stone_miners_l2.png",
+     "w": 75,
+     "h": 69,
+     "kind": "object",
+     "group": "stone",
+     "tags": [
+      "stone_miners_l2"
+     ]
+    },
+    {
+     "id": "building_stone_miners_l3",
+     "label": "stone miners l3",
+     "src": "/public/assets/art/ai-v1/iso/stone_miners_l3.png",
+     "w": 75,
+     "h": 79,
+     "kind": "object",
+     "group": "stone",
+     "tags": [
+      "stone_miners_l3"
      ]
     },
     {
@@ -2557,6 +3397,30 @@
      ]
     },
     {
+     "id": "building_stone_mountain_heart_l2",
+     "label": "stone mountain heart l2",
+     "src": "/public/assets/art/ai-v1/iso/stone_mountain_heart_l2.png",
+     "w": 54,
+     "h": 70,
+     "kind": "object",
+     "group": "stone",
+     "tags": [
+      "stone_mountain_heart_l2"
+     ]
+    },
+    {
+     "id": "building_stone_mountain_heart_l3",
+     "label": "stone mountain heart l3",
+     "src": "/public/assets/art/ai-v1/iso/stone_mountain_heart_l3.png",
+     "w": 54,
+     "h": 78,
+     "kind": "object",
+     "group": "stone",
+     "tags": [
+      "stone_mountain_heart_l3"
+     ]
+    },
+    {
      "id": "building_stone_quarry",
      "label": "Mỏ Đá",
      "src": "/public/assets/art/ai-v1/iso/stone_quarry.png",
@@ -2566,6 +3430,30 @@
      "group": "stone",
      "tags": [
       "stone_quarry"
+     ]
+    },
+    {
+     "id": "building_stone_quarry_l2",
+     "label": "stone quarry l2",
+     "src": "/public/assets/art/ai-v1/iso/stone_quarry_l2.png",
+     "w": 75,
+     "h": 61,
+     "kind": "object",
+     "group": "stone",
+     "tags": [
+      "stone_quarry_l2"
+     ]
+    },
+    {
+     "id": "building_stone_quarry_l3",
+     "label": "stone quarry l3",
+     "src": "/public/assets/art/ai-v1/iso/stone_quarry_l3.png",
+     "w": 75,
+     "h": 77,
+     "kind": "object",
+     "group": "stone",
+     "tags": [
+      "stone_quarry_l3"
      ]
     },
     {
@@ -2581,6 +3469,30 @@
      ]
     },
     {
+     "id": "building_stone_throne_l2",
+     "label": "stone throne l2",
+     "src": "/public/assets/art/ai-v1/iso/stone_throne_l2.png",
+     "w": 51,
+     "h": 62,
+     "kind": "object",
+     "group": "stone",
+     "tags": [
+      "stone_throne_l2"
+     ]
+    },
+    {
+     "id": "building_stone_throne_l3",
+     "label": "stone throne l3",
+     "src": "/public/assets/art/ai-v1/iso/stone_throne_l3.png",
+     "w": 51,
+     "h": 71,
+     "kind": "object",
+     "group": "stone",
+     "tags": [
+      "stone_throne_l3"
+     ]
+    },
+    {
      "id": "building_stone_wall",
      "label": "Tường Thành",
      "src": "/public/assets/art/ai-v1/iso/stone_wall.png",
@@ -2590,6 +3502,30 @@
      "group": "stone",
      "tags": [
       "stone_wall"
+     ]
+    },
+    {
+     "id": "building_stone_wall_l2",
+     "label": "stone wall l2",
+     "src": "/public/assets/art/ai-v1/iso/stone_wall_l2.png",
+     "w": 68,
+     "h": 56,
+     "kind": "object",
+     "group": "stone",
+     "tags": [
+      "stone_wall_l2"
+     ]
+    },
+    {
+     "id": "building_stone_wall_l3",
+     "label": "stone wall l3",
+     "src": "/public/assets/art/ai-v1/iso/stone_wall_l3.png",
+     "w": 68,
+     "h": 72,
+     "kind": "object",
+     "group": "stone",
+     "tags": [
+      "stone_wall_l3"
      ]
     },
     {
@@ -2605,6 +3541,30 @@
      ]
     },
     {
+     "id": "building_tide_cannon_l2",
+     "label": "tide cannon l2",
+     "src": "/public/assets/art/ai-v1/iso/tide_cannon_l2.png",
+     "w": 35,
+     "h": 43,
+     "kind": "object",
+     "group": "tide",
+     "tags": [
+      "tide_cannon_l2"
+     ]
+    },
+    {
+     "id": "building_tide_cannon_l3",
+     "label": "tide cannon l3",
+     "src": "/public/assets/art/ai-v1/iso/tide_cannon_l3.png",
+     "w": 35,
+     "h": 54,
+     "kind": "object",
+     "group": "tide",
+     "tags": [
+      "tide_cannon_l3"
+     ]
+    },
+    {
      "id": "building_tide_harbor",
      "label": "Bến Cảng",
      "src": "/public/assets/art/ai-v1/iso/tide_harbor.png",
@@ -2614,6 +3574,30 @@
      "group": "tide",
      "tags": [
       "tide_harbor"
+     ]
+    },
+    {
+     "id": "building_tide_harbor_l2",
+     "label": "tide harbor l2",
+     "src": "/public/assets/art/ai-v1/iso/tide_harbor_l2.png",
+     "w": 69,
+     "h": 62,
+     "kind": "object",
+     "group": "tide",
+     "tags": [
+      "tide_harbor_l2"
+     ]
+    },
+    {
+     "id": "building_tide_harbor_l3",
+     "label": "tide harbor l3",
+     "src": "/public/assets/art/ai-v1/iso/tide_harbor_l3.png",
+     "w": 69,
+     "h": 79,
+     "kind": "object",
+     "group": "tide",
+     "tags": [
+      "tide_harbor_l3"
      ]
     },
     {
@@ -2629,6 +3613,30 @@
      ]
     },
     {
+     "id": "building_tide_hookmen_l2",
+     "label": "tide hookmen l2",
+     "src": "/public/assets/art/ai-v1/iso/tide_hookmen_l2.png",
+     "w": 68,
+     "h": 72,
+     "kind": "object",
+     "group": "tide",
+     "tags": [
+      "tide_hookmen_l2"
+     ]
+    },
+    {
+     "id": "building_tide_hookmen_l3",
+     "label": "tide hookmen l3",
+     "src": "/public/assets/art/ai-v1/iso/tide_hookmen_l3.png",
+     "w": 68,
+     "h": 88,
+     "kind": "object",
+     "group": "tide",
+     "tags": [
+      "tide_hookmen_l3"
+     ]
+    },
+    {
      "id": "building_tide_kraken",
      "label": "Vực Kraken",
      "src": "/public/assets/art/ai-v1/iso/tide_kraken.png",
@@ -2638,6 +3646,30 @@
      "group": "tide",
      "tags": [
       "tide_kraken"
+     ]
+    },
+    {
+     "id": "building_tide_kraken_l2",
+     "label": "tide kraken l2",
+     "src": "/public/assets/art/ai-v1/iso/tide_kraken_l2.png",
+     "w": 68,
+     "h": 61,
+     "kind": "object",
+     "group": "tide",
+     "tags": [
+      "tide_kraken_l2"
+     ]
+    },
+    {
+     "id": "building_tide_kraken_l3",
+     "label": "tide kraken l3",
+     "src": "/public/assets/art/ai-v1/iso/tide_kraken_l3.png",
+     "w": 68,
+     "h": 68,
+     "kind": "object",
+     "group": "tide",
+     "tags": [
+      "tide_kraken_l3"
      ]
     },
     {
@@ -2653,6 +3685,30 @@
      ]
     },
     {
+     "id": "building_tide_pirates_l2",
+     "label": "tide pirates l2",
+     "src": "/public/assets/art/ai-v1/iso/tide_pirates_l2.png",
+     "w": 55,
+     "h": 71,
+     "kind": "object",
+     "group": "tide",
+     "tags": [
+      "tide_pirates_l2"
+     ]
+    },
+    {
+     "id": "building_tide_pirates_l3",
+     "label": "tide pirates l3",
+     "src": "/public/assets/art/ai-v1/iso/tide_pirates_l3.png",
+     "w": 55,
+     "h": 69,
+     "kind": "object",
+     "group": "tide",
+     "tags": [
+      "tide_pirates_l3"
+     ]
+    },
+    {
      "id": "building_tide_throne",
      "label": "Ngai San Hô",
      "src": "/public/assets/art/ai-v1/iso/tide_throne.png",
@@ -2662,6 +3718,30 @@
      "group": "tide",
      "tags": [
       "tide_throne"
+     ]
+    },
+    {
+     "id": "building_tide_throne_l2",
+     "label": "tide throne l2",
+     "src": "/public/assets/art/ai-v1/iso/tide_throne_l2.png",
+     "w": 45,
+     "h": 74,
+     "kind": "object",
+     "group": "tide",
+     "tags": [
+      "tide_throne_l2"
+     ]
+    },
+    {
+     "id": "building_tide_throne_l3",
+     "label": "tide throne l3",
+     "src": "/public/assets/art/ai-v1/iso/tide_throne_l3.png",
+     "w": 45,
+     "h": 78,
+     "kind": "object",
+     "group": "tide",
+     "tags": [
+      "tide_throne_l3"
      ]
     },
     {
@@ -2677,6 +3757,30 @@
      ]
     },
     {
+     "id": "building_tide_treasure_l2",
+     "label": "tide treasure l2",
+     "src": "/public/assets/art/ai-v1/iso/tide_treasure_l2.png",
+     "w": 52,
+     "h": 65,
+     "kind": "object",
+     "group": "tide",
+     "tags": [
+      "tide_treasure_l2"
+     ]
+    },
+    {
+     "id": "building_tide_treasure_l3",
+     "label": "tide treasure l3",
+     "src": "/public/assets/art/ai-v1/iso/tide_treasure_l3.png",
+     "w": 52,
+     "h": 64,
+     "kind": "object",
+     "group": "tide",
+     "tags": [
+      "tide_treasure_l3"
+     ]
+    },
+    {
      "id": "building_tide_wave_tower",
      "label": "Tháp Sóng",
      "src": "/public/assets/art/ai-v1/iso/tide_wave_tower.png",
@@ -2686,6 +3790,30 @@
      "group": "tide",
      "tags": [
       "tide_wave_tower"
+     ]
+    },
+    {
+     "id": "building_tide_wave_tower_l2",
+     "label": "tide wave tower l2",
+     "src": "/public/assets/art/ai-v1/iso/tide_wave_tower_l2.png",
+     "w": 56,
+     "h": 80,
+     "kind": "object",
+     "group": "tide",
+     "tags": [
+      "tide_wave_tower_l2"
+     ]
+    },
+    {
+     "id": "building_tide_wave_tower_l3",
+     "label": "tide wave tower l3",
+     "src": "/public/assets/art/ai-v1/iso/tide_wave_tower_l3.png",
+     "w": 56,
+     "h": 88,
+     "kind": "object",
+     "group": "tide",
+     "tags": [
+      "tide_wave_tower_l3"
      ]
     },
     {
@@ -2701,6 +3829,30 @@
      ]
     },
     {
+     "id": "building_wheat_field_l2",
+     "label": "wheat field l2",
+     "src": "/public/assets/art/ai-v1/iso/wheat_field_l2.png",
+     "w": 75,
+     "h": 50,
+     "kind": "object",
+     "group": "wheat",
+     "tags": [
+      "wheat_field_l2"
+     ]
+    },
+    {
+     "id": "building_wheat_field_l3",
+     "label": "wheat field l3",
+     "src": "/public/assets/art/ai-v1/iso/wheat_field_l3.png",
+     "w": 75,
+     "h": 71,
+     "kind": "object",
+     "group": "wheat",
+     "tags": [
+      "wheat_field_l3"
+     ]
+    },
+    {
      "id": "building_wheat_granary",
      "label": "Kho Thóc",
      "src": "/public/assets/art/ai-v1/iso/wheat_granary.png",
@@ -2710,6 +3862,30 @@
      "group": "wheat",
      "tags": [
       "wheat_granary"
+     ]
+    },
+    {
+     "id": "building_wheat_granary_l2",
+     "label": "wheat granary l2",
+     "src": "/public/assets/art/ai-v1/iso/wheat_granary_l2.png",
+     "w": 63,
+     "h": 69,
+     "kind": "object",
+     "group": "wheat",
+     "tags": [
+      "wheat_granary_l2"
+     ]
+    },
+    {
+     "id": "building_wheat_granary_l3",
+     "label": "wheat granary l3",
+     "src": "/public/assets/art/ai-v1/iso/wheat_granary_l3.png",
+     "w": 63,
+     "h": 74,
+     "kind": "object",
+     "group": "wheat",
+     "tags": [
+      "wheat_granary_l3"
      ]
     },
     {
@@ -2725,6 +3901,30 @@
      ]
     },
     {
+     "id": "building_wheat_militia_l2",
+     "label": "wheat militia l2",
+     "src": "/public/assets/art/ai-v1/iso/wheat_militia_l2.png",
+     "w": 62,
+     "h": 75,
+     "kind": "object",
+     "group": "wheat",
+     "tags": [
+      "wheat_militia_l2"
+     ]
+    },
+    {
+     "id": "building_wheat_militia_l3",
+     "label": "wheat militia l3",
+     "src": "/public/assets/art/ai-v1/iso/wheat_militia_l3.png",
+     "w": 62,
+     "h": 76,
+     "kind": "object",
+     "group": "wheat",
+     "tags": [
+      "wheat_militia_l3"
+     ]
+    },
+    {
      "id": "building_wheat_peasant_horde",
      "label": "Khởi Nghĩa Nông Dân",
      "src": "/public/assets/art/ai-v1/iso/wheat_peasant_horde.png",
@@ -2734,6 +3934,30 @@
      "group": "wheat",
      "tags": [
       "wheat_peasant_horde"
+     ]
+    },
+    {
+     "id": "building_wheat_peasant_horde_l2",
+     "label": "wheat peasant horde l2",
+     "src": "/public/assets/art/ai-v1/iso/wheat_peasant_horde_l2.png",
+     "w": 64,
+     "h": 69,
+     "kind": "object",
+     "group": "wheat",
+     "tags": [
+      "wheat_peasant_horde_l2"
+     ]
+    },
+    {
+     "id": "building_wheat_peasant_horde_l3",
+     "label": "wheat peasant horde l3",
+     "src": "/public/assets/art/ai-v1/iso/wheat_peasant_horde_l3.png",
+     "w": 64,
+     "h": 75,
+     "kind": "object",
+     "group": "wheat",
+     "tags": [
+      "wheat_peasant_horde_l3"
      ]
     },
     {
@@ -2749,6 +3973,30 @@
      ]
     },
     {
+     "id": "building_wheat_reapers_l2",
+     "label": "wheat reapers l2",
+     "src": "/public/assets/art/ai-v1/iso/wheat_reapers_l2.png",
+     "w": 64,
+     "h": 60,
+     "kind": "object",
+     "group": "wheat",
+     "tags": [
+      "wheat_reapers_l2"
+     ]
+    },
+    {
+     "id": "building_wheat_reapers_l3",
+     "label": "wheat reapers l3",
+     "src": "/public/assets/art/ai-v1/iso/wheat_reapers_l3.png",
+     "w": 64,
+     "h": 73,
+     "kind": "object",
+     "group": "wheat",
+     "tags": [
+      "wheat_reapers_l3"
+     ]
+    },
+    {
      "id": "building_wheat_scarecrow",
      "label": "Bù Nhìn Gác",
      "src": "/public/assets/art/ai-v1/iso/wheat_scarecrow.png",
@@ -2758,6 +4006,30 @@
      "group": "wheat",
      "tags": [
       "wheat_scarecrow"
+     ]
+    },
+    {
+     "id": "building_wheat_scarecrow_l2",
+     "label": "wheat scarecrow l2",
+     "src": "/public/assets/art/ai-v1/iso/wheat_scarecrow_l2.png",
+     "w": 45,
+     "h": 74,
+     "kind": "object",
+     "group": "wheat",
+     "tags": [
+      "wheat_scarecrow_l2"
+     ]
+    },
+    {
+     "id": "building_wheat_scarecrow_l3",
+     "label": "wheat scarecrow l3",
+     "src": "/public/assets/art/ai-v1/iso/wheat_scarecrow_l3.png",
+     "w": 45,
+     "h": 81,
+     "kind": "object",
+     "group": "wheat",
+     "tags": [
+      "wheat_scarecrow_l3"
      ]
     },
     {
@@ -2773,6 +4045,30 @@
      ]
     },
     {
+     "id": "building_wheat_throne_l2",
+     "label": "wheat throne l2",
+     "src": "/public/assets/art/ai-v1/iso/wheat_throne_l2.png",
+     "w": 54,
+     "h": 77,
+     "kind": "object",
+     "group": "wheat",
+     "tags": [
+      "wheat_throne_l2"
+     ]
+    },
+    {
+     "id": "building_wheat_throne_l3",
+     "label": "wheat throne l3",
+     "src": "/public/assets/art/ai-v1/iso/wheat_throne_l3.png",
+     "w": 54,
+     "h": 88,
+     "kind": "object",
+     "group": "wheat",
+     "tags": [
+      "wheat_throne_l3"
+     ]
+    },
+    {
      "id": "building_wheat_windmill",
      "label": "Cối Xay Gió",
      "src": "/public/assets/art/ai-v1/iso/wheat_windmill.png",
@@ -2782,6 +4078,30 @@
      "group": "wheat",
      "tags": [
       "wheat_windmill"
+     ]
+    },
+    {
+     "id": "building_wheat_windmill_l2",
+     "label": "wheat windmill l2",
+     "src": "/public/assets/art/ai-v1/iso/wheat_windmill_l2.png",
+     "w": 39,
+     "h": 63,
+     "kind": "object",
+     "group": "wheat",
+     "tags": [
+      "wheat_windmill_l2"
+     ]
+    },
+    {
+     "id": "building_wheat_windmill_l3",
+     "label": "wheat windmill l3",
+     "src": "/public/assets/art/ai-v1/iso/wheat_windmill_l3.png",
+     "w": 39,
+     "h": 77,
+     "kind": "object",
+     "group": "wheat",
+     "tags": [
+      "wheat_windmill_l3"
      ]
     },
     {

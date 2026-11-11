@@ -188,19 +188,21 @@ function render(): void {
       const foe = action('Địch', () => { player.team = 'foe'; });
       const animButtons = new Map<Animation, HTMLButtonElement>();
       const animations: Array<[string, Animation]> = [['Đứng', 'idle'], ['Đi', 'walk'], ['Đánh', 'attack']];
+      // Same speeds as the game (src/render/UnitRenderer.ts ANIM_FPS, 12/11/2026).
+      const gameFps: Record<Animation, number> = { idle: 6, walk: 8, attack: 11 };
       for (const [label, anim] of animations) {
         animButtons.set(anim, action(label, () => {
-          player.anim = anim; player.fps = anim === 'attack' ? 10 : 6;
+          player.anim = anim; player.fps = gameFps[anim];
           speed.value = String(player.fps); player.paused = false; player.patrol = false;
         }, true));
       }
       action('Dừng', () => { player.paused = true; });
       const flip = action('Lật ngang', () => { player.flip = !player.flip; });
       const patrol = action('Đi qua lại', () => {
-        player.anim = 'walk'; player.patrol = true; player.paused = false; player.fps = 6; speed.value = '6';
+        player.anim = 'walk'; player.patrol = true; player.paused = false; player.fps = gameFps.walk; speed.value = String(gameFps.walk);
       }, true);
       action('Đánh liên tục', () => {
-        player.anim = 'attack'; player.patrol = false; player.paused = false; player.fps = 10; speed.value = '10';
+        player.anim = 'attack'; player.patrol = false; player.paused = false; player.fps = gameFps.attack; speed.value = String(gameFps.attack);
       }, true);
       const speed = el('input');
       speed.type = 'range'; speed.min = '1'; speed.max = '24'; speed.value = '6';

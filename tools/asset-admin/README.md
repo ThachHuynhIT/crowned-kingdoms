@@ -41,7 +41,8 @@ ESLint hiện tại dùng cấu hình TypeScript recommended toàn repo, không 
 `tsc --noEmit -p tools/asset-admin/tsconfig.json`.
 
 `manifest.json` do `python tools/slice_art_batches.py` sinh; trình duyệt chỉ đọc.
-`game-assets.json` sinh bằng `python tools/build_game_assets.py`, liệt kê ảnh game.
+`game-assets.json` sinh bằng `python tools/build_game_assets.py` (không nhận tham số), liệt kê ảnh game
+`ai-v1` (cả nhà cấp 2/3); các bản HD/UHD là bản xuất lại đúng 2×/4× nên không liệt kê riêng.
 Admin gộp nó với `manifest.json`; mục cùng id lấy bản `game-assets.json`.
 Dữ liệu đọc từ manifest, localStorage và file nhập bắt đầu bằng `unknown`.
 Guard kiểm schema trước khi dùng; map còn kiểm id asset và snap. Không dùng
@@ -51,7 +52,7 @@ Guard kiểm schema trước khi dùng; map còn kiểm id asset và snap. Khôn
 
 Kho asset có tab danh mục/Tất cả, bộ lọc group kết hợp tìm kiếm, zoom nguyên,
 đổi nền, lưới 32 đơn vị thế giới, khung chi tiết và kích thước ảnh÷2.
-Lính giữ canvas tối thiểu 112×50 px ảnh, Ta/Địch, Đứng/Đi/Đánh 6/6/10 fps,
+Lính giữ canvas tối thiểu 112×50 px ảnh, Ta/Địch, Đứng/Đi/Đánh 6/8/11 fps như trong game,
 tốc độ, lật, đi qua lại, đánh liên tục và dừng; chỉ animate thẻ trong viewport,
 dừng RAF khi tab ẩn.
 
