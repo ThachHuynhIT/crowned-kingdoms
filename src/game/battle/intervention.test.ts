@@ -94,6 +94,9 @@ const DA = 36; // A: inside INTERVENTION.radius (48)
 const DB = 60; // B: outside it
 const A = 3; // id: Ngai 0, công trình 1, lính 2, địch 3, 4
 
+/** Boulder base damage of `year` (INTERVENTION.dmgBase + dmgPerYear × (year − 1)). */
+const base = (year: number): number => INTERVENTION.dmgBase + INTERVENTION.dmgPerYear * (year - 1);
+
 const scene = (year: number, foeHp = 1000, foeArmor = 0.5): BattleWorld => {
   const still = { speed: 0, dmg: 0 };
   const w = createBattle(
@@ -153,23 +156,23 @@ describe('boulder impact', () => {
     expect(w.boulders).toEqual([]);
   });
 
-  it('deals 40 magic damage in year 1, ignoring armor 0.5, only to foes inside the radius', () => {
+  it('deals the year-1 base magic damage, ignoring armor 0.5, only to foes inside the radius', () => {
     const w = scene(1);
     const hp0 = Array.from(w.hp.subarray(0, w.count));
     dropAndRun(w, 35);
     expect(Array.from(w.hp.subarray(0, w.count))).toEqual(hp0);
     dropAndRun(w, 36);
-    expect(w.hp[A]).toBe(1000 - 40);
+    expect(w.hp[A]).toBe(1000 - base(1));
     expect(w.hp[4]).toBe(1000); // ngoài bán kính
     expect(w.hp[2]).toBe(hp0[2]); // lính phe mình
     expect(w.hp[1]).toBe(hp0[1]); // công trình
     expect(w.hp[0]).toBe(hp0[0]); // Ngai
   });
 
-  it('scales with the year: year 5 → 80', () => {
+  it('scales with the year: year 5 → base + 4 × per year', () => {
     const w = scene(5);
     dropAndRun(w, 36);
-    expect(w.hp[A]).toBe(1000 - 80);
+    expect(w.hp[A]).toBe(1000 - base(5));
   });
 
   it('knocks foes INTERVENTION.knockback (24) px away from the centre over 3 ticks; allies stay put', () => {
@@ -189,12 +192,19 @@ describe('boulder impact', () => {
   });
 
   it('counts foes killed by the boulder in kills (not in killsBySource)', () => {
-    const w = scene(1, 30, 0);
+    const w = scene(1, base(1), 0);
     dropAndRun(w, 36);
     expect(w.alive[A]).toBe(0);
     expect(w.alive[4]).toBe(1);
     expect(w.kills).toBe(1);
     expect(w.killsBySource).toEqual({});
+  });
+
+  it('counts the boulder damage in interventionDamage, not in damageBySource', () => {
+    const w = scene(1, 30, 0);
+    dropAndRun(w, 36);
+    expect(w.interventionDamage).toBeGreaterThan(0);
+    expect(w.damageBySource).toEqual({});
   });
 
   it('boulderPhase leaves boulders that are not due yet', () => {
@@ -390,23 +400,23 @@ describe('auto-fire inside stepBattle', () => {
 });
 
 describe('decree-driven boulder (damage %, radius, cooldown from the setup)', () => {
-  it('hits for +50% (60 in year 1), covers the wider radius and cools down in 105 ticks', () => {
+  it('hits for +50% in year 1, covers the wider radius and cools down in 105 ticks', () => {
     const w = scene(1);
     w.boulderDmgPct = 50;
     w.boulderRadius = 64;
     w.cooldownTicks = 105;
     dropAndRun(w, 36);
-    expect(w.hp[A]).toBe(1000 - 60);
-    expect(w.hp[4]).toBe(1000 - 60); // DB = 60 px away: outside 48, inside 64
+    expect(w.hp[A]).toBe(1000 - base(1) * 1.5);
+    expect(w.hp[4]).toBe(1000 - base(1) * 1.5); // DB = 60 px away: outside 48, inside 64
     expect(w.readyTick).toBe(30 + 105);
   });
 
-  it('is unchanged without a setup intervention (legacy 40 damage, 150 cooldown)', () => {
+  it('is unchanged without a setup intervention (base damage, 150 cooldown)', () => {
     const w = scene(1);
     expect(w.boulderDmgPct).toBe(0);
     expect(w.cooldownTicks).toBe(INTERVENTION.cooldownTicks);
     dropAndRun(w, 36);
-    expect(w.hp[A]).toBe(1000 - 40);
+    expect(w.hp[A]).toBe(1000 - base(1));
     expect(w.readyTick).toBe(30 + 150);
   });
 

@@ -1,3 +1,4 @@
+import { logicalPointer } from '../displayRuntime';
 import Phaser from 'phaser';
 import { ContentBox } from '../ContentBox';
 import type { Point, Rect, Size } from '../hud/layout';
@@ -195,18 +196,21 @@ export class InspectionView {
   }
 
   private onWheel(pointer: Phaser.Input.Pointer, _over: unknown, _dx: number, dy: number): void {
-    if (this.visible && this.inside(pointer)) this.box.scrollBy(scrollLinesForWheel(dy));
+    const point = logicalPointer(this.scene, pointer);
+    if (this.visible && this.inside(point)) this.box.scrollBy(scrollLinesForWheel(dy));
   }
 
   private onDown(pointer: Phaser.Input.Pointer): void {
+    const point = logicalPointer(this.scene, pointer);
     this.dragged = false;
     this.applied = 0;
-    this.dragFrom = this.visible && this.inside(pointer) ? pointer.y : null;
+    this.dragFrom = this.visible && this.inside(point) ? point.y : null;
   }
 
   private onMove(pointer: Phaser.Input.Pointer): void {
+    const point = logicalPointer(this.scene, pointer);
     if (this.dragFrom === null || !pointer.isDown) return;
-    const step = scrollLinesForDrag(0, pointer.y - this.dragFrom);
+    const step = scrollLinesForDrag(0, point.y - this.dragFrom);
     if (!step.dragging) return;
     this.dragged = true;
     // `lines` is the total since the press; apply only what is new.

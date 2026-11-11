@@ -32,7 +32,7 @@ describe('decodeMeta', () => {
     const r = decodeMeta({ ...defaultProfile(), highestDifficultyWon: 99, settings: { master: 50, music: 'a' } });
     expect(r.kind).toBe('repaired');
     expect(r.profile.highestDifficultyWon).toBe(5);
-    expect(r.profile.settings).toEqual({ master: 50, music: 100, sfx: 100, screenShake: true });
+    expect(r.profile.settings).toEqual({ master: 50, music: 100, sfx: 100, screenShake: true, graphics: 'high', effects: true, damageNumbers: true });
   });
   it('never throws on garbage', () => {
     for (const g of [null, 5, 'a', [], { settledRuns: 4, mastery: 'x', wins: [] }]) {
@@ -85,7 +85,7 @@ describe('decodeMeta settings (G5)', () => {
 
   it('a v1 profile without screenShake gets true and keeps every other field', () => {
     const r = decodeMeta(old({ master: 30, music: 70, sfx: 20 }));
-    expect(r.profile.settings).toEqual({ master: 30, music: 70, sfx: 20, screenShake: true });
+    expect(r.profile.settings).toEqual({ master: 30, music: 70, sfx: 20, screenShake: true, graphics: 'high', effects: true, damageNumbers: true });
     expect(r.profile.version).toBe(2);
     expect(r.profile.crownPoints).toBe(42);
     expect(r.profile.mastery.wheat).toBe(31);
@@ -103,10 +103,22 @@ describe('decodeMeta settings (G5)', () => {
   it('a wrong screenShake type is repaired on its own', () => {
     const r = decodeMeta(old({ master: 30, music: 70, sfx: 20, screenShake: 'no' }));
     expect(r.kind).toBe('repaired');
-    expect(r.profile.settings).toEqual({ master: 30, music: 70, sfx: 20, screenShake: true });
+    expect(r.profile.settings).toEqual({ master: 30, music: 70, sfx: 20, screenShake: true, graphics: 'high', effects: true, damageNumbers: true });
   });
 
   it('keeps an old off-step volume such as 25', () => {
     expect(decodeMeta(old({ master: 25, music: 25, sfx: 25, screenShake: true })).profile.settings.master).toBe(25);
+  });
+});
+
+describe('decodeMeta graphics settings (11/11/2026)', () => {
+  const old = (settings: unknown) => ({ ...defaultProfile(), settings });
+  it('keeps valid graphics settings and repairs wrong ones to their defaults', () => {
+    const ok = decodeMeta(
+      old({ master: 30, music: 70, sfx: 20, screenShake: true, graphics: 'saver', effects: false, damageNumbers: false }),
+    );
+    expect(ok.profile.settings).toMatchObject({ graphics: 'saver', effects: false, damageNumbers: false });
+    const bad = decodeMeta(old({ master: 30, music: 70, sfx: 20, screenShake: true, graphics: 'ultra', effects: 'no' }));
+    expect(bad.profile.settings).toMatchObject({ graphics: 'high', effects: true, damageNumbers: true });
   });
 });

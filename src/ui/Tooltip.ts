@@ -1,3 +1,4 @@
+import { logicalPointer, logicalSize } from './displayRuntime';
 import type Phaser from 'phaser';
 import { ContentBox } from './ContentBox';
 import {
@@ -40,7 +41,8 @@ export class Tooltip implements TooltipHost {
     this.followPointer = true;
     this.box.setContent(content);
     const pointer = this.scene.input.activePointer;
-    this.moveTo(pointer.x, pointer.y);
+    const point = logicalPointer(this.scene, pointer);
+    this.moveTo(point.x, point.y);
   }
 
   showAbove(content: TooltipContent, anchor: Rect, owner: string): void {
@@ -71,7 +73,10 @@ export class Tooltip implements TooltipHost {
   }
 
   private onPointerMove(pointer: Phaser.Input.Pointer): void {
-    if (this.followPointer) this.moveTo(pointer.x, pointer.y);
+    if (this.followPointer) {
+      const point = logicalPointer(this.scene, pointer);
+      this.moveTo(point.x, point.y);
+    }
   }
 
   private moveTo(px: number, py: number): void {
@@ -84,6 +89,6 @@ export class Tooltip implements TooltipHost {
   }
 
   private screen(): Size {
-    return { w: this.scene.scale.width, h: this.scene.scale.height };
+    return logicalSize(this.scene);
   }
 }

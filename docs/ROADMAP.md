@@ -16,7 +16,7 @@ Chơi được trong trình duyệt:
 - Lưu ván và tải lại: lưu tự động và nhiều bản lưu có tên.
 - Âm thanh sinh bằng code, màn Cài đặt, PWA chơi offline.
 - Art bằng ảnh cho cả 9 vua.
-- Cân bằng: 59,0–63,6% thắng mỗi vua, chênh lệch 4,6 điểm (bot `greedy`, 500 ván/vua, Gai 0, 11/11/2026); chỉnh theo vua bằng `KING_TUNING` (phe mình), boss −10%, `ENEMY_STAT_MULT` 2,15; Ngai bắn hết vùng đất, lính tập hợp nhanh gấp 2,5.
+- Cân bằng: 55,6–64,0% thắng mỗi vua, chênh lệch 8,4 điểm (bot `greedy`, 500 ván/vua, Gai 0, tối 11/11/2026); Can Thiệp giảm còn 30–43% tổng sát thương (trước 75–81%), lính và tháp mạnh hơn (`ALLY_ROLE_TUNING`), `ENEMY_STAT_MULT` 1,5, `KING_TUNING` theo vua (Đồng Hồ 0 nhờ tăng thẳng thẻ); Vô tận ngân sách địch +10%/năm sau năm 30. Số sát thương trận trước hiện dưới chân nhà và trong hộp thông tin.
 
 ## Việc tiếp theo: phản hồi của chủ dự án, chỉ trên PC (09/11/2026)
 
@@ -69,6 +69,10 @@ Tất cả là cảm nhận trên PC (desktop ≥ 768 px). Bố cục điện th
 19. ✔ P0 icon (27): chỉ số, trạng thái, hành động (`docs/art-review/g3e/icons/review-2026-11-10.md`); hiện ở đầu dòng hộp thông tin.
 20. ✔ P2 đồ trang trí sân (10): thùng, rơm, biển, xe lúa rải trong sân; rào và cổng chỉ ở kho asset.
 21. Kiến trúc cấp 2/3 (dừng theo chủ dự án 10/11): 55/74 công trình và Ngai đã vào game; còn Ánh Trăng, Du Mục, trung lập (`docs/art-review/levels/review.md`). Còn lại (P2): hoạt ảnh công trình và Ngai, bộ frame lính mở rộng (42), mặt nạ nền dual-grid (76), nền menu và màn thắng/thua (6), ảnh phát hành (5).
+
+## Giai đoạn `enhance-hd-graphics`
+
+1. ✔ HiDPI rendering (11/11/2026): canvas theo DPR thật, chữ rasterise theo mật độ, layout/input giữ logical, art giữ nearest; chưa xuất lại art (bước 2). Spec [`2026-11-11-hidpi-rendering-design.md`](superpowers/specs/2026-11-11-hidpi-rendering-design.md), plan [`2026-11-11-hidpi-rendering.md`](superpowers/plans/2026-11-11-hidpi-rendering.md). Đã kiểm ở DPR thật 1/1,25/2/3; D1 giống hệt từng pixel so với trước.
 
 ## Để sau: điện thoại (chỉ làm khi chủ dự án bảo)
 

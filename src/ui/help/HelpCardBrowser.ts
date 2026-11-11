@@ -1,3 +1,4 @@
+import { logicalPointer } from '../displayRuntime';
 import Phaser from 'phaser';
 import type { Content } from '../../game/cards/registry';
 import type { CardId } from '../../data/types';
@@ -25,14 +26,17 @@ export class HelpCardBrowser {
   private shown = false;
   private drag: { id: number; startY: number; startRow: number } | null = null;
   private readonly onWheel = (p: Phaser.Input.Pointer, _o: unknown, _dx: number, dy: number): void => {
-    if (this.shown && this.contains(p)) this.scrollRows(dy > 0 ? 1 : dy < 0 ? -1 : 0);
+    const point = logicalPointer(this.scene, p);
+    if (this.shown && this.contains(point)) this.scrollRows(dy > 0 ? 1 : dy < 0 ? -1 : 0);
   };
   private readonly onDown = (p: Phaser.Input.Pointer): void => {
-    if (this.shown && this.contains(p)) this.drag = { id: p.id, startY: p.y, startRow: this.row };
+    const point = logicalPointer(this.scene, p);
+    if (this.shown && this.contains(point)) this.drag = { id: p.id, startY: point.y, startRow: this.row };
   };
   private readonly onMove = (p: Phaser.Input.Pointer): void => {
     if (!this.drag || this.drag.id !== p.id || !p.isDown) return;
-    this.setRow(this.drag.startRow - Math.trunc((p.y - this.drag.startY) / (DECK_CARD.h + GAP)));
+    const point = logicalPointer(this.scene, p);
+    this.setRow(this.drag.startRow - Math.trunc((point.y - this.drag.startY) / (DECK_CARD.h + GAP)));
   };
   private readonly onUp = (): void => {
     this.drag = null;

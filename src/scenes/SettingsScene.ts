@@ -1,11 +1,12 @@
 import Phaser from 'phaser';
+import { bindSceneDisplay, logicalSize, setDisplayDensityCap } from '../ui/displayRuntime';
 import type { EventBus } from '../core/events';
 import type { GameSpeed } from '../core/SimClock';
 import { DISCARD_MEMORY_ONLY_TEXT, SETTINGS_SAVE_FAILED_TEXT } from '../data/save';
 import { CONTENT } from '../game/cards/registry';
 import { defaultSlotName } from '../game/save/slots';
 import type { RealmScene } from './RealmScene';
-import type { AudioSettings } from '../data/settings';
+import { type AudioSettings, GRAPHICS_DENSITY_CAP, GRAPHICS_LABEL, GRAPHICS_QUALITIES } from '../data/settings';
 import type { GameEvents } from '../game/events';
 import { defaultProfile } from '../game/meta';
 import { stepVolume } from '../game/meta/settings';
@@ -72,6 +73,9 @@ export class SettingsScene extends Phaser.Scene {
     plus: Button;
   }[] = [];
   private shake!: Button;
+  private effects!: Button;
+  private graphics!: Button;
+  private damageNumbers!: Button;
   private discard!: Button;
   /** In a run (not the main menu): save the run into a named slot (2026-11-09). */
   private saveSlot!: Button;
@@ -84,6 +88,7 @@ export class SettingsScene extends Phaser.Scene {
   }
 
   create(data: SettingsLaunch): void {
+    bindSceneDisplay(this, () => this.layout());
     // Scene instances are reused; no state from the previous visit survives.
     this.launch = data;
     this.settings = {
@@ -130,6 +135,13 @@ export class SettingsScene extends Phaser.Scene {
       '',
       () => void this.change({ screenShake: !this.settings.screenShake }),
     );
+    // Graphics (owner 11/11/2026): sharpness on high-DPI screens, battle effects, last-battle damage numbers.
+    this.effects = this.button('', () => void this.change({ effects: !this.settings.effects }));
+    this.graphics = this.button('', () => {
+      const i = GRAPHICS_QUALITIES.indexOf(this.settings.graphics);
+      void this.change({ graphics: GRAPHICS_QUALITIES[(i + 1) % GRAPHICS_QUALITIES.length]! });
+    });
+    this.damageNumbers = this.button('', () => void this.change({ damageNumbers: !this.settings.damageNumbers }));
     this.discard = this.button('Xoá ván đang chơi', () => {
       this.confirming = true;
       this.showMessage(DISCARD_WARNING);
@@ -144,7 +156,6 @@ export class SettingsScene extends Phaser.Scene {
     });
     this.close = this.button('Đóng', () => this.leave());
     this.input.keyboard?.on('keydown-ESC', this.onEscape, this);
-    this.scale.on(Phaser.Scale.Events.RESIZE, this.layout, this);
     this.events.once(Phaser.Scenes.Events.SHUTDOWN, this.teardown, this);
     this.refresh();
     void this.loadSaved(this.visit);
@@ -186,7 +197,10 @@ export class SettingsScene extends Phaser.Scene {
     this.refresh();
     try {
       const result = await session.updateSettings(patch);
-      if (result.ok) getAudio(this)?.setVolumes(result.profile.settings);
+      if (result.ok) {
+        getAudio(this)?.setVolumes(result.profile.settings);
+        setDisplayDensityCap(this.game, GRAPHICS_DENSITY_CAP[result.profile.settings.graphics]);
+      }
       if (visit !== this.visit) return;
       if (result.ok) {
         this.settings = result.profile.settings;
@@ -270,6 +284,12 @@ export class SettingsScene extends Phaser.Scene {
     });
     this.shake.setLabel(`Rung màn hình: ${this.settings.screenShake ? 'Bật' : 'Tắt'}`);
     this.shake.setEnabled(writable);
+    this.effects.setLabel(`Hiệu ứng trận: ${this.settings.effects ? 'Đủ' : 'Giảm'}`);
+    this.effects.setEnabled(writable);
+    this.graphics.setLabel(`Độ nét: ${GRAPHICS_LABEL[this.settings.graphics]}`);
+    this.graphics.setEnabled(writable);
+    this.damageNumbers.setLabel(`Số sát thương: ${this.settings.damageNumbers ? 'Bật' : 'Tắt'}`);
+    this.damageNumbers.setEnabled(writable);
     const menu = this.launch.owner === SCENES.mainMenu;
     this.discard.setVisible(menu);
     this.saveSlot.setVisible(!menu);
@@ -284,7 +304,7 @@ export class SettingsScene extends Phaser.Scene {
   }
 
   private layout(): void {
-    const l = settingsLayout({ w: this.scale.width, h: this.scale.height });
+    const l = settingsLayout(logicalSize(this));
     fitOverlay(this, this.overlay);
     this.panel.resize(l.panel.w, l.panel.h);
     this.panel.image.setPosition(l.panel.x, l.panel.y);
@@ -304,6 +324,9 @@ export class SettingsScene extends Phaser.Scene {
       button(row.plus, r.plus);
     });
     button(this.shake, l.shake);
+    button(this.effects, l.effects);
+    button(this.graphics, l.graphics);
+    button(this.damageNumbers, l.damageNumbers);
     button(this.discard, l.discard);
     button(this.saveSlot, l.discard); // same spot: the discard button only shows on the main menu
     button(this.confirm, l.confirm);
@@ -331,7 +354,6 @@ export class SettingsScene extends Phaser.Scene {
   private teardown(): void {
     this.visit += 1;
     this.input.keyboard?.off('keydown-ESC', this.onEscape, this);
-    this.scale.off(Phaser.Scale.Events.RESIZE, this.layout, this);
     this.message.destroy();
     this.tooltip.destroy();
     const data = this.launch;

@@ -1,3 +1,4 @@
+import { bindSceneDisplay, logicalSize, logicalPointer, logicalPointerDistance } from '../ui/displayRuntime';
 import { HAND_STEP, handWindow } from '../ui/planning/handLayoutModel';
 import { shopPrice, buyCardIllegal } from '../game/run/shop';
 import Phaser from 'phaser';
@@ -185,6 +186,7 @@ export class PlanningHudScene extends Phaser.Scene {
   private view: CameraView = { zoom: 1, scroll: { x: 0, y: 0 } };
 
   create(data: RealmHudData): void {
+    bindSceneDisplay(this, () => this.layout());
     this.handScroll = 0;
     // Scene instances are reused: reset every per-launch field first.
     this.bus = data.bus;
@@ -211,7 +213,7 @@ export class PlanningHudScene extends Phaser.Scene {
     this.hoveredPlot = null;
     this.lay = this.currentLayout();
     this.view = overviewView(
-      { w: this.scale.width, h: this.scale.height },
+      logicalSize(this),
       'planning',
       this.controller.state.mode,
     );
@@ -386,7 +388,6 @@ export class PlanningHudScene extends Phaser.Scene {
     this.input.on(Phaser.Input.Events.POINTER_DOWN, this.onPointerDown, this);
     this.input.on(Phaser.Input.Events.POINTER_UP, this.onPointerUp, this);
     this.input.on('wheel', this.onHandWheel, this);
-    this.scale.on(Phaser.Scale.Events.RESIZE, this.layout, this);
     this.events.once(Phaser.Scenes.Events.SHUTDOWN, this.teardown, this);
 
     this.applySkin();
@@ -417,7 +418,7 @@ export class PlanningHudScene extends Phaser.Scene {
 
   /** Keep desktop cards at full size inside the scrolling hand window. */
   private placeHand(): void {
-    const screen = { w: this.scale.width, h: this.scale.height };
+    const screen = logicalSize(this);
     if (!this.lay.desktop) {
       this.hand.onScroll(null);
       this.hand.layout(centerHand(this.lay.hand, this.handCount));
@@ -435,15 +436,16 @@ export class PlanningHudScene extends Phaser.Scene {
 
   private onHandWheel(pointer: Phaser.Input.Pointer, _over: unknown, dx: number, dy: number): void {
     if (!this.lay.desktop || this.modalOpen() || this.controller.state.phase !== 'planning') return;
-    const { viewport, scroll } = handWindow({ w: this.scale.width, h: this.scale.height }, this.handCount, this.handScroll);
-    if (pointer.x < viewport.x || pointer.x > viewport.x + viewport.w || pointer.y < viewport.y - 12 || pointer.y > viewport.y + viewport.h) return;
+    const { viewport, scroll } = handWindow(logicalSize(this), this.handCount, this.handScroll);
+    const point = logicalPointer(this, pointer);
+    if (point.x < viewport.x || point.x > viewport.x + viewport.w || point.y < viewport.y - 12 || point.y > viewport.y + viewport.h) return;
     this.handScroll = scroll + Math.sign(dx || dy) * HAND_STEP;
     this.placeHand();
   }
   /** A card-sized panel flies from hand slot `index` to `plot` in CARD_FLY_MS, shrinking and fading (juice §11.5). */
   private flyCard(index: number, handSize: number, plot: number): void {
     const slots = this.lay.desktop
-      ? handWindow({ w: this.scale.width, h: this.scale.height }, handSize, this.handScroll).cards
+      ? handWindow(logicalSize(this), handSize, this.handScroll).cards
       : centerHand(this.lay.hand, handSize);
     const from = slots[Math.min(Math.max(0, index), slots.length - 1)];
     if (!from) return;
@@ -512,13 +514,13 @@ export class PlanningHudScene extends Phaser.Scene {
       this.floatGold(state.gold - this.lastGold);
     this.lastGold = state.gold;
     this.yearText.setText(yearLabel(state));
-    fitTextWidth(this.yearText, isDesktop(this.scale.width) ? 18 : 15, 11, this.lay.year.w);
+    fitTextWidth(this.yearText, isDesktop(logicalSize(this).w) ? 18 : 15, 11, this.lay.year.w);
     this.allyText.setText(allyStatusText(state.kingId, CONTENT));
     this.foeText.setText(foeStatusText(calendarCells(state, 1)[0], CONTENT));
     this.calendar.setCells(calendarCells(state, 5));
     this.scout.setPlan(state.army);
     if (this.inspected !== null) {
-      const model = buildingInfoModel(state, this.inspected, CONTENT);
+      const model = buildingInfoModel(state, this.inspected, CONTENT, undefined, this.controller.lastBattleDamage);
       if (model === null || state.phase !== 'planning') this.inspect(null, { x: 0, y: 0 });
       else this.info.setBuilding(model);
     }
@@ -692,7 +694,7 @@ export class PlanningHudScene extends Phaser.Scene {
     const last = buy ? buy.plot : moved ? moved.to : p.targets.at(-1);
     const show = buy !== null || p.ready || moved !== null;
     if (show) {
-      const screen = { w: this.scale.width, h: this.scale.height };
+      const screen = logicalSize(this);
       // A no-target tome has no plot: ✓/✕ take their default spot.
       const { confirm, cancel } =
         last === undefined
@@ -982,23 +984,24 @@ export class PlanningHudScene extends Phaser.Scene {
 
   private onPointerMove(pointer: Phaser.Input.Pointer): void {
     if (pointer.wasTouch) {
-      if (pointer.isDown && pointer.getDistance() > 8) this.stopPlotTimer();
+      if (pointer.isDown && logicalPointerDistance(this, pointer) > 8) this.stopPlotTimer();
       return;
     }
-    const hit = this.plotReason(pointer.x, pointer.y);
+    const point = logicalPointer(this, pointer);
+    const hit = this.plotReason(point.x, point.y);
     if (hit)
       this.tooltip.showAtPointer({ title: this.reasonText(hit.reason), lines: [] }, PLOT_TIP);
     else this.tooltip.hide(PLOT_TIP);
-    this.hoverRange(pointer);
+    this.hoverRange(point);
   }
 
   /** Mouse over a built plot shows its rings (desktop); leaving, a modal or a chosen card clears them. */
-  private hoverRange(pointer: Phaser.Input.Pointer): void {
+  private hoverRange(point: { x: number; y: number }): void {
     const state = this.controller.state;
     const plot =
       this.modalOpen() || state.phase !== 'planning'
         ? null
-        : (this.buildingAt({ x: pointer.x, y: pointer.y }) ?? this.plotAt({ x: pointer.x, y: pointer.y }));
+        : (this.buildingAt(point) ?? this.plotAt(point));
     const built = plot !== null && state.plots[plot]?.building ? plot : null;
     if (built === this.hoveredPlot) return;
     this.hoveredPlot = built;
@@ -1011,7 +1014,8 @@ export class PlanningHudScene extends Phaser.Scene {
   private onPointerDown(pointer: Phaser.Input.Pointer): void {
     if (!pointer.wasTouch) return;
     this.stopPlotTimer();
-    const hit = this.plotReason(pointer.x, pointer.y);
+    const point = logicalPointer(this, pointer);
+    const hit = this.plotReason(point.x, point.y);
     if (!hit) return;
     this.plotTimer = this.time.delayedCall(LONG_PRESS_MS, () => {
       this.plotTimer = null;
@@ -1030,7 +1034,7 @@ export class PlanningHudScene extends Phaser.Scene {
   private plotAt(p: { x: number; y: number }): number | null {
     return plotAtView(
       this.view,
-      { w: this.scale.width, h: this.scale.height },
+      logicalSize(this),
       p,
       this.controller.state.mode,
     );
@@ -1039,7 +1043,7 @@ export class PlanningHudScene extends Phaser.Scene {
   /** Building whose drawn art is under screen point `p` (the same pick as a click in RealmScene), else null. */
   private buildingAt(p: { x: number; y: number }): number | null {
     const state = this.controller.state;
-    const cam = screenToWorld(p, this.view.scroll, { w: this.scale.width, h: this.scale.height }, this.view.zoom);
+    const cam = screenToWorld(p, this.view.scroll, logicalSize(this), this.view.zoom);
     const boxes = boardBuildingBoxes(this.textures, state, CONTENT, state.mode);
     return pickSprite(boxes, cam, PICK_SLOP / this.view.zoom, atlasOpacity(this.textures));
   }
@@ -1048,7 +1052,7 @@ export class PlanningHudScene extends Phaser.Scene {
   private plotRect(plot: number): { x: number; y: number; w: number; h: number } {
     return plotRectAtView(
       this.view,
-      { w: this.scale.width, h: this.scale.height },
+      logicalSize(this),
       plot,
       this.controller.state.mode,
     );
@@ -1065,7 +1069,7 @@ export class PlanningHudScene extends Phaser.Scene {
     const model =
       plot === null || this.modalOpen()
         ? null
-        : buildingInfoModel(this.controller.state, plot, CONTENT);
+        : buildingInfoModel(this.controller.state, plot, CONTENT, undefined, this.controller.lastBattleDamage);
     if (plot === null || model === null) {
       this.inspected = null;
       this.info.hide();
@@ -1077,7 +1081,7 @@ export class PlanningHudScene extends Phaser.Scene {
     this.info.showBuilding(
       model,
       anchor,
-      { w: this.scale.width, h: this.scale.height },
+      logicalSize(this),
       planningControls(this.lay),
     );
   }
@@ -1160,7 +1164,7 @@ export class PlanningHudScene extends Phaser.Scene {
     if (!modal) return;
     fitOverlay(this, modal.overlay);
     const r = centredPanel(
-      { w: this.scale.width, h: this.scale.height },
+      logicalSize(this),
       SCOUT_MODAL.w,
       SCOUT_MODAL.h,
     );
@@ -1212,7 +1216,7 @@ export class PlanningHudScene extends Phaser.Scene {
 
   private currentLayout(): PlanningLayout {
     return planningLayout(
-      { w: this.scale.width, h: this.scale.height },
+      logicalSize(this),
       handSlots(this.controller.state),
       this.controller.state.mode,
     );
@@ -1220,7 +1224,7 @@ export class PlanningHudScene extends Phaser.Scene {
 
   private layout(): void {
     const l = (this.lay = this.currentLayout());
-    this.toasts.setAnchor(this.scale.width / 2, l.lives.y + l.lives.h + 8, this.scale.width - 32);
+    this.toasts.setAnchor(logicalSize(this).w / 2, l.lives.y + l.lives.h + 8, logicalSize(this).w - 32);
     this.livesBox.resize(l.lives.w, l.lives.h);
     this.livesBox.image.setPosition(l.lives.x, l.lives.y);
     const midY = l.lives.y + l.lives.h / 2;
@@ -1299,7 +1303,7 @@ export class PlanningHudScene extends Phaser.Scene {
     this.layoutScout();
     this.calendarModal?.layout();
     this.deckModal?.layout();
-    this.info.layout({ w: this.scale.width, h: this.scale.height }, planningControls(l));
+    this.info.layout(logicalSize(this), planningControls(l));
     this.refreshPending();
   }
 
@@ -1311,7 +1315,6 @@ export class PlanningHudScene extends Phaser.Scene {
     this.input.off(Phaser.Input.Events.POINTER_DOWN, this.onPointerDown, this);
     this.input.off(Phaser.Input.Events.POINTER_UP, this.onPointerUp, this);
     this.input.off('wheel', this.onHandWheel, this);
-    this.scale.off(Phaser.Scale.Events.RESIZE, this.layout, this);
     this.illegalTimer?.remove(false);
     this.stopPlotTimer();
     this.closeModals();

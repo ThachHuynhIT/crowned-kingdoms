@@ -11,7 +11,7 @@ import {
   UNLOCK_REFUSED_TEXT,
   UNLOCK_SAVE_FAILED_TEXT,
 } from '../data/save';
-import { type AudioSettings, VOLUME_MAX, VOLUME_MIN } from '../data/settings';
+import { type AudioSettings, GRAPHICS_QUALITIES, type GraphicsQuality, VOLUME_MAX, VOLUME_MIN } from '../data/settings';
 import type { CardId, KingId } from '../data/types';
 import type { Content } from '../game/cards/registry';
 import { decodeMeta, type MetaProfile, settleRun, unlockCard, unlockKing } from '../game/meta';
@@ -163,11 +163,17 @@ export async function openSession(
         // Stored volumes are integers (decodeMeta repairs anything else).
         settings[key] = Math.round(v);
       }
-      if ('screenShake' in patch) {
-        if (typeof patch.screenShake !== 'boolean') {
+      for (const key of ['screenShake', 'effects', 'damageNumbers'] as const) {
+        if (!(key in patch)) continue;
+        const v = patch[key];
+        if (typeof v !== 'boolean') return { ok: false, reason: 'notAllowed', message: SETTINGS_INVALID_TEXT };
+        settings[key] = v;
+      }
+      if ('graphics' in patch) {
+        if (!GRAPHICS_QUALITIES.includes(patch.graphics as GraphicsQuality)) {
           return { ok: false, reason: 'notAllowed', message: SETTINGS_INVALID_TEXT };
         }
-        settings.screenShake = patch.screenShake;
+        settings.graphics = patch.graphics as GraphicsQuality;
       }
       try {
         await commit({ ...profile, settings });

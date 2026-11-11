@@ -65,6 +65,7 @@ function makeState(army: ArmyPlan | null): RunState {
     yearStartPendingDraw: false,
     rng: { draw: 1, reward: 2, calendar: 3, council: 4, quest: 5, blessing: 6, shop: 7 },
     stats: { kills: 0, battlesWon: 0, battlesLost: 0, goldEarned: 0, conquered: 0, bossesWon: 0, bossesDefeated: [], completedYears: 0 },
+    lastBattleDamage: null,
     nextUid: 6,
     won: null,
   };
@@ -143,7 +144,7 @@ describe('buildBattleSetup', () => {
     };
     const s = buildBattleSetup(makeState(army), CONTENT).waves[0]!.spawns[0]!.stats;
     expect(s.hp).toBeCloseTo(30 * ENEMY_LEVEL_STAT[1]! * 1.5 * ENEMY_STAT_MULT, 6);
-    expect(s.hp).toBeCloseTo(30 * 1.45 * 1.5 * 2.15, 6); // 30 × 1.45 × 1.5 × ENEMY_STAT_MULT 2.15 (pinned 11/11/2026; no per-king enemy multiplier)
+    expect(s.hp).toBeCloseTo(30 * 1.45 * 1.5 * 1.5, 6); // 30 × 1.45 × 1.5 × ENEMY_STAT_MULT 1.5 (pinned 11/11/2026 after the intervention nerf; no per-king enemy multiplier)
     expect(s.dmg).toBeCloseTo(5 * 1.45 * 1.5 * ENEMY_STAT_MULT, 6);
   });
 

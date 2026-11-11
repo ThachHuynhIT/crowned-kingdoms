@@ -211,6 +211,22 @@ describe('RunController', () => {
     expect(states.length).toBeGreaterThan(0);
   });
 
+  it('remembers the damage per building of the last battle (none before the first)', () => {
+    const { bus, controller } = setup();
+    expect(controller.lastBattleDamage).toBeNull();
+    let result: BattleResult | null = null;
+    bus.on('battle:ended', (p) => (result = p.result));
+    sellDown(bus, controller);
+    runBattle(bus, controller);
+    expect(result!.damageBySource).toBeDefined();
+    expect(controller.lastBattleDamage).toEqual(result!.damageBySource);
+    // Kept in the run state (saved), so a controller built from a reloaded state still has it.
+    expect(controller.state.lastBattleDamage).toEqual(result!.damageBySource);
+    const reloaded = new RunController(createGameBus(), CONTENT, structuredClone(controller.state));
+    expect(reloaded.lastBattleDamage).toEqual(result!.damageBySource);
+    reloaded.dispose();
+  });
+
   it('keeps the speed chosen in one battle for the next battle and for a fresh controller', () => {
     const { bus, controller } = setup();
     sellDown(bus, controller);

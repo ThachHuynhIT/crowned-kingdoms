@@ -1,6 +1,6 @@
 import { describe, expect, it } from 'vitest';
 import { FIELD_TERRAINS, ROAD_TAIL, generateField, paintField, paintRoadTail } from './fieldArt';
-import { GRASS_FILES, IMAGE_ART_FILES, IMAGE_ART_SCALE, IMAGE_BUILDINGS, IMAGE_PLOTS, IMAGE_UNITS, MENU_IMAGE_LAYERS, POSES, WALL_FILE, menuImageLayers, unitPoseFile } from './imageArt';
+import { GRASS_FILES, IMAGE_ART_DIR, IMAGE_ART_FILES, IMAGE_ART_HD_DIR, IMAGE_ART_HD_BUILDINGS, IMAGE_ART_HD_FILES, IMAGE_ART_HD_PLOTS, IMAGE_ART_HD_SCALE, IMAGE_ART_HD_UNITS, IMAGE_ART_SCALE, IMAGE_BUILDINGS, IMAGE_PLOTS, IMAGE_UNITS, MENU_IMAGE_LAYERS, POSES, WALL_FILE, imageArtHdKey, imageArtKey, imageArtLoads, menuImageLayers, unitPoseFile, useHdArt } from './imageArt';
 import { PixelCanvas, upscale } from './pixel';
 
 describe('image art mapping', () => {
@@ -45,6 +45,44 @@ describe('image art mapping', () => {
   it('lists the three grass tiles and has no duplicate files', () => {
     for (const g of GRASS_FILES) expect(IMAGE_ART_FILES).toContain(g);
     expect(new Set(IMAGE_ART_FILES).size).toBe(IMAGE_ART_FILES.length);
+  });
+});
+
+describe('HD image art (4 art px per world unit)', () => {
+  it('is drawn at half the standard scale, so world sizes stay the same', () => {
+    expect(IMAGE_ART_HD_SCALE * 2).toBe(IMAGE_ART_SCALE);
+  });
+
+  it('covers every unit but footman, every image building with its levels, and every king plot skin', () => {
+    expect([...IMAGE_ART_HD_UNITS].sort()).toEqual(Object.keys(IMAGE_UNITS).filter((u) => u !== 'footman').sort());
+    expect([...IMAGE_ART_HD_BUILDINGS].sort()).toEqual(Object.keys(IMAGE_BUILDINGS).sort());
+    expect([...IMAGE_ART_HD_PLOTS].sort()).toEqual(Object.keys(IMAGE_PLOTS).sort());
+    expect(IMAGE_ART_HD_FILES).toContain('militia_foe_5');
+    expect(IMAGE_ART_HD_FILES).toContain('boss_crownless_king_5');
+    expect(IMAGE_ART_HD_FILES).toContain('iso/wheat_throne_l3');
+    expect(IMAGE_ART_HD_FILES).toContain('iso-neutral/neutral_well');
+    expect(IMAGE_ART_HD_FILES).toContain('iso/plots/nomad_built');
+    expect(IMAGE_ART_HD_FILES).not.toContain('footman_0');
+    for (const file of IMAGE_ART_HD_FILES) expect(IMAGE_ART_FILES).toContain(file);
+  });
+
+  it('loads HD twins under their own key only when asked, every other file from ai-v1', () => {
+    const sd = imageArtLoads(false);
+    const hd = imageArtLoads(true);
+    expect(sd.length).toBe(IMAGE_ART_FILES.length);
+    expect(hd.length).toBe(IMAGE_ART_FILES.length);
+    expect(sd.every((l) => l.url.startsWith(IMAGE_ART_DIR))).toBe(true);
+    expect(hd).toContainEqual({ key: imageArtHdKey('militia_0'), url: `${IMAGE_ART_HD_DIR}militia_0.png` });
+    expect(hd).toContainEqual({ key: imageArtKey('footman_0'), url: `${IMAGE_ART_DIR}footman_0.png` });
+    expect(hd).toContainEqual({ key: imageArtKey(WALL_FILE), url: `${IMAGE_ART_DIR}${WALL_FILE}.png` });
+    expect(hd.filter((l) => l.url.startsWith(IMAGE_ART_HD_DIR)).length).toBe(IMAGE_ART_HD_FILES.size);
+  });
+
+  it('switches on from display density 2', () => {
+    expect(useHdArt(1)).toBe(false);
+    expect(useHdArt(1.5)).toBe(false);
+    expect(useHdArt(2)).toBe(true);
+    expect(useHdArt(3)).toBe(true);
   });
 });
 

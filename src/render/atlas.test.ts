@@ -8,7 +8,7 @@ import {
   fxFrame,
   iconFrame,
   kingPlotFrame,
-  packShelves,
+  packSpritePages,
   plotFrame,
   spriteList,
   unitFrame,
@@ -103,8 +103,40 @@ describe('the G3 content in the atlas', () => {
     for (const card of CONTENT.neutralPool()) expect(byName.has(cardArtFrame(card.id)), card.id).toBe(true);
   });
 
-  it('packs into one sheet that fits a 4096 texture', () => {
-    const { height } = packShelves(list, 512);
-    expect(height).toBeLessThanOrEqual(4096);
+  it('packs the generated sprites onto pages that each fit a 4096 texture', () => {
+    const pages = packSpritePages(list);
+    for (const page of pages) {
+      expect(page.width).toBeLessThanOrEqual(4096);
+      expect(page.height).toBeLessThanOrEqual(4096);
+    }
+    expect(pages.flatMap((p) => p.placed.map((s) => s.name)).sort()).toEqual(list.map((s) => s.name).sort());
+  });
+});
+
+describe('packSpritePages', () => {
+  const box = (name: string, width: number, height: number) => ({ name, art: { width, height } });
+
+  it('starts a new page when the next shelf would pass the page height, frames never overlap', () => {
+    const sprites = Array.from({ length: 20 }, (_, i) => box(`s${i}`, 30, 30 + (i % 3)));
+    const pages = packSpritePages(sprites, 64, 100);
+    expect(pages.length).toBeGreaterThan(1);
+    for (const page of pages) {
+      expect(page.height).toBeLessThanOrEqual(100);
+      for (const a of page.placed) {
+        expect(a.x + a.art.width).toBeLessThanOrEqual(64);
+        expect(a.y + a.art.height).toBeLessThanOrEqual(page.height);
+        for (const b of page.placed)
+          if (a !== b)
+            expect(
+              a.x + a.art.width <= b.x || b.x + b.art.width <= a.x || a.y + a.art.height <= b.y || b.y + b.art.height <= a.y,
+              `${a.name} / ${b.name}`,
+            ).toBe(true);
+      }
+    }
+    expect(pages.reduce((n, p) => n + p.placed.length, 0)).toBe(20);
+  });
+
+  it('rejects a sprite larger than a page', () => {
+    expect(() => packSpritePages([box('huge', 10, 200)], 64, 100)).toThrow(/huge/);
   });
 });

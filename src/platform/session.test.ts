@@ -265,9 +265,9 @@ describe('session settings and discard (G5 §4)', () => {
     const s = await createSession(disk, () => undefined, CONTENT);
     const r = await s.updateSettings({ music: 30, screenShake: false });
     expect(r).toMatchObject({ ok: true });
-    expect(s.meta().settings).toEqual({ master: 100, music: 30, sfx: 100, screenShake: false });
+    expect(s.meta().settings).toEqual({ master: 100, music: 30, sfx: 100, screenShake: false, graphics: 'high', effects: true, damageNumbers: true });
     const again = await createSession(disk, () => undefined, CONTENT);
-    expect(again.meta().settings).toEqual({ master: 100, music: 30, sfx: 100, screenShake: false });
+    expect(again.meta().settings).toEqual({ master: 100, music: 30, sfx: 100, screenShake: false, graphics: 'high', effects: true, damageNumbers: true });
   });
 
   it('a newer profile refuses settings and never writes', async () => {
@@ -295,7 +295,7 @@ describe('session settings and discard (G5 §4)', () => {
   it('rejects non-finite or out-of-range values without writing', async () => {
     const store = new LoggingStore();
     const s = await openSession(store, CONTENT);
-    for (const patch of [{ master: Number.NaN }, { music: 101 }, { sfx: -1 }, { screenShake: 'x' as never }]) {
+    for (const patch of [{ master: Number.NaN }, { music: 101 }, { sfx: -1 }, { screenShake: 'x' as never }, { graphics: 'ultra' as never }, { effects: 1 as never }]) {
       expect(await s.updateSettings(patch)).toMatchObject({ ok: false, reason: 'notAllowed' });
     }
     expect(store.log).toEqual([]);
@@ -313,7 +313,7 @@ describe('session settings and discard (G5 §4)', () => {
       s.updateSettings({ sfx: 20, screenShake: false }),
     ]);
     const p = s.meta();
-    expect(p.settings).toEqual({ master: 40, music: 60, sfx: 20, screenShake: false });
+    expect(p.settings).toEqual({ master: 40, music: 60, sfx: 20, screenShake: false, graphics: 'high', effects: true, damageNumbers: true });
     expect(p.unlockedKings).toContain('grove');
     expect(p.settledRuns.length).toBe(1);
     const reloaded = (await createSession(disk, () => undefined, CONTENT)).meta();

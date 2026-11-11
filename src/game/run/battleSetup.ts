@@ -535,6 +535,7 @@ export function buildBattleSetup(state: RunState, content: Content): BattleSetup
     waves,
     autoFire: state.autoFire,
     power: state.kingId,
+    roleTuning: true,
     ...(bannerDef ? { banner: bannerDef } : {}),
     ...(boss ? { boss } : {}),
     // Vắng khi không có sắc lệnh/nhiệm vụ/perk: trận giữ số gốc §7.4 (G1/G2).

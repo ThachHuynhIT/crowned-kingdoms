@@ -58,6 +58,8 @@ export interface BuildingInfoModel {
   readonly enchants: readonly string[];
   readonly age: { readonly years: number; readonly bonus: number } | null;
   readonly spawn: UnitInfoModel | null;
+  /** Damage its tower and units dealt in the last battle (owner 11/11/2026); undefined/null before the first battle. */
+  readonly lastBattleDamage?: number | null;
 }
 
 const perSecond = (interval: number): number => (interval > 0 ? TICKS_PER_SECOND / interval : 0);
@@ -107,6 +109,7 @@ export const buildingInfoModel = (
   plot: number,
   content: Content,
   live?: { hp: number; maxHp: number },
+  damage: Readonly<Record<number, number>> | null = null,
 ): BuildingInfoModel | null => {
   const b = state.plots[plot]?.building;
   if (!b) return null;
@@ -153,6 +156,7 @@ export const buildingInfoModel = (
     }),
     age: hasAge ? { years: ageOf(b, state.year), bonus: b.ageBonus } : null,
     spawn: setup.spawn && spawnDef ? unitPreviewModel(setup.spawn.stats, spawnDef, level) : null,
+    lastBattleDamage: damage === null ? null : (damage[b.uid] ?? 0),
   };
 };
 

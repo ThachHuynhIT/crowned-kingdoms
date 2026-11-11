@@ -1,3 +1,4 @@
+import { logicalSize, logicalPointerDistance } from '../displayRuntime';
 import type Phaser from 'phaser';
 import type { EventBus } from '../../core/events';
 import { DECREES, decreeText } from '../../data/decrees';
@@ -68,7 +69,7 @@ export class CouncilModal {
       const box = createPanel(scene, 'slot', 64, 64);
       box.image.setInteractive({ useHandCursor: true });
       box.image.on('pointerup', (p: Phaser.Input.Pointer) => {
-        if (p.getDistance() <= 8) this.choose(i);
+        if (logicalPointerDistance(this.scene, p) <= 8) this.choose(i);
       });
       const icon = scene.add.image(0, 0, SPRITES_KEY, iconFrame('crown')).setOrigin(0, 0).setScale(2);
       const name = addUiText(scene, 0, 0, '', 15).setFontStyle('bold');
@@ -107,7 +108,7 @@ export class CouncilModal {
   layout(): void {
     const offer = councilOffer(this.state);
     if (offer === null) return;
-    const { width, height } = this.scene.scale;
+    const { w: width, h: height } = logicalSize(this.scene);
     const desktop = width >= 768;
     const inset = frameBorder(this.scene, 'panel') + (desktop ? PAD_DESKTOP : PAD_MOBILE);
     const l = councilLayout({ w: width, h: height }, inset);
@@ -236,7 +237,7 @@ export class CouncilModal {
       if (picked || eligible) {
         cell.setInteractive({ useHandCursor: true });
         cell.on('pointerup', (p: Phaser.Input.Pointer) => {
-          if (p.getDistance() <= 8) this.select(toggleSubselection(this.state, CONTENT, { plot }));
+          if (logicalPointerDistance(this.scene, p) <= 8) this.select(toggleSubselection(this.state, CONTENT, { plot }));
         });
       }
       if (picked) this.add(addUiText(this.scene, r.x + r.w / 2, r.y + r.h / 2, String(sub.picked.indexOf(plot) + 1), 16).setOrigin(0.5));
@@ -304,7 +305,7 @@ export class CouncilModal {
           .setInteractive({ useHandCursor: true }),
       );
       chip.on('pointerup', (p: Phaser.Input.Pointer) => {
-        if (p.getDistance() <= 8) this.select(toggleDeckCard(this.state, CONTENT, g.cardId));
+        if (logicalPointerDistance(this.scene, p) <= 8) this.select(toggleDeckCard(this.state, CONTENT, g.cardId));
       });
       const name = CONTENT.card(g.cardId).nameVi;
       const suffix = `×${g.indices.length}${g.picked > 0 ? ` (bỏ ${g.picked})` : ''}`;

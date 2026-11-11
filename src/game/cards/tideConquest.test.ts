@@ -1,4 +1,4 @@
-import { KING_TUNING } from '../../data/battle';
+import { ALLY_ROLE_TUNING, KING_TUNING } from '../../data/battle';
 import { SPEC_MOVE_SCALE } from '../../data/boardGeometry';
 import { describe, expect, it } from 'vitest';
 import { PULSE_RADIUS_BONUS, TOWER_RANGE, TOWER_SHOT_DMG_MULT, TOWER_STD } from '../../data/scaling';
@@ -145,8 +145,8 @@ describe('the nine Tide King cards (spec 6.7)', () => {
       for (let i = 0; i < 50; i++) stepBattle(w, []);
       expect(w.hp[near]).toBe(100);
       stepBattle(w, []); // tick 50
-      // the pulse carries the player king's KING_TUNING (runState is the Wheat king)
-      expect(w.hp[near]).toBeCloseTo(100 - 10 * (1 + KING_TUNING.wheat.dmgPct / 100));
+      // the pulse carries the player king's KING_TUNING (runState is the Wheat king) and the tower role tuning
+      expect(w.hp[near]).toBeCloseTo(100 - 10 * (1 + KING_TUNING.wheat.dmgPct / 100) * (1 + ALLY_ROLE_TUNING.towerDmgPct / 100));
       expect(w.kbTicks[near]).toBeGreaterThan(0);
       expect(Math.sqrt(w.kbX[near]! * w.kbX[near]! + w.kbY[near]! * w.kbY[near]!) * 3).toBeCloseTo(24 * SPEC_MOVE_SCALE);
       expect(w.kbX[near]).toBeLessThan(0); // shoved west, away from the tower

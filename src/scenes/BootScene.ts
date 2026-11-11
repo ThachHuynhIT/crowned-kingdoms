@@ -3,6 +3,8 @@ import { AudioManager } from '../audio/AudioManager';
 import { CONTENT } from '../game/cards/registry';
 import { browserIdbFactory, createSession } from '../platform/session';
 import { SCENES } from './keys';
+import { GRAPHICS_DENSITY_CAP } from '../data/settings';
+import { setDisplayDensityCap } from '../ui/displayRuntime';
 import { setSession, setStorageWarning } from './sessionRegistry';
 import { getAudio, setAudio } from './audioRegistry';
 
@@ -46,6 +48,7 @@ export class BootScene extends Phaser.Scene {
       .then((session) => {
         setSession(game, session);
         manager.setVolumes(session.meta().settings);
+        setDisplayDensityCap(game, GRAPHICS_DENSITY_CAP[session.meta().settings.graphics]);
         this.scene.start(SCENES.preload);
       });
   }

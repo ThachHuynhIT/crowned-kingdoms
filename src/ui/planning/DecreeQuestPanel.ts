@@ -1,3 +1,4 @@
+import { logicalSize } from '../displayRuntime';
 import Phaser from 'phaser';
 import type { EventBus } from '../../core/events';
 import type { GameEvents } from '../../game/events';
@@ -122,7 +123,7 @@ export class DecreeQuestPanel {
   }
 
   private layoutModal(text: string): void {
-    const { width, height } = this.scene.scale;
+    const { w: width, h: height } = logicalSize(this.scene);
     const inset = frameBorder(this.scene, 'panel') + PAD;
     const panel = centredPanel({ w: width, h: height }, 340, 520);
     fitOverlay(this.scene, this.overlay);

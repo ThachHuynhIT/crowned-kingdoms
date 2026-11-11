@@ -1,3 +1,4 @@
+import { logicalSize, logicalPointer } from '../displayRuntime';
 import Phaser from 'phaser';
 import { toCss } from '../../data/palette';
 import type { CardId, KingId } from '../../data/types';
@@ -186,12 +187,12 @@ export class RewardModal {
   }
 
   private compute(): RewardLayout {
-    const { width, height } = this.scene.scale;
+    const { w: width, h: height } = logicalSize(this.scene);
     return rewardLayout({ w: width, h: height }, INSET, this.cards.length, this.scroll);
   }
 
   private apply(l: RewardLayout): void {
-    const desktop = this.scene.scale.width >= 768;
+    const desktop = logicalSize(this.scene).w >= 768;
     fitOverlay(this.scene, this.overlay);
     this.fit(this.title, l.title.w, desktop ? 34 : 24);
     this.fit(this.subtitle, l.subtitle.w, desktop ? 20 : 15);
@@ -240,18 +241,21 @@ export class RewardModal {
   }
 
   private onWheel(pointer: Phaser.Input.Pointer, _over: unknown, _dx: number, dy: number): void {
-    if (this.lay.scrollMax > 0 && this.inViewport(pointer.x, pointer.y)) this.setScroll(this.scroll + dy * 0.5);
+    const point = logicalPointer(this.scene, pointer);
+    if (this.lay.scrollMax > 0 && this.inViewport(point.x, point.y)) this.setScroll(this.scroll + dy * 0.5);
   }
 
   private onDown(pointer: Phaser.Input.Pointer): void {
-    if (this.lay.scrollMax > 0 && this.inViewport(pointer.x, pointer.y)) {
-      this.drag = { id: pointer.id, y: pointer.y, scroll: this.scroll };
+    const point = logicalPointer(this.scene, pointer);
+    if (this.lay.scrollMax > 0 && this.inViewport(point.x, point.y)) {
+      this.drag = { id: pointer.id, y: point.y, scroll: this.scroll };
     }
   }
 
   private onMove(pointer: Phaser.Input.Pointer): void {
+    const point = logicalPointer(this.scene, pointer);
     if (!this.drag || this.drag.id !== pointer.id || !pointer.isDown) return;
-    this.setScroll(this.drag.scroll - (pointer.y - this.drag.y));
+    this.setScroll(this.drag.scroll - (point.y - this.drag.y));
   }
 
   private onUp(pointer: Phaser.Input.Pointer): void {

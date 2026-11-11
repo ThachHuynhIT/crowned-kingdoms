@@ -129,6 +129,34 @@ describe('camera model (spec 06/11/2026, P2 zoom)', () => {
         }
   });
 
+  it('snap_translation_is_device_integer: with a density ratio the translation lands on whole device pixels', () => {
+    for (const s of [DESKTOP, MOBILE, { w: 769, h: 815 }])
+      for (const ratio of [{ x: 1.25, y: 1.25 }, { x: 2, y: 2 }, { x: 3, y: 3 }, { x: 961 / 769, y: 1019 / 815 }])
+        for (const zoom of [1.03125, 1.7, 3])
+          for (const scroll of [{ x: -640.3, y: 24.77 }, { x: 12.123, y: 300.5 }]) {
+            const input = { zoom, scroll: { ...scroll } };
+            const v = snapView(input, s, ratio);
+            expect(input).toEqual({ zoom, scroll }); // input not mutated
+            expect(v.zoom).toBe(zoom);
+            for (const [axis, half] of [['x', s.w / 2], ['y', s.h / 2]] as const) {
+              const r = ratio[axis];
+              const t = ((1 - zoom) * half - zoom * v.scroll[axis]) * r;
+              expect(Math.abs(t - Math.round(t))).toBeLessThan(1e-6);
+              expect(Math.abs((v.scroll[axis] - scroll[axis]) * zoom * r)).toBeLessThanOrEqual(0.5 + 1e-9);
+            }
+            const again = snapView(v, s, ratio);
+            expect(again.scroll.x).toBeCloseTo(v.scroll.x, 9);
+            expect(again.scroll.y).toBeCloseTo(v.scroll.y, 9);
+          }
+  });
+
+  it('snapView with ratio 1 equals the old screen-pixel snap', () => {
+    for (const zoom of [1.03125, 1.7, 3]) {
+      const view = { zoom, scroll: { x: -640.3, y: 24.77 } };
+      expect(snapView(view, DESKTOP, { x: 1, y: 1 })).toEqual(snapView(view, DESKTOP));
+    }
+  });
+
   it('wheel_steps_keep_the_world_point_under_the_cursor', () => {
     const base = overviewView(DESKTOP, 'planning');
     const p = { x: 640, y: 360 }; // well inside the map: near an edge the clamp wins over the anchor

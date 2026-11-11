@@ -1,4 +1,5 @@
 import Phaser from 'phaser';
+import { bindSceneDisplay, logicalSize } from '../ui/displayRuntime';
 import { toCss } from '../data/palette';
 import { UI_PALETTE } from '../data/uiPalette';
 import { crownPoints } from '../game/meta';
@@ -57,6 +58,7 @@ export class RunEndScene extends Phaser.Scene {
   }
 
   create(data: Partial<RunEndData> = {}): void {
+    bindSceneDisplay(this, () => this.layout());
     // Scene instances are reused: reset every per-run field first.
     this.state = data.state ?? null;
     this.rows = [];
@@ -98,7 +100,6 @@ export class RunEndScene extends Phaser.Scene {
     ];
 
     this.input.keyboard?.on(Phaser.Input.Keyboard.Events.ANY_KEY_DOWN, this.onKey, this);
-    this.scale.on(Phaser.Scale.Events.RESIZE, this.layout, this);
     this.events.once(Phaser.Scenes.Events.SHUTDOWN, this.teardown, this);
     this.layout();
   }
@@ -122,7 +123,7 @@ export class RunEndScene extends Phaser.Scene {
   }
 
   private layout(): void {
-    const screen = { w: this.scale.width, h: this.scale.height };
+    const screen = logicalSize(this);
     const inset = frameBorder(this, 'panel') + PAD;
     const slots = this.rows.reduce((n, r) => n + r.slots, 0);
     const l = resultLayout(screen, inset, slots, this.buttons.length);
@@ -146,7 +147,6 @@ export class RunEndScene extends Phaser.Scene {
 
   private teardown(): void {
     this.input.keyboard?.off(Phaser.Input.Keyboard.Events.ANY_KEY_DOWN, this.onKey, this);
-    this.scale.off(Phaser.Scale.Events.RESIZE, this.layout, this);
     this.state = null;
   }
 }

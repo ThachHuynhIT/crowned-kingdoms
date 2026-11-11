@@ -6,7 +6,7 @@ import type { UnitId } from '../../data/types';
 import { UI_PALETTE } from '../../data/uiPalette';
 import type { ArmyPlan, ArmyWave, Edge } from '../../game/battle/types';
 import type { Content } from '../../game/cards/registry';
-import { SPRITES_KEY, unitFrame } from '../../render/atlas';
+import { SPRITES_KEY, frameDensityFactor, unitFrame } from '../../render/atlas';
 import type { Rect } from '../hud/layout';
 import { bossName } from './CalendarStrip';
 import { addUiText, bindPress, createPanel, frameBorder, type UiBox } from '../theme';
@@ -190,9 +190,11 @@ export class ScoutPanel {
           ? this.scene.add.image(0, 0, SPRITES_KEY, frame).setOrigin(0, 0)
           : null;
       if (img) {
-        const fh = img.height;
+        // sized by the standard-density frame, so an HD frame (twice the pixels) shows at the same size
+        const k = frameDensityFactor(frame);
+        const fh = img.height * k;
         const scale = fh <= maxIcon ? Math.floor(maxIcon / fh) : 1 / Math.ceil(fh / maxIcon);
-        img.setScale(scale);
+        img.setScale(scale * k);
       }
       const text = full ? `×${count} ${this.content.unit(unit).nameVi}` : `×${count}`;
       const label = addUiText(this.scene, 0, 0, text, 12).setOrigin(0, 0.5);

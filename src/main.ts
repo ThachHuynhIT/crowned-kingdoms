@@ -13,6 +13,11 @@ import { RealmScene } from './scenes/RealmScene';
 import { RunEndScene } from './scenes/RunEndScene';
 import { SavesScene } from './scenes/SavesScene';
 import { SettingsScene } from './scenes/SettingsScene';
+import { installDisplayRuntime, readInitialDisplayMetrics } from './ui/displayRuntime';
+
+const parent = document.getElementById('game') ?? document.body;
+// HiDPI (spec 2026-11-11): the canvas has round(CSS px × density) pixels; the display runtime owns that size.
+const display = readInitialDisplayMetrics(parent);
 
 const game = new Phaser.Game({
   type: Phaser.AUTO,
@@ -24,10 +29,18 @@ const game = new Phaser.Game({
   // WebAudio belongs to our gesture-unlocked AudioManager.
   audio: { noAudio: true },
   scale: {
-    // Canvas fills the #game box 1:1 (the window minus the safe-area insets, G5); the realm camera zooms.
-    mode: Phaser.Scale.RESIZE,
-    width: document.getElementById('game')?.clientWidth || window.innerWidth,
-    height: document.getElementById('game')?.clientHeight || window.innerHeight,
+    // The canvas fills the #game box (the window minus the safe-area insets, G5) at the display density: the
+    // display runtime (`src/ui/displayRuntime.ts`) sizes the backing store and the CSS box itself, so Phaser runs
+    // in NONE mode with zoom 1 and never rewrites the canvas style.
+    mode: Phaser.Scale.NONE,
+    width: display.backing.w,
+    height: display.backing.h,
+    zoom: 1,
+  },
+  callbacks: {
+    preBoot: (g) => {
+      installDisplayRuntime(g, parent, display);
+    },
   },
   input: {
     // Mouse + up to two simultaneous touches (pinch).
@@ -52,7 +65,9 @@ const game = new Phaser.Game({
 if (import.meta.env.DEV) {
   (window as unknown as { game: Phaser.Game }).game = game;
   void import('./dev/registerPreview').then((m) => m.registerPreview(game));
-  void import('./dev/fpsOverlay').then((m) => m.startFpsOverlay());
+  void Promise.all([import('./dev/fpsOverlay'), import('./ui/displayRuntime')]).then(([fps, display]) =>
+    fps.startFpsOverlay(() => display.devDisplaySnapshot(game)),
+  );
 }
 
 void registerPwa();

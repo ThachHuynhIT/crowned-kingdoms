@@ -78,3 +78,29 @@ Chủ dự án: lính ra đội hình nhanh hơn (`BATTLE.rallySpeedMult` 2,5 t�
 | 500 ván, rừng −2 → −8, lò rèn −17 → −20 | rừng 60,0%, lò rèn 59,0% |
 
 **Kết quả cuối (500 ván/vua, seeds 1–500): ĐẠT.** phép 63,0% · đồng hồ 60,0% · lò rèn 59,0% · rừng 60,0% · trăng 63,6% · du mục 63,2% · đá 63,0% · thuỷ triều 62,6% · lúa 59,6%. Chênh lệch 4,6 điểm. `KING_TUNING`: lúa +2, đá −19, phép −14, rừng −8, thuỷ triều +5, lò rèn −20, đồng hồ +10, trăng −4, du mục −6.
+
+## Lượt 6 (tối 11/11/2026): giảm Can Thiệp, tăng lính và tháp
+
+Chủ dự án: sát thương chủ yếu đến từ Can Thiệp thay vì lính; giảm Can Thiệp, tăng lính và tháp. Trận nay ghi `damageBySource` (sát thương theo công trình, gồm tháp và lính nó sinh, tính tới máu còn lại của địch) và `interventionDamage`, nên đo được tỉ phần.
+
+Trước khi chỉnh (bot `greedy`, 20 ván/vua): Can Thiệp 75–81% tổng sát thương, lính 9–23%, tháp 1–10%, Ngai 1–3%.
+
+Thay đổi:
+- `INTERVENTION.dmgBase` 40 → 6, `dmgPerYear` 10 → 1,5 (năm 30: 330 → 49,5); bỏng của Lò Rèn 8 → 4/giây, độc của Trăng 6 → 3/giây.
+- `ALLY_ROLE_TUNING` (mới, `src/data/battle.ts`): lính phe mình +120% sát thương, +50% máu; công trình tấn công/xung +200% sát thương (không gồm Ngai). Chỉ áp cho trận của ván (`BattleSetup.roleTuning`), không áp cho dựng trận thử trong test.
+- `ENEMY_STAT_MULT` 2,15 → 1,5.
+- `KING_TUNING`: lúa +27, đá −34, phép −12, rừng +21, thuỷ triều +3, lò rèn −26, đồng hồ +130, trăng +7, du mục +21.
+
+Tỉ phần sát thương sau chỉnh (100 ván/vua): Can Thiệp 30–43%, lính 23–64%, tháp 3–38% (đá 38%, thuỷ triều 24%), Ngai 1–6%.
+
+**Kết quả cuối (500 ván/vua, seeds 1–500): ĐẠT.** phép 55,0% · đồng hồ 61,8% · lò rèn 54,6% · rừng 63,0% · trăng 63,6% · du mục 63,8% · đá 58,0% · thuỷ triều 60,2% · lúa 62,4%. Chênh lệch 9,2 điểm.
+
+Ghi chú: Đồng Hồ cần +130% vì bộ thẻ của nó dựa nhiều vào Can Thiệp (choáng 1,8 giây) — nên xem lại thẻ Đồng Hồ thay vì giữ con số lớn này. Vô tận chưa cân lại: với bot greedy chỉ 1/40 seed của Đá sống tới năm 40 (seed thử nghiệm đổi 1 → 29).
+
+## Lượt 7 (đêm 11/11/2026): bộ thẻ Đồng Hồ, Vô tận
+
+- **Đồng Hồ** (`src/data/kings/clock.ts`): thay vì `KING_TUNING.clock` +130%, tăng chính thẻ. Lính thiếc 4–8 → 5–10 con, +60% máu/sát thương; nhện 3–7 → 4–8 con, hồi sinh 150 → 100 tick, +60%; người khổng lồ +80%; tháp bánh răng 5 → 9; pháo hơi nước 30 → 55; Ngai 850 → 1500 máu, 8 → 14 sát thương. Các +% là hiệu ứng `self` của thẻ (chỉ lính do nhà mình sinh), nên lính Đồng Hồ phía địch không đổi. `KING_TUNING.clock` = 0.
+- `KING_TUNING`: trăng 7 → 5, du mục 21 → 18.
+- **Vô tận** (`src/data/endless.ts`): ngân sách địch sau năm 30 tăng 10%/năm thay vì 15% (`ENDLESS_DATA_VERSION` 2). Bot greedy, 9 vua × 20 seed: trước giảm Can Thiệp trung bình sống tới năm 35,5, 29,4% qua năm 40; sau giảm Can Thiệp (chưa chỉnh) 34,5 và 12,8%; với 10%/năm 37,1 và 29,4%. Seed thử nghiệm Vô tận (đá): 29 → 4.
+
+**Kết quả cuối (500 ván/vua, seeds 1–500): ĐẠT.** phép 57,0% · đồng hồ 63,6% · lò rèn 55,6% · rừng 64,0% · trăng 61,0% · du mục 63,8% · đá 59,8% · thuỷ triều 60,8% · lúa 63,4%. Chênh lệch 8,4 điểm.

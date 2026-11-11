@@ -1,20 +1,30 @@
 """Publish the approved isometric sets of the six new kings (G5 plan Task 12).
 
     python docs/art-review/g5/make_assets.py <king> [<king> ...]
+    python docs/art-review/g5/make_assets.py --density 4 <king> [<king> ...]   # HiDPI twins -> ai-v1-hd/iso/
 
 Refuses a king whose `docs/art-review/g5/<king>/group-review.md` does not say ĐÃ DUYỆT. Uses the Wheat cutter
 (`docs/art-review/iso-board/make_assets.py`): black keyed to alpha 0/255, buildings reduced at the SAME scale as the
 Wheat set (the approved Reapers source becomes 64 px wide), plots reduced to 128 px wide with the diamond's centre on
 the middle row. Writes `public/assets/art/ai-v1/iso/<cardId>.png` and `iso/plots/<king>_<state>.png`, then adds a
 manifest entry per file to docs/assets.manifest.yml (existing ids are left alone).
+
+`--density 4` (HiDPI, 4 art px per world unit, drawn at scale 0.25) re-exports the SAME approved sources into
+`public/assets/art/ai-v1-hd/iso/` under the same names, each EXACTLY twice its published density-2 twin (buildings:
+`iso.reduce_hd`; plots: `iso.plot_hd`), so world footprint and anchors do not move. Only files whose density-2 twin is
+published are written; the manifest is not touched (HD twins are registered by `docs/art-review/hd/register_hd.py`).
+Cards re-keyed by `recut_border_key.py` must be re-cut afterwards with `recut_border_key.py --density 4 <card>`.
 """
 import importlib.util
 import sys
 from pathlib import Path
 
+from PIL import Image
+
 ROOT = Path(__file__).resolve().parents[3]
 G5 = ROOT / 'docs/art-review/g5'
 OUT = ROOT / 'public/assets/art/ai-v1/iso'
+OUT_HD = ROOT / 'public/assets/art/ai-v1-hd/iso'
 MANIFEST = ROOT / 'docs/assets.manifest.yml'
 KINGS = ['grove', 'tide', 'forge', 'clock', 'moon', 'nomad', 'stone', 'arcane']
 PLOT_STATES = ['open', 'locked', 'throne', 'built']
@@ -91,6 +101,33 @@ def publish(king: str) -> list[str]:
     return entries
 
 
+def publish_hd(king: str, m: int = 2) -> None:
+    """HiDPI twins of `king`'s published buildings and plots (see the module doc)."""
+    if not approved(king):
+        raise SystemExit(f'{king}: group not approved (docs/art-review/g5/{king}/group-review.md)')
+    k = iso.REAPERS_WIDTH / iso.keyed(iso.BUILDINGS['wheat_reapers']).width
+    (OUT_HD / 'plots').mkdir(parents=True, exist_ok=True)
+    for card, src in building_sources(king).items():
+        twin = OUT / f'{card}.png'
+        if not twin.exists():
+            print(f'{card}: no density-2 twin, skipped')
+            continue
+        img = iso.reduce_hd(iso.keyed(src), k, m)
+        img.save(OUT_HD / f'{card}.png')
+        with Image.open(twin) as t:
+            ok = img.size == (t.width * m, t.height * m)
+        print(f'{card}: {img.width}x{img.height}{"" if ok else "  SIZE MISMATCH"}')
+    for state, src in plot_sources(king).items():
+        twin = OUT / 'plots' / f'{king}_{state}.png'
+        if not twin.exists():
+            continue
+        with Image.open(twin) as t:
+            size = t.size
+        img = iso.plot_hd(iso.keyed(src), size, m)
+        img.save(OUT_HD / 'plots' / f'{king}_{state}.png')
+        print(f'plots/{king}_{state}: {img.width}x{img.height}')
+
+
 def main(kings: list[str]) -> None:
     for king in kings:
         if king not in KINGS:
@@ -108,4 +145,15 @@ def main(kings: list[str]) -> None:
 
 
 if __name__ == '__main__':
-    main(sys.argv[1:])
+    args = sys.argv[1:]
+    if '--density' in args:
+        i = args.index('--density')
+        density, kings = int(args[i + 1]), args[:i] + args[i + 2:]
+        if density != 4:
+            raise SystemExit('--density 4 only (density 2 is the default publish)')
+        for king in kings:
+            if king not in KINGS:
+                raise SystemExit(f'unknown king {king}; one of {KINGS}')
+            publish_hd(king)
+    else:
+        main(args)

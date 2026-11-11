@@ -4,12 +4,13 @@ import { UI_PALETTE } from '../data/uiPalette';
 import { CONTENT } from '../game/cards/registry';
 import { buildSpritesTexture, buildUiTexture } from '../render/atlas';
 import { WALL_IMAGES, WALL_IMAGE_DIR, wallImageKey } from '../render/mountainWallAssets';
-import { IMAGE_ART_DIR, IMAGE_ART_FILES, imageArtKey } from '../render/imageArt';
+import { imageArtLoads, useHdArt } from '../render/imageArt';
 import { PORTRAIT_ASSETS, PORTRAIT_DIR, portraitLargeTextureKey, portraitTextureKey } from '../render/portraitAssets';
 import type { UiFrame } from '../render/uiArt';
 import { UI_KIT_DIR, UI_KIT_FILES, kitTextureKey } from '../render/uiKit';
 import { CARD_ART_FILES } from '../ui/cards/cardImage';
 import { KING_BADGE_FILES } from '../ui/realm/kingBadge';
+import { bindSceneDisplay, displayMetrics, logicalSize } from '../ui/displayRuntime';
 import { textStyle } from '../ui/theme';
 import { SCENES } from './keys';
 
@@ -22,10 +23,14 @@ export class PreloadScene extends Phaser.Scene {
   }
 
   preload(): void {
-    const { width, height } = this.scale;
+    const { w: width, h: height } = logicalSize(this);
     const label = this.add
       .text(width / 2, height / 2, LOADING_LABEL, textStyle(16, UI_PALETTE.creamLight))
       .setOrigin(0.5);
+    bindSceneDisplay(this, () => {
+      const s = logicalSize(this);
+      label.setPosition(s.w / 2, s.h / 2);
+    });
     this.load.on(Phaser.Loader.Events.PROGRESS, (p: number) => {
       label.setText(`${LOADING_LABEL} ${Math.round(p * 100)}%`);
     });
@@ -33,8 +38,9 @@ export class PreloadScene extends Phaser.Scene {
     for (const [frame, file] of Object.entries(UI_KIT_FILES) as [UiFrame, string][]) {
       this.load.image(kitTextureKey(frame), UI_KIT_DIR + file);
     }
-    // Image art (G3e ai-v1); a file that fails to load leaves the generated art in its place.
-    for (const file of IMAGE_ART_FILES) this.load.image(imageArtKey(file), `${IMAGE_ART_DIR}${file}.png`);
+    // Image art (G3e ai-v1; its HD twins from ai-v1-hd at density ≥ 2); a file that fails to load leaves the generated
+    // art in its place.
+    for (const { key, url } of imageArtLoads(useHdArt(displayMetrics(this).density))) this.load.image(key, url);
     // Mountain wall backdrop per king (G3e); a file that fails to load leaves the placeholder wall.
     for (const s of WALL_IMAGES) this.load.image(wallImageKey(s.id), `${WALL_IMAGE_DIR}${s.id}.png`);
     // King portraits (G3e), 96×144 each; a file that fails to load leaves the generated placeholder portrait.

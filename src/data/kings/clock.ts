@@ -14,8 +14,12 @@ export const CLOCK_CARDS: readonly CardDef[] = [
     name: 'Windup Soldiers',
     kind: 'troop',
     rarity: 'common',
-    textVi: 'Sinh {count} lính thiếc.',
-    effects: [{ type: 'spawn', unit: 'tin_soldier', count: [4, 5, 6, 7, 8] }],
+    textVi: 'Sinh {count} lính thiếc, lên dây kỹ: +60% máu và sát thương.',
+    effects: [
+      { type: 'spawn', unit: 'tin_soldier', count: [5, 6, 7, 8, 10] },
+      { type: 'stat', scope: 'self', stat: 'hp', mode: 'pct', value: 60 },
+      { type: 'stat', scope: 'self', stat: 'dmg', mode: 'pct', value: 60 },
+    ],
   },
   {
     ...gear,
@@ -28,7 +32,7 @@ export const CLOCK_CARDS: readonly CardDef[] = [
     effects: [
       {
         type: 'tower',
-        attack: { dmg: 5, type: 'physical', range: cells(1.6875), interval: 10, projectileSpeed: 16 },
+        attack: { dmg: 9, type: 'physical', range: cells(1.6875), interval: 10, projectileSpeed: 16 },
         targeting: 'closestToThrone',
       },
       { type: 'rampAttackSpeed', pctPerSecond: 2, cap: 100 },
@@ -88,10 +92,12 @@ export const CLOCK_CARDS: readonly CardDef[] = [
     name: 'Spider Nest',
     kind: 'troop',
     rarity: 'uncommon',
-    textVi: 'Sinh {count} nhện cơ khí. Mỗi 150 tick, thiếu nhện thì sinh lại 1 con.',
+    textVi: 'Sinh {count} nhện cơ khí, +60% máu và sát thương. Mỗi 100 tick, thiếu nhện thì sinh lại 1 con.',
     effects: [
-      { type: 'spawn', unit: 'spider', count: [3, 4, 5, 6, 7] },
-      { type: 'respawnLost', everyTicks: 150 },
+      { type: 'spawn', unit: 'spider', count: [4, 5, 6, 7, 8] },
+      { type: 'respawnLost', everyTicks: 100 },
+      { type: 'stat', scope: 'self', stat: 'hp', mode: 'pct', value: 60 },
+      { type: 'stat', scope: 'self', stat: 'dmg', mode: 'pct', value: 60 },
     ],
   },
   {
@@ -116,7 +122,7 @@ export const CLOCK_CARDS: readonly CardDef[] = [
     effects: [
       {
         type: 'tower',
-        attack: { dmg: 30, type: 'physical', range: cells(2.4375), interval: 40, projectileSpeed: 10, splash: cells(0.5625) },
+        attack: { dmg: 55, type: 'physical', range: cells(2.4375), interval: 40, projectileSpeed: 10, splash: cells(0.5625) },
         targeting: 'closestToThrone',
       },
       { type: 'rampAttackSpeed', pctPerSecond: 1.5, cap: 90 },
@@ -129,8 +135,12 @@ export const CLOCK_CARDS: readonly CardDef[] = [
     name: 'Brass Colossus Forge',
     kind: 'troop',
     rarity: 'rare',
-    textVi: 'Sinh {count} khổng lồ đồng.',
-    effects: [{ type: 'spawn', unit: 'colossus', count: [1, 1, 1, 2, 2] }],
+    textVi: 'Sinh {count} khổng lồ đồng, +80% máu và sát thương.',
+    effects: [
+      { type: 'spawn', unit: 'colossus', count: [1, 1, 1, 2, 2] },
+      { type: 'stat', scope: 'self', stat: 'hp', mode: 'pct', value: 80 },
+      { type: 'stat', scope: 'self', stat: 'dmg', mode: 'pct', value: 80 },
+    ],
   },
 ];
 
@@ -171,9 +181,9 @@ export const CLOCK: KingDef = {
     tags: [],
     textVi:
       'Ngai của Vua Đồng Hồ: bắn trong tầm. Lên Dây: mọi lính và tháp của mình đánh nhanh dần mỗi giây trong trận (tối đa +40% tốc đánh).',
-    hp: 850,
+    hp: 1500,
     armor: 0.1,
-    attack: { dmg: 8, type: 'physical', range: cells(1.6875), interval: 12, projectileSpeed: 16 },
+    attack: { dmg: 14, type: 'physical', range: cells(1.6875), interval: 12, projectileSpeed: 16 },
     // Lên Dây: mọi lính và tháp +% tốc đánh mỗi giây (theo cấp Ngai), tối đa +40%.
     passive: [
       { type: 'stat', scope: 'board', filter: { kinds: ['troop', 'tower'] }, stat: 'rampAs', mode: 'flat', value: [0.5, 0.6, 0.7, 0.8, 1.0] },

@@ -1,7 +1,8 @@
 import { SPEC_MOVE_SCALE } from '../../data/boardGeometry';
 import { describe, expect, it } from 'vitest';
 import { TOWER_RANGE, TOWER_SHOT_DMG_MULT, TOWER_STD } from '../../data/scaling';
-import type { CardId, Level } from '../../data/types';
+import { CLOCK_CARDS } from '../../data/kings/clock';
+import type { AttackSpec, CardId, EffectDef, Level } from '../../data/types';
 import { tickBehaviours } from '../battle/behaviours';
 import { stepBattle } from '../battle/step';
 import { TEAM_ALLY, TEAM_FOE, addUnit, createBattle, structureFoot, type BattleWorld } from '../battle/world';
@@ -24,6 +25,25 @@ const IDS = [
   'clock_tick_rune',
   'clock_windup_soldiers',
 ];
+
+const effectsOf = (id: string): readonly EffectDef[] => {
+  const card = CLOCK_CARDS.find((c) => c.id === id)!;
+  return 'effects' in card ? card.effects : [];
+};
+const spawnCounts = (id: string): readonly number[] => {
+  const e = effectsOf(id).find((x) => x.type === 'spawn');
+  return e && e.type === 'spawn' ? e.count : [];
+};
+const towerAttack = (id: string): AttackSpec => {
+  const e = effectsOf(id).find((x) => x.type === 'tower');
+  if (!e || e.type !== 'tower') throw new Error(`no tower on ${id}`);
+  return e.attack;
+};
+const SPIDER_RESPAWN = ((): number => {
+  const e = effectsOf('clock_spiders').find((x) => x.type === 'respawnLost');
+  return e && e.type === 'respawnLost' ? e.everyTicks : 0;
+})();
+const SPIDERS_L1 = spawnCounts('clock_spiders')[0]!;
 
 const setupOf = (s: RunState) => buildBattleSetup(s, CONTENT);
 const at = (s: RunState, plot: number) => setupOf(s).structures.find((x) => x.plot === plot)!;
@@ -56,8 +76,8 @@ describe('the nine Clock King cards (spec 6.9)', () => {
   });
 
   describe.each([
-    ['clock_windup_soldiers', 'tin_soldier', 4, 8],
-    ['clock_spiders', 'spider', 3, 7],
+    ['clock_windup_soldiers', 'tin_soldier', spawnCounts('clock_windup_soldiers')[0]!, spawnCounts('clock_windup_soldiers')[4]!],
+    ['clock_spiders', 'spider', spawnCounts('clock_spiders')[0]!, spawnCounts('clock_spiders')[4]!],
     ['clock_colossus', 'colossus', 1, 2],
   ] as const)('%s spawns %s', (card, unit, l1, l5) => {
     it(`${l1} at level 1 and ${l5} at level 5`, () => {
@@ -70,18 +90,18 @@ describe('the nine Clock King cards (spec 6.9)', () => {
   });
 
   describe('clock_gear_tower and clock_steam_cannon', () => {
-    it('gear tower: 5 physical, range 72, every 10 ticks, shell speed 8, +2%/s up to +100%', () => {
+    it('gear tower: data damage, physical, range 72, every 10 ticks, shell speed 8, +2%/s up to +100%', () => {
       for (const level of [1, 5] as Level[]) {
         const s = at(withBuilding(runState(), 6, 'clock_gear_tower', level), 6);
-        expect(s.attack!.dmg).toBeCloseTo(5 * TOWER_STD[level - 1]! * TOWER_SHOT_DMG_MULT);
+        expect(s.attack!.dmg).toBeCloseTo(towerAttack('clock_gear_tower').dmg * TOWER_STD[level - 1]! * TOWER_SHOT_DMG_MULT);
         expect([s.attack!.range, s.attack!.interval, s.attack!.projectileSpeed]).toEqual([(108 + TOWER_RANGE[level - 1]!) * 3, 10, 8 * SPEC_MOVE_SCALE]);
         expect(s.rampAs).toEqual({ pps: 2, cap: 100 });
       }
     });
 
-    it('steam cannon: 30 physical, splash 18, range 104, every 40, +1.5%/s up to +90%', () => {
+    it('steam cannon: data damage, physical, splash 18, range 104, every 40, +1.5%/s up to +90%', () => {
       const s = at(withBuilding(runState(), 6, 'clock_steam_cannon', 1), 6);
-      expect(s.attack).toMatchObject({ dmg: 30 * TOWER_SHOT_DMG_MULT, splash: 36, range: 156 * 3, interval: 40, projectileSpeed: 5 * SPEC_MOVE_SCALE });
+      expect(s.attack).toMatchObject({ dmg: towerAttack('clock_steam_cannon').dmg * TOWER_SHOT_DMG_MULT, splash: 36, range: 156 * 3, interval: 40, projectileSpeed: 5 * SPEC_MOVE_SCALE });
       expect(s.rampAs).toEqual({ pps: 1.5, cap: 90 });
     });
 
@@ -177,19 +197,19 @@ describe('the nine Clock King cards (spec 6.9)', () => {
     ...s,
     army: { ...s.army!, waves: [{ spawnTick: 800, units: [] }] },
   });
-    it('brings back one spider every 150 ticks while below the original count, never above', () => {
+    it('brings back one spider every respawn interval while below the original count, never above', () => {
       const w = createBattle(setupOf(quiet(withBuilding(runState(), 6, 'clock_spiders', 1))));
       const alive = (): number => [...Array(w.count).keys()].filter((i) => w.alive[i] === 1 && w.label[i] === 'spider').length;
-      expect(alive()).toBe(3);
+      expect(alive()).toBe(SPIDERS_L1);
       const first = [...Array(w.count).keys()].find((i) => w.label[i] === 'spider')!;
       w.hp[first] = 0;
       w.alive[first] = 0;
-      while (w.tick < 149) stepBattle(w, []);
-      expect(alive()).toBe(2);
-      while (w.tick < 151) stepBattle(w, []);
-      expect(alive()).toBe(3);
-      while (w.tick < 310) stepBattle(w, []);
-      expect(alive()).toBe(3); // nothing missing: nothing more is made
+      while (w.tick < SPIDER_RESPAWN - 1) stepBattle(w, []);
+      expect(alive()).toBe(SPIDERS_L1 - 1);
+      while (w.tick < SPIDER_RESPAWN + 1) stepBattle(w, []);
+      expect(alive()).toBe(SPIDERS_L1);
+      while (w.tick < 2 * SPIDER_RESPAWN + 10) stepBattle(w, []);
+      expect(alive()).toBe(SPIDERS_L1); // nothing missing: nothing more is made
     });
 
     it('does not respawn once the nest itself is destroyed', () => {
@@ -198,8 +218,8 @@ describe('the nine Clock King cards (spec 6.9)', () => {
       const first = [...Array(w.count).keys()].find((i) => w.label[i] === 'spider')!;
       w.alive[nest] = 0;
       w.alive[first] = 0;
-      while (w.tick < 160) stepBattle(w, []);
-      expect([...Array(w.count).keys()].filter((i) => w.alive[i] === 1 && w.label[i] === 'spider')).toHaveLength(2);
+      while (w.tick < SPIDER_RESPAWN + 10) stepBattle(w, []);
+      expect([...Array(w.count).keys()].filter((i) => w.alive[i] === 1 && w.label[i] === 'spider')).toHaveLength(SPIDERS_L1 - 1);
     });
   });
 

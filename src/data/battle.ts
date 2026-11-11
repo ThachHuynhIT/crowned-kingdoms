@@ -26,7 +26,7 @@ export const ENEMY_LEVEL_STAT = [1, 1.45, 2.1, 3.05, 4.42] as const;
  * HP và sát thương của mọi lính địch nhân thêm hệ số này (cân bằng lại 2026-11-09 sau khi tầm tháp ×3, công trình
  * chặn đường và địch phải phá hết nhà: bot greedy Gai 0 thắng gần 100%; mục tiêu 35–65% mỗi vua).
  */
-export const ENEMY_STAT_MULT = 2.15; // 2.05 → 2.15 (11/11/2026): Ngai bắn hết vùng đất, lính tập hợp nhanh
+export const ENEMY_STAT_MULT = 1.5; // 2.15 → 1.5 (tối 11/11/2026): Can Thiệp giảm mạnh, lính/tháp mạnh lên (ALLY_ROLE_TUNING)
 /**
  * Máu và sát thương của boss 1/2/3 lúc vào trận, nhân với số trong `BOSSES` (10/11/2026: hết giờ không
  * còn là thắng, boss phải hạ được). Đo bằng `npm run balance`, xem docs/balance/2026-11-10-draw-one-balance.md.
@@ -39,16 +39,24 @@ export const BOSS_DMG_MULT = [0.9, 0.58, 0.9] as const;
  * Đo bằng `npm run balance`.
  */
 export const KING_TUNING: Readonly<Record<KingId, { readonly hpPct: number; readonly dmgPct: number }>> = {
-  wheat: { hpPct: 2, dmgPct: 2 },
-  stone: { hpPct: -19, dmgPct: -19 },
-  arcane: { hpPct: -14, dmgPct: -14 },
-  grove: { hpPct: -8, dmgPct: -8 },
-  tide: { hpPct: 5, dmgPct: 5 },
-  forge: { hpPct: -20, dmgPct: -20 },
-  clock: { hpPct: 10, dmgPct: 10 },
-  moon: { hpPct: -4, dmgPct: -4 },
-  nomad: { hpPct: -6, dmgPct: -6 },
+  wheat: { hpPct: 27, dmgPct: 27 },
+  stone: { hpPct: -34, dmgPct: -34 },
+  arcane: { hpPct: -12, dmgPct: -12 },
+  grove: { hpPct: 21, dmgPct: 21 },
+  tide: { hpPct: 3, dmgPct: 3 },
+  forge: { hpPct: -26, dmgPct: -26 },
+  clock: { hpPct: 0, dmgPct: 0 },
+  moon: { hpPct: 5, dmgPct: 5 },
+  nomad: { hpPct: 18, dmgPct: 18 },
 };
+
+/**
+ * Role tuning of our side (owner 11/11/2026: troops and towers should deal most of the damage, not the
+ * intervention). Percent added on top of the card stats, before `KING_TUNING`.
+ * - `unitDmgPct` / `unitHpPct`: every unit of ours (spawned troops, summons);
+ * - `towerDmgPct`: every structure of ours that attacks or pulses (not the throne).
+ */
+export const ALLY_ROLE_TUNING = { unitDmgPct: 120, unitHpPct: 50, towerDmgPct: 200 } as const;
 
 export const WAVES = { share: [0.4, 0.35, 0.25], spawnTick: [0, 120, 240] } as const;
 
@@ -62,8 +70,9 @@ export const EMBER_TICKS = 30;
 export const STATUS = { everyTicks: 10, minIntervalFactor: 0.5 } as const;
 
 export const INTERVENTION = {
-  dmgBase: 40,
-  dmgPerYear: 10, // sát thương = dmgBase + dmgPerYear × (year − 1), loại phép (bỏ qua giáp)
+  // Halved 11/11/2026 (owner: the intervention dealt ~80% of our damage; troops and towers should carry the fight).
+  dmgBase: 6,
+  dmgPerYear: 1.5, // sát thương = dmgBase + dmgPerYear × (year − 1), loại phép (bỏ qua giáp)
   radius: cells(0.75),
   delayTicks: 6,
   knockback: 24, // px, ×2 cùng sân (giữ số ô dịch mỗi tick)
@@ -98,9 +107,9 @@ export const INTERVENTION_POWERS: Readonly<Record<KingId, InterventionPower>> = 
   arcane: { name: 'Sét Phép', text: '+30% sát thương.', dmgPct: 30 },
   grove: { name: 'Rễ Quấn', text: 'Rễ cây giữ chân: địch trúng chậm 60% (mức trần) trong 2,5 giây.', slowPct: 60, slowTicks: 25 },
   tide: { name: 'Sóng Thần', text: 'Đẩy lùi địch xa gấp đôi.', knockbackMult: 2 },
-  forge: { name: 'Thép Nung', text: 'Địch trúng bị bỏng 8/giây trong 4 giây.', burnDps: 8, burnTicks: 40 },
+  forge: { name: 'Thép Nung', text: 'Địch trúng bị bỏng 4/giây trong 4 giây.', burnDps: 4, burnTicks: 40 },
   clock: { name: 'Ngưng Thời Gian', text: 'Địch trúng choáng 1,8 giây; −10% sát thương.', stunTicks: 18, dmgPct: -10 },
-  moon: { name: 'Lời Nguyền Trăng', text: 'Địch trúng nhiễm độc 6/giây trong 5 giây.', poisonDps: 6, poisonTicks: 50 },
+  moon: { name: 'Lời Nguyền Trăng', text: 'Địch trúng nhiễm độc 3/giây trong 5 giây.', poisonDps: 3, poisonTicks: 50 },
   nomad: { name: 'Mưa Tên', text: 'Vùng rơi rộng thêm 35%; −15% sát thương.', radiusPct: 35, dmgPct: -15 },
 };
 

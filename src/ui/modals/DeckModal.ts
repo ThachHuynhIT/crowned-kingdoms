@@ -1,3 +1,4 @@
+import { logicalSize, logicalPointer } from '../displayRuntime';
 import Phaser from 'phaser';
 import type { CardId } from '../../data/types';
 import { UI_PALETTE } from '../../data/uiPalette';
@@ -54,13 +55,15 @@ export class DeckModal {
     dy: number,
   ): void => this.scrollBy(dy * WHEEL_STEP);
   private readonly onDown = (p: Phaser.Input.Pointer): void => {
+    const point = logicalPointer(this.scene, p);
     const v = this.lay?.viewport;
-    if (!v || p.x < v.x || p.x > v.x + v.w || p.y < v.y || p.y > v.y + v.h) return;
-    this.drag = { id: p.id, startY: p.y, startScroll: this.scroll };
+    if (!v || point.x < v.x || point.x > v.x + v.w || point.y < v.y || point.y > v.y + v.h) return;
+    this.drag = { id: p.id, startY: point.y, startScroll: this.scroll };
   };
   private readonly onMove = (p: Phaser.Input.Pointer): void => {
+    const point = logicalPointer(this.scene, p);
     if (!this.drag || this.drag.id !== p.id || !p.isDown) return;
-    this.setScroll(this.drag.startScroll - (p.y - this.drag.startY));
+    this.setScroll(this.drag.startScroll - (point.y - this.drag.startY));
   };
   private readonly onUp = (p: Phaser.Input.Pointer): void => {
     if (!this.drag || this.drag.id !== p.id) return;
@@ -151,7 +154,7 @@ export class DeckModal {
     }
     this.cards.length = 0;
     for (const entry of this.entries) {
-      const view = new CardView(this.scene, this.content, deckCardSize({ w: this.scene.scale.width, h: this.scene.scale.height }), this.tooltip);
+      const view = new CardView(this.scene, this.content, deckCardSize(logicalSize(this.scene)), this.tooltip);
       if (this.skin !== 'neutral') view.setTheme(this.skin);
       view.setCard(entry.cardId);
       const badge = addUiText(this.scene, 0, 0, `×${entry.count}`, 14, UI_PALETTE.creamLight)
@@ -175,7 +178,7 @@ export class DeckModal {
   }
 
   private apply(): void {
-    const { width, height } = this.scene.scale;
+    const { w: width, h: height } = logicalSize(this.scene);
     const inset = frameBorder(this.scene, 'panel') + (width >= 768 ? PAD_DESKTOP : PAD_MOBILE);
     const l = deckModalLayout({ w: width, h: height }, inset, this.entries.length, this.scroll);
     this.lay = l;

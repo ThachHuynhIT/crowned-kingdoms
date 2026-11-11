@@ -1,6 +1,12 @@
 import { DEFAULT_VOLUME, META_SAVE_VERSION, STARTING_KINGS } from '../../data/meta';
 import { ALL_KINGS } from '../../data/rules';
-import { type AudioSettings, DEFAULT_SCREEN_SHAKE } from '../../data/settings';
+import {
+  type AudioSettings,
+  DEFAULT_DAMAGE_NUMBERS,
+  DEFAULT_EFFECTS,
+  DEFAULT_GRAPHICS,
+  DEFAULT_SCREEN_SHAKE,
+} from '../../data/settings';
 import type { CardId, KingId } from '../../data/types';
 
 export interface MetaProfile {
@@ -43,7 +49,15 @@ export const defaultProfile = (): MetaProfile => ({
   unlockedCards: [],
   wins: perKing(0),
   highestDifficultyWon: -1,
-  settings: { master: DEFAULT_VOLUME, music: DEFAULT_VOLUME, sfx: DEFAULT_VOLUME, screenShake: DEFAULT_SCREEN_SHAKE },
+  settings: {
+    master: DEFAULT_VOLUME,
+    music: DEFAULT_VOLUME,
+    sfx: DEFAULT_VOLUME,
+    screenShake: DEFAULT_SCREEN_SHAKE,
+    graphics: DEFAULT_GRAPHICS,
+    effects: DEFAULT_EFFECTS,
+    damageNumbers: DEFAULT_DAMAGE_NUMBERS,
+  },
   settledRuns: [],
   endlessUnlocked: false,
 });

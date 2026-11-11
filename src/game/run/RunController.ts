@@ -57,6 +57,14 @@ export class RunController {
     return this.current;
   }
 
+  /**
+   * Damage per building uid in the last battle (owner 11/11/2026: shown under buildings and in the info box); null
+   * before the first battle. Read from `RunState.lastBattleDamage`, so it is saved and survives a reload.
+   */
+  get lastBattleDamage(): Readonly<Record<number, number>> | null {
+    return this.current.lastBattleDamage;
+  }
+
   get runner(): BattleRunner | null {
     return this.active;
   }

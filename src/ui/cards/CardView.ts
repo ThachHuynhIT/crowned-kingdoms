@@ -1,3 +1,4 @@
+import { logicalPointer, logicalPointerDistance } from '../displayRuntime';
 import type Phaser from 'phaser';
 import type { CardDef, CardId, KingId } from '../../data/types';
 import { UI_PALETTE } from '../../data/uiPalette';
@@ -93,7 +94,7 @@ export class CardView {
     this.box.image.on('pointerdown', (pointer: Phaser.Input.Pointer) => {
       if (this.dropHandler) this.dragFrom = { id: pointer.id };
       this.scrolling = false;
-      this.scrollLastX = pointer.x;
+      this.scrollLastX = logicalPointer(scene, pointer).x;
     });
     scene.input.on('pointermove', this.onDragMove);
     scene.input.on('pointerup', this.onDragEnd);
@@ -188,9 +189,11 @@ export class CardView {
   private readonly onDragMove = (pointer: Phaser.Input.Pointer): void => {
     const from = this.dragFrom;
     if (!from || from.id !== pointer.id || !pointer.isDown) return;
+    const point = logicalPointer(this.scene, pointer);
     if (!this.dragging) {
-      if (pointer.getDistance() <= DRAG_SLOP) return;
-      this.scrolling = this.scrollHandler !== null && Math.abs(pointer.x - pointer.downX) > Math.abs(pointer.y - pointer.downY);
+      if (logicalPointerDistance(this.scene, pointer) <= DRAG_SLOP) return;
+      const press = logicalPointer(this.scene, { x: pointer.downX, y: pointer.downY });
+      this.scrolling = this.scrollHandler !== null && Math.abs(point.x - press.x) > Math.abs(point.y - press.y);
       this.dragging = true;
       this.press.cancel();
       if (!this.scrolling) {
@@ -199,11 +202,11 @@ export class CardView {
       }
     }
     if (this.scrolling) {
-      this.scrollHandler?.(this.scrollLastX - pointer.x);
-      this.scrollLastX = pointer.x;
+      this.scrollHandler?.(this.scrollLastX - point.x);
+      this.scrollLastX = point.x;
       return;
     }
-    this.container.setPosition(Math.round(pointer.x - this.size.w / 2), Math.round(pointer.y - this.size.h / 2));
+    this.container.setPosition(Math.round(point.x - this.size.w / 2), Math.round(point.y - this.size.h / 2));
   };
 
   private readonly onDragEnd = (pointer: Phaser.Input.Pointer): void => {
@@ -215,7 +218,8 @@ export class CardView {
     this.container.setDepth(0).setAlpha(this.dimmed ? DIMMED_ALPHA : 1);
     this.place();
     this.applyClip();
-    if (!this.scrolling) this.dropHandler?.(pointer.x, pointer.y);
+    const point = logicalPointer(this.scene, pointer);
+    if (!this.scrolling) this.dropHandler?.(point.x, point.y);
     this.scrolling = false;
   };
 

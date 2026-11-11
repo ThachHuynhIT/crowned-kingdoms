@@ -94,6 +94,8 @@ export const battleResult = (world: BattleWorld): BattleResult | null => {
     throneHpLostPct: maxHp > 0 ? Math.round((1 - hp / maxHp) * 100) : 100,
     kills: world.kills,
     killsBySource: { ...world.killsBySource },
+    damageBySource: roundedDamage(world.damageBySource),
+    interventionDamage: Math.round(world.interventionDamage),
     interventionsUsed: world.interventionsUsed,
     unitsLost: world.unitsLost,
     capped: world.capped,
@@ -125,4 +127,11 @@ export const simulateBattle = (
     if (result !== null) return result;
   }
   throw new Error(`simulateBattle: no result after ${maxSteps} ticks`);
+};
+
+/** Per-source damage rounded to whole points, sources sorted by uid (statistics, owner 11/11/2026). */
+const roundedDamage = (by: Record<number, number>): Record<number, number> => {
+  const out: Record<number, number> = {};
+  for (const uid of Object.keys(by).map(Number).sort((a, b) => a - b)) out[uid] = Math.round(by[uid]!);
+  return out;
 };

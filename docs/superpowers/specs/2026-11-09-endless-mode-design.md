@@ -38,7 +38,7 @@ Hội đồng: các mốc cũ 5/10/15/20/25 và trong Endless thêm 30 rồi m�
 
 ### Ngân sách và boss
 
-Mọi số/bảng ở `src/data/endless.ts`, giữ `ENEMY_BUDGET` và `SLOT_MULT` hiện tại. Năm 1..30 lấy đúng bảng cũ (năm 30 = 691). Từ năm 31 dùng bảng số nguyên **lưu sẵn**: `B[y] = min(1_000_000, floor((B[y-1] * 115 + 50) / 100))`. Đây là round từng năm từ 691; năm 31 = 795, năm 32 = 914. Bảng dừng tại phần tử đầu đạt 1.000.000; năm xa hơn tra phần tử cuối O(1), không vòng lặp theo year, không Math.pow. Test kiểm recurrence và điểm bão hoà, không sinh bảng runtime.
+Mọi số/bảng ở `src/data/endless.ts`, giữ `ENEMY_BUDGET` và `SLOT_MULT` hiện tại. Năm 1..30 lấy đúng bảng cũ (năm 30 = 691). Từ năm 31 dùng bảng số nguyên **lưu sẵn**: `B[y] = min(1_000_000, floor((B[y-1] * 110 + 50) / 100))` (×115 tới 11/11/2026; hạ ×110 sau khi giảm Can Thiệp để giữ độ sống sót của Vô tận, `docs/balance/2026-11-10-draw-one-balance.md` lượt 7). Đây là round từng năm từ 691; năm 31 = 760, năm 32 = 836. Bảng dừng tại phần tử đầu đạt 1.000.000; năm xa hơn tra phần tử cuối O(1), không vòng lặp theo year, không Math.pow. Test kiểm recurrence và điểm bão hoà, không sinh bảng runtime.
 
 Ngân sách cuối = `min(3_000_000, round(B[y] * slotMult * (1 + 0.1 * Gai) * modifierBudgetMult))`. Trần áp **sau** slot/Gai/modifier. Tiếp tục dùng `composeArmy`, `ENEMY_CAP=120`, cấp 1..5 và `sqrt(budget/spent)` khi chạm cap. Không tăng số quân để biểu diễn EP lớn. Năm 1..30 chưa có modifier nên cùng công thức cũ.
 

@@ -59,7 +59,7 @@ export class AudioManager {
   /** Every node of the master chain, disconnected on destroy. */
   private chain: AudioNode[] = [];
   private unlocking: Promise<void> | null = null;
-  private settings: AudioSettings = {
+  private settings: Pick<AudioSettings, 'master' | 'music' | 'sfx' | 'screenShake'> = {
     master: DEFAULT_VOLUME,
     music: DEFAULT_VOLUME,
     sfx: DEFAULT_VOLUME,
@@ -167,7 +167,7 @@ export class AudioManager {
     if (track) this.startTrack(track, true);
   }
 
-  setVolumes(settings: AudioSettings): void {
+  setVolumes(settings: Pick<AudioSettings, 'master' | 'music' | 'sfx' | 'screenShake'>): void {
     this.settings = { ...settings };
     this.applyVolumes();
   }

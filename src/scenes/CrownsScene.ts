@@ -1,4 +1,5 @@
 import Phaser from 'phaser';
+import { bindSceneDisplay, logicalSize, logicalPointer } from '../ui/displayRuntime';
 import { toCss } from '../data/palette';
 import type { CardId, KingId } from '../data/types';
 import { UI_PALETTE } from '../data/uiPalette';
@@ -76,6 +77,7 @@ export class CrownsScene extends Phaser.Scene {
   }
 
   create(): void {
+    bindSceneDisplay(this, () => this.layout());
     // Scene instances are reused: reset every per-visit field first.
     this.profile = getSession(this)?.meta() ?? defaultProfile();
     this.model = crownsModel(CONTENT, this.profile);
@@ -114,7 +116,6 @@ export class CrownsScene extends Phaser.Scene {
     this.input.on(Phaser.Input.Events.POINTER_MOVE, this.onMove, this);
     this.input.on(Phaser.Input.Events.POINTER_UP, this.onUp, this);
     this.input.on(Phaser.Input.Events.POINTER_WHEEL, this.onWheel, this);
-    this.scale.on(Phaser.Scale.Events.RESIZE, this.layout, this);
     this.events.once(Phaser.Scenes.Events.SHUTDOWN, this.teardown, this);
 
     this.refresh();
@@ -224,7 +225,7 @@ export class CrownsScene extends Phaser.Scene {
   // ---- layout --------------------------------------------------------------------------------
 
   private layout(): void {
-    const screen = { w: this.scale.width, h: this.scale.height };
+    const screen = logicalSize(this);
     const inset = frameBorder(this, 'panel') + 16;
     const l = crownsLayout(screen, inset, this.model.kings.length, this.model.cards.length);
     this.lay = l;
@@ -319,14 +320,16 @@ export class CrownsScene extends Phaser.Scene {
 
   private onDown(pointer: Phaser.Input.Pointer): void {
     if (this.lay.maxScroll <= 0) return;
-    if (pointer.y < this.lay.header.y + this.lay.header.h) return;
-    this.drag = { id: pointer.id, y: pointer.y, scroll: this.scroll, moved: false };
+    const point = logicalPointer(this, pointer);
+    if (point.y < this.lay.header.y + this.lay.header.h) return;
+    this.drag = { id: pointer.id, y: point.y, scroll: this.scroll, moved: false };
   }
 
   private onMove(pointer: Phaser.Input.Pointer): void {
     const d = this.drag;
     if (!d || d.id !== pointer.id || !pointer.isDown) return;
-    const dy = pointer.y - d.y;
+    const point = logicalPointer(this, pointer);
+    const dy = point.y - d.y;
     if (!d.moved && Math.abs(dy) <= DRAG_SLOP) return;
     d.moved = true;
     this.setScroll(d.scroll - dy);
@@ -356,7 +359,6 @@ export class CrownsScene extends Phaser.Scene {
     this.input.off(Phaser.Input.Events.POINTER_MOVE, this.onMove, this);
     this.input.off(Phaser.Input.Events.POINTER_UP, this.onUp, this);
     this.input.off(Phaser.Input.Events.POINTER_WHEEL, this.onWheel, this);
-    this.scale.off(Phaser.Scale.Events.RESIZE, this.layout, this);
     this.rows = [];
     this.drag = null;
     this.toasts.destroy();

@@ -73,7 +73,14 @@ export class FxRenderer {
   }[] = [];
   private readonly ringGfx: Phaser.GameObjects.Graphics;
 
-  constructor(scene: Phaser.Scene) {
+  /**
+   * @param fullEffects graphics setting (owner 11/11/2026): false skips the decorative hit sparks, the additive glow
+   *   layer and the Rage auras; projectiles, boulders, statuses, rings and floating damage always show.
+   */
+  constructor(
+    scene: Phaser.Scene,
+    private readonly fullEffects: () => boolean = () => true,
+  ) {
     this.scene = scene;
     this.ringGfx = scene.add.graphics().setDepth(RING_DEPTH);
     // Pre-create the Rage and status pools: making ~40 images in the frame the rage starts made that frame stutter
@@ -89,7 +96,7 @@ export class FxRenderer {
     const now = this.scene.time.now;
     for (const e of events) {
       if (e.type === 'hit') {
-        this.hitFx(world, e.id, e.sourceId, e.dmgType);
+        if (this.fullEffects()) this.hitFx(world, e.id, e.sourceId, e.dmgType);
         if (showsFloatingDamage(e.dmg)) this.floatDamage(world, e.id, e.dmg, now);
       } else if (e.type === 'boulder' && e.phase === 'impact') {
         this.rings.push({
@@ -308,7 +315,7 @@ export class FxRenderer {
       .setFrame(codeFxFrame(def.id, 0))
       .setVisible(true);
     shot.glow.setOrigin(0.5, oy).setPosition(Math.round(x), Math.round(y)).setDepth(depth - 1);
-    if (def.paintGlow) shot.glow.setFrame(codeFxFrame(def.id, 0, true)).setVisible(true);
+    if (def.paintGlow && this.fullEffects()) shot.glow.setFrame(codeFxFrame(def.id, 0, true)).setVisible(true);
     else shot.glow.setVisible(false);
   }
 
@@ -330,7 +337,7 @@ export class FxRenderer {
   private syncAuras(world: BattleWorld, now: number): void {
     const def = FX_BY_ID.get('rageAura');
     let used = 0;
-    if (def !== undefined && rageStacks(world) > 0) {
+    if (def !== undefined && rageStacks(world) > 0 && this.fullEffects()) {
       const f = codeFxFrameAt(def.frameMs, now, true) ?? 0;
       for (let id = 0; id < world.count && used < AURA_POOL; id++) {
         if (world.alive[id] === 0 || world.team[id] !== TEAM_FOE || world.kind[id] !== KIND_UNIT) continue;

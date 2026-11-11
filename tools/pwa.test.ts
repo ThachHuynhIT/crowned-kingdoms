@@ -3,7 +3,7 @@ import { tmpdir } from 'node:os';
 import { join } from 'node:path';
 import { inflateSync } from 'node:zlib';
 import { afterEach, describe, expect, it } from 'vitest';
-import { buildPwa, crc32, listBuildFiles, makeIcon, serviceWorkerSource } from './pwa';
+import { buildPwa, crc32, isRuntimeCached, listBuildFiles, makeIcon, serviceWorkerSource } from './pwa';
 
 /** Minimal PNG reader for the encoder's own output (one IDAT, filter 0, RGBA8). */
 const readPng = (png: Uint8Array) => {
@@ -69,6 +69,30 @@ describe('service worker', () => {
     expect(sw).not.toMatch(/"\/assets/); // relative URLs only, so any base path works
     writeFileSync(join(dir, 'assets/art/a.png'), 'png2');
     expect(buildPwa(dir).version).not.toBe(first.version);
+  });
+
+  it('does not precache the HiDPI art twins: it caches them cache-first at runtime, in a cache named by their digest', () => {
+    dir = mkdtempSync(join(tmpdir(), 'ck-pwa-'));
+    mkdirSync(join(dir, 'assets/art/ai-v1-hd/iso'), { recursive: true });
+    writeFileSync(join(dir, 'index.html'), '<html>');
+    writeFileSync(join(dir, 'assets/art/ai-v1-hd/militia_0.png'), 'hd1');
+    writeFileSync(join(dir, 'assets/art/ai-v1-hd/iso/wheat_field.png'), 'hd2');
+    expect(isRuntimeCached('assets/art/ai-v1-hd/militia_0.png')).toBe(true);
+    expect(isRuntimeCached('assets/art/ai-v1/militia_0.png')).toBe(false);
+    const first = buildPwa(dir);
+    expect(first).toMatchObject({ files: 1, runtimeFiles: 2 });
+    const sw = readFileSync(join(dir, 'sw.js'), 'utf-8');
+    expect(sw).not.toContain('ai-v1-hd/militia_0.png');
+    expect(sw).toContain('const RUNTIME_DIRS = ["./assets/art/ai-v1-hd/"]');
+    expect(sw).toContain('cache.put(req, res.clone())');
+    expect(sw).toContain('k !== RUNTIME_CACHE');
+    const cacheName = /const RUNTIME_CACHE = '(ck-hd-[0-9a-f]{16})'/.exec(sw)?.[1];
+    expect(cacheName).toBeDefined();
+    // an HD change renames the runtime cache only; the precache version stays
+    writeFileSync(join(dir, 'assets/art/ai-v1-hd/militia_0.png'), 'hd1b');
+    const second = buildPwa(dir);
+    expect(second.version).toBe(first.version);
+    expect(readFileSync(join(dir, 'sw.js'), 'utf-8')).not.toContain(cacheName!);
   });
 
   it('installs all-or-nothing, ignores foreign and non-GET requests, never skips waiting on its own', () => {

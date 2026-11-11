@@ -4,6 +4,7 @@
  * thoại của trình duyệt; xoá cần bấm hai lần. Sau mỗi thao tác màn hình dựng lại từ đĩa.
  */
 import Phaser from 'phaser';
+import { bindSceneDisplay, logicalSize } from '../ui/displayRuntime';
 import { toCss } from '../data/palette';
 import { AUTOSAVE_NAME } from '../data/save';
 import { UI_PALETTE } from '../data/uiPalette';
@@ -63,6 +64,7 @@ export class SavesScene extends Phaser.Scene {
   }
 
   create(data?: { notice?: string }): void {
+    bindSceneDisplay(this, () => this.layout());
     // Scene instances are reused: reset every per-visit field first.
     this.rows = [];
     this.page = 0;
@@ -79,8 +81,6 @@ export class SavesScene extends Phaser.Scene {
     this.prev = createButton(this, 0, 0, '‹', { fontSize: 20, onClick: () => this.turn(-1) });
     this.next = createButton(this, 0, 0, '›', { fontSize: 20, onClick: () => this.turn(1) });
     this.input.keyboard?.on('keydown-ESC', () => this.scene.start(SCENES.mainMenu));
-    this.scale.on(Phaser.Scale.Events.RESIZE, this.layout, this);
-    this.events.once(Phaser.Scenes.Events.SHUTDOWN, () => this.scale.off(Phaser.Scale.Events.RESIZE, this.layout, this));
     this.message.setText(this.notice || 'Đang đọc các bản lưu…');
     this.layout();
     void this.readSaves();
@@ -186,14 +186,14 @@ export class SavesScene extends Phaser.Scene {
   }
 
   private turn(by: number): void {
-    const l = savesLayout({ w: this.scale.width, h: this.scale.height }, this.rows.length);
+    const l = savesLayout(logicalSize(this), this.rows.length);
     const pages = Math.max(1, Math.ceil(this.rows.length / l.perPage));
     this.page = Math.min(pages - 1, Math.max(0, this.page + by));
     this.layout();
   }
 
   private layout(): void {
-    const l: SavesLayout = savesLayout({ w: this.scale.width, h: this.scale.height }, this.rows.length);
+    const l: SavesLayout = savesLayout(logicalSize(this), this.rows.length);
     const pages = Math.max(1, Math.ceil(this.rows.length / l.perPage));
     this.page = Math.min(this.page, pages - 1);
     const first = this.page * l.perPage;

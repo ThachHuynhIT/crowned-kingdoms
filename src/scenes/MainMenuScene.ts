@@ -1,4 +1,5 @@
 import Phaser from 'phaser';
+import { bindSceneDisplay, logicalSize } from '../ui/displayRuntime';
 import { toCss } from '../data/palette';
 import { UI_PALETTE } from '../data/uiPalette';
 import type { RunState } from '../game/run/state';
@@ -73,10 +74,11 @@ export class MainMenuScene extends Phaser.Scene {
   }
 
   create(): void {
+    bindSceneDisplay(this, () => this.layout());
     this.hills = [];
     this.fireflies = [];
     this.buttons = [];
-    this.pix = menuPixelScale(this.scale.height);
+    this.pix = menuPixelScale(logicalSize(this).h);
     this.cameras.main.setBackgroundColor(toCss(UI_PALETTE.sky[3]));
 
     // Dithered dusk sky, three drifting hill silhouettes, fireflies.
@@ -137,13 +139,11 @@ export class MainMenuScene extends Phaser.Scene {
     this.events.on(Phaser.Scenes.Events.RESUME, this.onResume, this);
 
     this.layout();
-    this.scale.on(Phaser.Scale.Events.RESIZE, this.layout, this);
     this.input.keyboard?.on(Phaser.Input.Keyboard.Events.ANY_KEY_DOWN, this.onKey, this);
     this.events.once(Phaser.Scenes.Events.SHUTDOWN, () => {
       this.events.off(Phaser.Scenes.Events.RESUME, this.onResume, this);
       this.input.keyboard?.off(Phaser.Input.Keyboard.Events.ANY_KEY_DOWN, this.onKey, this);
       this.guard.invalidate();
-      this.scale.off(Phaser.Scale.Events.RESIZE, this.layout, this);
     });
   }
 
@@ -194,7 +194,7 @@ export class MainMenuScene extends Phaser.Scene {
   }
 
   private layout(): void {
-    const { width, height } = this.scale;
+    const { w: width, h: height } = logicalSize(this);
 
     this.pix = menuPixelScale(height);
     const texW = Math.ceil(width / this.pix) + 1;
@@ -244,7 +244,7 @@ export class MainMenuScene extends Phaser.Scene {
   }
 
   private respawn(fly: Phaser.GameObjects.Image): void {
-    const { width, height } = this.scale;
+    const { w: width, h: height } = logicalSize(this);
     fly.setPosition(
       Phaser.Math.Between(0, width),
       Phaser.Math.Between(Math.floor(height * 0.3), height),
@@ -252,7 +252,7 @@ export class MainMenuScene extends Phaser.Scene {
   }
 
   private wander(fly: Phaser.GameObjects.Image): void {
-    const { width, height } = this.scale;
+    const { w: width, h: height } = logicalSize(this);
     if (fly.x < -8 || fly.x > width + 8 || fly.y < -8 || fly.y > height + 8) this.respawn(fly);
     this.tweens.add({
       targets: fly,

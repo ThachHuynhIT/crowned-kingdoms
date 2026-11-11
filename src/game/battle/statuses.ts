@@ -7,7 +7,7 @@
 import { STATUS } from '../../data/battle';
 import { afterBossDamage } from './bosses';
 import { mitigate } from './damage';
-import { KIND_UNIT, TEAM_FOE, heal, type BattleWorld } from './world';
+import { KIND_UNIT, TEAM_FOE, creditDamage, heal, type BattleWorld } from './world';
 
 /** Khoá bỏng/độc của quân địch cách xa khoá uid công trình (uid < 1e6). */
 export const FOE_KEY_BASE = 1_000_000;
@@ -42,6 +42,7 @@ export function addDot(
 /** Sát thương liên tục lên `victim` (qua giáp, qua khiên), ghi nguồn hạ gục nếu chết. */
 const damage = (w: BattleWorld, victim: number, raw: number, fire: boolean, key: number): void => {
   const dmg = Math.max(0, mitigate(raw, fire ? 'fire' : 'magic', w.armor[victim]!));
+  creditDamage(w, victim, key < FOE_KEY_BASE ? key : -1, dmg);
   const absorbed = Math.min(w.shield[victim]!, dmg);
   w.shield[victim] = w.shield[victim]! - absorbed;
   w.hp[victim] = w.hp[victim]! - (dmg - absorbed);

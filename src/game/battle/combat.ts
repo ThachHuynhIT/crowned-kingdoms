@@ -17,6 +17,7 @@ import {
   KIND_UNIT,
   TEAM_ALLY,
   TEAM_FOE,
+  creditDamage,
   addUnit,
   bossImmune,
   heal,
@@ -358,6 +359,7 @@ const applySlow = (w: BattleWorld, id: number, pct: number, ticks: number): void
   w.slowTicks[id] = Math.max(w.slowTicks[id]!, ticks);
 };
 
+
 /**
  * Bước 8: áp hàng đợi theo (id nguồn, id mục tiêu, thứ tự tạo). Mục tiêu đã chết (alive 0 hoặc
  * HP ≤ 0 từ đòn trước trong tick) bỏ qua. Đòn đưa HP về ≤ 0 ghi `killerUid`; còn sống thì
@@ -386,6 +388,7 @@ export const applyDamagePhase = (world: BattleWorld): void => {
       rageMult !== 1 && q.sourceId >= 0 && world.team[q.sourceId] === TEAM_FOE && world.kind[v] === KIND_STRUCTURE;
     const foeHit = q.sourceId >= 0 && world.team[q.sourceId] === TEAM_FOE;
     const dmg = Math.max(0, mitigateCode(q.raw, q.type, world.armor[v]!)) * landed * (raging ? rageMult : 1) * (foeHit ? stackMult : 1);
+    creditDamage(world, v, q.sourceUid, dmg);
     // Khiên hấp thụ trước HP, sau giáp (§8.5).
     const absorbed = Math.min(world.shield[v]!, dmg);
     world.shield[v] = world.shield[v]! - absorbed;

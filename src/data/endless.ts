@@ -25,16 +25,19 @@ export const ENDLESS_MODIFIER_IDS = ['elite', 'double_edge', 'famine', 'siege'] 
 export type EndlessModifierId = (typeof ENDLESS_MODIFIER_IDS)[number];
 
 /**
- * Ngân sách gốc EP từ năm 31 (spec §3): `B[y] = min(1_000_000, floor((B[y−1] × 115 + 50) / 100))`
+ * Ngân sách gốc EP từ năm 31 (spec §3): `B[y] = min(1_000_000, floor((B[y−1] × 110 + 50) / 100))`
  * bắt đầu từ `ENEMY_BUDGET[29] = 691`; phần tử đầu là năm 31. Lưu sẵn, dừng ở phần tử đầu đạt trần;
- * năm xa hơn tra phần tử cuối (không Math.pow, không vòng lặp theo năm).
+ * năm xa hơn tra phần tử cuối (không Math.pow, không vòng lặp theo năm). Tăng 10%/năm (trước là 15%)
+ * từ 11/11/2026: sau khi giảm Can Thiệp (f1cd374), greedy bot sống trong Vô tận gần như trước đó.
  */
 export const ENDLESS_BASE_BUDGET: readonly number[] = [
-  795, 914, 1051, 1209, 1390, 1599, 1839, 2115, 2432, 2797, 3217, 3700, 4255, 4893, 5627, 6471,
-  7442, 8558, 9842, 11_318, 13_016, 14_968, 17_213, 19_795, 22_764, 26_179, 30_106, 34_622, 39_815,
-  45_787, 52_655, 60_553, 69_636, 80_081, 92_093, 105_907, 121_793, 140_062, 161_071, 185_232,
-  213_017, 244_970, 281_716, 323_973, 372_569, 428_454, 492_722, 566_630, 651_625, 749_369, 861_774,
-  991_040, 1_000_000,
+  760, 836, 920, 1012, 1113, 1224, 1346, 1481, 1629, 1792, 1971, 2168, 2385, 2624, 2886, 3175, 3493,
+  3842, 4226, 4649, 5114, 5625, 6188, 6807, 7488, 8237, 9061, 9967, 10_964, 12_060, 13_266, 14_593,
+  16_052, 17_657, 19_423, 21_365, 23_502, 25_852, 28_437, 31_281, 34_409, 37_850, 41_635, 45_799,
+  50_379, 55_417, 60_959, 67_055, 73_761, 81_137, 89_251, 98_176, 107_994, 118_793, 130_672,
+  143_739, 158_113, 173_924, 191_316, 210_448, 231_493, 254_642, 280_106, 308_117, 338_929, 372_822,
+  410_104, 451_114, 496_225, 545_848, 600_433, 660_476, 726_524, 799_176, 879_094, 967_003,
+  1_000_000,
 ];
 /** Trần ngân sách gốc và trần ngân sách cuối (sau slot, Gai và biến thể). */
 export const ENDLESS_BASE_BUDGET_CAP = 1_000_000;
@@ -183,4 +186,4 @@ export const ENDLESS_SCORED_BOSSES_CAP = 3;
 export const ENDLESS_UNLOCK_TEXT = 'Đã mở chế độ Vô tận';
 
 /** Version of the Endless definitions above (blessings, modifiers, tables): bump it when any of them changes meaning. */
-export const ENDLESS_DATA_VERSION = 1;
+export const ENDLESS_DATA_VERSION = 2;

@@ -1,3 +1,4 @@
+import { logicalSize } from '../displayRuntime';
 import Phaser from 'phaser';
 import { toCss } from '../../data/palette';
 import type { PerkId } from '../../data/types';
@@ -108,7 +109,7 @@ export class PerkDialog {
   }
 
   layout(): void {
-    const { width, height } = this.scene.scale;
+    const { w: width, h: height } = logicalSize(this.scene);
     const desktop = width >= 768;
     const inset = frameBorder(this.scene, 'panel') + (desktop ? PAD_DESKTOP : PAD_MOBILE);
     const l = perkDialogLayout({ w: width, h: height }, inset);

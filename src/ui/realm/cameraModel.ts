@@ -5,6 +5,7 @@ import { BATTLE, ENEMY_PORTAL } from '../../data/battle';
 import type { RunMode } from '../../data/rules';
 import { plotCoords } from '../../game/run/boardGeometry';
 import { plotAtWorld } from '../../render/endlessBoardModel';
+import { snapTranslation } from '../displayMetrics';
 import type { Point, Rect, Size } from '../hud/layout';
 import { ZOOM_MAX, cameraScroll, realmZoomLimits, realmCamera, screenToWorld, type RealmPhase } from './realmLayout';
 
@@ -50,15 +51,19 @@ export const pinchZoom = (startZoom: number, startSq: number, nowSq: number): nu
  * The view as drawn (spec 2026-11-08 §4): Phaser draws world point p at `(1 − z)·mid − z·scroll + z·p`, so the
  * camera translation `(1 − z)·mid − z·scroll` is rounded to whole screen pixels and the scroll solved back. Nothing
  * shimmers at a fractional zoom; the view moves at most half a screen pixel. Only for drawing and the HUDs: pan and
- * zoom keep accumulating on the unsnapped view.
+ * zoom keep accumulating on the unsnapped view. `ratio` is the backing/logical ratio per axis (HiDPI spec 2026-11-11
+ * §4): the translation then lands on whole device pixels; ratio 1 (the default) is the old screen-pixel snap.
  */
-export const snapView = (view: CameraView, screen: Size): CameraView => {
+export const snapView = (view: CameraView, screen: Size, ratio: Point = { x: 1, y: 1 }): CameraView => {
   const z = view.zoom;
-  const axis = (scroll: number, half: number): number => {
+  const axis = (scroll: number, half: number, r: number): number => {
     const t = (1 - z) * half - z * scroll;
-    return ((1 - z) * half - Math.round(t)) / z;
+    return ((1 - z) * half - snapTranslation(t, r)) / z;
   };
-  return { zoom: z, scroll: { x: axis(view.scroll.x, screen.w / 2), y: axis(view.scroll.y, screen.h / 2) } };
+  return {
+    zoom: z,
+    scroll: { x: axis(view.scroll.x, screen.w / 2, ratio.x), y: axis(view.scroll.y, screen.h / 2, ratio.y) },
+  };
 };
 
 /**

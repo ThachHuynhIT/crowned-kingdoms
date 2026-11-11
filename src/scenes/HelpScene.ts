@@ -1,4 +1,5 @@
 import Phaser from 'phaser';
+import { bindSceneDisplay } from '../ui/displayRuntime';
 import type { EventBus } from '../core/events';
 import type { GameSpeed } from '../core/SimClock';
 import type { HelpTab } from '../data/help';
@@ -39,6 +40,7 @@ export class HelpScene extends Phaser.Scene {
   }
 
   create(data: HelpLaunch): void {
+    bindSceneDisplay(this, () => this.onResize());
     // Scene instances are reused: reset every field first.
     this.closed = false;
     this.locked = [];
@@ -51,7 +53,6 @@ export class HelpScene extends Phaser.Scene {
     this.tooltip = new Tooltip(this);
     this.modal = new HelpModal(this, CONTENT, this.tooltip, () => this.closeHelp(), data.tab).setDepth(HELP_DEPTH);
     this.input.keyboard?.on(Phaser.Input.Keyboard.Events.ANY_KEY_DOWN, this.onKey, this);
-    this.scale.on(Phaser.Scale.Events.RESIZE, this.onResize, this);
     this.events.once(Phaser.Scenes.Events.SHUTDOWN, this.teardown, this);
   }
 
@@ -93,7 +94,6 @@ export class HelpScene extends Phaser.Scene {
 
   private teardown(): void {
     this.input.keyboard?.off(Phaser.Input.Keyboard.Events.ANY_KEY_DOWN, this.onKey, this);
-    this.scale.off(Phaser.Scale.Events.RESIZE, this.onResize, this);
     this.modal?.destroy();
     this.modal = null;
     this.tooltip?.destroy();
