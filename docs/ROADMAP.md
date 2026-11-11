@@ -83,7 +83,14 @@ Tất cả là cảm nhận trên PC (desktop ≥ 768 px). Bố cục điện th
    - bộ lọc Trợ giúp thành dropdown;
    - chữ xanh/đỏ đạt WCAG AA;
    - spec asset lính theo hướng đi chéo.
-   **Còn mở:** HUD lập kế hoạch cho điện thoại ngang (lá bài che bàn cờ), cần duyệt hướng thiết kế.
+   Lượt 2: chơi được trọn ván trên điện thoại ngang:
+   - lá bài co theo chiều cao;
+   - bố cục máy tính cho mọi màn ngang từ 640 px;
+   - chọn vua, thẻ thưởng, Hội đồng, Lịch, bảng kết quả không còn tràn màn;
+   - chữ trên bàn cờ có viền;
+   - dropdown điều khiển được bằng phím.
+
+   **Còn mở:** kiểm trên điện thoại thật; thẻ thưởng vào tay (chờ quyết định); vẽ thử lính theo spec asset mới.
 
 ## Để sau: điện thoại (chỉ làm khi chủ dự án bảo)
 
