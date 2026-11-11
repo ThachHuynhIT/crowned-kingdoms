@@ -24,6 +24,8 @@ import { FxRenderer } from '../render/FxRenderer';
 import { RangeRenderer } from '../render/RangeRenderer';
 import { UnitRenderer } from '../render/UnitRenderer';
 import { buildSpritesTexture } from '../render/atlas';
+import { cameraBackingView } from '../ui/displayMetrics';
+import { bindSceneDisplay, displayMetrics, logicalPointer, logicalSize, setWorldTextZoom } from '../ui/displayRuntime';
 import { DRAG_SLOP, type Size } from '../ui/hud/layout';
 import { lockedPlotTap, plotHighlights, plotIllegalReason } from '../ui/planning/targetHints';
 import { lockedPlotPrice } from '../ui/realm/calendarModel';
@@ -289,7 +291,8 @@ export class RealmScene extends Phaser.Scene {
     this.input.on(Phaser.Input.Events.POINTER_MOVE, this.onPointerMove, this);
     this.input.on(Phaser.Input.Events.POINTER_UP, this.onPointerUp, this);
     this.input.on(Phaser.Input.Events.POINTER_WHEEL, this.onWheel, this);
-    this.scale.on(Phaser.Scale.Events.RESIZE, this.onResize, this);
+    // HiDPI (spec 2026-11-11): the runtime resizes the backing store and re-rasterises world text; the camera is ours.
+    bindSceneDisplay(this, this.onResize, 'realm');
     this.events.once(Phaser.Scenes.Events.SHUTDOWN, this.teardown, this);
 
     this.showPlanning(this.controller.state);
@@ -641,15 +644,17 @@ export class RealmScene extends Phaser.Scene {
   // ---- input -----------------------------------------------------------------------------
 
   private inHand(pointer: Phaser.Input.Pointer): boolean {
-    if (this.scale.width < 768 || this.controller.state.phase !== 'planning') return false;
+    if (this.screen().w < 768 || this.controller.state.phase !== 'planning') return false;
     const { viewport } = handWindow(this.screen(), this.controller.state.hand.length, 0);
-    return pointer.x >= viewport.x && pointer.x <= viewport.x + viewport.w &&
-      pointer.y >= viewport.y - 12 && pointer.y <= viewport.y + viewport.h;
+    const p = logicalPointer(this, pointer);
+    return p.x >= viewport.x && p.x <= viewport.x + viewport.w &&
+      p.y >= viewport.y - 12 && p.y <= viewport.y + viewport.h;
   }
 
   private onPointerDown(pointer: Phaser.Input.Pointer): void {
     if (this.inHand(pointer)) return;
-    this.pointers.set(pointer.id, { x: pointer.x, y: pointer.y });
+    const at = logicalPointer(this, pointer);
+    this.pointers.set(pointer.id, at);
     if (this.pointers.size === 2 && !this.mapBlocked) {
       // A second finger on the map: a pinch, never a click or a pan.
       this.pinch = this.view
@@ -660,7 +665,7 @@ export class RealmScene extends Phaser.Scene {
       return;
     }
     if (this.pointers.size > 2) return;
-    this.down = { id: pointer.id, x: pointer.x, y: pointer.y };
+    this.down = { id: pointer.id, x: at.x, y: at.y };
     this.panning = false;
   }
 
@@ -668,7 +673,8 @@ export class RealmScene extends Phaser.Scene {
     const last = this.pointers.get(pointer.id);
     if (!last || !pointer.isDown) return;
     if (this.inHand(pointer)) return;
-    this.pointers.set(pointer.id, { x: pointer.x, y: pointer.y });
+    const at = logicalPointer(this, pointer);
+    this.pointers.set(pointer.id, at);
     if (this.mapBlocked || !this.view) return;
     if (this.pinch !== null) {
       // Free zoom (spec 2026-11-08 §4): the zoom follows the finger spread, the map follows the midpoint.
@@ -690,8 +696,8 @@ export class RealmScene extends Phaser.Scene {
     const down = this.down;
     if (!down || down.id !== pointer.id) return;
     if (!this.panning) {
-      const dx = pointer.x - down.x;
-      const dy = pointer.y - down.y;
+      const dx = at.x - down.x;
+      const dy = at.y - down.y;
       if (dx * dx + dy * dy <= DRAG_SLOP * DRAG_SLOP) return;
       // Pan at every zoom step, the overview too: on a phone the 640 px board is wider than the screen and the
       // player drags to reach the side plots (clampView keeps the view on the map).
@@ -700,7 +706,7 @@ export class RealmScene extends Phaser.Scene {
     this.applyView(
       panBy(
         this.view,
-        { x: pointer.x - last.x, y: pointer.y - last.y },
+        { x: at.x - last.x, y: at.y - last.y },
         this.screen(),
         this.phase(),
         this.controller.state.mode,
@@ -715,7 +721,7 @@ export class RealmScene extends Phaser.Scene {
     this.applyView(
       zoomAt(
         this.view,
-        { x: pointer.x, y: pointer.y },
+        logicalPointer(this, pointer),
         next,
         this.screen(),
         this.phase(),
@@ -754,10 +760,12 @@ export class RealmScene extends Phaser.Scene {
       return;
     }
     if (this.inBattle || !this.board) return;
-    const dx = pointer.x - down.x;
-    const dy = pointer.y - down.y;
+    const at = logicalPointer(this, pointer);
+    const dx = at.x - down.x;
+    const dy = at.y - down.y;
     if (dx * dx + dy * dy > DRAG_SLOP * DRAG_SLOP) return;
-    // The camera works in projected (isometric) space: back to the square world first.
+    // The camera works in projected (isometric) space: back to the square world first. `getWorldPoint` takes the
+    // raw (backing px) pointer through the drawn camera.
     const cam = this.cameras.main.getWorldPoint(pointer.x, pointer.y);
     const world = unproject({ x: cam.x, y: cam.y });
     const plot = this.board.plotAt(world.x, world.y);
@@ -776,7 +784,7 @@ export class RealmScene extends Phaser.Scene {
     const art = aiming === null ? this.buildingAt(cam) : null;
     if (art !== null) {
       this.setPendingBuy(null);
-      this.bus.emit('ui:inspect', { plot: state.plots[art]?.building ? art : null, x: pointer.x, y: pointer.y });
+      this.bus.emit('ui:inspect', { plot: state.plots[art]?.building ? art : null, x: at.x, y: at.y });
       return;
     }
     if (plot !== null && state.plots[plot]?.unlocked === false) {
@@ -796,7 +804,7 @@ export class RealmScene extends Phaser.Scene {
       }
       const tap = lockedPlotTap(state, plot, aiming);
       if (tap.kind === 'buy') {
-        this.bus.emit('ui:inspect', { plot: null, x: pointer.x, y: pointer.y });
+        this.bus.emit('ui:inspect', { plot: null, x: at.x, y: at.y });
         this.setPendingBuy(plot);
         return;
       }
@@ -813,7 +821,7 @@ export class RealmScene extends Phaser.Scene {
     }
     // Not aiming a card: a tap on a building asks the HUD for its info box, any other tap closes it.
     const built = plot !== null && this.controller.state.plots[plot]?.building ? plot : null;
-    this.bus.emit('ui:inspect', { plot: built, x: pointer.x, y: pointer.y });
+    this.bus.emit('ui:inspect', { plot: built, x: at.x, y: at.y });
   }
 
   /**
@@ -822,7 +830,8 @@ export class RealmScene extends Phaser.Scene {
    */
   private buildingAt(cam: { x: number; y: number }): number | null {
     const state = this.controller.state;
-    const zoom = this.cameras.main.zoom || 1;
+    // The logical zoom (the camera's own zoom also carries the display density).
+    const zoom = this.view?.zoom ?? 1;
     const boxes = boardBuildingBoxes(this.textures, state, CONTENT, state.mode);
     return pickSprite(boxes, cam, PICK_SLOP / zoom, atlasOpacity(this.textures));
   }
@@ -836,7 +845,7 @@ export class RealmScene extends Phaser.Scene {
    * mid-slide sets the overview at once.
    */
   private placeCamera(ease = false): void {
-    const screen: Size = { w: this.scale.width, h: this.scale.height };
+    const screen: Size = this.screen();
     this.cameraEase?.stop();
     const easing = this.cameraEase !== null;
     this.cameraEase = null;
@@ -880,7 +889,7 @@ export class RealmScene extends Phaser.Scene {
   }
 
   private screen(): Size {
-    return { w: this.scale.width, h: this.scale.height };
+    return logicalSize(this);
   }
 
   private phase(): RealmPhase {
@@ -894,7 +903,7 @@ export class RealmScene extends Phaser.Scene {
   private applyView(view: CameraView): void {
     this.view = view;
     this.viewScreen = this.screen();
-    const shown = snapView(view, this.viewScreen);
+    const shown = snapView(view, this.viewScreen, displayMetrics(this).ratio);
     this.drawView();
     this.bus.emit('realm:view', {
       zoom: shown.zoom,
@@ -905,7 +914,8 @@ export class RealmScene extends Phaser.Scene {
   /** Shake is a temporary screen translation; the player's view and view events stay unchanged. */
   private drawView(): void {
     if (!this.view) return;
-    const base = snapView(this.view, this.viewScreen);
+    const metrics = displayMetrics(this);
+    const base = snapView(this.view, this.viewScreen, metrics.ratio);
     const offset = shakeOffset(
       this.shakeStart === null ? SHAKE_MS : this.time.now - this.shakeStart,
       getSession(this)?.meta().settings.screenShake !== false,
@@ -919,8 +929,12 @@ export class RealmScene extends Phaser.Scene {
         },
       },
       this.viewScreen,
+      metrics.ratio,
     );
-    this.cameras.main.setZoom(shown.zoom).setScroll(shown.scroll.x, shown.scroll.y);
+    // The logical view through the backing camera (identical at density 1); world text follows the zoom bucket.
+    const cam = cameraBackingView(shown, metrics);
+    this.cameras.main.setZoom(cam.zoom.x, cam.zoom.y).setScroll(cam.scroll.x, cam.scroll.y);
+    setWorldTextZoom(this, shown.zoom);
   }
 
   /** A resize keeps a zoomed view's centre; the overview stays the overview. */
@@ -947,7 +961,6 @@ export class RealmScene extends Phaser.Scene {
     this.range?.destroy();
     this.range = null;
     this.game.events.off(WARNING_EVENT, this.onStorageWarning, this);
-    this.scale.off(Phaser.Scale.Events.RESIZE, this.onResize, this);
     this.input.off(Phaser.Input.Events.POINTER_DOWN, this.onPointerDown, this);
     this.input.off(Phaser.Input.Events.POINTER_MOVE, this.onPointerMove, this);
     this.input.off(Phaser.Input.Events.POINTER_UP, this.onPointerUp, this);

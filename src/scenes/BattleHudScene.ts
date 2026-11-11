@@ -27,6 +27,7 @@ import { resolveShortcut, shortcutFlags, shortcutLabel } from '../ui/input/short
 import { openHelp } from './helpLauncher';
 import { openSettings } from './SettingsScene';
 import { bossReadout, type BossReadout } from '../ui/battle/battleReadout';
+import { bindSceneDisplay, logicalPointer, logicalPointerDistance, logicalSize } from '../ui/displayRuntime';
 import { DRAG_SLOP, GAP, MARGIN, textContent, type Point, type Rect } from '../ui/hud/layout';
 import { ENEMY_ARMY_TOOLTIP, armyHealth, healthText, throneHealth } from '../ui/hud/armyHealth';
 import { HealthBarView } from '../ui/hud/HealthBarView';
@@ -360,7 +361,7 @@ export class BattleHudScene extends Phaser.Scene {
     this.input.on(Phaser.Input.Events.POINTER_MOVE, this.onPointerMove, this);
     this.input.on(Phaser.Input.Events.POINTER_DOWN, this.onPointerDown, this);
     this.input.on(Phaser.Input.Events.POINTER_UP, this.onPointerUp, this);
-    this.scale.on(Phaser.Scale.Events.RESIZE, this.layout, this);
+    bindSceneDisplay(this, () => this.layout());
     this.events.once(Phaser.Scenes.Events.SHUTDOWN, this.teardown, this);
 
     this.livesText.setText(`× ${this.controller.state.lives}`);
@@ -421,7 +422,7 @@ export class BattleHudScene extends Phaser.Scene {
   private placeToasts(): void {
     const bs = this.lay.bossStatus;
     const below = this.bossShown ? bs.y + bs.h + GAP : this.lay.clock.y + this.lay.clock.h + GAP * 2;
-    this.toasts.setAnchor(this.scale.width / 2, below, this.scale.width - 2 * MARGIN);
+    this.toasts.setAnchor(this.screen().w / 2, below, this.screen().w - 2 * MARGIN);
   }
 
   /** The two bottom bars: the throne (accent of the playing king) and the enemy units on the field. */
@@ -441,7 +442,7 @@ export class BattleHudScene extends Phaser.Scene {
 
   private showYear(state: RunState): void {
     this.yearText.setText(yearLabel(state));
-    fitTextWidth(this.yearText, isDesktop(this.scale.width) ? 18 : 15, 11, this.lay.year.w);
+    fitTextWidth(this.yearText, isDesktop(this.screen().w) ? 18 : 15, 11, this.lay.year.w);
     this.calendar.setCells(calendarCells(state, 5));
   }
 
@@ -658,8 +659,7 @@ export class BattleHudScene extends Phaser.Scene {
       this.bus.emit('ui:range-selection', { target: null, mode: 'hover' });
     }
     if (on && !this.aimAt) {
-      const p = this.input.activePointer;
-      this.aimAt = { x: p.x, y: p.y };
+      this.aimAt = logicalPointer(this, this.input.activePointer);
     }
     this.drawCooldown();
     this.drawRing();
@@ -676,7 +676,7 @@ export class BattleHudScene extends Phaser.Scene {
   // ---- input ---------------------------------------------------------------------------------
 
   private onPointerMove(pointer: Phaser.Input.Pointer): void {
-    const p = { x: pointer.x, y: pointer.y };
+    const p = logicalPointer(this, pointer);
     const press = this.press;
     // Dragging out of the button aims (§10.7: drag from the button and release on the field).
     if (
@@ -684,7 +684,7 @@ export class BattleHudScene extends Phaser.Scene {
       pointer.id === press.id &&
       !this.aiming &&
       !inside(this.lay.intervene, p) &&
-      pointer.getDistance() > DRAG_SLOP &&
+      logicalPointerDistance(this, pointer) > DRAG_SLOP &&
       this.isReady()
     ) {
       this.setAiming(true);
@@ -699,7 +699,7 @@ export class BattleHudScene extends Phaser.Scene {
     const world = this.world;
     let id: number | null = null;
     if (world && !this.aiming && !pointer.wasTouch) {
-      id = this.entityUnder(world, { x: pointer.x, y: pointer.y });
+      id = this.entityUnder(world, logicalPointer(this, pointer));
     }
     if (id === this.hoveredId) return;
     this.hoveredId = id;
@@ -710,7 +710,7 @@ export class BattleHudScene extends Phaser.Scene {
   }
 
   private onPointerDown(pointer: Phaser.Input.Pointer): void {
-    const p = { x: pointer.x, y: pointer.y };
+    const p = logicalPointer(this, pointer);
     this.press = { id: pointer.id, fromButton: inside(this.lay.intervene, p), ...p };
     this.aimAt = p;
     if (this.aiming) this.drawRing();
@@ -721,7 +721,7 @@ export class BattleHudScene extends Phaser.Scene {
     if (!press || press.id !== pointer.id) return;
     this.press = null;
     if (this.ended) return;
-    const p = { x: pointer.x, y: pointer.y };
+    const p = logicalPointer(this, pointer);
     if (!this.aiming) {
       const moved = (p.x - press.x) ** 2 + (p.y - press.y) ** 2 > DRAG_SLOP * DRAG_SLOP;
       if (!press.fromButton && !moved && over.length === 0) this.inspectAt(p);
@@ -878,7 +878,7 @@ export class BattleHudScene extends Phaser.Scene {
   // ---- layout -------------------------------------------------------------------------------
 
   private screen(): { w: number; h: number } {
-    return { w: this.scale.width, h: this.scale.height };
+    return logicalSize(this);
   }
 
   private currentLayout(): BattleLayout {
@@ -887,7 +887,7 @@ export class BattleHudScene extends Phaser.Scene {
 
   private layout(): void {
     const l = (this.lay = this.currentLayout());
-    const desktop = isDesktop(this.scale.width);
+    const desktop = isDesktop(this.screen().w);
 
     this.livesBox.resize(l.lives.w, l.lives.h);
     this.livesBox.image.setPosition(l.lives.x, l.lives.y);
@@ -949,7 +949,7 @@ export class BattleHudScene extends Phaser.Scene {
     const banner = this.banner;
     if (!banner) return;
     const w = Math.min(
-      this.scale.width - 2 * MARGIN,
+      this.screen().w - 2 * MARGIN,
       Math.ceil(banner.text.width) + 2 * (PAD + 12),
     );
     const r = centredPanel(this.screen(), w, 72);
@@ -987,7 +987,6 @@ export class BattleHudScene extends Phaser.Scene {
     this.input.off(Phaser.Input.Events.POINTER_MOVE, this.onPointerMove, this);
     this.input.off(Phaser.Input.Events.POINTER_DOWN, this.onPointerDown, this);
     this.input.off(Phaser.Input.Events.POINTER_UP, this.onPointerUp, this);
-    this.scale.off(Phaser.Scale.Events.RESIZE, this.layout, this);
     this.bannerTimer?.remove(false);
     this.bannerTimer = null;
     this.closeScout();
