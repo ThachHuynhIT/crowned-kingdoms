@@ -1,5 +1,6 @@
 import Phaser from 'phaser';
 import { PALETTE, toCss } from './data/palette';
+import { installOrientationGuard } from './platform/orientation';
 import { registerPwa } from './platform/pwa';
 import { BattleHudScene } from './scenes/BattleHudScene';
 import { BootScene } from './scenes/BootScene';
@@ -70,4 +71,6 @@ if (import.meta.env.DEV) {
   );
 }
 
+// Phones play in landscape only (owner 12/11/2026): portrait shows a rotate overlay and pauses the game.
+installOrientationGuard(game);
 void registerPwa();
