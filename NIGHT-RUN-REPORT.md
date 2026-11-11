@@ -8,6 +8,9 @@ Plan: `docs/plans/2026-11-12-night-plan.md`.
   - Nguyên nhân: thẻ mua được đặt lên đầu chồng rút. Từ khi mỗi năm chỉ rút 1 lá, lá rút năm sau chính là thẻ vừa mua, nên trả 3 vàng mà tay không có thêm lá nào.
   - Giờ thẻ mua vào thẳng tay, giống "Mua thẻ".
 - **Mở game nhanh hơn** (commit `03305be`): từ lúc tải xong ảnh tới lúc vào menu, máy tính giảm từ 1032 ms xuống khoảng 620 ms, điện thoại từ 403 ms xuống khoảng 290 ms. Khung hình vốn đã nhẹ (khoảng 1 ms mỗi khung kể cả trận lớn), nên không đụng tới.
+- **Cài đặt trên màn ngang thấp** (commit `ecb00be`): ở 960×540, 844×390 và 667×375, bảng Cài đặt bị cắt mất tiêu đề và nút Đóng. Giờ màn thấp có bảng hai cột, nút Đóng nằm cạnh tiêu đề.
+- **Điện thoại chỉ chơi ngang** (commit `2edb562`): cầm dọc thì hiện "Xoay ngang điện thoại để chơi" và game tạm dừng; trình duyệt cho phép thì khoá màn ngang.
+- **Còn lớn nhất trên điện thoại ngang:** khi lập kế hoạch, lá bài trên tay và HUD che gần hết bàn cờ (ảnh `.superpowers/night-shots/sheet-land-realm.png`). Cần một bố cục HUD riêng cho màn ngang thấp; mình chưa làm vì là thiết kế lớn (xem đề xuất 3).
 - **Cần bạn quyết:** thẻ thưởng, thẻ chinh phục và thẻ thưởng nhiệm vụ vẫn theo luật cũ (đặt lên đầu chồng rút, thay cho lá rút của năm), vì đó là thiết kế có test. Xem mục "Đề xuất chờ duyệt".
 
 ## Phase 1: chọn, mua, bỏ qua thẻ — XONG
@@ -45,6 +48,29 @@ Plan: `docs/plans/2026-11-12-night-plan.md`.
 - **Ảnh kiểm tra sau khi sửa:** `.superpowers/night-perf-after.png`, giống bản trước.
 - **Chưa làm:** giảm thời gian tải 772 file UHD (53 MB). Muốn giảm phải gộp file hoặc tải dần khi phóng to, là thay đổi lớn. Đã ghi vào đề xuất.
 
+## Phase 3: bố cục nút và chữ — XONG MỘT PHẦN
+- **Đã chụp** mọi màn (Menu, Chọn vua, Vương Miện, Cài đặt, Trợ giúp, Lưu ván, Bàn cờ) ở 1280×720, 960×540, 844×390 và 667×375. Ảnh và bảng ghép trong `.superpowers/night-shots/` (`sheet-<màn>.png`).
+- **Lỗi tìm được và đã sửa:** bảng Cài đặt cao 696 px bị cắt ở mọi màn thấp hơn 712 px, mất nút Đóng.
+  - Sửa: bảng hai cột cao 372 px khi màn cao dưới 712 và rộng từ 640 (`src/ui/settings/settingsLayout.ts`).
+  - Test bố cục cho 6 cỡ màn ngang: không chồng nút, nút ≥ 48 px, nằm trong màn.
+  - Ảnh sau khi sửa: `.superpowers/night-shots/sheet-after-Settings.png`.
+  - Ở 1280×720 bảng không đổi.
+- **Không thấy lỗi** ở Vương Miện, Trợ giúp, Chọn vua (có cuộn; chữ dài trên thẻ trợ giúp được cắt bằng "…", đúng ý thiết kế).
+- **Test chậm** (`stress.test.ts`, `headless.test.ts`, `spriteAtlas.test.ts`) chỉ quá giờ khi server dev và trình duyệt chạy cùng lúc. Mình tắt server trước mỗi lần chạy gate, và rút test bộ bài mới xuống 1 ván (khoảng 1 giây).
+
+## Phase 4: điện thoại màn ngang — XONG MỘT PHẦN
+- **Khoá màn ngang và lớp phủ dọc** (`src/platform/orientation.ts`, có test):
+  - thiết bị chỉ có cảm ứng mà cầm dọc → lớp phủ "Xoay ngang điện thoại để chơi" và vòng lặp game ngủ;
+  - xoay ngang → game chạy lại;
+  - mỗi lần chạm thì thử `screen.orientation.lock('landscape')` (đa số trình duyệt chỉ cho khi toàn màn hình);
+  - máy tính (có chuột) không bao giờ bị chặn.
+  - Ảnh: `.superpowers/night-shots/orient-portrait.png`.
+- **Vùng an toàn:** đã có sẵn (`index.html` đặt `#game` theo `env(safe-area-inset-*)`).
+- **Đã chụp** 667×375, 844×390, 915×412, 932×430 và 1024×768 (`sheet-land-menu.png`, `sheet-land-realm.png`):
+  - menu ổn ở mọi cỡ;
+  - **bàn cờ khi lập kế hoạch thì không dùng được ở màn ngang điện thoại:** lá bài cao 288 px cùng hàng nút che gần hết, chỉ thấy một dải bàn cờ. 1024×768 ổn.
+- **Hiệu năng điện thoại:** đo ở 844×390 DPR 3 (giả lập): khoảng 1 ms mỗi khung. Mật độ vẫn theo cài đặt "Độ nét" có sẵn (Vừa = tối đa 2, Thấp = 1); mình không đổi mặc định.
+
 ## Quyết định kèm lý do
 - **Chỉ sửa thương nhân, không sửa thẻ thưởng:**
   - Test `commands.test.ts` ghi rõ thẻ thưởng là lá rút của năm sau (tay năm sau có đúng 1 lá, chính là thẻ thưởng).
@@ -55,6 +81,12 @@ Plan: `docs/plans/2026-11-12-night-plan.md`.
 1. **Thẻ thưởng, thẻ chinh phục, thẻ thưởng nhiệm vụ vào thẳng tay** như thương nhân. Hiện tại chúng thay cho lá rút của năm sau, nên người chơi có thể thấy cũng "mất" một lá rút. Đổi thì cần đo lại cân bằng.
 
 2. **Tải ảnh UHD dần:** chỉ tải bộ mật độ 8 khi người chơi phóng to lần đầu, hoặc gộp 772 file thành vài tấm atlas sẵn lúc build. Như vậy máy tính vào game nhanh thêm 1–2 giây.
+
+3. **HUD lập kế hoạch cho điện thoại ngang** (màn cao 375–430 px):
+   - lá bài thu nhỏ thành một hàng thấp (khoảng 96–120 px), bấm vào mới mở to;
+   - các nút Mua thẻ, Đổi bài, Bán bài, Bộ bài gom thành một cột bên phải;
+   - lịch năm và thanh trên gọn lại một dòng.
+   Đây là thiết kế giao diện mới nên cần bạn duyệt hướng trước. Hiện trạng ở `.superpowers/night-shots/sheet-land-realm.png`.
 
 ## Việc còn dở và bước tiếp theo
 - Phase 2 trở đi: xem plan.
