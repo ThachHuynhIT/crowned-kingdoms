@@ -25,8 +25,8 @@ import {
   type DisplayMetrics,
 } from './displayMetrics';
 
-/** Rollout switch (plan Task 6 flips it): false = density 1 unless a DEV `?density=` override is given. */
-export const HIDPI_ENABLED = false;
+/** Rollout switch (on since 11/11/2026, plan Task 6): the device density; false = density 1 unless a DEV `?density=` override is given. */
+export const HIDPI_ENABLED = true;
 
 const REGISTRY_KEY = 'displayRuntime';
 
