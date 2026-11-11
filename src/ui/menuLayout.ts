@@ -43,8 +43,27 @@ export interface MenuLayout {
 export const layoutMenu = (screen: Size, logo: Size, buttonCount: number): MenuLayout => {
   const cx = screen.w / 2;
   const logoMinY = logo.h / 2 + 8;
-  const stackH = buttonCount * MENU_BUTTON.h + Math.max(0, buttonCount - 1) * MENU_BUTTON.gap;
   const limit = screen.h - MENU_FOOTER_H - 8;
+  const stackOf = (rows: number): number => rows * MENU_BUTTON.h + Math.max(0, rows - 1) * MENU_BUTTON.gap;
+  // Landscape phones (night 12/11/2026: at 844×390 Cài đặt and Trợ giúp fell below the screen): when one column
+  // cannot fit under the logo, the buttons go in two columns.
+  const twoColumns =
+    buttonCount > 3 &&
+    logoMinY + logo.h / 2 + 8 + stackOf(buttonCount) > limit &&
+    screen.w >= 2 * MENU_BUTTON.w + MENU_BUTTON.gap + 16;
+  if (twoColumns) {
+    const rows = Math.ceil(buttonCount / 2);
+    const stackH = stackOf(rows);
+    const top = Math.max(logoMinY + logo.h / 2 + 8, Math.round((limit + logoMinY + logo.h / 2 - stackH) / 2));
+    const logoY = Math.max(logoMinY, Math.min(screen.h / 3, top - 8 - logo.h / 2));
+    const dx = (MENU_BUTTON.w + MENU_BUTTON.gap) / 2;
+    const buttons = Array.from({ length: buttonCount }, (_, i) => ({
+      x: cx + (i % 2 === 0 ? -dx : dx),
+      y: top + MENU_BUTTON.h / 2 + Math.floor(i / 2) * (MENU_BUTTON.h + MENU_BUTTON.gap),
+    }));
+    return { logo: { x: cx, y: logoY }, buttons, footer: { x: cx, y: screen.h - MENU_FOOTER_H / 2 } };
+  }
+  const stackH = stackOf(buttonCount);
   let logoY = Math.max(logoMinY, screen.h / 3);
   let top = Math.max(logoY + logo.h / 2 + 24, screen.h * 0.5);
   if (top + stackH > limit) {

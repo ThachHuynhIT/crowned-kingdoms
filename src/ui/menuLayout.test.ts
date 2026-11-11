@@ -86,3 +86,28 @@ describe('menu items', () => {
     check({ w: 375, h: 812 }, PHONE_LOGO, n);
   });
 });
+
+describe('layoutMenu on landscape phones (night 12/11/2026)', () => {
+  for (const screen of [
+    { w: 667, h: 375 },
+    { w: 844, h: 390 },
+    { w: 915, h: 412 },
+    { w: 932, h: 430 },
+  ]) {
+    it(`${screen.w}×${screen.h}: all six buttons in two columns under the logo, above the footer`, () => {
+      const m = layoutMenu(screen, PHONE_LOGO, 6);
+      const logoBottom = m.logo.y + PHONE_LOGO.h / 2;
+      expect(m.logo.y - PHONE_LOGO.h / 2).toBeGreaterThanOrEqual(0);
+      expect(new Set(m.buttons.map((b) => b.x)).size).toBe(2);
+      for (const b of m.buttons) {
+        expect(b.y - MENU_BUTTON.h / 2).toBeGreaterThanOrEqual(logoBottom);
+        expect(b.y + MENU_BUTTON.h / 2).toBeLessThanOrEqual(screen.h - MENU_FOOTER_H);
+        expect(b.x - MENU_BUTTON.w / 2).toBeGreaterThanOrEqual(0);
+        expect(b.x + MENU_BUTTON.w / 2).toBeLessThanOrEqual(screen.w);
+      }
+    });
+  }
+  it('keeps one column where it fits (1280×720)', () => {
+    expect(new Set(layoutMenu({ w: 1280, h: 720 }, DESKTOP_LOGO, 6).buttons.map((b) => b.x)).size).toBe(1);
+  });
+});
