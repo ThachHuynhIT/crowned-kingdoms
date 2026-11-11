@@ -4,7 +4,7 @@ import type { CardDef, CardId, KingId } from '../../data/types';
 import { UI_PALETTE } from '../../data/uiPalette';
 import { describeCard } from '../../game/cards/describe';
 import type { Content } from '../../game/cards/registry';
-import { SPRITES_KEY, iconFrame } from '../../render/atlas';
+import { SPRITES_KEY, frameDensityFactor, iconFrame } from '../../render/atlas';
 import { hudTexture } from '../../render/hudArtHd';
 import type { IconId } from '../../render/iconArt';
 import type { UiFrame } from '../../render/uiArt';
@@ -258,7 +258,8 @@ export class CardView {
     const full = density === 'full';
     const l = cardLayout(this.size, inset, density);
 
-    this.addAtlasImage(iconFrame(KIND_ICON[def.kind]), l.icon.x, l.icon.y)?.setOrigin(0, 0);
+    const kindIcon = iconFrame(KIND_ICON[def.kind]);
+    this.addAtlasImage(kindIcon, l.icon.x, l.icon.y)?.setOrigin(0, 0).setScale(frameDensityFactor(kindIcon));
 
     const name = addUiText(this.scene, l.name.x + l.name.w / 2, l.header.y + l.header.h / 2, '', full ? 12 : w < 80 ? 9 : 10)
       .setOrigin(0.5)
