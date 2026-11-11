@@ -43,7 +43,14 @@ export class HelpModal {
   private readonly tabs: Button[];
   private readonly filters: Button[];
   /** The open filter list (night 12/11/2026: a dropdown instead of cycling through up to 11 values). */
-  private menu: { overlay: Phaser.GameObjects.Rectangle; panel: UiBox; buttons: Button[] } | null = null;
+  private menu: {
+    overlay: Phaser.GameObjects.Rectangle;
+    panel: UiBox;
+    buttons: Button[];
+    /** Highlighted choice (arrow keys), and what choosing it does. */
+    focus: number;
+    choose: (index: number) => void;
+  } | null = null;
   private readonly root: Phaser.GameObjects.Container;
   private readonly browser: HelpCardBrowser;
   private readonly detail: ContentBox;
@@ -180,23 +187,47 @@ export class HelpModal {
     const panel = createPanel(this.scene, 'panel', l.panel.w, l.panel.h);
     panel.image.setPosition(l.panel.x, l.panel.y).setInteractive();
     const current = filterValue(this.state, key);
+    const choose = (j: number): void => {
+      const choice = choices[j];
+      if (!choice) return;
+      this.state = setFilterValue(this.state, key, choice.value);
+      this.closeMenu();
+      this.refresh();
+    };
     const buttons = choices.map((choice, j) => {
       const cell = l.cells[j]!;
       const b = createButton(this.scene, cell.x + cell.w / 2, cell.y + cell.h / 2, choice.label, {
         width: cell.w,
         height: cell.h,
         fontSize: 13,
-        onClick: () => {
-          this.state = setFilterValue(this.state, key, choice.value);
-          this.closeMenu();
-          this.refresh();
-        },
+        onClick: () => choose(j),
       });
       b.setActive(choice.value === current);
       return b;
     });
     this.root.add([overlay, panel.image, ...buttons.map((b) => b.container)]);
-    this.menu = { overlay, panel, buttons };
+    this.menu = { overlay, panel, buttons, focus: Math.max(0, choices.findIndex((c) => c.value === current)), choose };
+  }
+
+  /**
+   * Keyboard on an open filter list: arrows move the highlight (wrapping), Enter or Space chooses it. True when the key
+   * was used.
+   */
+  filterMenuKey(key: string): boolean {
+    const menu = this.menu;
+    if (!menu) return false;
+    const n = menu.buttons.length;
+    if (key === 'ArrowDown' || key === 'ArrowRight' || key === 'ArrowUp' || key === 'ArrowLeft') {
+      const step = key === 'ArrowDown' || key === 'ArrowRight' ? 1 : -1;
+      menu.focus = (menu.focus + step + n) % n;
+      menu.buttons.forEach((b, i) => b.setActive(i === menu.focus));
+      return true;
+    }
+    if (key === 'Enter' || key === ' ') {
+      menu.choose(menu.focus);
+      return true;
+    }
+    return false;
   }
 
   /** Close the open filter list (Esc); true when one was open. */

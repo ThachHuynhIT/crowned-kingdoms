@@ -59,6 +59,11 @@ export class HelpScene extends Phaser.Scene {
   private readonly onResize = (): void => this.modal?.layout();
 
   private onKey(event: KeyboardEvent): void {
+    // An open filter list takes the arrows, Enter and Space first.
+    if (this.modal?.filterMenuKey(event.key)) {
+      event.preventDefault();
+      return;
+    }
     const action = resolveShortcut(event.key, 'help', shortcutFlags(event, { helpOpen: true }));
     if (action === 'help.toggle') event.preventDefault();
     // Esc closes an open filter list first, then Trợ giúp itself.
