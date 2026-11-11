@@ -14,11 +14,15 @@ import { addUiText, createButton, createPanel, type Button, type TooltipHost, ty
 import { HelpCardBrowser } from './HelpCardBrowser';
 import { helpLayout, type HelpLayout } from './helpLayout';
 import { buildHelpCatalog, type HelpCatalog, type HelpEntry, type HelpFilter } from './helpModel';
+import { dropdownLayout } from '../dropdownLayout';
 import {
   KIND_LABEL,
   RARITY_LABEL,
-  cycleFilter,
+  filterChoices,
+  filterValue,
   initialHelpView,
+  setFilterValue,
+  type FilterKey,
   selectEntry,
   setHelpTab,
   type HelpView,
@@ -38,6 +42,8 @@ export class HelpModal {
   private readonly close: Button;
   private readonly tabs: Button[];
   private readonly filters: Button[];
+  /** The open filter list (night 12/11/2026: a dropdown instead of cycling through up to 11 values). */
+  private menu: { overlay: Phaser.GameObjects.Rectangle; panel: UiBox; buttons: Button[] } | null = null;
   private readonly root: Phaser.GameObjects.Container;
   private readonly browser: HelpCardBrowser;
   private readonly detail: ContentBox;
@@ -92,7 +98,7 @@ export class HelpModal {
       createButton(scene, 0, 0, labelVi, { width: 80, height: 44, fontSize: 13, onClick: () => this.setTab(id) }),
     );
     this.filters = [0, 1, 2, 3].map((i) =>
-      createButton(scene, 0, 0, '', { width: 120, height: 44, fontSize: 13, onClick: () => this.cycle(i) }),
+      createButton(scene, 0, 0, '', { width: 120, height: 44, fontSize: 13, onClick: () => this.openMenu(i) }),
     );
     this.root = scene.add.container(0, 0, [
       this.overlay,
@@ -133,10 +139,12 @@ export class HelpModal {
   }
 
   layout(): void {
+    this.closeMenu();
     this.refresh();
   }
 
   destroy(): void {
+    this.closeMenu();
     const input = this.scene.input;
     input.off(Phaser.Input.Events.POINTER_WHEEL, this.onWheel);
     input.off(Phaser.Input.Events.POINTER_DOWN, this.onDown);
@@ -154,14 +162,50 @@ export class HelpModal {
     return this.state.tab !== 'cards';
   }
 
-  private cycle(i: number): void {
-    const key = (['owner', 'kind', 'rarity', 'level'] as const)[i]!;
-    this.state = cycleFilter(
-      this.state,
+  /** Open filter `i`'s list of choices under its button; a choice applies it, a press elsewhere closes the list. */
+  private openMenu(i: number): void {
+    const wasOpen = this.menu !== null;
+    this.closeMenu();
+    if (wasOpen) return;
+    const key = (['owner', 'kind', 'rarity', 'level'] as const satisfies readonly FilterKey[])[i]!;
+    const choices = filterChoices(
       key,
       this.catalog.owners.map((o) => o.id),
+      (owner) => this.catalog.owners.find((o) => o.id === owner)?.nameVi ?? owner,
     );
-    this.refresh();
+    const anchor = this.lay.filters[i]!;
+    const l = dropdownLayout(anchor, choices.length, logicalSize(this.scene));
+    const overlay = createOverlay(this.scene, { alpha: 0.01 });
+    overlay.on(Phaser.Input.Events.POINTER_DOWN, () => this.closeMenu());
+    const panel = createPanel(this.scene, 'panel', l.panel.w, l.panel.h);
+    panel.image.setPosition(l.panel.x, l.panel.y).setInteractive();
+    const current = filterValue(this.state, key);
+    const buttons = choices.map((choice, j) => {
+      const cell = l.cells[j]!;
+      const b = createButton(this.scene, cell.x + cell.w / 2, cell.y + cell.h / 2, choice.label, {
+        width: cell.w,
+        height: cell.h,
+        fontSize: 13,
+        onClick: () => {
+          this.state = setFilterValue(this.state, key, choice.value);
+          this.closeMenu();
+          this.refresh();
+        },
+      });
+      b.setActive(choice.value === current);
+      return b;
+    });
+    this.root.add([overlay, panel.image, ...buttons.map((b) => b.container)]);
+    this.menu = { overlay, panel, buttons };
+  }
+
+  private closeMenu(): void {
+    if (!this.menu) return;
+    const { overlay, panel, buttons } = this.menu;
+    this.menu = null;
+    for (const b of buttons) b.container.destroy();
+    panel.image.destroy();
+    overlay.destroy();
   }
 
   private choose(entry: HelpEntry): void {

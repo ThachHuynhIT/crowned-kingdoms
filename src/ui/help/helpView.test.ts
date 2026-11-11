@@ -53,3 +53,19 @@ describe('help_filters_preserve_selection_on_resize', () => {
     expect(EMPTY_CARDS_TEXT).toBe('Không có thẻ phù hợp.');
   });
 });
+
+describe('help filter dropdowns (night 12/11/2026)', () => {
+  it('lists every choice in cycling order and sets one directly', async () => {
+    const { filterChoices, filterValue, setFilterValue, initialHelpView: init } = await import('./helpView');
+    const owners = ['wheat', 'stone', 'neutral'] as const;
+    const name = (o: string): string => o.toUpperCase();
+    expect(filterChoices('owner', owners, name).map((c) => c.value)).toEqual(['all', 'wheat', 'stone', 'neutral']);
+    expect(filterChoices('level', owners, name).map((c) => c.label)).toEqual(['Cấp 1', 'Cấp 2', 'Cấp 3', 'Cấp 4', 'Cấp 5']);
+    const v = { ...init(), entryId: 'x', scroll: 3 };
+    const owned = setFilterValue(v, 'owner', 'stone');
+    expect(owned.filter.owner).toBe('stone');
+    expect([owned.entryId, owned.scroll]).toEqual([null, 0]);
+    expect(filterValue(setFilterValue(v, 'level', '3'), 'level')).toBe('3');
+    expect(setFilterValue(v, 'kind', 'tower').filter.kind).toBe('tower');
+  });
+});

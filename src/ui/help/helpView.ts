@@ -60,3 +60,43 @@ export const KIND_LABEL: Record<CardKind, string> = {
   tome: 'Sách phép',
 };
 export const RARITY_LABEL: Record<Rarity, string> = { common: 'Thường', uncommon: 'Vừa', rare: 'Hiếm' };
+
+/** One choice of a help filter dropdown (night 12/11/2026: the four filters open a list instead of cycling). */
+export interface FilterChoice {
+  readonly value: string;
+  readonly label: string;
+}
+
+export type FilterKey = 'owner' | 'kind' | 'rarity' | 'level';
+
+/** Every choice of filter `key`, in the cycling order ("Tất cả" first); `ownerName` names a king or 'neutral'. */
+export const filterChoices = (
+  key: FilterKey,
+  owners: readonly (KingId | 'neutral')[],
+  ownerName: (owner: KingId | 'neutral') => string,
+): FilterChoice[] => {
+  const all: FilterChoice = { value: 'all', label: 'Tất cả' };
+  switch (key) {
+    case 'owner':
+      return [all, ...owners.map((o) => ({ value: o, label: ownerName(o) }))];
+    case 'kind':
+      return [all, ...KINDS.map((k) => ({ value: k, label: KIND_LABEL[k] }))];
+    case 'rarity':
+      return [all, ...RARITIES.map((r) => ({ value: r, label: RARITY_LABEL[r] }))];
+    case 'level':
+      return LEVELS.map((l) => ({ value: String(l), label: `Cấp ${l}` }));
+  }
+};
+
+/** The current value of filter `key` as a choice value. */
+export const filterValue = (view: HelpView, key: FilterKey): string => String(view.filter[key]);
+
+/** Set filter `key` to choice `value`; like cycling, a change goes back to the top and drops the selection. */
+export const setFilterValue = (view: HelpView, key: FilterKey, value: string): HelpView => {
+  const f = view.filter;
+  const filter: HelpFilter =
+    key === 'level'
+      ? { ...f, level: (LEVELS.find((l) => String(l) === value) ?? f.level) }
+      : ({ ...f, [key]: value } as HelpFilter);
+  return { ...view, filter, entryId: null, scroll: 0 };
+};
