@@ -483,3 +483,38 @@ describe('calendarModalLayout with pages (Endless)', () => {
     expect(calendarModalLayout(DESKTOP, 12, 30).pager).toBeNull();
   });
 });
+
+describe('modals on landscape phones (night 12/11/2026)', () => {
+  const inside = (r: { x: number; y: number; w: number; h: number }, o: { x: number; y: number; w: number; h: number }): boolean =>
+    r.x >= o.x && r.y >= o.y && r.x + r.w <= o.x + o.w && r.y + r.h <= o.y + o.h;
+  const overlaps = (a: { x: number; y: number; w: number; h: number }, b: { x: number; y: number; w: number; h: number }): boolean =>
+    a.x < b.x + b.w && b.x < a.x + a.w && a.y < b.y + b.h && b.y < a.y + a.h;
+  for (const screen of [
+    { w: 667, h: 375 },
+    { w: 844, h: 390 },
+    { w: 915, h: 412 },
+    { w: 932, h: 430 },
+  ]) {
+    const full = { x: 0, y: 0, ...screen };
+    it(`${screen.w}×${screen.h}: the council keeps Ban hành, the decrees and the detail area on screen`, () => {
+      const l = councilLayout(screen, 16);
+      expect(inside(l.panel, full)).toBe(true);
+      for (const r of [l.enact, l.area, ...l.choices]) expect(inside(r, l.panel), JSON.stringify(r)).toBe(true);
+      for (const c of l.choices) {
+        expect(overlaps(c, l.area)).toBe(false);
+        expect(overlaps(c, l.enact)).toBe(false);
+        expect(c.h).toBeGreaterThanOrEqual(44);
+      }
+      expect(overlaps(l.area, l.enact)).toBe(false);
+      expect(councilPlotSide(l.area.h)).toBeGreaterThanOrEqual(36);
+    });
+    it(`${screen.w}×${screen.h}: the 30-year calendar fits with 44 px cells`, () => {
+      const l = calendarModalLayout(screen, 16, 30);
+      expect(inside(l.panel, full)).toBe(true);
+      for (const c of l.cells) {
+        expect(inside(c, l.panel)).toBe(true);
+        expect(c.h).toBeGreaterThanOrEqual(44);
+      }
+    });
+  }
+});

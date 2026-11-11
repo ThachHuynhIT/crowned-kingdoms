@@ -137,8 +137,37 @@ export const councilPlotSide = (areaH: number): number => {
   return Math.max(COUNCIL_CELL.min, Math.min(COUNCIL_CELL.size, room));
 };
 
+/**
+ * Short landscape screens (night 12/11/2026: at 844×390 or 667×375 the stacked council put "Ban hành" below the
+ * screen): the three decrees in a column on the left, the detail area on the right, "Ban hành" centred under both.
+ */
+const councilSideLayout = (screen: Size, inset: number): CouncilLayout => {
+  const w = Math.min(screen.w - 2 * MARGIN, 940);
+  const h = screen.h - 2 * MARGIN;
+  const panel = centredPanel(screen, w, h);
+  const innerX = panel.x + inset;
+  const innerW = panel.w - 2 * inset;
+  const title = { x: innerX, y: panel.y + inset, w: innerW, h: COUNCIL_TITLE_H };
+  const y0 = title.y + COUNCIL_TITLE_H + GAP_ABOVE_CARDS;
+  const enactY = panel.y + panel.h - inset - COUNCIL_BUTTON.h;
+  const bodyH = enactY - GAP_ABOVE_CARDS - y0;
+  const gap = COUNCIL_PHONE.gap;
+  const choiceW = Math.min(COUNCIL_DESK.choice.w, Math.floor(innerW * 0.4));
+  const choiceH = Math.floor((bodyH - 2 * gap) / 3);
+  const choices = Array.from({ length: 3 }, (_, i) => ({ x: innerX, y: y0 + i * (choiceH + gap), w: choiceW, h: choiceH }));
+  const areaX = innerX + choiceW + GAP_ABOVE_CARDS;
+  const area = { x: areaX, y: y0, w: innerX + innerW - areaX, h: bodyH };
+  const enact = { x: Math.round(panel.x + (panel.w - COUNCIL_BUTTON.w) / 2), y: enactY, w: COUNCIL_BUTTON.w, h: COUNCIL_BUTTON.h };
+  return { panel, title, choices, area, enact };
+};
+
 /** §3.9 royal council: title, three decrees, the chosen decree's detail area, then "Ban hành". */
 export const councilLayout = (screen: Size, inset: number): CouncilLayout => {
+  // Landscape and too short for the decrees above the detail area: two columns.
+  if (screen.w > screen.h && screen.w >= 640) {
+    const rowH = 2 * inset + COUNCIL_TITLE_H + 3 * GAP_ABOVE_CARDS + COUNCIL_BUTTON.h + COUNCIL_DESK.choice.h + 200;
+    if (rowH > screen.h - 2 * MARGIN) return councilSideLayout(screen, inset);
+  }
   const desktop = isDesktop(screen.w);
   const spec = desktop ? COUNCIL_DESK : COUNCIL_PHONE;
   const inner = desktop ? 3 * spec.choice.w + 2 * spec.gap : spec.choice.w;
@@ -285,8 +314,13 @@ export const calendarModalLayout = (screen: Size, inset: number, years = 15, pag
   const desktop = isDesktop(screen.w);
   const cols = years > 15 ? 6 : 5;
   const rows = Math.ceil(years / cols);
-  const cell = desktop ? 72 : years > 15 ? 48 : 56;
   const gap = desktop ? 8 : 4;
+  // Short screens (night 12/11/2026: 844×390 cut off the last rows): the cells shrink to fit, never under 44 px.
+  const fit = Math.floor(
+    (screen.h - 2 * MARGIN - 2 * inset - CLOSE_BUTTON - GAP_ABOVE_CARDS - (pager ? GAP_ABOVE_CARDS + PAGER_H : 0) - (rows - 1) * gap) /
+      rows,
+  );
+  const cell = Math.max(44, Math.min(desktop ? 72 : years > 15 ? 48 : 56, fit));
   const gridW = cols * cell + (cols - 1) * gap;
   const gridH = rows * cell + (rows - 1) * gap;
   const w = gridW + 2 * inset;
