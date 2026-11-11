@@ -92,3 +92,20 @@ describe('landscape phones (night 12/11/2026)', () => {
     }
   });
 });
+
+describe('Endless on landscape phones (night 12/11/2026)', () => {
+  for (const screen of [
+    { w: 667, h: 375 },
+    { w: 844, h: 390 },
+  ]) {
+    it(`${screen.w}×${screen.h}: the bigger Endless board still sits above the hand`, () => {
+      const layout = planningLayout(screen, 5, 'endless');
+      const { viewport } = handWindow(screen, 5, 0);
+      expect(layout.desktop).toBe(true);
+      expect(layout.board.h).toBeGreaterThan(0);
+      expect(layout.board.y + layout.board.h).toBeLessThanOrEqual(viewport.y);
+      expect(layout.board.x).toBeGreaterThanOrEqual(0);
+      expect(layout.board.x + layout.board.w).toBeLessThanOrEqual(screen.w);
+    });
+  }
+});
