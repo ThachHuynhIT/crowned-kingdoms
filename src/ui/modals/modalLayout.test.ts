@@ -518,3 +518,25 @@ describe('modals on landscape phones (night 12/11/2026)', () => {
     });
   }
 });
+
+describe('more modals on landscape phones (night 12/11/2026)', () => {
+  const on = (r: { x: number; y: number; w: number; h: number }, s: Size): boolean =>
+    r.x >= 0 && r.y >= 0 && r.x + r.w <= s.w && r.y + r.h <= s.h;
+  for (const screen of [
+    { w: 667, h: 375 },
+    { w: 844, h: 390 },
+    { w: 932, h: 430 },
+  ]) {
+    it(`${screen.w}×${screen.h}: reward, quest and result keep their buttons on screen`, () => {
+      const r = rewardLayout(screen, 16, 3);
+      expect(on(r.take, screen), 'reward take').toBe(true);
+      expect(on(r.reroll, screen), 'reward reroll').toBe(true);
+      const q = questLayout(screen, 16);
+      for (const b of [q.accept, q.decline, q.help]) expect(on(b, screen), `quest ${JSON.stringify(b)}`).toBe(true);
+      for (const lines of [3, 6]) {
+        const res = resultLayout(screen, 16, lines, 2);
+        for (const b of res.buttons) expect(on(b, screen), `result ${lines} lines`).toBe(true);
+      }
+    });
+  }
+});

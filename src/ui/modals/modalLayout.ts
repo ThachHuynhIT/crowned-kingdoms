@@ -59,7 +59,59 @@ const REWARD_PHONE = { card: { w: 108, h: 180, gap: 5 }, reroll: { w: 220, h: 44
  * which wrap into rows of two; if the screen is still too short, the card grid scrolls inside
  * `viewport` (`scroll` px, clamped) and `scrollMax` says how far.
  */
+/** Smallest reward card on a short landscape screen (CardView shows its compact face). */
+const REWARD_SHORT_MIN_H = 110;
+
+/**
+ * Short landscape screens (night 12/11/2026: at 844×390 "Nhận" was below the screen, the cards never shrank): one row
+ * of cards scaled down to the room left, the reroll / skip line and Nhận side by side under them.
+ */
+const rewardShortLayout = (screen: Size, inset: number, count: number, scroll: number): RewardLayout | null => {
+  if (!(screen.w > screen.h && screen.w >= 640)) return null;
+  const { card, reroll } = REWARD_DESK;
+  const buttonsH = Math.max(reroll.h, REWARD_BUTTON.h);
+  const fixed = TITLE_H + HEADING_GAP + SUBTITLE_H + GAP_ABOVE_CARDS + CARD_LIFT + GAP_BELOW_CARDS + buttonsH;
+  const room = screen.h - 2 * MARGIN - 2 * inset - fixed;
+  if (room >= card.h) return null; // the usual layout fits
+  const n = Math.max(0, count);
+  const slots = Math.max(1, n);
+  const buttonsW = reroll.w + BUTTON_GAP + REWARD_BUTTON.w;
+  const maxW = screen.w - 2 * MARGIN - 2 * inset;
+  let h = Math.max(REWARD_SHORT_MIN_H, Math.min(card.h, room));
+  let w = Math.round((card.w * h) / card.h);
+  const gap = 12;
+  if (slots * w + (slots - 1) * gap > maxW) {
+    w = Math.floor((maxW - (slots - 1) * gap) / slots);
+    h = Math.round((card.h * w) / card.w);
+  }
+  const row = slots * w + (slots - 1) * gap;
+  const panel = centredPanel(screen, Math.max(row, buttonsW) + 2 * inset, fixed + h + 2 * inset);
+  const x = panel.x + inset;
+  const innerW = panel.w - 2 * inset;
+  const title = { x, y: panel.y + inset, w: innerW, h: TITLE_H };
+  const subtitle = { x, y: title.y + TITLE_H + HEADING_GAP, w: innerW, h: SUBTITLE_H };
+  const vy = subtitle.y + SUBTITLE_H + GAP_ABOVE_CARDS;
+  const x0 = Math.round(panel.x + (panel.w - row) / 2);
+  const viewport = { x: x0, y: vy, w: row, h: CARD_LIFT + h };
+  const cards = Array.from({ length: n }, (_, i) => ({ x: x0 + i * (w + gap), y: vy + CARD_LIFT, w, h }));
+  const by = vy + viewport.h + GAP_BELOW_CARDS;
+  const bx = Math.round(panel.x + (panel.w - buttonsW) / 2);
+  void scroll; // one row: nothing scrolls
+  return {
+    panel,
+    title,
+    subtitle,
+    viewport,
+    cards,
+    reroll: { x: bx, y: by + Math.round((buttonsH - reroll.h) / 2), w: reroll.w, h: reroll.h },
+    take: { x: bx + reroll.w + BUTTON_GAP, y: by + Math.round((buttonsH - REWARD_BUTTON.h) / 2), w: REWARD_BUTTON.w, h: REWARD_BUTTON.h },
+    scrollMax: 0,
+  };
+};
+
 export const rewardLayout = (screen: Size, inset: number, count = 3, scroll = 0): RewardLayout => {
+  const short = rewardShortLayout(screen, inset, count, scroll);
+  if (short) return short;
   const desktop = isDesktop(screen.w);
   const { card, reroll } = desktop ? REWARD_DESK : REWARD_PHONE;
   const n = Math.max(0, count);
