@@ -21,6 +21,10 @@ export const UI_PALETTE = {
   good: 0x5a9e3a, // thanh nhu cầu đầy
   warn: 0xe08a1e, // thanh nhu cầu thấp
   bad: 0xb8322a, // thanh nhu cầu nguy hiểm, lỗi đặt
+  // Chữ trên nền kem (12/11/2026): `good`/`bad` dùng cho thanh và viền; làm màu chữ thì quá nhạt (xanh 2,5:1), nên chữ
+  // dùng hai bản đậm này, đạt WCAG AA (≥ 4,5:1) trên kem và kem sáng.
+  goodText: 0x2b6418, // chữ "đã mở", "mở khoá", giá thương nhân
+  badText: 0x8c1f16, // chữ cảnh báo, "thua", chưa đủ điều kiện
   sky: [0xf6b26b, 0xf08a5d, 0xb85c7a, 0x6b4a8a], // gradient trời menu, trên → dưới
 } as const;
 

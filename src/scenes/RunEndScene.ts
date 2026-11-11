@@ -33,8 +33,8 @@ interface Row {
 const ROW_STYLE: Record<TallyLine['tone'], { color: number; size: number; bold: boolean }> = {
   plain: { color: UI_PALETTE.text, size: 18, bold: false },
   total: { color: UI_PALETTE.text, size: 20, bold: true },
-  unlock: { color: UI_PALETTE.good, size: 17, bold: true },
-  warning: { color: UI_PALETTE.bad, size: 14, bold: false },
+  unlock: { color: UI_PALETTE.goodText, size: 17, bold: true },
+  warning: { color: UI_PALETTE.badText, size: 14, bold: false },
 };
 
 /** Space between the panel border and its content. */
@@ -69,7 +69,7 @@ export class RunEndScene extends Phaser.Scene {
     const won = state?.won === true;
     const skin = state?.kingId ?? 'neutral';
     this.panel = createPanel(this, 'panel', 320, 240, 0, 0, skin);
-    this.title = addUiText(this, 0, 0, won ? 'Chiến thắng!' : 'Vương quốc sụp đổ', 30, won ? UI_PALETTE.text : UI_PALETTE.bad)
+    this.title = addUiText(this, 0, 0, won ? 'Chiến thắng!' : 'Vương quốc sụp đổ', 30, won ? UI_PALETTE.text : UI_PALETTE.badText)
       .setOrigin(0.5)
       .setFontStyle('bold');
     const tally = state ? (data.tally ?? fallbackTally(state)) : null;

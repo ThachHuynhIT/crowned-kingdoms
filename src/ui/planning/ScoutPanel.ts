@@ -135,7 +135,7 @@ export class ScoutPanel {
         cy += this.text(inset, cy, `${name} · Cấp ${plan.level}`, 13).height + LINE_GAP;
         const boss = bossLine(plan);
         if (boss !== null) {
-          const line = this.text(inset, cy, boss, 12, true, UI_PALETTE.bad);
+          const line = this.text(inset, cy, boss, 12, true, UI_PALETTE.badText);
           line.setWordWrapWidth(w - 2 * inset);
           cy += line.height + LINE_GAP;
         }

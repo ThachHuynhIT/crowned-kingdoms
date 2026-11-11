@@ -187,7 +187,7 @@ export class BlessingModal {
       put(v.effect, c.effectVi, small);
       put(v.stacks, c.stackVi, small);
       put(v.after, c.afterVi, small);
-      v.after.setColor(toCss(c.capped ? UI_PALETTE.bad : UI_PALETTE.good));
+      v.after.setColor(toCss(c.capped ? UI_PALETTE.badText : UI_PALETTE.goodText));
       v.pick.container.setPosition(b.x + b.w / 2, b.y + b.h / 2);
     });
     this.refreshButtons();

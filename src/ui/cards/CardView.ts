@@ -278,7 +278,7 @@ export class CardView {
     }
 
     if (this.badge) {
-      const badge = addUiText(this.scene, l.badge.x + l.badge.w / 2, l.badge.y + l.badge.h / 2, this.badge, full ? 12 : 10, UI_PALETTE.good)
+      const badge = addUiText(this.scene, l.badge.x + l.badge.w / 2, l.badge.y + l.badge.h / 2, this.badge, full ? 12 : 10, UI_PALETTE.goodText)
         .setOrigin(0.5)
         .setFontStyle('bold');
       this.add(badge);

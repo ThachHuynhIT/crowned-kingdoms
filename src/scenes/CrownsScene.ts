@@ -190,7 +190,7 @@ export class CrownsScene extends Phaser.Scene {
         ? this.model.kings.find((k) => k.id === view.target.id)!
         : this.model.cards.find((c) => c.id === view.target.id)!;
       view.name.setText(row.nameVi);
-      view.status.setText(row.status).setColor(toCss(row.unlocked ? UI_PALETTE.good : UI_PALETTE.text));
+      view.status.setText(row.status).setColor(toCss(row.unlocked ? UI_PALETTE.goodText : UI_PALETTE.text));
       view.button.setLabel(row.unlockLabel ?? '');
       view.button.setVisible(row.unlockLabel !== null);
       view.button.setEnabled(row.canUnlock && !this.unlocking);

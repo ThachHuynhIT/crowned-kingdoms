@@ -44,7 +44,7 @@ export class QuestModal {
     this.box.image.setInteractive();
     this.title = addUiText(scene, 0, 0, QUEST_TITLE, 18).setOrigin(0.5, 0).setFontStyle('bold');
     this.body = addUiText(scene, 0, 0, '', 14);
-    this.warn = addUiText(scene, 0, 0, '', 13, UI_PALETTE.bad);
+    this.warn = addUiText(scene, 0, 0, '', 13, UI_PALETTE.badText);
     this.accept = createButton(scene, 0, 0, 'Nhận', {
       width: COUNCIL_BUTTON.w,
       height: COUNCIL_BUTTON.h,

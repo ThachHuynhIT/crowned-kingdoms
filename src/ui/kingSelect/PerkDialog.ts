@@ -78,7 +78,7 @@ export class PerkDialog {
       });
       const name = addUiText(scene, 0, 0, '', 15).setFontStyle('bold');
       const text = addUiText(scene, 0, 0, '', 13);
-      const status = addUiText(scene, 0, 0, '', 12, UI_PALETTE.bad).setOrigin(1, 0);
+      const status = addUiText(scene, 0, 0, '', 12, UI_PALETTE.badText).setOrigin(1, 0);
       this.rows.push({ button, name, text, status });
       children.push(button.container, name, text, status);
     }
@@ -100,7 +100,7 @@ export class PerkDialog {
       row.name.setText(o.nameVi);
       row.text.setText(o.textVi);
       row.status.setText(o.unlocked ? (o.selected ? '✓ Đang chọn' : '') : (o.note ?? ''));
-      row.status.setColor(toCss(o.unlocked ? UI_PALETTE.good : UI_PALETTE.bad));
+      row.status.setColor(toCss(o.unlocked ? UI_PALETTE.goodText : UI_PALETTE.badText));
       row.button.setEnabled(o.unlocked);
       row.button.setActive(o.selected);
       for (const t of [row.name, row.text]) t.setAlpha(o.unlocked ? 1 : LOCKED_TEXT_ALPHA);

@@ -807,7 +807,7 @@ export class BattleHudScene extends Phaser.Scene {
       0,
       result.won ? WIN_TEXT : LOSS_TEXT,
       32,
-      result.won ? UI_PALETTE.text : UI_PALETTE.bad,
+      result.won ? UI_PALETTE.text : UI_PALETTE.badText,
     )
       .setOrigin(0.5)
       .setFontStyle('bold')
@@ -851,7 +851,7 @@ export class BattleHudScene extends Phaser.Scene {
       0,
       result.won ? WIN_TEXT : LOSS_TEXT,
       26,
-      result.won ? UI_PALETTE.text : UI_PALETTE.bad,
+      result.won ? UI_PALETTE.text : UI_PALETTE.badText,
     )
       .setOrigin(0.5)
       .setFontStyle('bold')
