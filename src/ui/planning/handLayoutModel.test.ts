@@ -1,6 +1,6 @@
 import { describe, expect, it } from 'vitest';
 import { handWindow } from './handLayoutModel';
-import { planningLayout } from '../realm/realmLayout';
+import { battleLayout, planningLayout } from '../realm/realmLayout';
 
 describe('desktop hand window', () => {
   for (const count of [0, 3, 5, 6, 9, 12]) {
@@ -106,6 +106,28 @@ describe('Endless on landscape phones (night 12/11/2026)', () => {
       expect(layout.board.y + layout.board.h).toBeLessThanOrEqual(viewport.y);
       expect(layout.board.x).toBeGreaterThanOrEqual(0);
       expect(layout.board.x + layout.board.w).toBeLessThanOrEqual(screen.w);
+    });
+  }
+});
+
+describe('battle HUD on landscape phones (night 12/11/2026)', () => {
+  const overlaps = (a: { x: number; y: number; w: number; h: number }, b: { x: number; y: number; w: number; h: number }): boolean =>
+    a.x < b.x + b.w && b.x < a.x + a.w && a.y < b.y + b.h && b.y < a.y + a.h;
+  for (const screen of [
+    { w: 667, h: 375 },
+    { w: 844, h: 390 },
+    { w: 915, h: 412 },
+    { w: 932, h: 430 },
+    { w: 1280, h: 720 },
+  ]) {
+    it(`${screen.w}×${screen.h}: speed buttons, year, clock and panels do not overlap and stay on screen`, () => {
+      const l = battleLayout(screen);
+      const rects = { year: l.year, clock: l.clock, foes: l.foes, waves: l.waves, intervene: l.intervene, auto: l.auto, ally: l.allyStatus, foe: l.foeStatus, ...Object.fromEntries(l.speed.map((s, i) => [`speed${i}`, s])) };
+      const entries = Object.entries(rects);
+      for (const [i, [name, r]] of entries.entries()) {
+        expect(r.x >= 0 && r.y >= 0 && r.x + r.w <= screen.w && r.y + r.h <= screen.h, `${name} on screen`).toBe(true);
+        for (const [other, o] of entries.slice(i + 1)) expect(overlaps(r, o), `${name} × ${other}`).toBe(false);
+      }
     });
   }
 });

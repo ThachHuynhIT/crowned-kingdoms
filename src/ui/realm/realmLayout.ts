@@ -528,8 +528,23 @@ export const battleLayout = (screen: Size, mode: RunMode = 'normal'): BattleLayo
     const speedX = w - MARGIN - speedW;
     const stripRight = calendar[calendar.length - 1]!.x + CELL;
     const speedY = stripRight + GAP <= speedX ? MARGIN : MARGIN + CELL + GAP;
-    const speed = [0, 1, 2, 3].map((i) => ({ x: speedX + i * (BUTTON + SPEED_GAP), y: speedY, w: BUTTON, h: BUTTON }));
-    const foes = { x: w - MARGIN - FOES.w, y: speedY + BUTTON + GAP, w: FOES.w, h: FOES.h };
+    // Narrow landscape screens (night 12/11/2026: at 667×375 the second-row speed buttons covered the year and the
+    // clock): the four buttons become a 2×2 block above the enemy bar, and the foes panel moves to the free second row
+    // on the left, under the lives and gold.
+    const blocked = speedY !== MARGIN && speedX < Math.max(year.x + year.w, clock.x + clock.w) + GAP;
+    const foeBarY = h - MARGIN - HP_BAR.desktop.h;
+    const blockW = 2 * BUTTON + SPEED_GAP;
+    const speed = blocked
+      ? [0, 1, 2, 3].map((i) => ({
+          x: w - MARGIN - blockW + (i % 2) * (BUTTON + SPEED_GAP),
+          y: foeBarY - GAP - (2 * BUTTON + SPEED_GAP) + Math.floor(i / 2) * (BUTTON + SPEED_GAP),
+          w: BUTTON,
+          h: BUTTON,
+        }))
+      : [0, 1, 2, 3].map((i) => ({ x: speedX + i * (BUTTON + SPEED_GAP), y: speedY, w: BUTTON, h: BUTTON }));
+    const foes = blocked
+      ? { x: MARGIN, y: MARGIN + CELL + GAP, w: FOES.w, h: FOES.h }
+      : { x: w - MARGIN - FOES.w, y: speedY + BUTTON + GAP, w: FOES.w, h: FOES.h };
     const waves = { x: foes.x + foes.w - WAVES.w, y: foes.y + foes.h + GAP, w: WAVES.w, h: WAVES.h };
     // The boss bar is centred under the clock, narrowed if the foes panel stands beside it.
     const bossW = Math.max(200, Math.min(BOSS.w, 2 * (foes.x - GAP - centreX)));
