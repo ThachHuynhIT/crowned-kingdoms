@@ -199,6 +199,13 @@ export class HelpModal {
     this.menu = { overlay, panel, buttons };
   }
 
+  /** Close the open filter list (Esc); true when one was open. */
+  closeFilterMenu(): boolean {
+    const open = this.menu !== null;
+    this.closeMenu();
+    return open;
+  }
+
   private closeMenu(): void {
     if (!this.menu) return;
     const { overlay, panel, buttons } = this.menu;

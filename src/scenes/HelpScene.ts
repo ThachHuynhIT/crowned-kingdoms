@@ -61,6 +61,8 @@ export class HelpScene extends Phaser.Scene {
   private onKey(event: KeyboardEvent): void {
     const action = resolveShortcut(event.key, 'help', shortcutFlags(event, { helpOpen: true }));
     if (action === 'help.toggle') event.preventDefault();
+    // Esc closes an open filter list first, then Trợ giúp itself.
+    if (action === 'cancel' && this.modal?.closeFilterMenu()) return;
     if (action === 'help.toggle' || action === 'cancel') this.closeHelp();
   }
 
