@@ -4,6 +4,7 @@
  * mục tiêu thiết kế 0.5 ms). Đo bằng process.hrtime.bigint() (performance.now bị ESLint cấm).
  */
 import { describe, expect, it } from 'vitest';
+import { INTERVENTION } from '../../data/battle';
 import { attackStats, battleSetup, structure, unitStats } from '../testing/fixtures';
 import { realBoss } from './bossKit';
 import { battleResult, stepBattle } from './step';
@@ -30,10 +31,27 @@ const archer = unitStats({
 /** Địch chỉ tiến từ phía trước; mép khác chỉ còn trong test hình học của world. */
 const EDGES: readonly Edge[] = ['S'];
 
+/**
+ * The auto-fired boulder is pinned to its 10/11/2026 strength (80 damage in year 5) through the setup's own
+ * `intervention.dmgPct`, so this benchmark keeps measuring the same workload when the balance data changes: the
+ * 11/11/2026 nerf (12 damage in year 5) left more foes alive per tick and made the scenario heavier, not the code
+ * slower.
+ */
+const PINNED_BOULDER_YEAR5 = 80;
+const pinnedIntervention = (year: number) => {
+  const now = INTERVENTION.dmgBase + INTERVENTION.dmgPerYear * (year - 1);
+  return {
+    dmgPct: (PINNED_BOULDER_YEAR5 / now - 1) * 100,
+    radius: INTERVENTION.radius,
+    cooldownTicks: INTERVENTION.cooldownTicks,
+  };
+};
+
 const standardSetup = (): BattleSetup =>
   battleSetup({
     year: 5,
     autoFire: true,
+    intervention: pinnedIntervention(5),
     structures: [
       ...[6, 7, 8, 11, 13, 16, 17, 18].map((plot) =>
         structure(plot, { cardId: 'wheat_militia', spawn: { stats: militia, count: 20 } }),
