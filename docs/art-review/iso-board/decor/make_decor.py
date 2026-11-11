@@ -3,13 +3,15 @@
     python docs/art-review/iso-board/decor/make_decor.py prompts [id ...]   # writes <id>/prompt.md and .superpowers/d.sh
     python docs/art-review/iso-board/decor/make_decor.py cut [id ...]       # source.png -> public/assets/art/ai-v1/iso/wilds/<id>.png
     python docs/art-review/iso-board/decor/make_decor.py cut --density 4 [id ...]   # HiDPI twin -> public/assets/art/ai-v1-hd/iso/wilds/
+    python docs/art-review/iso-board/decor/make_decor.py cut --density 8 [id ...]   # close-up twin -> public/assets/art/ai-v1-uhd/iso/wilds/
 
 The prompt is the "Prompt isometric dùng lại" block of docs/ART_STYLE.md (read through the buildings tool, never
 copied here), with the approved style reference and the approved isometric building attached. Background: flat
 magenta #FF00FF instead of black, so cutting leaves no dark rim (the old wilds had a maroon ring from black keying).
 Cutting keys the magenta, crops, box-reduces (mask-weighted, alpha 0/255) to the object's target height in art px
 (2 art px per world unit, like the other wilds) and writes a 4x preview next to the source. `--density 4` (11/11/2026)
-cuts the same source to EXACTLY twice the density-2 size (4 art px per world unit) into ai-v1-hd/, without a preview.
+cuts the same source to EXACTLY twice the density-2 size (4 art px per world unit) into ai-v1-hd/, without a preview;
+`--density 8` (12/11/2026, close-up tier) to EXACTLY four times it (8 art px per world unit) into ai-v1-uhd/.
 """
 import importlib.util
 import sys
@@ -22,6 +24,8 @@ ROOT = Path(__file__).resolve().parents[4]
 D = Path(__file__).resolve().parent
 OUT = ROOT / 'public/assets/art/ai-v1/iso/wilds'
 OUT_HD = ROOT / 'public/assets/art/ai-v1-hd/iso/wilds'
+DENSITIES = (2, 4, 8)
+OUT_DIRS = {4: OUT_HD, 8: ROOT / 'public/assets/art/ai-v1-uhd/iso/wilds'}
 REFERENCE = 'docs/art-review/style-references/harvester-house-front-approved.png'
 ISO_REF = 'docs/art-review/style-references/iso-building-approved.png'
 
@@ -83,7 +87,7 @@ def prompts(ids):
 
 
 def cut_one(decor_id: str, times: int = 1) -> Image.Image:
-    """The density-2 cut (times = 1), or its HiDPI twin at `times` x its size (2: 4 art px per world unit)."""
+    """The density-2 cut (times = 1), or its twin at `times` x its size (density / 2: 2 HiDPI, 4 close-up)."""
     a = np.array(Image.open(D / decor_id / 'source.png').convert('RGB')).astype(float)
     r, g, b = a[..., 0], a[..., 1], a[..., 2]
     solid = ~((r > 150) & (b > 150) & (g < 110))
@@ -106,13 +110,15 @@ def cut_one(decor_id: str, times: int = 1) -> Image.Image:
 def cut(ids):
     if '--density' in ids:
         at = ids.index('--density')
-        if ids[at + 1:at + 2] != ['4']:
-            raise SystemExit('usage: make_decor.py cut [--density 4] [id ...]')
+        if ids[at + 1:at + 2] not in (['4'], ['8']):
+            raise SystemExit('usage: make_decor.py cut [--density 4|8] [id ...]')
+        density = int(ids[at + 1])
         ids = ids[:at] + ids[at + 2:] or list(DECOR)
-        OUT_HD.mkdir(parents=True, exist_ok=True)
+        out_dir = OUT_DIRS[density]
+        out_dir.mkdir(parents=True, exist_ok=True)
         for i in ids:
-            im = cut_one(i, 2)
-            im.save(OUT_HD / f'{i.removeprefix("wild_")}.png')
+            im = cut_one(i, density // 2)
+            im.save(out_dir / f'{i.removeprefix("wild_")}.png')
             print(i, im.size)
         return
     OUT.mkdir(parents=True, exist_ok=True)

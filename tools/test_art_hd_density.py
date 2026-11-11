@@ -114,5 +114,26 @@ class HdDensityTest(unittest.TestCase):
         self.assertFalse(any(f.name.startswith('footman') for f in hd_files()))
 
 
+
+UHD = ROOT / 'public/assets/art/ai-v1-uhd'
+
+
+class UhdTwinTest(unittest.TestCase):
+    """Close-up art (12/11/2026): every ai-v1-uhd file is its ai-v1 twin at exactly 4x the pixels (2x its HD twin),
+    drawn at scale 0.125, so footprints and feet anchors do not move. Alpha stays 0/255."""
+
+    def test_every_uhd_file_is_four_times_its_twin(self):
+        files = sorted(UHD.rglob('*.png')) if UHD.exists() else []
+        self.assertGreater(len(files), 700)
+        for f in files:
+            rel = f.relative_to(UHD)
+            with self.subTest(rel.as_posix()):
+                with Image.open(f) as u, Image.open(SD / rel) as s, Image.open(HD / rel) as h:
+                    self.assertEqual(u.size, (s.width * 4, s.height * 4))
+                    self.assertEqual(u.size, (h.width * 2, h.height * 2))
+                    alpha = set(u.convert('RGBA').getchannel('A').getdata())
+                    self.assertLessEqual(alpha, {0, 255})
+
+
 if __name__ == '__main__':
     unittest.main()

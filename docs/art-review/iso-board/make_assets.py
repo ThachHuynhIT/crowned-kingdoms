@@ -2,9 +2,11 @@
 
     python docs/art-review/iso-board/make_assets.py
     python docs/art-review/iso-board/make_assets.py --density 4 --parts buildings   # HiDPI set -> ai-v1-hd/iso/
+    python docs/art-review/iso-board/make_assets.py --density 8 --parts buildings   # close-up set -> ai-v1-uhd/iso/
 
 `--density N` is the art px per world unit (default 2, the shipped set in ai-v1/; 4 is the HiDPI set in ai-v1-hd/,
-drawn at scale 0.25 so the world size stays the same): every target width is multiplied by N / 2. `--parts` limits the
+drawn at scale 0.25; 8 is the close-up set in ai-v1-uhd/, drawn at scale 0.125, so the world size stays the same):
+every target width is multiplied by m = N / 2. `--parts` limits the
 run to some of buildings, plots, wall (default all three).
 
 - Buildings: black keyed to alpha 0/255, then ONE scale for all eight so their sizes stay relative: the approved
@@ -15,7 +17,7 @@ run to some of buildings, plots, wall (default all three).
 - Wall: the cliff foot is measured column by column and every column shifted down so the foot runs at exactly 2:1
   (owner: "sửa dốc tường sau"; vertical edges stay vertical, nothing is rotated), then reduced to 480 px wide; the
   foot at the right edge is the bottom row. At `--density 4` the wall is cut by `reduce_hd` (exactly 2x the shipped
-  480 px segment, same foot line), like the buildings.
+  480 px segment, same foot line), like the buildings; `--density 8` likewise at exactly 4x.
 Reduction is a premultiplied box filter; alpha is snapped back to 0/255.
 """
 from pathlib import Path
@@ -26,7 +28,16 @@ ROOT = Path(__file__).resolve().parents[3]
 D = ROOT / 'docs/art-review/iso-board'
 OUT = ROOT / 'public/assets/art/ai-v1/iso'
 OUT_HD = ROOT / 'public/assets/art/ai-v1-hd/iso'
-DENSITIES = (2, 4)
+DENSITIES = (2, 4, 8)
+# art root per density (2 = the shipped set; the others mirror its relative paths)
+ART_ROOTS = {2: 'ai-v1', 4: 'ai-v1-hd', 8: 'ai-v1-uhd'}
+
+
+def art_root(density: int) -> Path:
+    """`public/assets/art/<set>` for `density` (2, 4 or 8)."""
+    if density not in ART_ROOTS:
+        raise SystemExit(f'--density must be one of {DENSITIES}')
+    return ROOT / 'public/assets/art' / ART_ROOTS[density]
 PARTS = ('buildings', 'plots', 'wall')
 
 BUILDINGS = {
@@ -142,7 +153,7 @@ def shear_wall(img: Image.Image) -> tuple[Image.Image, float]:
 
 
 def parse_args(argv: list[str]) -> tuple[int, tuple[str, ...]]:
-    """`--density N` (2 or 4, default 2) and `--parts a,b` (default all)."""
+    """`--density N` (2, 4 or 8, default 2) and `--parts a,b` (default all)."""
     density, parts = 2, PARTS
     if '--density' in argv:
         density = int(argv[argv.index('--density') + 1])
@@ -154,7 +165,7 @@ def parse_args(argv: list[str]) -> tuple[int, tuple[str, ...]]:
 
 
 def main(density: int = 2, parts: tuple[str, ...] = PARTS) -> None:
-    out_dir = OUT if density == 2 else OUT_HD
+    out_dir = art_root(density) / 'iso'
     (out_dir / 'plots').mkdir(parents=True, exist_ok=True)
     if 'buildings' in parts:
         sources = {k: keyed(p) for k, p in BUILDINGS.items()}
