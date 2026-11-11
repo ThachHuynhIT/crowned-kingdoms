@@ -17,9 +17,13 @@ Lượt 1 chỉ sửa bảng Cài đặt. Lượt 2 rà mọi màn ở 667×375,
 5. **Bảng kết quả trận và kết thúc ván** có thể đẩy nút ra ngoài màn (`d92105c`).
 6. **Menu chính mất nút "Cài đặt" và "Trợ giúp"** (`00e9854`): giờ xếp hai cột trên màn ngang.
 
+7. **Trong trận ở 667×375, nút tốc độ che nhãn năm và đồng hồ** (`332662c`): giờ thành khối 2×2 ở góc dưới phải.
+8. **Ô gợi ý đè nút sắc lệnh và nút Cài đặt** (`6aefb80`, `cfc8980`); trong chế độ Vô tận, **nút Vô tận đè nhãn năm** (`64af264`).
+
 Thêm trong lượt 2:
 - chữ nổi trên bàn cờ có viền tối, đọc được trên cỏ (`219b44c`);
-- dropdown Trợ giúp dùng được bằng phím mũi tên và Enter (`95c95d2`).
+- dropdown Trợ giúp dùng được bằng phím mũi tên và Enter (`95c95d2`);
+- test chồng chéo cho HUD lập kế hoạch và HUD trận ở 667×375 → 1280×720, gồm cả 960×540, 1024×600, 1024×768 (`9f1197f`, `3693e40`).
 
 Mỗi bản sửa có test bố cục cho các cỡ màn ngang và đã chụp ảnh kiểm sau một trận thật (ảnh trong `.superpowers/night-shots/`: `land2-*`, `land3-*`, `fix-*`, `ks-*`).
 
@@ -143,6 +147,9 @@ Không push, không PR, không dùng Codex. Gate (lint, typecheck, 3118 test, bu
 | Chọn vua | nút "CHƠI" ở y = 500–728, ngoài màn | ảnh vua và lưới bên trái, điều khiển bên phải | `556528d` | `ks-*-detail.png` |
 | Hộp đặc quyền | hàng tràn ở 667×375 | hàng co lại (≥ 60 px) | `556528d` | `sw-*-perks.png` |
 | Menu chính | mất "Cài đặt", "Trợ giúp" | hai cột | `00e9854` | trước `sheet-land-menu.png`, sau `sheet-menu2.png` |
+| HUD trận 667×375 | nút tốc độ che "NĂM" và đồng hồ | khối 2×2 trên thanh máu địch; "Địch còn" sang trái | `332662c` | trước `land3-667x375-battle.png`, sau `battle2-667x375.png` |
+| Ô gợi ý | đè nút sắc lệnh và nút ⚙ | dời sang phải, thu hẹp nếu cần | `6aefb80`, `cfc8980` | trước `land3-667x375-plan.png`, sau `sheet-hint.png` |
+| Nút Vô tận | đè nhãn năm (tính toán ở 844×390) | xuống dưới nút ⚙ | `64af264` | chỉ có test, chưa chụp (Vô tận cần mở khoá) |
 
 - **Không đổi trên máy tính:** 1280×720 và 1024×768 giữ nguyên bố cục (có test).
 - **Hiệu năng điện thoại** (844×390, DPR 3 giả lập, trận năm 1, 2 lần mỗi cấu hình):
