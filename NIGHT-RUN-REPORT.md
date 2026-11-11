@@ -4,15 +4,24 @@ Nhánh `feature/close-up-art` (PR #22, chưa merge). Đêm nay không push, khô
 Plan: `docs/plans/2026-11-12-night-plan.md`.
 
 ## Tóm tắt buổi sáng
-- **Đã sửa lỗi Thương nhân "mất 1 thẻ"** (commit `365bc30`).
-  - Nguyên nhân: thẻ mua được đặt lên đầu chồng rút. Từ khi mỗi năm chỉ rút 1 lá, lá rút năm sau chính là thẻ vừa mua, nên trả 3 vàng mà tay không có thêm lá nào.
-  - Giờ thẻ mua vào thẳng tay, giống "Mua thẻ".
-- **Mở game nhanh hơn** (commit `03305be`): từ lúc tải xong ảnh tới lúc vào menu, máy tính giảm từ 1032 ms xuống khoảng 620 ms, điện thoại từ 403 ms xuống khoảng 290 ms. Khung hình vốn đã nhẹ (khoảng 1 ms mỗi khung kể cả trận lớn), nên không đụng tới.
-- **Cài đặt trên màn ngang thấp** (commit `ecb00be`): ở 960×540, 844×390 và 667×375, bảng Cài đặt bị cắt mất tiêu đề và nút Đóng. Giờ màn thấp có bảng hai cột, nút Đóng nằm cạnh tiêu đề.
-- **Điện thoại chỉ chơi ngang** (commit `2edb562`): cầm dọc thì hiện "Xoay ngang điện thoại để chơi" và game tạm dừng; trình duyệt cho phép thì khoá màn ngang.
-- **Còn lớn nhất trên điện thoại ngang:** khi lập kế hoạch, lá bài trên tay và HUD che gần hết bàn cờ (ảnh `.superpowers/night-shots/sheet-land-realm.png`). Cần một bố cục HUD riêng cho màn ngang thấp; mình chưa làm vì là thiết kế lớn (xem đề xuất 3).
-- **Bộ lọc Trợ giúp thành dropdown** (commit `aec1152`), **chữ xanh/đỏ đủ tương phản** (commit `9c149a5`), **Trợ giúp cập nhật** theo bản sửa thương nhân (commit `6a7f73f`), **spec asset lính theo hướng đi chéo** (commit `6adfebc`, chỉ là tài liệu, chưa tạo ảnh).
-- **Cần bạn quyết:** thẻ thưởng, thẻ chinh phục và thẻ thưởng nhiệm vụ vẫn theo luật cũ (đặt lên đầu chồng rút, thay cho lá rút của năm), vì đó là thiết kế có test. Xem mục "Đề xuất chờ duyệt".
+Đêm 12/11 (02:00 → khoảng 03:05): 14 commit trên `feature/close-up-art`. Không push, không PR, không dùng Codex. Gate (lint, typecheck, 3095 test, build) qua trước mỗi commit.
+
+**Đã làm:**
+1. **Sửa lỗi Thương nhân "mất 1 thẻ"** (`365bc30`).
+   - Nguyên nhân: thẻ mua được đặt lên đầu chồng rút; mỗi năm chỉ rút 1 lá, nên lá rút chính là thẻ vừa mua, trả 3 vàng mà tay không thêm lá nào.
+   - Giờ thẻ mua vào thẳng tay, như "Mua thẻ". Có test tái hiện: chạy cả ván 30 năm, kiểm bộ bài sau mỗi lệnh.
+2. **Vào game nhanh hơn** (`03305be`): từ lúc tải xong ảnh tới khi vào menu, máy tính 1032 → khoảng 620 ms, điện thoại 403 → khoảng 290 ms. Khung hình vốn chỉ khoảng 1 ms.
+3. **Cài đặt trên màn ngang thấp** (`ecb00be`): trước bị cắt mất nút Đóng; giờ bảng hai cột.
+4. **Điện thoại chỉ chơi ngang** (`2edb562`): cầm dọc thì hiện "Xoay ngang điện thoại để chơi" và game dừng; trình duyệt cho phép thì khoá màn ngang.
+5. **Bộ lọc Trợ giúp thành dropdown** (`aec1152`, Esc đóng dropdown trước: `b5acca1`).
+6. **Chữ xanh/đỏ đạt WCAG AA** trên nền kem (`9c149a5`).
+7. **Trợ giúp ghi đúng luật thương nhân** (`6a7f73f`); **trang admin** có đủ nhà cấp 2/3 và tốc độ hoạt hình như game (`d20e567`).
+8. **Spec asset lính** theo hướng đi chéo (`6adfebc`): chỉ tài liệu, chưa tạo ảnh.
+
+**Cần bạn quyết:**
+1. **Thẻ thưởng, thẻ chinh phục, thẻ thưởng nhiệm vụ** có nên vào thẳng tay như thương nhân không? Hiện chúng thay cho lá rút năm sau.
+2. **HUD lập kế hoạch trên điện thoại ngang:** lá bài che gần hết bàn cờ (ảnh `.superpowers/night-shots/sheet-land-realm.png`). Cần duyệt hướng thiết kế trước khi làm.
+3. **Spec asset lính** (`docs/superpowers/specs/2026-11-12-unit-asset-rules-design.md`): duyệt rồi mới vẽ thử Dân Quân.
 
 ## Phase 1: chọn, mua, bỏ qua thẻ — XONG
 - **Tái hiện lỗi:**
@@ -121,5 +130,19 @@ Plan: `docs/plans/2026-11-12-night-plan.md`.
    - lịch năm và thanh trên gọn lại một dòng.
    Đây là thiết kế giao diện mới nên cần bạn duyệt hướng trước. Hiện trạng ở `.superpowers/night-shots/sheet-land-realm.png`.
 
+## Phase 7: bản đồ — KHÔNG LÀM, kèm lý do
+- **Hiệu năng:** đo khung hình khi lập kế hoạch và trong trận năm 30 chỉ khoảng 1 ms (p95 1,6 ms), không có gì đáng tối ưu về CPU.
+- **Phần đắt nhất là bộ nhớ đồ hoạ khi bật cận cảnh:** atlas 6 trang 2048×4096. Muốn giảm phải đổi cách tải ảnh (đề xuất 2).
+- **Hiển thị:** đêm trước bạn đã yêu cầu bỏ hướng làm mờ/căn góc chân nhà, nên mình không đụng tới.
+
+## Sau các phase
+- Lint và typecheck không có cảnh báo nào.
+- **Bundle:** `dist/assets/index-*.js` 1,96 MB (gzip 552 kB), phần lớn là Phaser. Tách chunk không giảm tổng dung lượng tải lần đầu, nên mình không đổi.
+- **Test đo tốc độ `stress.test.ts`** (trần 4 ms mỗi bước) thỉnh thoảng đo được 4,3–4,7 ms khi máy đang bận và fail; chạy lại thì qua. Mình không nới trần. Bạn có thể cân nhắc nới trần, hoặc chỉ chạy test này riêng.
+
 ## Việc còn dở và bước tiếp theo
-- Phase 2 trở đi: xem plan.
+1. **HUD lập kế hoạch cho điện thoại ngang** (đề xuất 3): chờ bạn duyệt hướng thiết kế.
+2. **Thẻ thưởng vào tay** (đề xuất 1): chờ quyết định, sau đó đo lại cân bằng.
+3. **Vẽ thử Dân Quân** theo spec asset lính mới: chờ duyệt spec.
+4. **Chưa đo độ tương phản** của chữ đặt trực tiếp trên bàn cờ (tên vua, "Địch: …").
+5. **Bàn phím:** dropdown mới chỉ có Esc, chưa đi chọn bằng phím mũi tên.
