@@ -4,6 +4,13 @@ Nhánh `feature/close-up-art` (PR #22, chưa merge). Đêm nay không push, khô
 Plan: `docs/plans/2026-11-12-night-plan.md`.
 
 ## Tóm tắt buổi sáng
+**Lượt 3 (09:25 → 09:35), lượt cuối:**
+- **Kiểm hồi quy bằng ảnh, không thấy lỗi mới, không cần commit sửa:**
+  - máy tính 1280×720: menu, chọn vua, Cài đặt, lập kế hoạch, trận, thẻ thưởng (`.superpowers/night-shots/sheet-final-pc.png`, `sheet-final-pc2.png`);
+  - máy tính bảng 1024×768: menu, chọn vua, lập kế hoạch (`sheet-final-tab.png`).
+- **Gate cuối:** lint, typecheck, 3144 test, build đều qua. Cây làm việc sạch, không còn tiến trình chạy nền.
+- **Dừng sớm:** các việc còn lại đều cần bạn quyết (xem "Cần bạn quyết" bên dưới), nên mình dừng thay vì sửa linh tinh.
+
 **Lượt 2 (04:30 →): điện thoại màn ngang đã chơi được trọn ván.**
 
 Lượt 1 chỉ sửa bảng Cài đặt. Lượt 2 rà mọi màn ở 667×375, 844×390, 915×412 và 932×430, tìm thấy 5 chỗ chặn người chơi và đã sửa cả 5:
