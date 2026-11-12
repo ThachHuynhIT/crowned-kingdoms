@@ -26,7 +26,7 @@ export const ENEMY_LEVEL_STAT = [1, 1.45, 2.1, 3.05, 4.42] as const;
  * HP và sát thương của mọi lính địch nhân thêm hệ số này (cân bằng lại 2026-11-09 sau khi tầm tháp ×3, công trình
  * chặn đường và địch phải phá hết nhà: bot greedy Gai 0 thắng gần 100%; mục tiêu 35–65% mỗi vua).
  */
-export const ENEMY_STAT_MULT = 1.5; // 2.15 → 1.5 (tối 11/11/2026): Can Thiệp giảm mạnh, lính/tháp mạnh lên (ALLY_ROLE_TUNING)
+export const ENEMY_STAT_MULT = 2.2; // 1.5 → 2.2 (12/11/2026): thẻ thưởng vào thẳng tay; chỉ máu/sát thương, không đổi số lượng địch. Trước: 2.15 → 1.5 (tối 11/11/2026)
 /**
  * Máu và sát thương của boss 1/2/3 lúc vào trận, nhân với số trong `BOSSES` (10/11/2026: hết giờ không
  * còn là thắng, boss phải hạ được). Đo bằng `npm run balance`, xem docs/balance/2026-11-10-draw-one-balance.md.

@@ -144,7 +144,7 @@ describe('buildBattleSetup', () => {
     };
     const s = buildBattleSetup(makeState(army), CONTENT).waves[0]!.spawns[0]!.stats;
     expect(s.hp).toBeCloseTo(30 * ENEMY_LEVEL_STAT[1]! * 1.5 * ENEMY_STAT_MULT, 6);
-    expect(s.hp).toBeCloseTo(30 * 1.45 * 1.5 * 1.5, 6); // 30 × 1.45 × 1.5 × ENEMY_STAT_MULT 1.5 (pinned 11/11/2026 after the intervention nerf; no per-king enemy multiplier)
+    expect(s.hp).toBeCloseTo(30 * 1.45 * 1.5 * 2.2, 6); // 30 × 1.45 × 1.5 × ENEMY_STAT_MULT 2.2 (pinned 12/11/2026 after reward cards went to the hand; no per-king enemy multiplier)
     expect(s.dmg).toBeCloseTo(5 * 1.45 * 1.5 * ENEMY_STAT_MULT, 6);
   });
 
