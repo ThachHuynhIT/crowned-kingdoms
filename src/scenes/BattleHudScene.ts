@@ -31,6 +31,7 @@ import { bindSceneDisplay, logicalPointer, logicalPointerDistance, logicalSize }
 import { DRAG_SLOP, GAP, MARGIN, textContent, type Point, type Rect } from '../ui/hud/layout';
 import { ENEMY_ARMY_TOOLTIP, armyHealth, healthText, throneHealth } from '../ui/hud/armyHealth';
 import { HealthBarView } from '../ui/hud/HealthBarView';
+import { battleBoards } from '../ui/hud/hudBoards';
 import { kingTheme } from '../ui/kingSelect/kingTheme';
 import { CalendarModal } from '../ui/modals/CalendarModal';
 import { CalendarStrip } from '../ui/planning/CalendarStrip';
@@ -125,6 +126,8 @@ export class BattleHudScene extends Phaser.Scene {
   private world: BattleWorld | null = null;
 
   private livesBox!: UiBox;
+  /** Desktop wooden backboards: the top row and, when apart, the speed buttons. */
+  private boards: UiBox[] = [];
   private livesIcon: Phaser.GameObjects.Image | null = null;
   private livesText!: Phaser.GameObjects.Text;
   private goldBox!: UiBox;
@@ -223,6 +226,11 @@ export class BattleHudScene extends Phaser.Scene {
     });
 
     // Top left: lives (as in planning).
+    this.boards = [0, 1].map(() => {
+      const b = createPanel(this, 'board', 64, 64);
+      b.image.setDepth(-10);
+      return b;
+    });
     this.livesBox = createPanel(this, 'panel', this.lay.lives.w, this.lay.lives.h);
     const tex = this.textures;
     this.livesIcon =
@@ -890,6 +898,14 @@ export class BattleHudScene extends Phaser.Scene {
 
   private layout(): void {
     const l = (this.lay = this.currentLayout());
+    const boards = isWideLayout(this.screen()) ? battleBoards(this.screen(), l) : null;
+    [boards?.top, boards?.speed].forEach((r, i) => {
+      const b = this.boards[i]!;
+      b.image.setVisible(!!r);
+      if (!r) return;
+      b.resize(r.w, r.h);
+      b.image.setPosition(r.x, r.y);
+    });
     const desktop = isWideLayout(this.screen());
 
     this.livesBox.resize(l.lives.w, l.lives.h);

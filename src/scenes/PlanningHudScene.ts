@@ -1,5 +1,6 @@
 import { bindSceneDisplay, logicalSize, logicalPointer, logicalPointerDistance } from '../ui/displayRuntime';
 import { handWindow } from '../ui/planning/handLayoutModel';
+import { hudBoards } from '../ui/hud/hudBoards';
 import { shopPrice, buyCardIllegal } from '../game/run/shop';
 import Phaser from 'phaser';
 import type { EventBus } from '../core/events';
@@ -19,6 +20,7 @@ import { rerollPrice } from '../game/run/decrees';
 import { cardOffer } from '../game/run/flow';
 import type { IllegalReason, RunState } from '../game/run/state';
 import { SPRITES_KEY, frameDensityFactor, iconFrame } from '../render/atlas';
+import type { IconId } from '../render/iconArt';
 import { ContentBox } from '../ui/ContentBox';
 import { ToastStack } from '../ui/ToastStack';
 import { Tooltip } from '../ui/Tooltip';
@@ -122,6 +124,8 @@ export class PlanningHudScene extends Phaser.Scene {
   private lay!: PlanningLayout;
   private tooltip!: Tooltip;
   private livesBox!: UiBox;
+  /** Desktop wooden backboards (top row, left actions, hand, deck), hidden on the phone layout. */
+  private boards: UiBox[] = [];
   private livesIcon: Phaser.GameObjects.Image | null = null;
   private livesText!: Phaser.GameObjects.Text;
   private yearText!: Phaser.GameObjects.Text;
@@ -231,6 +235,12 @@ export class PlanningHudScene extends Phaser.Scene {
       content: () => textContent(lines),
     });
 
+    // Wooden backboards first, so every HUD element draws over them (desktop only, placed in layout()).
+    this.boards = [0, 1, 2, 3].map(() => {
+      const b = createPanel(this, 'board', 64, 64);
+      b.image.setDepth(-10);
+      return b;
+    });
     this.livesBox = createPanel(this, 'panel', 120, 52);
     const tex = this.textures;
     this.livesIcon =
@@ -312,6 +322,7 @@ export class PlanningHudScene extends Phaser.Scene {
       width: this.lay.shop.w,
       height: this.lay.shop.h,
       fontSize: 13,
+      icon: this.actionIcon('gold'),
       onClick: () => {
         if (this.modalOpen()) return;
         const reason = buyCardIllegal(this.controller.state, CONTENT);
@@ -544,7 +555,8 @@ export class PlanningHudScene extends Phaser.Scene {
     this.rerollBtn.setVisible(choosing && !state.played);
     this.deckBtn.setVisible(planning);
     this.shopBtn.setVisible(planning);
-    this.shopBtn.setLabel(`Mua thẻ · ${shopPrice(state)} vàng`);
+    // With the gold coin icon (desktop) the unit is already shown: "Mua thẻ · 5".
+    this.shopBtn.setLabel(this.lay.desktop ? `Mua thẻ · ${shopPrice(state)}` : `Mua thẻ · ${shopPrice(state)} vàng`);
     this.shopBtn.setEnabled(buyCardIllegal(state, CONTENT) === null);
     this.refreshActions(state);
     this.handCount = state.hand.length;
@@ -1197,16 +1209,19 @@ export class PlanningHudScene extends Phaser.Scene {
     const common = { width: w, height: h, fontSize, skin: this.controller.state.kingId };
     this.sellBtn = createButton(this, 0, 0, 'Bán bài', {
       ...common,
+      icon: this.actionIcon('sell'),
       onClick: () => this.sell(),
       tooltip: { host: this.tooltip, content: () => textContent(this.sellTip()) },
     });
     this.rerollBtn = createButton(this, 0, 0, 'Đổi bài', {
       ...common,
+      icon: this.actionIcon('reroll'),
       onClick: () => this.reroll(),
       tooltip: { host: this.tooltip, content: () => textContent(this.rerollTip()) },
     });
     this.deckBtn = createButton(this, 0, 0, 'Bộ bài', {
       ...common,
+      icon: this.actionIcon('tome'),
       onClick: () => this.bus.emit('ui:open-modal', { modal: 'deck' }),
       tooltip: {
         host: this.tooltip,
@@ -1216,6 +1231,28 @@ export class PlanningHudScene extends Phaser.Scene {
     this.sellBtn.setVisible(visible[0]!);
     this.rerollBtn.setVisible(visible[1]!);
     this.deckBtn.setVisible(visible[2]!);
+  }
+
+  /** An action button's icon left of its label (desktop), from the `sprites` atlas; none when it did not load. */
+  private actionIcon(id: IconId): { key: string; frame: string; scale: number; side: 'left' } | undefined {
+    const frame = iconFrame(id);
+    if (!this.lay.desktop || !this.textures.exists(SPRITES_KEY) || !this.textures.get(SPRITES_KEY).has(frame)) return undefined;
+    return { key: SPRITES_KEY, frame, scale: 2 * frameDensityFactor(frame), side: 'left' };
+  }
+
+  /** Stretch the four desktop backboards round their controls; the phone layout has none. */
+  private layoutBoards(l: PlanningLayout): void {
+    const enemy = l.scoutButton ?? l.calendar[l.calendar.length - 1]!;
+    const screen = logicalSize(this);
+    const rects = l.desktop ? hudBoards(screen, l, handWindow(screen, this.handCount, 0).viewport, enemy) : null;
+    const list = rects ? [rects.top, rects.left, rects.hand, rects.right] : [];
+    this.boards.forEach((b, i) => {
+      const r = list[i];
+      b.image.setVisible(r !== undefined);
+      if (!r) return;
+      b.resize(r.w, r.h);
+      b.image.setPosition(r.x, r.y);
+    });
   }
 
   private currentLayout(): PlanningLayout {
@@ -1279,6 +1316,7 @@ export class PlanningHudScene extends Phaser.Scene {
       );
     }
     this.placeHand();
+    this.layoutBoards(l);
     if (this.actionSize.w !== l.sell.w || this.actionSize.h !== l.sell.h)
       this.createActionButtons();
     for (const [button, r] of [

@@ -81,3 +81,16 @@ export const layoutMenu = (screen: Size, logo: Size, buttonCount: number): MenuL
     footer: { x: cx, y: screen.h - MENU_FOOTER_H / 2 },
   };
 };
+
+/** Padding of the wooden board round the menu buttons. */
+export const MENU_BOARD_PAD = 14;
+
+/** The wooden board behind the menu buttons (12/11/2026): the buttons' bounds grown by `MENU_BOARD_PAD`; null without buttons. */
+export const menuButtonBoard = (buttons: readonly Point[]): { x: number; y: number; w: number; h: number } | null => {
+  if (buttons.length === 0) return null;
+  const x = Math.min(...buttons.map((b) => b.x)) - MENU_BUTTON.w / 2 - MENU_BOARD_PAD;
+  const y = Math.min(...buttons.map((b) => b.y)) - MENU_BUTTON.h / 2 - MENU_BOARD_PAD;
+  const x2 = Math.max(...buttons.map((b) => b.x)) + MENU_BUTTON.w / 2 + MENU_BOARD_PAD;
+  const y2 = Math.max(...buttons.map((b) => b.y)) + MENU_BUTTON.h / 2 + MENU_BOARD_PAD;
+  return { x, y, w: x2 - x, h: y2 - y };
+};

@@ -238,8 +238,11 @@ export interface ButtonOptions {
   width?: number;
   height?: number;
   fontSize?: number;
-  /** Optional pixel-art icon (texture key + frame), drawn above the label at integer scale. */
-  icon?: { key: string; frame: string; scale?: number };
+  /**
+   * Optional pixel-art icon (texture key + frame) at integer scale: above the label, or left of it with `side: 'left'`
+   * (the icon and the label centred together as one group).
+   */
+  icon?: { key: string; frame: string; scale?: number; side?: 'top' | 'left' };
   onClick: () => void;
   /** Explain an unavailable action without executing it. */
   onDisabledClick?: () => void;
@@ -290,7 +293,22 @@ export const createButton = (
   const box = createPanel(scene, 'button', width, height, 0.5, 0.5, skin);
   const children: Phaser.GameObjects.GameObject[] = [box.image];
   let text: Phaser.GameObjects.Text;
-  if (icon) {
+  let iconImg: Phaser.GameObjects.Image | null = null;
+  /** Re-centre an icon-left group after the label or the size changes. */
+  const placeLeftIcon = (): void => {
+    if (!iconImg || icon?.side !== 'left') return;
+    const gap = 8;
+    const total = iconImg.displayWidth + gap + text.width;
+    const x0 = -total / 2;
+    iconImg.setPosition(Math.round(x0 + iconImg.displayWidth / 2), 0);
+    text.setPosition(Math.round(x0 + iconImg.displayWidth + gap), 0);
+  };
+  if (icon?.side === 'left') {
+    iconImg = scene.add.image(0, 0, icon.key, icon.frame).setOrigin(0.5).setScale(icon.scale ?? 1);
+    text = addUiText(scene, 0, 0, label, fontSize).setOrigin(0, 0.5);
+    children.push(iconImg, text);
+    placeLeftIcon();
+  } else if (icon) {
     const img = scene.add
       .image(0, height / 2 - fontSize - 6, icon.key, icon.frame)
       .setOrigin(0.5, 1)
@@ -340,7 +358,10 @@ export const createButton = (
       active = value;
       refresh();
     },
-    setLabel: (value) => text.setText(value),
+    setLabel: (value) => {
+      text.setText(value);
+      placeLeftIcon();
+    },
     resize: (w, h) => {
       width = w;
       height = h;

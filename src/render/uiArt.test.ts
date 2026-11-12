@@ -42,6 +42,7 @@ const CORE: Record<UiFrame, number> = {
   cardUncommon: UI_PALETTE.cream,
   cardRare: UI_PALETTE.cream,
   cardSelected: UI_PALETTE.cream,
+  board: UI_PALETTE.woodDark,
 };
 
 describe('uiArt frames', () => {

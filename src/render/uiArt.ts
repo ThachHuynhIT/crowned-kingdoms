@@ -25,6 +25,7 @@ export const UI_FRAME_IDS = [
   'cardUncommon',
   'cardRare',
   'cardSelected',
+  'board',
 ] as const;
 export type UiFrame = (typeof UI_FRAME_IDS)[number];
 
@@ -53,6 +54,8 @@ export const UI_FRAMES: Readonly<Record<UiFrame, UiFrameDef>> = {
   cardUncommon: { w: 24, h: 32, slice: 8, border: 4 },
   cardRare: { w: 24, h: 32, slice: 8, border: 4 },
   cardSelected: { w: 24, h: 32, slice: 8, border: 5 },
+  /** HUD backboard (12/11/2026): thick grained wood frame round dark planks, nails in the corners. */
+  board: { w: 32, h: 32, slice: 11, border: 7 },
 };
 
 /** Frames that exist once per king, painted in that king's colours (see `KING_THEMES`). */
@@ -230,6 +233,25 @@ const paintWoodFrame = (f: WoodFrame): PixelCanvas => {
   return c;
 };
 
+/**
+ * HUD backboard (owner 12/11/2026: "UI trên PC đơn giản quá"): the thick grained wood frame of a panel round a flat
+ * dark wood core with an inner shadow, and a brass nail in each inner corner.
+ * Stretched as a nine-slice behind HUD rows, the hand and the menu.
+ */
+const paintBoard = (): PixelCanvas => {
+  const { w, h } = UI_FRAMES.board;
+  const c = paintWoodFrame({ w, h, wood: 5, core: P.woodDark, seed: 7 });
+  const k = 1 + 5 + 1;
+  // The core is flat (it stretches); an inner shadow on its top and left edges gives the board depth.
+  c.fillRect(k, k, w - 2 * k, 1, P.outline);
+  c.fillRect(k, k, 1, h - 2 * k, P.outline);
+  for (const [x, y] of [[k + 1, k + 1], [w - k - 3, k + 1], [k + 1, h - k - 3], [w - k - 3, h - k - 3]] as const) {
+    c.fillRect(x, y, 2, 2, P.gold);
+    c.set(x + 1, y + 1, P.woodDark);
+  }
+  return c;
+};
+
 /** Hotbar slot: thin outer ring (1 or 2 px), creamDark inner edge, flat core. */
 const paintSlot = (outer: number, outerWidth: number, core: number): PixelCanvas => {
   const { w, h } = UI_FRAMES.slot;
@@ -302,6 +324,8 @@ export const paintUiFrame = (frame: AnyUiFrame): PixelCanvas => {
       return paintSlot(P.select, 2, P.cream);
     case 'tooltip':
       return paintTooltip();
+    case 'board':
+      return paintBoard();
     default:
       return paintSkinnable(base, P);
   }

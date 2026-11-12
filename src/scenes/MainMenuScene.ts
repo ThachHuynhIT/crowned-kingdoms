@@ -8,7 +8,7 @@ import { hudTexture } from '../render/hudArtHd';
 import { MENU_SKY_FILE, imageArtKey, menuImageLayers } from '../render/imageArt';
 import { HILL_LAYERS, MENU_SKY_H, menuPixelScale, paintHills, paintSky } from '../render/uiArt';
 import { resolveShortcut, shortcutFlags } from '../ui/input/shortcuts';
-import { MENU_BUTTON, layoutMenu, visibleMenuItems, type MenuItemId } from '../ui/menuLayout';
+import { MENU_BUTTON, layoutMenu, menuButtonBoard, visibleMenuItems, type MenuItemId } from '../ui/menuLayout';
 import { openHelp } from './helpLauncher';
 import {
   addUiText,
@@ -63,6 +63,8 @@ export class MainMenuScene extends Phaser.Scene {
   private parallax: number[] = [];
   private fireflies: Phaser.GameObjects.Image[] = [];
   private logo!: UiBox;
+  /** Wooden board behind the menu buttons (12/11/2026). */
+  private buttonBoard!: UiBox;
   private title!: Phaser.GameObjects.Text;
   private subtitle!: Phaser.GameObjects.Text;
   private footer!: Phaser.GameObjects.Text;
@@ -116,6 +118,7 @@ export class MainMenuScene extends Phaser.Scene {
     this.createFireflies();
 
     // Logo board.
+    this.buttonBoard = createPanel(this, 'board', 64, 64);
     this.logo = createPanel(this, 'panel', 200, 100, 0.5, 0.5);
     this.title = this.add
       .text(0, 0, TITLE, {
@@ -235,6 +238,12 @@ export class MainMenuScene extends Phaser.Scene {
       const at = m.buttons[i]!;
       button.container.setPosition(at.x, at.y);
     });
+    const board = menuButtonBoard(m.buttons);
+    this.buttonBoard.image.setVisible(board !== null);
+    if (board) {
+      this.buttonBoard.resize(board.w, board.h);
+      this.buttonBoard.image.setPosition(board.x, board.y);
+    }
     this.footer.setPosition(m.footer.x, m.footer.y);
     this.notice.setWordWrapWidth(Math.max(120, width - 32));
     this.notice.setPosition(m.footer.x, m.footer.y - 18);

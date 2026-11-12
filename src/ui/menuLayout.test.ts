@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest';
-import { MENU_BUTTON, MENU_FOOTER_H, MENU_ITEMS, layoutMenu, visibleMenuItems } from './menuLayout';
+import { MENU_BUTTON, MENU_FOOTER_H, MENU_ITEMS, layoutMenu, menuButtonBoard, visibleMenuItems } from './menuLayout';
 
 /** Logo board size measured in the browser: 2× borders on desktop, 1× on phones. */
 const DESKTOP_LOGO = { w: 520, h: 150 };
@@ -110,4 +110,23 @@ describe('layoutMenu on landscape phones (night 12/11/2026)', () => {
   it('keeps one column where it fits (1280×720)', () => {
     expect(new Set(layoutMenu({ w: 1280, h: 720 }, DESKTOP_LOGO, 6).buttons.map((b) => b.x)).size).toBe(1);
   });
+});
+
+describe('menuButtonBoard (12/11/2026)', () => {
+  for (const [screen, logo] of [[{ w: 1280, h: 720 }, DESKTOP_LOGO], [{ w: 844, h: 390 }, PHONE_LOGO], [{ w: 667, h: 375 }, PHONE_LOGO]] as const) {
+    it(`${screen.w}×${screen.h}: holds every button, stays on screen, tucks at most a gap under the logo`, () => {
+      const m = layoutMenu(screen, logo, 6);
+      const b = menuButtonBoard(m.buttons)!;
+      for (const p of m.buttons) {
+        expect(p.x - MENU_BUTTON.w / 2).toBeGreaterThanOrEqual(b.x);
+        expect(p.y + MENU_BUTTON.h / 2).toBeLessThanOrEqual(b.y + b.h);
+      }
+      expect(b.x).toBeGreaterThanOrEqual(0);
+      expect(b.x + b.w).toBeLessThanOrEqual(screen.w);
+      expect(b.y + b.h).toBeLessThanOrEqual(screen.h);
+      // the board may tuck a few px under the logo board (drawn on top of it), never above its middle
+      expect(b.y).toBeGreaterThanOrEqual(m.logo.y + logo.h / 2 - MENU_BUTTON.gap);
+    });
+  }
+  it('is null without buttons', () => expect(menuButtonBoard([])).toBeNull());
 });
