@@ -242,7 +242,7 @@ export interface ButtonOptions {
    * Optional pixel-art icon (texture key + frame) at integer scale: above the label, or left of it with `side: 'left'`
    * (the icon and the label centred together as one group).
    */
-  icon?: { key: string; frame: string; scale?: number; side?: 'top' | 'left' };
+  icon?: { key: string; frame: string; scale?: number; side?: 'top' | 'left'; tint?: number };
   onClick: () => void;
   /** Explain an unavailable action without executing it. */
   onDisabledClick?: () => void;
@@ -305,6 +305,7 @@ export const createButton = (
   };
   if (icon?.side === 'left') {
     iconImg = scene.add.image(0, 0, icon.key, icon.frame).setOrigin(0.5).setScale(icon.scale ?? 1);
+    if (icon.tint !== undefined) iconImg.setTint(icon.tint);
     text = addUiText(scene, 0, 0, label, fontSize).setOrigin(0, 0.5);
     children.push(iconImg, text);
     placeLeftIcon();

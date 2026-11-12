@@ -5,13 +5,14 @@ import { CONTENT } from '../game/cards/registry';
 import { atlasSourceKeys, buildSpritesTexture, buildUiTexture } from '../render/atlas';
 import { WORLD_PICTURE_FILES, imageArtHdKey, imageArtKey, imageArtLoads, imageArtUhdKey } from '../render/imageArt';
 import { artQuality } from '../render/artQuality';
-import { smoothLoadedTextures } from '../render/smoothArt';
+import { applySmoothFilter, smoothLoadedTextures } from '../render/smoothArt';
 import { PORTRAIT_ASSETS, PORTRAIT_DIR, portraitLargeTextureKey, portraitTextureKey } from '../render/portraitAssets';
 import type { UiFrame } from '../render/uiArt';
 import { UI_KIT_DIR, UI_KIT_FILES, kitTextureKey } from '../render/uiKit';
 import { CARD_ART_FILES } from '../ui/cards/cardImage';
 import { KING_BADGE_FILES } from '../ui/realm/kingBadge';
 import { queueHudArtHd } from '../render/hudArtHd';
+import { GAME_ICON_IDS, gameIconKey, queueGameIcons } from '../ui/gameIcons';
 import { bindSceneDisplay, displayMetrics, logicalSize } from '../ui/displayRuntime';
 import { textStyle } from '../ui/theme';
 import { SCENES } from './keys';
@@ -54,6 +55,8 @@ export class PreloadScene extends Phaser.Scene {
     for (const f of KING_BADGE_FILES) this.load.image(f.key, f.url);
     // HD twins of the HUD art (cards, portraits, king cards, menu, icons) on density ≥ 2 screens (11/11/2026).
     queueHudArtHd(this.load, displayMetrics(this).density);
+    // Vector menu icons (game-icons.net, 12/11/2026).
+    queueGameIcons(this.load);
     // Real assets (atlases, audio) will be queued here with this.load.*.
   }
 
@@ -62,6 +65,8 @@ export class PreloadScene extends Phaser.Scene {
     // World sprites, card pictures and icons: built once, shared by every scene.
     buildSpritesTexture(this.textures, CONTENT);
     // Close-up art: smooth sampling with mipmaps for every picture but the UI frames (graphics 'high').
+    // The vector icons are always sampled smoothly (mipmapped), whatever the pixel-art quality setting.
+    for (const id of GAME_ICON_IDS) if (this.textures.exists(gameIconKey(id))) applySmoothFilter(this.game.renderer, this.textures.get(gameIconKey(id)));
     smoothLoadedTextures(
       this.game,
       new Set(WORLD_PICTURE_FILES.flatMap((f) => [imageArtKey(f), imageArtHdKey(f), imageArtUhdKey(f)])),

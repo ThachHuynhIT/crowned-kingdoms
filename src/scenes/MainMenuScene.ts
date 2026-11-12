@@ -1,13 +1,12 @@
 import Phaser from 'phaser';
-import { bindSceneDisplay, displayMetrics, logicalSize } from '../ui/displayRuntime';
+import { bindSceneDisplay, logicalSize } from '../ui/displayRuntime';
 import { toCss } from '../data/palette';
 import { UI_PALETTE } from '../data/uiPalette';
 import type { RunState } from '../game/run/state';
-import { UI_KEY, addPixelTexture } from '../render/atlas';
-import { hudTexture } from '../render/hudArtHd';
-import { MENU_SKY_FILE, imageArtKey, menuImageLayers } from '../render/imageArt';
-import { HILL_LAYERS, MENU_SKY_H, menuPixelScale, paintHills, paintSky } from '../render/uiArt';
+import { UI_KEY } from '../render/atlas';
 import { resolveShortcut, shortcutFlags } from '../ui/input/shortcuts';
+import { GAME_ICONS_CREDIT, gameIcon, type GameIconId } from '../ui/gameIcons';
+import { MenuBackdrop } from '../ui/menuBackdrop';
 import { MENU_BUTTON, layoutMenu, menuButtonBoard, visibleMenuItems, type MenuItemId } from '../ui/menuLayout';
 import { openHelp } from './helpLauncher';
 import {
@@ -29,10 +28,7 @@ import { openSettings } from './SettingsScene';
 
 const TITLE = 'Crowned Kingdoms';
 const SUBTITLE = 'Một vương quốc nhỏ, chín ngai vàng';
-const SKY_KEY = 'menu-sky';
-const hillKey = (layer: number): string => `menu-hills-${layer}`;
 /** Drift speed of each hill layer, far → near (screen px per second). */
-const PARALLAX = [4, 8, 16] as const;
 const FIREFLIES = 24;
 
 /** A fresh run seed; scenes may use wall-clock randomness (the run itself is seeded). */
@@ -52,15 +48,20 @@ const MENU_ACTIONS: Record<MenuItemId, (scene: MainMenuScene) => void> = {
   help: (scene) => openHelp(scene, null, null),
 };
 
+/** game-icons.net icon of each menu button (12/11/2026). */
+const MENU_ICONS: Readonly<Record<MenuItemId, GameIconId>> = {
+  continue: 'continue',
+  newRun: 'new_run',
+  saves: 'load',
+  crowns: 'crowns',
+  settings: 'settings',
+  help: 'book',
+};
+
 export class MainMenuScene extends Phaser.Scene {
   private pix = 2;
-  private sky!: Phaser.GameObjects.TileSprite;
-  private hills: Phaser.GameObjects.TileSprite[] = [];
-  /** Texture px per art px of the sky and of each hill strip: 2 for an HD twin (drawn at half the scale), else 1. */
-  private skyFactor = 1;
-  private hillFactors: number[] = [];
-  /** Drift speed of each entry of `hills` (screen px per second). */
-  private parallax: number[] = [];
+  /** Dusk sky and drifting hills, shared with the other screens outside the game. */
+  private backdrop!: MenuBackdrop;
   private fireflies: Phaser.GameObjects.Image[] = [];
   private logo!: UiBox;
   /** Wooden board behind the menu buttons (12/11/2026). */
@@ -81,40 +82,12 @@ export class MainMenuScene extends Phaser.Scene {
 
   create(): void {
     bindSceneDisplay(this, () => this.layout());
-    this.hills = [];
-    this.hillFactors = [];
     this.fireflies = [];
     this.buttons = [];
-    this.pix = menuPixelScale(logicalSize(this).h);
     this.cameras.main.setBackgroundColor(toCss(UI_PALETTE.sky[3]));
-
-    // Dithered dusk sky, three drifting hill silhouettes, fireflies.
-    addPixelTexture(this.textures, SKY_KEY, paintSky());
-    // The approved dusk-sky picture when it loaded (G5), else the painted bands; both are MENU_SKY_H tall.
-    // At display density >= 2 each picture's HD twin when it loaded (twice the pixels, drawn at half the scale).
-    const density = displayMetrics(this).density;
-    const sky = MENU_SKY_FILE && this.textures.exists(imageArtKey(MENU_SKY_FILE))
-      ? hudTexture(this.textures, imageArtKey(MENU_SKY_FILE), density)
-      : { key: SKY_KEY, factor: 1 };
-    this.skyFactor = sky.factor;
-    this.sky = this.add.tileSprite(0, 0, 4, MENU_SKY_H * sky.factor, sky.key).setOrigin(0, 0);
-    // Picture strips (G5) when they all loaded, else the painted hill silhouettes.
-    const pictures = menuImageLayers((file) => this.textures.exists(imageArtKey(file)));
-    if (pictures !== null) {
-      this.parallax = pictures.map((layer) => layer.parallax);
-      const textures = pictures.map((layer) => hudTexture(this.textures, imageArtKey(layer.file), density));
-      this.hillFactors = textures.map((tex) => tex.factor);
-      this.hills = textures.map(({ key }) =>
-        this.add.tileSprite(0, 0, 4, this.textures.getFrame(key).height, key).setOrigin(0, 1),
-      );
-    } else {
-      HILL_LAYERS.forEach((_, i) => addPixelTexture(this.textures, hillKey(i), paintHills(i)));
-      this.parallax = [...PARALLAX];
-      this.hillFactors = HILL_LAYERS.map(() => 1);
-      this.hills = HILL_LAYERS.map((layer, i) =>
-        this.add.tileSprite(0, 0, 4, layer.height, hillKey(i)).setOrigin(0, 1),
-      );
-    }
+    // Dusk sky, three drifting hill strips (src/ui/menuBackdrop.ts), fireflies.
+    this.backdrop = new MenuBackdrop(this);
+    this.pix = this.backdrop.pixelScale;
     this.createFireflies();
 
     // Logo board.
@@ -134,6 +107,7 @@ export class MainMenuScene extends Phaser.Scene {
         width: MENU_BUTTON.w,
         height: MENU_BUTTON.h,
         fontSize: 18,
+        icon: gameIcon(this, MENU_ICONS[item.id], 28),
         onClick: () => {
           getAudio(this)?.play('ui_click');
           MENU_ACTIONS[item.id](this);
@@ -143,8 +117,9 @@ export class MainMenuScene extends Phaser.Scene {
       return button;
     });
     this.footer = this.add
-      .text(0, 0, `v${__APP_VERSION__}`, textStyle(11, UI_PALETTE.creamLight))
-      .setOrigin(0.5);
+      .text(0, 0, `v${__APP_VERSION__} · ${GAME_ICONS_CREDIT}`, textStyle(11, UI_PALETTE.creamLight))
+      .setOrigin(0.5)
+      .setStroke(toCss(UI_PALETTE.outline), 3);
     this.notice = this.add
       .text(0, 0, takeStorageWarning(this) ?? '', textStyle(13, UI_PALETTE.creamLight))
       .setOrigin(0.5, 1)
@@ -203,21 +178,14 @@ export class MainMenuScene extends Phaser.Scene {
   }
 
   update(_time: number, delta: number): void {
-    this.hills.forEach((hill, i) => {
-      hill.tilePositionX += ((this.parallax[i] ?? 0) * delta * (this.hillFactors[i] ?? 1)) / 1000 / this.pix;
-    });
+    this.backdrop.update(delta);
   }
 
   private layout(): void {
     const { w: width, h: height } = logicalSize(this);
 
-    this.pix = menuPixelScale(height);
-    const texW = Math.ceil(width / this.pix) + 1;
-    this.sky.setSize(texW * this.skyFactor, MENU_SKY_H * this.skyFactor).setScale(this.pix / this.skyFactor);
-    this.hills.forEach((hill, i) => {
-      const f = this.hillFactors[i] ?? 1;
-      hill.setSize(texW * f, hill.height).setScale(this.pix / f).setPosition(0, height);
-    });
+    this.backdrop.layout();
+    this.pix = this.backdrop.pixelScale;
     for (const fly of this.fireflies) fly.setScale(this.pix);
 
     // Logo board size from its text (title size: same clamp as before).

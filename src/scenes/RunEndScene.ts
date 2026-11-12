@@ -1,4 +1,5 @@
 import Phaser from 'phaser';
+import { gameIcon } from '../ui/gameIcons';
 import { bindSceneDisplay, logicalSize } from '../ui/displayRuntime';
 import { toCss } from '../data/palette';
 import { UI_PALETTE } from '../data/uiPalette';
@@ -87,6 +88,7 @@ export class RunEndScene extends Phaser.Scene {
         width: RESULT_BUTTON.w,
         height: RESULT_BUTTON.h,
         fontSize: 18,
+        icon: gameIcon(this, 'back', 24),
         onClick: () => this.toMenu(),
         skin,
       }),
@@ -94,6 +96,7 @@ export class RunEndScene extends Phaser.Scene {
         width: RESULT_BUTTON.w,
         height: RESULT_BUTTON.h,
         fontSize: 18,
+        icon: gameIcon(this, 'new_run', 24),
         onClick: () => this.newRun(),
         skin,
       }),

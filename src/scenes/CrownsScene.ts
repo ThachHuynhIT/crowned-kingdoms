@@ -1,4 +1,5 @@
 import Phaser from 'phaser';
+import { MenuBackdrop } from '../ui/menuBackdrop';
 import { bindSceneDisplay, displayMetrics, logicalSize, logicalPointer } from '../ui/displayRuntime';
 import { toCss } from '../data/palette';
 import type { CardId, KingId } from '../data/types';
@@ -54,6 +55,8 @@ interface RowView {
  * re-renders from the profile the session returns.
  */
 export class CrownsScene extends Phaser.Scene {
+  /** Dusk sky and hills of the menu behind the screen (12/11/2026). */
+  private backdrop!: MenuBackdrop;
   private profile: MetaProfile = defaultProfile();
   private model!: CrownsModel;
   private lay!: CrownsLayout;
@@ -78,6 +81,7 @@ export class CrownsScene extends Phaser.Scene {
   }
 
   create(): void {
+    this.backdrop = new MenuBackdrop(this, { color: UI_PALETTE.outline, alpha: 0.35 });
     bindSceneDisplay(this, () => this.layout());
     // Scene instances are reused: reset every per-visit field first.
     this.profile = getSession(this)?.meta() ?? defaultProfile();
@@ -232,7 +236,12 @@ export class CrownsScene extends Phaser.Scene {
 
   // ---- layout --------------------------------------------------------------------------------
 
+  update(_time: number, delta: number): void {
+    this.backdrop.update(delta);
+  }
+
   private layout(): void {
+    this.backdrop.layout();
     const screen = logicalSize(this);
     const inset = frameBorder(this, 'panel') + 16;
     const l = crownsLayout(screen, inset, this.model.kings.length, this.model.cards.length);

@@ -4,6 +4,8 @@
  * thoại của trình duyệt; xoá cần bấm hai lần. Sau mỗi thao tác màn hình dựng lại từ đĩa.
  */
 import Phaser from 'phaser';
+import { gameIcon } from '../ui/gameIcons';
+import { MenuBackdrop } from '../ui/menuBackdrop';
 import { bindSceneDisplay, logicalSize } from '../ui/displayRuntime';
 import { toCss } from '../data/palette';
 import { AUTOSAVE_NAME } from '../data/save';
@@ -44,6 +46,8 @@ const fitText = (obj: Phaser.GameObjects.Text, text: string, maxW: number): void
 };
 
 export class SavesScene extends Phaser.Scene {
+  /** Dusk sky and hills of the menu behind the screen (12/11/2026). */
+  private backdrop!: MenuBackdrop;
   private panel!: UiBox;
   private title!: Phaser.GameObjects.Text;
   private message!: Phaser.GameObjects.Text;
@@ -64,6 +68,7 @@ export class SavesScene extends Phaser.Scene {
   }
 
   create(data?: { notice?: string }): void {
+    this.backdrop = new MenuBackdrop(this, { color: UI_PALETTE.outline, alpha: 0.35 });
     bindSceneDisplay(this, () => this.layout());
     // Scene instances are reused: reset every per-visit field first.
     this.rows = [];
@@ -77,7 +82,7 @@ export class SavesScene extends Phaser.Scene {
     this.panel = createPanel(this, 'panel', 200, 200);
     this.title = addUiText(this, 0, 0, 'Tải ván', 24).setFontStyle('bold').setOrigin(0.5);
     this.message = addUiText(this, 0, 0, this.notice, 14).setOrigin(0.5);
-    this.back = createButton(this, 0, 0, 'Về menu', { onClick: () => this.scene.start(SCENES.mainMenu) });
+    this.back = createButton(this, 0, 0, 'Về menu', { icon: gameIcon(this, 'back', 22), onClick: () => this.scene.start(SCENES.mainMenu) });
     this.prev = createButton(this, 0, 0, '‹', { fontSize: 20, onClick: () => this.turn(-1) });
     this.next = createButton(this, 0, 0, '›', { fontSize: 20, onClick: () => this.turn(1) });
     this.input.keyboard?.on('keydown-ESC', () => this.scene.start(SCENES.mainMenu));
@@ -115,9 +120,9 @@ export class SavesScene extends Phaser.Scene {
       name: addUiText(this, 0, 0, name, 15).setOrigin(0, 0.5).setFontStyle('bold'),
       info,
       detail: addUiText(this, 0, 0, '', 12).setOrigin(0, 0.5),
-      open: createButton(this, 0, 0, 'Mở', { onClick: () => void this.open(id) }),
+      open: createButton(this, 0, 0, 'Mở', { icon: gameIcon(this, 'continue', 20), onClick: () => void this.open(id) }),
       rename: slot ? createButton(this, 0, 0, 'Tên', { onClick: () => void this.rename(slot) }) : null,
-      remove: slot ? createButton(this, 0, 0, 'Xoá', { onClick: () => void this.remove(slot) }) : null,
+      remove: slot ? createButton(this, 0, 0, 'Xoá', { icon: gameIcon(this, 'trash', 20), onClick: () => void this.remove(slot) }) : null,
     };
   }
 
@@ -192,7 +197,12 @@ export class SavesScene extends Phaser.Scene {
     this.layout();
   }
 
+  update(_time: number, delta: number): void {
+    this.backdrop.update(delta);
+  }
+
   private layout(): void {
+    this.backdrop.layout();
     const l: SavesLayout = savesLayout(logicalSize(this), this.rows.length);
     const pages = Math.max(1, Math.ceil(this.rows.length / l.perPage));
     this.page = Math.min(this.page, pages - 1);

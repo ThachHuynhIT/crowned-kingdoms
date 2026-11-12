@@ -1,4 +1,6 @@
 import Phaser from 'phaser';
+import { gameIcon } from '../ui/gameIcons';
+import { MenuBackdrop } from '../ui/menuBackdrop';
 import { bindSceneDisplay, logicalSize, logicalPointer } from '../ui/displayRuntime';
 import { toCss } from '../data/palette';
 import type { RunMode } from '../data/rules';
@@ -74,6 +76,8 @@ const themedText = (
  * screen takes the selected king's colours.
  */
 export class KingSelectScene extends Phaser.Scene {
+  /** Dusk sky and hills of the menu behind the screen (12/11/2026). */
+  private backdrop!: MenuBackdrop;
   private choices: readonly KingChoice[] = [];
   private selected = 0;
   private mode: Mode = 'carousel';
@@ -121,6 +125,9 @@ export class KingSelectScene extends Phaser.Scene {
   }
 
   create(data: KingSelectData = {}): void {
+    // The menu's sky behind a shade in the chosen king's colour (set in refresh()), created before bindSceneDisplay's
+    // first relayout reaches it.
+    this.backdrop = new MenuBackdrop(this, { color: 0x000000, alpha: 0.78 });
     bindSceneDisplay(this, () => this.layout());
     // Scene instances are reused: reset every per-visit field first.
     this.profile = getSession(this)?.meta() ?? defaultProfile();
@@ -151,10 +158,11 @@ export class KingSelectScene extends Phaser.Scene {
     this.toasts = new ToastStack(this, DIALOG_DEPTH + 50);
     this.modeNote = themedText(this, '', 13, theme.light, theme.bgDark).setOrigin(0, 0.5);
 
-    this.back = createButton(this, 0, 0, '‹ Quay lại', {
+    this.back = createButton(this, 0, 0, 'Quay lại', {
       width: 120,
       height: 48,
       fontSize: 15,
+      icon: gameIcon(this, 'back', 22),
       onClick: () => this.goBack(),
       tooltip: { host: this.tooltip, content: () => textContent(['Quay lại (Esc)']) },
     });
@@ -201,6 +209,7 @@ export class KingSelectScene extends Phaser.Scene {
       width: 168,
       height: 56,
       fontSize: 22,
+      icon: gameIcon(this, 'new_run', 30),
       onClick: () => this.begin(),
       tooltip: { host: this.tooltip, content: () => textContent(['Chơi (Enter)']) },
     });
@@ -210,6 +219,7 @@ export class KingSelectScene extends Phaser.Scene {
       width: 120,
       height: 44,
       fontSize: 14,
+      icon: gameIcon(this, 'dice', 22),
       onClick: () => {
         this.seed = newRunSeed();
         this.refresh();
@@ -444,6 +454,7 @@ export class KingSelectScene extends Phaser.Scene {
     const theme = this.theme();
     const skin = this.skin();
     this.cameras.main.setBackgroundColor(toCss(theme.bgDark));
+    this.backdrop.setShade(theme.bgDark, 0.78);
     for (const t of [this.title, this.namePrefix, this.nameTitle, this.note, this.diffCaption, this.diffLabel, this.perkName, this.points, this.modeNote]) {
       t.setShadow(2, 2, toCss(theme.bgDark), 0, false, true);
     }
@@ -487,7 +498,12 @@ export class KingSelectScene extends Phaser.Scene {
     button.container.setPosition(r.x + r.w / 2, r.y + r.h / 2);
   }
 
+  update(_time: number, delta: number): void {
+    this.backdrop.update(delta);
+  }
+
   private layout(): void {
+    this.backdrop.layout();
     const screen = logicalSize(this);
     const carousel = this.mode === 'carousel';
     const detail = !carousel;

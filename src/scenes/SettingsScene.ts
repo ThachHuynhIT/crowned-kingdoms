@@ -1,6 +1,7 @@
 import { artQuality } from '../render/artQuality';
 import { ART_RELOAD_TEXT, deviceArtQuality, sameArtQuality } from './artSession';
 import Phaser from 'phaser';
+import { gameIcon, type GameIconId } from '../ui/gameIcons';
 import { bindSceneDisplay, logicalSize, setDisplayDensityCap } from '../ui/displayRuntime';
 import type { EventBus } from '../core/events';
 import type { GameSpeed } from '../core/SimClock';
@@ -142,32 +143,33 @@ export class SettingsScene extends Phaser.Scene {
     this.graphics = this.button('', () => {
       const i = GRAPHICS_QUALITIES.indexOf(this.settings.graphics);
       void this.change({ graphics: GRAPHICS_QUALITIES[(i + 1) % GRAPHICS_QUALITIES.length]! });
-    });
+    }, 'graphics');
     this.damageNumbers = this.button('', () => void this.change({ damageNumbers: !this.settings.damageNumbers }));
     this.discard = this.button('Xoá ván đang chơi', () => {
       this.confirming = true;
       this.showMessage(DISCARD_WARNING);
       this.refresh();
-    });
-    this.saveSlot = this.button('Lưu ván…', () => void this.saveNamed());
+    }, 'trash');
+    this.saveSlot = this.button('Lưu ván…', () => void this.saveNamed(), 'load');
     this.confirm = this.button('Xác nhận xoá', () => void this.discardSaved());
     this.cancel = this.button('Huỷ', () => {
       this.confirming = false;
       this.showMessage('');
       this.refresh();
     });
-    this.close = this.button('Đóng', () => this.leave());
+    this.close = this.button('Đóng', () => this.leave(), 'exit');
     this.input.keyboard?.on('keydown-ESC', this.onEscape, this);
     this.events.once(Phaser.Scenes.Events.SHUTDOWN, this.teardown, this);
     this.refresh();
     void this.loadSaved(this.visit);
   }
 
-  private button(label: string, onClick: () => void): Button {
+  private button(label: string, onClick: () => void, icon?: GameIconId): Button {
     return createButton(this, 0, 0, label, {
       width: 48,
       height: 48,
       fontSize: 16,
+      icon: icon ? gameIcon(this, icon, 24) : undefined,
       onClick: () => {
         getAudio(this)?.play('ui_click');
         onClick();
