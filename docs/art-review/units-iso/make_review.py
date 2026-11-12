@@ -1,6 +1,7 @@
 """Cut the diagonal-direction sheets of a unit into game-size frames and a review board (no game files written).
 
     python docs/art-review/units-iso/make_review.py militia
+    python docs/art-review/units-iso/make_review.py --frames 12 militia
 
 Uses the cutting code of docs/art-review/g3e/units/make_poses.py (same cells, magenta key, reduction factor and redrawn
 outline as the shipped frames), so the new frames come out at exactly the size of today's unit. Writes
@@ -71,6 +72,54 @@ def main(unit):
     print(unit, 'frames', rows['se'][0].shape[1], 'x', rows['se'][0].shape[0], 'old', old[0].shape[1], 'x', old[0].shape[0])
 
 
+def frames12_of(unit, d):
+    """The 12 frames of direction `d` (sheets A and B), reduced by ONE factor taken from idle 1 so every frame keeps
+    the shipped unit's height and the same pixel size."""
+    sheets = [np.array(Image.open(P / unit / f'frames12-{d}-{part}-source.png').convert('RGBA')) for part in 'ab']
+    figures = [mp.crop_figure(c) for sheet in sheets for c in mp.cells(sheet)]
+    with Image.open(ROOT / f'public/assets/art/ai-v1/{unit}_0.png') as im:
+        shipped = np.array(im.convert('RGBA'))
+    rows_ = np.where(shipped[..., 3] > 0)[0]
+    factor = figures[0][1].shape[0] / (int(rows_.max() - rows_.min()) + 1)
+    return mp.place([mp.outline(mp.reduce(rgb, solid, factor)) for rgb, solid in figures])
+
+
+# 4 frames per animation, played twice as fast as the 2-frame set so each loop keeps its length (UnitRenderer 6/8/11)
+ANIMS12 = [('idle', range(0, 4), 12), ('walk', range(4, 8), 16), ('attack', range(8, 12), 22)]
+
+
+def main12(unit):
+    out = P / unit / 'frames12'
+    out.mkdir(parents=True, exist_ok=True)
+    rows = {}
+    for d in ('se', 'nw'):
+        fr = frames12_of(unit, d)
+        rows[d] = fr
+        for i, f in enumerate(fr):
+            Image.fromarray(f).save(out / f'{unit}_{d}_{i}.png')
+        w, h = fr[0].shape[1], fr[0].shape[0]
+        for name, idx, fps in ANIMS12:
+            imgs = [on_grass([fr[i]], w, h).convert('RGB') for i in idx]
+            imgs[0].save(P / unit / f'anim12-{d}-{name}.gif', save_all=True, append_images=imgs[1:],
+                         duration=round(1000 / fps), loop=0)
+    w = max(f.shape[1] for r in rows.values() for f in r)
+    h = max(f.shape[0] for r in rows.values() for f in r)
+    strips = [on_grass(r, w, h) for r in rows.values()]
+    board = Image.new('RGBA', (max(s.width for s in strips), sum(s.height + 8 for s in strips)), (40, 40, 48, 255))
+    y = 0
+    for s in strips:
+        board.paste(s, (0, y))
+        y += s.height + 8
+    board.save(P / unit / 'review12.png')
+    print(unit, '12 frames per direction', rows['se'][0].shape[1], 'x', rows['se'][0].shape[0])
+
+
 if __name__ == '__main__':
-    for u in sys.argv[1:] or ['militia']:
-        main(u)
+    args = sys.argv[1:]
+    if '--frames' in args:
+        i = args.index('--frames')
+        for u in [a for j, a in enumerate(args) if j not in (i, i + 1)] or ['militia']:
+            main12(u)
+    else:
+        for u in args or ['militia']:
+            main(u)
