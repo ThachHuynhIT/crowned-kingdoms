@@ -51885,3 +51885,367 @@ L4x216 copy (2026-11-10) made by tools/prepare_king_portraits.py --size 144x216 
     finalSize: 120x128
     anchor: feet
     notes: Close-up twin of public/assets/art/ai-v1/wraith_foe_5.png: same approved source and pipeline at 8 art px per world unit, exactly 4x its twin (same footprint and anchor), by docs/art-review/g3e/units/make_poses.py --export --density 8 (12/11/2026); loaded instead of the twin for the close-up art tier (graphics "high" on a desktop) and drawn at 0.125 (src/render/imageArt.ts IMAGE_ART_UHD_FILES, src/render/artQuality.ts). Twin: Moon wraith foe recolour, pose 5 (attack 1); reduced and outlined by docs/art-review/g3e/units/make_poses.py --export (approved 2026-11-09 by Claude under the owner's delegation); drawn at scale 0.5 (src/render/imageArt.ts)
+  - id: gi_settings
+    path: public/assets/icons/game-icons/settings.svg
+    category: icon
+    origin: external
+    source: https://game-icons.net (github.com/game-icons/icons/lorc/cog.svg)
+    creator: Lorc
+    license: CC-BY-3.0
+    attribution: true
+    redistribute: true
+    evidence: docs/licenses/game-icons/
+    modified: true
+    nativeSize: 512x512
+    finalSize: 512x512
+    notes: Vector icon (SVG) for the menus, background square removed, tinted in game (src/ui/gameIcons.ts)
+  - id: gi_help
+    path: public/assets/icons/game-icons/help.svg
+    category: icon
+    origin: external
+    source: https://game-icons.net (github.com/game-icons/icons/delapouite/info.svg)
+    creator: Delapouite
+    license: CC-BY-3.0
+    attribution: true
+    redistribute: true
+    evidence: docs/licenses/game-icons/
+    modified: true
+    nativeSize: 512x512
+    finalSize: 512x512
+    notes: Vector icon (SVG) for the menus, background square removed, tinted in game (src/ui/gameIcons.ts)
+  - id: gi_continue
+    path: public/assets/icons/game-icons/continue.svg
+    category: icon
+    origin: external
+    source: https://game-icons.net (github.com/game-icons/icons/guard13007/play-button.svg)
+    creator: Guard13007
+    license: CC-BY-3.0
+    attribution: true
+    redistribute: true
+    evidence: docs/licenses/game-icons/
+    modified: true
+    nativeSize: 512x512
+    finalSize: 512x512
+    notes: Vector icon (SVG) for the menus, background square removed, tinted in game (src/ui/gameIcons.ts)
+  - id: gi_new_run
+    path: public/assets/icons/game-icons/new_run.svg
+    category: icon
+    origin: external
+    source: https://game-icons.net (github.com/game-icons/icons/lorc/crossed-swords.svg)
+    creator: Lorc
+    license: CC-BY-3.0
+    attribution: true
+    redistribute: true
+    evidence: docs/licenses/game-icons/
+    modified: true
+    nativeSize: 512x512
+    finalSize: 512x512
+    notes: Vector icon (SVG) for the menus, background square removed, tinted in game (src/ui/gameIcons.ts)
+  - id: gi_load
+    path: public/assets/icons/game-icons/load.svg
+    category: icon
+    origin: external
+    source: https://game-icons.net (github.com/game-icons/icons/delapouite/save.svg)
+    creator: Delapouite
+    license: CC-BY-3.0
+    attribution: true
+    redistribute: true
+    evidence: docs/licenses/game-icons/
+    modified: true
+    nativeSize: 512x512
+    finalSize: 512x512
+    notes: Vector icon (SVG) for the menus, background square removed, tinted in game (src/ui/gameIcons.ts)
+  - id: gi_crowns
+    path: public/assets/icons/game-icons/crowns.svg
+    category: icon
+    origin: external
+    source: https://game-icons.net (github.com/game-icons/icons/lorc/crown.svg)
+    creator: Lorc
+    license: CC-BY-3.0
+    attribution: true
+    redistribute: true
+    evidence: docs/licenses/game-icons/
+    modified: true
+    nativeSize: 512x512
+    finalSize: 512x512
+    notes: Vector icon (SVG) for the menus, background square removed, tinted in game (src/ui/gameIcons.ts)
+  - id: gi_back
+    path: public/assets/icons/game-icons/back.svg
+    category: icon
+    origin: external
+    source: https://game-icons.net (github.com/game-icons/icons/lorc/return-arrow.svg)
+    creator: Lorc
+    license: CC-BY-3.0
+    attribution: true
+    redistribute: true
+    evidence: docs/licenses/game-icons/
+    modified: true
+    nativeSize: 512x512
+    finalSize: 512x512
+    notes: Vector icon (SVG) for the menus, background square removed, tinted in game (src/ui/gameIcons.ts)
+  - id: gi_exit
+    path: public/assets/icons/game-icons/exit.svg
+    category: icon
+    origin: external
+    source: https://game-icons.net (github.com/game-icons/icons/delapouite/exit-door.svg)
+    creator: Delapouite
+    license: CC-BY-3.0
+    attribution: true
+    redistribute: true
+    evidence: docs/licenses/game-icons/
+    modified: true
+    nativeSize: 512x512
+    finalSize: 512x512
+    notes: Vector icon (SVG) for the menus, background square removed, tinted in game (src/ui/gameIcons.ts)
+  - id: gi_sound
+    path: public/assets/icons/game-icons/sound.svg
+    category: icon
+    origin: external
+    source: https://game-icons.net (github.com/game-icons/icons/delapouite/sound-on.svg)
+    creator: Delapouite
+    license: CC-BY-3.0
+    attribution: true
+    redistribute: true
+    evidence: docs/licenses/game-icons/
+    modified: true
+    nativeSize: 512x512
+    finalSize: 512x512
+    notes: Vector icon (SVG) for the menus, background square removed, tinted in game (src/ui/gameIcons.ts)
+  - id: gi_music
+    path: public/assets/icons/game-icons/music.svg
+    category: icon
+    origin: external
+    source: https://game-icons.net (github.com/game-icons/icons/delapouite/musical-notes.svg)
+    creator: Delapouite
+    license: CC-BY-3.0
+    attribution: true
+    redistribute: true
+    evidence: docs/licenses/game-icons/
+    modified: true
+    nativeSize: 512x512
+    finalSize: 512x512
+    notes: Vector icon (SVG) for the menus, background square removed, tinted in game (src/ui/gameIcons.ts)
+  - id: gi_mute
+    path: public/assets/icons/game-icons/mute.svg
+    category: icon
+    origin: external
+    source: https://game-icons.net (github.com/game-icons/icons/delapouite/mute.svg)
+    creator: Delapouite
+    license: CC-BY-3.0
+    attribution: true
+    redistribute: true
+    evidence: docs/licenses/game-icons/
+    modified: true
+    nativeSize: 512x512
+    finalSize: 512x512
+    notes: Vector icon (SVG) for the menus, background square removed, tinted in game (src/ui/gameIcons.ts)
+  - id: gi_graphics
+    path: public/assets/icons/game-icons/graphics.svg
+    category: icon
+    origin: external
+    source: https://game-icons.net (github.com/game-icons/icons/delapouite/settings-knobs.svg)
+    creator: Delapouite
+    license: CC-BY-3.0
+    attribution: true
+    redistribute: true
+    evidence: docs/licenses/game-icons/
+    modified: true
+    nativeSize: 512x512
+    finalSize: 512x512
+    notes: Vector icon (SVG) for the menus, background square removed, tinted in game (src/ui/gameIcons.ts)
+  - id: gi_speed
+    path: public/assets/icons/game-icons/speed.svg
+    category: icon
+    origin: external
+    source: https://game-icons.net (github.com/game-icons/icons/delapouite/speedometer.svg)
+    creator: Delapouite
+    license: CC-BY-3.0
+    attribution: true
+    redistribute: true
+    evidence: docs/licenses/game-icons/
+    modified: true
+    nativeSize: 512x512
+    finalSize: 512x512
+    notes: Vector icon (SVG) for the menus, background square removed, tinted in game (src/ui/gameIcons.ts)
+  - id: gi_trophy
+    path: public/assets/icons/game-icons/trophy.svg
+    category: icon
+    origin: external
+    source: https://game-icons.net (github.com/game-icons/icons/lorc/trophy.svg)
+    creator: Lorc
+    license: CC-BY-3.0
+    attribution: true
+    redistribute: true
+    evidence: docs/licenses/game-icons/
+    modified: true
+    nativeSize: 512x512
+    finalSize: 512x512
+    notes: Vector icon (SVG) for the menus, background square removed, tinted in game (src/ui/gameIcons.ts)
+  - id: gi_lock
+    path: public/assets/icons/game-icons/lock.svg
+    category: icon
+    origin: external
+    source: https://game-icons.net (github.com/game-icons/icons/lorc/padlock.svg)
+    creator: Lorc
+    license: CC-BY-3.0
+    attribution: true
+    redistribute: true
+    evidence: docs/licenses/game-icons/
+    modified: true
+    nativeSize: 512x512
+    finalSize: 512x512
+    notes: Vector icon (SVG) for the menus, background square removed, tinted in game (src/ui/gameIcons.ts)
+  - id: gi_unlock
+    path: public/assets/icons/game-icons/unlock.svg
+    category: icon
+    origin: external
+    source: https://game-icons.net (github.com/game-icons/icons/delapouite/padlock-open.svg)
+    creator: Delapouite
+    license: CC-BY-3.0
+    attribution: true
+    redistribute: true
+    evidence: docs/licenses/game-icons/
+    modified: true
+    nativeSize: 512x512
+    finalSize: 512x512
+    notes: Vector icon (SVG) for the menus, background square removed, tinted in game (src/ui/gameIcons.ts)
+  - id: gi_book
+    path: public/assets/icons/game-icons/book.svg
+    category: icon
+    origin: external
+    source: https://game-icons.net (github.com/game-icons/icons/delapouite/spell-book.svg)
+    creator: Delapouite
+    license: CC-BY-3.0
+    attribution: true
+    redistribute: true
+    evidence: docs/licenses/game-icons/
+    modified: true
+    nativeSize: 512x512
+    finalSize: 512x512
+    notes: Vector icon (SVG) for the menus, background square removed, tinted in game (src/ui/gameIcons.ts)
+  - id: gi_castle
+    path: public/assets/icons/game-icons/castle.svg
+    category: icon
+    origin: external
+    source: https://game-icons.net (github.com/game-icons/icons/delapouite/castle.svg)
+    creator: Delapouite
+    license: CC-BY-3.0
+    attribution: true
+    redistribute: true
+    evidence: docs/licenses/game-icons/
+    modified: true
+    nativeSize: 512x512
+    finalSize: 512x512
+    notes: Vector icon (SVG) for the menus, background square removed, tinted in game (src/ui/gameIcons.ts)
+  - id: gi_dice
+    path: public/assets/icons/game-icons/dice.svg
+    category: icon
+    origin: external
+    source: https://game-icons.net (github.com/game-icons/icons/delapouite/perspective-dice-six-faces-random.svg)
+    creator: Delapouite
+    license: CC-BY-3.0
+    attribution: true
+    redistribute: true
+    evidence: docs/licenses/game-icons/
+    modified: true
+    nativeSize: 512x512
+    finalSize: 512x512
+    notes: Vector icon (SVG) for the menus, background square removed, tinted in game (src/ui/gameIcons.ts)
+  - id: gi_coins
+    path: public/assets/icons/game-icons/coins.svg
+    category: icon
+    origin: external
+    source: https://game-icons.net (github.com/game-icons/icons/delapouite/coins.svg)
+    creator: Delapouite
+    license: CC-BY-3.0
+    attribution: true
+    redistribute: true
+    evidence: docs/licenses/game-icons/
+    modified: true
+    nativeSize: 512x512
+    finalSize: 512x512
+    notes: Vector icon (SVG) for the menus, background square removed, tinted in game (src/ui/gameIcons.ts)
+  - id: gi_trash
+    path: public/assets/icons/game-icons/trash.svg
+    category: icon
+    origin: external
+    source: https://game-icons.net (github.com/game-icons/icons/delapouite/trash-can.svg)
+    creator: Delapouite
+    license: CC-BY-3.0
+    attribution: true
+    redistribute: true
+    evidence: docs/licenses/game-icons/
+    modified: true
+    nativeSize: 512x512
+    finalSize: 512x512
+    notes: Vector icon (SVG) for the menus, background square removed, tinted in game (src/ui/gameIcons.ts)
+  - id: gi_swap
+    path: public/assets/icons/game-icons/swap.svg
+    category: icon
+    origin: external
+    source: https://game-icons.net (github.com/game-icons/icons/delapouite/card-exchange.svg)
+    creator: Delapouite
+    license: CC-BY-3.0
+    attribution: true
+    redistribute: true
+    evidence: docs/licenses/game-icons/
+    modified: true
+    nativeSize: 512x512
+    finalSize: 512x512
+    notes: Vector icon (SVG) for the menus, background square removed, tinted in game (src/ui/gameIcons.ts)
+  - id: gi_pause
+    path: public/assets/icons/game-icons/pause.svg
+    category: icon
+    origin: external
+    source: https://game-icons.net (github.com/game-icons/icons/guard13007/pause-button.svg)
+    creator: Guard13007
+    license: CC-BY-3.0
+    attribution: true
+    redistribute: true
+    evidence: docs/licenses/game-icons/
+    modified: true
+    nativeSize: 512x512
+    finalSize: 512x512
+    notes: Vector icon (SVG) for the menus, background square removed, tinted in game (src/ui/gameIcons.ts)
+  - id: gi_fast
+    path: public/assets/icons/game-icons/fast.svg
+    category: icon
+    origin: external
+    source: https://game-icons.net (github.com/game-icons/icons/delapouite/fast-forward-button.svg)
+    creator: Delapouite
+    license: CC-BY-3.0
+    attribution: true
+    redistribute: true
+    evidence: docs/licenses/game-icons/
+    modified: true
+    nativeSize: 512x512
+    finalSize: 512x512
+    notes: Vector icon (SVG) for the menus, background square removed, tinted in game (src/ui/gameIcons.ts)
+  - id: gi_scroll
+    path: public/assets/icons/game-icons/scroll.svg
+    category: icon
+    origin: external
+    source: https://game-icons.net (github.com/game-icons/icons/lorc/scroll-unfurled.svg)
+    creator: Lorc
+    license: CC-BY-3.0
+    attribution: true
+    redistribute: true
+    evidence: docs/licenses/game-icons/
+    modified: true
+    nativeSize: 512x512
+    finalSize: 512x512
+    notes: Vector icon (SVG) for the menus, background square removed, tinted in game (src/ui/gameIcons.ts)
+  - id: gi_banner
+    path: public/assets/icons/game-icons/banner.svg
+    category: icon
+    origin: external
+    source: https://game-icons.net (github.com/game-icons/icons/delapouite/knight-banner.svg)
+    creator: Delapouite
+    license: CC-BY-3.0
+    attribution: true
+    redistribute: true
+    evidence: docs/licenses/game-icons/
+    modified: true
+    nativeSize: 512x512
+    finalSize: 512x512
+    notes: Vector icon (SVG) for the menus, background square removed, tinted in game (src/ui/gameIcons.ts)

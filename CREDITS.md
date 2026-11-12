@@ -9,6 +9,7 @@
 
 Most art is procedurally generated placeholder art (`src/render/*Art.ts`).
 
+- Menu icons (`public/assets/icons/game-icons/`): [game-icons.net](https://game-icons.net) — Icons made by Lorc, Delapouite and Guard13007, [CC BY 3.0](https://creativecommons.org/licenses/by/3.0/). Modified: black background square removed, tinted in game. Fetched by `tools/fetch_game_icons.py` (list of icons and authors in `docs/assets.manifest.yml`, ids `gi_*`); licence in `docs/licenses/game-icons/`. Credited in game in the main menu footer.
 - UI frames (panel, tooltip, button, card): [Pixel UI Pack](https://kenney.nl/assets/pixel-ui-pack) by Kenney — CC0 (credit not required, given with thanks). Unmodified; see `docs/licenses/kenney-pixel-ui-pack/`.
 - Candidate UI frames (`public/assets/ui/kenney-pixel-adventure/`): [UI Pack - Pixel Adventure](https://kenney.nl/assets/ui-pack-pixel-adventure) by Kenney — CC0 (credit not required, given with thanks). Unmodified; see `docs/licenses/kenney-ui-pack-pixel-adventure/`.
 - Candidate UI borders (`public/assets/ui/kenney-fantasy-borders/`): [Fantasy UI Borders](https://kenney.nl/assets/fantasy-ui-borders) by Kenney — CC0 (credit not required, given with thanks). Unmodified; see `docs/licenses/kenney-fantasy-ui-borders/`.
