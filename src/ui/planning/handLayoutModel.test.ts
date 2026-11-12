@@ -1,6 +1,6 @@
 import { describe, expect, it } from 'vitest';
 import { handWindow } from './handLayoutModel';
-import { battleLayout, endlessButtonRect, planningLayout, underHelpRow } from '../realm/realmLayout';
+import { battleLayout, endlessButtonRect, planningLayout, settingsRect } from '../realm/realmLayout';
 
 describe('desktop hand window', () => {
   for (const count of [0, 3, 5, 6, 9, 12]) {
@@ -125,7 +125,7 @@ describe('battle HUD on landscape phones (night 12/11/2026)', () => {
   ]) {
     it(`${screen.w}×${screen.h}: speed buttons, year, clock and panels do not overlap and stay on screen`, () => {
       const l = battleLayout(screen);
-      const rects = { year: l.year, clock: l.clock, foes: l.foes, waves: l.waves, intervene: l.intervene, auto: l.auto, ally: l.allyStatus, foe: l.foeStatus, ...Object.fromEntries(l.speed.map((s, i) => [`speed${i}`, s])) };
+      const rects = { gear: settingsRect(l.help), help: l.help, ...Object.fromEntries(l.calendar.map((c, i) => [`cal${i}`, c])), year: l.year, clock: l.clock, foes: l.foes, waves: l.waves, intervene: l.intervene, auto: l.auto, ally: l.allyStatus, foe: l.foeStatus, ...Object.fromEntries(l.speed.map((s, i) => [`speed${i}`, s])) };
       const entries = Object.entries(rects);
       for (const [i, [name, r]] of entries.entries()) {
         expect(r.x >= 0 && r.y >= 0 && r.x + r.w <= screen.w && r.y + r.h <= screen.h, `${name} on screen`).toBe(true);
@@ -154,8 +154,8 @@ describe('planning HUD on landscape phones (night 12/11/2026)', () => {
         shop: l.shop, reroll: l.reroll, sell: l.sell, deck: l.deck,
         ...Object.fromEntries(l.calendar.map((c, i) => [`cal${i}`, c])),
       };
-      // the ⚙ button under help (normal mode; the Endless button beside it only shows in Endless)
-      if (l.desktop) rects.gear = { ...underHelpRow(l.help), w: 48 };
+      // the ⚙ button right of help, in the top row (owner 12/11/2026)
+      if (l.desktop) rects.gear = settingsRect(l.help);
       if (l.scoutButton) rects.scout = l.scoutButton;
       if (l.decreeButton) rects.decree = l.decreeButton;
       const entries = Object.entries(rects);
@@ -174,10 +174,23 @@ describe('Endless panel button (night 12/11/2026)', () => {
     it(`${screen.w}×${screen.h}: clear of the year label, the gear and the hint`, () => {
       const l = planningLayout(screen, 5, 'endless');
       const b = endlessButtonRect(l.help, l.year);
-      const gear = { ...underHelpRow(l.help), w: 48 };
+      const gear = settingsRect(l.help);
       expect(overlaps(b, l.year)).toBe(false);
       expect(overlaps(b, gear)).toBe(false);
       expect(overlaps(b, l.hint)).toBe(false);
+    });
+  }
+});
+
+describe('settings button (owner 12/11/2026)', () => {
+  for (const screen of [{ w: 1280, h: 720 }, { w: 1920, h: 1080 }, { w: 844, h: 390 }]) {
+    it(`${screen.w}×${screen.h}: sits in the top row beside help`, () => {
+      const l = planningLayout(screen, 5);
+      const g = settingsRect(l.help);
+      expect(g.y).toBe(l.help.y);
+      expect(g.h).toBe(l.help.h);
+      expect(g.x).toBeGreaterThan(l.help.x + l.help.w);
+      expect(g.x + g.w).toBeLessThanOrEqual(l.calendar[0]!.x);
     });
   }
 });

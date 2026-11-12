@@ -66,6 +66,7 @@ import { calendarCells, illegalText, yearLabel } from '../ui/realm/calendarModel
 import {
   centerHand,
   endlessButtonRect,
+  settingsRect,
   isWideLayout,
   confirmFor,
   planningLayout,
@@ -1293,9 +1294,11 @@ export class PlanningHudScene extends Phaser.Scene {
     this.scout.setVisible(l.scout !== null);
     if (l.scout) this.scout.layout(l.scout, 'full');
     this.helpBtn.container.setPosition(l.help.x + l.help.w / 2, l.help.y + l.help.h / 2);
+    const gear = settingsRect(l.help);
+    this.settingsBtn.resize(l.desktop ? gear.w : 48, l.desktop ? gear.h : 48);
     this.settingsBtn.container.setPosition(
-      l.desktop ? l.help.x + 24 : MARGIN + 24,
-      l.desktop ? l.help.y + l.help.h + 32 : l.calendar[0]!.y + l.calendar[0]!.h + 32,
+      l.desktop ? gear.x + gear.w / 2 : MARGIN + 24,
+      l.desktop ? gear.y + gear.h / 2 : l.calendar[0]!.y + l.calendar[0]!.h + 32,
     );
     this.endlessPanel.layoutButton(
       l.desktop
@@ -1303,10 +1306,10 @@ export class PlanningHudScene extends Phaser.Scene {
         : { x: MARGIN + 56, y: l.calendar[0]!.y + l.calendar[0]!.h + 8, w: 96, h: 48 },
     );
     this.endlessPanel.layout();
-    const noticeX = l.help.x + l.help.w + 8;
+    const noticeX = gear.x + gear.w + 8;
     const noticeW = Math.min(320, l.calendar[0]!.x - 8 - noticeX);
     this.questNotice.layout(
-      l.desktop && noticeW >= 160 ? { x: noticeX, y: l.help.y, w: noticeW, h: l.help.h } : null,
+      l.desktop && noticeW >= 120 ? { x: noticeX, y: l.help.y, w: noticeW, h: l.help.h } : null,
     );
     this.scoutBtn.setVisible(l.scoutButton !== null);
     if (l.scoutButton) {

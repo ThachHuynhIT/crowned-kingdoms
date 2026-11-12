@@ -45,6 +45,7 @@ import {
   battleLayout,
   screenToWorld,
   isWideLayout,
+  settingsRect,
   type BattleLayout,
 } from '../ui/realm/realmLayout';
 import { overviewView, worldAtView, type CameraView } from '../ui/realm/cameraModel';
@@ -946,9 +947,11 @@ export class BattleHudScene extends Phaser.Scene {
     const wv = l.waves;
     this.wavesBtn.container.setPosition(wv.x + wv.w / 2, wv.y + wv.h / 2);
     this.helpBtn.container.setPosition(l.help.x + l.help.w / 2, l.help.y + l.help.h / 2);
+    const gear = settingsRect(l.help);
+    this.settingsBtn.resize(desktop ? gear.w : 48, desktop ? gear.h : 48);
     this.settingsBtn.container.setPosition(
-      l.help.x + 24,
-      desktop ? l.help.y + l.help.h + 32 : l.bossStatus.y + l.bossStatus.h + 32,
+      desktop ? gear.x + gear.w / 2 : l.help.x + 24,
+      desktop ? gear.y + gear.h / 2 : l.bossStatus.y + l.bossStatus.h + 32,
     );
     this.layoutScout();
     this.info.layout(this.screen(), battleControls(l));

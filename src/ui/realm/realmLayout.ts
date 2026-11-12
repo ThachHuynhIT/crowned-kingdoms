@@ -248,19 +248,25 @@ const DECREE_PANEL_W = 260;
 const helpRect = (gold: Rect): Rect => ({ x: gold.x + gold.w + GAP, y: gold.y, w: 52, h: gold.h });
 
 /**
- * The row under the help button on desktop: the ⚙ settings button (48 px) and, in Endless, its 96 px panel button
- * (PlanningHudScene places both from `help`). The play hint keeps clear of it.
+ * The ⚙ settings button on desktop: in the top row right of the help button, the same size (owner 12/11/2026: it
+ * hung alone on a second row).
  */
-export const underHelpRow = (help: Rect): Rect => ({ x: help.x, y: help.y + help.h + 8, w: 56 + 96, h: 48 });
+export const settingsRect = (help: Rect): Rect => ({ x: help.x + help.w + GAP, y: help.y, w: help.w, h: help.h });
 
 /**
- * The Endless panel button on desktop: right of the ⚙ under the help button, or under the ⚙ when that spot would
- * cover the year label (night 12/11/2026: landscape phones).
+ * The row under the help button on desktop: in Endless, the 96 px panel button (PlanningHudScene places it from
+ * `help`). The play hint keeps clear of it.
+ */
+export const underHelpRow = (help: Rect): Rect => ({ x: help.x, y: help.y + help.h + 8, w: 96, h: 48 });
+
+/**
+ * The Endless panel button on desktop: under the help button, or one row lower when that spot would cover the year
+ * label (night 12/11/2026: landscape phones).
  */
 export const endlessButtonRect = (help: Rect, year: Rect): Rect => {
-  const beside = { x: help.x + 56, y: help.y + help.h + 8, w: 96, h: 48 };
-  const covers = beside.x < year.x + year.w && year.x < beside.x + beside.w && beside.y < year.y + year.h && year.y < beside.y + beside.h;
-  return covers ? { x: help.x, y: beside.y + 48 + 8, w: 96, h: 48 } : beside;
+  const under = underHelpRow(help);
+  const covers = under.x < year.x + year.w && year.x < under.x + under.w && under.y < year.y + year.h && year.y < under.y + under.h;
+  return covers ? { ...under, y: under.y + 48 + 8 } : under;
 };
 
 const desktopLayout = (screen: Size, handSize: number, mode: RunMode): PlanningLayout => {
@@ -268,14 +274,18 @@ const desktopLayout = (screen: Size, handSize: number, mode: RunMode): PlanningL
   const zoom = planningZoom(screen, handSize, mode);
   const boardW = boardWidth(mode) * zoom;
   const boardH = boardHeight(mode) * zoom;
-  const lives = { x: MARGIN, y: MARGIN, w: DESK.top.lives, h: DESK.top.h };
-  const gold = { x: lives.x + lives.w + GAP, y: MARGIN, w: DESK.top.gold, h: DESK.top.h };
+  // Narrow screens (under 720 px, landscape phones) take 24 px off the lives and gold boxes so the ⚙ beside help
+  // still leaves room for the year strip and the enemy button (12/11/2026).
+  const boxW = (full: number): number => (w < 720 ? full - 24 : full);
+  const lives = { x: MARGIN, y: MARGIN, w: boxW(DESK.top.lives), h: DESK.top.h };
+  const gold = { x: lives.x + lives.w + GAP, y: MARGIN, w: boxW(DESK.top.gold), h: DESK.top.h };
   const wide =
     w >= WIDE_DESKTOP && (w - boardW) / 2 >= MARGIN + Math.max(DECREE_PANEL_W, DESK.scout.w) + PANEL_CLEAR;
   // The year strip sits in the middle of the top edge (right of the help button on a narrow window),
   // with the year label right under it.
   const stripW = CALENDAR_CELLS * CELL + (CALENDAR_CELLS - 1) * GAP;
-  const helpEnd = helpRect(gold).x + 52;
+  const gear = settingsRect(helpRect(gold));
+  const helpEnd = gear.x + gear.w;
   const stripX = Math.max(Math.round((w - stripW) / 2), helpEnd + GAP);
   const strip = calendarStripLayout({ x: stripX, y: MARGIN, w: stripW, h: CELL }, CALENDAR_CELLS);
   const calendar = strip.cells;
