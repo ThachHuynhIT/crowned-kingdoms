@@ -2,6 +2,7 @@
 
     python docs/art-review/units-iso/make_review.py militia
     python docs/art-review/units-iso/make_review.py --frames 12 militia
+    python docs/art-review/units-iso/make_review.py --rows militia   (one 4x3 sheet per direction: idle 3, walk 4, attack 4)
 
 Uses the cutting code of docs/art-review/g3e/units/make_poses.py (same cells, magenta key, reduction factor and redrawn
 outline as the shipped frames), so the new frames come out at exactly the size of today's unit. Writes
@@ -114,9 +115,81 @@ def main12(unit):
     print(unit, '12 frames per direction', rows['se'][0].shape[1], 'x', rows['se'][0].shape[0])
 
 
+# --rows: one sheet per direction, 4 columns x 3 rows; row 1 idle uses 3 cells (the 4th is empty)
+ROW_LAYOUT = [('idle', 3, 9), ('walk', 4, 16), ('attack', 4, 22)]  # name, frames, fps
+
+
+def main_block(cell):
+    """The cell cut to its tallest run of non-empty rows, then its widest run of non-empty columns: drops a
+    neighbouring row's spear tip that pokes into the cell (the 4x3 cells are only 341 px tall)."""
+    solid = ~mp.magenta_mask(cell[..., :3])
+
+    def longest(mask):
+        idx = np.where(mask)[0]
+        if len(idx) == 0:
+            return 0, len(mask)
+        runs, start = [], idx[0]
+        for a, b in zip(idx, idx[1:]):
+            if b - a > 3:
+                runs.append((start, a + 1))
+                start = b
+        runs.append((start, idx[-1] + 1))
+        return max(runs, key=lambda r: r[1] - r[0])
+
+    y0, y1 = longest(solid.sum(axis=1) > 2)
+    x0, x1 = longest(solid[y0:y1].sum(axis=0) > 2)
+    out = cell.copy()
+    keep = np.zeros(solid.shape, bool)
+    keep[y0:y1, x0:x1] = True
+    out[~keep] = (255, 0, 255, 255)
+    return out
+
+
+def rows_frames_of(unit, d):
+    sheet = np.array(Image.open(P / unit / f'rows-{d}-source.png').convert('RGBA'))
+    h, w = sheet.shape[:2]
+    cw, ch = w // 4, h // 3
+    figures = [mp.crop_figure(main_block(sheet[r * ch:(r + 1) * ch, c * cw:(c + 1) * cw]))
+               for r, (_, n, _) in enumerate(ROW_LAYOUT) for c in range(n)]
+    with Image.open(ROOT / f'public/assets/art/ai-v1/{unit}_0.png') as im:
+        shipped = np.array(im.convert('RGBA'))
+    rows_ = np.where(shipped[..., 3] > 0)[0]
+    factor = figures[0][1].shape[0] / (int(rows_.max() - rows_.min()) + 1)
+    return mp.place([mp.outline(mp.reduce(rgb, solid, factor)) for rgb, solid in figures])
+
+
+def main_rows(unit):
+    out = P / unit / 'frames-rows'
+    out.mkdir(parents=True, exist_ok=True)
+    strips = []
+    for d in ('se', 'nw'):
+        fr = rows_frames_of(unit, d)
+        for i, f in enumerate(fr):
+            Image.fromarray(f).save(out / f'{unit}_{d}_{i}.png')
+        w, h = fr[0].shape[1], fr[0].shape[0]
+        start = 0
+        for name, n, fps in ROW_LAYOUT:
+            seq = fr[start:start + n]
+            strips.append(on_grass(seq, w, h))
+            imgs = [on_grass([f], w, h).convert('RGB') for f in seq]
+            imgs[0].save(P / unit / f'anim-rows-{d}-{name}.gif', save_all=True, append_images=imgs[1:],
+                         duration=round(1000 / fps), loop=0)
+            start += n
+    board = Image.new('RGBA', (max(s.width for s in strips), sum(s.height + 8 for s in strips)), (40, 40, 48, 255))
+    y = 0
+    for s in strips:
+        board.paste(s, (0, y))
+        y += s.height + 8
+    board.save(P / unit / 'review-rows.png')
+    print(unit, '11 frames per direction', w, 'x', h)
+
+
 if __name__ == '__main__':
     args = sys.argv[1:]
-    if '--frames' in args:
+    if '--rows' in args:
+        for u in [a for a in args if a != '--rows'] or ['militia']:
+            main_rows(u)
+    elif '--frames' in args:
         i = args.index('--frames')
         for u in [a for j, a in enumerate(args) if j not in (i, i + 1)] or ['militia']:
             main12(u)

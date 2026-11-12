@@ -3,6 +3,9 @@
     python docs/art-review/units-iso/make_prompts.py militia
     python docs/art-review/units-iso/make_prompts.py --frames 12 militia
 
+`--rows` (owner 12/11/2026: "codex vẽ 1 hình chứa tất cả hành động, 3 hàng mỗi hàng 1 loại; đứng yên chỉ cần 3"): ONE
+sheet per direction, row 1 idle (3 frames), row 2 walk (4), row 3 attack (4), in a 4-column grid.
+
 `--frames 12` (owner 12/11/2026: "mỗi nhân vật 12 động tác để hoạt ảnh mượt hơn"): per direction 4 idle, 4 walk and
 4 attack frames, drawn in two 3×2 sheets (A: idle 1–4, walk 1–2; B: walk 3–4, attack 1–4). Each run attaches the
 direction's 6-frame sample (same character, camera and size) and run B also attaches run A's sheet.
@@ -125,6 +128,52 @@ def main12(units):
     print(path)
 
 
+BODY_ROWS = """Create ONE pixel-art ANIMATION SHEET for the Crowned Kingdoms unit {name} — {role}
+Attached images: (1) the approved style reference; (2) the approved ISOMETRIC building `{iso}` — its CAMERA (classic 2:1 isometric, looking down at about 30 degrees); (3) `{sample}` — the approved sample of THIS unit facing this way: draw exactly the SAME character at the SAME size, camera, facing, palette, outline and pixel size.
+Facing: every cell faces {facing}: {how}. Do not draw any mirrored copy.
+Format: a LANDSCAPE image, aspect ratio 3:2 (target 1536x1024 px), a grid of 4 columns x 3 rows of equal cells (each 384 px wide and 341 px tall), ONE ROW PER ANIMATION. Each used cell holds ONE full-body copy of the character, the same size in every cell, the feet on the same baseline near the bottom of the cell, a margin on every side, nothing crossing into another cell, no grid lines drawn. Each art pixel is a clean square block of 6x6 source pixels.
+Row 1 — IDLE, 3 frames in the first three cells (the 4th cell of row 1 stays EMPTY magenta), a gentle breathing loop:
+1. standing at rest, weight on both feet, weapon upright (as the sample);
+2. breathing in, shoulders and head 1 art pixel lower;
+3. breathing out, halfway back (leads back into frame 1).
+Row 2 — WALK, 4 frames, a smooth loop toward the facing direction:
+1. contact: the near foot just landed forward, the far foot back, arms swinging, body 1 art pixel lower;
+2. passing: the far foot lifted passing the near leg, body at idle height;
+3. contact on the other side: the far foot forward, the near foot back, the other arm swing, body 1 art pixel lower;
+4. passing on the other side (leads back into frame 1).
+Row 3 — ATTACK, 4 frames:
+1. anticipation: {a1}
+2. wind-up: {a2}
+3. strike: {a3}
+4. recovery: {a4}
+Neighbouring frames change only a little so the loops play smoothly. All movement follows the facing direction (diagonal on screen), never a pure left-right side view. Big simple limb and weapon movements that read at 64x64 art pixels; no motion blur, speed lines or effects.
+Team colours: ALLY version, blue accents exactly as in the sample.
+Style: warm cozy medieval fantasy pixel art, crisp square pixel clusters, upper-left lighting, a 1-art-pixel dark outline in a darker shade of each material (never pure black), the sample's palette.
+Background: ONE flat solid magenta #FF00FF filling the whole canvas, no gradient, texture, glow, cast shadow or ground; the character must not contain magenta.
+No text, letters, numbers, labels, UI, frame, watermark, blur, antialiasing or smooth gradients.
+"""
+
+
+def main_rows(units):
+    runner = ['#!/bin/bash', f'cd "{ROOT.as_posix()}"']
+    for unit in units:
+        name, role, *_ = up.UNITS[unit]
+        for d, (facing, how) in FACING.items():
+            sample = f'docs/art-review/units-iso/{unit}/poses-{d}-source.png'
+            out = f'docs/art-review/units-iso/{unit}/rows-{d}-source.png'
+            text = up.HEADER.format(out=out, doc=up.STYLE_DOC, ref=up.REFERENCE) + BODY_ROWS.format(
+                name=name, role=role, iso=ISO_REF, sample=sample, facing=facing, how=how, **ATTACK12[unit])
+            prompt = P / unit / f'prompt-rows-{d}.md'
+            prompt.write_text(text, encoding='utf-8', newline='\n')
+            rel = prompt.relative_to(ROOT).as_posix()
+            runner.append(f'codex exec --sandbox workspace-write -C "$PWD" -i {up.REFERENCE} -i {ISO_REF} -i {sample} - < {rel} > .superpowers/codex-rows-{unit}-{d}.out 2>&1')
+            runner.append(f'if [ -s {out} ]; then echo "{unit} {d} ok"; else echo "{unit} {d} MISSING"; fi >> .superpowers/units-rows.log')
+    runner.append('echo done >> .superpowers/units-rows.log')
+    path = ROOT / '.superpowers/units-rows.sh'
+    path.write_text('\n'.join(runner) + '\n', encoding='utf-8', newline='\n')
+    print(path)
+
+
 def main(units):
     runner = ['#!/bin/bash', f'cd "{ROOT.as_posix()}"']
     for unit in units:
@@ -148,7 +197,9 @@ def main(units):
 
 if __name__ == '__main__':
     args = sys.argv[1:]
-    if '--frames' in args:
+    if '--rows' in args:
+        main_rows([a for a in args if a != '--rows'] or ['militia'])
+    elif '--frames' in args:
         i = args.index('--frames')
         if args[i + 1] != '12':
             raise SystemExit('--frames supports 12 only')
