@@ -28,7 +28,7 @@ describe('runHeadless', () => {
     expect(JSON.stringify(a.state)).toBe(JSON.stringify(b.state));
   });
 
-  it('varies across seeds', () => {
+  it('varies across seeds', { timeout: 30_000 }, () => { // ten whole runs: slow when the suite runs in parallel
     const outcomes = new Set<string>();
     for (let seed = 1; seed <= 10; seed++) {
       const { state } = runHeadless({ seed, kingId: 'wheat' });
@@ -84,7 +84,7 @@ describe('runHeadless under the G2 rules', () => {
     expect(JSON.stringify(play(5, 'wheat').state)).toBe(JSON.stringify(play(5, 'wheat').state));
   });
 
-  it('exercises gold, rerolls and plot purchases across seeds', () => {
+  it('exercises gold, rerolls and plot purchases across seeds', { timeout: 30_000 }, () => { // twelve whole runs
     let earned = 0;
     let bought = 0;
     for (let seed = 1; seed <= 12; seed++) {

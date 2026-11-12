@@ -30,6 +30,19 @@ Lệnh đo: `npm run balance -- --king <vua> --runs N --bot greedy --difficulty 
   - chênh lệch 31 điểm (Thuỷ Triều 50% → Đá 81%).
 - Chỉnh hệ số chung thì không thu hẹp được chênh lệch: ở 2,4 Thuỷ Triều chỉ còn 13% trong khi Phép vẫn 63%.
 
-## Bước tiếp theo đề xuất (chờ duyệt)
-- Thu hẹp chênh lệch bằng `KING_TUNING` (phe mình) cho Đá, Rừng, Du Mục.
-- Chạy mẫu nghiệm thu 500 ván/vua.
+## Chỉnh riêng ba vua (chủ dự án duyệt 12/11/2026)
+
+`KING_TUNING` (% máu và sát thương phe mình), mult 2,2, 100 ván/vua:
+
+| Vua | Trước | Sau | Thắng trước → sau |
+|---|---|---|---|
+| Đá | −34 | −42 | 81% → 55% |
+| Rừng | +21 | +15 | 69% → 60% |
+| Du mục | +18 | +13 | 68% → 62% |
+
+**Kết quả: ĐẠT.**
+- Chín vua thắng 50–64%: Thuỷ Triều 50, Lúa 53, Trăng 54, Đá 55, Đồng Hồ 55, Rừng 60, Du Mục 62, Lò Rèn 62, Phép 64.
+- Chênh lệch 14 điểm (mục tiêu ≤ 15), trung bình khoảng 57%.
+
+## Còn lại
+- Mẫu nghiệm thu 500 ván/vua chưa chạy.
