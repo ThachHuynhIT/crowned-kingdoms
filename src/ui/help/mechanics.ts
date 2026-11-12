@@ -52,7 +52,7 @@ export const mechanicEntries = (content: Content): readonly HelpEntry[] => {
     entry('year', 'Một năm', [
       `Năm đầu bạn có ${RUN.handSize} thẻ; mỗi năm sau rút thêm ${RUN.yearDraw} thẻ (năm hội đồng và năm ngay sau trận boss rút ${RUN.bonusYearDraw}), bài cũ được giữ.`,
       `Chơi thẻ lên bàn cờ 5×5 hoặc bán thẻ (${RUN.skipPlayGold} vàng mỗi thẻ) tới khi trên tay còn ${RUN.battleHandMax} thẻ, rồi trận tự bắt đầu; năm cuối của ván 30 năm phải dùng hết bài.`,
-      `Mua thẻ: ${RUN.shopBaseGold} vàng cho một thẻ ngẫu nhiên của vua bạn, mỗi lần mua thêm trong năm đắt hơn ${RUN.shopStepGold} vàng.`,
+      `Mua thẻ: ${RUN.shopBaseGold} vàng cho một thẻ ngẫu nhiên của vua bạn, mỗi lần mua thêm trong năm đắt hơn ${RUN.shopStepGold} vàng; tối đa ${RUN.shopBuysPerYear} lần mỗi năm và chỉ khi tay chưa đủ ${RUN.handMax} lá.`,
       `Đầu năm ${RUN.questYears.join(', ')} có thể có sứ giả đề nghị nhiệm vụ; sau trận bạn nhận thưởng hoặc chinh phục, và năm ${RUN.councilYears.join(', ')} có hội đồng.`,
       `Ván đầy đủ dài ${lastYear} năm; sống qua năm cuối là thắng, hết mạng là thua.`,
     ]),
@@ -105,7 +105,8 @@ export const mechanicEntries = (content: Content): readonly HelpEntry[] => {
     ]),
     entry('rewards', 'Thẻ thưởng', [
       `Thẻ thưởng cho ${REWARD.choices} lựa chọn (sắc lệnh Giao Thương tăng lên ${DECREE_RULES.reward}).`,
-      'Thẻ thưởng chọn được nằm trên đầu chồng rút: đó là lá bạn rút đầu năm sau.',
+      'Thẻ thưởng, thẻ chinh phục và thẻ thưởng nhiệm vụ vào thẳng tay; đầu năm sau bạn vẫn rút lá mới như thường.',
+      `Trên tay tối đa ${RUN.handMax} lá: tay đầy thì thẻ nhận thêm nằm trên đầu chồng rút, rút đầu năm cũng dừng ở ${RUN.handMax} lá.`,
     ]),
     entry('powers', 'Can Thiệp riêng của vua', [
       'Can Thiệp rơi vào chỗ bạn chọn, cùng hồi chiêu và sát thương gốc; mỗi vua thêm một hiệu ứng:',
@@ -113,7 +114,7 @@ export const mechanicEntries = (content: Content): readonly HelpEntry[] => {
     ]),
     entry('merchant', 'Thương nhân', [
       `Sau trận các năm ${RUN.merchantYears.join(', ')} (Vô tận: sau năm ${RULES_FULL.years}, cứ ${RUN.merchantEvery} năm) thương nhân bày ${REWARD.choices} thẻ.`,
-      `Mỗi thẻ ${RUN.merchantPrice} vàng, mua tối đa 1 hoặc bỏ qua miễn phí; thẻ mua vào thẳng tay (như Mua thẻ), lá rút năm sau vẫn là lá mới.`,
+      `Mỗi thẻ ${RUN.merchantPrice} vàng, mua tối đa 1 hoặc bỏ qua miễn phí; thẻ mua vào thẳng tay như thẻ thưởng.`,
     ]),
   ];
 };

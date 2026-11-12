@@ -90,7 +90,9 @@ Tất cả là cảm nhận trên PC (desktop ≥ 768 px). Bố cục điện th
    - chữ trên bàn cờ có viền;
    - dropdown điều khiển được bằng phím.
 
-   **Còn mở:** kiểm trên điện thoại thật; thẻ thưởng vào tay (chờ quyết định); vẽ thử lính theo spec asset mới.
+   **Còn mở:** kiểm trên điện thoại thật; lính theo spec asset mới (mẫu Dân Quân 3 hàng đã vẽ, các lính khác để sau theo chủ dự án 12/11).
+
+   ✔ 12/11/2026 (chủ dự án duyệt): thẻ thưởng, thẻ chinh phục và thẻ thưởng nhiệm vụ (kể cả Thăng Cấp của nhiệm vụ Tàn Sát) vào thẳng tay như thẻ thương nhân, không còn thay chỗ lá rút năm sau.
 
 ## Để sau: điện thoại (chỉ làm khi chủ dự án bảo)
 

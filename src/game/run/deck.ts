@@ -1,4 +1,5 @@
 import type { Rng } from '../../core/random';
+import { RUN } from '../../data/run';
 import type { CardId } from '../../data/types';
 
 export interface HandPiles {
@@ -43,4 +44,13 @@ export function refillHand(
     nextHand.push(draw.shift()!);
   }
   return { hand: nextHand, drawPile: draw, discardPile: discard };
+}
+
+/**
+ * Nhận một thẻ (thưởng, chinh phục, thưởng nhiệm vụ, thương nhân): vào tay khi tay còn dưới `RUN.handMax` lá, tay đầy
+ * thì lên đầu chồng rút để không mất lá nào (chủ dự án 12/11/2026). Không sửa đầu vào; `deck` do người gọi thêm.
+ */
+export function gainCard(piles: Readonly<HandPiles>, card: CardId): HandPiles {
+  if (piles.hand.length < RUN.handMax) return { ...piles, hand: [...piles.hand, card] };
+  return { ...piles, drawPile: [card, ...piles.drawPile] };
 }

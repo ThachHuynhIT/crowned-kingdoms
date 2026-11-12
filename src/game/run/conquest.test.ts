@@ -121,6 +121,16 @@ describe('conquering a king (spec §3.7)', () => {
     expect(next.offers).toBeNull();
   });
 
+  it('puts the reward and the conquest card straight into the hand (owner 12/11/2026)', () => {
+    const start = won();
+    const reward = cardOffer(start)!.cardIds[0]!;
+    const s = ok(applyCommand(start, { type: 'pickOffer', index: 0 }, content));
+    expect(s.hand).toEqual([...start.hand, reward]);
+    const chosen = cardOffer(s)!.cardIds[1]!;
+    const picked = ok(applyCommand(s, { type: 'pickOffer', index: 1 }, content));
+    expect(picked.hand.slice(0, s.hand.length + 1)).toEqual([...s.hand, chosen]);
+  });
+
   it('is deterministic for the same state', () => {
     const a = ok(applyCommand(won(), { type: 'pickOffer', index: 0 }, content));
     const b = ok(applyCommand(won(), { type: 'pickOffer', index: 0 }, content));

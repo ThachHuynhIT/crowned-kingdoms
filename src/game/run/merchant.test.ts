@@ -10,7 +10,8 @@ import { rollOffers } from './rewards';
 import type { RunState } from './state';
 
 const merchantState = (over: Partial<RunState> = {}): RunState => {
-  const base = runState({ rules: RULES_FULL, year: 6, gold: 10, ...over });
+  // after a battle the hand holds at most RUN.battleHandMax cards
+  const base = runState({ rules: RULES_FULL, year: 6, gold: 10, hand: runState().deck.slice(0, RUN.battleHandMax), ...over });
   return {
     ...base,
     phase: 'reward',

@@ -24,7 +24,7 @@ import { activeModifier } from './endlessModifiers';
 import { isCouncilYear, isFinalYear } from './endlessRules';
 import { enactDecree, rollCouncil, selectDecree, setCouncilSelection } from './council';
 import { rerollPrice, rewardCount } from './decrees';
-import { refillHand } from './deck';
+import { gainCard, refillHand } from './deck';
 import { cardOffer, enqueueOffers } from './flow';
 import { maxEnchantStacks, perkLossGold, placedAgeBonus } from './perks';
 import { stateRefusal } from './playable';
@@ -350,7 +350,7 @@ function applyBase(input: RunState, cmd: RunCommand, content: Content): CommandR
       // Thưởng thường và thương nhân được bỏ qua; chinh phục và thưởng nhiệm vụ bắt buộc chọn một thẻ.
       const merchant = offer.kind === 'merchant';
       if (offer.kind !== 'reward' && !merchant && index === null) return fail('badTarget');
-      let { deck, drawPile, hand } = state;
+      let { deck, hand, drawPile } = state;
       let gold = state.gold;
       let goldEarned = state.stats.goldEarned;
       if (index === null) {
@@ -366,15 +366,10 @@ function applyBase(input: RunState, cmd: RunCommand, content: Content): CommandR
           if (unaffordable !== null) return fail(unaffordable);
           gold -= offer.price ?? RUN.merchantPrice;
         }
+        // Mọi thẻ chọn được (thưởng, chinh phục, thưởng nhiệm vụ, thương nhân) vào thẳng tay như Mua thẻ (chủ dự án
+        // 12/11/2026); tay đã đủ `RUN.handMax` lá thì lên đầu chồng rút (`gainCard`). Trước đây thẻ thưởng lên đầu chồng rút nên thay chỗ lá rút đầu năm sau: tay không thêm lá nào.
         deck = [...deck, picked];
-        if (merchant) {
-          // Mua ở thương nhân: thẳng lên tay như Mua thẻ (sửa lỗi 12/11/2026). Đặt lên đầu chồng rút thì lá rút duy
-          // nhất của năm sau chính là thẻ vừa mua: trả 3 vàng mà tay không thêm lá nào.
-          hand = [...hand, picked];
-        } else {
-          // Lên đầu chồng rút: thẻ vừa chọn có ngay trên tay năm sau (không bị chôn trong chồng bỏ).
-          drawPile = [picked, ...drawPile];
-        }
+        ({ hand, drawPile } = gainCard({ hand, drawPile, discardPile: state.discardPile }, picked));
       }
       let next: RunState = {
         ...state,

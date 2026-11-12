@@ -160,12 +160,18 @@ describe('quest rewards: gold and counters', () => {
 });
 
 describe('quest rewards: board and deck', () => {
-  it('slaughter: 100 kills in one battle adds Promote to deck and the top of the draw pile; 99 does not', () => {
-    const s = withQuest('quest_slaughter');
+  it('slaughter: 100 kills in one battle adds Promote to deck and straight into the hand; 99 does not', () => {
+    const full = withQuest('quest_slaughter');
+    const s = { ...full, hand: full.hand.slice(0, 2), drawPile: [...full.hand.slice(2), ...full.drawPile] };
     const done = after(s, result({ kills: 100 }));
     expect(status(done)).toBe('completed');
     expect(done.deck).toEqual([...s.deck, QUEST_RULES.promoteCard]);
-    expect(done.drawPile[0]).toBe(QUEST_RULES.promoteCard);
+    expect(done.hand).toEqual([...s.hand, QUEST_RULES.promoteCard]);
+    expect(done.drawPile).toEqual(s.drawPile);
+    // a full hand (owner 12/11/2026: at most RUN.handMax cards) puts Promote on top of the draw pile instead
+    const fullDone = after(full, result({ kills: 100 }));
+    expect(fullDone.hand).toEqual(full.hand);
+    expect(fullDone.drawPile).toEqual([QUEST_RULES.promoteCard, ...full.drawPile]);
     expect(status(after(s, result({ kills: 99 })))).toBe('active');
   });
 

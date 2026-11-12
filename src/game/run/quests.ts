@@ -9,6 +9,7 @@ import type { BuildingKind, QuestId } from '../../data/types';
 import type { Content } from '../cards/registry';
 import type { BattleResult } from '../battle/types';
 import { THRONE_PLOT, attachEnchant, levelUpBuilding } from './board';
+import { gainCard } from './deck';
 import { enqueueOffers, finishYearStart } from './flow';
 import { maxEnchantStacks } from './perks';
 import { neutralRewardPool, rollRareOffers } from './rewards';
@@ -190,7 +191,7 @@ export function settleQuests(
         if (at === 'afterBattle' && result !== null && result.kills >= QUEST_RULES.kills) {
           done();
           s.deck.push(QUEST_RULES.promoteCard);
-          s.drawPile.unshift(QUEST_RULES.promoteCard);
+          Object.assign(s, gainCard(s, QUEST_RULES.promoteCard)); // into the hand like every reward card (owner 12/11/2026)
         }
         break;
       case 'quest_double_rune': {

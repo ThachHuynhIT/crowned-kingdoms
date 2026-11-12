@@ -141,4 +141,6 @@ const ILLEGAL_TEXT: Record<IllegalReason, string> = {
   noFreeMove: 'Năm nay đã hết lượt dời miễn phí.',
   wrongKing: 'Chỉ Vua Du Mục được dời miễn phí.',
   noShopCards: 'Không còn thẻ nào để mua.',
+  shopLimit: `Mỗi năm chỉ mua được ${RUN.shopBuysPerYear} thẻ.`,
+  handFull: `Tay đã đủ ${RUN.handMax} lá.`,
 };

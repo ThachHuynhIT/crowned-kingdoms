@@ -191,7 +191,9 @@ export type IllegalReason =
   | 'lastLife'
   | 'noFreeMove'
   | 'wrongKing'
-  | 'noShopCards';
+  | 'noShopCards'
+  | 'shopLimit'
+  | 'handFull';
 
 export type PlayTarget =
   | { kind: 'none' }

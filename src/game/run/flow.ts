@@ -1,5 +1,6 @@
 /** Thứ tự bước trong năm và hàng đợi lựa chọn (spec §3.2, §5.5). Thuần, không sửa đầu vào. */
 import { Rng } from '../../core/random';
+import { RUN } from '../../data/run';
 import type { Content } from '../cards/registry';
 import { yearDrawCount } from './decrees';
 import { refillHand } from './deck';
@@ -57,8 +58,14 @@ export function closeOffer(state: RunState): RunState {
 export function finishYearStart(state: RunState, _content: Content): RunState {
   if (!state.yearStartPendingDraw) return state;
   const rng = new Rng(state.rng.draw);
-  // Keep the cards in hand and draw a few more (owner 2026-11-10): cards that cannot be played are sold.
-  const piles = refillHand(state.hand, state.drawPile, state.discardPile, rng, state.hand.length + yearDrawCount(state));
+  // Keep the cards in hand and draw a few more (owner 2026-11-10), never past `RUN.handMax` (owner 2026-11-12).
+  const piles = refillHand(
+    state.hand,
+    state.drawPile,
+    state.discardPile,
+    rng,
+    Math.min(RUN.handMax, state.hand.length + yearDrawCount(state)),
+  );
   return {
     ...state,
     ...piles,

@@ -20,6 +20,8 @@ export const shopPool = (state: Pick<RunState, 'kingId'>, content: Content): Car
 export const buyCardIllegal = (state: RunState, content: Content): IllegalReason | null => {
   if (state.phase !== 'planning') return 'wrongPhase';
   if (shopPool(state, content).length === 0) return 'noShopCards';
+  if (state.shopPurchasesThisYear >= RUN.shopBuysPerYear) return 'shopLimit';
+  if (state.hand.length >= RUN.handMax) return 'handFull';
   if (state.gold < shopPrice(state)) return 'notEnoughGold';
   return null;
 };

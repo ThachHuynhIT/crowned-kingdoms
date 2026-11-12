@@ -18,6 +18,13 @@ const base = (over: Partial<RunState> = {}): RunState => ({
   ...over,
 });
 
+/** The hand kept from the last battle (`RUN.battleHandMax` cards); the rest goes back on the draw pile. */
+const keptHand = <S extends Pick<RunState, 'hand' | 'drawPile'>>(s: S): S => ({
+  ...s,
+  hand: s.hand.slice(0, RUN.battleHandMax),
+  drawPile: [...s.hand.slice(RUN.battleHandMax), ...s.drawPile],
+});
+
 /** The run at the end of `year - 1`, ready for `startYear`. */
 const before = (year: number, over: Partial<RunState> = {}): RunState => base({ year: year - 1, ...over });
 
@@ -106,7 +113,7 @@ describe('quest_years_and_capacity', () => {
 });
 
 describe('answering', () => {
-  const offered = (over: Partial<RunState> = {}): RunState => startYear(before(3, over), CONTENT);
+  const offered = (over: Partial<RunState> = {}): RunState => startYear(keptHand(before(3, over)), CONTENT);
   const id = (s: RunState): QuestId => (s.offers as { questId: QuestId }).questId;
 
   it('accept records the quest with deadline offeredYear + duration - 1, then draws the year cards on top of the kept hand', () => {

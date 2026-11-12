@@ -552,13 +552,14 @@ describe('rewards', () => {
     expect(r.state.offers).toBeNull();
   });
 
-  it('the chosen reward is in the next hand right away, not buried in the discard pile', () => {
+  it('the chosen reward goes straight into the hand, on top of the next year draw (owner 12/11/2026)', () => {
     for (const index of [0, 1, 2]) {
       const s = reward();
       const chosen = cardOffer(s)!.cardIds[index]!;
       const next = ok(applyCommand(s, { type: 'pickOffer', index }, CONTENT)).state;
-      expect(next.hand).toContain(chosen);
-      expect(next.hand).toHaveLength(RUN.yearDraw);
+      expect(next.hand.slice(0, s.hand.length + 1)).toEqual([...s.hand, chosen]);
+      // the reward card plus the year's normal draw: the reward no longer takes the place of a drawn card
+      expect(next.hand).toHaveLength(s.hand.length + 1 + RUN.yearDraw);
       expect(sorted([...next.hand, ...next.drawPile, ...next.discardPile])).toEqual(sorted(next.deck));
     }
   });

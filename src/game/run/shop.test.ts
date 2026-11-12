@@ -7,6 +7,9 @@ import { buyCardIllegal, shopPool, shopPrice } from './shop';
 import type { RunState } from './state';
 import { startYear } from './yearFlow';
 
+/** A planning state holding one card, so three purchases fit under `RUN.handMax` (owner 12/11/2026). */
+const shopState = (over: Partial<RunState> = {}): RunState => runState({ hand: runState().deck.slice(0, 1), ...over });
+
 const buy = (s: RunState): RunState => {
   const r = applyCommand(s, { type: 'buyCard' }, CONTENT);
   if ('error' in r) throw new Error(r.error);
@@ -20,7 +23,7 @@ describe('Mua thẻ (owner 2026-11-10)', () => {
   });
 
   it('buy_card_appends_once_to_deck_and_hand, pays the price and never marks a play', () => {
-    const s = runState({ gold: 20 });
+    const s = shopState({ gold: 20 });
     const after = buy(s);
     expect(after.gold).toBe(15);
     expect(after.hand).toHaveLength(s.hand.length + 1);
@@ -42,7 +45,7 @@ describe('Mua thẻ (owner 2026-11-10)', () => {
   });
 
   it('shop_advances_only_shop_stream and is deterministic', () => {
-    const s = runState({ gold: 20 });
+    const s = shopState({ gold: 20 });
     const a = buy(s);
     const b = buy(s);
     expect(a.hand).toEqual(b.hand);
@@ -53,15 +56,15 @@ describe('Mua thẻ (owner 2026-11-10)', () => {
   });
 
   it('failed_purchase_is_atomic: not enough gold or wrong phase changes nothing', () => {
-    const poor = runState({ gold: 4 });
+    const poor = shopState({ gold: 4 });
     expect(buyCardIllegal(poor, CONTENT)).toBe('notEnoughGold');
     const r = applyCommand(poor, { type: 'buyCard' }, CONTENT);
     expect('error' in r && r.error).toBe('notEnoughGold');
-    expect(buyCardIllegal(runState({ gold: 20, phase: 'battle' }), CONTENT)).toBe('wrongPhase');
+    expect(buyCardIllegal(shopState({ gold: 20, phase: 'battle' }), CONTENT)).toBe('wrongPhase');
   });
 
   it('shop_counter_resets_only_at_start_year', () => {
-    const twice = buy(buy(runState({ gold: 30 })));
+    const twice = buy(buy(shopState({ gold: 30 })));
     expect(shopPrice(twice)).toBe(11);
     const next = startYear({ ...twice, phase: 'yearEnd' }, CONTENT);
     expect(next.shopPurchasesThisYear).toBe(0);

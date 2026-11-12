@@ -116,11 +116,19 @@ describe('startYear follows the calendar', () => {
 
 describe('startYear draws within the same call (no held-back draw outside the quest step)', () => {
   it('leaves yearStartPendingDraw false and the year draw added to the kept hand', () => {
-    const prev = before(2);
+    const prev = { ...before(2), hand: before(2).hand.slice(0, 2), drawPile: [...before(2).hand.slice(2), ...before(2).drawPile] };
     const next = startYear(prev, content);
     expect(next.yearStartPendingDraw).toBe(false);
     expect(next.phase).toBe('planning');
     expect(next.hand.slice(0, prev.hand.length)).toEqual(prev.hand);
     expect(next.hand).toHaveLength(prev.hand.length + RUN.yearDraw);
+  });
+
+  it('never draws past RUN.handMax: a full kept hand draws nothing (owner 12/11/2026)', () => {
+    const prev = before(2);
+    expect(prev.hand).toHaveLength(RUN.handMax);
+    const next = startYear(prev, content);
+    expect(next.hand).toEqual(prev.hand);
+    expect(next.drawPile).toEqual(prev.drawPile);
   });
 });
