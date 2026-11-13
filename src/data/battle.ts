@@ -41,7 +41,7 @@ export const BOSS_DMG_MULT = [0.9, 0.58, 0.9] as const;
 export const KING_TUNING: Readonly<Record<KingId, { readonly hpPct: number; readonly dmgPct: number }>> = {
   wheat: { hpPct: 27, dmgPct: 27 },
   stone: { hpPct: -42, dmgPct: -42 },
-  arcane: { hpPct: -12, dmgPct: -12 },
+  arcane: { hpPct: -18, dmgPct: -18 },
   grove: { hpPct: 15, dmgPct: 15 },
   tide: { hpPct: 3, dmgPct: 3 },
   forge: { hpPct: -26, dmgPct: -26 },

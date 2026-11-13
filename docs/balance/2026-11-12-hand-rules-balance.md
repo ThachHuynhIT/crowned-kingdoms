@@ -44,5 +44,29 @@ Lệnh đo: `npm run balance -- --king <vua> --runs N --bot greedy --difficulty 
 - Chín vua thắng 50–64%: Thuỷ Triều 50, Lúa 53, Trăng 54, Đá 55, Đồng Hồ 55, Rừng 60, Du Mục 62, Lò Rèn 62, Phép 64.
 - Chênh lệch 14 điểm (mục tiêu ≤ 15), trung bình khoảng 57%.
 
-## Còn lại
-- Mẫu nghiệm thu 500 ván/vua chưa chạy.
+## Mẫu nghiệm thu 500 ván/vua (seeds 1–500)
+
+| Vua | 100 ván | **500 ván** |
+|---|---|---|
+| Phép | 64% | **72,0%** |
+| Du mục | 62% | **63,8%** |
+| Rừng | 60% | **63,6%** |
+| Lò rèn | 62% | **61,6%** |
+| Lúa | 53% | **60,6%** |
+| Thuỷ triều | 50% | **59,8%** |
+| Đồng hồ | 55% | **58,8%** |
+| Trăng | 54% | **56,0%** |
+| Đá | 55% | **55,0%** |
+
+**Kết quả: CHƯA ĐẠT.**
+- Phép 72% vượt trần 65%. Chênh lệch 17 điểm (Đá 55% → Phép 72%), quá mục tiêu ≤ 15.
+- Bỏ Phép ra thì tám vua còn lại nằm trong 55–64%, chênh 9 điểm.
+- Mẫu 100 ván (seeds 1–100) đánh giá thấp Phép, Lúa và Thuỷ Triều.
+
+## Chỉnh vua Phép (chủ dự án duyệt 13/11/2026)
+
+`KING_TUNING.arcane` −12 → **−18**. Đo lại Phép 500 ván: 72,0% → **61,2%**.
+
+**Kết quả nghiệm thu: ĐẠT.**
+- Chín vua thắng 55,0–63,8% (500 ván/vua): Đá 55,0, Trăng 56,0, Đồng Hồ 58,8, Thuỷ Triều 59,8, Lúa 60,6, Phép 61,2, Lò Rèn 61,6, Rừng 63,6, Du Mục 63,8.
+- Chênh lệch 8,8 điểm (mục tiêu ≤ 15), trung bình khoảng 60%.
