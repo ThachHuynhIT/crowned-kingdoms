@@ -245,6 +245,46 @@ def rows_figure_px(unit):
     return min(280, round(MILITIA_ROWS_FIGURE * shipped_height(unit) / shipped_height('militia') / 10) * 10)
 
 
+# 17/11/2026: units without a hand-written ATTACK12 entry take their wind-up and strike from the approved front-view
+# pose sheet's text (g3e/units/make_prompts.py ATTACK/STRIKE), turned from "to the right" to the facing direction.
+DIAGONAL_BODY = (' Body check for this unit: its body is LONG, so turn the WHOLE body diagonally with the camera of image 3:'
+                 ' facing DOWN-RIGHT the head and chest are at the lower right and the rear at the upper left, seen from'
+                 ' above-front; facing UP-LEFT the head is at the upper left and the rear at the lower right, seen from'
+                 ' above-behind. Never a pure side profile, never head-on.')
+ROWS_NOTES = {u: DIAGONAL_BODY for u in ('wolf', 'stag', 'spider', 'iron_drake', 'rider', 'horse_archer')}
+# r1 17/11/2026: r0 SE hid the face in a dark visor with glowing eyes
+ROWS_NOTES['construct'] = ' Character check for this unit: the face is LIGHT carved stone like the rest of the body, with two small violet eyes and a gold circlet with a violet gem on the forehead, exactly as in image 4 (NO dark visor, no shadowed face recess); pale stone plates bound with gold bands, the big violet crystal in the chest, the blue sash across the chest and the blue flap with the gold crown.'
+# r1 17/11/2026: r0 SE wore a big leafy mantle and an angry face
+ROWS_NOTES['bear'] = ' Character check for this unit: only a FEW small moss patches on the head and shoulders and ONE small white flower on one shoulder (NO leafy mantle or leaf collar), a round friendly face (calm, not angry, except the roar of the wind-up), a big tan-orange belly, the BLUE harness crossing the chest with gold square buckles and a blue belt with small pouches, exactly as in image 4.'
+# r1 17/11/2026: r0 lost the chibi head (SE) and turned the bandana into a headband (NW)
+ROWS_NOTES['pirate'] = ' Character check for this unit: CHIBI proportions exactly as in image 4 (a big head, about 40% of the height, like the militia in image 3); the BLUE bandana covers the WHOLE top of the head like a cap, knotted at the back with two short tails (hair shows only at the sides and the fringe, never on top of the head); a cream-and-brown striped shirt, a blue sash, brown trousers, boots, a short curved cutlass with a gold guard.'
+# r1 17/11/2026: r0 SE drew a second bayonet next to the upright rifle in the recovery frame
+ROWS_NOTES['tin_soldier'] = ' Weapon check for this unit: exactly ONE bayonet rifle in every cell, held in both hands during the attack and upright at the side at rest; never two weapons in one cell.'
+# r1 17/11/2026: r0 SE drew a scary, narrow-skulled skeleton with an angry brow and a cape
+ROWS_NOTES['skeleton'] = ' Character check for this unit: CUTE, not scary, exactly as in image 4: a BIG ROUND smooth skull (about 45% of the height) with one small crack, two ROUND glowing violet eye sockets with NO angry brow, a short torn blue scarf and a torn blue cloth skirt (NO flowing cape), a round wooden shield and a short rusty sword.'
+# r1 17/11/2026: r0 SE drew a darker brown horse without the blue blanket and a thin, non-chibi rider
+ROWS_NOTES['horse_archer'] = DIAGONAL_BODY + ' Character check for this unit: the horse is LIGHT GOLDEN-TAN with a dark brown mane and tail and a BLUE saddle blanket with gold trim, exactly as in image 4; the rider is CHIBI (a big head under a big round red fur hat with cream fur trim and a red pompom), a red coat with cream fur cuffs, a blue sash across the chest, a short recurve bow and a quiver of arrows on the back.'
+ROWS_NOTES['wraith'] = ' Body check for this unit: it FLOATS with a wispy tail and no feet; the walk row is a gentle forward glide with a small bob, the tail swaying. Character check (r1/r2 17/11/2026: r0 SE was pale lavender with a pointed hood): the cloak is the LIGHT pastel dusty pink of image 4, exactly as light as image 4 (r2: r1 came out dark maroon; not pale lavender, not dark red), its shadows a soft mauve, a ROUNDED hood with a stitched seam on top (no pointed tip), a dark hood opening with two glowing PINK-VIOLET eyes, blue trim and a blue clasp with a ribbon.'
+
+
+def _facing_text(t):
+    for a, b in (('forward to the right', 'forward along the facing direction'), ('aiming to the right', 'aiming along the facing direction'),
+                 ('in front of it to the right', 'in front of it along the facing direction'), ('in front to the right', 'in front along the facing direction'),
+                 ('to the right', 'along the facing direction'), ('pointing right', 'pointing along the facing direction')):
+        t = t.replace(a, b)
+    return t
+
+
+def rows_actions(unit):
+    if unit in ATTACK12:
+        return {'idle': '', 'note': '', **ATTACK12[unit]}
+    return {'idle': '', 'note': ROWS_NOTES.get(unit, ''),
+            'a1': 'the first small move into the wind-up below (weight shifting back).',
+            'a2': _facing_text(up.ATTACK[unit]),
+            'a3': _facing_text(up.STRIKE[unit]),
+            'a4': 'coming back out of the strike, returning toward the idle stance.'}
+
+
 def build_rows_prompt(unit, d):
     if not (ROOT / up.STYLE_DOC).exists() or not (ROOT / up.REFERENCE).exists():
         raise SystemExit('docs/ART_STYLE.md or the approved reference image is missing: refusing to generate images')
@@ -263,7 +303,7 @@ def build_rows_prompt(unit, d):
                 raise SystemExit(f'{ref} (approved reference) is missing: refusing to generate images')
         images = [up.REFERENCE, ISO_REF, militia, sheet]
         body = BODY_ROWS_NEW.format(name=name, role=role, iso=ISO_REF, militia=militia, sheet=sheet, facing=facing,
-                                    how=how, fig=rows_figure_px(unit), **{'idle': '', 'note': '', **ATTACK12[unit]})
+                                    how=how, fig=rows_figure_px(unit), **rows_actions(unit))
     return up.HEADER.format(out=out, doc=up.STYLE_DOC, ref=up.REFERENCE) + body, images, out
 
 

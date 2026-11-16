@@ -145,7 +145,30 @@ def main_block(cell):
     return out
 
 
+# 17/11/2026: units whose own colours sit inside make_poses' loose magenta key (r > 150, b > 150, g < 110): the pink
+# wraith cloak lost its darker shades and showed holes. For them the key is only the near-pure #FF00FF background.
+TIGHT_KEY = {'wraith', 'moon_reaper'}
+
+
+def tight_key(rgb):
+    r, g, b = (rgb[..., k].astype(int) for k in range(3))
+    return (r > 215) & (b > 215) & (g < 70)
+
+
+_LOOSE = mp.magenta_mask
+
+
 def rows_frames_of(unit, d):
+    if unit in TIGHT_KEY:
+        mp.magenta_mask = tight_key
+        try:
+            return _rows_frames_of(unit, d)
+        finally:
+            mp.magenta_mask = _LOOSE
+    return _rows_frames_of(unit, d)
+
+
+def _rows_frames_of(unit, d):
     sheet = np.array(Image.open(P / unit / f'rows-{d}-source.png').convert('RGBA'))
     h, w = sheet.shape[:2]
     cw, ch = w // 4, h // 3
