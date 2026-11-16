@@ -4,7 +4,10 @@
     python docs/art-review/units-iso/make_prompts.py --frames 12 militia
 
 `--rows` (owner 12/11/2026: "codex vẽ 1 hình chứa tất cả hành động, 3 hàng mỗi hàng 1 loại; đứng yên chỉ cần 3"): ONE
-sheet per direction, row 1 idle (3 frames), row 2 walk (4), row 3 attack (4), in a 4-column grid.
+sheet per direction, row 1 idle (3 frames), row 2 walk (4), row 3 attack (4), in a 4-column grid. A unit without a
+6-frame iso sample (16/11/2026: reaper, peasant, golem, miner, slinger, rubble) attaches instead the approved militia
+row sheet of the same direction (same-kind reference) and its own approved front-view pose sheet (character);
+optional per-unit 'idle' and 'note' entries in ATTACK12 carry redraw corrections.
 
 `--frames 12` (owner 12/11/2026: "mỗi nhân vật 12 động tác để hoạt ảnh mượt hơn"): per direction 4 idle, 4 walk and
 4 attack frames, drawn in two 3×2 sheets (A: idle 1–4, walk 1–2; B: walk 3–4, attack 1–4). Each run attaches the
@@ -98,6 +101,48 @@ ATTACK12 = {
         'a3': 'a lunge toward the facing direction, the spear thrust straight out along it with the arm fully extended.',
         'a4': 'pulling back from the lunge, the spear half withdrawn, returning toward the idle stance.',
     },
+    # 16/11/2026: the rest of the Wheat and Stone sets, drawn straight as row sheets (no 6-frame iso sample);
+    # the actions follow each unit's approved front-view pose sheet (g3e/units/make_prompts.py ATTACK/STRIKE)
+    'reaper': {
+        'a1': 'weight shifts back, both hands lift the sickle-scythe off the shoulder.',
+        'a2': 'the sickle-scythe raised high above and behind the head with both hands, weight on the back foot.',
+        'a3': 'a wide low swing: the blade sweeps down and forward along the facing direction at knee height, body leaning forward.',
+        'a4': 'the blade low and behind the swing, rising back toward the shoulder, returning toward the idle stance.',
+    },
+    'peasant': {
+        # r1 16/11/2026: r0 SE held the fork lowered forward while NW held it upright; r2: r1 SE faced the viewer
+        'idle': ', the pitchfork held UPRIGHT in both hands with the tines up above the head (never lowered or pointed forward); keep it upright through the whole idle and walk rows; the body is clearly TURNED three-quarter toward the facing direction exactly like the militia in image 3 in every cell (r2: r1 stood square to the viewer)',
+        'a1': 'weight shifts back, the pitchfork starts to draw back in both hands.',
+        'a2': 'the pitchfork pulled back at waist height with both hands, leaning back.',
+        'a3': 'a hard jab: the pitchfork thrust forward along the facing direction at chest height, both arms extended, front foot forward.',
+        'a4': 'pulling the pitchfork back from the jab, returning toward the idle stance.',
+    },
+    'golem': {
+        # r1 16/11/2026: r0 SE drew an angular block golem with glowing eyes instead of the approved round one
+        'note': ' Character check for this unit: rounded, pillow-like WARM grey-brown boulders (no sharp angular blocks), a round friendly face with a small smile and small DARK eyes (no glowing eyes), ONE small blue crystal shard on each shoulder (no crystal clusters), plain blue bands on the wrists and belt with a blue cloth flap, exactly as in image 4.',
+        'a1': 'the body leans back, both stone fists start to rise.',
+        'a2': 'both stone fists raised high above the head, the body leaning back, the chest rune glowing brighter.',
+        'a3': 'both fists slammed down together in front of it along the facing direction at ground level, the body bent forward.',
+        'a4': 'the fists lifting off the ground, the body straightening back toward the idle stance.',
+    },
+    'miner': {
+        'a1': 'weight shifts back, the pickaxe starts to rise in both hands.',
+        'a2': 'the pickaxe swung up behind the shoulder with both hands, weight on the back foot.',
+        'a3': 'the pickaxe brought down hard in front along the facing direction at knee height, body bent forward.',
+        'a4': 'the pickaxe lifting back from the blow across the body, returning toward the idle stance.',
+    },
+    'slinger': {
+        'a1': 'the sling lifted, the stone placed in the pouch, the other arm pointing along the facing direction.',
+        'a2': 'the sling whirled above the head in one hand, the other arm pointing along the facing direction.',
+        'a3': 'the throwing arm swung fully forward along the facing direction at shoulder height, the sling released and empty, front foot forward (no flying stone: the game draws it).',
+        'a4': 'the arm coming back down, the sling hanging empty, returning toward the idle stance.',
+    },
+    'rubble': {
+        'a1': 'the rock heap squashes a little lower.',
+        'a2': 'the rock heap squashed low and leaning back, ready to hop.',
+        'a3': 'a hop forward along the facing direction, the rock heap stretched tall and leaning into the hit, feet off the ground.',
+        'a4': 'landing, the heap squashed a little, returning toward the idle stance.',
+    },
 }
 
 
@@ -154,19 +199,85 @@ No text, letters, numbers, labels, UI, frame, watermark, blur, antialiasing or s
 """
 
 
+# Units without a 6-frame iso sample (16/11/2026): the APPROVED militia row sheet of the same direction is the
+# same-kind reference (camera, facing, grid, baseline, finish) and the unit's own approved front-view pose sheet
+# carries the character design.
+MILITIA_ROWS = 'docs/art-review/units-iso/militia/rows-{d}-source.png'
+# on-screen figure height of the militia in its approved row sheet, in source px
+MILITIA_ROWS_FIGURE = 270
+
+BODY_ROWS_NEW = """Create ONE pixel-art ANIMATION SHEET for the Crowned Kingdoms unit {name} — {role}
+Attached images: (1) the approved style reference; (2) the approved ISOMETRIC building `{iso}` — its CAMERA (classic 2:1 isometric, looking down at about 30 degrees); (3) `{militia}` — the APPROVED animation sheet of another unit (the Wheat militia) facing this same way: copy its camera, facing, grid layout, cell spacing, feet baseline, outline, shading and finish exactly, but NOT its character; (4) `{sheet}` — this unit's own approved front-view pose sheet: draw exactly THIS character (face, hair, body shape, clothes, colours, proportions, weapon, team-colour areas), only the camera and the facing change to match image 3.{note}
+Facing: every cell faces {facing}: {how}. Do not draw any mirrored copy.
+Format: a LANDSCAPE image, aspect ratio 3:2 (target 1536x1024 px), a grid of 4 columns x 3 rows of equal cells (each 384 px wide and 341 px tall), ONE ROW PER ANIMATION, laid out like image 3. Each used cell holds ONE full-body copy of the character, about {fig} px tall in every cell (the SAME size in every cell), the feet on the same baseline near the bottom of the cell, a margin on every side, nothing (weapon included) crossing into another cell, no grid lines drawn. Every art pixel is a clean square block, the same block size in every cell.
+Row 1 — IDLE, 3 frames in the first three cells (the 4th cell of row 1 stays EMPTY magenta), a gentle breathing loop:
+1. standing at rest as in the idle pose of image 4, weight on both feet{idle};
+2. breathing in, shoulders and head 1 art pixel lower;
+3. breathing out, halfway back (leads back into frame 1).
+Row 2 — WALK, 4 frames, a smooth loop toward the facing direction:
+1. contact: the near foot just landed forward, the far foot back, body 1 art pixel lower;
+2. passing: the far foot lifted passing the near leg, body at idle height;
+3. contact on the other side: the far foot forward, the near foot back, body 1 art pixel lower;
+4. passing on the other side (leads back into frame 1).
+Row 3 — ATTACK, 4 frames:
+1. anticipation: {a1}
+2. wind-up: {a2}
+3. strike: {a3}
+4. recovery: {a4}
+Neighbouring frames change only a little so the loops play smoothly. All movement follows the facing direction (diagonal on screen), never a pure left-right side view. Big simple limb and weapon movements that read at 64x64 art pixels; no motion blur, speed lines, dust or effects.
+Team colours: ALLY version, blue accents exactly as in image 4.
+Style: warm cozy medieval fantasy pixel art, crisp square pixel clusters, upper-left lighting, a 1-art-pixel dark outline in a darker shade of each material (never pure black), the palette of image 4.
+Background: ONE flat solid magenta #FF00FF filling the whole canvas, no gradient, texture, glow, cast shadow or ground; the character must not contain magenta.
+No text, letters, numbers, labels, UI, frame, watermark, blur, antialiasing or smooth gradients.
+"""
+
+
+def shipped_height(unit):
+    from PIL import Image
+    with Image.open(ROOT / f'public/assets/art/ai-v1/{unit}_0.png') as im:
+        box = im.convert('RGBA').getchannel('A').getbbox()
+    return box[3] - box[1]
+
+
+def rows_figure_px(unit):
+    """Source-px height asked for in the sheet: the militia's row-sheet height scaled by the shipped height ratio,
+    capped so a big unit still fits its 341 px cell."""
+    return min(280, round(MILITIA_ROWS_FIGURE * shipped_height(unit) / shipped_height('militia') / 10) * 10)
+
+
+def build_rows_prompt(unit, d):
+    if not (ROOT / up.STYLE_DOC).exists() or not (ROOT / up.REFERENCE).exists():
+        raise SystemExit('docs/ART_STYLE.md or the approved reference image is missing: refusing to generate images')
+    name, role, *_ = up.UNITS[unit]
+    facing, how = FACING[d]
+    out = f'docs/art-review/units-iso/{unit}/rows-{d}-source.png'
+    sample = f'docs/art-review/units-iso/{unit}/poses-{d}-source.png'
+    if (ROOT / sample).exists():
+        images = [up.REFERENCE, ISO_REF, sample]
+        body = BODY_ROWS.format(name=name, role=role, iso=ISO_REF, sample=sample, facing=facing, how=how,
+                                **ATTACK12[unit])
+    else:
+        militia, sheet = MILITIA_ROWS.format(d=d), f'docs/art-review/g3e/units/{unit}/poses-source.png'
+        for ref in (militia, sheet):
+            if not (ROOT / ref).exists():
+                raise SystemExit(f'{ref} (approved reference) is missing: refusing to generate images')
+        images = [up.REFERENCE, ISO_REF, militia, sheet]
+        body = BODY_ROWS_NEW.format(name=name, role=role, iso=ISO_REF, militia=militia, sheet=sheet, facing=facing,
+                                    how=how, fig=rows_figure_px(unit), **{'idle': '', 'note': '', **ATTACK12[unit]})
+    return up.HEADER.format(out=out, doc=up.STYLE_DOC, ref=up.REFERENCE) + body, images, out
+
+
 def main_rows(units):
     runner = ['#!/bin/bash', f'cd "{ROOT.as_posix()}"']
     for unit in units:
-        name, role, *_ = up.UNITS[unit]
-        for d, (facing, how) in FACING.items():
-            sample = f'docs/art-review/units-iso/{unit}/poses-{d}-source.png'
-            out = f'docs/art-review/units-iso/{unit}/rows-{d}-source.png'
-            text = up.HEADER.format(out=out, doc=up.STYLE_DOC, ref=up.REFERENCE) + BODY_ROWS.format(
-                name=name, role=role, iso=ISO_REF, sample=sample, facing=facing, how=how, **ATTACK12[unit])
+        for d in FACING:
+            text, images, out = build_rows_prompt(unit, d)
             prompt = P / unit / f'prompt-rows-{d}.md'
+            prompt.parent.mkdir(parents=True, exist_ok=True)
             prompt.write_text(text, encoding='utf-8', newline='\n')
             rel = prompt.relative_to(ROOT).as_posix()
-            runner.append(f'codex exec --sandbox workspace-write -C "$PWD" -i {up.REFERENCE} -i {ISO_REF} -i {sample} - < {rel} > .superpowers/codex-rows-{unit}-{d}.out 2>&1')
+            attach = ' '.join(f'-i {i}' for i in images)
+            runner.append(f'codex exec --json --sandbox workspace-write -C "$PWD" {attach} - < {rel} > .superpowers/codex-rows-{unit}-{d}.out 2>&1')
             runner.append(f'if [ -s {out} ]; then echo "{unit} {d} ok"; else echo "{unit} {d} MISSING"; fi >> .superpowers/units-rows.log')
     runner.append('echo done >> .superpowers/units-rows.log')
     path = ROOT / '.superpowers/units-rows.sh'
