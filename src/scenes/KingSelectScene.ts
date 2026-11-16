@@ -8,7 +8,6 @@ import type { KingId, PerkId } from '../data/types';
 import type { KingTheme } from '../data/uiPalette';
 import { CONTENT } from '../game/cards/registry';
 import { defaultProfile, type MetaProfile } from '../game/meta';
-import { buildSpritesTexture } from '../render/atlas';
 import { CardView } from '../ui/cards/CardView';
 import { textContent } from '../ui/hud/layout';
 import { carouselScreen, carouselSlots, unlockButtonRect, type CarouselSlot } from '../ui/kingSelect/carouselLayout';
@@ -28,6 +27,7 @@ import { createButton, createPanel, textStyle, type Button, type UiBox } from '.
 import { resolveShortcut, shortcutFlags } from '../ui/input/shortcuts';
 import { openHelp } from './helpLauncher';
 import { SCENES } from './keys';
+import { ensureSceneSprites } from './ArtStreamScene';
 import { newRunSeed } from './MainMenuScene';
 import type { RealmData } from './RealmScene';
 import { getSession } from './sessionRegistry';
@@ -146,7 +146,7 @@ export class KingSelectScene extends Phaser.Scene {
     this.perk = null;
     this.perkDialog = null;
     this.unlocking = false;
-    buildSpritesTexture(this.textures, CONTENT); // no-op once PreloadScene built it
+    ensureSceneSprites(this); // no-op once built, unless streamed close-up art waits to be swapped in
 
     this.tooltip = new Tooltip(this);
     const theme = this.theme();

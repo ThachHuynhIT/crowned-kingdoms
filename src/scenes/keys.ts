@@ -11,4 +11,5 @@ export const SCENES = {
   help: 'Help',
   settings: 'Settings',
   saves: 'Saves',
+  artStream: 'ArtStream',
 } as const;

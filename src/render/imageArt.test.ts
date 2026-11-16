@@ -1,6 +1,6 @@
 import { describe, expect, it } from 'vitest';
 import { FIELD_TERRAINS, ROAD_TAIL, generateField, paintField, paintRoadTail } from './fieldArt';
-import { DECOR_APPROVED, FOREST_APPROVED, GROUND_TEXTURES_APPROVED, GROUND_TEXTURE_FILES, PORTAL_ART, decorFile, forestFile, imageArtScale, imageArtTexture, GRASS_FILES, IMAGE_ART_DIR, IMAGE_ART_FILES, IMAGE_ART_HD_DIR, IMAGE_ART_HD_BUILDINGS, IMAGE_ART_HD_FILES, IMAGE_ART_HD_PLOTS, IMAGE_ART_HD_SCALE, IMAGE_ART_HD_UNITS, IMAGE_ART_SCALE, IMAGE_BUILDINGS, IMAGE_PLOTS, IMAGE_UNITS, MENU_IMAGE_LAYERS, POSES, WALL_FILE, imageArtHdKey, imageArtKey, imageArtLoads, menuImageLayers, unitPoseFile, densityArtTier, IMAGE_ART_UHD_DIR, IMAGE_ART_UHD_FILES, IMAGE_ART_UHD_SCALE, imageArtUhdKey } from './imageArt';
+import { DECOR_APPROVED, FOREST_APPROVED, GROUND_TEXTURES_APPROVED, GROUND_TEXTURE_FILES, PORTAL_ART, decorFile, forestFile, imageArtScale, imageArtTexture, GRASS_FILES, IMAGE_ART_DIR, IMAGE_ART_FILES, IMAGE_ART_HD_DIR, IMAGE_ART_HD_BUILDINGS, IMAGE_ART_HD_FILES, IMAGE_ART_HD_PLOTS, IMAGE_ART_HD_SCALE, IMAGE_ART_HD_UNITS, IMAGE_ART_SCALE, IMAGE_BUILDINGS, IMAGE_PLOTS, IMAGE_UNITS, MENU_IMAGE_LAYERS, POSES, WALL_FILE, imageArtHdKey, imageArtKey, imageArtLoads, menuImageLayers, unitPoseFile, densityArtTier, IMAGE_ART_UHD_DIR, IMAGE_ART_UHD_FILES, IMAGE_ART_UHD_SCALE, imageArtUhdKey, startupArtTier, streamedArtLoads, supersededArtKeys } from './imageArt';
 import { PixelCanvas, upscale } from './pixel';
 
 describe('image art mapping', () => {
@@ -275,5 +275,43 @@ describe('menu picture strips (G5)', () => {
     for (const layer of MENU_IMAGE_LAYERS) expect(IMAGE_ART_FILES).toContain(layer.file);
     const speeds = MENU_IMAGE_LAYERS.map((layer) => layer.parallax);
     expect([...speeds].sort((a, b) => a - b)).toEqual(speeds);
+  });
+});
+
+describe('close-up art streamed after start-up (13/11/2026)', () => {
+  it('starts at the density tier when close-up is chosen; other tiers start as they are', () => {
+    expect(startupArtTier('uhd', 1)).toBe('sd');
+    expect(startupArtTier('uhd', 2)).toBe('hd');
+    expect(startupArtTier('hd', 2)).toBe('hd');
+    expect(startupArtTier('sd', 3)).toBe('sd');
+  });
+
+  it('streams nothing outside close-up', () => {
+    expect(streamedArtLoads('hd', 2)).toEqual([]);
+    expect(streamedArtLoads('sd', 1)).toEqual([]);
+  });
+
+  it('streams exactly the close-up loads that start-up did not load', () => {
+    for (const density of [1, 2]) {
+      const start = imageArtLoads(startupArtTier('uhd', density));
+      const streamed = streamedArtLoads('uhd', density);
+      const startKeys = new Set(start.map((l) => l.key));
+      for (const l of streamed) expect(startKeys.has(l.key)).toBe(false);
+      // start-up + streamed covers every close-up load
+      const all = new Set([...startKeys, ...streamed.map((l) => l.key)]);
+      for (const l of imageArtLoads('uhd')) expect(all.has(l.key)).toBe(true);
+    }
+    expect(streamedArtLoads('uhd', 2).every((l) => l.url.startsWith(IMAGE_ART_UHD_DIR))).toBe(true);
+    expect(streamedArtLoads('uhd', 2).length).toBe(IMAGE_ART_UHD_FILES.size);
+    // at density 1 the HD ground also streams in
+    expect(streamedArtLoads('uhd', 1)).toContainEqual({ key: imageArtHdKey(GRASS_FILES[0]!), url: `${IMAGE_ART_HD_DIR}${GRASS_FILES[0]!}.png` });
+  });
+
+  it('the superseded start-up keys are those a streamed load replaces', () => {
+    const superseded = supersededArtKeys('uhd', 2);
+    expect(superseded).toContain(imageArtHdKey('militia_0'));
+    expect(superseded).not.toContain(imageArtKey('footman_0'));
+    expect(superseded.length).toBe(streamedArtLoads('uhd', 2).length);
+    expect(supersededArtKeys('hd', 2)).toEqual([]);
   });
 });

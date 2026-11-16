@@ -23,7 +23,6 @@ import { FieldRenderer } from '../render/FieldRenderer';
 import { FxRenderer } from '../render/FxRenderer';
 import { RangeRenderer } from '../render/RangeRenderer';
 import { UnitRenderer } from '../render/UnitRenderer';
-import { buildSpritesTexture } from '../render/atlas';
 import { cameraBackingView } from '../ui/displayMetrics';
 import { bindSceneDisplay, displayMetrics, logicalPointer, logicalSize, setWorldTextZoom } from '../ui/displayRuntime';
 import { DRAG_SLOP, type Size } from '../ui/hud/layout';
@@ -56,6 +55,7 @@ import {
 } from '../ui/realm/cameraModel';
 import { realmCamera, realmCameraMix, type RealmPhase } from '../ui/realm/realmLayout';
 import { SCENES } from './keys';
+import { ensureSceneSprites } from './ArtStreamScene';
 import { getAudio } from './audioRegistry';
 import { battleCues, transitionCues } from './audioCues';
 
@@ -223,7 +223,7 @@ export class RealmScene extends Phaser.Scene {
     const seed = initial.seed;
     this.resumedAtYearEnd = resume?.phase === 'yearEnd';
 
-    buildSpritesTexture(this.textures, CONTENT); // no-op once PreloadScene built it
+    ensureSceneSprites(this); // no-op once built, unless streamed close-up art waits to be swapped in
     this.bus = createGameBus();
     this.controller = new RunController(
       this.bus,

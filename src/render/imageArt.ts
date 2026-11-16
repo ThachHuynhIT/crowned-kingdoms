@@ -665,6 +665,27 @@ export const imageArtLoads = (tier: ArtTier): readonly { key: string; url: strin
     return { key: imageArtKey(file), url: `${IMAGE_ART_DIR}${file}.png` };
   });
 
+/**
+ * Close-up art streamed after start-up (13/11/2026): with the 'uhd' tier, Preload loads only the art of the display
+ * density (`densityArtTier`) so the menu shows sooner; the close-up twins load in the background
+ * (`streamedArtLoads`, `scenes/ArtStreamScene.ts`) and replace the start-up art at the next scene change.
+ */
+export const startupArtTier = (tier: ArtTier, density: number): ArtTier => (tier === 'uhd' ? densityArtTier(density) : tier);
+
+/** The loads of `tier` that start-up (`startupArtTier`) leaves out, paired with the start-up load each one replaces. */
+const streamedPairs = (tier: ArtTier, density: number): { start: { key: string; url: string }; streamed: { key: string; url: string } }[] => {
+  const start = imageArtLoads(startupArtTier(tier, density));
+  return imageArtLoads(tier).flatMap((streamed, i) => (streamed.key === start[i]!.key ? [] : [{ start: start[i]!, streamed }]));
+};
+
+/** What to load in the background after start-up: empty unless `tier` is 'uhd'. */
+export const streamedArtLoads = (tier: ArtTier, density: number): readonly { key: string; url: string }[] =>
+  streamedPairs(tier, density).map((p) => p.streamed);
+
+/** Start-up texture keys a streamed load replaces: removed once the streamed art is in use. */
+export const supersededArtKeys = (tier: ArtTier, density: number): readonly string[] =>
+  streamedPairs(tier, density).map((p) => p.start.key);
+
 /** Pose index of each animation frame (the sheets are drawn idle0 idle1 walk0 walk1 attack0 attack1). */
 export const POSES: Record<UnitAnim, readonly [number, number]> = {
   idle: [0, 1],

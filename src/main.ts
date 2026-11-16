@@ -2,6 +2,7 @@ import Phaser from 'phaser';
 import { PALETTE, toCss } from './data/palette';
 import { installOrientationGuard } from './platform/orientation';
 import { registerPwa } from './platform/pwa';
+import { ArtStreamScene } from './scenes/ArtStreamScene';
 import { BattleHudScene } from './scenes/BattleHudScene';
 import { BootScene } from './scenes/BootScene';
 import { CrownsScene } from './scenes/CrownsScene';
@@ -60,6 +61,7 @@ const game = new Phaser.Game({
     HelpScene,
     SettingsScene,
     SavesScene,
+    ArtStreamScene,
   ],
 });
 
