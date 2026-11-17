@@ -149,6 +149,36 @@ export const IMAGE_UNITS: Readonly<Record<string, string>> = {
 const POSE_INDEXES = [0, 1, 2, 3, 4, 5];
 
 /**
+ * Units drawn in battle from the diagonal sheets (17/11/2026, spec 2026-11-17-iso-unit-sheets-design.md): per team a
+ * strip of `ISO_UNIT_FRAMES` equal cells for each of the two drawn directions, SE (facing the viewer, to the right) and
+ * NW (back to the viewer, to the left); a horizontal flip gives SW and NE. Cut by
+ * `docs/art-review/units-iso/make_review.py --export [--density 4|8]`; approved by Claude under the owner's delegation.
+ * Their front-view poses load only pose 0 (the HUD picture); a unit not listed keeps its six front-view poses.
+ */
+export const ISO_UNITS: readonly string[] = [
+  'militia', 'reaper', 'peasant', 'golem', 'miner', 'rubble', 'slinger', 'apprentice', 'frost_mage', 'archmage',
+  'construct', 'wolf', 'bear', 'treant', 'stag', 'dryad', 'pirate', 'hookman', 'musketeer', 'swordsman',
+  'bombardier', 'shieldbearer', 'iron_drake', 'tin_soldier', 'spider', 'gear_gunner', 'colossus', 'skeleton',
+  'wraith', 'vampire', 'moon_reaper', 'rider', 'horse_archer', 'khan_guard', 'mercenary',
+];
+/** Cells of an iso unit strip: idle 0–2, walk 3–6, attack 7–10. */
+export const ISO_UNIT_FRAMES = 11;
+export type IsoDir = 'se' | 'nw';
+/** File of the iso strip of `unit` for `team` and direction `dir`. */
+export const isoUnitFile = (unit: string, team: 'ally' | 'foe', dir: IsoDir): string =>
+  `iso-units/${unit}_${team === 'foe' ? 'foe_' : ''}${dir}`;
+const ISO_UNIT_SET: ReadonlySet<string> = new Set(ISO_UNITS);
+/** Front-view pose files of image-art unit `unit` (ally and foe): pose 0 only for an iso unit. */
+const unitPoseFiles = (unit: string): string[] => {
+  const prefix = IMAGE_UNITS[unit];
+  if (prefix === undefined) return [];
+  const poses = ISO_UNIT_SET.has(unit) ? [0] : POSE_INDEXES;
+  return [...poses.map((i) => `${prefix}_${i}`), ...poses.map((i) => `${prefix}_foe_${i}`)];
+};
+const isoUnitFiles = (unit: string): string[] =>
+  (['ally', 'foe'] as const).flatMap((team) => (['se', 'nw'] as const).map((dir) => isoUnitFile(unit, team, dir)));
+
+/**
  * Buildings drawn from image art: card id → file. The eight Wheat buildings (throne included) are the isometric
  * set (approved 2026-11-06) cut by `docs/art-review/iso-board/make_assets.py` into `iso/` at one shared scale (the
  * Reapers barn is 64 px wide); they replace the earlier 45-degree front-view set.
@@ -564,10 +594,8 @@ export const IMAGE_ART_HD_FX: readonly string[] = [
 
 /** Every PNG of the set (file name without `.png`). */
 export const IMAGE_ART_FILES: readonly string[] = [
-  ...Object.values(IMAGE_UNITS).flatMap((prefix) => [
-    ...POSE_INDEXES.map((i) => `${prefix}_${i}`),
-    ...POSE_INDEXES.map((i) => `${prefix}_foe_${i}`),
-  ]),
+  ...Object.keys(IMAGE_UNITS).flatMap(unitPoseFiles),
+  ...ISO_UNITS.flatMap(isoUnitFiles),
   ...Object.values(IMAGE_BUILDINGS),
   ...Object.entries(IMAGE_BUILDING_LEVELS).flatMap(([card, arts]) =>
     (arts ?? []).flatMap((art) => {
@@ -595,10 +623,8 @@ export const IMAGE_ART_FILES: readonly string[] = [
  * four plot skins of each HD king, the world pictures of each `IMAGE_ART_HD_WORLD` group, the HD atlas icons and fx.
  */
 export const IMAGE_ART_HD_FILES: ReadonlySet<string> = new Set([
-  ...IMAGE_ART_HD_UNITS.flatMap((unit) => {
-    const prefix = IMAGE_UNITS[unit];
-    return prefix === undefined ? [] : POSE_INDEXES.flatMap((i) => [`${prefix}_${i}`, `${prefix}_foe_${i}`]);
-  }),
+  ...IMAGE_ART_HD_UNITS.flatMap(unitPoseFiles),
+  ...ISO_UNITS.flatMap(isoUnitFiles),
   ...IMAGE_ART_HD_BUILDINGS.flatMap((card) => {
     const base = IMAGE_BUILDINGS[card];
     if (base === undefined) return [];

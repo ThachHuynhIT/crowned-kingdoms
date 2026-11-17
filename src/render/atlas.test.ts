@@ -140,3 +140,16 @@ describe('packSpritePages', () => {
     expect(() => packSpritePages([box('huge', 10, 200)], 64, 100)).toThrow(/huge/);
   });
 });
+
+describe('iso unit strips (17/11/2026)', () => {
+  it('stripCell copies cell i of n equal cells', async () => {
+    const { stripCell } = await import('./atlas');
+    const { PixelCanvas: Canvas } = await import('./pixel');
+    const strip = new Canvas(6, 2);
+    for (let x = 0; x < 6; x++) for (let y = 0; y < 2; y++) strip.set(x, y, x * 16 + y, 255);
+    const cell = stripCell(strip, 1, 3);
+    expect([cell.width, cell.height]).toEqual([2, 2]);
+    expect([...cell.data.subarray(0, 4)]).toEqual([0, 0, 32, 255]);
+    expect([...cell.data.subarray(12, 16)]).toEqual([0, 0, 49, 255]);
+  });
+});

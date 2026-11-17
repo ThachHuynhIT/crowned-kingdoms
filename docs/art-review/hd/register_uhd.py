@@ -34,6 +34,8 @@ def exporter(rel: str) -> str:
     name = rel.rsplit('/', 1)[-1].removesuffix('.png')
     if '/' not in rel:
         return 'docs/art-review/g3e/units/make_poses.py --export --density 8'
+    if rel.startswith('iso-units/'):
+        return 'docs/art-review/units-iso/make_review.py --export --density 8'
     if rel.startswith('iso/wilds/'):
         if name in {'barrel', 'haystack', 'sign', 'wheat_cart'}:
             return f'docs/art-review/iso-board/decor/make_decor.py cut --density 8 wild_{name}'

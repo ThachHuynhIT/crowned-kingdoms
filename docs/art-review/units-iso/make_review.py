@@ -168,7 +168,9 @@ def rows_frames_of(unit, d):
     return _rows_frames_of(unit, d)
 
 
-def _rows_frames_of(unit, d):
+def _rows_figures(unit, d):
+    """The 11 figures of direction `d` cut from its sheet, and the source px per density-2 px that gives the idle
+    figure the shipped unit's height."""
     sheet = np.array(Image.open(P / unit / f'rows-{d}-source.png').convert('RGBA'))
     h, w = sheet.shape[:2]
     cw, ch = w // 4, h // 3
@@ -178,7 +180,54 @@ def _rows_frames_of(unit, d):
         shipped = np.array(im.convert('RGBA'))
     rows_ = np.where(shipped[..., 3] > 0)[0]
     factor = figures[0][1].shape[0] / (int(rows_.max() - rows_.min()) + 1)
+    return figures, factor
+
+
+def _rows_frames_of(unit, d):
+    figures, factor = _rows_figures(unit, d)
     return mp.place([mp.outline(mp.reduce(rgb, solid, factor)) for rgb, solid in figures])
+
+
+def rows_game_frames(unit, d, density):
+    """The 11 runtime frames of direction `d` at `density` art px per world unit: density 2 is the reviewed
+    frames-rows cut; 4 and 8 are reduced straight from the source and placed on exactly m x the density-2 canvas
+    (`place_twin`, same anchor and footprint)."""
+    def cut():
+        figures, factor = _rows_figures(unit, d)
+        twins = [mp.outline(mp.reduce(rgb, solid, factor)) for rgb, solid in figures]
+        if density == 2:
+            return mp.place(twins)
+        m = density // 2
+        return mp.place_twin([mp.outline(mp.reduce(rgb, solid, factor / m)) for rgb, solid in figures], twins, m)
+    if unit in TIGHT_KEY:
+        mp.magenta_mask = tight_key
+        try:
+            return cut()
+        finally:
+            mp.magenta_mask = _LOOSE
+    return cut()
+
+
+ISO_RUNTIME = 'iso-units'
+
+
+def export_rows(unit, density):
+    """Write the runtime strips: public/assets/art/<ai-v1|ai-v1-hd|ai-v1-uhd>/iso-units/<unit>_<se|nw>.png and the red
+    foe recolour <unit>_foe_<se|nw>.png, the 11 frames side by side in equal cells (idle 0-2, walk 3-6, attack 7-10;
+    src/render/imageArt.ts ISO_UNITS)."""
+    out = mp.runtime_dir(density) / ISO_RUNTIME
+    out.mkdir(parents=True, exist_ok=True)
+    for d in ('se', 'nw'):
+        frames = rows_game_frames(unit, d, density)
+        strip = np.concatenate(frames, axis=1)
+        if density != 2:
+            with Image.open(mp.RUNTIME / ISO_RUNTIME / f'{unit}_{d}.png') as im:
+                m = density // 2
+                if (im.height * m, im.width * m) != strip.shape[:2]:
+                    raise SystemExit(f'{unit} {d}: density-2 strip {im.size} is not this cut; export density 2 first')
+        Image.fromarray(strip).save(out / f'{unit}_{d}.png')
+        Image.fromarray(mp.foe(strip)).save(out / f'{unit}_foe_{d}.png')
+        print(f'{unit} {d}: {len(frames)} frames {frames[0].shape[1]}x{frames[0].shape[0]} (density {density})')
 
 
 def main_rows(unit):
@@ -209,7 +258,11 @@ def main_rows(unit):
 
 if __name__ == '__main__':
     args = sys.argv[1:]
-    if '--rows' in args:
+    if '--export' in args:
+        density, rest = mp.parse_density([a for a in args if a != '--export'])
+        for u in rest:
+            export_rows(u, density)
+    elif '--rows' in args:
         for u in [a for a in args if a != '--rows'] or ['militia']:
             main_rows(u)
     elif '--frames' in args:

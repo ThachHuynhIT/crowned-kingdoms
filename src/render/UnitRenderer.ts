@@ -6,7 +6,8 @@ import type { CardId } from '../data/types';
 import { KIND_UNIT, TEAM_ALLY, type BattleWorld } from '../game/battle/world';
 import { BUILDING_FOOT_DY } from './BoardRenderer';
 import { ISO_SPRITE_SCALE, iso } from './isoView';
-import { SPRITES_KEY, frameDensityFactor, fxFrame, imageFrameScale, pickBuildingFrame, unitFrame } from './atlas';
+import { SPRITES_KEY, frameDensityFactor, fxFrame, imageFrameScale, isoUnitFrame, pickBuildingFrame, unitFrame } from './atlas';
+import { isoFacing, isoFlip, isoPoseCell, isoScreenMove, type IsoFacing } from './isoUnitModel';
 import { plotAtWorld } from './endlessBoardModel';
 import type { RunMode } from '../data/rules';
 import type { UnitAnim } from './unitArt';
@@ -29,6 +30,8 @@ interface Slot {
   /** Has lost HP at least once this battle: buildings and the throne show their bar only from then on (owner 2026-11-10). */
   wounded: boolean;
   tint: { colors: [number, number, number, number]; mode: number } | null;
+  /** Facing of a unit drawn from its diagonal sheets (`ISO_UNITS`); null for front-view art. */
+  iso: IsoFacing | null;
 }
 
 /**
@@ -93,7 +96,7 @@ export class UnitRenderer {
       const foot = isUnit ? p.y + world.radius[id]! : p.y + BUILDING_FOOT_DY;
       const sprite = slot.sprite;
       sprite.setPosition(Math.round(p.x), Math.round(foot)).setDepth(foot);
-      if (isUnit) this.animate(world, id, slot, now);
+      if (isUnit) this.animate(world, id, slot, now, a);
       if (world.hp[id]! < world.maxHp[id]!) slot.wounded = true;
       if (isUnit || slot.wounded) this.drawBar(world, id, sprite, isUnit);
       if (isUnit && world.stunTicks[id]! > 0) this.showStun(sprite);
@@ -125,9 +128,16 @@ export class UnitRenderer {
 
   private create(world: BattleWorld, id: number): Slot | null {
     const label = world.label[id] ?? '';
-    const frame =
-      world.kind[id] === KIND_UNIT
-        ? unitFrame(label, world.team[id] === TEAM_ALLY ? 'ally' : 'foe', 'idle', 0)
+    const ally = world.team[id] === TEAM_ALLY;
+    const team = ally ? 'ally' : 'foe';
+    // Diagonal sheets when they loaded: allies start facing down-right toward the road, raiders up-left at the board.
+    const isoStart: IsoFacing = ally ? { dir: 'se', left: false } : { dir: 'nw', left: true };
+    const isoFrame = isoUnitFrame(label, team, isoStart.dir, 0);
+    const facing = world.kind[id] === KIND_UNIT && label !== '' && this.hasFrame(isoFrame, false) ? isoStart : null;
+    const frame = facing
+      ? isoFrame
+      : world.kind[id] === KIND_UNIT
+        ? unitFrame(label, team, 'idle', 0)
         : this.structureFrame(world, id, label as CardId);
     if (label === '' || !this.hasFrame(frame)) {
       this.slots[id] = null;
@@ -139,18 +149,23 @@ export class UnitRenderer {
     const slot: Slot = {
       sprite,
       frame,
-      facingLeft: world.team[id] !== TEAM_ALLY,
+      facingLeft: !ally,
       dead: false,
       wounded: false,
       flashFrames: 0,
       tint: null,
+      iso: facing,
     };
-    sprite.setFlipX(slot.facingLeft);
+    sprite.setFlipX(facing ? isoFlip(facing) : slot.facingLeft);
     this.slots[id] = slot;
     return slot;
   }
 
-  private animate(world: BattleWorld, id: number, slot: Slot, now: number): void {
+  private animate(world: BattleWorld, id: number, slot: Slot, now: number, alpha: number): void {
+    if (slot.iso) {
+      this.animateIso(world, id, slot, now, alpha);
+      return;
+    }
     const dx = world.x[id]! - world.prevX[id]!;
     const dy = world.y[id]! - world.prevY[id]!;
     const interval = world.interval[id]!;
@@ -170,6 +185,40 @@ export class UnitRenderer {
     if (face !== 0 && face < 0 !== slot.facingLeft) {
       slot.facingLeft = face < 0;
       slot.sprite.setFlipX(slot.facingLeft);
+    }
+  }
+
+  /** A unit drawn from its diagonal sheets: sheet and flip by its screen move (else toward its target), cell by pose. */
+  private animateIso(world: BattleWorld, id: number, slot: Slot, now: number, alpha: number): void {
+    const dx = world.x[id]! - world.prevX[id]!;
+    const dy = world.y[id]! - world.prevY[id]!;
+    const t = world.target[id]!;
+    const hasTarget = t >= 0 && world.alive[t] === 1;
+    const moving = dx !== 0 || dy !== 0;
+    const move = moving
+      ? isoScreenMove(dx, dy)
+      : hasTarget
+        ? isoScreenMove(world.x[t]! - world.x[id]!, world.y[t]! - world.y[id]!)
+        : { sx: 0, sy: 0 };
+    const facing = isoFacing(slot.iso!, move.sx, move.sy);
+    if (facing !== slot.iso) {
+      slot.iso = facing;
+      slot.sprite.setFlipX(isoFlip(facing));
+    }
+    const cell = isoPoseCell({
+      moving,
+      interval: world.interval[id]!,
+      cooldown: world.cooldown[id]!,
+      stunned: world.stunTicks[id]! > 0,
+      hasTarget,
+      alpha,
+      nowMs: now,
+    });
+    const team = world.team[id] === TEAM_ALLY ? 'ally' : 'foe';
+    const frame = isoUnitFrame(world.label[id]!, team, facing.dir, cell);
+    if (frame !== slot.frame && this.hasFrame(frame)) {
+      slot.sprite.setFrame(frame).setScale(imageFrameScale(frame) * ISO_SPRITE_SCALE);
+      slot.frame = frame;
     }
   }
 
@@ -245,13 +294,13 @@ export class UnitRenderer {
     });
   }
 
-  private hasFrame(frame: string): boolean {
+  private hasFrame(frame: string, warn = true): boolean {
     let ok = this.frameOk.get(frame);
     if (ok === undefined) {
       ok = this.scene.textures.get(SPRITES_KEY).has(frame);
       this.frameOk.set(frame, ok);
     }
-    if (!ok && !this.warned.has(frame)) {
+    if (!ok && warn && !this.warned.has(frame)) {
       this.warned.add(frame);
       console.warn(`UnitRenderer: missing sprite frame "${frame}" in "${SPRITES_KEY}"`);
     }

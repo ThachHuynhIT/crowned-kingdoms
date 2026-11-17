@@ -1,6 +1,6 @@
 import { describe, expect, it } from 'vitest';
 import { FIELD_TERRAINS, ROAD_TAIL, generateField, paintField, paintRoadTail } from './fieldArt';
-import { DECOR_APPROVED, FOREST_APPROVED, GROUND_TEXTURES_APPROVED, GROUND_TEXTURE_FILES, PORTAL_ART, decorFile, forestFile, imageArtScale, imageArtTexture, GRASS_FILES, IMAGE_ART_DIR, IMAGE_ART_FILES, IMAGE_ART_HD_DIR, IMAGE_ART_HD_BUILDINGS, IMAGE_ART_HD_FILES, IMAGE_ART_HD_PLOTS, IMAGE_ART_HD_SCALE, IMAGE_ART_HD_UNITS, IMAGE_ART_SCALE, IMAGE_BUILDINGS, IMAGE_PLOTS, IMAGE_UNITS, MENU_IMAGE_LAYERS, POSES, WALL_FILE, imageArtHdKey, imageArtKey, imageArtLoads, menuImageLayers, unitPoseFile, densityArtTier, IMAGE_ART_UHD_DIR, IMAGE_ART_UHD_FILES, IMAGE_ART_UHD_SCALE, imageArtUhdKey, startupArtTier, streamedArtLoads, supersededArtKeys } from './imageArt';
+import { DECOR_APPROVED, FOREST_APPROVED, GROUND_TEXTURES_APPROVED, GROUND_TEXTURE_FILES, PORTAL_ART, decorFile, forestFile, imageArtScale, imageArtTexture, GRASS_FILES, IMAGE_ART_DIR, IMAGE_ART_FILES, IMAGE_ART_HD_DIR, IMAGE_ART_HD_BUILDINGS, IMAGE_ART_HD_FILES, IMAGE_ART_HD_PLOTS, IMAGE_ART_HD_SCALE, IMAGE_ART_HD_UNITS, IMAGE_ART_SCALE, IMAGE_BUILDINGS, IMAGE_PLOTS, IMAGE_UNITS, MENU_IMAGE_LAYERS, POSES, WALL_FILE, imageArtHdKey, imageArtKey, imageArtLoads, menuImageLayers, unitPoseFile, densityArtTier, IMAGE_ART_UHD_DIR, IMAGE_ART_UHD_FILES, IMAGE_ART_UHD_SCALE, imageArtUhdKey, ISO_UNITS, isoUnitFile, startupArtTier, streamedArtLoads, supersededArtKeys } from './imageArt';
 import { PixelCanvas, upscale } from './pixel';
 
 describe('image art mapping', () => {
@@ -8,12 +8,19 @@ describe('image art mapping', () => {
     expect(IMAGE_ART_SCALE).toBe(0.5);
   });
 
-  it('every pose of every animation maps to a listed file, ally and foe', () => {
+  it('every pose of every animation maps to a listed file, ally and foe (an iso unit: its strips and front pose 0)', () => {
     for (const unit of Object.keys(IMAGE_UNITS))
-      for (const team of ['ally', 'foe'] as const)
+      for (const team of ['ally', 'foe'] as const) {
+        if (ISO_UNITS.includes(unit)) {
+          expect(IMAGE_ART_FILES).toContain(unitPoseFile(unit, team, 'idle', 0));
+          expect(IMAGE_ART_FILES).not.toContain(unitPoseFile(unit, team, 'walk', 0));
+          for (const dir of ['se', 'nw'] as const) expect(IMAGE_ART_FILES).toContain(isoUnitFile(unit, team, dir));
+          continue;
+        }
         for (const anim of ['idle', 'walk', 'attack'] as const)
           for (const n of [0, 1])
             expect(IMAGE_ART_FILES, `${unit} ${team} ${anim} ${n}`).toContain(unitPoseFile(unit, team, anim, n));
+      }
     for (const file of Object.values(IMAGE_BUILDINGS)) expect(IMAGE_ART_FILES).toContain(file);
   });
 
@@ -57,7 +64,9 @@ describe('HD image art (4 art px per world unit)', () => {
     expect([...IMAGE_ART_HD_UNITS].sort()).toEqual(Object.keys(IMAGE_UNITS).filter((u) => u !== 'footman').sort());
     expect([...IMAGE_ART_HD_BUILDINGS].sort()).toEqual(Object.keys(IMAGE_BUILDINGS).sort());
     expect([...IMAGE_ART_HD_PLOTS].sort()).toEqual(Object.keys(IMAGE_PLOTS).sort());
-    expect(IMAGE_ART_HD_FILES).toContain('militia_foe_5');
+    expect(IMAGE_ART_HD_FILES).toContain('militia_foe_0');
+    expect(IMAGE_ART_HD_FILES).toContain('iso-units/militia_foe_nw');
+    expect(IMAGE_ART_HD_FILES).toContain('bandit_foe_5');
     expect(IMAGE_ART_HD_FILES).toContain('boss_crownless_king_5');
     expect(IMAGE_ART_HD_FILES).toContain('iso/wheat_throne_l3');
     expect(IMAGE_ART_HD_FILES).toContain('iso-neutral/neutral_well');

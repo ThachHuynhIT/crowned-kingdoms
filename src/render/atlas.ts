@@ -39,6 +39,10 @@ import {
   IMAGE_ICONS,
   IMAGE_PLOTS,
   IMAGE_UNITS,
+  ISO_UNITS,
+  ISO_UNIT_FRAMES,
+  isoUnitFile,
+  type IsoDir,
   PLOT_STATES,
   imageArtHdKey,
   imageArtUhdKey,
@@ -84,6 +88,9 @@ import { UNIT_FRAME_COUNT, paintUnit, unitCloth, type UnitAnim, type UnitTeam } 
 
 export const unitFrame = (unit: UnitId, team: UnitTeam, anim: UnitAnim, n: number): string =>
   `unit_${unit}_${team}_${anim}${n}`;
+/** Cell `i` (0–10) of an iso unit strip (`ISO_UNITS`): exists only when the strip loaded. */
+export const isoUnitFrame = (unit: UnitId, team: UnitTeam, dir: IsoDir, i: number): string =>
+  `unitiso_${unit}_${team}_${dir}${i}`;
 /** Troop/tower building or the throne (the throne card id is its frame). */
 export const buildingFrame = (cardId: CardId): string => `building_${cardId}`;
 /** Frame of the L2/L3 architecture of a building (`IMAGE_BUILDING_LEVELS`). */
@@ -352,7 +359,7 @@ export const imageFile = (textures: Phaser.Textures.TextureManager, file: string
  * reading 772 close-up pictures back as pixels and copying them pixel by pixel took about 0.8 s at start-up. The
  * stand-in only carries the size (its pixel buffer is empty); `buildSpritesTexture` draws the picture itself.
  */
-const IMAGE_SOURCES = new WeakMap<PixelCanvas, CanvasImageSource>();
+const IMAGE_SOURCES = new WeakMap<PixelCanvas, { readonly image: CanvasImageSource; readonly sx: number }>();
 /** Keys of the loaded textures copied into the `sprites` atlas: drawn only through the atlas, never on their own. */
 const ATLAS_SOURCE_KEYS = new Set<string>();
 /** The loaded textures copied into the `sprites` atlas (smooth sampling skips them: nothing draws them directly). */
@@ -367,9 +374,31 @@ const imageStandIn = (textures: Phaser.Textures.TextureManager, key: string): Pi
     height: image.height,
     data: new Uint8ClampedArray(0),
   });
-  IMAGE_SOURCES.set(art, image);
+  IMAGE_SOURCES.set(art, { image, sx: 0 });
   ATLAS_SOURCE_KEYS.add(key);
   return art;
+};
+
+/**
+ * Cell `i` of `n` equal cells laid side by side in `strip` (a loaded stand-in or plain pixels): a stand-in drawn from
+ * its slice of the strip's picture, or a pixel copy.
+ */
+export const stripCell = (strip: PixelCanvas, i: number, n: number): PixelCanvas => {
+  const w = Math.floor(strip.width / n);
+  const source = IMAGE_SOURCES.get(strip);
+  if (source) {
+    const art = Object.assign(Object.create(PixelCanvas.prototype) as PixelCanvas, {
+      width: w,
+      height: strip.height,
+      data: new Uint8ClampedArray(0),
+    });
+    IMAGE_SOURCES.set(art, { image: source.image, sx: source.sx + i * w });
+    return art;
+  }
+  const cell = new PixelCanvas(w, strip.height);
+  for (let y = 0; y < strip.height; y++)
+    cell.data.set(strip.data.subarray((y * strip.width + i * w) * 4, (y * strip.width + i * w + w) * 4), y * w * 4);
+  return cell;
 };
 
 /**
@@ -428,6 +457,18 @@ export const withImageArtFrom = (
     IMAGE_FRAMES.set(s.name, image.scale);
     return { name: s.name, art: image.art };
   });
+  // Iso unit strips have no generated fallback either: their frames exist only when the strip loaded.
+  for (const unit of ISO_UNITS)
+    for (const team of ['ally', 'foe'] as const)
+      for (const dir of ['se', 'nw'] as const) {
+        const image = lookup(isoUnitFile(unit, team, dir));
+        if (image === null) continue;
+        for (let i = 0; i < ISO_UNIT_FRAMES; i++) {
+          const name = isoUnitFrame(unit, team, dir, i);
+          IMAGE_FRAMES.set(name, image.scale);
+          out.push({ name, art: stripCell(image.art, i, ISO_UNIT_FRAMES) });
+        }
+      }
   // Level architecture has no generated fallback: a frame exists only when its image loaded.
   for (const [card, arts] of Object.entries(IMAGE_BUILDING_LEVELS))
     for (const lv of arts ?? []) {
@@ -501,7 +542,7 @@ export const buildSpritesTexture = (
     const ctx = canvas.getContext('2d');
     for (const p of page.placed) {
       const source = IMAGE_SOURCES.get(p.art);
-      if (source) ctx?.drawImage(source, p.x, p.y);
+      if (source) ctx?.drawImage(source.image, source.sx, 0, p.art.width, p.art.height, p.x, p.y, p.art.width, p.art.height);
     }
     return canvas;
   });

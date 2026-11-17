@@ -57,6 +57,8 @@ HD = 'public/assets/art/ai-v1-hd/'
 def exporter(rel: str) -> str:
     if '/' not in rel:
         return 'docs/art-review/g3e/units/make_poses.py --export --density 4'
+    if rel.startswith('iso-units/'):
+        return 'docs/art-review/units-iso/make_review.py --export --density 4'
     if rel.startswith('iso-neutral/'):
         return 'docs/art-review/neutral-iso/make_assets.py --density 4'
     name = rel.rsplit('/', 1)[1]

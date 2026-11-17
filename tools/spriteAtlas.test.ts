@@ -71,7 +71,9 @@ describe('the sprites texture with the real image art', () => {
     expect(pages.flatMap((p) => p.placed.map((s) => s.name)).sort()).toEqual(list.map((s) => s.name).sort());
     if (hd) expect(hdFrames).toBeGreaterThan(0);
     else expect(hdFrames).toBe(0);
-  });
+    // every iso unit strip is cut into its 11 cells (17/11/2026)
+    expect(list.filter((s) => s.name.startsWith('unitiso_')).length).toBe(35 * 2 * 2 * 11);
+  }, 30_000);
 
   it('HD atlas icons and fx keep their size: frame px × frameDensityFactor = the ai-v1 frame px', () => {
     const sd = new Map(pagesAt('sd').list.map((s) => [s.name, s.art]));
@@ -98,7 +100,7 @@ describe('the sprites texture with the real image art', () => {
 
 describe('close-up art files (ai-v1-uhd, 12/11/2026)', () => {
   it('every UHD file the game loads exists and is exactly 4x its ai-v1 twin', () => {
-    expect(IMAGE_ART_UHD_FILES.size).toBeGreaterThan(700);
+    expect(IMAGE_ART_UHD_FILES.size).toBeGreaterThan(500);
     for (const file of IMAGE_ART_UHD_FILES) {
       const uhd = `public/${IMAGE_ART_UHD_DIR}${file}.png`;
       expect(existsSync(uhd), file).toBe(true);
