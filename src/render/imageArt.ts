@@ -431,6 +431,7 @@ export const IMAGE_BUILDING_ANIMS: readonly string[] = [
   'stone_crystal',
   'stone_golem_forge',
   'stone_mountain_heart',
+  'stone_quarry',
   'stone_throne',
   'tide_cannon',
   'tide_kraken',
