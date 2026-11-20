@@ -371,6 +371,10 @@ BATCHES = {
         ('wishing_stones', 'a small pile of round stones with a few flowers placed on top', 20, False, 8),
     ]),
 }
+# one themed pair of sheets per king and seasonal extras (handoff 20/11/2026)
+sys.path.insert(0, str(Path(__file__).resolve().parent))
+from batches_extra import EXTRA_BATCHES  # noqa: E402
+BATCHES.update(EXTRA_BATCHES)
 
 FOOTER = """
 PRODUCTION (overrides "transparent background" above): ONE image 1536x1024 (landscape), ONE flat solid magenta #FF00FF
