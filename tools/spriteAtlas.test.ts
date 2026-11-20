@@ -72,7 +72,7 @@ describe('the sprites texture with the real image art', () => {
     if (hd) expect(hdFrames).toBeGreaterThan(0);
     else expect(hdFrames).toBe(0);
     // every iso unit strip is cut into its 11 cells (17/11/2026)
-    expect(list.filter((s) => s.name.startsWith('unitiso_')).length).toBe(44 * 2 * 2 * 11);
+    expect(list.filter((s) => s.name.startsWith('unitiso_')).length).toBe(45 * 2 * 2 * 11);
   }, 30_000);
 
   it('HD atlas icons and fx keep their size: frame px × frameDensityFactor = the ai-v1 frame px', () => {

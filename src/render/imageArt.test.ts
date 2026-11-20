@@ -60,8 +60,8 @@ describe('HD image art (4 art px per world unit)', () => {
     expect(IMAGE_ART_HD_SCALE * 2).toBe(IMAGE_ART_SCALE);
   });
 
-  it('covers every unit but footman, every image building with its levels, and every king plot skin', () => {
-    expect([...IMAGE_ART_HD_UNITS].sort()).toEqual(Object.keys(IMAGE_UNITS).filter((u) => u !== 'footman').sort());
+  it('covers every unit, every image building with its levels, and every king plot skin', () => {
+    expect([...IMAGE_ART_HD_UNITS].sort()).toEqual(Object.keys(IMAGE_UNITS).sort());
     expect([...IMAGE_ART_HD_BUILDINGS].sort()).toEqual(Object.keys(IMAGE_BUILDINGS).sort());
     expect([...IMAGE_ART_HD_PLOTS].sort()).toEqual(Object.keys(IMAGE_PLOTS).sort());
     expect(IMAGE_ART_HD_FILES).toContain('militia_foe_0');
@@ -71,7 +71,7 @@ describe('HD image art (4 art px per world unit)', () => {
     expect(IMAGE_ART_HD_FILES).toContain('iso/wheat_throne_l3');
     expect(IMAGE_ART_HD_FILES).toContain('iso-neutral/neutral_well');
     expect(IMAGE_ART_HD_FILES).toContain('iso/plots/nomad_built');
-    expect(IMAGE_ART_HD_FILES).not.toContain('footman_0');
+    expect(IMAGE_ART_HD_FILES).toContain('iso-units/footman_nw');
     for (const file of IMAGE_ART_HD_FILES) expect(IMAGE_ART_FILES).toContain(file);
   });
 
@@ -82,7 +82,7 @@ describe('HD image art (4 art px per world unit)', () => {
     expect(hd.length).toBe(IMAGE_ART_FILES.length);
     expect(sd.every((l) => l.url.startsWith(IMAGE_ART_DIR))).toBe(true);
     expect(hd).toContainEqual({ key: imageArtHdKey('militia_0'), url: `${IMAGE_ART_HD_DIR}militia_0.png` });
-    expect(hd).toContainEqual({ key: imageArtKey('footman_0'), url: `${IMAGE_ART_DIR}footman_0.png` });
+    expect(hd).toContainEqual({ key: imageArtHdKey('footman_0'), url: `${IMAGE_ART_HD_DIR}footman_0.png` });
     expect(hd).toContainEqual({ key: imageArtHdKey(WALL_FILE), url: `${IMAGE_ART_HD_DIR}${WALL_FILE}.png` });
     expect(hd).toContainEqual({ key: imageArtHdKey('icons/icon_gold-16'), url: `${IMAGE_ART_HD_DIR}icons/icon_gold-16.png` });
     expect(hd).toContainEqual({ key: imageArtHdKey('fx/fx_arrow_ne'), url: `${IMAGE_ART_HD_DIR}fx/fx_arrow_ne.png` });
@@ -127,7 +127,8 @@ describe('HD image art (4 art px per world unit)', () => {
     expect(uhd).toContainEqual({ key: imageArtUhdKey(WALL_FILE), url: `${IMAGE_ART_UHD_DIR}${WALL_FILE}.png` });
     expect(uhd).toContainEqual({ key: imageArtHdKey(GRASS_FILES[0]!), url: `${IMAGE_ART_HD_DIR}${GRASS_FILES[0]!}.png` });
     expect(uhd).toContainEqual({ key: imageArtHdKey('icons/icon_gold-16'), url: `${IMAGE_ART_HD_DIR}icons/icon_gold-16.png` });
-    expect(uhd).toContainEqual({ key: imageArtKey('footman_0'), url: `${IMAGE_ART_DIR}footman_0.png` });
+    expect(uhd).toContainEqual({ key: imageArtUhdKey('footman_0'), url: `${IMAGE_ART_UHD_DIR}footman_0.png` });
+    expect(uhd).toContainEqual({ key: imageArtKey('icons/icon_life-16'), url: `${IMAGE_ART_DIR}icons/icon_life-16.png` });
     expect(uhd.filter((l) => l.url.startsWith(IMAGE_ART_UHD_DIR)).length).toBe(IMAGE_ART_UHD_FILES.size);
     for (const file of IMAGE_ART_UHD_FILES) expect(IMAGE_ART_HD_FILES).toContain(file);
   });
@@ -319,7 +320,7 @@ describe('close-up art streamed after start-up (13/11/2026)', () => {
   it('the superseded start-up keys are those a streamed load replaces', () => {
     const superseded = supersededArtKeys('uhd', 2);
     expect(superseded).toContain(imageArtHdKey('militia_0'));
-    expect(superseded).not.toContain(imageArtKey('footman_0'));
+    expect(superseded).not.toContain(imageArtKey('icons/icon_life-16'));
     expect(superseded.length).toBe(streamedArtLoads('uhd', 2).length);
     expect(supersededArtKeys('hd', 2)).toEqual([]);
   });

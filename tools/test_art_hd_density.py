@@ -114,9 +114,11 @@ class HdDensityTest(unittest.TestCase):
             self.assertIn(icon, icons)
             self.assertTrue((HD / f'{icons[icon]}.png').exists(), icons[icon])
 
-    def test_footman_has_no_hd_twin(self):
-        """footman has no pose source (front-view barracks sheet): it stays ai-v1 at every density."""
-        self.assertFalse(any(f.name.startswith('footman') for f in hd_files()))
+    def test_footman_has_hd_twins(self):
+        """footman got a pose source on 20/11/2026: its poses and iso strips have HD twins like every unit."""
+        names = {f.relative_to(HD).as_posix() for f in hd_files()}
+        self.assertIn('footman_0.png', names)
+        self.assertIn('iso-units/footman_se.png', names)
 
 
 

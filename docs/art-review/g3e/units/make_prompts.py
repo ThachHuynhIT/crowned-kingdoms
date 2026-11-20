@@ -71,6 +71,9 @@ UNITS = {
     'horse_archer': ('Cung Kỵ (Du Mục)', 'a ranged horse archer of the Nomad kingdom.', 'a chibi steppe archer on a small tan horse, a red felt coat with a BLUE sash, a fur hat, a short recurve bow and a quiver; the horse has a BLUE saddle blanket.', 96, 96),
     'khan_guard': ('Cận Vệ Khả Hãn (Du Mục)', 'an elite heavy guard of the Nomad king.', 'a broad chibi guard in lamellar armour of red and gold plates, a BLUE sash, a spiked helmet with a horse-tail plume, holding a long glaive.', 64, 96),
     'mercenary': ('Lính Đánh Thuê (trung lập)', 'a hired neutral mercenary soldier.', 'a rough chibi sellsword in a patched brown leather jerkin with a BLUE armband, a scarred cheerful face, holding a short sword and a small buckler.', 64, 64),
+    # 20/11/2026: the neutral Barracks footman, until now only ai-v1 frames cut from batch-01-barracks (no pose source);
+    # its identity (helmet, blue scarf-cape, cream tunic, short sword, round wooden shield) comes from that old sheet
+    'footman': ('Lính Bộ (trung lập)', 'a basic neutral foot soldier trained in the Barracks.', 'a young chibi foot soldier in a round grey steel kettle helmet with a raised ridge down the middle and a small brim, a BLUE scarf-cape over the shoulders that hangs down the front as a blue tabard flap, a cream linen tunic, a brown leather belt with a brass buckle, brown leather bracers and brown boots, holding a short straight steel sword upright in one hand and a round wooden shield with an iron rim and a round iron boss on the other arm; calm determined face with simple dark eyes.', 64, 64),
     'bandit': ('Thổ Phỉ', 'a basic neutral bandit raider that only appears as an enemy.', 'a scruffy chibi bandit with a cloth mask over the nose, a patched leather vest, a BLUE headband, holding a short curved knife; sly grin.', 64, 64),
     'bandit_archer': ('Cung Thủ Thổ Phỉ', 'a ranged bandit archer.', 'a lean chibi bandit archer in a hooded ragged cloak with a BLUE scarf, a short bow and a quiver of crude arrows.', 64, 64),
     'boar_rider': ('Kỵ Sĩ Lợn Rừng', 'a bandit riding a wild boar, fast and tough.', "a chibi bandit riding a big bristly brown wild boar with tusks, the rider waving a spiked club, a BLUE rag tied on the boar's saddle.", 96, 96),
@@ -87,9 +90,15 @@ UNITS = {
 # sheet is drawn at a block size that makes this height fit a 512 px cell.
 # 2026-11-09 (owner): giants about 2x a soldier, big beasts about 1.6x, bosses above them
 HEIGHT = {'golem': 100, 'miner': 58, 'rubble': 34, 'slinger': 50, 'apprentice': 50, 'frost_mage': 52, 'archmage': 60, 'construct': 84, 'wolf': 40, 'bear': 84, 'treant': 104, 'stag': 58, 'dryad': 52, 'pirate': 50, 'hookman': 58, 'musketeer': 58, 'swordsman': 52, 'bombardier': 50, 'shieldbearer': 54, 'iron_drake': 104, 'tin_soldier': 50, 'spider': 34, 'gear_gunner': 50, 'colossus': 108, 'skeleton': 48, 'wraith': 48, 'vampire': 56, 'moon_reaper': 84, 'rider': 62, 'horse_archer': 62, 'khan_guard': 58, 'mercenary': 50, 'bandit': 50, 'bandit_archer': 50, 'boar_rider': 60, 'ogre': 100, 'frog': 30, 'hornet': 32, 'boss_bog_ogre': 140, 'boss_hornet_queen': 140, 'boss_crownless_king': 148}
+# 20/11/2026: the footman ships 34 px tall at density 2 (batch-01-barracks); 52 x UNIT_SCALE 1.3 / 2 keeps that size
+HEIGHT['footman'] = 52
 MILITIA_HEIGHT = 51
 # approved unit of the same kind, attached to every new unit's standing sample (ART_STYLE: "ảnh đã duyệt cùng loại")
 UNIT_REFERENCE = 'docs/art-review/g3e/units/militia/source.png'
+# a unit redrawn from an older sheet attaches that sheet as a third image so it keeps its identity (standing sample only)
+IDENTITY_REFERENCE = {'footman': 'docs/art-review/g3e/batch-01-barracks/source.png'}
+IDENTITY_LINE = """Identity: the third attached image (`{ref}`) is this unit's OLD sprite sheet (top row: six poses of this footman, drawn from a lower camera on a dark background; ignore the building and the background). Keep exactly that character and its colours: the grey ridged kettle helmet, the blue scarf-cape and blue tabard flap, the cream tunic, the brown belt, bracers and boots, the short steel sword and the round wooden shield with an iron rim and boss. Redraw it with the camera, chibi proportions and finish of the approved militia (second image).
+"""
 
 SCALE_LINE = """Scale and style: the second attached image is the APPROVED Wheat militia; match its chibi style, outline, shading and palette warmth exactly. In the game this unit stands about {pct}% as tall as that militia ({h} art pixels against 51), so give it the matching bulk and proportions, but still draw it large, filling the canvas height.
 """
@@ -108,6 +117,8 @@ def build_prompt(out, unit):
     body = BODY.format(name=name, role=role, visual=visual, native=native, block=block)
     if unit in HEIGHT:
         body += SCALE_LINE.format(pct=round(100 * HEIGHT[unit] / MILITIA_HEIGHT), h=HEIGHT[unit])
+    if unit in IDENTITY_REFERENCE:
+        body += IDENTITY_LINE.format(ref=IDENTITY_REFERENCE[unit])
     return HEADER.format(out=out, doc=STYLE_DOC, ref=REFERENCE) + body
 
 
@@ -147,6 +158,7 @@ ATTACK = {
     'horse_archer': 'the bow drawn fully, aiming to the right.',
     'khan_guard': 'the glaive raised high behind the shoulder with both hands.',
     'mercenary': 'the sword raised back over the shoulder, buckler forward.',
+    'footman': 'the short sword raised high beside the helmet, the round shield held forward in front of the chest.',
     'wolf': 'the wolf crouched low on its front legs, ears back, ready to pounce.',
     'bear': 'both big paws raised high, standing tall, mouth open in a roar.',
     'treant': 'both branch arms raised high, leaves shaking, leaning back.',
@@ -193,6 +205,7 @@ STRIKE = {
     'horse_archer': 'the arrow just released to the right, the bowstring snapping (the arrow is drawn by the game).',
     'khan_guard': 'a heavy sweep of the glaive forward to the right at chest height.',
     'mercenary': 'a slash forward to the right at chest height, front foot forward.',
+    'footman': 'a lunge to the right, the short sword thrust straight out to the right at chest height with the arm fully extended, the shield stays on the body.',
     'wolf': 'a leap forward to the right with jaws open, front paws reaching out.',
     'bear': 'a heavy swipe down and forward to the right with one paw, body leaning forward.',
     'treant': 'both branch arms slammed down forward to the right at ground level, roots lifting.',
@@ -275,6 +288,8 @@ def main(only=None, poses=False):
             images = f'-i {REFERENCE} -i {sample_path(unit).relative_to(ROOT).as_posix()}'
         else:
             images = f'-i {REFERENCE}' + (f' -i {UNIT_REFERENCE}' if unit in HEIGHT else '')
+            if unit in IDENTITY_REFERENCE:
+                images += f' -i {IDENTITY_REFERENCE[unit]}'
         runner.append(f'codex exec --sandbox workspace-write -C "$PWD" {images} - < {prompt} > .superpowers/codex-{tag}-{unit}.out 2>&1')
         runner.append(f'if [ -s {out} ]; then echo "{unit} ok" >> .superpowers/{tag}.log; else echo "{unit} MISSING" >> .superpowers/{tag}.log; fi')
     runner.append(f'echo done >> .superpowers/{tag}.log')

@@ -40,16 +40,15 @@ export const IMAGE_ART_UHD_DIR = 'assets/art/ai-v1-uhd/';
 export const IMAGE_ART_UHD_SCALE = 0.125;
 export const imageArtUhdKey = (file: string): string => `imgart-uhd-${file}`;
 /**
- * Units with an HD twin (11/11/2026: every unit, enemy and boss with a pose source). `footman` has none: its ai-v1
- * frames were cut from the old front-view barracks sheet (`docs/art-review/g3e/batch-01-barracks`), not from a pose
- * source, so it keeps its ai-v1 frames at every density. Rollback of a group = remove its ids.
+ * Units with an HD twin (11/11/2026: every unit, enemy and boss with a pose source; `footman` since its pose source was
+ * drawn 20/11/2026). Rollback of a group = remove its ids.
  */
 export const IMAGE_ART_HD_UNITS: readonly string[] = [
   'militia', 'reaper', 'peasant', 'golem', 'miner', 'rubble', 'slinger', 'apprentice', 'frost_mage', 'archmage',
   'construct', 'wolf', 'bear', 'treant', 'stag', 'dryad', 'pirate', 'hookman', 'musketeer', 'swordsman',
   'bombardier', 'shieldbearer', 'iron_drake', 'tin_soldier', 'spider', 'gear_gunner', 'colossus', 'skeleton',
   'wraith', 'vampire', 'moon_reaper', 'rider', 'horse_archer', 'khan_guard', 'mercenary', 'bandit', 'bandit_archer',
-  'boar_rider', 'ogre', 'frog', 'hornet', 'boss_bog_ogre', 'boss_hornet_queen', 'boss_crownless_king',
+  'boar_rider', 'ogre', 'frog', 'hornet', 'boss_bog_ogre', 'boss_hornet_queen', 'boss_crownless_king', 'footman',
 ];
 /** Building cards with an HD twin of their base image and of each listed L2/L3 image (`IMAGE_BUILDING_LEVELS`). */
 export const IMAGE_ART_HD_BUILDINGS: readonly string[] = [
@@ -162,7 +161,7 @@ export const ISO_UNITS: readonly string[] = [
   'wraith', 'vampire', 'moon_reaper', 'rider', 'horse_archer', 'khan_guard', 'mercenary',
   // raiders, boss summons and the three bosses (20/11/2026)
   'bandit', 'bandit_archer', 'boar_rider', 'ogre', 'frog', 'hornet', 'boss_bog_ogre', 'boss_hornet_queen',
-  'boss_crownless_king',
+  'boss_crownless_king', 'footman',
 ];
 /** Cells of an iso unit strip: idle 0–2, walk 3–6, attack 7–10. */
 export const ISO_UNIT_FRAMES = 11;

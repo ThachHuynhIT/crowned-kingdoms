@@ -313,170 +313,170 @@ assets:
     path: public/assets/art/ai-v1/footman_0.png
     category: world
     origin: custom
-    source: docs/art-review/g3e/batch-01-barracks/source.png
-    creator: Project owner (OpenAI imagegen via Codex; prompt in docs/art-review/g3e/batch-01-barracks/prompt.md)
+    source: docs/art-review/g3e/units/footman/poses-source.png
+    creator: Project owner (OpenAI imagegen via Codex; prompt in docs/art-review/g3e/units/footman/poses-prompt.md)
     license: project-owned
     attribution: false
     redistribute: true
-    evidence: docs/art-review/g3e/batch-01-barracks/
+    evidence: docs/art-review/g3e/units/footman/poses/
     modified: true
-    nativeSize: ~26x32
-    finalSize: 48x34
-    notes: Footman pose 0; background removed and block-downsampled by batch-01-barracks/make_assets.py; scale 0.5
+    nativeSize: 1536x1024
+    finalSize: 42x36
+    notes: Footman pose 0; mask-weighted box reduction to 2 art px per world unit plus a redrawn 1-px material outline by docs/art-review/g3e/units/make_poses.py --export (redrawn from a pose source 20/11/2026, approved by Claude under the owner's delegation); drawn at scale 0.5 (src/render/imageArt.ts)
   - id: world_ai_v1_footman_foe_0
     path: public/assets/art/ai-v1/footman_foe_0.png
     category: world
     origin: custom
-    source: docs/art-review/g3e/batch-01-barracks/source.png
-    creator: Project owner (OpenAI imagegen via Codex; prompt in docs/art-review/g3e/batch-01-barracks/prompt.md)
+    source: docs/art-review/g3e/units/footman/poses-source.png
+    creator: Project owner (OpenAI imagegen via Codex; prompt in docs/art-review/g3e/units/footman/poses-prompt.md)
     license: project-owned
     attribution: false
     redistribute: true
-    evidence: docs/art-review/g3e/batch-01-barracks/
+    evidence: docs/art-review/g3e/units/footman/poses/
     modified: true
-    nativeSize: ~26x32
-    finalSize: 48x34
-    notes: Foe recolour (blue to red) of footman pose 0
+    nativeSize: 1536x1024
+    finalSize: 42x36
+    notes: Footman pose 0 (red foe recolour); mask-weighted box reduction to 2 art px per world unit plus a redrawn 1-px material outline by docs/art-review/g3e/units/make_poses.py --export (redrawn from a pose source 20/11/2026, approved by Claude under the owner's delegation); drawn at scale 0.5 (src/render/imageArt.ts)
   - id: world_ai_v1_footman_1
     path: public/assets/art/ai-v1/footman_1.png
     category: world
     origin: custom
-    source: docs/art-review/g3e/batch-01-barracks/source.png
-    creator: Project owner (OpenAI imagegen via Codex; prompt in docs/art-review/g3e/batch-01-barracks/prompt.md)
+    source: docs/art-review/g3e/units/footman/poses-source.png
+    creator: Project owner (OpenAI imagegen via Codex; prompt in docs/art-review/g3e/units/footman/poses-prompt.md)
     license: project-owned
     attribution: false
     redistribute: true
-    evidence: docs/art-review/g3e/batch-01-barracks/
+    evidence: docs/art-review/g3e/units/footman/poses/
     modified: true
-    nativeSize: ~26x32
-    finalSize: 48x34
-    notes: Footman pose 1; background removed and block-downsampled by batch-01-barracks/make_assets.py; scale 0.5
+    nativeSize: 1536x1024
+    finalSize: 42x36
+    notes: Footman pose 1; mask-weighted box reduction to 2 art px per world unit plus a redrawn 1-px material outline by docs/art-review/g3e/units/make_poses.py --export (redrawn from a pose source 20/11/2026, approved by Claude under the owner's delegation); drawn at scale 0.5 (src/render/imageArt.ts)
   - id: world_ai_v1_footman_foe_1
     path: public/assets/art/ai-v1/footman_foe_1.png
     category: world
     origin: custom
-    source: docs/art-review/g3e/batch-01-barracks/source.png
-    creator: Project owner (OpenAI imagegen via Codex; prompt in docs/art-review/g3e/batch-01-barracks/prompt.md)
+    source: docs/art-review/g3e/units/footman/poses-source.png
+    creator: Project owner (OpenAI imagegen via Codex; prompt in docs/art-review/g3e/units/footman/poses-prompt.md)
     license: project-owned
     attribution: false
     redistribute: true
-    evidence: docs/art-review/g3e/batch-01-barracks/
+    evidence: docs/art-review/g3e/units/footman/poses/
     modified: true
-    nativeSize: ~26x32
-    finalSize: 48x34
-    notes: Foe recolour (blue to red) of footman pose 1
+    nativeSize: 1536x1024
+    finalSize: 42x36
+    notes: Footman pose 1 (red foe recolour); mask-weighted box reduction to 2 art px per world unit plus a redrawn 1-px material outline by docs/art-review/g3e/units/make_poses.py --export (redrawn from a pose source 20/11/2026, approved by Claude under the owner's delegation); drawn at scale 0.5 (src/render/imageArt.ts)
   - id: world_ai_v1_footman_2
     path: public/assets/art/ai-v1/footman_2.png
     category: world
     origin: custom
-    source: docs/art-review/g3e/batch-01-barracks/source.png
-    creator: Project owner (OpenAI imagegen via Codex; prompt in docs/art-review/g3e/batch-01-barracks/prompt.md)
+    source: docs/art-review/g3e/units/footman/poses-source.png
+    creator: Project owner (OpenAI imagegen via Codex; prompt in docs/art-review/g3e/units/footman/poses-prompt.md)
     license: project-owned
     attribution: false
     redistribute: true
-    evidence: docs/art-review/g3e/batch-01-barracks/
+    evidence: docs/art-review/g3e/units/footman/poses/
     modified: true
-    nativeSize: ~26x32
-    finalSize: 48x34
-    notes: Footman pose 2; background removed and block-downsampled by batch-01-barracks/make_assets.py; scale 0.5
+    nativeSize: 1536x1024
+    finalSize: 42x36
+    notes: Footman pose 2; mask-weighted box reduction to 2 art px per world unit plus a redrawn 1-px material outline by docs/art-review/g3e/units/make_poses.py --export (redrawn from a pose source 20/11/2026, approved by Claude under the owner's delegation); drawn at scale 0.5 (src/render/imageArt.ts)
   - id: world_ai_v1_footman_foe_2
     path: public/assets/art/ai-v1/footman_foe_2.png
     category: world
     origin: custom
-    source: docs/art-review/g3e/batch-01-barracks/source.png
-    creator: Project owner (OpenAI imagegen via Codex; prompt in docs/art-review/g3e/batch-01-barracks/prompt.md)
+    source: docs/art-review/g3e/units/footman/poses-source.png
+    creator: Project owner (OpenAI imagegen via Codex; prompt in docs/art-review/g3e/units/footman/poses-prompt.md)
     license: project-owned
     attribution: false
     redistribute: true
-    evidence: docs/art-review/g3e/batch-01-barracks/
+    evidence: docs/art-review/g3e/units/footman/poses/
     modified: true
-    nativeSize: ~26x32
-    finalSize: 48x34
-    notes: Foe recolour (blue to red) of footman pose 2
+    nativeSize: 1536x1024
+    finalSize: 42x36
+    notes: Footman pose 2 (red foe recolour); mask-weighted box reduction to 2 art px per world unit plus a redrawn 1-px material outline by docs/art-review/g3e/units/make_poses.py --export (redrawn from a pose source 20/11/2026, approved by Claude under the owner's delegation); drawn at scale 0.5 (src/render/imageArt.ts)
   - id: world_ai_v1_footman_3
     path: public/assets/art/ai-v1/footman_3.png
     category: world
     origin: custom
-    source: docs/art-review/g3e/batch-01-barracks/source.png
-    creator: Project owner (OpenAI imagegen via Codex; prompt in docs/art-review/g3e/batch-01-barracks/prompt.md)
+    source: docs/art-review/g3e/units/footman/poses-source.png
+    creator: Project owner (OpenAI imagegen via Codex; prompt in docs/art-review/g3e/units/footman/poses-prompt.md)
     license: project-owned
     attribution: false
     redistribute: true
-    evidence: docs/art-review/g3e/batch-01-barracks/
+    evidence: docs/art-review/g3e/units/footman/poses/
     modified: true
-    nativeSize: ~26x32
-    finalSize: 48x34
-    notes: Footman pose 3; background removed and block-downsampled by batch-01-barracks/make_assets.py; scale 0.5
+    nativeSize: 1536x1024
+    finalSize: 42x36
+    notes: Footman pose 3; mask-weighted box reduction to 2 art px per world unit plus a redrawn 1-px material outline by docs/art-review/g3e/units/make_poses.py --export (redrawn from a pose source 20/11/2026, approved by Claude under the owner's delegation); drawn at scale 0.5 (src/render/imageArt.ts)
   - id: world_ai_v1_footman_foe_3
     path: public/assets/art/ai-v1/footman_foe_3.png
     category: world
     origin: custom
-    source: docs/art-review/g3e/batch-01-barracks/source.png
-    creator: Project owner (OpenAI imagegen via Codex; prompt in docs/art-review/g3e/batch-01-barracks/prompt.md)
+    source: docs/art-review/g3e/units/footman/poses-source.png
+    creator: Project owner (OpenAI imagegen via Codex; prompt in docs/art-review/g3e/units/footman/poses-prompt.md)
     license: project-owned
     attribution: false
     redistribute: true
-    evidence: docs/art-review/g3e/batch-01-barracks/
+    evidence: docs/art-review/g3e/units/footman/poses/
     modified: true
-    nativeSize: ~26x32
-    finalSize: 48x34
-    notes: Foe recolour (blue to red) of footman pose 3
+    nativeSize: 1536x1024
+    finalSize: 42x36
+    notes: Footman pose 3 (red foe recolour); mask-weighted box reduction to 2 art px per world unit plus a redrawn 1-px material outline by docs/art-review/g3e/units/make_poses.py --export (redrawn from a pose source 20/11/2026, approved by Claude under the owner's delegation); drawn at scale 0.5 (src/render/imageArt.ts)
   - id: world_ai_v1_footman_4
     path: public/assets/art/ai-v1/footman_4.png
     category: world
     origin: custom
-    source: docs/art-review/g3e/batch-01-barracks/source.png
-    creator: Project owner (OpenAI imagegen via Codex; prompt in docs/art-review/g3e/batch-01-barracks/prompt.md)
+    source: docs/art-review/g3e/units/footman/poses-source.png
+    creator: Project owner (OpenAI imagegen via Codex; prompt in docs/art-review/g3e/units/footman/poses-prompt.md)
     license: project-owned
     attribution: false
     redistribute: true
-    evidence: docs/art-review/g3e/batch-01-barracks/
+    evidence: docs/art-review/g3e/units/footman/poses/
     modified: true
-    nativeSize: ~26x32
-    finalSize: 48x34
-    notes: Footman pose 4; background removed and block-downsampled by batch-01-barracks/make_assets.py; scale 0.5
+    nativeSize: 1536x1024
+    finalSize: 42x36
+    notes: Footman pose 4; mask-weighted box reduction to 2 art px per world unit plus a redrawn 1-px material outline by docs/art-review/g3e/units/make_poses.py --export (redrawn from a pose source 20/11/2026, approved by Claude under the owner's delegation); drawn at scale 0.5 (src/render/imageArt.ts)
   - id: world_ai_v1_footman_foe_4
     path: public/assets/art/ai-v1/footman_foe_4.png
     category: world
     origin: custom
-    source: docs/art-review/g3e/batch-01-barracks/source.png
-    creator: Project owner (OpenAI imagegen via Codex; prompt in docs/art-review/g3e/batch-01-barracks/prompt.md)
+    source: docs/art-review/g3e/units/footman/poses-source.png
+    creator: Project owner (OpenAI imagegen via Codex; prompt in docs/art-review/g3e/units/footman/poses-prompt.md)
     license: project-owned
     attribution: false
     redistribute: true
-    evidence: docs/art-review/g3e/batch-01-barracks/
+    evidence: docs/art-review/g3e/units/footman/poses/
     modified: true
-    nativeSize: ~26x32
-    finalSize: 48x34
-    notes: Foe recolour (blue to red) of footman pose 4
+    nativeSize: 1536x1024
+    finalSize: 42x36
+    notes: Footman pose 4 (red foe recolour); mask-weighted box reduction to 2 art px per world unit plus a redrawn 1-px material outline by docs/art-review/g3e/units/make_poses.py --export (redrawn from a pose source 20/11/2026, approved by Claude under the owner's delegation); drawn at scale 0.5 (src/render/imageArt.ts)
   - id: world_ai_v1_footman_5
     path: public/assets/art/ai-v1/footman_5.png
     category: world
     origin: custom
-    source: docs/art-review/g3e/batch-01-barracks/source.png
-    creator: Project owner (OpenAI imagegen via Codex; prompt in docs/art-review/g3e/batch-01-barracks/prompt.md)
+    source: docs/art-review/g3e/units/footman/poses-source.png
+    creator: Project owner (OpenAI imagegen via Codex; prompt in docs/art-review/g3e/units/footman/poses-prompt.md)
     license: project-owned
     attribution: false
     redistribute: true
-    evidence: docs/art-review/g3e/batch-01-barracks/
+    evidence: docs/art-review/g3e/units/footman/poses/
     modified: true
-    nativeSize: ~26x32
-    finalSize: 48x34
-    notes: Footman pose 5; background removed and block-downsampled by batch-01-barracks/make_assets.py; scale 0.5
+    nativeSize: 1536x1024
+    finalSize: 42x36
+    notes: Footman pose 5; mask-weighted box reduction to 2 art px per world unit plus a redrawn 1-px material outline by docs/art-review/g3e/units/make_poses.py --export (redrawn from a pose source 20/11/2026, approved by Claude under the owner's delegation); drawn at scale 0.5 (src/render/imageArt.ts)
   - id: world_ai_v1_footman_foe_5
     path: public/assets/art/ai-v1/footman_foe_5.png
     category: world
     origin: custom
-    source: docs/art-review/g3e/batch-01-barracks/source.png
-    creator: Project owner (OpenAI imagegen via Codex; prompt in docs/art-review/g3e/batch-01-barracks/prompt.md)
+    source: docs/art-review/g3e/units/footman/poses-source.png
+    creator: Project owner (OpenAI imagegen via Codex; prompt in docs/art-review/g3e/units/footman/poses-prompt.md)
     license: project-owned
     attribution: false
     redistribute: true
-    evidence: docs/art-review/g3e/batch-01-barracks/
+    evidence: docs/art-review/g3e/units/footman/poses/
     modified: true
-    nativeSize: ~26x32
-    finalSize: 48x34
-    notes: Foe recolour (blue to red) of footman pose 5
+    nativeSize: 1536x1024
+    finalSize: 42x36
+    notes: Footman pose 5 (red foe recolour); mask-weighted box reduction to 2 art px per world unit plus a redrawn 1-px material outline by docs/art-review/g3e/units/make_poses.py --export (redrawn from a pose source 20/11/2026, approved by Claude under the owner's delegation); drawn at scale 0.5 (src/render/imageArt.ts)
   - id: world_ai_v1_barracks
     path: public/assets/art/ai-v1/barracks.png
     category: world
@@ -61561,3 +61561,507 @@ L4x216 copy (2026-11-10) made by tools/prepare_king_portraits.py --size 144x216 
     nativeSize: 1536x1024
     finalSize: 3608x292
     notes: Close-up twin of public/assets/art/ai-v1/iso-units/ogre_se.png: same approved source and pipeline at 8 art px per world unit, exactly 4x its twin (same footprint and anchor), by docs/art-review/units-iso/make_review.py --export --density 8 (12/11/2026); loaded instead of the twin for the close-up art tier (graphics "high" on a desktop) and drawn at 0.125 (src/render/imageArt.ts IMAGE_ART_UHD_FILES, src/render/artQuality.ts). Twin: ogre SE strip, ally colours: 11 equal cells (idle 0-2, walk 3-6, attack 7-10), mask-weighted box reduction to 2 art px per world unit plus a redrawn 1-px outline by docs/art-review/units-iso/make_review.py --export (approved by Claude under the owner's delegation 09/11/2026); drawn at scale 0.5 in battle (src/render/imageArt.ts ISO_UNITS)
+  - id: world_iso_unit_footman_foe_nw
+    path: public/assets/art/ai-v1/iso-units/footman_foe_nw.png
+    category: unit
+    origin: custom
+    source: docs/art-review/units-iso/footman/rows-nw-source.png
+    creator: Project owner (OpenAI imagegen via Codex; prompt in docs/art-review/units-iso/footman/prompt-rows-nw.md)
+    license: project-owned
+    attribution: false
+    redistribute: true
+    evidence: docs/art-review/units-iso/footman/review.md
+    modified: true
+    nativeSize: 1536x1024
+    finalSize: 550x37
+    notes: footman NW strip, red foe recolour (make_poses.foe): 11 equal cells (idle 0-2, walk 3-6, attack 7-10), mask-weighted box reduction to 2 art px per world unit plus a redrawn 1-px outline by docs/art-review/units-iso/make_review.py --export (approved by Claude under the owner's delegation 09/11/2026); drawn at scale 0.5 in battle (src/render/imageArt.ts ISO_UNITS)
+  - id: world_iso_unit_footman_foe_se
+    path: public/assets/art/ai-v1/iso-units/footman_foe_se.png
+    category: unit
+    origin: custom
+    source: docs/art-review/units-iso/footman/rows-se-source.png
+    creator: Project owner (OpenAI imagegen via Codex; prompt in docs/art-review/units-iso/footman/prompt-rows-se.md)
+    license: project-owned
+    attribution: false
+    redistribute: true
+    evidence: docs/art-review/units-iso/footman/review.md
+    modified: true
+    nativeSize: 1536x1024
+    finalSize: 418x35
+    notes: footman SE strip, red foe recolour (make_poses.foe): 11 equal cells (idle 0-2, walk 3-6, attack 7-10), mask-weighted box reduction to 2 art px per world unit plus a redrawn 1-px outline by docs/art-review/units-iso/make_review.py --export (approved by Claude under the owner's delegation 09/11/2026); drawn at scale 0.5 in battle (src/render/imageArt.ts ISO_UNITS)
+  - id: world_iso_unit_footman_nw
+    path: public/assets/art/ai-v1/iso-units/footman_nw.png
+    category: unit
+    origin: custom
+    source: docs/art-review/units-iso/footman/rows-nw-source.png
+    creator: Project owner (OpenAI imagegen via Codex; prompt in docs/art-review/units-iso/footman/prompt-rows-nw.md)
+    license: project-owned
+    attribution: false
+    redistribute: true
+    evidence: docs/art-review/units-iso/footman/review.md
+    modified: true
+    nativeSize: 1536x1024
+    finalSize: 550x37
+    notes: footman NW strip, ally colours: 11 equal cells (idle 0-2, walk 3-6, attack 7-10), mask-weighted box reduction to 2 art px per world unit plus a redrawn 1-px outline by docs/art-review/units-iso/make_review.py --export (approved by Claude under the owner's delegation 09/11/2026); drawn at scale 0.5 in battle (src/render/imageArt.ts ISO_UNITS)
+  - id: world_iso_unit_footman_se
+    path: public/assets/art/ai-v1/iso-units/footman_se.png
+    category: unit
+    origin: custom
+    source: docs/art-review/units-iso/footman/rows-se-source.png
+    creator: Project owner (OpenAI imagegen via Codex; prompt in docs/art-review/units-iso/footman/prompt-rows-se.md)
+    license: project-owned
+    attribution: false
+    redistribute: true
+    evidence: docs/art-review/units-iso/footman/review.md
+    modified: true
+    nativeSize: 1536x1024
+    finalSize: 418x35
+    notes: footman SE strip, ally colours: 11 equal cells (idle 0-2, walk 3-6, attack 7-10), mask-weighted box reduction to 2 art px per world unit plus a redrawn 1-px outline by docs/art-review/units-iso/make_review.py --export (approved by Claude under the owner's delegation 09/11/2026); drawn at scale 0.5 in battle (src/render/imageArt.ts ISO_UNITS)
+  - id: world_ai_v1_footman_0_hd
+    path: public/assets/art/ai-v1-hd/footman_0.png
+    category: world
+    origin: custom
+    source: docs/art-review/g3e/units/footman/poses-source.png
+    creator: Project owner (OpenAI imagegen via Codex; prompt in docs/art-review/g3e/units/footman/poses-prompt.md)
+    license: project-owned
+    attribution: false
+    redistribute: true
+    evidence: docs/art-review/g3e/units/footman/poses/
+    modified: true
+    nativeSize: 1536x1024
+    finalSize: 84x72
+    notes: HiDPI twin of public/assets/art/ai-v1/footman_0.png: same approved source and pipeline at 4 art px per world unit, exactly 2x its twin (same footprint and anchor), by docs/art-review/g3e/units/make_poses.py --export --density 4 (11/11/2026); loaded instead of the twin at display density >= 2 and drawn at 0.25 (src/render/imageArt.ts IMAGE_ART_HD_FILES). Twin: Footman pose 0; mask-weighted box reduction to 2 art px per world unit plus a redrawn 1-px material outline by docs/art-review/g3e/units/make_poses.py --export (redrawn from a pose source 20/11/2026, approved by Claude under the owner's delegation); drawn at scale 0.5 (src/render/imageArt.ts)
+  - id: world_ai_v1_footman_1_hd
+    path: public/assets/art/ai-v1-hd/footman_1.png
+    category: world
+    origin: custom
+    source: docs/art-review/g3e/units/footman/poses-source.png
+    creator: Project owner (OpenAI imagegen via Codex; prompt in docs/art-review/g3e/units/footman/poses-prompt.md)
+    license: project-owned
+    attribution: false
+    redistribute: true
+    evidence: docs/art-review/g3e/units/footman/poses/
+    modified: true
+    nativeSize: 1536x1024
+    finalSize: 84x72
+    notes: HiDPI twin of public/assets/art/ai-v1/footman_1.png: same approved source and pipeline at 4 art px per world unit, exactly 2x its twin (same footprint and anchor), by docs/art-review/g3e/units/make_poses.py --export --density 4 (11/11/2026); loaded instead of the twin at display density >= 2 and drawn at 0.25 (src/render/imageArt.ts IMAGE_ART_HD_FILES). Twin: Footman pose 1; mask-weighted box reduction to 2 art px per world unit plus a redrawn 1-px material outline by docs/art-review/g3e/units/make_poses.py --export (redrawn from a pose source 20/11/2026, approved by Claude under the owner's delegation); drawn at scale 0.5 (src/render/imageArt.ts)
+  - id: world_ai_v1_footman_2_hd
+    path: public/assets/art/ai-v1-hd/footman_2.png
+    category: world
+    origin: custom
+    source: docs/art-review/g3e/units/footman/poses-source.png
+    creator: Project owner (OpenAI imagegen via Codex; prompt in docs/art-review/g3e/units/footman/poses-prompt.md)
+    license: project-owned
+    attribution: false
+    redistribute: true
+    evidence: docs/art-review/g3e/units/footman/poses/
+    modified: true
+    nativeSize: 1536x1024
+    finalSize: 84x72
+    notes: HiDPI twin of public/assets/art/ai-v1/footman_2.png: same approved source and pipeline at 4 art px per world unit, exactly 2x its twin (same footprint and anchor), by docs/art-review/g3e/units/make_poses.py --export --density 4 (11/11/2026); loaded instead of the twin at display density >= 2 and drawn at 0.25 (src/render/imageArt.ts IMAGE_ART_HD_FILES). Twin: Footman pose 2; mask-weighted box reduction to 2 art px per world unit plus a redrawn 1-px material outline by docs/art-review/g3e/units/make_poses.py --export (redrawn from a pose source 20/11/2026, approved by Claude under the owner's delegation); drawn at scale 0.5 (src/render/imageArt.ts)
+  - id: world_ai_v1_footman_3_hd
+    path: public/assets/art/ai-v1-hd/footman_3.png
+    category: world
+    origin: custom
+    source: docs/art-review/g3e/units/footman/poses-source.png
+    creator: Project owner (OpenAI imagegen via Codex; prompt in docs/art-review/g3e/units/footman/poses-prompt.md)
+    license: project-owned
+    attribution: false
+    redistribute: true
+    evidence: docs/art-review/g3e/units/footman/poses/
+    modified: true
+    nativeSize: 1536x1024
+    finalSize: 84x72
+    notes: HiDPI twin of public/assets/art/ai-v1/footman_3.png: same approved source and pipeline at 4 art px per world unit, exactly 2x its twin (same footprint and anchor), by docs/art-review/g3e/units/make_poses.py --export --density 4 (11/11/2026); loaded instead of the twin at display density >= 2 and drawn at 0.25 (src/render/imageArt.ts IMAGE_ART_HD_FILES). Twin: Footman pose 3; mask-weighted box reduction to 2 art px per world unit plus a redrawn 1-px material outline by docs/art-review/g3e/units/make_poses.py --export (redrawn from a pose source 20/11/2026, approved by Claude under the owner's delegation); drawn at scale 0.5 (src/render/imageArt.ts)
+  - id: world_ai_v1_footman_4_hd
+    path: public/assets/art/ai-v1-hd/footman_4.png
+    category: world
+    origin: custom
+    source: docs/art-review/g3e/units/footman/poses-source.png
+    creator: Project owner (OpenAI imagegen via Codex; prompt in docs/art-review/g3e/units/footman/poses-prompt.md)
+    license: project-owned
+    attribution: false
+    redistribute: true
+    evidence: docs/art-review/g3e/units/footman/poses/
+    modified: true
+    nativeSize: 1536x1024
+    finalSize: 84x72
+    notes: HiDPI twin of public/assets/art/ai-v1/footman_4.png: same approved source and pipeline at 4 art px per world unit, exactly 2x its twin (same footprint and anchor), by docs/art-review/g3e/units/make_poses.py --export --density 4 (11/11/2026); loaded instead of the twin at display density >= 2 and drawn at 0.25 (src/render/imageArt.ts IMAGE_ART_HD_FILES). Twin: Footman pose 4; mask-weighted box reduction to 2 art px per world unit plus a redrawn 1-px material outline by docs/art-review/g3e/units/make_poses.py --export (redrawn from a pose source 20/11/2026, approved by Claude under the owner's delegation); drawn at scale 0.5 (src/render/imageArt.ts)
+  - id: world_ai_v1_footman_5_hd
+    path: public/assets/art/ai-v1-hd/footman_5.png
+    category: world
+    origin: custom
+    source: docs/art-review/g3e/units/footman/poses-source.png
+    creator: Project owner (OpenAI imagegen via Codex; prompt in docs/art-review/g3e/units/footman/poses-prompt.md)
+    license: project-owned
+    attribution: false
+    redistribute: true
+    evidence: docs/art-review/g3e/units/footman/poses/
+    modified: true
+    nativeSize: 1536x1024
+    finalSize: 84x72
+    notes: HiDPI twin of public/assets/art/ai-v1/footman_5.png: same approved source and pipeline at 4 art px per world unit, exactly 2x its twin (same footprint and anchor), by docs/art-review/g3e/units/make_poses.py --export --density 4 (11/11/2026); loaded instead of the twin at display density >= 2 and drawn at 0.25 (src/render/imageArt.ts IMAGE_ART_HD_FILES). Twin: Footman pose 5; mask-weighted box reduction to 2 art px per world unit plus a redrawn 1-px material outline by docs/art-review/g3e/units/make_poses.py --export (redrawn from a pose source 20/11/2026, approved by Claude under the owner's delegation); drawn at scale 0.5 (src/render/imageArt.ts)
+  - id: world_ai_v1_footman_foe_0_hd
+    path: public/assets/art/ai-v1-hd/footman_foe_0.png
+    category: world
+    origin: custom
+    source: docs/art-review/g3e/units/footman/poses-source.png
+    creator: Project owner (OpenAI imagegen via Codex; prompt in docs/art-review/g3e/units/footman/poses-prompt.md)
+    license: project-owned
+    attribution: false
+    redistribute: true
+    evidence: docs/art-review/g3e/units/footman/poses/
+    modified: true
+    nativeSize: 1536x1024
+    finalSize: 84x72
+    notes: HiDPI twin of public/assets/art/ai-v1/footman_foe_0.png: same approved source and pipeline at 4 art px per world unit, exactly 2x its twin (same footprint and anchor), by docs/art-review/g3e/units/make_poses.py --export --density 4 (11/11/2026); loaded instead of the twin at display density >= 2 and drawn at 0.25 (src/render/imageArt.ts IMAGE_ART_HD_FILES). Twin: Footman pose 0 (red foe recolour); mask-weighted box reduction to 2 art px per world unit plus a redrawn 1-px material outline by docs/art-review/g3e/units/make_poses.py --export (redrawn from a pose source 20/11/2026, approved by Claude under the owner's delegation); drawn at scale 0.5 (src/render/imageArt.ts)
+  - id: world_ai_v1_footman_foe_1_hd
+    path: public/assets/art/ai-v1-hd/footman_foe_1.png
+    category: world
+    origin: custom
+    source: docs/art-review/g3e/units/footman/poses-source.png
+    creator: Project owner (OpenAI imagegen via Codex; prompt in docs/art-review/g3e/units/footman/poses-prompt.md)
+    license: project-owned
+    attribution: false
+    redistribute: true
+    evidence: docs/art-review/g3e/units/footman/poses/
+    modified: true
+    nativeSize: 1536x1024
+    finalSize: 84x72
+    notes: HiDPI twin of public/assets/art/ai-v1/footman_foe_1.png: same approved source and pipeline at 4 art px per world unit, exactly 2x its twin (same footprint and anchor), by docs/art-review/g3e/units/make_poses.py --export --density 4 (11/11/2026); loaded instead of the twin at display density >= 2 and drawn at 0.25 (src/render/imageArt.ts IMAGE_ART_HD_FILES). Twin: Footman pose 1 (red foe recolour); mask-weighted box reduction to 2 art px per world unit plus a redrawn 1-px material outline by docs/art-review/g3e/units/make_poses.py --export (redrawn from a pose source 20/11/2026, approved by Claude under the owner's delegation); drawn at scale 0.5 (src/render/imageArt.ts)
+  - id: world_ai_v1_footman_foe_2_hd
+    path: public/assets/art/ai-v1-hd/footman_foe_2.png
+    category: world
+    origin: custom
+    source: docs/art-review/g3e/units/footman/poses-source.png
+    creator: Project owner (OpenAI imagegen via Codex; prompt in docs/art-review/g3e/units/footman/poses-prompt.md)
+    license: project-owned
+    attribution: false
+    redistribute: true
+    evidence: docs/art-review/g3e/units/footman/poses/
+    modified: true
+    nativeSize: 1536x1024
+    finalSize: 84x72
+    notes: HiDPI twin of public/assets/art/ai-v1/footman_foe_2.png: same approved source and pipeline at 4 art px per world unit, exactly 2x its twin (same footprint and anchor), by docs/art-review/g3e/units/make_poses.py --export --density 4 (11/11/2026); loaded instead of the twin at display density >= 2 and drawn at 0.25 (src/render/imageArt.ts IMAGE_ART_HD_FILES). Twin: Footman pose 2 (red foe recolour); mask-weighted box reduction to 2 art px per world unit plus a redrawn 1-px material outline by docs/art-review/g3e/units/make_poses.py --export (redrawn from a pose source 20/11/2026, approved by Claude under the owner's delegation); drawn at scale 0.5 (src/render/imageArt.ts)
+  - id: world_ai_v1_footman_foe_3_hd
+    path: public/assets/art/ai-v1-hd/footman_foe_3.png
+    category: world
+    origin: custom
+    source: docs/art-review/g3e/units/footman/poses-source.png
+    creator: Project owner (OpenAI imagegen via Codex; prompt in docs/art-review/g3e/units/footman/poses-prompt.md)
+    license: project-owned
+    attribution: false
+    redistribute: true
+    evidence: docs/art-review/g3e/units/footman/poses/
+    modified: true
+    nativeSize: 1536x1024
+    finalSize: 84x72
+    notes: HiDPI twin of public/assets/art/ai-v1/footman_foe_3.png: same approved source and pipeline at 4 art px per world unit, exactly 2x its twin (same footprint and anchor), by docs/art-review/g3e/units/make_poses.py --export --density 4 (11/11/2026); loaded instead of the twin at display density >= 2 and drawn at 0.25 (src/render/imageArt.ts IMAGE_ART_HD_FILES). Twin: Footman pose 3 (red foe recolour); mask-weighted box reduction to 2 art px per world unit plus a redrawn 1-px material outline by docs/art-review/g3e/units/make_poses.py --export (redrawn from a pose source 20/11/2026, approved by Claude under the owner's delegation); drawn at scale 0.5 (src/render/imageArt.ts)
+  - id: world_ai_v1_footman_foe_4_hd
+    path: public/assets/art/ai-v1-hd/footman_foe_4.png
+    category: world
+    origin: custom
+    source: docs/art-review/g3e/units/footman/poses-source.png
+    creator: Project owner (OpenAI imagegen via Codex; prompt in docs/art-review/g3e/units/footman/poses-prompt.md)
+    license: project-owned
+    attribution: false
+    redistribute: true
+    evidence: docs/art-review/g3e/units/footman/poses/
+    modified: true
+    nativeSize: 1536x1024
+    finalSize: 84x72
+    notes: HiDPI twin of public/assets/art/ai-v1/footman_foe_4.png: same approved source and pipeline at 4 art px per world unit, exactly 2x its twin (same footprint and anchor), by docs/art-review/g3e/units/make_poses.py --export --density 4 (11/11/2026); loaded instead of the twin at display density >= 2 and drawn at 0.25 (src/render/imageArt.ts IMAGE_ART_HD_FILES). Twin: Footman pose 4 (red foe recolour); mask-weighted box reduction to 2 art px per world unit plus a redrawn 1-px material outline by docs/art-review/g3e/units/make_poses.py --export (redrawn from a pose source 20/11/2026, approved by Claude under the owner's delegation); drawn at scale 0.5 (src/render/imageArt.ts)
+  - id: world_ai_v1_footman_foe_5_hd
+    path: public/assets/art/ai-v1-hd/footman_foe_5.png
+    category: world
+    origin: custom
+    source: docs/art-review/g3e/units/footman/poses-source.png
+    creator: Project owner (OpenAI imagegen via Codex; prompt in docs/art-review/g3e/units/footman/poses-prompt.md)
+    license: project-owned
+    attribution: false
+    redistribute: true
+    evidence: docs/art-review/g3e/units/footman/poses/
+    modified: true
+    nativeSize: 1536x1024
+    finalSize: 84x72
+    notes: HiDPI twin of public/assets/art/ai-v1/footman_foe_5.png: same approved source and pipeline at 4 art px per world unit, exactly 2x its twin (same footprint and anchor), by docs/art-review/g3e/units/make_poses.py --export --density 4 (11/11/2026); loaded instead of the twin at display density >= 2 and drawn at 0.25 (src/render/imageArt.ts IMAGE_ART_HD_FILES). Twin: Footman pose 5 (red foe recolour); mask-weighted box reduction to 2 art px per world unit plus a redrawn 1-px material outline by docs/art-review/g3e/units/make_poses.py --export (redrawn from a pose source 20/11/2026, approved by Claude under the owner's delegation); drawn at scale 0.5 (src/render/imageArt.ts)
+  - id: world_iso_unit_footman_foe_nw_hd
+    path: public/assets/art/ai-v1-hd/iso-units/footman_foe_nw.png
+    category: unit
+    origin: custom
+    source: docs/art-review/units-iso/footman/rows-nw-source.png
+    creator: Project owner (OpenAI imagegen via Codex; prompt in docs/art-review/units-iso/footman/prompt-rows-nw.md)
+    license: project-owned
+    attribution: false
+    redistribute: true
+    evidence: docs/art-review/units-iso/footman/review.md
+    modified: true
+    nativeSize: 1536x1024
+    finalSize: 1100x74
+    notes: HiDPI twin of public/assets/art/ai-v1/iso-units/footman_foe_nw.png: same approved source and pipeline at 4 art px per world unit, exactly 2x its twin (same footprint and anchor), by docs/art-review/units-iso/make_review.py --export --density 4, pinholes closed by docs/art-review/hd/fill_pinholes.py (11/11/2026); loaded instead of the twin at display density >= 2 and drawn at 0.25 (src/render/imageArt.ts IMAGE_ART_HD_FILES). Twin: footman NW strip, red foe recolour (make_poses.foe): 11 equal cells (idle 0-2, walk 3-6, attack 7-10), mask-weighted box reduction to 2 art px per world unit plus a redrawn 1-px outline by docs/art-review/units-iso/make_review.py --export (approved by Claude under the owner's delegation 09/11/2026); drawn at scale 0.5 in battle (src/render/imageArt.ts ISO_UNITS)
+  - id: world_iso_unit_footman_foe_se_hd
+    path: public/assets/art/ai-v1-hd/iso-units/footman_foe_se.png
+    category: unit
+    origin: custom
+    source: docs/art-review/units-iso/footman/rows-se-source.png
+    creator: Project owner (OpenAI imagegen via Codex; prompt in docs/art-review/units-iso/footman/prompt-rows-se.md)
+    license: project-owned
+    attribution: false
+    redistribute: true
+    evidence: docs/art-review/units-iso/footman/review.md
+    modified: true
+    nativeSize: 1536x1024
+    finalSize: 836x70
+    notes: HiDPI twin of public/assets/art/ai-v1/iso-units/footman_foe_se.png: same approved source and pipeline at 4 art px per world unit, exactly 2x its twin (same footprint and anchor), by docs/art-review/units-iso/make_review.py --export --density 4, pinholes closed by docs/art-review/hd/fill_pinholes.py (11/11/2026); loaded instead of the twin at display density >= 2 and drawn at 0.25 (src/render/imageArt.ts IMAGE_ART_HD_FILES). Twin: footman SE strip, red foe recolour (make_poses.foe): 11 equal cells (idle 0-2, walk 3-6, attack 7-10), mask-weighted box reduction to 2 art px per world unit plus a redrawn 1-px outline by docs/art-review/units-iso/make_review.py --export (approved by Claude under the owner's delegation 09/11/2026); drawn at scale 0.5 in battle (src/render/imageArt.ts ISO_UNITS)
+  - id: world_iso_unit_footman_nw_hd
+    path: public/assets/art/ai-v1-hd/iso-units/footman_nw.png
+    category: unit
+    origin: custom
+    source: docs/art-review/units-iso/footman/rows-nw-source.png
+    creator: Project owner (OpenAI imagegen via Codex; prompt in docs/art-review/units-iso/footman/prompt-rows-nw.md)
+    license: project-owned
+    attribution: false
+    redistribute: true
+    evidence: docs/art-review/units-iso/footman/review.md
+    modified: true
+    nativeSize: 1536x1024
+    finalSize: 1100x74
+    notes: HiDPI twin of public/assets/art/ai-v1/iso-units/footman_nw.png: same approved source and pipeline at 4 art px per world unit, exactly 2x its twin (same footprint and anchor), by docs/art-review/units-iso/make_review.py --export --density 4, pinholes closed by docs/art-review/hd/fill_pinholes.py (11/11/2026); loaded instead of the twin at display density >= 2 and drawn at 0.25 (src/render/imageArt.ts IMAGE_ART_HD_FILES). Twin: footman NW strip, ally colours: 11 equal cells (idle 0-2, walk 3-6, attack 7-10), mask-weighted box reduction to 2 art px per world unit plus a redrawn 1-px outline by docs/art-review/units-iso/make_review.py --export (approved by Claude under the owner's delegation 09/11/2026); drawn at scale 0.5 in battle (src/render/imageArt.ts ISO_UNITS)
+  - id: world_iso_unit_footman_se_hd
+    path: public/assets/art/ai-v1-hd/iso-units/footman_se.png
+    category: unit
+    origin: custom
+    source: docs/art-review/units-iso/footman/rows-se-source.png
+    creator: Project owner (OpenAI imagegen via Codex; prompt in docs/art-review/units-iso/footman/prompt-rows-se.md)
+    license: project-owned
+    attribution: false
+    redistribute: true
+    evidence: docs/art-review/units-iso/footman/review.md
+    modified: true
+    nativeSize: 1536x1024
+    finalSize: 836x70
+    notes: HiDPI twin of public/assets/art/ai-v1/iso-units/footman_se.png: same approved source and pipeline at 4 art px per world unit, exactly 2x its twin (same footprint and anchor), by docs/art-review/units-iso/make_review.py --export --density 4, pinholes closed by docs/art-review/hd/fill_pinholes.py (11/11/2026); loaded instead of the twin at display density >= 2 and drawn at 0.25 (src/render/imageArt.ts IMAGE_ART_HD_FILES). Twin: footman SE strip, ally colours: 11 equal cells (idle 0-2, walk 3-6, attack 7-10), mask-weighted box reduction to 2 art px per world unit plus a redrawn 1-px outline by docs/art-review/units-iso/make_review.py --export (approved by Claude under the owner's delegation 09/11/2026); drawn at scale 0.5 in battle (src/render/imageArt.ts ISO_UNITS)
+  - id: world_ai_v1_footman_0_uhd
+    path: public/assets/art/ai-v1-uhd/footman_0.png
+    category: world
+    origin: custom
+    source: docs/art-review/g3e/units/footman/poses-source.png
+    creator: Project owner (OpenAI imagegen via Codex; prompt in docs/art-review/g3e/units/footman/poses-prompt.md)
+    license: project-owned
+    attribution: false
+    redistribute: true
+    evidence: docs/art-review/g3e/units/footman/poses/
+    modified: true
+    nativeSize: 1536x1024
+    finalSize: 168x144
+    notes: Close-up twin of public/assets/art/ai-v1/footman_0.png: same approved source and pipeline at 8 art px per world unit, exactly 4x its twin (same footprint and anchor), by docs/art-review/g3e/units/make_poses.py --export --density 8 (12/11/2026); loaded instead of the twin for the close-up art tier (graphics "high" on a desktop) and drawn at 0.125 (src/render/imageArt.ts IMAGE_ART_UHD_FILES, src/render/artQuality.ts). Twin: Footman pose 0; mask-weighted box reduction to 2 art px per world unit plus a redrawn 1-px material outline by docs/art-review/g3e/units/make_poses.py --export (redrawn from a pose source 20/11/2026, approved by Claude under the owner's delegation); drawn at scale 0.5 (src/render/imageArt.ts)
+  - id: world_ai_v1_footman_1_uhd
+    path: public/assets/art/ai-v1-uhd/footman_1.png
+    category: world
+    origin: custom
+    source: docs/art-review/g3e/units/footman/poses-source.png
+    creator: Project owner (OpenAI imagegen via Codex; prompt in docs/art-review/g3e/units/footman/poses-prompt.md)
+    license: project-owned
+    attribution: false
+    redistribute: true
+    evidence: docs/art-review/g3e/units/footman/poses/
+    modified: true
+    nativeSize: 1536x1024
+    finalSize: 168x144
+    notes: Close-up twin of public/assets/art/ai-v1/footman_1.png: same approved source and pipeline at 8 art px per world unit, exactly 4x its twin (same footprint and anchor), by docs/art-review/g3e/units/make_poses.py --export --density 8 (12/11/2026); loaded instead of the twin for the close-up art tier (graphics "high" on a desktop) and drawn at 0.125 (src/render/imageArt.ts IMAGE_ART_UHD_FILES, src/render/artQuality.ts). Twin: Footman pose 1; mask-weighted box reduction to 2 art px per world unit plus a redrawn 1-px material outline by docs/art-review/g3e/units/make_poses.py --export (redrawn from a pose source 20/11/2026, approved by Claude under the owner's delegation); drawn at scale 0.5 (src/render/imageArt.ts)
+  - id: world_ai_v1_footman_2_uhd
+    path: public/assets/art/ai-v1-uhd/footman_2.png
+    category: world
+    origin: custom
+    source: docs/art-review/g3e/units/footman/poses-source.png
+    creator: Project owner (OpenAI imagegen via Codex; prompt in docs/art-review/g3e/units/footman/poses-prompt.md)
+    license: project-owned
+    attribution: false
+    redistribute: true
+    evidence: docs/art-review/g3e/units/footman/poses/
+    modified: true
+    nativeSize: 1536x1024
+    finalSize: 168x144
+    notes: Close-up twin of public/assets/art/ai-v1/footman_2.png: same approved source and pipeline at 8 art px per world unit, exactly 4x its twin (same footprint and anchor), by docs/art-review/g3e/units/make_poses.py --export --density 8 (12/11/2026); loaded instead of the twin for the close-up art tier (graphics "high" on a desktop) and drawn at 0.125 (src/render/imageArt.ts IMAGE_ART_UHD_FILES, src/render/artQuality.ts). Twin: Footman pose 2; mask-weighted box reduction to 2 art px per world unit plus a redrawn 1-px material outline by docs/art-review/g3e/units/make_poses.py --export (redrawn from a pose source 20/11/2026, approved by Claude under the owner's delegation); drawn at scale 0.5 (src/render/imageArt.ts)
+  - id: world_ai_v1_footman_3_uhd
+    path: public/assets/art/ai-v1-uhd/footman_3.png
+    category: world
+    origin: custom
+    source: docs/art-review/g3e/units/footman/poses-source.png
+    creator: Project owner (OpenAI imagegen via Codex; prompt in docs/art-review/g3e/units/footman/poses-prompt.md)
+    license: project-owned
+    attribution: false
+    redistribute: true
+    evidence: docs/art-review/g3e/units/footman/poses/
+    modified: true
+    nativeSize: 1536x1024
+    finalSize: 168x144
+    notes: Close-up twin of public/assets/art/ai-v1/footman_3.png: same approved source and pipeline at 8 art px per world unit, exactly 4x its twin (same footprint and anchor), by docs/art-review/g3e/units/make_poses.py --export --density 8 (12/11/2026); loaded instead of the twin for the close-up art tier (graphics "high" on a desktop) and drawn at 0.125 (src/render/imageArt.ts IMAGE_ART_UHD_FILES, src/render/artQuality.ts). Twin: Footman pose 3; mask-weighted box reduction to 2 art px per world unit plus a redrawn 1-px material outline by docs/art-review/g3e/units/make_poses.py --export (redrawn from a pose source 20/11/2026, approved by Claude under the owner's delegation); drawn at scale 0.5 (src/render/imageArt.ts)
+  - id: world_ai_v1_footman_4_uhd
+    path: public/assets/art/ai-v1-uhd/footman_4.png
+    category: world
+    origin: custom
+    source: docs/art-review/g3e/units/footman/poses-source.png
+    creator: Project owner (OpenAI imagegen via Codex; prompt in docs/art-review/g3e/units/footman/poses-prompt.md)
+    license: project-owned
+    attribution: false
+    redistribute: true
+    evidence: docs/art-review/g3e/units/footman/poses/
+    modified: true
+    nativeSize: 1536x1024
+    finalSize: 168x144
+    notes: Close-up twin of public/assets/art/ai-v1/footman_4.png: same approved source and pipeline at 8 art px per world unit, exactly 4x its twin (same footprint and anchor), by docs/art-review/g3e/units/make_poses.py --export --density 8 (12/11/2026); loaded instead of the twin for the close-up art tier (graphics "high" on a desktop) and drawn at 0.125 (src/render/imageArt.ts IMAGE_ART_UHD_FILES, src/render/artQuality.ts). Twin: Footman pose 4; mask-weighted box reduction to 2 art px per world unit plus a redrawn 1-px material outline by docs/art-review/g3e/units/make_poses.py --export (redrawn from a pose source 20/11/2026, approved by Claude under the owner's delegation); drawn at scale 0.5 (src/render/imageArt.ts)
+  - id: world_ai_v1_footman_5_uhd
+    path: public/assets/art/ai-v1-uhd/footman_5.png
+    category: world
+    origin: custom
+    source: docs/art-review/g3e/units/footman/poses-source.png
+    creator: Project owner (OpenAI imagegen via Codex; prompt in docs/art-review/g3e/units/footman/poses-prompt.md)
+    license: project-owned
+    attribution: false
+    redistribute: true
+    evidence: docs/art-review/g3e/units/footman/poses/
+    modified: true
+    nativeSize: 1536x1024
+    finalSize: 168x144
+    notes: Close-up twin of public/assets/art/ai-v1/footman_5.png: same approved source and pipeline at 8 art px per world unit, exactly 4x its twin (same footprint and anchor), by docs/art-review/g3e/units/make_poses.py --export --density 8 (12/11/2026); loaded instead of the twin for the close-up art tier (graphics "high" on a desktop) and drawn at 0.125 (src/render/imageArt.ts IMAGE_ART_UHD_FILES, src/render/artQuality.ts). Twin: Footman pose 5; mask-weighted box reduction to 2 art px per world unit plus a redrawn 1-px material outline by docs/art-review/g3e/units/make_poses.py --export (redrawn from a pose source 20/11/2026, approved by Claude under the owner's delegation); drawn at scale 0.5 (src/render/imageArt.ts)
+  - id: world_ai_v1_footman_foe_0_uhd
+    path: public/assets/art/ai-v1-uhd/footman_foe_0.png
+    category: world
+    origin: custom
+    source: docs/art-review/g3e/units/footman/poses-source.png
+    creator: Project owner (OpenAI imagegen via Codex; prompt in docs/art-review/g3e/units/footman/poses-prompt.md)
+    license: project-owned
+    attribution: false
+    redistribute: true
+    evidence: docs/art-review/g3e/units/footman/poses/
+    modified: true
+    nativeSize: 1536x1024
+    finalSize: 168x144
+    notes: Close-up twin of public/assets/art/ai-v1/footman_foe_0.png: same approved source and pipeline at 8 art px per world unit, exactly 4x its twin (same footprint and anchor), by docs/art-review/g3e/units/make_poses.py --export --density 8 (12/11/2026); loaded instead of the twin for the close-up art tier (graphics "high" on a desktop) and drawn at 0.125 (src/render/imageArt.ts IMAGE_ART_UHD_FILES, src/render/artQuality.ts). Twin: Footman pose 0 (red foe recolour); mask-weighted box reduction to 2 art px per world unit plus a redrawn 1-px material outline by docs/art-review/g3e/units/make_poses.py --export (redrawn from a pose source 20/11/2026, approved by Claude under the owner's delegation); drawn at scale 0.5 (src/render/imageArt.ts)
+  - id: world_ai_v1_footman_foe_1_uhd
+    path: public/assets/art/ai-v1-uhd/footman_foe_1.png
+    category: world
+    origin: custom
+    source: docs/art-review/g3e/units/footman/poses-source.png
+    creator: Project owner (OpenAI imagegen via Codex; prompt in docs/art-review/g3e/units/footman/poses-prompt.md)
+    license: project-owned
+    attribution: false
+    redistribute: true
+    evidence: docs/art-review/g3e/units/footman/poses/
+    modified: true
+    nativeSize: 1536x1024
+    finalSize: 168x144
+    notes: Close-up twin of public/assets/art/ai-v1/footman_foe_1.png: same approved source and pipeline at 8 art px per world unit, exactly 4x its twin (same footprint and anchor), by docs/art-review/g3e/units/make_poses.py --export --density 8 (12/11/2026); loaded instead of the twin for the close-up art tier (graphics "high" on a desktop) and drawn at 0.125 (src/render/imageArt.ts IMAGE_ART_UHD_FILES, src/render/artQuality.ts). Twin: Footman pose 1 (red foe recolour); mask-weighted box reduction to 2 art px per world unit plus a redrawn 1-px material outline by docs/art-review/g3e/units/make_poses.py --export (redrawn from a pose source 20/11/2026, approved by Claude under the owner's delegation); drawn at scale 0.5 (src/render/imageArt.ts)
+  - id: world_ai_v1_footman_foe_2_uhd
+    path: public/assets/art/ai-v1-uhd/footman_foe_2.png
+    category: world
+    origin: custom
+    source: docs/art-review/g3e/units/footman/poses-source.png
+    creator: Project owner (OpenAI imagegen via Codex; prompt in docs/art-review/g3e/units/footman/poses-prompt.md)
+    license: project-owned
+    attribution: false
+    redistribute: true
+    evidence: docs/art-review/g3e/units/footman/poses/
+    modified: true
+    nativeSize: 1536x1024
+    finalSize: 168x144
+    notes: Close-up twin of public/assets/art/ai-v1/footman_foe_2.png: same approved source and pipeline at 8 art px per world unit, exactly 4x its twin (same footprint and anchor), by docs/art-review/g3e/units/make_poses.py --export --density 8 (12/11/2026); loaded instead of the twin for the close-up art tier (graphics "high" on a desktop) and drawn at 0.125 (src/render/imageArt.ts IMAGE_ART_UHD_FILES, src/render/artQuality.ts). Twin: Footman pose 2 (red foe recolour); mask-weighted box reduction to 2 art px per world unit plus a redrawn 1-px material outline by docs/art-review/g3e/units/make_poses.py --export (redrawn from a pose source 20/11/2026, approved by Claude under the owner's delegation); drawn at scale 0.5 (src/render/imageArt.ts)
+  - id: world_ai_v1_footman_foe_3_uhd
+    path: public/assets/art/ai-v1-uhd/footman_foe_3.png
+    category: world
+    origin: custom
+    source: docs/art-review/g3e/units/footman/poses-source.png
+    creator: Project owner (OpenAI imagegen via Codex; prompt in docs/art-review/g3e/units/footman/poses-prompt.md)
+    license: project-owned
+    attribution: false
+    redistribute: true
+    evidence: docs/art-review/g3e/units/footman/poses/
+    modified: true
+    nativeSize: 1536x1024
+    finalSize: 168x144
+    notes: Close-up twin of public/assets/art/ai-v1/footman_foe_3.png: same approved source and pipeline at 8 art px per world unit, exactly 4x its twin (same footprint and anchor), by docs/art-review/g3e/units/make_poses.py --export --density 8 (12/11/2026); loaded instead of the twin for the close-up art tier (graphics "high" on a desktop) and drawn at 0.125 (src/render/imageArt.ts IMAGE_ART_UHD_FILES, src/render/artQuality.ts). Twin: Footman pose 3 (red foe recolour); mask-weighted box reduction to 2 art px per world unit plus a redrawn 1-px material outline by docs/art-review/g3e/units/make_poses.py --export (redrawn from a pose source 20/11/2026, approved by Claude under the owner's delegation); drawn at scale 0.5 (src/render/imageArt.ts)
+  - id: world_ai_v1_footman_foe_4_uhd
+    path: public/assets/art/ai-v1-uhd/footman_foe_4.png
+    category: world
+    origin: custom
+    source: docs/art-review/g3e/units/footman/poses-source.png
+    creator: Project owner (OpenAI imagegen via Codex; prompt in docs/art-review/g3e/units/footman/poses-prompt.md)
+    license: project-owned
+    attribution: false
+    redistribute: true
+    evidence: docs/art-review/g3e/units/footman/poses/
+    modified: true
+    nativeSize: 1536x1024
+    finalSize: 168x144
+    notes: Close-up twin of public/assets/art/ai-v1/footman_foe_4.png: same approved source and pipeline at 8 art px per world unit, exactly 4x its twin (same footprint and anchor), by docs/art-review/g3e/units/make_poses.py --export --density 8 (12/11/2026); loaded instead of the twin for the close-up art tier (graphics "high" on a desktop) and drawn at 0.125 (src/render/imageArt.ts IMAGE_ART_UHD_FILES, src/render/artQuality.ts). Twin: Footman pose 4 (red foe recolour); mask-weighted box reduction to 2 art px per world unit plus a redrawn 1-px material outline by docs/art-review/g3e/units/make_poses.py --export (redrawn from a pose source 20/11/2026, approved by Claude under the owner's delegation); drawn at scale 0.5 (src/render/imageArt.ts)
+  - id: world_ai_v1_footman_foe_5_uhd
+    path: public/assets/art/ai-v1-uhd/footman_foe_5.png
+    category: world
+    origin: custom
+    source: docs/art-review/g3e/units/footman/poses-source.png
+    creator: Project owner (OpenAI imagegen via Codex; prompt in docs/art-review/g3e/units/footman/poses-prompt.md)
+    license: project-owned
+    attribution: false
+    redistribute: true
+    evidence: docs/art-review/g3e/units/footman/poses/
+    modified: true
+    nativeSize: 1536x1024
+    finalSize: 168x144
+    notes: Close-up twin of public/assets/art/ai-v1/footman_foe_5.png: same approved source and pipeline at 8 art px per world unit, exactly 4x its twin (same footprint and anchor), by docs/art-review/g3e/units/make_poses.py --export --density 8 (12/11/2026); loaded instead of the twin for the close-up art tier (graphics "high" on a desktop) and drawn at 0.125 (src/render/imageArt.ts IMAGE_ART_UHD_FILES, src/render/artQuality.ts). Twin: Footman pose 5 (red foe recolour); mask-weighted box reduction to 2 art px per world unit plus a redrawn 1-px material outline by docs/art-review/g3e/units/make_poses.py --export (redrawn from a pose source 20/11/2026, approved by Claude under the owner's delegation); drawn at scale 0.5 (src/render/imageArt.ts)
+  - id: world_iso_unit_footman_foe_nw_uhd
+    path: public/assets/art/ai-v1-uhd/iso-units/footman_foe_nw.png
+    category: unit
+    origin: custom
+    source: docs/art-review/units-iso/footman/rows-nw-source.png
+    creator: Project owner (OpenAI imagegen via Codex; prompt in docs/art-review/units-iso/footman/prompt-rows-nw.md)
+    license: project-owned
+    attribution: false
+    redistribute: true
+    evidence: docs/art-review/units-iso/footman/review.md
+    modified: true
+    nativeSize: 1536x1024
+    finalSize: 2200x148
+    notes: Close-up twin of public/assets/art/ai-v1/iso-units/footman_foe_nw.png: same approved source and pipeline at 8 art px per world unit, exactly 4x its twin (same footprint and anchor), by docs/art-review/units-iso/make_review.py --export --density 8 (12/11/2026); loaded instead of the twin for the close-up art tier (graphics "high" on a desktop) and drawn at 0.125 (src/render/imageArt.ts IMAGE_ART_UHD_FILES, src/render/artQuality.ts). Twin: footman NW strip, red foe recolour (make_poses.foe): 11 equal cells (idle 0-2, walk 3-6, attack 7-10), mask-weighted box reduction to 2 art px per world unit plus a redrawn 1-px outline by docs/art-review/units-iso/make_review.py --export (approved by Claude under the owner's delegation 09/11/2026); drawn at scale 0.5 in battle (src/render/imageArt.ts ISO_UNITS)
+  - id: world_iso_unit_footman_foe_se_uhd
+    path: public/assets/art/ai-v1-uhd/iso-units/footman_foe_se.png
+    category: unit
+    origin: custom
+    source: docs/art-review/units-iso/footman/rows-se-source.png
+    creator: Project owner (OpenAI imagegen via Codex; prompt in docs/art-review/units-iso/footman/prompt-rows-se.md)
+    license: project-owned
+    attribution: false
+    redistribute: true
+    evidence: docs/art-review/units-iso/footman/review.md
+    modified: true
+    nativeSize: 1536x1024
+    finalSize: 1672x140
+    notes: Close-up twin of public/assets/art/ai-v1/iso-units/footman_foe_se.png: same approved source and pipeline at 8 art px per world unit, exactly 4x its twin (same footprint and anchor), by docs/art-review/units-iso/make_review.py --export --density 8 (12/11/2026); loaded instead of the twin for the close-up art tier (graphics "high" on a desktop) and drawn at 0.125 (src/render/imageArt.ts IMAGE_ART_UHD_FILES, src/render/artQuality.ts). Twin: footman SE strip, red foe recolour (make_poses.foe): 11 equal cells (idle 0-2, walk 3-6, attack 7-10), mask-weighted box reduction to 2 art px per world unit plus a redrawn 1-px outline by docs/art-review/units-iso/make_review.py --export (approved by Claude under the owner's delegation 09/11/2026); drawn at scale 0.5 in battle (src/render/imageArt.ts ISO_UNITS)
+  - id: world_iso_unit_footman_nw_uhd
+    path: public/assets/art/ai-v1-uhd/iso-units/footman_nw.png
+    category: unit
+    origin: custom
+    source: docs/art-review/units-iso/footman/rows-nw-source.png
+    creator: Project owner (OpenAI imagegen via Codex; prompt in docs/art-review/units-iso/footman/prompt-rows-nw.md)
+    license: project-owned
+    attribution: false
+    redistribute: true
+    evidence: docs/art-review/units-iso/footman/review.md
+    modified: true
+    nativeSize: 1536x1024
+    finalSize: 2200x148
+    notes: Close-up twin of public/assets/art/ai-v1/iso-units/footman_nw.png: same approved source and pipeline at 8 art px per world unit, exactly 4x its twin (same footprint and anchor), by docs/art-review/units-iso/make_review.py --export --density 8 (12/11/2026); loaded instead of the twin for the close-up art tier (graphics "high" on a desktop) and drawn at 0.125 (src/render/imageArt.ts IMAGE_ART_UHD_FILES, src/render/artQuality.ts). Twin: footman NW strip, ally colours: 11 equal cells (idle 0-2, walk 3-6, attack 7-10), mask-weighted box reduction to 2 art px per world unit plus a redrawn 1-px outline by docs/art-review/units-iso/make_review.py --export (approved by Claude under the owner's delegation 09/11/2026); drawn at scale 0.5 in battle (src/render/imageArt.ts ISO_UNITS)
+  - id: world_iso_unit_footman_se_uhd
+    path: public/assets/art/ai-v1-uhd/iso-units/footman_se.png
+    category: unit
+    origin: custom
+    source: docs/art-review/units-iso/footman/rows-se-source.png
+    creator: Project owner (OpenAI imagegen via Codex; prompt in docs/art-review/units-iso/footman/prompt-rows-se.md)
+    license: project-owned
+    attribution: false
+    redistribute: true
+    evidence: docs/art-review/units-iso/footman/review.md
+    modified: true
+    nativeSize: 1536x1024
+    finalSize: 1672x140
+    notes: Close-up twin of public/assets/art/ai-v1/iso-units/footman_se.png: same approved source and pipeline at 8 art px per world unit, exactly 4x its twin (same footprint and anchor), by docs/art-review/units-iso/make_review.py --export --density 8 (12/11/2026); loaded instead of the twin for the close-up art tier (graphics "high" on a desktop) and drawn at 0.125 (src/render/imageArt.ts IMAGE_ART_UHD_FILES, src/render/artQuality.ts). Twin: footman SE strip, ally colours: 11 equal cells (idle 0-2, walk 3-6, attack 7-10), mask-weighted box reduction to 2 art px per world unit plus a redrawn 1-px outline by docs/art-review/units-iso/make_review.py --export (approved by Claude under the owner's delegation 09/11/2026); drawn at scale 0.5 in battle (src/render/imageArt.ts ISO_UNITS)
