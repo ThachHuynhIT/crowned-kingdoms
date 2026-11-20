@@ -1,0 +1,11 @@
+{
+  "id": "tulips_orange",
+  "tall": false,
+  "radius": 7,
+  "batch": "flowers",
+  "description": "a small clump of orange tulips with long green leaves",
+  "size_sd": [
+    23,
+    22
+  ]
+}

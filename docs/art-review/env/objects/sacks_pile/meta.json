@@ -1,0 +1,11 @@
+{
+  "id": "sacks_pile",
+  "tall": false,
+  "radius": 12,
+  "batch": "farm",
+  "description": "a pile of three burlap grain sacks lying together",
+  "size_sd": [
+    33,
+    24
+  ]
+}

@@ -1,0 +1,11 @@
+{
+  "id": "banner_pole",
+  "tall": false,
+  "radius": 6,
+  "batch": "camp_b",
+  "description": "a wooden pole with a plain blank cream cloth banner, no emblem, no letters",
+  "size_sd": [
+    32,
+    58
+  ]
+}

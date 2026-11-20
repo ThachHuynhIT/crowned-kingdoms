@@ -1,0 +1,11 @@
+{
+  "id": "flowers_purple",
+  "tall": false,
+  "radius": 7,
+  "batch": "flowers",
+  "description": "a small cluster of purple violets with heart-shaped leaves",
+  "size_sd": [
+    14,
+    13
+  ]
+}

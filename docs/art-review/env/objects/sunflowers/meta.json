@@ -1,0 +1,11 @@
+{
+  "id": "sunflowers",
+  "tall": false,
+  "radius": 7,
+  "batch": "flowers",
+  "description": "two or three small sunflowers with big yellow heads on tall green stems",
+  "size_sd": [
+    33,
+    38
+  ]
+}

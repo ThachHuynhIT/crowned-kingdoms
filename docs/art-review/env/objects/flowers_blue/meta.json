@@ -1,0 +1,11 @@
+{
+  "id": "flowers_blue",
+  "tall": false,
+  "radius": 8,
+  "batch": "flowers",
+  "description": "a small cluster of blue cornflowers with green stems",
+  "size_sd": [
+    13,
+    18
+  ]
+}

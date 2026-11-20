@@ -1,0 +1,11 @@
+{
+  "id": "grindstone",
+  "tall": false,
+  "radius": 9,
+  "batch": "village_b",
+  "description": "a round grindstone wheel on a small wooden frame with a crank handle",
+  "size_sd": [
+    29,
+    28
+  ]
+}

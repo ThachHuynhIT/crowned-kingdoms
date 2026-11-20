@@ -1,0 +1,11 @@
+{
+  "id": "clover_patch",
+  "tall": false,
+  "radius": 9,
+  "batch": "grasses",
+  "description": "a low patch of clover leaves with a few small white clover flowers",
+  "size_sd": [
+    17,
+    12
+  ]
+}

@@ -1,0 +1,11 @@
+{
+  "id": "fern_mix",
+  "tall": false,
+  "radius": 10,
+  "batch": "wild_b",
+  "description": "a fern growing together with tall grass and a small flower",
+  "size_sd": [
+    37,
+    30
+  ]
+}

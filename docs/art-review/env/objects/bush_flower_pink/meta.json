@@ -1,0 +1,11 @@
+{
+  "id": "bush_flower_pink",
+  "tall": false,
+  "radius": 10,
+  "batch": "bushes",
+  "description": "a round green bush covered in small soft-pink flowers (never magenta)",
+  "size_sd": [
+    39,
+    32
+  ]
+}

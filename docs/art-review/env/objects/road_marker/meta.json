@@ -1,0 +1,11 @@
+{
+  "id": "road_marker",
+  "tall": false,
+  "radius": 5,
+  "batch": "markers",
+  "description": "a short wooden road-marker post with a painted red band at the top",
+  "size_sd": [
+    11,
+    26
+  ]
+}

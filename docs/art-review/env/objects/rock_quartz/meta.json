@@ -1,0 +1,11 @@
+{
+  "id": "rock_quartz",
+  "tall": false,
+  "radius": 10,
+  "batch": "rocks_c",
+  "description": "a white quartz rock with pale glittering facets",
+  "size_sd": [
+    27,
+    24
+  ]
+}

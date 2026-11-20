@@ -1,0 +1,11 @@
+{
+  "id": "branches_fallen",
+  "tall": false,
+  "radius": 12,
+  "batch": "forest_floor_b",
+  "description": "a few fallen dry branches and twigs lying on the ground",
+  "size_sd": [
+    29,
+    20
+  ]
+}

@@ -1,0 +1,11 @@
+{
+  "id": "hedge_segment",
+  "tall": false,
+  "radius": 16,
+  "batch": "bushes_c",
+  "description": "a short trimmed green hedge block running along a diagonal axis",
+  "size_sd": [
+    30,
+    26
+  ]
+}

@@ -1,0 +1,11 @@
+{
+  "id": "boulders_field",
+  "tall": true,
+  "radius": 32,
+  "batch": "crags_c",
+  "description": "a loose spread of seven grey boulders of mixed sizes with grass between them",
+  "size_sd": [
+    88,
+    56
+  ]
+}

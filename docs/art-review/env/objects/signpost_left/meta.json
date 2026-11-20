@@ -1,0 +1,11 @@
+{
+  "id": "signpost_left",
+  "tall": false,
+  "radius": 7,
+  "batch": "markers",
+  "description": "a wooden signpost with a single plank arrow pointing left, no letters",
+  "size_sd": [
+    24,
+    34
+  ]
+}

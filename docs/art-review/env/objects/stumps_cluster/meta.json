@@ -1,0 +1,11 @@
+{
+  "id": "stumps_cluster",
+  "tall": false,
+  "radius": 13,
+  "batch": "wild_b",
+  "description": "three small tree stumps of different heights close together",
+  "size_sd": [
+    28,
+    22
+  ]
+}

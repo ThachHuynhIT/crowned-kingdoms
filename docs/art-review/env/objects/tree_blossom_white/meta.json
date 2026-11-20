@@ -1,0 +1,11 @@
+{
+  "id": "tree_blossom_white",
+  "tall": true,
+  "radius": 22,
+  "batch": "trees_c",
+  "description": "a small tree covered in white blossom, like a pear tree in spring",
+  "size_sd": [
+    83,
+    88
+  ]
+}

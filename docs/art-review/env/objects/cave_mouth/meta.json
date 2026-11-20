@@ -1,0 +1,11 @@
+{
+  "id": "cave_mouth",
+  "tall": true,
+  "radius": 30,
+  "batch": "crags_b",
+  "description": "a rock mound with a dark cave opening facing the lower right, moss and ferns around the entrance",
+  "size_sd": [
+    108,
+    72
+  ]
+}

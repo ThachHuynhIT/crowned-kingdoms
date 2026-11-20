@@ -1,0 +1,11 @@
+{
+  "id": "tree_sapling",
+  "tall": true,
+  "radius": 8,
+  "batch": "trees_c",
+  "description": "a thin sapling tree tied to a wooden stake, a few green leaves",
+  "size_sd": [
+    26,
+    56
+  ]
+}

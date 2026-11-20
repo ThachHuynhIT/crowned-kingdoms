@@ -1,0 +1,11 @@
+{
+  "id": "sedge",
+  "tall": false,
+  "radius": 8,
+  "batch": "grasses_b",
+  "description": "a clump of sedge with stiff blue-green blades",
+  "size_sd": [
+    23,
+    26
+  ]
+}

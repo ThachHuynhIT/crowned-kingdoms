@@ -1,0 +1,11 @@
+{
+  "id": "millstone",
+  "tall": false,
+  "radius": 12,
+  "batch": "village_b",
+  "description": "an old round millstone lying flat on the ground, a hole in the middle, grass around it",
+  "size_sd": [
+    29,
+    18
+  ]
+}

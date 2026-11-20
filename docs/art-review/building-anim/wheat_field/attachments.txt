@@ -1,0 +1,4 @@
+docs/art-review/building-anim/wheat_field/template.png
+docs/art-review/building-anim/wheat_field/source.png
+docs/art-review/style-references/harvester-house-front-approved.png
+docs/art-review/style-references/iso-building-approved.png

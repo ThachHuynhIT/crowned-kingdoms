@@ -1,0 +1,11 @@
+{
+  "id": "bush_dead",
+  "tall": false,
+  "radius": 10,
+  "batch": "bushes_c",
+  "description": "a dead dry brown bush of bare twigs",
+  "size_sd": [
+    37,
+    28
+  ]
+}

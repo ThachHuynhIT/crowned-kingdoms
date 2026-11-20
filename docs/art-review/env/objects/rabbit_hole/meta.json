@@ -1,0 +1,11 @@
+{
+  "id": "rabbit_hole",
+  "tall": false,
+  "radius": 9,
+  "batch": "forest_floor_b",
+  "description": "a small earthen mound with a round rabbit burrow hole, a little grass around it",
+  "size_sd": [
+    25,
+    16
+  ]
+}

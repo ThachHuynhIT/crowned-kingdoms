@@ -1,0 +1,11 @@
+{
+  "id": "tools_leaning",
+  "tall": false,
+  "radius": 8,
+  "batch": "farm_c",
+  "description": "a rake, a shovel and a hoe leaning together against a short post",
+  "size_sd": [
+    32,
+    38
+  ]
+}

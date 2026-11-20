@@ -1,0 +1,11 @@
+{
+  "id": "beehive",
+  "tall": false,
+  "radius": 8,
+  "batch": "camp",
+  "description": "a wooden beehive box: stacked white-painted wooden boxes with a little roof, on a short stand",
+  "size_sd": [
+    22,
+    30
+  ]
+}

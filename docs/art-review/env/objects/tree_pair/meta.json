@@ -1,0 +1,11 @@
+{
+  "id": "tree_pair",
+  "tall": true,
+  "radius": 30,
+  "batch": "trees_b",
+  "description": "a cluster of two trees growing together: one green oak and one smaller pine side by side",
+  "size_sd": [
+    113,
+    104
+  ]
+}

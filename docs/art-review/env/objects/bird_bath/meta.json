@@ -1,0 +1,11 @@
+{
+  "id": "bird_bath",
+  "tall": false,
+  "radius": 8,
+  "batch": "camp",
+  "description": "a small stone bird bath: a shallow bowl of water on a stone pedestal",
+  "size_sd": [
+    23,
+    28
+  ]
+}

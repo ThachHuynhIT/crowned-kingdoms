@@ -1,0 +1,11 @@
+{
+  "id": "wheat_wild",
+  "tall": false,
+  "radius": 7,
+  "batch": "grasses_b",
+  "description": "a few stalks of wild wheat with golden ears",
+  "size_sd": [
+    21,
+    30
+  ]
+}

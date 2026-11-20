@@ -1,0 +1,11 @@
+{
+  "id": "bush_gooseberry",
+  "tall": false,
+  "radius": 10,
+  "batch": "bushes_c",
+  "description": "a low bush with small green leaves and translucent green and red berries",
+  "size_sd": [
+    32,
+    24
+  ]
+}

@@ -1,0 +1,11 @@
+{
+  "id": "tree_olive",
+  "tall": true,
+  "radius": 22,
+  "batch": "trees_d",
+  "description": "an old olive-like tree: a twisted grey trunk and a silvery grey-green airy crown",
+  "size_sd": [
+    91,
+    82
+  ]
+}

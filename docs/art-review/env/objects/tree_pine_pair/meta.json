@@ -1,0 +1,11 @@
+{
+  "id": "tree_pine_pair",
+  "tall": true,
+  "radius": 20,
+  "batch": "trees_f",
+  "description": "two young pine trees of slightly different heights side by side",
+  "size_sd": [
+    82,
+    90
+  ]
+}

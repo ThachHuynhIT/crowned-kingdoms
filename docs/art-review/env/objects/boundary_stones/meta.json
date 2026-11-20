@@ -1,0 +1,11 @@
+{
+  "id": "boundary_stones",
+  "tall": false,
+  "radius": 14,
+  "batch": "markers",
+  "description": "a row of three small white-washed boundary stones along a diagonal axis",
+  "size_sd": [
+    21,
+    20
+  ]
+}

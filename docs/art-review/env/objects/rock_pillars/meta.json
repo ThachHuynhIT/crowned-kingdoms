@@ -1,0 +1,11 @@
+{
+  "id": "rock_pillars",
+  "tall": true,
+  "radius": 20,
+  "batch": "crags_b",
+  "description": "three tall thin stone pillars of different heights standing close together",
+  "size_sd": [
+    79,
+    96
+  ]
+}

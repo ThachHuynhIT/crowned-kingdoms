@@ -1,0 +1,11 @@
+{
+  "id": "barrel_pair",
+  "tall": false,
+  "radius": 11,
+  "batch": "village_b",
+  "description": "two wooden barrels side by side, one with a lid, one open with water",
+  "size_sd": [
+    32,
+    30
+  ]
+}

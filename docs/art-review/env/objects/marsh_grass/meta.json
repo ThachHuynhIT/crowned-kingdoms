@@ -1,0 +1,11 @@
+{
+  "id": "marsh_grass",
+  "tall": false,
+  "radius": 10,
+  "batch": "water_edge",
+  "description": "a patch of marsh grass with a few small blue flowers",
+  "size_sd": [
+    23,
+    20
+  ]
+}

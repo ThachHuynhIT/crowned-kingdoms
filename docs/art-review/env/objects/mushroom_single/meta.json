@@ -1,0 +1,11 @@
+{
+  "id": "mushroom_single",
+  "tall": false,
+  "radius": 5,
+  "batch": "forest_floor",
+  "description": "one brown-capped mushroom with a cream stem",
+  "size_sd": [
+    11,
+    14
+  ]
+}

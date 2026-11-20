@@ -1,0 +1,11 @@
+{
+  "id": "stump_sprouting",
+  "tall": false,
+  "radius": 12,
+  "batch": "trees_d",
+  "description": "a big old tree stump with fresh green shoots and small leafy branches sprouting from it",
+  "size_sd": [
+    50,
+    46
+  ]
+}

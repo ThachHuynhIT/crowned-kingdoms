@@ -1,0 +1,11 @@
+{
+  "id": "rock_crystal",
+  "tall": false,
+  "radius": 9,
+  "batch": "rocks_b",
+  "description": "a small grey rock with a few pale blue crystals sticking out",
+  "size_sd": [
+    32,
+    26
+  ]
+}

@@ -1,0 +1,11 @@
+{
+  "id": "topiary_round",
+  "tall": false,
+  "radius": 9,
+  "batch": "bushes",
+  "description": "a neatly trimmed round topiary ball bush on a very short stem",
+  "size_sd": [
+    35,
+    36
+  ]
+}

@@ -1,0 +1,11 @@
+{
+  "id": "stone_lantern",
+  "tall": false,
+  "radius": 7,
+  "batch": "stones_b",
+  "description": "a small stone garden lantern: a square stone cap and box on a short pillar",
+  "size_sd": [
+    21,
+    34
+  ]
+}

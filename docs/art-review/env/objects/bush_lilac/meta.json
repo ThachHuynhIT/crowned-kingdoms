@@ -1,0 +1,11 @@
+{
+  "id": "bush_lilac",
+  "tall": false,
+  "radius": 11,
+  "batch": "bushes_c",
+  "description": "a lilac bush with cone-shaped light purple flower clusters",
+  "size_sd": [
+    43,
+    36
+  ]
+}

@@ -1,0 +1,11 @@
+{
+  "id": "wet_stones",
+  "tall": false,
+  "radius": 11,
+  "batch": "water_edge",
+  "description": "a group of smooth wet dark river stones with a little water shine",
+  "size_sd": [
+    30,
+    16
+  ]
+}

@@ -1,0 +1,11 @@
+{
+  "id": "thistles",
+  "tall": false,
+  "radius": 8,
+  "batch": "forest_floor_b",
+  "description": "a clump of thistles: spiky grey-green leaves and purple thistle flowers",
+  "size_sd": [
+    30,
+    23
+  ]
+}

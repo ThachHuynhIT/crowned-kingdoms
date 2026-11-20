@@ -1,0 +1,11 @@
+{
+  "id": "statue_head",
+  "tall": false,
+  "radius": 13,
+  "batch": "ruins_b",
+  "description": "a fallen giant stone statue head lying on the ground, worn and mossy, calm face",
+  "size_sd": [
+    33,
+    30
+  ]
+}

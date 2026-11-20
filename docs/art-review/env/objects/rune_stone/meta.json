@@ -1,0 +1,11 @@
+{
+  "id": "rune_stone",
+  "tall": false,
+  "radius": 8,
+  "batch": "stones_b",
+  "description": "a tall flat carved standing stone with spiral patterns (no letters), lichen",
+  "size_sd": [
+    27,
+    40
+  ]
+}

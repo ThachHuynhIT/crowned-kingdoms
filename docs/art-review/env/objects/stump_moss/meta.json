@@ -1,0 +1,11 @@
+{
+  "id": "stump_moss",
+  "tall": false,
+  "radius": 10,
+  "batch": "forest_floor",
+  "description": "a tree stump covered in green moss on its top and sides, a few roots",
+  "size_sd": [
+    37,
+    30
+  ]
+}

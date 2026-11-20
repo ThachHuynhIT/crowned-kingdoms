@@ -1,0 +1,11 @@
+{
+  "id": "rock_round_pair",
+  "tall": false,
+  "radius": 10,
+  "batch": "rocks_b",
+  "description": "two smooth round river stones resting together",
+  "size_sd": [
+    27,
+    18
+  ]
+}

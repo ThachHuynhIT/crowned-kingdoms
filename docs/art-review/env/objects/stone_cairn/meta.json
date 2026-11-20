@@ -1,0 +1,11 @@
+{
+  "id": "stone_cairn",
+  "tall": false,
+  "radius": 7,
+  "batch": "rocks_b",
+  "description": "a cairn: a small stack of balanced flat stones",
+  "size_sd": [
+    28,
+    30
+  ]
+}

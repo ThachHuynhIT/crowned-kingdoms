@@ -1,0 +1,11 @@
+{
+  "id": "marigolds",
+  "tall": false,
+  "radius": 8,
+  "batch": "flowers_b",
+  "description": "a small clump of orange and yellow marigolds",
+  "size_sd": [
+    21,
+    18
+  ]
+}

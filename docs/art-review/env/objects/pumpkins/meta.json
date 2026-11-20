@@ -1,0 +1,11 @@
+{
+  "id": "pumpkins",
+  "tall": false,
+  "radius": 10,
+  "batch": "farm_b",
+  "description": "a small group of three orange pumpkins with green leaves and vines",
+  "size_sd": [
+    21,
+    18
+  ]
+}

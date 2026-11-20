@@ -9,3 +9,10 @@ tools/out/
 
 # Python bytecode from the art-review scripts
 __pycache__/
+
+# copies of every original art picture (tools/collect_art_sources.py)
+art-sources/
+
+# building-animation intermediates (rebuilt by docs/art-review/building-anim/make_anim.py)
+docs/art-review/building-anim/**/raw/
+docs/art-review/building-anim/**/template*.png

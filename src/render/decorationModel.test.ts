@@ -87,11 +87,39 @@ describe('a clear battlefield (spec 2026-11-08 §5)', () => {
       }
   });
 
-  it('low_decor_only_at_edges_and_at_most_twelve', () => {
+  it('low_decor_only_at_edges_and_at_most_the_configured_count (12 until 20/11/2026)', () => {
     for (let seed = 1; seed <= 100; seed++) {
       const low = layoutDecorations(seed, ASSETS).filter((d) => !d.tall);
-      expect(low.length).toBeLessThanOrEqual(12);
+      expect(low.length).toBeLessThanOrEqual(FIELD_DECOR.low.count);
       for (const p of low) expect(p.x <= FIELD_DECOR.low.edge.west || p.x >= FIELD_DECOR.low.edge.east, `${seed} ${p.x}`).toBe(true);
     }
+  });
+});
+
+describe('flat ground patches (20/11/2026)', () => {
+  const WITH_FLAT: DecorAsset[] = [...ASSETS, { id: 'patch_dirt', tall: false, radius: 10, flat: true }];
+
+  it('lie off the board, the road, the water and the portal, apart from each other', () => {
+    for (let seed = 1; seed <= 6; seed++) {
+      const field = generateField(seed);
+      const flats = layoutDecorations(seed, WITH_FLAT).filter((d) => d.flat);
+      expect(flats.length, `${seed}`).toBeGreaterThan(40);
+      for (const p of flats) {
+        expect(p.x + 10 > BOARD.lo - 8 && p.x - 10 < BOARD.hi + 8 && p.y + 10 > BOARD.lo - 8 && p.y - 10 < BOARD.hi + 8).toBe(false);
+        const t = fieldTerrainAt(field, p.x, p.y);
+        expect(t === WATER || t === PATH, `${seed} ${p.x},${p.y}`).toBe(false);
+      }
+      for (let i = 0; i < flats.length; i++)
+        for (let j = i + 1; j < flats.length; j++) {
+          const dx = flats[i]!.x - flats[j]!.x;
+          const dy = flats[i]!.y - flats[j]!.y;
+          expect(dx * dx + dy * dy).toBeGreaterThanOrEqual((20 + FIELD_DECOR.flat.spacing) ** 2);
+        }
+    }
+  });
+
+  it('do not change where the standing objects go', () => {
+    const standing = (a: DecorAsset[]) => layoutDecorations(3, a).filter((d) => !d.flat);
+    expect(standing(WITH_FLAT)).toEqual(standing(ASSETS));
   });
 });

@@ -1,0 +1,11 @@
+{
+  "id": "flowers_red",
+  "tall": false,
+  "radius": 8,
+  "batch": "flowers",
+  "description": "a small cluster of red poppies with green stems and leaves",
+  "size_sd": [
+    16,
+    18
+  ]
+}

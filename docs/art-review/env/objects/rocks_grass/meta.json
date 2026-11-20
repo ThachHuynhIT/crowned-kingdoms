@@ -1,0 +1,11 @@
+{
+  "id": "rocks_grass",
+  "tall": false,
+  "radius": 11,
+  "batch": "rocks_b",
+  "description": "three small rocks half hidden in a tuft of tall grass",
+  "size_sd": [
+    28,
+    22
+  ]
+}

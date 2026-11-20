@@ -14,7 +14,9 @@ import { THRONE_PLOT, adjacentToUnlocked } from '../game/run/board';
 import type { RunState } from '../game/run/state';
 import { FONT_UI } from '../ui/theme';
 import { ISO } from '../core/iso';
-import { SPRITES_KEY, imageFrameScale, kingPlotFrame, pickBuildingFrame, plotFrame } from './atlas';
+import { SPRITES_KEY, buildingAnimFrame, buildingFrame, imageFrameScale, kingPlotFrame, pickBuildingFrame, plotFrame } from './atlas';
+import { buildingAnimIndex } from './buildingAnimModel';
+import { BUILDING_ANIM_FRAMES } from './imageArt';
 import { ISO_SPRITE_SCALE, insetPoly, iso, isoQuad, strokePoly } from './isoView';
 
 /** Ground layer: plots sit on the field (depth 0), under every y-sorted sprite. */
@@ -79,6 +81,8 @@ export class BoardRenderer {
   /** Card shown on each plot's building image, null = none. */
   /** Frame shown on each plot (base or L2/L3 architecture), null when empty. */
   private readonly cards: (string | null)[] = [];
+  /** Activity-loop frames of each plot's level-1 building (`IMAGE_BUILDING_ANIMS`), null when it stays still. */
+  private readonly anims: (string[] | null)[] = [];
   private readonly highlights: Phaser.GameObjects.Graphics;
   private readonly arrows: Phaser.GameObjects.Graphics;
   /** Level pips (bottom) and enchantment dots (top) of each building. */
@@ -152,6 +156,16 @@ export class BoardRenderer {
   }
 
   /** Hide buildings while the battle renders them as structures (UnitRenderer). */
+  /** Advance the activity loops of the level-1 buildings (call every frame). */
+  animate(nowMs: number): void {
+    this.anims.forEach((loop, plot) => {
+      const img = this.buildings[plot];
+      if (!loop || !img) return;
+      const frame = loop[buildingAnimIndex(nowMs, plot)]!;
+      if (img.frame.name !== frame) img.setFrame(frame).setScale(imageFrameScale(frame) * ISO_SPRITE_SCALE);
+    });
+  }
+
   setBuildingsVisible(visible: boolean): void {
     this.buildingsVisible = visible;
     this.buildings.forEach((b, p) => b?.setVisible(visible && this.cards[p] !== null));
@@ -285,6 +299,7 @@ export class BoardRenderer {
     const shown = this.cards[plot] ?? null;
     if (cardId === null) {
       this.cards[plot] = null;
+      this.anims[plot] = null;
       img?.setVisible(false);
       return;
     }
@@ -292,6 +307,8 @@ export class BoardRenderer {
     const sprites = this.scene.textures.get(SPRITES_KEY);
     const frame = pickBuildingFrame(cardId, level, (f) => sprites.has(f));
     this.cards[plot] = frame;
+    const loop = Array.from({ length: BUILDING_ANIM_FRAMES }, (_, i) => buildingAnimFrame(cardId, i));
+    this.anims[plot] = frame === buildingFrame(cardId) && loop.every((f) => sprites.has(f)) ? loop : null;
     if (img === null) {
       const foot = buildingFoot(plot, this.mode);
       img = this.scene.add

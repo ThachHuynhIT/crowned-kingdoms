@@ -1,0 +1,11 @@
+{
+  "id": "wheat_sheaf",
+  "tall": false,
+  "radius": 7,
+  "batch": "farm_c",
+  "description": "a single upright tied sheaf of golden wheat",
+  "size_sd": [
+    21,
+    32
+  ]
+}

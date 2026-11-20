@@ -1,0 +1,11 @@
+{
+  "id": "rock_cluster_b",
+  "tall": false,
+  "radius": 12,
+  "batch": "rocks",
+  "description": "a cluster of four small brown-grey rocks",
+  "size_sd": [
+    35,
+    24
+  ]
+}

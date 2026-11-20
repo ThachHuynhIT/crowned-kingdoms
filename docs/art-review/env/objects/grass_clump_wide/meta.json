@@ -1,0 +1,11 @@
+{
+  "id": "grass_clump_wide",
+  "tall": false,
+  "radius": 10,
+  "batch": "grasses_b",
+  "description": "a wide low clump of lush green grass",
+  "size_sd": [
+    27,
+    18
+  ]
+}

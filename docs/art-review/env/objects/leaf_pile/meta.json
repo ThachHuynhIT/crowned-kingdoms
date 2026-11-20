@@ -1,0 +1,11 @@
+{
+  "id": "leaf_pile",
+  "tall": false,
+  "radius": 10,
+  "batch": "forest_floor",
+  "description": "a small heap of fallen autumn leaves: orange, red, yellow and brown",
+  "size_sd": [
+    26,
+    15
+  ]
+}

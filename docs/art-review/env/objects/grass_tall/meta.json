@@ -1,0 +1,11 @@
+{
+  "id": "grass_tall",
+  "tall": false,
+  "radius": 8,
+  "batch": "grasses",
+  "description": "a clump of tall wild grass with seed heads, green and straw tones",
+  "size_sd": [
+    31,
+    32
+  ]
+}

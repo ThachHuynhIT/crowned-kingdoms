@@ -1,0 +1,11 @@
+{
+  "id": "hitching_post",
+  "tall": false,
+  "radius": 12,
+  "batch": "village_b",
+  "description": "a wooden hitching post: two posts and a rail with a coiled rope, along a diagonal axis",
+  "size_sd": [
+    24,
+    26
+  ]
+}

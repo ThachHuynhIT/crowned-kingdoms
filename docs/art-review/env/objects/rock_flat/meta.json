@@ -1,0 +1,11 @@
+{
+  "id": "rock_flat",
+  "tall": false,
+  "radius": 13,
+  "batch": "rocks",
+  "description": "a low wide flat stone slab lying on the ground, slightly mossy at the edges",
+  "size_sd": [
+    39,
+    18
+  ]
+}

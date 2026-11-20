@@ -1,0 +1,11 @@
+{
+  "id": "crag_tree",
+  "tall": true,
+  "radius": 26,
+  "batch": "crags_b",
+  "description": "a rocky crag with a small twisted pine tree growing out of a crack on top",
+  "size_sd": [
+    107,
+    104
+  ]
+}

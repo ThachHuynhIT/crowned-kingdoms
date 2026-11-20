@@ -1,0 +1,11 @@
+{
+  "id": "boulders_grassy",
+  "tall": true,
+  "radius": 30,
+  "batch": "crags",
+  "description": "a heap of large boulders half buried in tall grass, with small yellow flowers",
+  "size_sd": [
+    116,
+    78
+  ]
+}

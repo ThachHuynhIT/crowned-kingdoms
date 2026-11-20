@@ -1,0 +1,11 @@
+{
+  "id": "obelisk_small",
+  "tall": false,
+  "radius": 8,
+  "batch": "stones_b",
+  "description": "a small weathered stone obelisk on a square base",
+  "size_sd": [
+    28,
+    46
+  ]
+}

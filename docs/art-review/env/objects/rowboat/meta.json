@@ -1,0 +1,11 @@
+{
+  "id": "rowboat",
+  "tall": false,
+  "radius": 20,
+  "batch": "water_edge",
+  "description": "a small wooden rowboat beached on the ground, two oars inside, along a diagonal axis",
+  "size_sd": [
+    36,
+    26
+  ]
+}

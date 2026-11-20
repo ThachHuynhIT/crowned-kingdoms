@@ -1,0 +1,11 @@
+{
+  "id": "log_long",
+  "tall": false,
+  "radius": 24,
+  "batch": "wild_misc",
+  "description": "a long fallen tree trunk with bark and a broken branch stub, lying along a diagonal axis",
+  "size_sd": [
+    45,
+    30
+  ]
+}

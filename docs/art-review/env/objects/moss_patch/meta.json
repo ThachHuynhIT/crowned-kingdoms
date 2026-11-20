@@ -1,0 +1,11 @@
+{
+  "id": "moss_patch",
+  "tall": false,
+  "radius": 11,
+  "batch": "wild_misc",
+  "description": "a soft low patch of green moss with a couple of tiny pebbles, flat on the ground",
+  "size_sd": [
+    28,
+    13
+  ]
+}

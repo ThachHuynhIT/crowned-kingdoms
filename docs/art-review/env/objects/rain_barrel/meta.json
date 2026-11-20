@@ -1,0 +1,11 @@
+{
+  "id": "rain_barrel",
+  "tall": false,
+  "radius": 8,
+  "batch": "farm_b",
+  "description": "a wooden rain barrel with a lid and a small spout, beside a bucket",
+  "size_sd": [
+    27,
+    30
+  ]
+}

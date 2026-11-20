@@ -1,0 +1,11 @@
+{
+  "id": "arch_broken",
+  "tall": true,
+  "radius": 18,
+  "batch": "stones_b",
+  "description": "a broken stone archway: one side and half the arch still standing, the rest fallen as blocks",
+  "size_sd": [
+    55,
+    52
+  ]
+}

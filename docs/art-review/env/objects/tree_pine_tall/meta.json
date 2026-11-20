@@ -1,0 +1,11 @@
+{
+  "id": "tree_pine_tall",
+  "tall": true,
+  "radius": 14,
+  "batch": "trees_d",
+  "description": "a very tall slim Scots pine: a long bare orange-brown trunk and a flat-topped dark-green crown",
+  "size_sd": [
+    85,
+    116
+  ]
+}

@@ -1,0 +1,11 @@
+{
+  "id": "flowers_mixed",
+  "tall": false,
+  "radius": 9,
+  "batch": "flowers",
+  "description": "a small mixed wildflower patch: red, yellow, white and blue flowers among grass",
+  "size_sd": [
+    19,
+    18
+  ]
+}

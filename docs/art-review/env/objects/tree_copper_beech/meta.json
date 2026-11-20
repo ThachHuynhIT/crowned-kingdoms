@@ -1,0 +1,11 @@
+{
+  "id": "tree_copper_beech",
+  "tall": true,
+  "radius": 24,
+  "batch": "trees_d",
+  "description": "a copper beech tree: a round crown of deep red-purple leaves, smooth grey trunk",
+  "size_sd": [
+    88,
+    96
+  ]
+}

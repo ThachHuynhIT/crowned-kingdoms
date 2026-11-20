@@ -6,7 +6,19 @@ import type { CardId } from '../data/types';
 import { KIND_UNIT, TEAM_ALLY, type BattleWorld } from '../game/battle/world';
 import { BUILDING_FOOT_DY } from './BoardRenderer';
 import { ISO_SPRITE_SCALE, iso } from './isoView';
-import { SPRITES_KEY, frameDensityFactor, fxFrame, imageFrameScale, isoUnitFrame, pickBuildingFrame, unitFrame } from './atlas';
+import {
+  SPRITES_KEY,
+  buildingAnimFrame,
+  buildingFrame,
+  frameDensityFactor,
+  fxFrame,
+  imageFrameScale,
+  isoUnitFrame,
+  pickBuildingFrame,
+  unitFrame,
+} from './atlas';
+import { buildingAnimIndex } from './buildingAnimModel';
+import { BUILDING_ANIM_FRAMES } from './imageArt';
 import { isoFacing, isoFlip, isoPoseCell, isoScreenMove, type IsoFacing } from './isoUnitModel';
 import { plotAtWorld } from './endlessBoardModel';
 import type { RunMode } from '../data/rules';
@@ -32,6 +44,8 @@ interface Slot {
   tint: { colors: [number, number, number, number]; mode: number } | null;
   /** Facing of a unit drawn from its diagonal sheets (`ISO_UNITS`); null for front-view art. */
   iso: IsoFacing | null;
+  /** Activity-loop frames of a level-1 building (`IMAGE_BUILDING_ANIMS`); null when it stays still. */
+  anim: string[] | null;
 }
 
 /**
@@ -97,6 +111,7 @@ export class UnitRenderer {
       const sprite = slot.sprite;
       sprite.setPosition(Math.round(p.x), Math.round(foot)).setDepth(foot);
       if (isUnit) this.animate(world, id, slot, now, a);
+      else if (slot.anim) this.setFrame(slot, slot.anim[buildingAnimIndex(now, id)]!);
       if (world.hp[id]! < world.maxHp[id]!) slot.wounded = true;
       if (isUnit || slot.wounded) this.drawBar(world, id, sprite, isUnit);
       if (isUnit && world.stunTicks[id]! > 0) this.showStun(sprite);
@@ -119,6 +134,19 @@ export class UnitRenderer {
     return pickBuildingFrame(cardId, level, (f) => this.hasFrame(f));
   }
 
+  /** The activity loop of `card` when the building shows its level-1 picture and every loop frame loaded. */
+  private animFrames(card: CardId, still: string): string[] | null {
+    if (still !== buildingFrame(card)) return null;
+    const frames = Array.from({ length: BUILDING_ANIM_FRAMES }, (_, i) => buildingAnimFrame(card, i));
+    return frames.every((f) => this.hasFrame(f, false)) ? frames : null;
+  }
+
+  private setFrame(slot: Slot, frame: string): void {
+    if (frame === slot.frame) return;
+    slot.sprite.setFrame(frame).setScale(imageFrameScale(frame) * ISO_SPRITE_SCALE);
+    slot.frame = frame;
+  }
+
   /** Keep render-frame flashes advancing even after the final simulation tick. */
   updateFlashes(): void {
     for (const slot of this.slots) {
@@ -134,11 +162,13 @@ export class UnitRenderer {
     const isoStart: IsoFacing = ally ? { dir: 'se', left: false } : { dir: 'nw', left: true };
     const isoFrame = isoUnitFrame(label, team, isoStart.dir, 0);
     const facing = world.kind[id] === KIND_UNIT && label !== '' && this.hasFrame(isoFrame, false) ? isoStart : null;
-    const frame = facing
+    const still = facing
       ? isoFrame
       : world.kind[id] === KIND_UNIT
         ? unitFrame(label, team, 'idle', 0)
         : this.structureFrame(world, id, label as CardId);
+    const anim = facing || world.kind[id] === KIND_UNIT ? null : this.animFrames(label as CardId, still);
+    const frame = anim ? anim[0]! : still;
     if (label === '' || !this.hasFrame(frame)) {
       this.slots[id] = null;
       return null;
@@ -155,6 +185,7 @@ export class UnitRenderer {
       flashFrames: 0,
       tint: null,
       iso: facing,
+      anim,
     };
     sprite.setFlipX(facing ? isoFlip(facing) : slot.facingLeft);
     this.slots[id] = slot;

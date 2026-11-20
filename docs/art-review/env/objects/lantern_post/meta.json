@@ -1,0 +1,11 @@
+{
+  "id": "lantern_post",
+  "tall": false,
+  "radius": 6,
+  "batch": "camp",
+  "description": "a wooden lantern post: a tall post with an arm holding a small iron lantern (unlit)",
+  "size_sd": [
+    27,
+    56
+  ]
+}

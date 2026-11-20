@@ -1,0 +1,11 @@
+{
+  "id": "weapon_rack",
+  "tall": false,
+  "radius": 12,
+  "batch": "camp_b",
+  "description": "a small wooden rack holding three spears and a round wooden shield",
+  "size_sd": [
+    30,
+    36
+  ]
+}

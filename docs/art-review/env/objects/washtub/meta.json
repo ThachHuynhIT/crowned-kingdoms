@@ -1,0 +1,11 @@
+{
+  "id": "washtub",
+  "tall": false,
+  "radius": 9,
+  "batch": "village_b",
+  "description": "a round wooden washtub with a washboard leaning in it",
+  "size_sd": [
+    19,
+    20
+  ]
+}

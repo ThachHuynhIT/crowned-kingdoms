@@ -1,0 +1,11 @@
+{
+  "id": "footpath_stones",
+  "tall": false,
+  "radius": 16,
+  "batch": "camp",
+  "description": "a short trail of five flat stepping stones set in the grass, following a diagonal axis",
+  "size_sd": [
+    33,
+    22
+  ]
+}

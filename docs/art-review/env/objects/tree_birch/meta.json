@@ -1,0 +1,11 @@
+{
+  "id": "tree_birch",
+  "tall": true,
+  "radius": 16,
+  "batch": "trees_a",
+  "description": "a slender white birch tree: white bark with dark marks, light airy yellow-green leaf clumps",
+  "size_sd": [
+    75,
+    104
+  ]
+}

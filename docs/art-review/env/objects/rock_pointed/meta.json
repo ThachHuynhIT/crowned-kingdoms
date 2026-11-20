@@ -1,0 +1,11 @@
+{
+  "id": "rock_pointed",
+  "tall": false,
+  "radius": 8,
+  "batch": "rocks_c",
+  "description": "a single pointed upright grey rock",
+  "size_sd": [
+    28,
+    30
+  ]
+}

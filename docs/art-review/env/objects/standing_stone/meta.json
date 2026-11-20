@@ -1,0 +1,11 @@
+{
+  "id": "standing_stone",
+  "tall": true,
+  "radius": 10,
+  "batch": "crags",
+  "description": "a single tall ancient standing stone (menhir), weathered grey with lichen patches",
+  "size_sd": [
+    41,
+    62
+  ]
+}

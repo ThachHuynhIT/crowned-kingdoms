@@ -1,0 +1,11 @@
+{
+  "id": "milk_churns",
+  "tall": false,
+  "radius": 8,
+  "batch": "farm_c",
+  "description": "two metal milk churns with lids standing together",
+  "size_sd": [
+    23,
+    26
+  ]
+}

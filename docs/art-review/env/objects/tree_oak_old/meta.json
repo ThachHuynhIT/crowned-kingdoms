@@ -1,0 +1,11 @@
+{
+  "id": "tree_oak_old",
+  "tall": true,
+  "radius": 30,
+  "batch": "trees_c",
+  "description": "a huge old oak with a thick gnarled trunk, exposed roots and a wide green crown",
+  "size_sd": [
+    117,
+    108
+  ]
+}

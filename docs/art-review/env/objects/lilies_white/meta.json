@@ -1,0 +1,11 @@
+{
+  "id": "lilies_white",
+  "tall": false,
+  "radius": 8,
+  "batch": "flowers_b",
+  "description": "a clump of white lilies with long green leaves",
+  "size_sd": [
+    25,
+    28
+  ]
+}

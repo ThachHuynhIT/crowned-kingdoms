@@ -1,0 +1,11 @@
+{
+  "id": "bush_juniper",
+  "tall": false,
+  "radius": 12,
+  "batch": "bushes_b",
+  "description": "a low spreading juniper shrub with blue-green scale leaves",
+  "size_sd": [
+    42,
+    22
+  ]
+}

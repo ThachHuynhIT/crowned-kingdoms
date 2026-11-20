@@ -1,0 +1,11 @@
+{
+  "id": "cosmos_pink",
+  "tall": false,
+  "radius": 8,
+  "batch": "flowers_b",
+  "description": "a clump of soft pink cosmos flowers on thin green stems (soft pink, never magenta)",
+  "size_sd": [
+    24,
+    24
+  ]
+}

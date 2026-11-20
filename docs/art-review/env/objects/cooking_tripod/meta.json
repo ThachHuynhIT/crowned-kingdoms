@@ -1,0 +1,11 @@
+{
+  "id": "cooking_tripod",
+  "tall": false,
+  "radius": 10,
+  "batch": "camp_b",
+  "description": "a wooden tripod over a cold ring of stones with an iron cooking pot hanging from it, no fire",
+  "size_sd": [
+    27,
+    34
+  ]
+}

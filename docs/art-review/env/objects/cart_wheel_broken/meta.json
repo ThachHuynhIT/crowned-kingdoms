@@ -1,0 +1,11 @@
+{
+  "id": "cart_wheel_broken",
+  "tall": false,
+  "radius": 10,
+  "batch": "ruins",
+  "description": "a broken wooden cart wheel leaning on a rock, some spokes missing",
+  "size_sd": [
+    27,
+    24
+  ]
+}

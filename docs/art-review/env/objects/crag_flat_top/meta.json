@@ -1,0 +1,11 @@
+{
+  "id": "crag_flat_top",
+  "tall": true,
+  "radius": 30,
+  "batch": "crags_b",
+  "description": "a wide flat-topped rock outcrop with steep cracked sides and grass growing on its flat top",
+  "size_sd": [
+    112,
+    69
+  ]
+}

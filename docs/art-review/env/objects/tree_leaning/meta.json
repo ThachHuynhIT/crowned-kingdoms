@@ -1,0 +1,11 @@
+{
+  "id": "tree_leaning",
+  "tall": true,
+  "radius": 22,
+  "batch": "trees_e",
+  "description": "a wind-bent tree leaning to one side, its crown swept sideways, green leaves",
+  "size_sd": [
+    106,
+    88
+  ]
+}

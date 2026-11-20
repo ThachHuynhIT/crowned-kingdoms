@@ -1,0 +1,11 @@
+{
+  "id": "bush_rock",
+  "tall": false,
+  "radius": 12,
+  "batch": "bushes_c",
+  "description": "a green bush growing against a small grey rock",
+  "size_sd": [
+    34,
+    28
+  ]
+}

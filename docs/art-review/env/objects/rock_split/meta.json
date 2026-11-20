@@ -1,0 +1,11 @@
+{
+  "id": "rock_split",
+  "tall": false,
+  "radius": 13,
+  "batch": "rocks",
+  "description": "a boulder split in two halves with a small plant growing in the crack",
+  "size_sd": [
+    47,
+    30
+  ]
+}

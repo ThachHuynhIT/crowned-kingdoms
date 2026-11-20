@@ -1,0 +1,11 @@
+{
+  "id": "stairs_ruin",
+  "tall": false,
+  "radius": 16,
+  "batch": "ruins_b",
+  "description": "a short ruined stone staircase of four steps leading nowhere, moss on the steps",
+  "size_sd": [
+    37,
+    34
+  ]
+}

@@ -1,0 +1,11 @@
+{
+  "id": "carved_pole",
+  "tall": false,
+  "radius": 6,
+  "batch": "markers",
+  "description": "a carved wooden pole with simple geometric bands and a small wooden roof cap",
+  "size_sd": [
+    28,
+    52
+  ]
+}

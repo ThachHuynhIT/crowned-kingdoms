@@ -310,7 +310,8 @@ export class RealmScene extends Phaser.Scene {
     this.bus.emit('log', { text });
   };
 
-  update(_time: number, delta: number): void {
+  update(time: number, delta: number): void {
+    this.board?.animate(time);
     if (this.refused) return;
     this.units?.updateFlashes();
     // Taken before update: the tick that ends the battle drops the runner, and that final

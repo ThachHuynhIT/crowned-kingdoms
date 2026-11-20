@@ -1,0 +1,11 @@
+{
+  "id": "bush_sprouts",
+  "tall": false,
+  "radius": 7,
+  "batch": "bushes_b",
+  "description": "three young leafy sprouts growing from bare earth",
+  "size_sd": [
+    19,
+    14
+  ]
+}

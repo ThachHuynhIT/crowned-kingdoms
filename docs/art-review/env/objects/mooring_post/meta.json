@@ -1,0 +1,11 @@
+{
+  "id": "mooring_post",
+  "tall": false,
+  "radius": 6,
+  "batch": "water_edge",
+  "description": "a short thick wooden mooring post with a coil of rope around it",
+  "size_sd": [
+    21,
+    26
+  ]
+}

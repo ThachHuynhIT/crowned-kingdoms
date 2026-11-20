@@ -1,0 +1,11 @@
+{
+  "id": "boulder_giant",
+  "tall": true,
+  "radius": 24,
+  "batch": "crags_b",
+  "description": "one giant rounded boulder with a deep crack, moss in the crack, small flowers at its foot",
+  "size_sd": [
+    94,
+    72
+  ]
+}

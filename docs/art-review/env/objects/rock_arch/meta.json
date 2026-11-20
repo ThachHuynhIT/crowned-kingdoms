@@ -1,0 +1,11 @@
+{
+  "id": "rock_arch",
+  "tall": true,
+  "radius": 28,
+  "batch": "crags_b",
+  "description": "a natural stone arch: two rock legs joined at the top, grass and moss on it",
+  "size_sd": [
+    112,
+    84
+  ]
+}

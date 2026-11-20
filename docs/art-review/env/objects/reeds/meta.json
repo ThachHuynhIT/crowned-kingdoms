@@ -1,0 +1,11 @@
+{
+  "id": "reeds",
+  "tall": false,
+  "radius": 8,
+  "batch": "grasses",
+  "description": "a clump of reeds: tall thin green and tan stems",
+  "size_sd": [
+    31,
+    38
+  ]
+}

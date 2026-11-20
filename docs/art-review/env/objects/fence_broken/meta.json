@@ -1,0 +1,11 @@
+{
+  "id": "fence_broken",
+  "tall": false,
+  "radius": 14,
+  "batch": "village_b",
+  "description": "a short broken wooden fence: two posts, one rail snapped and hanging, along a diagonal axis",
+  "size_sd": [
+    33,
+    26
+  ]
+}

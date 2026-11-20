@@ -1,0 +1,1727 @@
+[
+ {
+  "id": "decal_dirt_round",
+  "radius": 24,
+  "sheet": "sheet_dirt"
+ },
+ {
+  "id": "decal_dirt_oval",
+  "radius": 27,
+  "sheet": "sheet_dirt"
+ },
+ {
+  "id": "decal_dirt_kidney",
+  "radius": 24,
+  "sheet": "sheet_dirt"
+ },
+ {
+  "id": "decal_dirt_small",
+  "radius": 12,
+  "sheet": "sheet_dirt"
+ },
+ {
+  "id": "decal_dirt_scatter",
+  "radius": 24,
+  "sheet": "sheet_dirt"
+ },
+ {
+  "id": "decal_dirt_worn",
+  "radius": 25,
+  "sheet": "sheet_dirt"
+ },
+ {
+  "id": "decal_dirt_dark",
+  "radius": 24,
+  "sheet": "sheet_dirt"
+ },
+ {
+  "id": "decal_dirt_pebbly",
+  "radius": 24,
+  "sheet": "sheet_dirt"
+ },
+ {
+  "id": "decal_dirt_mole",
+  "radius": 18,
+  "sheet": "sheet_dirt"
+ },
+ {
+  "id": "decal_clover_a",
+  "radius": 18,
+  "sheet": "sheet_greens"
+ },
+ {
+  "id": "decal_clover_b",
+  "radius": 21,
+  "sheet": "sheet_greens"
+ },
+ {
+  "id": "decal_clover_c",
+  "radius": 25,
+  "sheet": "sheet_greens"
+ },
+ {
+  "id": "decal_clover_d",
+  "radius": 13,
+  "sheet": "sheet_greens"
+ },
+ {
+  "id": "decal_tufts_a",
+  "radius": 20,
+  "sheet": "sheet_greens"
+ },
+ {
+  "id": "decal_tufts_b",
+  "radius": 23,
+  "sheet": "sheet_greens"
+ },
+ {
+  "id": "decal_tufts_c",
+  "radius": 16,
+  "sheet": "sheet_greens"
+ },
+ {
+  "id": "decal_tufts_dry",
+  "radius": 22,
+  "sheet": "sheet_greens"
+ },
+ {
+  "id": "decal_weeds",
+  "radius": 21,
+  "sheet": "sheet_greens"
+ },
+ {
+  "id": "decal_flowers_white",
+  "radius": 25,
+  "sheet": "sheet_flowers"
+ },
+ {
+  "id": "decal_flowers_yellow",
+  "radius": 25,
+  "sheet": "sheet_flowers"
+ },
+ {
+  "id": "decal_flowers_pink",
+  "radius": 24,
+  "sheet": "sheet_flowers"
+ },
+ {
+  "id": "decal_flowers_lilac",
+  "radius": 24,
+  "sheet": "sheet_flowers"
+ },
+ {
+  "id": "decal_flowers_blue",
+  "radius": 23,
+  "sheet": "sheet_flowers"
+ },
+ {
+  "id": "decal_flowers_red",
+  "radius": 23,
+  "sheet": "sheet_flowers"
+ },
+ {
+  "id": "decal_flowers_orange",
+  "radius": 23,
+  "sheet": "sheet_flowers"
+ },
+ {
+  "id": "decal_flowers_mixed",
+  "radius": 29,
+  "sheet": "sheet_flowers"
+ },
+ {
+  "id": "decal_flowers_dandelion",
+  "radius": 23,
+  "sheet": "sheet_flowers"
+ },
+ {
+  "id": "decal_pebbles_a",
+  "radius": 23,
+  "sheet": "sheet_stones_moss"
+ },
+ {
+  "id": "decal_pebbles_b",
+  "radius": 24,
+  "sheet": "sheet_stones_moss"
+ },
+ {
+  "id": "decal_pebbles_c",
+  "radius": 11,
+  "sheet": "sheet_stones_moss"
+ },
+ {
+  "id": "decal_stepping",
+  "radius": 26,
+  "sheet": "sheet_stones_moss"
+ },
+ {
+  "id": "decal_moss_a",
+  "radius": 23,
+  "sheet": "sheet_stones_moss"
+ },
+ {
+  "id": "decal_moss_b",
+  "radius": 26,
+  "sheet": "sheet_stones_moss"
+ },
+ {
+  "id": "decal_moss_c",
+  "radius": 16,
+  "sheet": "sheet_stones_moss"
+ },
+ {
+  "id": "decal_moss_stone",
+  "radius": 22,
+  "sheet": "sheet_stones_moss"
+ },
+ {
+  "id": "decal_lichen",
+  "radius": 19,
+  "sheet": "sheet_stones_moss"
+ },
+ {
+  "id": "decal_leaves_orange",
+  "radius": 24,
+  "sheet": "sheet_leaves_water"
+ },
+ {
+  "id": "decal_leaves_red",
+  "radius": 22,
+  "sheet": "sheet_leaves_water"
+ },
+ {
+  "id": "decal_leaves_yellow",
+  "radius": 22,
+  "sheet": "sheet_leaves_water"
+ },
+ {
+  "id": "decal_leaves_brown",
+  "radius": 23,
+  "sheet": "sheet_leaves_water"
+ },
+ {
+  "id": "decal_puddle_a",
+  "radius": 22,
+  "sheet": "sheet_leaves_water"
+ },
+ {
+  "id": "decal_puddle_b",
+  "radius": 25,
+  "sheet": "sheet_leaves_water"
+ },
+ {
+  "id": "decal_puddle_c",
+  "radius": 13,
+  "sheet": "sheet_leaves_water"
+ },
+ {
+  "id": "decal_mud",
+  "radius": 24,
+  "sheet": "sheet_leaves_water"
+ },
+ {
+  "id": "decal_puddle_leaf",
+  "radius": 18,
+  "sheet": "sheet_leaves_water"
+ },
+ {
+  "id": "decal_fairy_ring_a",
+  "radius": 26,
+  "sheet": "sheet_dry_marks"
+ },
+ {
+  "id": "decal_fairy_ring_b",
+  "radius": 27,
+  "sheet": "sheet_dry_marks"
+ },
+ {
+  "id": "decal_cracked_a",
+  "radius": 27,
+  "sheet": "sheet_dry_marks"
+ },
+ {
+  "id": "decal_cracked_b",
+  "radius": 18,
+  "sheet": "sheet_dry_marks"
+ },
+ {
+  "id": "decal_cracked_c",
+  "radius": 29,
+  "sheet": "sheet_dry_marks"
+ },
+ {
+  "id": "decal_sand_a",
+  "radius": 26,
+  "sheet": "sheet_dry_marks"
+ },
+ {
+  "id": "decal_sand_b",
+  "radius": 26,
+  "sheet": "sheet_dry_marks"
+ },
+ {
+  "id": "decal_sand_c",
+  "radius": 16,
+  "sheet": "sheet_dry_marks"
+ },
+ {
+  "id": "decal_scorched_a",
+  "radius": 26,
+  "sheet": "sheet_dry_marks"
+ },
+ {
+  "id": "decal_footprints",
+  "radius": 24,
+  "sheet": "sheet_tracks"
+ },
+ {
+  "id": "decal_hoofprints",
+  "radius": 23,
+  "sheet": "sheet_tracks"
+ },
+ {
+  "id": "decal_pawprints",
+  "radius": 20,
+  "sheet": "sheet_tracks"
+ },
+ {
+  "id": "decal_cart_tracks_a",
+  "radius": 25,
+  "sheet": "sheet_tracks"
+ },
+ {
+  "id": "decal_cart_tracks_b",
+  "radius": 25,
+  "sheet": "sheet_tracks"
+ },
+ {
+  "id": "decal_cart_tracks_c",
+  "radius": 21,
+  "sheet": "sheet_tracks"
+ },
+ {
+  "id": "decal_scorched_b",
+  "radius": 16,
+  "sheet": "sheet_tracks"
+ },
+ {
+  "id": "decal_scorched_c",
+  "radius": 26,
+  "sheet": "sheet_tracks"
+ },
+ {
+  "id": "decal_campfire_ash",
+  "radius": 19,
+  "sheet": "sheet_tracks"
+ },
+ {
+  "id": "decal_edge_dirt_a",
+  "radius": 28,
+  "sheet": "sheet_edges"
+ },
+ {
+  "id": "decal_edge_dirt_b",
+  "radius": 28,
+  "sheet": "sheet_edges"
+ },
+ {
+  "id": "decal_edge_dirt_c",
+  "radius": 21,
+  "sheet": "sheet_edges"
+ },
+ {
+  "id": "decal_edge_trampled",
+  "radius": 28,
+  "sheet": "sheet_edges"
+ },
+ {
+  "id": "decal_edge_burrow",
+  "radius": 22,
+  "sheet": "sheet_edges"
+ },
+ {
+  "id": "decal_edge_rootball",
+  "radius": 28,
+  "sheet": "sheet_edges"
+ },
+ {
+  "id": "decal_edge_gravel",
+  "radius": 26,
+  "sheet": "sheet_edges"
+ },
+ {
+  "id": "decal_edge_clay",
+  "radius": 25,
+  "sheet": "sheet_edges"
+ },
+ {
+  "id": "decal_edge_ashgrey",
+  "radius": 23,
+  "sheet": "sheet_edges"
+ },
+ {
+  "id": "decal_bloom_white_s",
+  "radius": 18,
+  "sheet": "sheet_flowers2"
+ },
+ {
+  "id": "decal_bloom_yellow_s",
+  "radius": 20,
+  "sheet": "sheet_flowers2"
+ },
+ {
+  "id": "decal_bloom_pink_s",
+  "radius": 20,
+  "sheet": "sheet_flowers2"
+ },
+ {
+  "id": "decal_bloom_violet_s",
+  "radius": 19,
+  "sheet": "sheet_flowers2"
+ },
+ {
+  "id": "decal_bloom_blue_s",
+  "radius": 19,
+  "sheet": "sheet_flowers2"
+ },
+ {
+  "id": "decal_bloom_red_s",
+  "radius": 20,
+  "sheet": "sheet_flowers2"
+ },
+ {
+  "id": "decal_bloom_line",
+  "radius": 25,
+  "sheet": "sheet_flowers2"
+ },
+ {
+  "id": "decal_bloom_ring",
+  "radius": 22,
+  "sheet": "sheet_flowers2"
+ },
+ {
+  "id": "decal_bloom_heather",
+  "radius": 24,
+  "sheet": "sheet_flowers2"
+ },
+ {
+  "id": "decal_twigs",
+  "radius": 23,
+  "sheet": "sheet_litter"
+ },
+ {
+  "id": "decal_straw",
+  "radius": 24,
+  "sheet": "sheet_litter"
+ },
+ {
+  "id": "decal_woodchips",
+  "radius": 20,
+  "sheet": "sheet_litter"
+ },
+ {
+  "id": "decal_acorns",
+  "radius": 19,
+  "sheet": "sheet_litter"
+ },
+ {
+  "id": "decal_pinecones",
+  "radius": 22,
+  "sheet": "sheet_litter"
+ },
+ {
+  "id": "decal_mushrooms_flat",
+  "radius": 15,
+  "sheet": "sheet_litter"
+ },
+ {
+  "id": "decal_seed_spill",
+  "radius": 23,
+  "sheet": "sheet_litter"
+ },
+ {
+  "id": "decal_shards",
+  "radius": 20,
+  "sheet": "sheet_litter"
+ },
+ {
+  "id": "decal_feathers",
+  "radius": 20,
+  "sheet": "sheet_litter"
+ },
+ {
+  "id": "decal_big_dirt",
+  "radius": 27,
+  "sheet": "sheet_large"
+ },
+ {
+  "id": "decal_big_meadow",
+  "radius": 26,
+  "sheet": "sheet_large"
+ },
+ {
+  "id": "decal_big_clover",
+  "radius": 26,
+  "sheet": "sheet_large"
+ },
+ {
+  "id": "decal_big_sand",
+  "radius": 27,
+  "sheet": "sheet_large"
+ },
+ {
+  "id": "decal_big_moss",
+  "radius": 27,
+  "sheet": "sheet_large"
+ },
+ {
+  "id": "decal_big_leaves",
+  "radius": 27,
+  "sheet": "sheet_large"
+ },
+ {
+  "id": "decal_big_gravel",
+  "radius": 27,
+  "sheet": "sheet_large"
+ },
+ {
+  "id": "decal_big_mud",
+  "radius": 27,
+  "sheet": "sheet_large"
+ },
+ {
+  "id": "decal_big_drygrass",
+  "radius": 27,
+  "sheet": "sheet_large"
+ },
+ {
+  "id": "decal_path_stones",
+  "radius": 26,
+  "sheet": "sheet_paths"
+ },
+ {
+  "id": "decal_path_dirt_bend",
+  "radius": 26,
+  "sheet": "sheet_paths"
+ },
+ {
+  "id": "decal_path_flagstones",
+  "radius": 26,
+  "sheet": "sheet_paths"
+ },
+ {
+  "id": "decal_path_planks",
+  "radius": 25,
+  "sheet": "sheet_paths"
+ },
+ {
+  "id": "decal_path_cobbles",
+  "radius": 24,
+  "sheet": "sheet_paths"
+ },
+ {
+  "id": "decal_path_gravel",
+  "radius": 26,
+  "sheet": "sheet_paths"
+ },
+ {
+  "id": "decal_path_crossing",
+  "radius": 24,
+  "sheet": "sheet_paths"
+ },
+ {
+  "id": "decal_path_end",
+  "radius": 24,
+  "sheet": "sheet_paths"
+ },
+ {
+  "id": "decal_path_brick",
+  "radius": 25,
+  "sheet": "sheet_paths"
+ },
+ {
+  "id": "decal_glow_mushrooms",
+  "radius": 20,
+  "sheet": "sheet_magic"
+ },
+ {
+  "id": "decal_flower_circle",
+  "radius": 26,
+  "sheet": "sheet_magic"
+ },
+ {
+  "id": "decal_stone_circle",
+  "radius": 25,
+  "sheet": "sheet_magic"
+ },
+ {
+  "id": "decal_crop_circle",
+  "radius": 25,
+  "sheet": "sheet_magic"
+ },
+ {
+  "id": "decal_salt_ring",
+  "radius": 26,
+  "sheet": "sheet_magic"
+ },
+ {
+  "id": "decal_spilled_coins",
+  "radius": 18,
+  "sheet": "sheet_magic"
+ },
+ {
+  "id": "decal_old_well_cover",
+  "radius": 21,
+  "sheet": "sheet_magic"
+ },
+ {
+  "id": "decal_horseshoe",
+  "radius": 19,
+  "sheet": "sheet_magic"
+ },
+ {
+  "id": "decal_dirt_round_2",
+  "radius": 27,
+  "sheet": "sheet_dirt_2"
+ },
+ {
+  "id": "decal_dirt_oval_2",
+  "radius": 27,
+  "sheet": "sheet_dirt_2"
+ },
+ {
+  "id": "decal_dirt_kidney_2",
+  "radius": 25,
+  "sheet": "sheet_dirt_2"
+ },
+ {
+  "id": "decal_dirt_small_2",
+  "radius": 13,
+  "sheet": "sheet_dirt_2"
+ },
+ {
+  "id": "decal_dirt_scatter_2",
+  "radius": 20,
+  "sheet": "sheet_dirt_2"
+ },
+ {
+  "id": "decal_dirt_worn_2",
+  "radius": 26,
+  "sheet": "sheet_dirt_2"
+ },
+ {
+  "id": "decal_dirt_dark_2",
+  "radius": 22,
+  "sheet": "sheet_dirt_2"
+ },
+ {
+  "id": "decal_dirt_pebbly_2",
+  "radius": 24,
+  "sheet": "sheet_dirt_2"
+ },
+ {
+  "id": "decal_dirt_mole_2",
+  "radius": 18,
+  "sheet": "sheet_dirt_2"
+ },
+ {
+  "id": "decal_clover_a_2",
+  "radius": 23,
+  "sheet": "sheet_greens_2"
+ },
+ {
+  "id": "decal_clover_b_2",
+  "radius": 19,
+  "sheet": "sheet_greens_2"
+ },
+ {
+  "id": "decal_clover_c_2",
+  "radius": 27,
+  "sheet": "sheet_greens_2"
+ },
+ {
+  "id": "decal_clover_d_2",
+  "radius": 13,
+  "sheet": "sheet_greens_2"
+ },
+ {
+  "id": "decal_tufts_a_2",
+  "radius": 19,
+  "sheet": "sheet_greens_2"
+ },
+ {
+  "id": "decal_tufts_b_2",
+  "radius": 24,
+  "sheet": "sheet_greens_2"
+ },
+ {
+  "id": "decal_tufts_c_2",
+  "radius": 16,
+  "sheet": "sheet_greens_2"
+ },
+ {
+  "id": "decal_tufts_dry_2",
+  "radius": 23,
+  "sheet": "sheet_greens_2"
+ },
+ {
+  "id": "decal_weeds_2",
+  "radius": 23,
+  "sheet": "sheet_greens_2"
+ },
+ {
+  "id": "decal_flowers_white_2",
+  "radius": 25,
+  "sheet": "sheet_flowers_2"
+ },
+ {
+  "id": "decal_flowers_yellow_2",
+  "radius": 24,
+  "sheet": "sheet_flowers_2"
+ },
+ {
+  "id": "decal_flowers_pink_2",
+  "radius": 23,
+  "sheet": "sheet_flowers_2"
+ },
+ {
+  "id": "decal_flowers_lilac_2",
+  "radius": 25,
+  "sheet": "sheet_flowers_2"
+ },
+ {
+  "id": "decal_flowers_blue_2",
+  "radius": 21,
+  "sheet": "sheet_flowers_2"
+ },
+ {
+  "id": "decal_flowers_red_2",
+  "radius": 23,
+  "sheet": "sheet_flowers_2"
+ },
+ {
+  "id": "decal_flowers_orange_2",
+  "radius": 20,
+  "sheet": "sheet_flowers_2"
+ },
+ {
+  "id": "decal_flowers_mixed_2",
+  "radius": 27,
+  "sheet": "sheet_flowers_2"
+ },
+ {
+  "id": "decal_flowers_dandelion_2",
+  "radius": 23,
+  "sheet": "sheet_flowers_2"
+ },
+ {
+  "id": "decal_pebbles_a_2",
+  "radius": 24,
+  "sheet": "sheet_stones_moss_2"
+ },
+ {
+  "id": "decal_pebbles_b_2",
+  "radius": 23,
+  "sheet": "sheet_stones_moss_2"
+ },
+ {
+  "id": "decal_pebbles_c_2",
+  "radius": 13,
+  "sheet": "sheet_stones_moss_2"
+ },
+ {
+  "id": "decal_stepping_2",
+  "radius": 26,
+  "sheet": "sheet_stones_moss_2"
+ },
+ {
+  "id": "decal_moss_a_2",
+  "radius": 23,
+  "sheet": "sheet_stones_moss_2"
+ },
+ {
+  "id": "decal_moss_b_2",
+  "radius": 26,
+  "sheet": "sheet_stones_moss_2"
+ },
+ {
+  "id": "decal_moss_c_2",
+  "radius": 14,
+  "sheet": "sheet_stones_moss_2"
+ },
+ {
+  "id": "decal_moss_stone_2",
+  "radius": 23,
+  "sheet": "sheet_stones_moss_2"
+ },
+ {
+  "id": "decal_lichen_2",
+  "radius": 23,
+  "sheet": "sheet_stones_moss_2"
+ },
+ {
+  "id": "decal_leaves_orange_2",
+  "radius": 23,
+  "sheet": "sheet_leaves_water_2"
+ },
+ {
+  "id": "decal_leaves_red_2",
+  "radius": 23,
+  "sheet": "sheet_leaves_water_2"
+ },
+ {
+  "id": "decal_leaves_yellow_2",
+  "radius": 23,
+  "sheet": "sheet_leaves_water_2"
+ },
+ {
+  "id": "decal_leaves_brown_2",
+  "radius": 24,
+  "sheet": "sheet_leaves_water_2"
+ },
+ {
+  "id": "decal_puddle_a_2",
+  "radius": 23,
+  "sheet": "sheet_leaves_water_2"
+ },
+ {
+  "id": "decal_puddle_b_2",
+  "radius": 26,
+  "sheet": "sheet_leaves_water_2"
+ },
+ {
+  "id": "decal_puddle_c_2",
+  "radius": 11,
+  "sheet": "sheet_leaves_water_2"
+ },
+ {
+  "id": "decal_mud_2",
+  "radius": 24,
+  "sheet": "sheet_leaves_water_2"
+ },
+ {
+  "id": "decal_puddle_leaf_2",
+  "radius": 19,
+  "sheet": "sheet_leaves_water_2"
+ },
+ {
+  "id": "decal_fairy_ring_a_2",
+  "radius": 28,
+  "sheet": "sheet_dry_marks_2"
+ },
+ {
+  "id": "decal_fairy_ring_b_2",
+  "radius": 25,
+  "sheet": "sheet_dry_marks_2"
+ },
+ {
+  "id": "decal_cracked_a_2",
+  "radius": 27,
+  "sheet": "sheet_dry_marks_2"
+ },
+ {
+  "id": "decal_cracked_b_2",
+  "radius": 17,
+  "sheet": "sheet_dry_marks_2"
+ },
+ {
+  "id": "decal_cracked_c_2",
+  "radius": 30,
+  "sheet": "sheet_dry_marks_2"
+ },
+ {
+  "id": "decal_sand_a_2",
+  "radius": 23,
+  "sheet": "sheet_dry_marks_2"
+ },
+ {
+  "id": "decal_sand_b_2",
+  "radius": 28,
+  "sheet": "sheet_dry_marks_2"
+ },
+ {
+  "id": "decal_sand_c_2",
+  "radius": 16,
+  "sheet": "sheet_dry_marks_2"
+ },
+ {
+  "id": "decal_scorched_a_2",
+  "radius": 28,
+  "sheet": "sheet_dry_marks_2"
+ },
+ {
+  "id": "decal_footprints_2",
+  "radius": 21,
+  "sheet": "sheet_tracks_2"
+ },
+ {
+  "id": "decal_hoofprints_2",
+  "radius": 21,
+  "sheet": "sheet_tracks_2"
+ },
+ {
+  "id": "decal_pawprints_2",
+  "radius": 18,
+  "sheet": "sheet_tracks_2"
+ },
+ {
+  "id": "decal_cart_tracks_a_2",
+  "radius": 23,
+  "sheet": "sheet_tracks_2"
+ },
+ {
+  "id": "decal_cart_tracks_b_2",
+  "radius": 23,
+  "sheet": "sheet_tracks_2"
+ },
+ {
+  "id": "decal_cart_tracks_c_2",
+  "radius": 19,
+  "sheet": "sheet_tracks_2"
+ },
+ {
+  "id": "decal_scorched_b_2",
+  "radius": 14,
+  "sheet": "sheet_tracks_2"
+ },
+ {
+  "id": "decal_scorched_c_2",
+  "radius": 25,
+  "sheet": "sheet_tracks_2"
+ },
+ {
+  "id": "decal_campfire_ash_2",
+  "radius": 17,
+  "sheet": "sheet_tracks_2"
+ },
+ {
+  "id": "decal_edge_dirt_a_2",
+  "radius": 28,
+  "sheet": "sheet_edges_2"
+ },
+ {
+  "id": "decal_edge_dirt_b_2",
+  "radius": 29,
+  "sheet": "sheet_edges_2"
+ },
+ {
+  "id": "decal_edge_dirt_c_2",
+  "radius": 21,
+  "sheet": "sheet_edges_2"
+ },
+ {
+  "id": "decal_edge_trampled_2",
+  "radius": 28,
+  "sheet": "sheet_edges_2"
+ },
+ {
+  "id": "decal_edge_burrow_2",
+  "radius": 21,
+  "sheet": "sheet_edges_2"
+ },
+ {
+  "id": "decal_edge_rootball_2",
+  "radius": 29,
+  "sheet": "sheet_edges_2"
+ },
+ {
+  "id": "decal_edge_gravel_2",
+  "radius": 28,
+  "sheet": "sheet_edges_2"
+ },
+ {
+  "id": "decal_edge_clay_2",
+  "radius": 25,
+  "sheet": "sheet_edges_2"
+ },
+ {
+  "id": "decal_edge_ashgrey_2",
+  "radius": 24,
+  "sheet": "sheet_edges_2"
+ },
+ {
+  "id": "decal_bloom_white_s_2",
+  "radius": 23,
+  "sheet": "sheet_flowers2_2"
+ },
+ {
+  "id": "decal_bloom_yellow_s_2",
+  "radius": 22,
+  "sheet": "sheet_flowers2_2"
+ },
+ {
+  "id": "decal_bloom_pink_s_2",
+  "radius": 21,
+  "sheet": "sheet_flowers2_2"
+ },
+ {
+  "id": "decal_bloom_violet_s_2",
+  "radius": 22,
+  "sheet": "sheet_flowers2_2"
+ },
+ {
+  "id": "decal_bloom_blue_s_2",
+  "radius": 21,
+  "sheet": "sheet_flowers2_2"
+ },
+ {
+  "id": "decal_bloom_red_s_2",
+  "radius": 22,
+  "sheet": "sheet_flowers2_2"
+ },
+ {
+  "id": "decal_bloom_line_2",
+  "radius": 25,
+  "sheet": "sheet_flowers2_2"
+ },
+ {
+  "id": "decal_bloom_ring_2",
+  "radius": 23,
+  "sheet": "sheet_flowers2_2"
+ },
+ {
+  "id": "decal_bloom_heather_2",
+  "radius": 24,
+  "sheet": "sheet_flowers2_2"
+ },
+ {
+  "id": "decal_twigs_2",
+  "radius": 22,
+  "sheet": "sheet_litter_2"
+ },
+ {
+  "id": "decal_straw_2",
+  "radius": 24,
+  "sheet": "sheet_litter_2"
+ },
+ {
+  "id": "decal_woodchips_2",
+  "radius": 22,
+  "sheet": "sheet_litter_2"
+ },
+ {
+  "id": "decal_acorns_2",
+  "radius": 19,
+  "sheet": "sheet_litter_2"
+ },
+ {
+  "id": "decal_pinecones_2",
+  "radius": 22,
+  "sheet": "sheet_litter_2"
+ },
+ {
+  "id": "decal_mushrooms_flat_2",
+  "radius": 13,
+  "sheet": "sheet_litter_2"
+ },
+ {
+  "id": "decal_seed_spill_2",
+  "radius": 19,
+  "sheet": "sheet_litter_2"
+ },
+ {
+  "id": "decal_shards_2",
+  "radius": 20,
+  "sheet": "sheet_litter_2"
+ },
+ {
+  "id": "decal_feathers_2",
+  "radius": 17,
+  "sheet": "sheet_litter_2"
+ },
+ {
+  "id": "decal_big_dirt_2",
+  "radius": 27,
+  "sheet": "sheet_large_2"
+ },
+ {
+  "id": "decal_big_meadow_2",
+  "radius": 26,
+  "sheet": "sheet_large_2"
+ },
+ {
+  "id": "decal_big_clover_2",
+  "radius": 26,
+  "sheet": "sheet_large_2"
+ },
+ {
+  "id": "decal_big_sand_2",
+  "radius": 27,
+  "sheet": "sheet_large_2"
+ },
+ {
+  "id": "decal_big_moss_2",
+  "radius": 26,
+  "sheet": "sheet_large_2"
+ },
+ {
+  "id": "decal_big_leaves_2",
+  "radius": 27,
+  "sheet": "sheet_large_2"
+ },
+ {
+  "id": "decal_big_gravel_2",
+  "radius": 27,
+  "sheet": "sheet_large_2"
+ },
+ {
+  "id": "decal_big_mud_2",
+  "radius": 27,
+  "sheet": "sheet_large_2"
+ },
+ {
+  "id": "decal_big_drygrass_2",
+  "radius": 27,
+  "sheet": "sheet_large_2"
+ },
+ {
+  "id": "decal_path_stones_2",
+  "radius": 24,
+  "sheet": "sheet_paths_2"
+ },
+ {
+  "id": "decal_path_dirt_bend_2",
+  "radius": 24,
+  "sheet": "sheet_paths_2"
+ },
+ {
+  "id": "decal_path_flagstones_2",
+  "radius": 25,
+  "sheet": "sheet_paths_2"
+ },
+ {
+  "id": "decal_path_planks_2",
+  "radius": 25,
+  "sheet": "sheet_paths_2"
+ },
+ {
+  "id": "decal_path_cobbles_2",
+  "radius": 24,
+  "sheet": "sheet_paths_2"
+ },
+ {
+  "id": "decal_path_gravel_2",
+  "radius": 26,
+  "sheet": "sheet_paths_2"
+ },
+ {
+  "id": "decal_path_crossing_2",
+  "radius": 24,
+  "sheet": "sheet_paths_2"
+ },
+ {
+  "id": "decal_path_end_2",
+  "radius": 23,
+  "sheet": "sheet_paths_2"
+ },
+ {
+  "id": "decal_path_brick_2",
+  "radius": 23,
+  "sheet": "sheet_paths_2"
+ },
+ {
+  "id": "decal_rune_circle_2",
+  "radius": 24,
+  "sheet": "sheet_magic_2"
+ },
+ {
+  "id": "decal_glow_mushrooms_2",
+  "radius": 18,
+  "sheet": "sheet_magic_2"
+ },
+ {
+  "id": "decal_flower_circle_2",
+  "radius": 23,
+  "sheet": "sheet_magic_2"
+ },
+ {
+  "id": "decal_stone_circle_2",
+  "radius": 23,
+  "sheet": "sheet_magic_2"
+ },
+ {
+  "id": "decal_crop_circle_2",
+  "radius": 22,
+  "sheet": "sheet_magic_2"
+ },
+ {
+  "id": "decal_salt_ring_2",
+  "radius": 24,
+  "sheet": "sheet_magic_2"
+ },
+ {
+  "id": "decal_spilled_coins_2",
+  "radius": 17,
+  "sheet": "sheet_magic_2"
+ },
+ {
+  "id": "decal_old_well_cover_2",
+  "radius": 20,
+  "sheet": "sheet_magic_2"
+ },
+ {
+  "id": "decal_horseshoe_2",
+  "radius": 19,
+  "sheet": "sheet_magic_2"
+ },
+ {
+  "id": "decal_dirt_round_3",
+  "radius": 23,
+  "sheet": "sheet_dirt_3"
+ },
+ {
+  "id": "decal_dirt_oval_3",
+  "radius": 27,
+  "sheet": "sheet_dirt_3"
+ },
+ {
+  "id": "decal_dirt_kidney_3",
+  "radius": 24,
+  "sheet": "sheet_dirt_3"
+ },
+ {
+  "id": "decal_dirt_small_3",
+  "radius": 13,
+  "sheet": "sheet_dirt_3"
+ },
+ {
+  "id": "decal_dirt_scatter_3",
+  "radius": 24,
+  "sheet": "sheet_dirt_3"
+ },
+ {
+  "id": "decal_dirt_worn_3",
+  "radius": 25,
+  "sheet": "sheet_dirt_3"
+ },
+ {
+  "id": "decal_dirt_dark_3",
+  "radius": 22,
+  "sheet": "sheet_dirt_3"
+ },
+ {
+  "id": "decal_dirt_pebbly_3",
+  "radius": 24,
+  "sheet": "sheet_dirt_3"
+ },
+ {
+  "id": "decal_dirt_mole_3",
+  "radius": 17,
+  "sheet": "sheet_dirt_3"
+ },
+ {
+  "id": "decal_clover_a_3",
+  "radius": 26,
+  "sheet": "sheet_greens_3"
+ },
+ {
+  "id": "decal_clover_d_3",
+  "radius": 16,
+  "sheet": "sheet_greens_3"
+ },
+ {
+  "id": "decal_tufts_a_3",
+  "radius": 20,
+  "sheet": "sheet_greens_3"
+ },
+ {
+  "id": "decal_tufts_b_3",
+  "radius": 25,
+  "sheet": "sheet_greens_3"
+ },
+ {
+  "id": "decal_tufts_c_3",
+  "radius": 14,
+  "sheet": "sheet_greens_3"
+ },
+ {
+  "id": "decal_tufts_dry_3",
+  "radius": 22,
+  "sheet": "sheet_greens_3"
+ },
+ {
+  "id": "decal_weeds_3",
+  "radius": 23,
+  "sheet": "sheet_greens_3"
+ },
+ {
+  "id": "decal_flowers_white_3",
+  "radius": 25,
+  "sheet": "sheet_flowers_3"
+ },
+ {
+  "id": "decal_flowers_yellow_3",
+  "radius": 24,
+  "sheet": "sheet_flowers_3"
+ },
+ {
+  "id": "decal_flowers_pink_3",
+  "radius": 23,
+  "sheet": "sheet_flowers_3"
+ },
+ {
+  "id": "decal_flowers_lilac_3",
+  "radius": 25,
+  "sheet": "sheet_flowers_3"
+ },
+ {
+  "id": "decal_flowers_blue_3",
+  "radius": 22,
+  "sheet": "sheet_flowers_3"
+ },
+ {
+  "id": "decal_flowers_red_3",
+  "radius": 24,
+  "sheet": "sheet_flowers_3"
+ },
+ {
+  "id": "decal_flowers_orange_3",
+  "radius": 22,
+  "sheet": "sheet_flowers_3"
+ },
+ {
+  "id": "decal_flowers_mixed_3",
+  "radius": 28,
+  "sheet": "sheet_flowers_3"
+ },
+ {
+  "id": "decal_flowers_dandelion_3",
+  "radius": 23,
+  "sheet": "sheet_flowers_3"
+ },
+ {
+  "id": "decal_pebbles_a_3",
+  "radius": 23,
+  "sheet": "sheet_stones_moss_3"
+ },
+ {
+  "id": "decal_pebbles_b_3",
+  "radius": 23,
+  "sheet": "sheet_stones_moss_3"
+ },
+ {
+  "id": "decal_pebbles_c_3",
+  "radius": 9,
+  "sheet": "sheet_stones_moss_3"
+ },
+ {
+  "id": "decal_stepping_3",
+  "radius": 22,
+  "sheet": "sheet_stones_moss_3"
+ },
+ {
+  "id": "decal_moss_a_3",
+  "radius": 21,
+  "sheet": "sheet_stones_moss_3"
+ },
+ {
+  "id": "decal_moss_b_3",
+  "radius": 24,
+  "sheet": "sheet_stones_moss_3"
+ },
+ {
+  "id": "decal_moss_c_3",
+  "radius": 14,
+  "sheet": "sheet_stones_moss_3"
+ },
+ {
+  "id": "decal_moss_stone_3",
+  "radius": 19,
+  "sheet": "sheet_stones_moss_3"
+ },
+ {
+  "id": "decal_lichen_3",
+  "radius": 20,
+  "sheet": "sheet_stones_moss_3"
+ },
+ {
+  "id": "decal_leaves_orange_3",
+  "radius": 25,
+  "sheet": "sheet_leaves_water_3"
+ },
+ {
+  "id": "decal_leaves_red_3",
+  "radius": 23,
+  "sheet": "sheet_leaves_water_3"
+ },
+ {
+  "id": "decal_leaves_yellow_3",
+  "radius": 24,
+  "sheet": "sheet_leaves_water_3"
+ },
+ {
+  "id": "decal_leaves_brown_3",
+  "radius": 25,
+  "sheet": "sheet_leaves_water_3"
+ },
+ {
+  "id": "decal_puddle_a_3",
+  "radius": 20,
+  "sheet": "sheet_leaves_water_3"
+ },
+ {
+  "id": "decal_puddle_b_3",
+  "radius": 27,
+  "sheet": "sheet_leaves_water_3"
+ },
+ {
+  "id": "decal_puddle_c_3",
+  "radius": 13,
+  "sheet": "sheet_leaves_water_3"
+ },
+ {
+  "id": "decal_mud_3",
+  "radius": 25,
+  "sheet": "sheet_leaves_water_3"
+ },
+ {
+  "id": "decal_puddle_leaf_3",
+  "radius": 18,
+  "sheet": "sheet_leaves_water_3"
+ },
+ {
+  "id": "decal_fairy_ring_a_3",
+  "radius": 27,
+  "sheet": "sheet_dry_marks_3"
+ },
+ {
+  "id": "decal_fairy_ring_b_3",
+  "radius": 23,
+  "sheet": "sheet_dry_marks_3"
+ },
+ {
+  "id": "decal_cracked_a_3",
+  "radius": 28,
+  "sheet": "sheet_dry_marks_3"
+ },
+ {
+  "id": "decal_cracked_b_3",
+  "radius": 17,
+  "sheet": "sheet_dry_marks_3"
+ },
+ {
+  "id": "decal_cracked_c_3",
+  "radius": 29,
+  "sheet": "sheet_dry_marks_3"
+ },
+ {
+  "id": "decal_sand_a_3",
+  "radius": 23,
+  "sheet": "sheet_dry_marks_3"
+ },
+ {
+  "id": "decal_sand_b_3",
+  "radius": 27,
+  "sheet": "sheet_dry_marks_3"
+ },
+ {
+  "id": "decal_sand_c_3",
+  "radius": 15,
+  "sheet": "sheet_dry_marks_3"
+ },
+ {
+  "id": "decal_scorched_a_3",
+  "radius": 27,
+  "sheet": "sheet_dry_marks_3"
+ },
+ {
+  "id": "decal_footprints_3",
+  "radius": 25,
+  "sheet": "sheet_tracks_3"
+ },
+ {
+  "id": "decal_hoofprints_3",
+  "radius": 28,
+  "sheet": "sheet_tracks_3"
+ },
+ {
+  "id": "decal_pawprints_3",
+  "radius": 22,
+  "sheet": "sheet_tracks_3"
+ },
+ {
+  "id": "decal_cart_tracks_a_3",
+  "radius": 26,
+  "sheet": "sheet_tracks_3"
+ },
+ {
+  "id": "decal_cart_tracks_b_3",
+  "radius": 25,
+  "sheet": "sheet_tracks_3"
+ },
+ {
+  "id": "decal_cart_tracks_c_3",
+  "radius": 24,
+  "sheet": "sheet_tracks_3"
+ },
+ {
+  "id": "decal_scorched_b_3",
+  "radius": 16,
+  "sheet": "sheet_tracks_3"
+ },
+ {
+  "id": "decal_scorched_c_3",
+  "radius": 28,
+  "sheet": "sheet_tracks_3"
+ },
+ {
+  "id": "decal_campfire_ash_3",
+  "radius": 21,
+  "sheet": "sheet_tracks_3"
+ },
+ {
+  "id": "decal_edge_dirt_a_3",
+  "radius": 28,
+  "sheet": "sheet_edges_3"
+ },
+ {
+  "id": "decal_edge_trampled_3",
+  "radius": 27,
+  "sheet": "sheet_edges_3"
+ },
+ {
+  "id": "decal_edge_burrow_3",
+  "radius": 19,
+  "sheet": "sheet_edges_3"
+ },
+ {
+  "id": "decal_edge_rootball_3",
+  "radius": 28,
+  "sheet": "sheet_edges_3"
+ },
+ {
+  "id": "decal_edge_gravel_3",
+  "radius": 28,
+  "sheet": "sheet_edges_3"
+ },
+ {
+  "id": "decal_edge_clay_3",
+  "radius": 25,
+  "sheet": "sheet_edges_3"
+ },
+ {
+  "id": "decal_edge_ashgrey_3",
+  "radius": 23,
+  "sheet": "sheet_edges_3"
+ },
+ {
+  "id": "decal_bloom_white_s_3",
+  "radius": 17,
+  "sheet": "sheet_flowers2_3"
+ },
+ {
+  "id": "decal_bloom_yellow_s_3",
+  "radius": 17,
+  "sheet": "sheet_flowers2_3"
+ },
+ {
+  "id": "decal_bloom_pink_s_3",
+  "radius": 17,
+  "sheet": "sheet_flowers2_3"
+ },
+ {
+  "id": "decal_bloom_violet_s_3",
+  "radius": 18,
+  "sheet": "sheet_flowers2_3"
+ },
+ {
+  "id": "decal_bloom_blue_s_3",
+  "radius": 17,
+  "sheet": "sheet_flowers2_3"
+ },
+ {
+  "id": "decal_bloom_red_s_3",
+  "radius": 17,
+  "sheet": "sheet_flowers2_3"
+ },
+ {
+  "id": "decal_bloom_line_3",
+  "radius": 25,
+  "sheet": "sheet_flowers2_3"
+ },
+ {
+  "id": "decal_bloom_ring_3",
+  "radius": 20,
+  "sheet": "sheet_flowers2_3"
+ },
+ {
+  "id": "decal_bloom_heather_3",
+  "radius": 24,
+  "sheet": "sheet_flowers2_3"
+ },
+ {
+  "id": "decal_twigs_3",
+  "radius": 17,
+  "sheet": "sheet_litter_3"
+ },
+ {
+  "id": "decal_straw_3",
+  "radius": 22,
+  "sheet": "sheet_litter_3"
+ },
+ {
+  "id": "decal_woodchips_3",
+  "radius": 18,
+  "sheet": "sheet_litter_3"
+ },
+ {
+  "id": "decal_acorns_3",
+  "radius": 16,
+  "sheet": "sheet_litter_3"
+ },
+ {
+  "id": "decal_pinecones_3",
+  "radius": 15,
+  "sheet": "sheet_litter_3"
+ },
+ {
+  "id": "decal_mushrooms_flat_3",
+  "radius": 12,
+  "sheet": "sheet_litter_3"
+ },
+ {
+  "id": "decal_seed_spill_3",
+  "radius": 18,
+  "sheet": "sheet_litter_3"
+ },
+ {
+  "id": "decal_shards_3",
+  "radius": 17,
+  "sheet": "sheet_litter_3"
+ },
+ {
+  "id": "decal_feathers_3",
+  "radius": 16,
+  "sheet": "sheet_litter_3"
+ },
+ {
+  "id": "decal_big_dirt_3",
+  "radius": 26,
+  "sheet": "sheet_large_3"
+ },
+ {
+  "id": "decal_big_meadow_3",
+  "radius": 27,
+  "sheet": "sheet_large_3"
+ },
+ {
+  "id": "decal_big_clover_3",
+  "radius": 27,
+  "sheet": "sheet_large_3"
+ },
+ {
+  "id": "decal_big_sand_3",
+  "radius": 27,
+  "sheet": "sheet_large_3"
+ },
+ {
+  "id": "decal_big_moss_3",
+  "radius": 26,
+  "sheet": "sheet_large_3"
+ },
+ {
+  "id": "decal_big_leaves_3",
+  "radius": 27,
+  "sheet": "sheet_large_3"
+ },
+ {
+  "id": "decal_big_gravel_3",
+  "radius": 26,
+  "sheet": "sheet_large_3"
+ },
+ {
+  "id": "decal_big_mud_3",
+  "radius": 26,
+  "sheet": "sheet_large_3"
+ },
+ {
+  "id": "decal_big_drygrass_3",
+  "radius": 27,
+  "sheet": "sheet_large_3"
+ },
+ {
+  "id": "decal_path_stones_3",
+  "radius": 23,
+  "sheet": "sheet_paths_3"
+ },
+ {
+  "id": "decal_path_dirt_bend_3",
+  "radius": 23,
+  "sheet": "sheet_paths_3"
+ },
+ {
+  "id": "decal_path_flagstones_3",
+  "radius": 22,
+  "sheet": "sheet_paths_3"
+ },
+ {
+  "id": "decal_path_planks_3",
+  "radius": 24,
+  "sheet": "sheet_paths_3"
+ },
+ {
+  "id": "decal_path_cobbles_3",
+  "radius": 23,
+  "sheet": "sheet_paths_3"
+ },
+ {
+  "id": "decal_path_gravel_3",
+  "radius": 22,
+  "sheet": "sheet_paths_3"
+ },
+ {
+  "id": "decal_path_crossing_3",
+  "radius": 22,
+  "sheet": "sheet_paths_3"
+ },
+ {
+  "id": "decal_path_end_3",
+  "radius": 23,
+  "sheet": "sheet_paths_3"
+ },
+ {
+  "id": "decal_path_brick_3",
+  "radius": 23,
+  "sheet": "sheet_paths_3"
+ },
+ {
+  "id": "decal_glow_mushrooms_3",
+  "radius": 16,
+  "sheet": "sheet_magic_3"
+ },
+ {
+  "id": "decal_flower_circle_3",
+  "radius": 23,
+  "sheet": "sheet_magic_3"
+ },
+ {
+  "id": "decal_stone_circle_3",
+  "radius": 23,
+  "sheet": "sheet_magic_3"
+ },
+ {
+  "id": "decal_crop_circle_3",
+  "radius": 25,
+  "sheet": "sheet_magic_3"
+ },
+ {
+  "id": "decal_salt_ring_3",
+  "radius": 25,
+  "sheet": "sheet_magic_3"
+ },
+ {
+  "id": "decal_spilled_coins_3",
+  "radius": 15,
+  "sheet": "sheet_magic_3"
+ },
+ {
+  "id": "decal_old_well_cover_3",
+  "radius": 22,
+  "sheet": "sheet_magic_3"
+ },
+ {
+  "id": "decal_horseshoe_3",
+  "radius": 17,
+  "sheet": "sheet_magic_3"
+ }
+]

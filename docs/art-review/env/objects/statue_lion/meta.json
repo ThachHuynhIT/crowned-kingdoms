@@ -1,0 +1,11 @@
+{
+  "id": "statue_lion",
+  "tall": false,
+  "radius": 10,
+  "batch": "stones_b",
+  "description": "a weathered stone lion statue sitting on a plinth, a bit chipped, mossy",
+  "size_sd": [
+    28,
+    40
+  ]
+}

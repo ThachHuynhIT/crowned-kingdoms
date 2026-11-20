@@ -1,0 +1,11 @@
+{
+  "id": "dandelions",
+  "tall": false,
+  "radius": 7,
+  "batch": "grasses",
+  "description": "a few dandelions: green leaf rosettes, two yellow flowers and one white puffball",
+  "size_sd": [
+    19,
+    18
+  ]
+}

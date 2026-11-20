@@ -1,0 +1,11 @@
+{
+  "id": "fern",
+  "tall": false,
+  "radius": 9,
+  "batch": "bushes",
+  "description": "a fern plant: long feathery arching green fronds spreading out from the centre",
+  "size_sd": [
+    37,
+    28
+  ]
+}

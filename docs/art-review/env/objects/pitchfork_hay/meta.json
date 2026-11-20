@@ -1,0 +1,11 @@
+{
+  "id": "pitchfork_hay",
+  "tall": false,
+  "radius": 11,
+  "batch": "farm_c",
+  "description": "a small pile of loose hay with a wooden pitchfork stuck in it",
+  "size_sd": [
+    31,
+    32
+  ]
+}

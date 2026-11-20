@@ -1,0 +1,11 @@
+{
+  "id": "pillar_stump",
+  "tall": false,
+  "radius": 9,
+  "batch": "ruins_b",
+  "description": "the short stump of a broken stone column on a square base",
+  "size_sd": [
+    27,
+    26
+  ]
+}

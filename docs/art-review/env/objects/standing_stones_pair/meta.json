@@ -1,0 +1,11 @@
+{
+  "id": "standing_stones_pair",
+  "tall": true,
+  "radius": 18,
+  "batch": "crags_c",
+  "description": "two tall weathered standing stones side by side with a fallen lintel stone at their feet",
+  "size_sd": [
+    77,
+    70
+  ]
+}

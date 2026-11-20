@@ -1,0 +1,5 @@
+docs/art-review/building-anim/wheat_windmill/template.png
+docs/art-review/building-anim/wheat_windmill/source.png
+docs/art-review/style-references/harvester-house-front-approved.png
+docs/art-review/style-references/iso-building-approved.png
+docs/art-review/building-anim/wheat_windmill/guide.png

@@ -1,0 +1,11 @@
+{
+  "id": "rock_dark",
+  "tall": false,
+  "radius": 11,
+  "batch": "rocks_b",
+  "description": "a dark slate-grey angular rock with a few sharp facets",
+  "size_sd": [
+    29,
+    26
+  ]
+}

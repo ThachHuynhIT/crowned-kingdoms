@@ -10,6 +10,9 @@ import { iso } from './isoView';
  * whose PNG did not load is skipped. Nothing moves, so there is no per-frame update. An HD twin (density ≥ 2) is drawn at
  * half scale, so every object keeps its size and foot.
  */
+/** Between the painted ground (0–0.01) and the plots (1). */
+const FLAT_DECOR_DEPTH = 0.5;
+
 export class DecorationRenderer {
   private images: Phaser.GameObjects.Image[] = [];
 
@@ -19,12 +22,13 @@ export class DecorationRenderer {
     for (const p of layoutDecorations(seed, approved, mode)) {
       const at = iso(p);
       const tex = imageArtTexture(exists, decorFile(p.assetId))!;
+      // A flat patch lies on the ground (centred on its point, under the plots, buildings and units).
       this.images.push(
         scene.add
           .image(Math.round(at.x), Math.round(at.y), tex.key)
-          .setOrigin(0.5, 1)
+          .setOrigin(0.5, p.flat ? 0.5 : 1)
           .setScale(imageArtScale(1, tex.factor))
-          .setDepth(at.y),
+          .setDepth(p.flat ? FLAT_DECOR_DEPTH : at.y),
       );
     }
   }

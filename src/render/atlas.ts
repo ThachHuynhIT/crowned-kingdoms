@@ -33,6 +33,11 @@ import {
   IMAGE_ART_SCALE,
   IMAGE_BUILDINGS,
   IMAGE_BUILDING_LEVELS,
+  IMAGE_BUILDING_ANIMS,
+  RULE_ICONS,
+  ruleIconFile,
+  BUILDING_ANIM_FRAMES,
+  buildingAnimFile,
   buildingLevelFile,
   levelArt,
   IMAGE_FX,
@@ -93,6 +98,8 @@ export const isoUnitFrame = (unit: UnitId, team: UnitTeam, dir: IsoDir, i: numbe
   `unitiso_${unit}_${team}_${dir}${i}`;
 /** Troop/tower building or the throne (the throne card id is its frame). */
 export const buildingFrame = (cardId: CardId): string => `building_${cardId}`;
+/** Frame `i` of the activity loop of a building (`IMAGE_BUILDING_ANIMS`): exists only when its file loaded. */
+export const buildingAnimFrame = (cardId: CardId, i: number): string => `building_${cardId}_anim${i}`;
 /** Frame of the L2/L3 architecture of a building (`IMAGE_BUILDING_LEVELS`). */
 export const buildingLevelFrame = (cardId: CardId, art: 2 | 3): string => `building_${cardId}_l${art}`;
 
@@ -113,6 +120,8 @@ export const kingPlotFrame = (kingId: string, state: PlotState): string =>
   IMAGE_PLOTS[kingId] === undefined ? plotFrame(state) : `plot_${kingId}_${state}`;
 export const cardArtFrame = (cardId: CardId): string => `card_art_${cardId}`;
 export const iconFrame = (id: IconId): string => `icon_${id}`;
+/** Frame of the per-rule icon `id` (`RULE_ICONS`): exists only when its file loaded. */
+export const ruleIconFrame = (id: string): string => `icon_${id}`;
 /** `arrow_<dir>`, `boulder`, `boulder_shadow`, `spark`. */
 export const fxFrame = (name: string): string => `fx_${name}`;
 /** Texture key of the painted battle field for `seed`. */
@@ -457,6 +466,21 @@ export const withImageArtFrom = (
     IMAGE_FRAMES.set(s.name, image.scale);
     return { name: s.name, art: image.art };
   });
+  for (const id of RULE_ICONS) {
+    const image = lookup(ruleIconFile(id));
+    if (image === null) continue;
+    IMAGE_FRAMES.set(ruleIconFrame(id), image.scale);
+    out.push({ name: ruleIconFrame(id), art: image.art });
+  }
+  for (const card of IMAGE_BUILDING_ANIMS)
+    for (let i = 0; i < BUILDING_ANIM_FRAMES; i++) {
+      const file = buildingAnimFile(card, i);
+      const image = file === null ? null : lookup(file);
+      if (image === null) continue;
+      const name = buildingAnimFrame(card as CardId, i);
+      IMAGE_FRAMES.set(name, image.scale);
+      out.push({ name, art: image.art });
+    }
   // Iso unit strips have no generated fallback either: their frames exist only when the strip loaded.
   for (const unit of ISO_UNITS)
     for (const team of ['ally', 'foe'] as const)

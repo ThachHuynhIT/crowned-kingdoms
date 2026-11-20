@@ -1,0 +1,11 @@
+{
+  "id": "hay_bales_stack",
+  "tall": false,
+  "radius": 14,
+  "batch": "farm",
+  "description": "three rectangular hay bales: two on the ground and one on top",
+  "size_sd": [
+    37,
+    34
+  ]
+}

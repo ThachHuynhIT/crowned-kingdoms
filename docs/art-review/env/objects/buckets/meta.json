@@ -1,0 +1,11 @@
+{
+  "id": "buckets",
+  "tall": false,
+  "radius": 8,
+  "batch": "farm_b",
+  "description": "two wooden buckets with iron bands, one tipped over",
+  "size_sd": [
+    18,
+    16
+  ]
+}

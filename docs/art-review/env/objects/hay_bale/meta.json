@@ -1,0 +1,11 @@
+{
+  "id": "hay_bale",
+  "tall": false,
+  "radius": 12,
+  "batch": "farm",
+  "description": "one rectangular golden hay bale tied with two strings, a box shape on the diagonal axes",
+  "size_sd": [
+    26,
+    22
+  ]
+}

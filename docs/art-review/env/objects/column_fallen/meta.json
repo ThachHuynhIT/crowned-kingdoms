@@ -1,0 +1,11 @@
+{
+  "id": "column_fallen",
+  "tall": false,
+  "radius": 18,
+  "batch": "ruins",
+  "description": "a fallen stone column lying on the ground in two pieces along a diagonal axis, grass around it",
+  "size_sd": [
+    38,
+    32
+  ]
+}

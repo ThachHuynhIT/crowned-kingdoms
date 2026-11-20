@@ -1,0 +1,11 @@
+{
+  "id": "lily_pads",
+  "tall": false,
+  "radius": 10,
+  "batch": "water_edge",
+  "description": "a small cluster of floating green lily pads with one pink-white water lily flower, flat",
+  "size_sd": [
+    22,
+    12
+  ]
+}

@@ -1,0 +1,11 @@
+{
+  "id": "tree_cypress",
+  "tall": true,
+  "radius": 11,
+  "batch": "trees_e",
+  "description": "a tall narrow dark-green cypress tree shaped like a flame",
+  "size_sd": [
+    43,
+    108
+  ]
+}

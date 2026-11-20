@@ -1,0 +1,11 @@
+{
+  "id": "milestone",
+  "tall": false,
+  "radius": 6,
+  "batch": "ruins",
+  "description": "a small old carved stone milestone marker, rounded top, no letters",
+  "size_sd": [
+    20,
+    24
+  ]
+}

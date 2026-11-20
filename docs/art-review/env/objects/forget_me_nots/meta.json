@@ -1,0 +1,11 @@
+{
+  "id": "forget_me_nots",
+  "tall": false,
+  "radius": 8,
+  "batch": "flowers_b",
+  "description": "a small patch of tiny sky-blue forget-me-not flowers",
+  "size_sd": [
+    19,
+    14
+  ]
+}

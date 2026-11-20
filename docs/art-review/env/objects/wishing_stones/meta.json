@@ -1,0 +1,11 @@
+{
+  "id": "wishing_stones",
+  "tall": false,
+  "radius": 8,
+  "batch": "markers",
+  "description": "a small pile of round stones with a few flowers placed on top",
+  "size_sd": [
+    25,
+    20
+  ]
+}

@@ -1,0 +1,11 @@
+{
+  "id": "notice_board",
+  "tall": false,
+  "radius": 12,
+  "batch": "markers",
+  "description": "a small wooden notice board on two posts with blank paper notes pinned on it, no text",
+  "size_sd": [
+    30,
+    40
+  ]
+}

@@ -11,6 +11,11 @@ Keys out the magenta, crops to the object, and box-reduces it (mask-weighted, al
 HiDPI twins (2026-11-11): the same cut at twice the pixels (64x64 and 32x32) under the same names in
 public/assets/art/ai-v1-hd/icons/ (no preview). The game draws them at half the scale at display density >= 2
 (src/render/hudArtHd.ts). Without --density the output is unchanged.
+
+    python docs/art-review/g3e/icons/make_assets.py --review icon_decree_moat [...]
+
+Review cut (2026-11-20): writes nothing into public/. Both densities go to docs/art-review/g3e/icons/<id>/cut/
+(<id>.png, <id>-16.png, hd/<id>.png, hd/<id>-16.png) plus the usual preview.png, for wiring in later.
 """
 import sys
 from pathlib import Path
@@ -62,7 +67,28 @@ def density_arg(args):
     return density, list(args[:i]) + list(args[i + 2:])
 
 
+def review_cut(ids):
+    """Both densities into docs/art-review/g3e/icons/<id>/cut/ (never public/), plus preview.png."""
+    for icon in ids:
+        sq, m = cut(P / icon / 'source.png')
+        out = P / icon / 'cut'
+        (out / 'hd').mkdir(parents=True, exist_ok=True)
+        big, small = reduce(sq, m, 32), reduce(sq, m, 16)
+        big.save(out / f'{icon}.png')
+        small.save(out / f'{icon}-16.png')
+        reduce(sq, m, 64).save(out / 'hd' / f'{icon}.png')
+        reduce(sq, m, 32).save(out / 'hd' / f'{icon}-16.png')
+        prev = Image.new('RGBA', (32 * 4 + 16 * 4 + 24, 32 * 4 + 16), (232, 214, 170, 255))
+        prev.alpha_composite(big.resize((128, 128), Image.NEAREST), (8, 8))
+        prev.alpha_composite(small.resize((64, 64), Image.NEAREST), (8 + 128 + 8, 8 + 64))
+        prev.save(P / icon / 'preview.png')
+        print(icon, 'review ok')
+
+
 def main(args):
+    if '--review' in args:
+        review_cut([a for a in args if a != '--review'])
+        return
     density, ids = density_arg(args)
     if density != 1:
         OUT_HD.mkdir(parents=True, exist_ok=True)

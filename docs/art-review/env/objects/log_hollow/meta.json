@@ -1,0 +1,11 @@
+{
+  "id": "log_hollow",
+  "tall": false,
+  "radius": 16,
+  "batch": "forest_floor_b",
+  "description": "a hollow fallen log with a dark open end, lying along a diagonal axis, a fern beside it",
+  "size_sd": [
+    35,
+    28
+  ]
+}

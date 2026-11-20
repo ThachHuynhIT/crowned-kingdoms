@@ -29,6 +29,9 @@ Background: ONE flat solid magenta #FF00FF filling the whole canvas, no gradient
 No text, letters, numbers, labels, UI frame, card frame, watermark, blur, antialiasing or smooth gradients. Only this one object.
 """
 
+SET_NOTE = """The SECOND attached image is an approved icon of this same set: match its outline thickness, art-pixel size, framing, tone count and finish exactly, but do NOT copy its object; draw only the object described above.
+"""
+
 ICONS = {
     'icon_troop': ('Lính (loại thẻ)', 'the card kind "troop": a barracks that spawns soldiers.', 'a small steel helmet with a red plume in front of two crossed swords, the helmet is the main shape, swords peek out behind it; steel greys with a red accent.'),
     'icon_tower': ('Tháp (loại thẻ)', 'the card kind "tower": a defensive tower that shoots.', 'a round stone tower with a crenellated top, a small arched door and an arrow slit, a tiny pennant on top; warm grey stone with a wood-brown door.'),
@@ -84,6 +87,69 @@ ICONS = {
     'icon_decree': ('Sắc lệnh (bảng)', 'a royal decree that changes the rules for the run.', 'a flat parchment page with a big red wax seal stamped with a small crown at the bottom, a few dark lines as text; cream parchment, red wax, gold crown.'),
     'icon_pause': ('Tạm dừng (nút)', 'the button "pause the battle".', 'two thick vertical rounded bars side by side, cream-coloured with a warm brown outline, like a pause symbol carved in wood.'),
     'icon_save': ('Lưu (nút)', 'the button "save the game".', 'a small closed wooden chest with brass corners and a brass lock, lid slightly domed; warm wood, brass.'),
+    # per-decree icons (20/11/2026, `icon_decree_*` in tools/asset-admin/planned.json; effects from src/data/decrees.ts);
+    # same frame as the approved P0 set, the approved icon_decree source is attached as the set reference
+    'icon_decree_harvest_tax': ('Thuế Mùa Màng (sắc lệnh)', 'the decree "harvest tax": extra gold at the start of every year.', 'one golden wheat sheaf tied with a brown cord, a big shiny gold coin leaning in front of its lower half; golden yellow wheat, bright gold coin, brown cord.'),
+    'icon_decree_expand_borders': ('Mở Rộng Bờ Cõi (sắc lệnh)', 'the decree "expand borders": open locked plots of land at once.', 'a square patch of green grass seen from the front with a wooden boundary stake planted in it, a small blue pennant on the stake, and two short bold white arrows pointing outward to the left and right of the patch; green grass, warm wood, blue pennant.'),
+    'icon_decree_mobilize': ('Tổng Động Viên (sắc lệnh)', 'the decree "mobilize": every troop building gets more soldiers.', 'a big chunky war horn held diagonally, mouthpiece at the lower left and the wide bell opening at the upper right facing the viewer, a cream-brown animal horn with two thick brass bands, a short red cord looped under it, three bold sound lines above the bell; the horn fills most of the square frame; cream horn, brass, red cord.'),
+    'icon_decree_recast_crown': ('Đúc Lại Vương Miện (sắc lệnh)', 'the decree "recast the crown": the throne gains one level.', 'a small golden royal crown resting on top of a dark iron anvil, a few bright orange sparks flying from the crown; gold crown, dark iron anvil, orange sparks.'),
+    'icon_decree_royal_armory': ('Kho Vũ Khí Hoàng Gia (sắc lệnh)', 'the decree "royal armory": every soldier deals more damage.', 'three big steel weapons fanned out from one point at the bottom like a bouquet, a sword in the middle, an axe on the left and a spear on the right, tied together at the bottom with a red ribbon and a small gold crown medallion; bright steel grey blades, warm wood handles, red ribbon, gold.'),
+    'icon_decree_new_armor': ('Áo Giáp Mới (sắc lệnh)', 'the decree "new armor": every soldier gets more hit points.', 'a grey chainmail shirt (hauberk) with short sleeves, its ring texture shown as a simple checker of light and dark grey, a small red heart badge on the chest; steel grey mail, red heart.'),
+    'icon_decree_royal_archers': ('Cung Thủ Hoàng Gia (sắc lệnh)', 'the decree "royal archers": every tower and the throne shoot farther.', 'a brown leather quiver standing upright, full of arrows with blue-and-white feather fletching sticking out of the top, a small gold crown badge on the quiver; brown leather, blue fletching, gold.'),
+    'icon_decree_merchant_guild': ('Phường Hội Thương Nhân (sắc lệnh)', 'the decree "merchant guild": free card redraws every year.', 'a small brass balance scale, one pan holding a cream playing card and the other pan holding a gold coin, the two pans level; brass, cream card, gold coin.'),
+    'icon_decree_fourth_hand': ('Bàn Tay Thứ Tư (sắc lệnh)', 'the decree "fourth hand": draw one more card every year.', 'a brown leather glove seen from the back holding four cream playing cards fanned out above it, the fourth card on the right slightly brighter with a small gold sparkle; brown glove, cream cards.'),
+    'icon_decree_bigger_boulder': ('Đá Tảng Lớn (sắc lệnh)', 'the decree "bigger boulder": the royal boulder hits harder and wider.', 'a big round cracked grey boulder with a wide orange-and-yellow impact starburst behind its lower half and a bold gold plus sign on its top-right; warm grey stone, orange burst, gold plus.'),
+    'icon_decree_quick_reflex': ('Phản Xạ Nhanh (sắc lệnh)', 'the decree "quick reflex": the royal intervention recharges faster.', 'a round brass stopwatch with a cream face and a small winder on top, a bold yellow lightning bolt crossing over its face diagonally; brass, cream face, yellow bolt.'),
+    'icon_decree_amnesty': ('Lệnh Ân Xá (sắc lệnh)', 'the decree "amnesty": the kingdom gains one life.', 'an opened iron shackle (manacle) with its broken chain hanging, a plump red heart floating just above it; dark iron, saturated red heart.'),
+    'icon_decree_treasury': ('Ngân Khố (sắc lệnh)', 'the decree "treasury": a pile of gold right now.', 'an open wooden treasure chest with brass corners, its lid raised, overflowing with shiny gold coins heaped above the rim; warm wood, brass, bright gold.'),
+    'icon_decree_academy': ('Học Viện Hoàng Gia (sắc lệnh)', 'the decree "royal academy": pick one of two rare cards of your king for the deck.', 'a small wooden lectern holding an open book with cream pages, a white quill pen standing in a little ink pot beside it on the lectern, a small gold star above the book; warm wood, cream pages, white quill, gold star.'),
+    'icon_decree_purge': ('Thanh Lọc (sắc lệnh)', 'the decree "purge": remove cards from the deck.', 'one cream playing card torn into two halves with a jagged tear down the middle, the halves pulled slightly apart and tilted, two tiny paper scraps falling; cream card with a red-brown border.'),
+    'icon_decree_trade': ('Giao Thương (sắc lệnh)', 'the decree "trade": reward offers show more cards to choose from.', 'a small two-wheeled wooden merchant cart loaded with a tied grain sack, a crate and a rolled red cloth, seen from the side; warm wood, beige sack, red cloth.'),
+    'icon_decree_rune_festival': ('Lễ Hội Phù Chú (sắc lệnh)', 'the decree "rune festival": every enchanted building gets one more charm stack.', 'a round red-and-gold paper festival lantern hanging from a short cord, a glowing golden-yellow rune symbol painted on its front, two tiny yellow sparkles; red paper, gold bands, bright yellow rune (no pink, purple or magenta anywhere).'),
+    'icon_decree_moat': ('Hào Nước (sắc lệnh)', 'the decree "moat": every enemy moves slower.', 'a short stretch of grey stone castle wall with a crenellated top rising out of a wide band of blue rippled water in front of it; warm grey stone, bright blue water with white ripple highlights.'),
+    # per-quest icons (20/11/2026, `icon_quest_*`; conditions from src/data/quests.ts); the approved icon_quest source is the set reference
+    'icon_quest_untouched': ('Ngai Vô Sự (nhiệm vụ)', 'the quest "untouched throne": win a battle without the throne losing any health.', 'a small high-backed wooden throne with a red cushion and a gold crown on top, enclosed in a light-blue glowing round protective dome with a bright highlight on the top-left; dark wood, red, gold, light blue dome.'),
+    'icon_quest_three_barracks': ('Ba Doanh Trại (nhiệm vụ)', 'the quest "three barracks": own three troop buildings at once.', 'three small pointed army tents in a row, the middle one bigger and in front, each with red-and-cream stripes and a tiny red pennant on top; red and cream canvas, brown poles.'),
+    'icon_quest_no_reroll': ('Tiết Kiệm (nhiệm vụ)', 'the quest "thrift": never redraw the hand during the quest.', 'a round clay piggy bank seen from the side with a coin slot on its back and a gold coin dropping into the slot; terracotta orange-pink clay, gold coin.'),
+    'icon_quest_slaughter': ('Đại Thắng (nhiệm vụ)', 'the quest "great victory": defeat at least one hundred enemies in one battle.', 'a small pyramid of three cute round cartoon skulls (two at the bottom, one on top) with a tiny red battle flag planted on the top skull, no gore; bone white, red flag.'),
+    'icon_quest_double_rune': ('Bùa Chồng Bùa (nhiệm vụ)', 'the quest "rune on rune": one building carries two charm stacks.', 'two round grey stone rune medallions overlapping side by side like linked rings, each with a glowing light-blue rune, the right one brighter, a small gold sparkle where they overlap; grey stone, light-blue and white runes, gold rims (no pink, purple or magenta anywhere).'),
+    'icon_quest_land_grab': ('Khai Phá (nhiệm vụ)', 'the quest "clear new land": open more plots during the quest.', 'a wooden-handled iron shovel stuck upright in a small mound of brown earth, a tiny green sprout growing beside the mound; warm wood, iron grey, brown earth, green sprout.'),
+    'icon_quest_master_builder': ('Thợ Cả (nhiệm vụ)', 'the quest "master builder": own a building of high level.', 'a steel mason trowel with a wooden handle resting diagonally on a small neat stack of three red bricks, a small gold star above; steel grey, red-orange brick, gold star.'),
+    'icon_quest_blitz': ('Chớp Nhoáng (nhiệm vụ)', 'the quest "blitz": win a battle very quickly.', 'two crossed short steel swords with a bold yellow lightning bolt striking down through the crossing point; steel grey blades, brass guards, bright yellow bolt.'),
+    'icon_quest_hoard': ('Kho Đầy (nhiệm vụ)', 'the quest "full hoard": end a year with a lot of gold.', 'a tall heaped mound of gold coins with a gold goblet standing on top of the heap, a bright highlight on the top-left; gold with warm orange shading.'),
+    'icon_quest_no_help': ('Tự Lực (nhiệm vụ)', 'the quest "self-reliance": win a battle without the royal intervention.', 'a raised clenched fist in a brown leather bracer, knuckles toward the viewer, three short strength lines beside it; warm skin tone, brown leather.'),
+    'icon_quest_offering': ('Lễ Vật (nhiệm vụ)', 'the quest "offering": play a sacrifice card.', 'two open cupped hands held together, offering a glowing gold coin with two small gold sparkles above it; warm skin tone, bright gold.'),
+    'icon_quest_diversity': ('Trăm Nghề (nhiệm vụ)', 'the quest "hundred trades": own all four kinds of building at once (troop, tower, economy, support).', 'a round wooden shield split by a cross into four quarters coloured red, slate grey, gold and leaf green, a brass boss in the centre; red, grey, gold, green, warm wood rim.'),
+    'icon_quest_wager': ('Đặt Cược (nhiệm vụ)', 'the quest "wager": pay gold now, win two battles in a row for a bigger prize.', 'two ivory dice tumbling, the front one showing round red pips, a gold coin lying behind them; ivory white dice, red pips, gold coin.'),
+    # per-perk icons (20/11/2026, optional `icon_perks_optional` in tools/asset-admin/planned.json; effects from src/data/kings/*.ts `perks`);
+    # the approved icon_attack source is attached as the set reference
+    'icon_perk_wheat_p1': ('Hạt Giống Tốt (đặc quyền)', 'the king perk "Hạt Giống Tốt": start the run with a level-1 wheat field in front of the throne.', 'a small open burlap seed sack full of golden seeds with one bright green sprout growing out of the seeds; beige burlap, golden seeds, green sprout.'),
+    'icon_perk_wheat_p2': ('Thuế Nhẹ (đặc quyền)', 'the king perk "Thuế Nhẹ": the first card redraw each year is free.', 'one light white feather lying diagonally across a single gold coin; white feather with soft grey shading, bright gold coin.'),
+    'icon_perk_wheat_p3': ('Toàn Dân Cầm Giáo (đặc quyền)', 'the king perk "Toàn Dân Cầm Giáo": militia and peasant soldiers get more health and damage.', 'a wooden pitchfork and a steel-tipped spear crossed in an X; warm wood shafts, iron prongs, steel spear head.'),
+    'icon_perk_stone_p1': ('Nền Móng Vững (đặc quyền)', 'the king perk "Nền Móng Vững": the throne gets much more health.', 'a big square grey foundation stone block with a carved glowing blue rune on its front, resting on two flat stone slabs; slate grey stone, blue rune.'),
+    'icon_perk_stone_p2': ('Đá Gọi Đá (đặc quyền)', 'the king perk "Đá Gọi Đá": start the run with a level-1 catapult tower in front of the throne.', 'a small wooden catapult seen from the side with its arm raised and a round grey stone in its bucket; warm wood, iron bands, grey stone.'),
+    'icon_perk_stone_p3': ('Tường Không Đổ (đặc quyền)', 'the king perk "Tường Không Đổ": every building gets more health.', 'a short sturdy grey stone brick wall segment with a small round steel shield bolted to its front, no crenellations; warm grey stone, steel shield.'),
+    'icon_perk_arcane_p1': ('Sách Phép Dày (đặc quyền)', 'the king perk "Sách Phép Dày": each building can hold more charm stacks.', 'a very thick deep navy-blue spellbook seen from the side so the many cream page edges show, a gold ribbon bookmark with a small glowing light-blue rune tag hanging out; navy-blue leather, cream pages, gold, light-blue rune (no pink, purple or magenta anywhere).'),
+    'icon_perk_arcane_p2': ('Bùa Đầu Mùa (đặc quyền)', 'the king perk "Bùa Đầu Mùa": the throne starts the run with one spark charm.', 'a round grey stone charm with a glowing orange spark rune in its centre and four small orange sparks flying out around it; grey stone, bright orange spark.'),
+    'icon_perk_arcane_p3': ('Ma Lực Dồi Dào (đặc quyền)', 'the king perk "Ma Lực Dồi Dào": the royal intervention recharges much faster.', 'a round glass bottle with a cork, full of glowing bright blue mana liquid that overflows over the rim in two drops; glass, bright blue, cork brown.'),
+    'icon_perk_grove_p1': ('Rễ Từ Trước (đặc quyền)', 'the king perk "Rễ Từ Trước": new forest buildings start already two years old.', 'a small young leafy tree with its brown roots spreading wide below it, the roots visible as if the soil were cut away; leaf green, bark brown.'),
+    'icon_perk_grove_p2': ('Sói Đầu Đàn (đặc quyền)', 'the king perk "Sói Đầu Đàn": the wolf den spawns one more wolf.', 'a grey wolf head in profile howling upward, ears back, a white muzzle; grey and white fur, dark grey shading.'),
+    'icon_perk_grove_p3': ('Đất Lành (đặc quyền)', 'the king perk "Đất Lành": during battle the throne slowly regains health.', 'one fresh green leaf with a glowing light-green water droplet on it and a small green plus sparkle; fresh green, light green glow.'),
+    'icon_perk_tide_p1': ('Túi Đầy (đặc quyền)', 'the king perk "Túi Đầy": start the run with extra gold.', 'a fat sea-blue cloth money bag tied at the top with a rope, a small white anchor stitched on it, two gold coins peeking out of the top; sea blue cloth, rope, gold.'),
+    'icon_perk_tide_p2': ('Gió Thuận (đặc quyền)', 'the king perk "Gió Thuận": every knockback of our side is stronger.', 'a white ship sail billowing full of wind on a short wooden mast, three curved wind lines blowing into it from the left; white sail, warm wood, pale blue wind lines.'),
+    'icon_perk_tide_p3': ('Chuộc Tù (đặc quyền)', 'the king perk "Chuộc Tù": losing a battle still pays half the victory gold.', 'one gold coin broken cleanly into two halves, the right half missing and only a few gold crumbs beside it; bright gold with orange shading.'),
+    'icon_perk_forge_p1': ('Than Hồng (đặc quyền)', 'the king perk "Than Hồng": every burn deals more damage.', 'a lump of black coal glowing with bright orange-red cracks and two small flames licking up from it; black coal, orange-red glow, yellow flame tips.'),
+    'icon_perk_forge_p2': ('Học Việc (đặc quyền)', 'the king perk "Học Việc": start the run with a level-1 forge in front of the throne.', 'a pair of iron blacksmith tongs holding a glowing red-hot iron bar; dark iron tongs, red-orange hot metal.'),
+    'icon_perk_forge_p3': ('Thép Tốt (đặc quyền)', 'the king perk "Thép Tốt": every soldier of our side gets a little more armor.', 'one shiny steel ingot bar in trapezoid shape with a bright white glint on the top-left; cool steel grey with light highlights.'),
+    'icon_perk_clock_p1': ('Dây Cót Căng (đặc quyền)', 'the king perk "Dây Cót Căng": every ramp-up starts already wound by a few seconds.', 'a brass wind-up key with a big round looped handle and a short notched shaft, two small curved motion lines beside it; brass with warm orange shading.'),
+    'icon_perk_clock_p2': ('Bánh Răng Dự Phòng (đặc quyền)', 'the king perk "Bánh Răng Dự Phòng": start the run with a level-1 gear tower in front of the throne.', 'two interlocking brass cogwheels, one big and one small, teeth meshing; brass and copper.'),
+    'icon_perk_clock_p3': ('Giờ Vàng (đặc quyền)', 'the king perk "Giờ Vàng": the battle rage and the battle time limit come later.', 'a golden bell hanging from a short wooden yoke, slightly swung to the right, two short ring lines beside it; bright gold bell, warm wood yoke.'),
+    'icon_perk_moon_p1': ('Hồn Đói (đặc quyền)', 'the king perk "Hồn Đói": harvesting souls needs fewer souls.', 'a dark slate-grey stone chalice with pale cyan soul wisps swirling down into it; dark slate grey stone with cool blue shading, pale cyan wisps (no pink, purple or magenta anywhere).'),
+    'icon_perk_moon_p2': ('Trăng Non (đặc quyền)', 'the king perk "Trăng Non": the starting deck has one more Blood Pact card.', 'a silver crescent moon with one red blood drop hanging from its lower tip; silver with cool grey shading, saturated red drop.'),
+    'icon_perk_moon_p3': ('Mạng Thứ Tư (đặc quyền)', 'the king perk "Mạng Thứ Tư": start the run with four lives but a weaker throne.', 'four small plump red hearts arranged in a diamond, the bottom heart with a small crack; saturated red with dark red shading.'),
+    'icon_perk_nomad_p1': ('Vó Ngựa (đặc quyền)', 'the king perk "Vó Ngựa": cavalry move faster and hit harder.', 'one iron horseshoe opening upward with nail holes and three short speed lines trailing behind it to the left; iron grey with a warm highlight.'),
+    'icon_perk_nomad_p2': ('Thảo Nguyên Rộng (đặc quyền)', 'the king perk "Thảo Nguyên Rộng": start the run with two edge plots already open.', 'an unrolled tan leather map showing a green land patch, with two small bold white arrows pointing to its left and right edges; tan leather, green land, white arrows.'),
+    'icon_perk_nomad_p3': ('Nhổ Trại Nhanh (đặc quyền)', 'the king perk "Nhổ Trại Nhanh": the mobile tent gets one more free move each year.', 'a rolled-up felt tent bundle tied with two red ropes, strapped across two short wooden poles; cream-brown felt, red rope, warm wood.'),
 }
 
 
@@ -91,7 +157,18 @@ def build_prompt(out, icon):
     if not (ROOT / STYLE_DOC).exists() or not (ROOT / REFERENCE).exists():
         raise SystemExit('docs/ART_STYLE.md or the approved reference image is missing: refusing to generate images')
     name, meaning, visual = ICONS[icon]
-    return HEADER.format(out=out, doc=STYLE_DOC, ref=REFERENCE) + BODY.format(name=name, meaning=meaning, visual=visual)
+    prompt = HEADER.format(out=out, doc=STYLE_DOC, ref=REFERENCE) + BODY.format(name=name, meaning=meaning, visual=visual)
+    if set_reference(icon) and not icon.startswith('icon_king_'):
+        prompt += SET_NOTE
+    return prompt
+
+
+def set_reference(icon):
+    """The approved icon of the same set, attached next to the style reference (' -i <path>' or '')."""
+    for prefix, ref in (('icon_king_', 'icon_king_wheat'), ('icon_decree_', 'icon_decree'), ('icon_quest_', 'icon_quest'), ('icon_perk_', 'icon_attack')):
+        if icon.startswith(prefix) and icon != ref:
+            return f' -i docs/art-review/g3e/icons/{ref}/source.png'
+    return ''
 
 
 def main(only=None):
@@ -104,7 +181,7 @@ def main(only=None):
         out = (d / 'source.png').relative_to(ROOT).as_posix()
         (d / 'prompt.md').write_text(build_prompt(out, icon), encoding='utf-8')
         prompt = (d / 'prompt.md').relative_to(ROOT).as_posix()
-        extra = ' -i docs/art-review/g3e/icons/icon_king_wheat/source.png' if icon.startswith('icon_king_') and icon != 'icon_king_wheat' else ''
+        extra = set_reference(icon)
         runner.append(f'codex exec --sandbox workspace-write -C "$PWD" -i {REFERENCE}{extra} - < {prompt} > .superpowers/codex-i-{icon}.out 2>&1')
         runner.append(f'if [ -s {out} ]; then echo "{icon} ok" >> .superpowers/i.log; else echo "{icon} MISSING" >> .superpowers/i.log; fi')
     runner.append('echo done >> .superpowers/i.log')

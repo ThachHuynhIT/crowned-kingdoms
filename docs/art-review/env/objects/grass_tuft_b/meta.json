@@ -1,0 +1,11 @@
+{
+  "id": "grass_tuft_b",
+  "tall": false,
+  "radius": 7,
+  "batch": "grasses",
+  "description": "a wider tuft of green grass with a few longer blades",
+  "size_sd": [
+    32,
+    22
+  ]
+}

@@ -10,12 +10,15 @@ export interface DecorAsset {
   readonly id: string;
   readonly tall: boolean;
   readonly radius: number;
+  /** A flat ground patch (20/11/2026): drawn on the ground under everything. */
+  readonly flat?: boolean;
 }
 
 /** Where one decoration stands (world px, its foot). */
 export interface DecorPlacement {
   readonly assetId: string;
   readonly tall: boolean;
+  readonly flat?: boolean;
   readonly x: number;
   readonly y: number;
 }
@@ -35,8 +38,9 @@ export const layoutDecorations = (
   mode: RunMode = 'normal',
 ): readonly DecorPlacement[] => {
   const pool = [...assets].sort((a, b) => (a.id < b.id ? -1 : a.id > b.id ? 1 : 0));
-  const tall = pool.filter((a) => a.tall);
-  const low = pool.filter((a) => !a.tall);
+  const tall = pool.filter((a) => a.tall && !a.flat);
+  const low = pool.filter((a) => !a.tall && !a.flat);
+  const flat = pool.filter((a) => a.flat);
   const out: DecorPlacement[] = [];
   const radiusOf = new Map(pool.map((a) => [a.id, a.radius]));
   const free = (x: number, y: number, r: number): boolean =>
@@ -94,5 +98,36 @@ export const layoutDecorations = (
     out.push({ assetId: a.id, tall: false, x, y });
     placed++;
   }
-  return out;
+
+  // Flat: anywhere in the field and the ring around it, off the board, the road, the water and the portal; patches
+  // keep apart from each other only (they lie under the standing objects).
+  const fc = FIELD_DECOR.flat;
+  const flats: DecorPlacement[] = [];
+  const flatFree = (x: number, y: number, r: number): boolean =>
+    flats.every((p) => {
+      const dx = p.x - x;
+      const dy = p.y - y;
+      const min = (radiusOf.get(p.assetId) ?? 0) + r + fc.spacing;
+      return dx * dx + dy * dy >= min * min;
+    });
+  const flo = geometryFor(mode).boardMin - fc.boardPad;
+  const fhi = geometryFor(mode).boardMax + fc.boardPad;
+  for (let i = 0, placed = 0; flat.length > 0 && placed < fc.count && i < fc.attempts; i++) {
+    const a = flat[Math.floor(h(i, 21) * flat.length)]!;
+    const r = a.radius;
+    const x = Math.round(-ring.outer + h(i, 22) * (F + 2 * ring.outer));
+    const y = Math.round(FIELD_DECOR.northLimit + h(i, 23) * (F + ring.outer - FIELD_DECOR.northLimit));
+    if (x + r > flo && x - r < fhi && y + r > flo && y - r < fhi) continue;
+    if (touches(x, y, r, FIELD_DECOR.portalClear)) continue;
+    if (y > F && Math.abs(x - F / 2) < cfg.roadHalf + r) continue; // the road's line south of the field
+    let blocked = false;
+    for (const [dx, dy] of [[r, 0], [-r, 0], [0, r], [0, -r], [0, 0]] as const) {
+      const t = fieldTerrainAt(field, x + dx, y + dy);
+      if (t === WATER || t === PATH) blocked = true;
+    }
+    if (blocked || !flatFree(x, y, r)) continue;
+    flats.push({ assetId: a.id, tall: false, flat: true, x, y });
+    placed++;
+  }
+  return [...flats, ...out];
 };

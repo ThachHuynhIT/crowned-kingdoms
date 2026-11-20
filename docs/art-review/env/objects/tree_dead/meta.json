@@ -1,0 +1,11 @@
+{
+  "id": "tree_dead",
+  "tall": true,
+  "radius": 18,
+  "batch": "trees_a",
+  "description": "a dead leafless tree: grey-brown gnarled bare branches, cracked bark, no leaves",
+  "size_sd": [
+    97,
+    92
+  ]
+}

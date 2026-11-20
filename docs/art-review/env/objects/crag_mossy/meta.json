@@ -1,0 +1,11 @@
+{
+  "id": "crag_mossy",
+  "tall": true,
+  "radius": 28,
+  "batch": "crags",
+  "description": "a big mossy rock outcrop: rounded grey boulders stacked, covered in green moss and small ferns",
+  "size_sd": [
+    106,
+    88
+  ]
+}

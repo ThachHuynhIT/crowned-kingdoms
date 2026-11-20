@@ -1,0 +1,11 @@
+{
+  "id": "tree_fir_small",
+  "tall": true,
+  "radius": 13,
+  "batch": "trees_a",
+  "description": "a small fir tree: a narrow cone of dark blue-green needle tiers, short trunk",
+  "size_sd": [
+    55,
+    80
+  ]
+}

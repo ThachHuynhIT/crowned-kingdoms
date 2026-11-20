@@ -1,0 +1,11 @@
+{
+  "id": "rock_sand",
+  "tall": false,
+  "radius": 11,
+  "batch": "rocks_b",
+  "description": "a sandy-tan sandstone rock with horizontal layers",
+  "size_sd": [
+    31,
+    26
+  ]
+}

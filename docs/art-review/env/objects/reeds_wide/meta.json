@@ -1,0 +1,11 @@
+{
+  "id": "reeds_wide",
+  "tall": false,
+  "radius": 12,
+  "batch": "water_edge",
+  "description": "a wide dense clump of reeds and tall rushes",
+  "size_sd": [
+    37,
+    36
+  ]
+}

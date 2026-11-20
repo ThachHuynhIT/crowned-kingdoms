@@ -1,0 +1,11 @@
+{
+  "id": "crates_stack",
+  "tall": false,
+  "radius": 12,
+  "batch": "farm",
+  "description": "two wooden crates on the ground and one stacked on top",
+  "size_sd": [
+    40,
+    38
+  ]
+}

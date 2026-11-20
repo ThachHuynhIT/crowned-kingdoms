@@ -1,0 +1,11 @@
+{
+  "id": "urn_broken",
+  "tall": false,
+  "radius": 9,
+  "batch": "ruins_b",
+  "description": "a large cracked clay urn with a broken rim, tipped on its side",
+  "size_sd": [
+    26,
+    20
+  ]
+}

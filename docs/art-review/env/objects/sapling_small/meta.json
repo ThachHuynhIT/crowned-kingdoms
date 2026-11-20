@@ -1,0 +1,11 @@
+{
+  "id": "sapling_small",
+  "tall": false,
+  "radius": 6,
+  "batch": "wild_b",
+  "description": "a tiny young tree sapling with a few leaves",
+  "size_sd": [
+    25,
+    32
+  ]
+}

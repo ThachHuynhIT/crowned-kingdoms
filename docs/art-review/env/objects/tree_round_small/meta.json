@@ -1,0 +1,11 @@
+{
+  "id": "tree_round_small",
+  "tall": true,
+  "radius": 16,
+  "batch": "trees_e",
+  "description": "a small tree with a neat round ball-shaped green crown on a straight trunk",
+  "size_sd": [
+    58,
+    74
+  ]
+}

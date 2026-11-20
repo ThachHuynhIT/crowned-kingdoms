@@ -1,0 +1,11 @@
+{
+  "id": "tree_willow",
+  "tall": true,
+  "radius": 26,
+  "batch": "trees_a",
+  "description": "a weeping willow: a thick short trunk and long drooping curtains of pale green leaves",
+  "size_sd": [
+    105,
+    100
+  ]
+}

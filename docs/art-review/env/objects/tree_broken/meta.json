@@ -1,0 +1,11 @@
+{
+  "id": "tree_broken",
+  "tall": true,
+  "radius": 16,
+  "batch": "trees_c",
+  "description": "a tree broken by lightning: a tall splintered trunk with a few leafy branches left",
+  "size_sd": [
+    74,
+    84
+  ]
+}

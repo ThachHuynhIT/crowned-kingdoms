@@ -1,0 +1,11 @@
+{
+  "id": "bush_leafy_wide",
+  "tall": false,
+  "radius": 13,
+  "batch": "bushes_c",
+  "description": "a wide low leafy bush with big bright green leaves",
+  "size_sd": [
+    38,
+    26
+  ]
+}

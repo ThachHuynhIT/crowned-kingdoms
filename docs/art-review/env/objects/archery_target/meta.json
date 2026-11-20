@@ -1,0 +1,11 @@
+{
+  "id": "archery_target",
+  "tall": false,
+  "radius": 10,
+  "batch": "camp_b",
+  "description": "a round straw archery target with red and white rings on a wooden stand",
+  "size_sd": [
+    27,
+    34
+  ]
+}

@@ -1,0 +1,11 @@
+{
+  "id": "sack",
+  "tall": false,
+  "radius": 7,
+  "batch": "farm",
+  "description": "one tied burlap grain sack standing upright",
+  "size_sd": [
+    16,
+    20
+  ]
+}

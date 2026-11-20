@@ -1,0 +1,11 @@
+{
+  "id": "shrine_stone",
+  "tall": false,
+  "radius": 11,
+  "batch": "ruins",
+  "description": "a small stone wayside shrine: a little stone house-shaped niche on a pillar with a candle inside",
+  "size_sd": [
+    24,
+    46
+  ]
+}

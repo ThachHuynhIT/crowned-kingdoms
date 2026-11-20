@@ -1,0 +1,11 @@
+{
+  "id": "fern_large",
+  "tall": false,
+  "radius": 12,
+  "batch": "wild_misc",
+  "description": "a large lush fern with many long arching fronds",
+  "size_sd": [
+    50,
+    37
+  ]
+}

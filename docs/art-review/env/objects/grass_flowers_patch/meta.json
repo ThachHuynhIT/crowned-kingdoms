@@ -1,0 +1,11 @@
+{
+  "id": "grass_flowers_patch",
+  "tall": false,
+  "radius": 8,
+  "batch": "grasses_b",
+  "description": "a tuft of green grass with a few tiny white and yellow flowers",
+  "size_sd": [
+    20,
+    20
+  ]
+}

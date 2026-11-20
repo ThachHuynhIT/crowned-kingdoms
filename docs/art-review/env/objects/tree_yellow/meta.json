@@ -1,0 +1,11 @@
+{
+  "id": "tree_yellow",
+  "tall": true,
+  "radius": 24,
+  "batch": "trees_c",
+  "description": "a round deciduous tree in early autumn: bright golden-yellow leaves",
+  "size_sd": [
+    92,
+    94
+  ]
+}

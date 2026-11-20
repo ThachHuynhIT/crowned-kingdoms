@@ -1,0 +1,11 @@
+{
+  "id": "tree_bushy",
+  "tall": true,
+  "radius": 26,
+  "batch": "trees_b",
+  "description": "a broad bushy deciduous tree with a very full dense dark-green crown reaching low",
+  "size_sd": [
+    107,
+    92
+  ]
+}

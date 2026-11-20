@@ -1,0 +1,11 @@
+{
+  "id": "foxgloves",
+  "tall": false,
+  "radius": 7,
+  "batch": "flowers_b",
+  "description": "two tall foxglove spikes with pale purple bell flowers and broad leaves at the base",
+  "size_sd": [
+    28,
+    36
+  ]
+}

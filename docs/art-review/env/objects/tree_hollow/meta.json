@@ -1,0 +1,11 @@
+{
+  "id": "tree_hollow",
+  "tall": true,
+  "radius": 22,
+  "batch": "trees_f",
+  "description": "an old tree with a big dark hollow in its thick trunk and a modest green crown",
+  "size_sd": [
+    86,
+    92
+  ]
+}

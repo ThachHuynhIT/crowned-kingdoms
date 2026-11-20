@@ -1,0 +1,11 @@
+{
+  "id": "chest_small",
+  "tall": false,
+  "radius": 8,
+  "batch": "camp_b",
+  "description": "a small wooden chest with iron bands, closed",
+  "size_sd": [
+    21,
+    20
+  ]
+}

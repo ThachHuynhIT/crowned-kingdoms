@@ -1,0 +1,11 @@
+{
+  "id": "grass_short_cluster",
+  "tall": false,
+  "radius": 9,
+  "batch": "grasses_b",
+  "description": "three tiny tufts of short grass close together",
+  "size_sd": [
+    18,
+    11
+  ]
+}

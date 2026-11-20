@@ -1,0 +1,11 @@
+{
+  "id": "driftwood",
+  "tall": false,
+  "radius": 13,
+  "batch": "water_edge",
+  "description": "a bleached grey piece of driftwood lying on the ground along a diagonal axis",
+  "size_sd": [
+    27,
+    20
+  ]
+}

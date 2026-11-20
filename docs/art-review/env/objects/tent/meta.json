@@ -1,0 +1,11 @@
+{
+  "id": "tent",
+  "tall": false,
+  "radius": 18,
+  "batch": "camp",
+  "description": "a small canvas camping tent, cream fabric on a wooden pole frame, the open flap on the right side",
+  "size_sd": [
+    46,
+    46
+  ]
+}

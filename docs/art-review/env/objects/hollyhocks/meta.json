@@ -1,0 +1,11 @@
+{
+  "id": "hollyhocks",
+  "tall": false,
+  "radius": 8,
+  "batch": "wild_b",
+  "description": "two tall hollyhock stalks with pink and white flowers up the stem",
+  "size_sd": [
+    36,
+    46
+  ]
+}

@@ -1,0 +1,11 @@
+{
+  "id": "rock_mossy_flat",
+  "tall": false,
+  "radius": 12,
+  "batch": "rocks_c",
+  "description": "a low flat rock completely covered in soft green moss",
+  "size_sd": [
+    28,
+    16
+  ]
+}

@@ -1,0 +1,11 @@
+{
+  "id": "crate",
+  "tall": false,
+  "radius": 8,
+  "batch": "farm",
+  "description": "one wooden crate with plank sides and corner braces",
+  "size_sd": [
+    24,
+    24
+  ]
+}

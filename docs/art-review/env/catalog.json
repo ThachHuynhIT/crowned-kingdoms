@@ -1,0 +1,1526 @@
+[
+  {
+    "id": "tree_birch",
+    "tall": true,
+    "radius": 16,
+    "batch": "trees_a"
+  },
+  {
+    "id": "tree_willow",
+    "tall": true,
+    "radius": 26,
+    "batch": "trees_a"
+  },
+  {
+    "id": "tree_cherry",
+    "tall": true,
+    "radius": 24,
+    "batch": "trees_a"
+  },
+  {
+    "id": "tree_young_oak",
+    "tall": true,
+    "radius": 16,
+    "batch": "trees_a"
+  },
+  {
+    "id": "tree_fir_small",
+    "tall": true,
+    "radius": 13,
+    "batch": "trees_a"
+  },
+  {
+    "id": "tree_dead",
+    "tall": true,
+    "radius": 18,
+    "batch": "trees_a"
+  },
+  {
+    "id": "tree_fruit",
+    "tall": true,
+    "radius": 22,
+    "batch": "trees_b"
+  },
+  {
+    "id": "tree_bushy",
+    "tall": true,
+    "radius": 26,
+    "batch": "trees_b"
+  },
+  {
+    "id": "tree_pair",
+    "tall": true,
+    "radius": 30,
+    "batch": "trees_b"
+  },
+  {
+    "id": "tree_poplar",
+    "tall": true,
+    "radius": 13,
+    "batch": "trees_b"
+  },
+  {
+    "id": "tree_maple_red",
+    "tall": true,
+    "radius": 24,
+    "batch": "trees_b"
+  },
+  {
+    "id": "tree_spruce_blue",
+    "tall": true,
+    "radius": 17,
+    "batch": "trees_b"
+  },
+  {
+    "id": "crag_tall",
+    "tall": true,
+    "radius": 26,
+    "batch": "crags"
+  },
+  {
+    "id": "standing_stone",
+    "tall": true,
+    "radius": 10,
+    "batch": "crags"
+  },
+  {
+    "id": "standing_stones_ring",
+    "tall": true,
+    "radius": 30,
+    "batch": "crags"
+  },
+  {
+    "id": "crag_mossy",
+    "tall": true,
+    "radius": 28,
+    "batch": "crags"
+  },
+  {
+    "id": "rock_spire",
+    "tall": true,
+    "radius": 16,
+    "batch": "crags"
+  },
+  {
+    "id": "boulders_grassy",
+    "tall": true,
+    "radius": 30,
+    "batch": "crags"
+  },
+  {
+    "id": "boulder_mossy_a",
+    "tall": false,
+    "radius": 14,
+    "batch": "rocks"
+  },
+  {
+    "id": "boulder_mossy_b",
+    "tall": false,
+    "radius": 12,
+    "batch": "rocks"
+  },
+  {
+    "id": "rock_cluster_a",
+    "tall": false,
+    "radius": 14,
+    "batch": "rocks"
+  },
+  {
+    "id": "rock_cluster_b",
+    "tall": false,
+    "radius": 12,
+    "batch": "rocks"
+  },
+  {
+    "id": "pebbles_a",
+    "tall": false,
+    "radius": 8,
+    "batch": "rocks"
+  },
+  {
+    "id": "pebbles_b",
+    "tall": false,
+    "radius": 9,
+    "batch": "rocks"
+  },
+  {
+    "id": "rock_flat",
+    "tall": false,
+    "radius": 13,
+    "batch": "rocks"
+  },
+  {
+    "id": "rock_split",
+    "tall": false,
+    "radius": 13,
+    "batch": "rocks"
+  },
+  {
+    "id": "bush_flower_pink",
+    "tall": false,
+    "radius": 10,
+    "batch": "bushes"
+  },
+  {
+    "id": "bush_flower_white",
+    "tall": false,
+    "radius": 10,
+    "batch": "bushes"
+  },
+  {
+    "id": "bush_flower_yellow",
+    "tall": false,
+    "radius": 10,
+    "batch": "bushes"
+  },
+  {
+    "id": "fern",
+    "tall": false,
+    "radius": 9,
+    "batch": "bushes"
+  },
+  {
+    "id": "bush_holly",
+    "tall": false,
+    "radius": 10,
+    "batch": "bushes"
+  },
+  {
+    "id": "topiary_round",
+    "tall": false,
+    "radius": 9,
+    "batch": "bushes"
+  },
+  {
+    "id": "bramble",
+    "tall": false,
+    "radius": 12,
+    "batch": "bushes"
+  },
+  {
+    "id": "bush_lavender",
+    "tall": false,
+    "radius": 10,
+    "batch": "bushes"
+  },
+  {
+    "id": "grass_tuft_a",
+    "tall": false,
+    "radius": 6,
+    "batch": "grasses"
+  },
+  {
+    "id": "grass_tuft_b",
+    "tall": false,
+    "radius": 7,
+    "batch": "grasses"
+  },
+  {
+    "id": "grass_tall",
+    "tall": false,
+    "radius": 8,
+    "batch": "grasses"
+  },
+  {
+    "id": "reeds",
+    "tall": false,
+    "radius": 8,
+    "batch": "grasses"
+  },
+  {
+    "id": "cattails",
+    "tall": false,
+    "radius": 8,
+    "batch": "grasses"
+  },
+  {
+    "id": "grass_dry",
+    "tall": false,
+    "radius": 7,
+    "batch": "grasses"
+  },
+  {
+    "id": "clover_patch",
+    "tall": false,
+    "radius": 9,
+    "batch": "grasses"
+  },
+  {
+    "id": "dandelions",
+    "tall": false,
+    "radius": 7,
+    "batch": "grasses"
+  },
+  {
+    "id": "flowers_red",
+    "tall": false,
+    "radius": 8,
+    "batch": "flowers"
+  },
+  {
+    "id": "flowers_blue",
+    "tall": false,
+    "radius": 8,
+    "batch": "flowers"
+  },
+  {
+    "id": "flowers_yellow",
+    "tall": false,
+    "radius": 8,
+    "batch": "flowers"
+  },
+  {
+    "id": "flowers_white",
+    "tall": false,
+    "radius": 8,
+    "batch": "flowers"
+  },
+  {
+    "id": "flowers_purple",
+    "tall": false,
+    "radius": 7,
+    "batch": "flowers"
+  },
+  {
+    "id": "flowers_mixed",
+    "tall": false,
+    "radius": 9,
+    "batch": "flowers"
+  },
+  {
+    "id": "sunflowers",
+    "tall": false,
+    "radius": 7,
+    "batch": "flowers"
+  },
+  {
+    "id": "tulips_orange",
+    "tall": false,
+    "radius": 7,
+    "batch": "flowers"
+  },
+  {
+    "id": "mushroom_single",
+    "tall": false,
+    "radius": 5,
+    "batch": "forest_floor"
+  },
+  {
+    "id": "mushroom_ring",
+    "tall": false,
+    "radius": 14,
+    "batch": "forest_floor"
+  },
+  {
+    "id": "mushroom_red",
+    "tall": false,
+    "radius": 6,
+    "batch": "forest_floor"
+  },
+  {
+    "id": "mushroom_cluster",
+    "tall": false,
+    "radius": 7,
+    "batch": "forest_floor"
+  },
+  {
+    "id": "stump_moss",
+    "tall": false,
+    "radius": 10,
+    "batch": "forest_floor"
+  },
+  {
+    "id": "stump_axe",
+    "tall": false,
+    "radius": 10,
+    "batch": "forest_floor"
+  },
+  {
+    "id": "woodpile",
+    "tall": false,
+    "radius": 14,
+    "batch": "forest_floor"
+  },
+  {
+    "id": "leaf_pile",
+    "tall": false,
+    "radius": 10,
+    "batch": "forest_floor"
+  },
+  {
+    "id": "log_mushrooms",
+    "tall": false,
+    "radius": 16,
+    "batch": "forest_floor_b"
+  },
+  {
+    "id": "log_hollow",
+    "tall": false,
+    "radius": 16,
+    "batch": "forest_floor_b"
+  },
+  {
+    "id": "branches_fallen",
+    "tall": false,
+    "radius": 12,
+    "batch": "forest_floor_b"
+  },
+  {
+    "id": "stump_small",
+    "tall": false,
+    "radius": 8,
+    "batch": "forest_floor_b"
+  },
+  {
+    "id": "leaves_red",
+    "tall": false,
+    "radius": 10,
+    "batch": "forest_floor_b"
+  },
+  {
+    "id": "rabbit_hole",
+    "tall": false,
+    "radius": 9,
+    "batch": "forest_floor_b"
+  },
+  {
+    "id": "anthill",
+    "tall": false,
+    "radius": 8,
+    "batch": "forest_floor_b"
+  },
+  {
+    "id": "thistles",
+    "tall": false,
+    "radius": 8,
+    "batch": "forest_floor_b"
+  },
+  {
+    "id": "well_old",
+    "tall": false,
+    "radius": 16,
+    "batch": "ruins"
+  },
+  {
+    "id": "pillar_ruined",
+    "tall": true,
+    "radius": 10,
+    "batch": "ruins"
+  },
+  {
+    "id": "statue_broken",
+    "tall": false,
+    "radius": 12,
+    "batch": "ruins"
+  },
+  {
+    "id": "shrine_stone",
+    "tall": false,
+    "radius": 11,
+    "batch": "ruins"
+  },
+  {
+    "id": "cart_wheel_broken",
+    "tall": false,
+    "radius": 10,
+    "batch": "ruins"
+  },
+  {
+    "id": "column_fallen",
+    "tall": false,
+    "radius": 18,
+    "batch": "ruins"
+  },
+  {
+    "id": "ruin_wall",
+    "tall": false,
+    "radius": 20,
+    "batch": "ruins"
+  },
+  {
+    "id": "milestone",
+    "tall": false,
+    "radius": 6,
+    "batch": "ruins"
+  },
+  {
+    "id": "crate",
+    "tall": false,
+    "radius": 8,
+    "batch": "farm"
+  },
+  {
+    "id": "crates_stack",
+    "tall": false,
+    "radius": 12,
+    "batch": "farm"
+  },
+  {
+    "id": "sack",
+    "tall": false,
+    "radius": 7,
+    "batch": "farm"
+  },
+  {
+    "id": "sacks_pile",
+    "tall": false,
+    "radius": 12,
+    "batch": "farm"
+  },
+  {
+    "id": "hay_bale",
+    "tall": false,
+    "radius": 12,
+    "batch": "farm"
+  },
+  {
+    "id": "hay_bales_stack",
+    "tall": false,
+    "radius": 14,
+    "batch": "farm"
+  },
+  {
+    "id": "scarecrow",
+    "tall": false,
+    "radius": 8,
+    "batch": "farm"
+  },
+  {
+    "id": "campfire_unlit",
+    "tall": false,
+    "radius": 9,
+    "batch": "farm"
+  },
+  {
+    "id": "tent",
+    "tall": false,
+    "radius": 18,
+    "batch": "camp"
+  },
+  {
+    "id": "signpost_double",
+    "tall": false,
+    "radius": 7,
+    "batch": "camp"
+  },
+  {
+    "id": "lantern_post",
+    "tall": false,
+    "radius": 6,
+    "batch": "camp"
+  },
+  {
+    "id": "beehive",
+    "tall": false,
+    "radius": 8,
+    "batch": "camp"
+  },
+  {
+    "id": "bird_bath",
+    "tall": false,
+    "radius": 8,
+    "batch": "camp"
+  },
+  {
+    "id": "footpath_stones",
+    "tall": false,
+    "radius": 16,
+    "batch": "camp"
+  },
+  {
+    "id": "stepping_stones",
+    "tall": false,
+    "radius": 12,
+    "batch": "camp"
+  },
+  {
+    "id": "water_trough",
+    "tall": false,
+    "radius": 14,
+    "batch": "camp"
+  },
+  {
+    "id": "wheelbarrow",
+    "tall": false,
+    "radius": 12,
+    "batch": "farm_b"
+  },
+  {
+    "id": "pumpkins",
+    "tall": false,
+    "radius": 10,
+    "batch": "farm_b"
+  },
+  {
+    "id": "flower_pots",
+    "tall": false,
+    "radius": 7,
+    "batch": "farm_b"
+  },
+  {
+    "id": "bench",
+    "tall": false,
+    "radius": 12,
+    "batch": "farm_b"
+  },
+  {
+    "id": "rain_barrel",
+    "tall": false,
+    "radius": 8,
+    "batch": "farm_b"
+  },
+  {
+    "id": "buckets",
+    "tall": false,
+    "radius": 8,
+    "batch": "farm_b"
+  },
+  {
+    "id": "basket_apples",
+    "tall": false,
+    "radius": 6,
+    "batch": "farm_b"
+  },
+  {
+    "id": "firewood_chopping",
+    "tall": false,
+    "radius": 10,
+    "batch": "farm_b"
+  },
+  {
+    "id": "tree_pine_cluster",
+    "tall": true,
+    "radius": 28,
+    "batch": "trees_c"
+  },
+  {
+    "id": "tree_oak_old",
+    "tall": true,
+    "radius": 30,
+    "batch": "trees_c"
+  },
+  {
+    "id": "tree_yellow",
+    "tall": true,
+    "radius": 24,
+    "batch": "trees_c"
+  },
+  {
+    "id": "tree_sapling",
+    "tall": true,
+    "radius": 8,
+    "batch": "trees_c"
+  },
+  {
+    "id": "tree_blossom_white",
+    "tall": true,
+    "radius": 22,
+    "batch": "trees_c"
+  },
+  {
+    "id": "tree_broken",
+    "tall": true,
+    "radius": 16,
+    "batch": "trees_c"
+  },
+  {
+    "id": "rock_sand",
+    "tall": false,
+    "radius": 11,
+    "batch": "rocks_b"
+  },
+  {
+    "id": "rock_dark",
+    "tall": false,
+    "radius": 11,
+    "batch": "rocks_b"
+  },
+  {
+    "id": "rock_ore",
+    "tall": false,
+    "radius": 11,
+    "batch": "rocks_b"
+  },
+  {
+    "id": "rock_round_pair",
+    "tall": false,
+    "radius": 10,
+    "batch": "rocks_b"
+  },
+  {
+    "id": "boulder_lichen",
+    "tall": false,
+    "radius": 15,
+    "batch": "rocks_b"
+  },
+  {
+    "id": "rocks_grass",
+    "tall": false,
+    "radius": 11,
+    "batch": "rocks_b"
+  },
+  {
+    "id": "stone_cairn",
+    "tall": false,
+    "radius": 7,
+    "batch": "rocks_b"
+  },
+  {
+    "id": "rock_crystal",
+    "tall": false,
+    "radius": 9,
+    "batch": "rocks_b"
+  },
+  {
+    "id": "bush_round_dark",
+    "tall": false,
+    "radius": 10,
+    "batch": "bushes_b"
+  },
+  {
+    "id": "bush_autumn",
+    "tall": false,
+    "radius": 10,
+    "batch": "bushes_b"
+  },
+  {
+    "id": "bush_hydrangea",
+    "tall": false,
+    "radius": 10,
+    "batch": "bushes_b"
+  },
+  {
+    "id": "bush_rose",
+    "tall": false,
+    "radius": 10,
+    "batch": "bushes_b"
+  },
+  {
+    "id": "bush_berry_blue",
+    "tall": false,
+    "radius": 10,
+    "batch": "bushes_b"
+  },
+  {
+    "id": "bush_tall_grass",
+    "tall": false,
+    "radius": 9,
+    "batch": "bushes_b"
+  },
+  {
+    "id": "bush_juniper",
+    "tall": false,
+    "radius": 12,
+    "batch": "bushes_b"
+  },
+  {
+    "id": "bush_sprouts",
+    "tall": false,
+    "radius": 7,
+    "batch": "bushes_b"
+  },
+  {
+    "id": "tree_pine_tall",
+    "tall": true,
+    "radius": 14,
+    "batch": "trees_d"
+  },
+  {
+    "id": "tree_copper_beech",
+    "tall": true,
+    "radius": 24,
+    "batch": "trees_d"
+  },
+  {
+    "id": "tree_rowan",
+    "tall": true,
+    "radius": 20,
+    "batch": "trees_d"
+  },
+  {
+    "id": "tree_larch_gold",
+    "tall": true,
+    "radius": 15,
+    "batch": "trees_d"
+  },
+  {
+    "id": "tree_olive",
+    "tall": true,
+    "radius": 22,
+    "batch": "trees_d"
+  },
+  {
+    "id": "stump_sprouting",
+    "tall": false,
+    "radius": 12,
+    "batch": "trees_d"
+  },
+  {
+    "id": "rock_arch",
+    "tall": true,
+    "radius": 28,
+    "batch": "crags_b"
+  },
+  {
+    "id": "crag_flat_top",
+    "tall": true,
+    "radius": 30,
+    "batch": "crags_b"
+  },
+  {
+    "id": "boulder_giant",
+    "tall": true,
+    "radius": 24,
+    "batch": "crags_b"
+  },
+  {
+    "id": "rock_pillars",
+    "tall": true,
+    "radius": 20,
+    "batch": "crags_b"
+  },
+  {
+    "id": "crag_tree",
+    "tall": true,
+    "radius": 26,
+    "batch": "crags_b"
+  },
+  {
+    "id": "cave_mouth",
+    "tall": true,
+    "radius": 30,
+    "batch": "crags_b"
+  },
+  {
+    "id": "pond_small",
+    "tall": false,
+    "radius": 20,
+    "batch": "wild_misc"
+  },
+  {
+    "id": "puddle",
+    "tall": false,
+    "radius": 12,
+    "batch": "wild_misc"
+  },
+  {
+    "id": "log_long",
+    "tall": false,
+    "radius": 24,
+    "batch": "wild_misc"
+  },
+  {
+    "id": "roots_exposed",
+    "tall": false,
+    "radius": 12,
+    "batch": "wild_misc"
+  },
+  {
+    "id": "moss_patch",
+    "tall": false,
+    "radius": 11,
+    "batch": "wild_misc"
+  },
+  {
+    "id": "rock_vines",
+    "tall": false,
+    "radius": 12,
+    "batch": "wild_misc"
+  },
+  {
+    "id": "fern_large",
+    "tall": false,
+    "radius": 12,
+    "batch": "wild_misc"
+  },
+  {
+    "id": "mushroom_giant",
+    "tall": false,
+    "radius": 9,
+    "batch": "wild_misc"
+  },
+  {
+    "id": "hitching_post",
+    "tall": false,
+    "radius": 12,
+    "batch": "village_b"
+  },
+  {
+    "id": "grindstone",
+    "tall": false,
+    "radius": 9,
+    "batch": "village_b"
+  },
+  {
+    "id": "millstone",
+    "tall": false,
+    "radius": 12,
+    "batch": "village_b"
+  },
+  {
+    "id": "plough",
+    "tall": false,
+    "radius": 14,
+    "batch": "village_b"
+  },
+  {
+    "id": "barrel_pair",
+    "tall": false,
+    "radius": 11,
+    "batch": "village_b"
+  },
+  {
+    "id": "fence_broken",
+    "tall": false,
+    "radius": 14,
+    "batch": "village_b"
+  },
+  {
+    "id": "washtub",
+    "tall": false,
+    "radius": 9,
+    "batch": "village_b"
+  },
+  {
+    "id": "woodcart_small",
+    "tall": false,
+    "radius": 14,
+    "batch": "village_b"
+  },
+  {
+    "id": "cosmos_pink",
+    "tall": false,
+    "radius": 8,
+    "batch": "flowers_b"
+  },
+  {
+    "id": "foxgloves",
+    "tall": false,
+    "radius": 7,
+    "batch": "flowers_b"
+  },
+  {
+    "id": "bluebells",
+    "tall": false,
+    "radius": 8,
+    "batch": "flowers_b"
+  },
+  {
+    "id": "marigolds",
+    "tall": false,
+    "radius": 8,
+    "batch": "flowers_b"
+  },
+  {
+    "id": "lilies_white",
+    "tall": false,
+    "radius": 8,
+    "batch": "flowers_b"
+  },
+  {
+    "id": "heather",
+    "tall": false,
+    "radius": 10,
+    "batch": "flowers_b"
+  },
+  {
+    "id": "forget_me_nots",
+    "tall": false,
+    "radius": 8,
+    "batch": "flowers_b"
+  },
+  {
+    "id": "wild_garlic",
+    "tall": false,
+    "radius": 9,
+    "batch": "flowers_b"
+  },
+  {
+    "id": "stone_bench",
+    "tall": false,
+    "radius": 12,
+    "batch": "stones_b"
+  },
+  {
+    "id": "arch_broken",
+    "tall": true,
+    "radius": 18,
+    "batch": "stones_b"
+  },
+  {
+    "id": "rune_stone",
+    "tall": false,
+    "radius": 8,
+    "batch": "stones_b"
+  },
+  {
+    "id": "stone_steps",
+    "tall": false,
+    "radius": 14,
+    "batch": "stones_b"
+  },
+  {
+    "id": "obelisk_small",
+    "tall": false,
+    "radius": 8,
+    "batch": "stones_b"
+  },
+  {
+    "id": "fountain_dry",
+    "tall": false,
+    "radius": 16,
+    "batch": "stones_b"
+  },
+  {
+    "id": "statue_lion",
+    "tall": false,
+    "radius": 10,
+    "batch": "stones_b"
+  },
+  {
+    "id": "stone_lantern",
+    "tall": false,
+    "radius": 7,
+    "batch": "stones_b"
+  },
+  {
+    "id": "tree_round_small",
+    "tall": true,
+    "radius": 16,
+    "batch": "trees_e"
+  },
+  {
+    "id": "tree_oak_orange",
+    "tall": true,
+    "radius": 24,
+    "batch": "trees_e"
+  },
+  {
+    "id": "tree_birch_twin",
+    "tall": true,
+    "radius": 18,
+    "batch": "trees_e"
+  },
+  {
+    "id": "tree_leaning",
+    "tall": true,
+    "radius": 22,
+    "batch": "trees_e"
+  },
+  {
+    "id": "tree_cypress",
+    "tall": true,
+    "radius": 11,
+    "batch": "trees_e"
+  },
+  {
+    "id": "tree_mossy_ancient",
+    "tall": true,
+    "radius": 26,
+    "batch": "trees_e"
+  },
+  {
+    "id": "crag_red",
+    "tall": true,
+    "radius": 26,
+    "batch": "crags_c"
+  },
+  {
+    "id": "crag_mossy_tall",
+    "tall": true,
+    "radius": 18,
+    "batch": "crags_c"
+  },
+  {
+    "id": "boulders_field",
+    "tall": true,
+    "radius": 32,
+    "batch": "crags_c"
+  },
+  {
+    "id": "rocky_hill",
+    "tall": true,
+    "radius": 32,
+    "batch": "crags_c"
+  },
+  {
+    "id": "crag_slate",
+    "tall": true,
+    "radius": 24,
+    "batch": "crags_c"
+  },
+  {
+    "id": "standing_stones_pair",
+    "tall": true,
+    "radius": 18,
+    "batch": "crags_c"
+  },
+  {
+    "id": "lily_pads",
+    "tall": false,
+    "radius": 10,
+    "batch": "water_edge"
+  },
+  {
+    "id": "driftwood",
+    "tall": false,
+    "radius": 13,
+    "batch": "water_edge"
+  },
+  {
+    "id": "rowboat",
+    "tall": false,
+    "radius": 20,
+    "batch": "water_edge"
+  },
+  {
+    "id": "fishing_basket",
+    "tall": false,
+    "radius": 7,
+    "batch": "water_edge"
+  },
+  {
+    "id": "mooring_post",
+    "tall": false,
+    "radius": 6,
+    "batch": "water_edge"
+  },
+  {
+    "id": "wet_stones",
+    "tall": false,
+    "radius": 11,
+    "batch": "water_edge"
+  },
+  {
+    "id": "reeds_wide",
+    "tall": false,
+    "radius": 12,
+    "batch": "water_edge"
+  },
+  {
+    "id": "marsh_grass",
+    "tall": false,
+    "radius": 10,
+    "batch": "water_edge"
+  },
+  {
+    "id": "hedge_segment",
+    "tall": false,
+    "radius": 16,
+    "batch": "bushes_c"
+  },
+  {
+    "id": "bush_small_round",
+    "tall": false,
+    "radius": 8,
+    "batch": "bushes_c"
+  },
+  {
+    "id": "bush_leafy_wide",
+    "tall": false,
+    "radius": 13,
+    "batch": "bushes_c"
+  },
+  {
+    "id": "bush_flower_red",
+    "tall": false,
+    "radius": 10,
+    "batch": "bushes_c"
+  },
+  {
+    "id": "bush_lilac",
+    "tall": false,
+    "radius": 11,
+    "batch": "bushes_c"
+  },
+  {
+    "id": "bush_dead",
+    "tall": false,
+    "radius": 10,
+    "batch": "bushes_c"
+  },
+  {
+    "id": "bush_gooseberry",
+    "tall": false,
+    "radius": 10,
+    "batch": "bushes_c"
+  },
+  {
+    "id": "bush_rock",
+    "tall": false,
+    "radius": 12,
+    "batch": "bushes_c"
+  },
+  {
+    "id": "grass_flowers_patch",
+    "tall": false,
+    "radius": 8,
+    "batch": "grasses_b"
+  },
+  {
+    "id": "grass_clump_wide",
+    "tall": false,
+    "radius": 10,
+    "batch": "grasses_b"
+  },
+  {
+    "id": "wheat_wild",
+    "tall": false,
+    "radius": 7,
+    "batch": "grasses_b"
+  },
+  {
+    "id": "grass_seedheads",
+    "tall": false,
+    "radius": 7,
+    "batch": "grasses_b"
+  },
+  {
+    "id": "grass_short_cluster",
+    "tall": false,
+    "radius": 9,
+    "batch": "grasses_b"
+  },
+  {
+    "id": "sedge",
+    "tall": false,
+    "radius": 8,
+    "batch": "grasses_b"
+  },
+  {
+    "id": "horsetail",
+    "tall": false,
+    "radius": 7,
+    "batch": "grasses_b"
+  },
+  {
+    "id": "grass_bluish",
+    "tall": false,
+    "radius": 7,
+    "batch": "grasses_b"
+  },
+  {
+    "id": "bedroll",
+    "tall": false,
+    "radius": 10,
+    "batch": "camp_b"
+  },
+  {
+    "id": "cooking_tripod",
+    "tall": false,
+    "radius": 10,
+    "batch": "camp_b"
+  },
+  {
+    "id": "log_seat",
+    "tall": false,
+    "radius": 12,
+    "batch": "camp_b"
+  },
+  {
+    "id": "banner_pole",
+    "tall": false,
+    "radius": 6,
+    "batch": "camp_b"
+  },
+  {
+    "id": "weapon_rack",
+    "tall": false,
+    "radius": 12,
+    "batch": "camp_b"
+  },
+  {
+    "id": "archery_target",
+    "tall": false,
+    "radius": 10,
+    "batch": "camp_b"
+  },
+  {
+    "id": "chest_small",
+    "tall": false,
+    "radius": 8,
+    "batch": "camp_b"
+  },
+  {
+    "id": "tent_green",
+    "tall": false,
+    "radius": 16,
+    "batch": "camp_b"
+  },
+  {
+    "id": "tree_pear",
+    "tall": true,
+    "radius": 22,
+    "batch": "trees_f"
+  },
+  {
+    "id": "tree_chestnut",
+    "tall": true,
+    "radius": 26,
+    "batch": "trees_f"
+  },
+  {
+    "id": "tree_hawthorn",
+    "tall": true,
+    "radius": 18,
+    "batch": "trees_f"
+  },
+  {
+    "id": "tree_elm",
+    "tall": true,
+    "radius": 24,
+    "batch": "trees_f"
+  },
+  {
+    "id": "tree_pine_pair",
+    "tall": true,
+    "radius": 20,
+    "batch": "trees_f"
+  },
+  {
+    "id": "tree_hollow",
+    "tall": true,
+    "radius": 22,
+    "batch": "trees_f"
+  },
+  {
+    "id": "rock_mossy_flat",
+    "tall": false,
+    "radius": 12,
+    "batch": "rocks_c"
+  },
+  {
+    "id": "rock_pointed",
+    "tall": false,
+    "radius": 8,
+    "batch": "rocks_c"
+  },
+  {
+    "id": "rocks_tiny_pair",
+    "tall": false,
+    "radius": 7,
+    "batch": "rocks_c"
+  },
+  {
+    "id": "boulder_cracked",
+    "tall": false,
+    "radius": 13,
+    "batch": "rocks_c"
+  },
+  {
+    "id": "rock_quartz",
+    "tall": false,
+    "radius": 10,
+    "batch": "rocks_c"
+  },
+  {
+    "id": "rock_brown_round",
+    "tall": false,
+    "radius": 10,
+    "batch": "rocks_c"
+  },
+  {
+    "id": "gravel_patch",
+    "tall": false,
+    "radius": 12,
+    "batch": "rocks_c"
+  },
+  {
+    "id": "rocks_flowers",
+    "tall": false,
+    "radius": 11,
+    "batch": "rocks_c"
+  },
+  {
+    "id": "cabbages",
+    "tall": false,
+    "radius": 12,
+    "batch": "farm_c"
+  },
+  {
+    "id": "milk_churns",
+    "tall": false,
+    "radius": 8,
+    "batch": "farm_c"
+  },
+  {
+    "id": "pitchfork_hay",
+    "tall": false,
+    "radius": 11,
+    "batch": "farm_c"
+  },
+  {
+    "id": "chicken_coop",
+    "tall": false,
+    "radius": 14,
+    "batch": "farm_c"
+  },
+  {
+    "id": "tools_leaning",
+    "tall": false,
+    "radius": 8,
+    "batch": "farm_c"
+  },
+  {
+    "id": "apple_crate",
+    "tall": false,
+    "radius": 9,
+    "batch": "farm_c"
+  },
+  {
+    "id": "wheat_sheaf",
+    "tall": false,
+    "radius": 7,
+    "batch": "farm_c"
+  },
+  {
+    "id": "feed_trough",
+    "tall": false,
+    "radius": 12,
+    "batch": "farm_c"
+  },
+  {
+    "id": "stumps_cluster",
+    "tall": false,
+    "radius": 13,
+    "batch": "wild_b"
+  },
+  {
+    "id": "sapling_small",
+    "tall": false,
+    "radius": 6,
+    "batch": "wild_b"
+  },
+  {
+    "id": "fern_mix",
+    "tall": false,
+    "radius": 10,
+    "batch": "wild_b"
+  },
+  {
+    "id": "hollyhocks",
+    "tall": false,
+    "radius": 8,
+    "batch": "wild_b"
+  },
+  {
+    "id": "wild_strawberries",
+    "tall": false,
+    "radius": 9,
+    "batch": "wild_b"
+  },
+  {
+    "id": "clover_flowers",
+    "tall": false,
+    "radius": 9,
+    "batch": "wild_b"
+  },
+  {
+    "id": "rock_flowers_purple",
+    "tall": false,
+    "radius": 11,
+    "batch": "wild_b"
+  },
+  {
+    "id": "log_small_mushroom",
+    "tall": false,
+    "radius": 10,
+    "batch": "wild_b"
+  },
+  {
+    "id": "wall_corner_ruin",
+    "tall": false,
+    "radius": 18,
+    "batch": "ruins_b"
+  },
+  {
+    "id": "pillar_stump",
+    "tall": false,
+    "radius": 9,
+    "batch": "ruins_b"
+  },
+  {
+    "id": "floor_tiles_broken",
+    "tall": false,
+    "radius": 16,
+    "batch": "ruins_b"
+  },
+  {
+    "id": "stairs_ruin",
+    "tall": false,
+    "radius": 16,
+    "batch": "ruins_b"
+  },
+  {
+    "id": "statue_head",
+    "tall": false,
+    "radius": 13,
+    "batch": "ruins_b"
+  },
+  {
+    "id": "urn_broken",
+    "tall": false,
+    "radius": 9,
+    "batch": "ruins_b"
+  },
+  {
+    "id": "gate_posts",
+    "tall": false,
+    "radius": 16,
+    "batch": "ruins_b"
+  },
+  {
+    "id": "well_ruined",
+    "tall": false,
+    "radius": 14,
+    "batch": "ruins_b"
+  },
+  {
+    "id": "signpost_left",
+    "tall": false,
+    "radius": 7,
+    "batch": "markers"
+  },
+  {
+    "id": "notice_board",
+    "tall": false,
+    "radius": 12,
+    "batch": "markers"
+  },
+  {
+    "id": "road_marker",
+    "tall": false,
+    "radius": 5,
+    "batch": "markers"
+  },
+  {
+    "id": "carved_pole",
+    "tall": false,
+    "radius": 6,
+    "batch": "markers"
+  },
+  {
+    "id": "lamp_stone",
+    "tall": false,
+    "radius": 6,
+    "batch": "markers"
+  },
+  {
+    "id": "flag_marker",
+    "tall": false,
+    "radius": 4,
+    "batch": "markers"
+  },
+  {
+    "id": "boundary_stones",
+    "tall": false,
+    "radius": 14,
+    "batch": "markers"
+  },
+  {
+    "id": "wishing_stones",
+    "tall": false,
+    "radius": 8,
+    "batch": "markers"
+  }
+]

@@ -1,0 +1,11 @@
+{
+  "id": "tree_poplar",
+  "tall": true,
+  "radius": 13,
+  "batch": "trees_b",
+  "description": "a tall narrow poplar tree: a column-shaped crown of mid-green leaves",
+  "size_sd": [
+    45,
+    112
+  ]
+}

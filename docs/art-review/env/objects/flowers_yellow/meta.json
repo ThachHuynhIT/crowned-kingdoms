@@ -1,0 +1,11 @@
+{
+  "id": "flowers_yellow",
+  "tall": false,
+  "radius": 8,
+  "batch": "flowers",
+  "description": "a small cluster of yellow buttercups with green leaves",
+  "size_sd": [
+    15,
+    16
+  ]
+}

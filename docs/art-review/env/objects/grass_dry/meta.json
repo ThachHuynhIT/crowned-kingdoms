@@ -1,0 +1,11 @@
+{
+  "id": "grass_dry",
+  "tall": false,
+  "radius": 7,
+  "batch": "grasses",
+  "description": "a tuft of dry golden-tan grass",
+  "size_sd": [
+    28,
+    22
+  ]
+}

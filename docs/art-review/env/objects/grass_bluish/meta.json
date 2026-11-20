@@ -1,0 +1,11 @@
+{
+  "id": "grass_bluish",
+  "tall": false,
+  "radius": 7,
+  "batch": "grasses_b",
+  "description": "a tuft of blue-grey ornamental grass",
+  "size_sd": [
+    26,
+    22
+  ]
+}

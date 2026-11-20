@@ -1,0 +1,11 @@
+{
+  "id": "tree_birch_twin",
+  "tall": true,
+  "radius": 18,
+  "batch": "trees_e",
+  "description": "two slender white birch trunks growing from one base, light green airy leaves",
+  "size_sd": [
+    88,
+    104
+  ]
+}

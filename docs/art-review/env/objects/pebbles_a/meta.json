@@ -1,0 +1,11 @@
+{
+  "id": "pebbles_a",
+  "tall": false,
+  "radius": 8,
+  "batch": "rocks",
+  "description": "a small low pile of grey pebbles on the ground",
+  "size_sd": [
+    22,
+    12
+  ]
+}

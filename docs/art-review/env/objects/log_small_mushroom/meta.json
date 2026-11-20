@@ -1,0 +1,11 @@
+{
+  "id": "log_small_mushroom",
+  "tall": false,
+  "radius": 10,
+  "batch": "wild_b",
+  "description": "a short small log with two little mushrooms on it, along a diagonal axis",
+  "size_sd": [
+    23,
+    18
+  ]
+}

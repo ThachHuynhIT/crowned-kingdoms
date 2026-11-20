@@ -1,0 +1,11 @@
+{
+  "id": "tree_spruce_blue",
+  "tall": true,
+  "radius": 17,
+  "batch": "trees_b",
+  "description": "a blue-green spruce tree with drooping layered branches, a dense cone shape",
+  "size_sd": [
+    83,
+    104
+  ]
+}

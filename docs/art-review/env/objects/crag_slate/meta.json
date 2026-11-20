@@ -1,0 +1,11 @@
+{
+  "id": "crag_slate",
+  "tall": true,
+  "radius": 24,
+  "batch": "crags_c",
+  "description": "a jagged dark slate-grey crag with sharp angular slabs pointing upward",
+  "size_sd": [
+    100,
+    96
+  ]
+}

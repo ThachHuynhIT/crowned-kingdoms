@@ -8,6 +8,7 @@ import { geometryFor } from '../../game/run/boardGeometry';
 import type { GameEvents } from '../../game/events';
 import type { CouncilSelection, RunCommand, RunState } from '../../game/run/state';
 import { SPRITES_KEY, frameDensityFactor, iconFrame } from '../../render/atlas';
+import { ruleIconOr } from '../ruleIcon';
 import { CardView } from '../cards/CardView';
 import type { Rect } from '../hud/layout';
 import { addUiText, createButton, createPanel, frameBorder, type Button, type TooltipHost, type UiBox } from '../theme';
@@ -124,7 +125,9 @@ export class CouncilModal {
       view.box.resize(r.w, r.h);
       view.box.image.setPosition(r.x, r.y);
       view.box.setFrame(offer.selected === id ? 'slotSelected' : 'slot');
-      view.icon.setPosition(r.x + 10, r.y + 10);
+      const frame = ruleIconOr(this.scene, id, 'crown');
+      if (view.icon.frame.name !== frame) view.icon.setFrame(frame);
+      view.icon.setScale(2 * frameDensityFactor(frame)).setPosition(r.x + 10, r.y + 10);
       const textX = r.x + 10 + 32 + 8;
       const wrap = Math.max(40, r.w - (textX - r.x) - 10);
       view.name.setText(def?.nameVi ?? id).setPosition(textX, r.y + 8).setWordWrapWidth(wrap);

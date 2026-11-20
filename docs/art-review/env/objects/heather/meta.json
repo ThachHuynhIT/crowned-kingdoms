@@ -1,0 +1,11 @@
+{
+  "id": "heather",
+  "tall": false,
+  "radius": 10,
+  "batch": "flowers_b",
+  "description": "a low mound of heather with tiny purple-pink flowers",
+  "size_sd": [
+    23,
+    18
+  ]
+}

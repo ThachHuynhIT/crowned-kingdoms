@@ -1,0 +1,11 @@
+{
+  "id": "mushroom_ring",
+  "tall": false,
+  "radius": 14,
+  "batch": "forest_floor",
+  "description": "a fairy ring: a flat circle of small cream and brown mushrooms on the ground, seen in isometric",
+  "size_sd": [
+    30,
+    24
+  ]
+}

@@ -1,0 +1,11 @@
+{
+  "id": "tree_pine_cluster",
+  "tall": true,
+  "radius": 28,
+  "batch": "trees_c",
+  "description": "a cluster of three pine trees of different heights growing close together",
+  "size_sd": [
+    92,
+    108
+  ]
+}

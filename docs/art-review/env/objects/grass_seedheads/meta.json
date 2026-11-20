@@ -1,0 +1,11 @@
+{
+  "id": "grass_seedheads",
+  "tall": false,
+  "radius": 7,
+  "batch": "grasses_b",
+  "description": "a tuft of grass with fluffy cream seed heads",
+  "size_sd": [
+    24,
+    28
+  ]
+}

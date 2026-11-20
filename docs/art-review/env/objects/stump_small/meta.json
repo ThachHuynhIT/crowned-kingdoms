@@ -1,0 +1,11 @@
+{
+  "id": "stump_small",
+  "tall": false,
+  "radius": 8,
+  "batch": "forest_floor_b",
+  "description": "a small low cut tree stump with visible rings",
+  "size_sd": [
+    30,
+    20
+  ]
+}

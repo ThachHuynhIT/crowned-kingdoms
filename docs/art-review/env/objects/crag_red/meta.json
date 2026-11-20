@@ -1,0 +1,11 @@
+{
+  "id": "crag_red",
+  "tall": true,
+  "radius": 26,
+  "batch": "crags_c",
+  "description": "a red-orange sandstone crag with layered horizontal bands and a few grass tufts",
+  "size_sd": [
+    106,
+    89
+  ]
+}

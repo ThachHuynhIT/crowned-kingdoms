@@ -5,6 +5,8 @@ import type { GameEvents } from '../../game/events';
 import type { RunState } from '../../game/run/state';
 import { RUN } from '../../data/run';
 import { UI_PALETTE } from '../../data/uiPalette';
+import { SPRITES_KEY, frameDensityFactor, iconFrame } from '../../render/atlas';
+import { ruleIconOr } from '../ruleIcon';
 import { addUiText, createButton, createPanel, frameBorder, type Button, type UiBox } from '../theme';
 import { largestFitting } from './fitText';
 import { questOfferView } from './councilModel';
@@ -26,6 +28,8 @@ export class QuestModal {
   private readonly overlay: Phaser.GameObjects.Rectangle;
   private readonly box: UiBox;
   private readonly title: Phaser.GameObjects.Text;
+  /** The offered quest's own icon (20/11/2026), left of the title. */
+  private readonly icon: Phaser.GameObjects.Image;
   private readonly body: Phaser.GameObjects.Text;
   private readonly warn: Phaser.GameObjects.Text;
   private readonly accept: Button;
@@ -43,6 +47,7 @@ export class QuestModal {
     this.box = createPanel(scene, 'panel', 64, 64, 0, 0, skin);
     this.box.image.setInteractive();
     this.title = addUiText(scene, 0, 0, QUEST_TITLE, 18).setOrigin(0.5, 0).setFontStyle('bold');
+    this.icon = scene.add.image(0, 0, SPRITES_KEY, iconFrame('tome')).setOrigin(1, 0);
     this.body = addUiText(scene, 0, 0, '', 14);
     this.warn = addUiText(scene, 0, 0, '', 13, UI_PALETTE.badText);
     this.accept = createButton(scene, 0, 0, 'Nhận', {
@@ -70,6 +75,7 @@ export class QuestModal {
       this.overlay,
       this.box.image,
       this.title,
+      this.icon,
       this.body,
       this.warn,
       this.accept.container,
@@ -101,6 +107,12 @@ export class QuestModal {
     this.box.image.setPosition(l.panel.x, l.panel.y);
     this.title.setPosition(l.title.x + l.title.w / 2, l.title.y + 4);
     this.title.setFontSize(desktop ? 18 : 15);
+    const offer = this.state.offers;
+    const frame = ruleIconOr(this.scene, offer?.kind === 'quest' ? offer.questId : '', 'tome');
+    if (this.icon.frame.name !== frame) this.icon.setFrame(frame);
+    this.icon
+      .setScale(2 * frameDensityFactor(frame))
+      .setPosition(Math.round(l.title.x + l.title.w / 2 - this.title.width / 2 - 8), l.title.y - 4);
     const lines = [
       view.nameVi,
       '',

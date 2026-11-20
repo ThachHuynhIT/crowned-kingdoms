@@ -34,7 +34,7 @@ def world_hd_files(text: str, listed) -> set[str]:
         out.add('iso/wall_cliff.png')
     if 'decor' in groups:
         catalog = re.search(r'DECOR_CATALOG[^=]*=\s*\[(.*?)\];', text, re.S).group(1)
-        out |= {f'iso/wilds/{i}.png' for i in re.findall(r"id: '([a-z_]+)'", catalog)}
+        out |= {f'iso/wilds/{i}.png' for i in re.findall(r"id: '([a-z_0-9]+)'", catalog)}
     if 'forest' in groups:
         out |= {f'iso/polish/{i}.png' for i in listed('FOREST_APPROVED')}
     if 'portal' in groups:
@@ -79,7 +79,8 @@ class HdDensityTest(unittest.TestCase):
         for card in listed('IMAGE_ART_HD_BUILDINGS'):
             bases = [d for d in ('iso', 'iso-neutral') if (SD / d / f'{card}.png').exists()]
             self.assertEqual(len(bases), 1, f'{card}: no single ai-v1 base image')
-            expected |= {f'{bases[0]}/{card}{s}.png' for s in ('', '_l2', '_l3') if (SD / bases[0] / f'{card}{s}.png').exists()}
+            expected |= {f'{bases[0]}/{card}{s}.png' for s in ('', '_l2', '_l3', '_anim0', '_anim1', '_anim2')
+                         if (SD / bases[0] / f'{card}{s}.png').exists()}
         expected |= {f'iso/plots/{k}_{s}.png' for k in listed('IMAGE_ART_HD_PLOTS') for s in ('open', 'locked', 'throne', 'built')}
         expected |= world_hd_files(text, listed)
         expected |= {f'fx/fx_{fx}.png' for fx in listed('IMAGE_ART_HD_FX')}

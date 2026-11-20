@@ -1,0 +1,11 @@
+{
+  "id": "signpost_double",
+  "tall": false,
+  "radius": 7,
+  "batch": "camp",
+  "description": "a wooden signpost with two plank arrows pointing different ways, no letters",
+  "size_sd": [
+    28,
+    42
+  ]
+}

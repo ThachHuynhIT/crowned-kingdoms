@@ -1,0 +1,11 @@
+{
+  "id": "campfire_unlit",
+  "tall": false,
+  "radius": 9,
+  "batch": "farm",
+  "description": "an unlit campfire: a ring of grey stones around a few crossed logs, no fire, no smoke",
+  "size_sd": [
+    23,
+    16
+  ]
+}

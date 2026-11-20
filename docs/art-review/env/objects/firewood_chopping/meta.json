@@ -1,0 +1,11 @@
+{
+  "id": "firewood_chopping",
+  "tall": false,
+  "radius": 10,
+  "batch": "farm_b",
+  "description": "a chopping block (short thick log) with split logs scattered around it",
+  "size_sd": [
+    25,
+    20
+  ]
+}

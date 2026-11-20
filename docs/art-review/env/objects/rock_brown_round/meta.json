@@ -1,0 +1,11 @@
+{
+  "id": "rock_brown_round",
+  "tall": false,
+  "radius": 10,
+  "batch": "rocks_c",
+  "description": "a round warm brown rock",
+  "size_sd": [
+    29,
+    22
+  ]
+}

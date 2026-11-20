@@ -1,0 +1,11 @@
+{
+  "id": "statue_broken",
+  "tall": false,
+  "radius": 12,
+  "batch": "ruins",
+  "description": "a broken old stone statue on a square pedestal: only the legs and part of the body remain, mossy",
+  "size_sd": [
+    30,
+    50
+  ]
+}

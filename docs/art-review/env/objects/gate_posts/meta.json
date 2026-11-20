@@ -1,0 +1,11 @@
+{
+  "id": "gate_posts",
+  "tall": false,
+  "radius": 16,
+  "batch": "ruins_b",
+  "description": "two old stone gate posts with round stone caps, no gate between them, on a diagonal axis",
+  "size_sd": [
+    44,
+    44
+  ]
+}

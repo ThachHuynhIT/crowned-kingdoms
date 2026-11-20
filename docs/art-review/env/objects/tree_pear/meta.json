@@ -1,0 +1,11 @@
+{
+  "id": "tree_pear",
+  "tall": true,
+  "radius": 22,
+  "batch": "trees_f",
+  "description": "a pear tree with a round green crown and small yellow-green pears hanging",
+  "size_sd": [
+    82,
+    88
+  ]
+}

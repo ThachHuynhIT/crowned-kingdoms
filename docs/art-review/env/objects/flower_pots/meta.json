@@ -1,0 +1,11 @@
+{
+  "id": "flower_pots",
+  "tall": false,
+  "radius": 7,
+  "batch": "farm_b",
+  "description": "two clay flower pots with red and yellow flowers",
+  "size_sd": [
+    19,
+    20
+  ]
+}

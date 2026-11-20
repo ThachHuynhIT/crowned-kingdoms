@@ -1,0 +1,11 @@
+{
+  "id": "wheelbarrow",
+  "tall": false,
+  "radius": 12,
+  "batch": "farm_b",
+  "description": "a wooden wheelbarrow with one wheel, empty",
+  "size_sd": [
+    27,
+    24
+  ]
+}

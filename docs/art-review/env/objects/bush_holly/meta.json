@@ -1,0 +1,11 @@
+{
+  "id": "bush_holly",
+  "tall": false,
+  "radius": 10,
+  "batch": "bushes",
+  "description": "a holly bush: dark glossy spiky green leaves with clusters of red berries",
+  "size_sd": [
+    37,
+    31
+  ]
+}

@@ -1,0 +1,11 @@
+{
+  "id": "rock_spire",
+  "tall": true,
+  "radius": 16,
+  "batch": "crags",
+  "description": "a narrow pointed rock spire of layered brown-grey stone with a little grass at its foot",
+  "size_sd": [
+    82,
+    110
+  ]
+}

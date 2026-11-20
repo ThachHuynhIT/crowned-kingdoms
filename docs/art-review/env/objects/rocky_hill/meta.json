@@ -1,0 +1,11 @@
+{
+  "id": "rocky_hill",
+  "tall": true,
+  "radius": 32,
+  "batch": "crags_c",
+  "description": "a low grassy hill with grey rocks breaking through its top and sides",
+  "size_sd": [
+    111,
+    64
+  ]
+}

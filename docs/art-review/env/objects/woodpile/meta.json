@@ -1,0 +1,11 @@
+{
+  "id": "woodpile",
+  "tall": false,
+  "radius": 14,
+  "batch": "forest_floor",
+  "description": "a neat stack of split firewood logs, the cut ends facing the viewer on the left side",
+  "size_sd": [
+    39,
+    31
+  ]
+}

@@ -1,0 +1,11 @@
+{
+  "id": "tree_cherry",
+  "tall": true,
+  "radius": 24,
+  "batch": "trees_a",
+  "description": "a cherry blossom tree: dark brown twisting trunk, a round crown of pale pink blossoms (soft pink, never magenta)",
+  "size_sd": [
+    93,
+    96
+  ]
+}

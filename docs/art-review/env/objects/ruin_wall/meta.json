@@ -1,0 +1,11 @@
+{
+  "id": "ruin_wall",
+  "tall": false,
+  "radius": 20,
+  "batch": "ruins",
+  "description": "a short crumbling fragment of an old stone wall with an empty arched window, moss and grass",
+  "size_sd": [
+    46,
+    44
+  ]
+}

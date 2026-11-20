@@ -1,0 +1,11 @@
+{
+  "id": "stone_steps",
+  "tall": false,
+  "radius": 14,
+  "batch": "stones_b",
+  "description": "three worn stone steps going up a small grassy rise, on the diagonal axes",
+  "size_sd": [
+    29,
+    20
+  ]
+}

@@ -1,0 +1,11 @@
+{
+  "id": "tree_oak_orange",
+  "tall": true,
+  "radius": 24,
+  "batch": "trees_e",
+  "description": "an oak tree in autumn with a full crown of orange and russet leaves",
+  "size_sd": [
+    111,
+    98
+  ]
+}

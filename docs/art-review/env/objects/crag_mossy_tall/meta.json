@@ -1,0 +1,11 @@
+{
+  "id": "crag_mossy_tall",
+  "tall": true,
+  "radius": 18,
+  "batch": "crags_c",
+  "description": "a tall narrow mossy rock column with ferns growing on its ledges",
+  "size_sd": [
+    63,
+    104
+  ]
+}

@@ -1,0 +1,11 @@
+{
+  "id": "tree_elm",
+  "tall": true,
+  "radius": 24,
+  "batch": "trees_f",
+  "description": "a tall elm tree with a vase-shaped spreading crown of green leaves",
+  "size_sd": [
+    100,
+    108
+  ]
+}

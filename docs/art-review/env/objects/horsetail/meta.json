@@ -1,0 +1,11 @@
+{
+  "id": "horsetail",
+  "tall": false,
+  "radius": 7,
+  "batch": "grasses_b",
+  "description": "a clump of horsetail plants: jointed green stems with whorls of thin needles",
+  "size_sd": [
+    19,
+    26
+  ]
+}

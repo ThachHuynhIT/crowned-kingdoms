@@ -1,0 +1,11 @@
+{
+  "id": "log_seat",
+  "tall": false,
+  "radius": 12,
+  "batch": "camp_b",
+  "description": "a short log lying on its side used as a seat, along a diagonal axis",
+  "size_sd": [
+    22,
+    16
+  ]
+}

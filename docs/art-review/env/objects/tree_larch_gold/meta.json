@@ -1,0 +1,11 @@
+{
+  "id": "tree_larch_gold",
+  "tall": true,
+  "radius": 15,
+  "batch": "trees_d",
+  "description": "a larch tree in autumn: a narrow cone of soft golden-yellow needles",
+  "size_sd": [
+    60,
+    100
+  ]
+}

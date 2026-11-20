@@ -1,0 +1,11 @@
+{
+  "id": "flag_marker",
+  "tall": false,
+  "radius": 4,
+  "batch": "markers",
+  "description": "a thin stick with a small plain red cloth flag, stuck in the ground",
+  "size_sd": [
+    18,
+    30
+  ]
+}

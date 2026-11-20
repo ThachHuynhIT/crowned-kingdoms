@@ -1,0 +1,11 @@
+{
+  "id": "well_old",
+  "tall": false,
+  "radius": 16,
+  "batch": "ruins",
+  "description": "an old round stone well with a small wooden roof and a bucket on a rope",
+  "size_sd": [
+    41,
+    54
+  ]
+}

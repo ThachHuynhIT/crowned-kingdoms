@@ -1,0 +1,11 @@
+{
+  "id": "wild_garlic",
+  "tall": false,
+  "radius": 9,
+  "batch": "flowers_b",
+  "description": "a patch of broad green leaves with round white star-flower heads",
+  "size_sd": [
+    19,
+    18
+  ]
+}

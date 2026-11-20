@@ -1,0 +1,11 @@
+{
+  "id": "anthill",
+  "tall": false,
+  "radius": 8,
+  "batch": "forest_floor_b",
+  "description": "a cone-shaped anthill of brown earth and pine needles",
+  "size_sd": [
+    28,
+    20
+  ]
+}

@@ -1,0 +1,11 @@
+{
+  "id": "rock_vines",
+  "tall": false,
+  "radius": 12,
+  "batch": "wild_misc",
+  "description": "a medium grey rock wrapped in creeping green vines with small white flowers",
+  "size_sd": [
+    36,
+    30
+  ]
+}

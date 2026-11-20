@@ -1,0 +1,11 @@
+{
+  "id": "bramble",
+  "tall": false,
+  "radius": 12,
+  "batch": "bushes",
+  "description": "a tangled bramble thicket: thorny arching stems, few leaves, a few dark blackberries",
+  "size_sd": [
+    36,
+    29
+  ]
+}

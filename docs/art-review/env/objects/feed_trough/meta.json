@@ -1,0 +1,11 @@
+{
+  "id": "feed_trough",
+  "tall": false,
+  "radius": 12,
+  "batch": "farm_c",
+  "description": "a low wooden feed trough filled with grain, along a diagonal axis",
+  "size_sd": [
+    20,
+    16
+  ]
+}

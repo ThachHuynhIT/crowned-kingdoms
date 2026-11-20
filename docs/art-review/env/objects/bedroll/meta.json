@@ -1,0 +1,11 @@
+{
+  "id": "bedroll",
+  "tall": false,
+  "radius": 10,
+  "batch": "camp_b",
+  "description": "a rolled-up bedroll and blanket lying on the ground, tied with straps",
+  "size_sd": [
+    19,
+    16
+  ]
+}

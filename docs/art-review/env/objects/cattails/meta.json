@@ -1,0 +1,11 @@
+{
+  "id": "cattails",
+  "tall": false,
+  "radius": 8,
+  "batch": "grasses",
+  "description": "a clump of cattails: tall green leaves with brown sausage-shaped seed heads",
+  "size_sd": [
+    34,
+    40
+  ]
+}

@@ -1,0 +1,11 @@
+{
+  "id": "crag_tall",
+  "tall": true,
+  "radius": 26,
+  "batch": "crags",
+  "description": "a tall grey rock crag with vertical cracked faces and tufts of grass on its ledges",
+  "size_sd": [
+    97,
+    100
+  ]
+}

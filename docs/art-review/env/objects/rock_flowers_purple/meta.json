@@ -1,0 +1,11 @@
+{
+  "id": "rock_flowers_purple",
+  "tall": false,
+  "radius": 11,
+  "batch": "wild_b",
+  "description": "a small rock with purple wildflowers growing around it",
+  "size_sd": [
+    26,
+    20
+  ]
+}

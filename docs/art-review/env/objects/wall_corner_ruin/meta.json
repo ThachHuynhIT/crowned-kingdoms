@@ -1,0 +1,11 @@
+{
+  "id": "wall_corner_ruin",
+  "tall": false,
+  "radius": 18,
+  "batch": "ruins_b",
+  "description": "a crumbled corner of an old stone wall, two short wall stubs meeting at a right angle on the diagonal axes, moss",
+  "size_sd": [
+    49,
+    40
+  ]
+}

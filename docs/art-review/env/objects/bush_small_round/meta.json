@@ -1,0 +1,11 @@
+{
+  "id": "bush_small_round",
+  "tall": false,
+  "radius": 8,
+  "batch": "bushes_c",
+  "description": "a small round green bush",
+  "size_sd": [
+    23,
+    22
+  ]
+}

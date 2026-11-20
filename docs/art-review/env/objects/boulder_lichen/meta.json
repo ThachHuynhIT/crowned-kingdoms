@@ -1,0 +1,11 @@
+{
+  "id": "boulder_lichen",
+  "tall": false,
+  "radius": 15,
+  "batch": "rocks_b",
+  "description": "a big grey boulder with orange and pale lichen patches",
+  "size_sd": [
+    45,
+    38
+  ]
+}

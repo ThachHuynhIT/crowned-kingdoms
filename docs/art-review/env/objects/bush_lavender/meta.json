@@ -1,0 +1,11 @@
+{
+  "id": "bush_lavender",
+  "tall": false,
+  "radius": 10,
+  "batch": "bushes",
+  "description": "a clump of lavender: upright grey-green stems with purple flower spikes",
+  "size_sd": [
+    28,
+    27
+  ]
+}

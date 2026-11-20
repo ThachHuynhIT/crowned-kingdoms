@@ -1,0 +1,11 @@
+{
+  "id": "flowers_white",
+  "tall": false,
+  "radius": 8,
+  "batch": "flowers",
+  "description": "a small cluster of white daisies with yellow centres",
+  "size_sd": [
+    14,
+    16
+  ]
+}

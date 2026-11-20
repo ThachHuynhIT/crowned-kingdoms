@@ -1,0 +1,11 @@
+{
+  "id": "clover_flowers",
+  "tall": false,
+  "radius": 9,
+  "batch": "wild_b",
+  "description": "a patch of clover with pink-purple clover flower heads",
+  "size_sd": [
+    18,
+    14
+  ]
+}

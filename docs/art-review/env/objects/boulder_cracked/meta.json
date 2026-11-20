@@ -1,0 +1,11 @@
+{
+  "id": "boulder_cracked",
+  "tall": false,
+  "radius": 13,
+  "batch": "rocks_c",
+  "description": "a medium boulder cracked across its top, moss in the crack",
+  "size_sd": [
+    41,
+    32
+  ]
+}

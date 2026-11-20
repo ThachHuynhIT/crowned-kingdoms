@@ -1,0 +1,11 @@
+{
+  "id": "standing_stones_ring",
+  "tall": true,
+  "radius": 30,
+  "batch": "crags",
+  "description": "a small ring of five weathered standing stones on grass, seen in isometric",
+  "size_sd": [
+    79,
+    66
+  ]
+}

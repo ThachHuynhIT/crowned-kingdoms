@@ -1,0 +1,11 @@
+{
+  "id": "puddle",
+  "tall": false,
+  "radius": 12,
+  "batch": "wild_misc",
+  "description": "a small muddy puddle of water on brown earth, flat on the ground",
+  "size_sd": [
+    34,
+    16
+  ]
+}

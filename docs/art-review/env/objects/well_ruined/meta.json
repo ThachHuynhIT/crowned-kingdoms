@@ -1,0 +1,11 @@
+{
+  "id": "well_ruined",
+  "tall": false,
+  "radius": 14,
+  "batch": "ruins_b",
+  "description": "a ruined round stone well, its wall half collapsed, no roof",
+  "size_sd": [
+    31,
+    26
+  ]
+}

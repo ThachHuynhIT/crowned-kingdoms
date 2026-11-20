@@ -1,0 +1,11 @@
+{
+  "id": "cabbages",
+  "tall": false,
+  "radius": 12,
+  "batch": "farm_c",
+  "description": "a small row of three green cabbages growing in soil",
+  "size_sd": [
+    24,
+    16
+  ]
+}

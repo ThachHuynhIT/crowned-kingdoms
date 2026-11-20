@@ -1,0 +1,11 @@
+{
+  "id": "log_mushrooms",
+  "tall": false,
+  "radius": 16,
+  "batch": "forest_floor_b",
+  "description": "a fallen mossy log with a row of small mushrooms growing on it, lying along a diagonal axis",
+  "size_sd": [
+    48,
+    32
+  ]
+}

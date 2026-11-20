@@ -1,0 +1,11 @@
+{
+  "id": "mushroom_red",
+  "tall": false,
+  "radius": 6,
+  "batch": "forest_floor",
+  "description": "one red-capped toadstool with white spots and a white stem, plus a tiny one beside it",
+  "size_sd": [
+    18,
+    20
+  ]
+}

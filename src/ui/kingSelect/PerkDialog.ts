@@ -9,16 +9,21 @@ import type { UiSkin } from '../skin';
 import { addUiText, createButton, createPanel, frameBorder, type Button, type TooltipHost, type UiBox } from '../theme';
 import { perkDialogLayout } from './detailLayout';
 import type { PerkOption } from './perkModel';
+import { SPRITES_KEY, frameDensityFactor, iconFrame } from '../../render/atlas';
+import { ruleIconOr } from '../ruleIcon';
 
 const PAD_DESKTOP = 12;
 const PAD_MOBILE = 6;
 const LOCKED_TEXT_ALPHA = 0.6;
+/** Room for the perk icon (32 px) and its gap. */
+const ICON_W = 40;
 
 interface Row {
   button: Button;
   name: Phaser.GameObjects.Text;
   text: Phaser.GameObjects.Text;
   status: Phaser.GameObjects.Text;
+  icon: Phaser.GameObjects.Image;
 }
 
 /**
@@ -79,8 +84,9 @@ export class PerkDialog {
       const name = addUiText(scene, 0, 0, '', 15).setFontStyle('bold');
       const text = addUiText(scene, 0, 0, '', 13);
       const status = addUiText(scene, 0, 0, '', 12, UI_PALETTE.badText).setOrigin(1, 0);
-      this.rows.push({ button, name, text, status });
-      children.push(button.container, name, text, status);
+      const icon = scene.add.image(0, 0, SPRITES_KEY, iconFrame('crown')).setOrigin(0, 0);
+      this.rows.push({ button, name, text, status, icon });
+      children.push(button.container, icon, name, text, status);
     }
     this.root = scene.add.container(0, 0, children);
     this.setOptions(options);
@@ -96,7 +102,11 @@ export class PerkDialog {
     this.rows.forEach((row, i) => {
       const o = options[i];
       row.button.setVisible(o !== undefined);
+      row.icon.setVisible(o !== undefined);
       if (!o) return;
+      const frame = ruleIconOr(this.scene, `perk_${o.id}`, 'crown');
+      if (row.icon.frame.name !== frame) row.icon.setFrame(frame);
+      row.icon.setScale(2 * frameDensityFactor(frame)).setAlpha(o.unlocked ? 1 : LOCKED_TEXT_ALPHA);
       row.name.setText(o.nameVi);
       row.text.setText(o.textVi);
       row.status.setText(o.unlocked ? (o.selected ? '✓ Đang chọn' : '') : (o.note ?? ''));
@@ -124,8 +134,10 @@ export class PerkDialog {
       row.button.container.setPosition(r.x + r.w / 2, r.y + r.h / 2);
       const pad = 12;
       row.status.setPosition(r.x + r.w - pad, r.y + 10);
-      row.name.setPosition(r.x + pad, r.y + 8);
-      row.text.setPosition(r.x + pad, r.y + 30).setWordWrapWidth(r.w - 2 * pad);
+      // the perk's own icon (20/11/2026) on the left, the texts beside it
+      row.icon.setPosition(r.x + pad, r.y + 10);
+      row.name.setPosition(r.x + pad + ICON_W, r.y + 8);
+      row.text.setPosition(r.x + pad + ICON_W, r.y + 30).setWordWrapWidth(r.w - 2 * pad - ICON_W);
     });
   }
 

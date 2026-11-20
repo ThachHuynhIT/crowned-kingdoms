@@ -1,0 +1,11 @@
+{
+  "id": "bench",
+  "tall": false,
+  "radius": 12,
+  "batch": "farm_b",
+  "description": "a simple wooden bench along a diagonal axis",
+  "size_sd": [
+    26,
+    22
+  ]
+}

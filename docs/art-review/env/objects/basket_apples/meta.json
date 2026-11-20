@@ -1,0 +1,11 @@
+{
+  "id": "basket_apples",
+  "tall": false,
+  "radius": 6,
+  "batch": "farm_b",
+  "description": "a woven wicker basket full of red apples",
+  "size_sd": [
+    15,
+    16
+  ]
+}

@@ -1,0 +1,11 @@
+{
+  "id": "bluebells",
+  "tall": false,
+  "radius": 8,
+  "batch": "flowers_b",
+  "description": "a small patch of bluebells: nodding blue bell flowers on arching stems",
+  "size_sd": [
+    19,
+    18
+  ]
+}

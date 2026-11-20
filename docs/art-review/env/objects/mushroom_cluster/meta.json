@@ -1,0 +1,11 @@
+{
+  "id": "mushroom_cluster",
+  "tall": false,
+  "radius": 7,
+  "batch": "forest_floor",
+  "description": "a cluster of five small tan mushrooms growing together",
+  "size_sd": [
+    18,
+    16
+  ]
+}

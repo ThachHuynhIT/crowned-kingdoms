@@ -1,0 +1,11 @@
+{
+  "id": "woodcart_small",
+  "tall": false,
+  "radius": 14,
+  "batch": "village_b",
+  "description": "a tiny wooden handcart loaded with firewood logs, two wheels",
+  "size_sd": [
+    38,
+    30
+  ]
+}

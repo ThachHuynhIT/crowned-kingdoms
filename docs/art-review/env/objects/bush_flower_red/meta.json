@@ -1,0 +1,11 @@
+{
+  "id": "bush_flower_red",
+  "tall": false,
+  "radius": 10,
+  "batch": "bushes_c",
+  "description": "a round green bush covered in small red flowers",
+  "size_sd": [
+    36,
+    32
+  ]
+}

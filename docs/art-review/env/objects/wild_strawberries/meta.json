@@ -1,0 +1,11 @@
+{
+  "id": "wild_strawberries",
+  "tall": false,
+  "radius": 9,
+  "batch": "wild_b",
+  "description": "a low patch of wild strawberry leaves with small red berries and white flowers",
+  "size_sd": [
+    17,
+    12
+  ]
+}

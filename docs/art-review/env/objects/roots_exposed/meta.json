@@ -1,0 +1,11 @@
+{
+  "id": "roots_exposed",
+  "tall": false,
+  "radius": 12,
+  "batch": "wild_misc",
+  "description": "gnarled tree roots sticking out of the ground in a low tangle",
+  "size_sd": [
+    28,
+    16
+  ]
+}

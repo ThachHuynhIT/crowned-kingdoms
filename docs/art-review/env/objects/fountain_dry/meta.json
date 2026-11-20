@@ -1,0 +1,11 @@
+{
+  "id": "fountain_dry",
+  "tall": false,
+  "radius": 16,
+  "batch": "stones_b",
+  "description": "a small dry round stone fountain basin with a short central spout, cracked, grass in it",
+  "size_sd": [
+    40,
+    30
+  ]
+}

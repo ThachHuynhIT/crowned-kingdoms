@@ -1,0 +1,11 @@
+{
+  "id": "tree_mossy_ancient",
+  "tall": true,
+  "radius": 26,
+  "batch": "trees_e",
+  "description": "an ancient tree draped with hanging grey-green moss, gnarled trunk, dark green crown",
+  "size_sd": [
+    110,
+    100
+  ]
+}

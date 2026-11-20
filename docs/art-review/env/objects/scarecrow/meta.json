@@ -1,0 +1,11 @@
+{
+  "id": "scarecrow",
+  "tall": false,
+  "radius": 8,
+  "batch": "farm",
+  "description": "a scarecrow on a wooden post: straw hat, patched shirt, arms out sideways, straw sticking out",
+  "size_sd": [
+    46,
+    54
+  ]
+}

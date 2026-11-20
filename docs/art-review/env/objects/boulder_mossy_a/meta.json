@@ -1,0 +1,11 @@
+{
+  "id": "boulder_mossy_a",
+  "tall": false,
+  "radius": 14,
+  "batch": "rocks",
+  "description": "one round grey boulder with a thick cap of green moss on top",
+  "size_sd": [
+    38,
+    34
+  ]
+}

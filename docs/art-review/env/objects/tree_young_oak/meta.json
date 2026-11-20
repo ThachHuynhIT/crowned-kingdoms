@@ -1,0 +1,11 @@
+{
+  "id": "tree_young_oak",
+  "tall": true,
+  "radius": 16,
+  "batch": "trees_a",
+  "description": "a young oak tree: a thin trunk and a small round crown of fresh green leaves",
+  "size_sd": [
+    71,
+    78
+  ]
+}

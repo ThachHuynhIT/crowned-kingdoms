@@ -1,0 +1,11 @@
+{
+  "id": "tree_hawthorn",
+  "tall": true,
+  "radius": 18,
+  "batch": "trees_f",
+  "description": "a small hawthorn tree, bushy and low, covered in tiny white blossom",
+  "size_sd": [
+    87,
+    70
+  ]
+}

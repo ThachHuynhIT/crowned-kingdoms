@@ -1,0 +1,11 @@
+{
+  "id": "mushroom_giant",
+  "tall": false,
+  "radius": 9,
+  "batch": "wild_misc",
+  "description": "one big storybook mushroom with a wide brown-orange cap and a thick pale stem",
+  "size_sd": [
+    42,
+    34
+  ]
+}

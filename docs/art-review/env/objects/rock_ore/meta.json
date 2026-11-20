@@ -1,0 +1,11 @@
+{
+  "id": "rock_ore",
+  "tall": false,
+  "radius": 11,
+  "batch": "rocks_b",
+  "description": "a grey rock with small glinting iron-ore and copper veins",
+  "size_sd": [
+    30,
+    26
+  ]
+}

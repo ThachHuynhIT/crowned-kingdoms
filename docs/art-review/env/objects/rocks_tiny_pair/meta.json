@@ -1,0 +1,11 @@
+{
+  "id": "rocks_tiny_pair",
+  "tall": false,
+  "radius": 7,
+  "batch": "rocks_c",
+  "description": "two tiny grey rocks side by side",
+  "size_sd": [
+    26,
+    12
+  ]
+}

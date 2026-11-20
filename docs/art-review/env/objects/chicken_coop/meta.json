@@ -1,0 +1,11 @@
+{
+  "id": "chicken_coop",
+  "tall": false,
+  "radius": 14,
+  "batch": "farm_c",
+  "description": "a small wooden chicken coop with a sloped plank roof and a little ramp, no animals",
+  "size_sd": [
+    38,
+    40
+  ]
+}

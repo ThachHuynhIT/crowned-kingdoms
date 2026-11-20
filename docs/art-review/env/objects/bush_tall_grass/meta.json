@@ -1,0 +1,11 @@
+{
+  "id": "bush_tall_grass",
+  "tall": false,
+  "radius": 9,
+  "batch": "bushes_b",
+  "description": "a big clump of ornamental tall grass, arching blades, cream plumes",
+  "size_sd": [
+    37,
+    36
+  ]
+}

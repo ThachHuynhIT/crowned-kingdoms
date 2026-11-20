@@ -1,0 +1,11 @@
+{
+  "id": "tree_rowan",
+  "tall": true,
+  "radius": 20,
+  "batch": "trees_d",
+  "description": "a rowan tree: a light open crown of feathery green leaves with bunches of orange-red berries",
+  "size_sd": [
+    77,
+    88
+  ]
+}

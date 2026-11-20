@@ -1,0 +1,11 @@
+{
+  "id": "stone_bench",
+  "tall": false,
+  "radius": 12,
+  "batch": "stones_b",
+  "description": "an old stone bench: a slab on two blocks, mossy, along a diagonal axis",
+  "size_sd": [
+    29,
+    22
+  ]
+}

@@ -1,0 +1,11 @@
+{
+  "id": "pillar_ruined",
+  "tall": true,
+  "radius": 10,
+  "batch": "ruins",
+  "description": "a broken ruined stone column standing upright, its top snapped off, ivy climbing it",
+  "size_sd": [
+    35,
+    58
+  ]
+}

@@ -1,0 +1,11 @@
+{
+  "id": "apple_crate",
+  "tall": false,
+  "radius": 9,
+  "batch": "farm_c",
+  "description": "a wooden crate full of red and green apples",
+  "size_sd": [
+    22,
+    20
+  ]
+}

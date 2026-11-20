@@ -1,0 +1,11 @@
+{
+  "id": "tree_chestnut",
+  "tall": true,
+  "radius": 26,
+  "batch": "trees_f",
+  "description": "a big chestnut tree with a broad dome of large dark-green leaves and pale flower candles",
+  "size_sd": [
+    106,
+    100
+  ]
+}

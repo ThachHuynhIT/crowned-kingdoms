@@ -1,0 +1,11 @@
+{
+  "id": "fishing_basket",
+  "tall": false,
+  "radius": 7,
+  "batch": "water_edge",
+  "description": "a woven fishing creel basket with a fishing rod leaning on it",
+  "size_sd": [
+    21,
+    26
+  ]
+}

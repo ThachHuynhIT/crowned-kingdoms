@@ -1,0 +1,11 @@
+{
+  "id": "tent_green",
+  "tall": false,
+  "radius": 16,
+  "batch": "camp_b",
+  "description": "a small green canvas tent on poles, the open flap on the right side",
+  "size_sd": [
+    44,
+    40
+  ]
+}

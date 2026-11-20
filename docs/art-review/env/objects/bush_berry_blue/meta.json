@@ -1,0 +1,11 @@
+{
+  "id": "bush_berry_blue",
+  "tall": false,
+  "radius": 10,
+  "batch": "bushes_b",
+  "description": "a low bush with clusters of blueberries",
+  "size_sd": [
+    37,
+    26
+  ]
+}

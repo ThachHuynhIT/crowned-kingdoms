@@ -1,0 +1,11 @@
+{
+  "id": "water_trough",
+  "tall": false,
+  "radius": 14,
+  "batch": "camp",
+  "description": "a wooden water trough on short legs, filled with water",
+  "size_sd": [
+    26,
+    22
+  ]
+}

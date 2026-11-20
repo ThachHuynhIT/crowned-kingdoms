@@ -1,0 +1,11 @@
+{
+  "id": "lamp_stone",
+  "tall": false,
+  "radius": 6,
+  "batch": "markers",
+  "description": "a short stone post with an iron lamp cage on top (unlit)",
+  "size_sd": [
+    18,
+    36
+  ]
+}
