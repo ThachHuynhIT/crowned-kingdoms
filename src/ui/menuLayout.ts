@@ -94,3 +94,17 @@ export const menuButtonBoard = (buttons: readonly Point[]): { x: number; y: numb
   const y2 = Math.max(...buttons.map((b) => b.y)) + MENU_BUTTON.h / 2 + MENU_BOARD_PAD;
   return { x, y, w: x2 - x, h: y2 - y };
 };
+
+/**
+ * Whole-number scale of the logo picture (20/11/2026): as large as fits in 42% of the screen height, at least 1, so
+ * pixel art stays sharp.
+ */
+export const menuLogoScale = (screenH: number, artH: number): number => Math.max(1, Math.floor((0.42 * screenH) / artH));
+
+/** Title font size that fits the logo's ribbon band `bandW`×`bandH` (logical px) for a title `widthAt1` px wide per font px. */
+export const ribbonTitleSize = (bandW: number, bandH: number, widthAt1: number): number =>
+  Math.max(10, Math.floor(Math.min(bandH * 0.95, bandW / widthAt1)));
+
+/** Smallest whole-number scale at which an `artW`×`artH` picture covers the whole screen (run-end backdrops). */
+export const coverScale = (screen: { w: number; h: number }, artW: number, artH: number): number =>
+  Math.max(1, Math.ceil(Math.max(screen.w / artW, screen.h / artH)));

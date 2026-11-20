@@ -68,7 +68,7 @@ Tất cả là cảm nhận trên PC (desktop ≥ 768 px). Bố cục điện th
 18. ✔ P0 đạn (14) và VFX (20) vẽ bằng code (`src/render/codeFx.ts`, `src/render/fx/`), đã gắn vào trận: mỗi lính/công trình bắn đạn riêng (`src/render/projectileFx.ts`), trúng đòn, lính tan, công trình sụp, đá tảng nổ, hồi sinh, vòng lửa Cuồng Nộ. Trạng thái (choáng, vô hiệu, bỏng, độc, chậm) lặp trên lính/công trình đang bị; bàn cờ: đặt, dời, nâng cấp công trình (`src/render/fxCues.ts`).
 19. ✔ P0 icon (27): chỉ số, trạng thái, hành động (`docs/art-review/g3e/icons/review-2026-11-10.md`); hiện ở đầu dòng hộp thông tin.
 20. ✔ P2 đồ trang trí sân (10): thùng, rơm, biển, xe lúa rải trong sân; rào và cổng chỉ ở kho asset.
-21. Kiến trúc cấp 2/3 (dừng theo chủ dự án 10/11): 55/74 công trình và Ngai đã vào game; còn Ánh Trăng, Du Mục, trung lập (`docs/art-review/levels/review.md`). Còn lại (P2): hoạt ảnh công trình và Ngai, bộ frame lính mở rộng (42), mặt nạ nền dual-grid (76), nền menu và màn thắng/thua (6), ảnh phát hành (5).
+21. ✔ Kiến trúc cấp 2/3 (20/11/2026): đủ 74/74 công trình và Ngai, có cả Ánh Trăng, Du Mục và trung lập (`docs/art-review/levels/review.md`). ✔ Nền menu và màn thắng/thua (20/11): lớp cỏ gần, logo có dải ruy băng ghi tên game, tranh lâu đài khi thắng và khi thua. ✔ Icon ứng dụng, icon tròn (maskable) và favicon. ✔ Lính đi theo hướng chéo: 44 lính, trừ `footman` (chưa có ảnh nguồn theo tư thế). Còn lại (P2): hoạt ảnh công trình và Ngai, mặt nạ nền dual-grid (76), ảnh chụp màn hình phát hành (chụp từ game).
 
 ## Giai đoạn `enhance-hd-graphics`
 

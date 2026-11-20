@@ -130,3 +130,28 @@ describe('menuButtonBoard (12/11/2026)', () => {
   }
   it('is null without buttons', () => expect(menuButtonBoard([])).toBeNull());
 });
+
+describe('menu logo picture (20/11/2026)', () => {
+  it('scales by whole steps within 42% of the screen height, never below 1', async () => {
+    const { menuLogoScale } = await import('./menuLayout');
+    expect(menuLogoScale(720, 171)).toBe(1);
+    expect(menuLogoScale(1080, 171)).toBe(2);
+    expect(menuLogoScale(300, 171)).toBe(1);
+  });
+
+  it('sizes the title to the ribbon band by height, then by width', async () => {
+    const { ribbonTitleSize } = await import('./menuLayout');
+    expect(ribbonTitleSize(176, 20, 8)).toBe(19);
+    expect(ribbonTitleSize(176, 40, 8)).toBe(22);
+    expect(ribbonTitleSize(20, 20, 8)).toBe(10);
+  });
+});
+
+describe('run-end backdrop (20/11/2026)', () => {
+  it('covers the screen at a whole-number scale', async () => {
+    const { coverScale } = await import('./menuLayout');
+    expect(coverScale({ w: 1280, h: 720 }, 384, 256)).toBe(4);
+    expect(coverScale({ w: 384, h: 256 }, 384, 256)).toBe(1);
+    expect(coverScale({ w: 844, h: 390 }, 384, 256)).toBe(3);
+  });
+});

@@ -66,8 +66,8 @@ describe('HD image art (4 art px per world unit)', () => {
     expect([...IMAGE_ART_HD_PLOTS].sort()).toEqual(Object.keys(IMAGE_PLOTS).sort());
     expect(IMAGE_ART_HD_FILES).toContain('militia_foe_0');
     expect(IMAGE_ART_HD_FILES).toContain('iso-units/militia_foe_nw');
-    expect(IMAGE_ART_HD_FILES).toContain('bandit_foe_5');
-    expect(IMAGE_ART_HD_FILES).toContain('boss_crownless_king_5');
+    expect(IMAGE_ART_HD_FILES).toContain('bandit_foe_0');
+    expect(IMAGE_ART_HD_FILES).toContain('iso-units/boss_crownless_king_nw');
     expect(IMAGE_ART_HD_FILES).toContain('iso/wheat_throne_l3');
     expect(IMAGE_ART_HD_FILES).toContain('iso-neutral/neutral_well');
     expect(IMAGE_ART_HD_FILES).toContain('iso/plots/nomad_built');

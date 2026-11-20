@@ -71,7 +71,11 @@ class HdDensityTest(unittest.TestCase):
             body = re.search(name + r'[^=]*=\s*\[(.*?)\]', text, re.S).group(1)
             return re.findall(r"'([a-z_]+)'", re.sub(r'//[^\n]*', '', body))
 
+        # units drawn from diagonal strips (ISO_UNITS, 17/11/2026) add their four strips; their front poses 1-5 stay on
+        # disk (no longer loaded, pose 0 is the HUD picture)
+        iso = set(listed('ISO_UNITS'))
         expected = {f'{u}{t}_{i}.png' for u in listed('IMAGE_ART_HD_UNITS') for t in ('', '_foe') for i in range(6)}
+        expected |= {f'iso-units/{u}{t}_{d}.png' for u in iso for t in ('', '_foe') for d in ('se', 'nw')}
         for card in listed('IMAGE_ART_HD_BUILDINGS'):
             bases = [d for d in ('iso', 'iso-neutral') if (SD / d / f'{card}.png').exists()]
             self.assertEqual(len(bases), 1, f'{card}: no single ai-v1 base image')
@@ -95,7 +99,8 @@ class HdDensityTest(unittest.TestCase):
         expected |= {f'portraits/{k}{s}.png' for k in kings for s in ('', '-144')}
         expected |= {f'king-cards/{k}.png' for k in kings}
         expected |= {f'icons/icon_king_{k}{s}.png' for k in kings for s in ('', '-16')}
-        expected |= {'menu/sky.png', 'menu/hills_far.png', 'menu/hills_mid.png'}
+        expected |= {'menu/sky.png', 'menu/hills_far.png', 'menu/hills_mid.png', 'menu/hills_near.png', 'menu/logo.png',
+                     'menu/win.png', 'menu/lose.png'}
         self.assertEqual(expected - hud_hd_files(), set())
 
     def test_atlas_icons_have_their_twin(self):

@@ -149,7 +149,7 @@ export const IMAGE_UNITS: Readonly<Record<string, string>> = {
 const POSE_INDEXES = [0, 1, 2, 3, 4, 5];
 
 /**
- * Units drawn in battle from the diagonal sheets (17/11/2026, spec 2026-11-17-iso-unit-sheets-design.md): per team a
+ * Units drawn in battle from the diagonal sheets (17/11/2026; raiders and bosses 20/11/2026, spec 2026-11-17-iso-unit-sheets-design.md): per team a
  * strip of `ISO_UNIT_FRAMES` equal cells for each of the two drawn directions, SE (facing the viewer, to the right) and
  * NW (back to the viewer, to the left); a horizontal flip gives SW and NE. Cut by
  * `docs/art-review/units-iso/make_review.py --export [--density 4|8]`; approved by Claude under the owner's delegation.
@@ -160,6 +160,9 @@ export const ISO_UNITS: readonly string[] = [
   'construct', 'wolf', 'bear', 'treant', 'stag', 'dryad', 'pirate', 'hookman', 'musketeer', 'swordsman',
   'bombardier', 'shieldbearer', 'iron_drake', 'tin_soldier', 'spider', 'gear_gunner', 'colossus', 'skeleton',
   'wraith', 'vampire', 'moon_reaper', 'rider', 'horse_archer', 'khan_guard', 'mercenary',
+  // raiders, boss summons and the three bosses (20/11/2026)
+  'bandit', 'bandit_archer', 'boar_rider', 'ogre', 'frog', 'hornet', 'boss_bog_ogre', 'boss_hornet_queen',
+  'boss_crownless_king',
 ];
 /** Cells of an iso unit strip: idle 0–2, walk 3–6, attack 7–10. */
 export const ISO_UNIT_FRAMES = 11;
@@ -325,6 +328,25 @@ export const IMAGE_BUILDING_LEVELS: Readonly<Partial<Record<string, readonly (2 
   grove_throne: [2, 3],
   grove_treant: [2, 3],
   grove_wolf_den: [2, 3],
+  moon_altar: [2, 3],
+  moon_crypt: [2, 3],
+  moon_reaper_shrine: [2, 3],
+  moon_shadow_spire: [2, 3],
+  moon_summoning_circle: [2, 3],
+  moon_throne: [2, 3],
+  moon_vampires: [2, 3],
+  neutral_archer_tower: [2, 3],
+  neutral_barracks: [2, 3],
+  neutral_mercenary_camp: [2, 3],
+  neutral_well: [2, 3],
+  nomad_bazaar: [2, 3],
+  nomad_caravan: [2, 3],
+  nomad_horse_archers: [2, 3],
+  nomad_khan_guard: [2, 3],
+  nomad_riders: [2, 3],
+  nomad_stables: [2, 3],
+  nomad_throne: [2, 3],
+  nomad_watchtower: [2, 3],
   stone_catapult: [2, 3],
   stone_crystal: [2, 3],
   stone_golem_forge: [2, 3],
@@ -544,10 +566,27 @@ export const kingCardFile = (king: KingId): string => `king-cards/${king}`;
 export const MENU_IMAGE_LAYERS: readonly { readonly file: string; readonly parallax: number }[] = [
   { file: 'menu/hills_far', parallax: 4 },
   { file: 'menu/hills_mid', parallax: 10 },
+  // low grass, flowers and fence in front (20/11/2026; stays low so the fields of the middle strip still show)
+  { file: 'menu/hills_near', parallax: 16 },
 ];
 
 /** The dusk sky behind the strips as a picture (384×256, repeats left to right); null keeps the painted bands. */
 export const MENU_SKY_FILE: string | null = 'menu/sky';
+
+/** The main-menu logo picture (256×171, 20/11/2026): the title is written on its blank ribbon; null keeps the board. */
+export const MENU_LOGO_FILE: string | null = 'menu/logo';
+/** The blank ribbon of the logo in its art px (centre and writing band), where the title goes. */
+export const MENU_LOGO_RIBBON = { cx: 128, cy: 126, w: 176, h: 20 } as const;
+/** Run-end backdrops (384×256, 20/11/2026): the castle at sunrise when won, ruined at night when lost. */
+export const RUN_END_FILES: Readonly<Record<'won' | 'lost', string>> = { won: 'menu/win', lost: 'menu/lose' };
+/** Every picture of the screens outside the game: menu strips, sky, logo and run-end backdrops. */
+export const MENU_PICTURE_FILES: readonly string[] = [
+  ...MENU_IMAGE_LAYERS.map((layer) => layer.file),
+  ...(MENU_SKY_FILE ? [MENU_SKY_FILE] : []),
+  ...(MENU_LOGO_FILE ? [MENU_LOGO_FILE] : []),
+  RUN_END_FILES.won,
+  RUN_END_FILES.lost,
+];
 
 /** The picture strips when every one of them loaded, else null (the menu keeps its painted hills). */
 export const menuImageLayers = (
@@ -605,8 +644,7 @@ export const IMAGE_ART_FILES: readonly string[] = [
   ),
   ...Object.values(IMAGE_ICONS),
   ...Object.values(STAT_ICONS),
-  ...MENU_IMAGE_LAYERS.map((layer) => layer.file),
-  ...(MENU_SKY_FILE ? [MENU_SKY_FILE] : []),
+  ...MENU_PICTURE_FILES,
   ...Object.values(IMAGE_FX),
   ...KING_CARDS_APPROVED.map(kingCardFile),
   ...Object.values(IMAGE_PLOTS).flatMap((prefix) => PLOT_STATES.map((s) => `${prefix}_${s}`)),

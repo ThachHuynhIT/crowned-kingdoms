@@ -5,8 +5,7 @@ import {
   HD_ART_MIN_DENSITY,
   IMAGE_ART_DIR,
   KING_CARDS_APPROVED,
-  MENU_IMAGE_LAYERS,
-  MENU_SKY_FILE,
+  MENU_PICTURE_FILES,
   STAT_ICONS,
   imageArtKey,
   kingCardFile,
@@ -43,7 +42,7 @@ const HUD_BASE_FILES: readonly { key: string; url: string }[] = [
   ...KING_BADGE_FILES,
   ...Object.values(STAT_ICONS).map((file) => ({ key: imageArtKey(file), url: `${IMAGE_ART_DIR}${file}.png` })),
   ...KING_CARDS_APPROVED.map(kingCardFile).map((file) => ({ key: imageArtKey(file), url: `${IMAGE_ART_DIR}${file}.png` })),
-  ...[...MENU_IMAGE_LAYERS.map((layer) => layer.file), ...(MENU_SKY_FILE ? [MENU_SKY_FILE] : [])].map((file) => ({
+  ...MENU_PICTURE_FILES.map((file) => ({
     key: imageArtKey(file),
     url: `${IMAGE_ART_DIR}${file}.png`,
   })),

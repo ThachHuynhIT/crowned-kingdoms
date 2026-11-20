@@ -239,10 +239,16 @@ def shipped_height(unit):
     return box[3] - box[1]
 
 
+# 20/11/2026: big units whose wind-up lifts a weapon high over the head ask for a shorter idle figure, so the raised
+# club or sword still stays inside the 341 px cell (the cut scales by the idle height, so the game size is unchanged)
+ROWS_FIGURE_CAP = {u: 240 for u in ('ogre', 'boss_bog_ogre', 'boss_hornet_queen', 'boss_crownless_king')}
+
+
 def rows_figure_px(unit):
     """Source-px height asked for in the sheet: the militia's row-sheet height scaled by the shipped height ratio,
     capped so a big unit still fits its 341 px cell."""
-    return min(280, round(MILITIA_ROWS_FIGURE * shipped_height(unit) / shipped_height('militia') / 10) * 10)
+    cap = ROWS_FIGURE_CAP.get(unit, 280)
+    return min(cap, round(MILITIA_ROWS_FIGURE * shipped_height(unit) / shipped_height('militia') / 10) * 10)
 
 
 # 17/11/2026: units without a hand-written ATTACK12 entry take their wind-up and strike from the approved front-view
@@ -266,6 +272,21 @@ ROWS_NOTES['skeleton'] = ' Character check for this unit: CUTE, not scary, exact
 ROWS_NOTES['horse_archer'] = DIAGONAL_BODY + ' Character check for this unit: the horse is LIGHT GOLDEN-TAN with a dark brown mane and tail and a BLUE saddle blanket with gold trim, exactly as in image 4; the rider is CHIBI (a big head under a big round red fur hat with cream fur trim and a red pompom), a red coat with cream fur cuffs, a blue sash across the chest, a short recurve bow and a quiver of arrows on the back.'
 ROWS_NOTES['wraith'] = ' Body check for this unit: it FLOATS with a wispy tail and no feet; the walk row is a gentle forward glide with a small bob, the tail swaying. Character check (r1/r2 17/11/2026: r0 SE was pale lavender with a pointed hood): the cloak is the LIGHT pastel dusty pink of image 4, exactly as light as image 4 (r2: r1 came out dark maroon; not pale lavender, not dark red), its shadows a soft mauve, a ROUNDED hood with a stitched seam on top (no pointed tip), a dark hood opening with two glowing PINK-VIOLET eyes, blue trim and a blue clasp with a ribbon.'
 
+# 20/11/2026: the raiders, the boss summons and the three bosses (character notes from their approved g3e pose sheets)
+FLOAT_BODY = (' Body check for this unit: it FLIES, hovering a little above the ground with its legs dangling (no feet'
+              ' standing on the ground); the walk row is a forward flight along the facing direction with a small bob'
+              ' up and down and the wings in different beat positions; the lowest point (stinger tip) stays on about'
+              ' the same baseline in every cell.')
+ROWS_NOTES['bandit'] = ' Character check for this unit: CHIBI proportions exactly as in image 4 (a big head, about 40% of the height); messy spiky brown hair, a BLUE headband knotted at the side with two tails, a brown cloth mask over the nose and mouth, a cream shirt with torn short sleeves under a brown vest with an orange star patch, a blue sash, patched brown trousers, brown boots, ONE short curved knife in one hand with a gold wrist ring.'
+ROWS_NOTES['bandit_archer'] = ' Character check for this unit: CHIBI proportions exactly as in image 4 (a big head); a patched BROWN hood over the head, a BLUE scarf around the neck, a ragged tan tunic with a brown strap across the chest, a blue armband, brown boots, a wooden bow in one hand and a quiver of arrows on the back. During the attack the bow is drawn along the facing direction (no flying arrow: the game draws it).'
+ROWS_NOTES['boar_rider'] = DIAGONAL_BODY + ' Character check for this unit: a big shaggy DARK BROWN wild boar with cream tusks and a pink snout, ridden by a CHIBI bandit (a big head) with spiky brown hair, a RED headband, a fur vest with a blue strap, holding a wooden club studded with iron spikes, exactly as in image 4.'
+ROWS_NOTES['ogre'] = ' Character check for this unit: a huge, chunky, friendly-goofy OLIVE-GREEN ogre exactly as in image 4: a pot belly, darker green spots, a small tuft of brown hair, two small lower tusks, a big round nose, a ragged tan loincloth with blue dots and a BLUE sash, a wooden club with iron studs. Keep the raised club of the wind-up INSIDE its own cell.'
+ROWS_NOTES['frog'] = ' Character check for this unit: a small ROUND chibi frog exactly as in image 4: bright yellow-green skin with darker green spots, a cream belly, big round eyes, pink blush cheeks, a BLUE lily-pad cap on the head and a blue scarf knotted at the neck. It moves in small hops (the walk row is a squash-and-hop loop); the tongue of the strike is short and stays inside the cell.'
+ROWS_NOTES['hornet'] = FLOAT_BODY + ' Character check for this unit: a small CUTE round hornet exactly as in image 4: a big round yellow-and-brown head with big eyes and two curled antennae, a fluffy cream collar, a yellow-and-brown striped abdomen with ONE blue stripe, pale see-through wings and a small stinger.'
+ROWS_NOTES['boss_bog_ogre'] = ' Character check for this unit: a GIANT swamp ogre exactly as in image 4: olive skin covered in brown MUD drips, long matted swamp-grass hair, a SMALL FROG sitting on top of the head, small tusks, a ragged loincloth with a BLUE sash, a thick LOG club dripping mud. Keep the raised log of the wind-up INSIDE its own cell; any mud splash stays small and next to the club.'
+ROWS_NOTES['boss_hornet_queen'] = FLOAT_BODY + ' Character check for this unit: a GIANT hornet QUEEN exactly as in image 4: a cute chibi face, a small GOLD CROWN between two curled antennae, a fluffy cream collar, a blue sash across the chest, a big yellow-and-brown striped abdomen with a stinger, large pale golden wings, and a long golden STINGER SPEAR. Keep the spear and the wings INSIDE its own cell.'
+ROWS_NOTES['boss_crownless_king'] = ' Character check for this unit: a big, stocky dark king in DARK BROWN plate armour with GOLD trim exactly as in image 4: a round bucket helmet (NO crown) with two glowing ORANGE eyes in the visor slit, a blue diamond gem on the chest and on the sword guard, a blue belt and a blue tabard with a gold border, a torn DARK WINE-PLUM cape (clearly darker and redder than the magenta background, never pink-magenta), and ONE big straight greatsword. Keep the raised sword of the wind-up INSIDE its own cell.'
+
 
 def _facing_text(t):
     for a, b in (('forward to the right', 'forward along the facing direction'), ('aiming to the right', 'aiming along the facing direction'),
@@ -275,10 +296,21 @@ def _facing_text(t):
     return t
 
 
-def rows_actions(unit):
+# r1 corrections that concern ONE direction only (20/11/2026), appended to that direction's note
+ROWS_NOTES_DIR = {
+    # r0 SE moved the knife to the other hand in attack frames 1-2
+    ('bandit', 'se'): ' Weapon check: the knife stays in the SAME hand (the hand on the right of the screen) in every cell of all three rows, including the anticipation and wind-up; never switch hands.',
+    # r0 SE drew the club twice in the recovery frame
+    ('ogre', 'se'): ' Weapon check: exactly ONE club in every cell; in the recovery frame the club is lifted back up in one hand, never a second club across the body.',
+    # r0 NW showed only the right wings and an all-gold spear
+    ('boss_hornet_queen', 'nw'): ' Back-view check: BOTH pairs of wings are visible in every cell, spread to the LEFT and to the RIGHT of the back like in image 4 (never only one side); the spear has a BROWN wooden shaft with a gold spear head and gold bands, exactly as in image 4.',
+}
+
+
+def rows_actions(unit, d=None):
     if unit in ATTACK12:
         return {'idle': '', 'note': '', **ATTACK12[unit]}
-    return {'idle': '', 'note': ROWS_NOTES.get(unit, ''),
+    return {'idle': '', 'note': ROWS_NOTES.get(unit, '') + ROWS_NOTES_DIR.get((unit, d), ''),
             'a1': 'the first small move into the wind-up below (weight shifting back).',
             'a2': _facing_text(up.ATTACK[unit]),
             'a3': _facing_text(up.STRIKE[unit]),
@@ -303,7 +335,7 @@ def build_rows_prompt(unit, d):
                 raise SystemExit(f'{ref} (approved reference) is missing: refusing to generate images')
         images = [up.REFERENCE, ISO_REF, militia, sheet]
         body = BODY_ROWS_NEW.format(name=name, role=role, iso=ISO_REF, militia=militia, sheet=sheet, facing=facing,
-                                    how=how, fig=rows_figure_px(unit), **rows_actions(unit))
+                                    how=how, fig=rows_figure_px(unit), **rows_actions(unit, d))
     return up.HEADER.format(out=out, doc=up.STYLE_DOC, ref=up.REFERENCE) + body, images, out
 
 

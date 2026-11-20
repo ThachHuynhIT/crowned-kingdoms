@@ -1,6 +1,9 @@
 import Phaser from 'phaser';
 import { gameIcon } from '../ui/gameIcons';
-import { bindSceneDisplay, logicalSize } from '../ui/displayRuntime';
+import { bindSceneDisplay, displayMetrics, logicalSize } from '../ui/displayRuntime';
+import { hudTexture } from '../render/hudArtHd';
+import { RUN_END_FILES, imageArtKey } from '../render/imageArt';
+import { coverScale } from '../ui/menuLayout';
 import { toCss } from '../data/palette';
 import { UI_PALETTE } from '../data/uiPalette';
 import { crownPoints } from '../game/meta';
@@ -50,6 +53,8 @@ const PAD = 16;
 export class RunEndScene extends Phaser.Scene {
   private state: RunState | null = null;
   private panel!: UiBox;
+  /** Castle backdrop (20/11/2026): sunrise when won, ruined at night when lost; null keeps the plain sky colour. */
+  private backdrop: { image: Phaser.GameObjects.Image; factor: number } | null = null;
   private title!: Phaser.GameObjects.Text;
   private rows: Row[] = [];
   private buttons: Button[] = [];
@@ -69,6 +74,12 @@ export class RunEndScene extends Phaser.Scene {
     const state = this.state;
     const won = state?.won === true;
     const skin = state?.kingId ?? 'neutral';
+    const file = won ? RUN_END_FILES.won : RUN_END_FILES.lost;
+    this.backdrop = null;
+    if (this.textures.exists(imageArtKey(file))) {
+      const tex = hudTexture(this.textures, imageArtKey(file), displayMetrics(this).density);
+      this.backdrop = { image: this.add.image(0, 0, tex.key).setOrigin(0.5), factor: tex.factor };
+    }
     this.panel = createPanel(this, 'panel', 320, 240, 0, 0, skin);
     this.title = addUiText(this, 0, 0, won ? 'Chiến thắng!' : 'Vương quốc sụp đổ', 30, won ? UI_PALETTE.text : UI_PALETTE.badText)
       .setOrigin(0.5)
@@ -127,6 +138,11 @@ export class RunEndScene extends Phaser.Scene {
 
   private layout(): void {
     const screen = logicalSize(this);
+    if (this.backdrop) {
+      const { image, factor } = this.backdrop;
+      const k = coverScale(screen, image.width / factor, image.height / factor);
+      image.setScale(k / factor).setPosition(Math.round(screen.w / 2), Math.round(screen.h / 2));
+    }
     const inset = frameBorder(this, 'panel') + PAD;
     const slots = this.rows.reduce((n, r) => n + r.slots, 0);
     const l = resultLayout(screen, inset, slots, this.buttons.length);

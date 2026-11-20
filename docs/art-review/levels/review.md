@@ -24,3 +24,23 @@ Danh sách P2 `building_<card>_l2/_l3` trong `tools/asset-admin/planned.json`. D
 - Đã vẽ nhưng **chưa cắt, chưa duyệt**: Ánh Trăng `moon_altar`, `moon_crypt`, `moon_reaper_shrine` (nguồn ở `<card>/l2|l3/source.png`).
 - Chưa vẽ: 5 công trình còn lại của Ánh Trăng, 7 của Du Mục, 4 trung lập. Prompt đã có sẵn.
 - Vẽ tiếp: `python docs/art-review/levels/make_levels.py prompts moon nomad neutral` rồi chạy `.superpowers/lv.sh` (bỏ dòng các thẻ đã có `source.png`), sau đó `cut <vua>`, duyệt, `register <vua>`.
+
+## Ánh Trăng — vẽ tiếp 20/11/2026
+
+Prompt từ `make_levels.py` (hàm `prompt()`), Codex với ảnh phong cách, nhà isometric đã duyệt và ảnh cấp 1. Cắt bằng `make_levels.py cut <thẻ>` ở mật độ 2, 4, 8. Bảng `sheet-moon.png`, từng thẻ ở `<thẻ>/preview.png`. Đã `register` (vào game).
+
+- **Bàn thờ, hầm mộ:** bản vẽ 10/11 được cắt, đạt (60/65/70 và 41/45/60 px).
+- **Đền thần chết:** L2 đạt. Bản đầu của L3 (`l3/source-v1.png`) cao bằng L2 nên vẽ lại; bản mới cao 78 px.
+- **Tháp bóng tối:** L2 đạt (85 px). Hai bản đầu của L3 (`source-v1/v2.png`) có tường thuôn dần lên trên và thấp hơn L2. Bản thứ ba (`l3/prompt-redo.md`) tường thẳng, cao 98 px.
+- **Vòng triệu hồi (62/68/78), Ngai (69/74/77), nhà ma cà rồng (63/69/74):** đạt. Ngai L3 thay quả cầu trăng đen bằng vương miện trăng vàng.
+
+Claude duyệt theo uỷ quyền của chủ dự án 09/11/2026.
+
+## Du Mục và trung lập — 20/11/2026
+
+Cùng quy trình như Ánh Trăng. Bảng `sheet-nomad.png` và `sheet-neutral.png`. Đã `register` (vào game).
+
+- **Du Mục (8):** chợ, đoàn buôn, nhà cung kỵ, cận vệ Khan, nhà kỵ binh, chuồng ngựa, Ngai, tháp canh. Tháp canh L2 vẽ lại một lần; nó chỉ cao hơn L1 1 px, khác chủ yếu ở nền đá và mái che.
+- **Trung lập (4):** tháp cung, trại lính, trại lính đánh thuê, giếng (ảnh gốc `iso-neutral`). Tháp cung L3 thấp hơn L2 2 px nhưng có viền vàng, nhìn ra bản lớn nhất.
+
+Claude duyệt theo uỷ quyền của chủ dự án 09/11/2026.

@@ -1,13 +1,24 @@
 import Phaser from 'phaser';
-import { bindSceneDisplay, logicalSize } from '../ui/displayRuntime';
+import { bindSceneDisplay, displayMetrics, logicalSize } from '../ui/displayRuntime';
 import { toCss } from '../data/palette';
 import { UI_PALETTE } from '../data/uiPalette';
 import type { RunState } from '../game/run/state';
 import { UI_KEY } from '../render/atlas';
+import { hudTexture } from '../render/hudArtHd';
+import { MENU_LOGO_FILE, MENU_LOGO_RIBBON, imageArtKey } from '../render/imageArt';
 import { resolveShortcut, shortcutFlags } from '../ui/input/shortcuts';
 import { GAME_ICONS_CREDIT, gameIcon, type GameIconId } from '../ui/gameIcons';
 import { MenuBackdrop } from '../ui/menuBackdrop';
-import { MENU_BUTTON, layoutMenu, menuButtonBoard, visibleMenuItems, type MenuItemId } from '../ui/menuLayout';
+import {
+  MENU_BOARD_PAD,
+  MENU_BUTTON,
+  layoutMenu,
+  menuButtonBoard,
+  menuLogoScale,
+  ribbonTitleSize,
+  visibleMenuItems,
+  type MenuItemId,
+} from '../ui/menuLayout';
 import { openHelp } from './helpLauncher';
 import {
   addUiText,
@@ -64,6 +75,8 @@ export class MainMenuScene extends Phaser.Scene {
   private backdrop!: MenuBackdrop;
   private fireflies: Phaser.GameObjects.Image[] = [];
   private logo!: UiBox;
+  /** The logo picture (20/11/2026) with its texture factor (2 for the HD twin); null keeps the wooden board. */
+  private logoArt: { image: Phaser.GameObjects.Image; factor: number } | null = null;
   /** Wooden board behind the menu buttons (12/11/2026). */
   private buttonBoard!: UiBox;
   private title!: Phaser.GameObjects.Text;
@@ -93,6 +106,12 @@ export class MainMenuScene extends Phaser.Scene {
     // Logo board.
     this.buttonBoard = createPanel(this, 'board', 64, 64);
     this.logo = createPanel(this, 'panel', 200, 100, 0.5, 0.5);
+    this.logoArt = null;
+    if (MENU_LOGO_FILE && this.textures.exists(imageArtKey(MENU_LOGO_FILE))) {
+      const tex = hudTexture(this.textures, imageArtKey(MENU_LOGO_FILE), displayMetrics(this).density);
+      this.logoArt = { image: this.add.image(0, 0, tex.key).setOrigin(0.5, 0), factor: tex.factor };
+      this.logo.image.setVisible(false);
+    }
     this.title = this.add
       .text(0, 0, TITLE, {
         ...textStyle(48, UI_PALETTE.text, FONT_TITLE),
@@ -188,6 +207,37 @@ export class MainMenuScene extends Phaser.Scene {
     this.pix = this.backdrop.pixelScale;
     for (const fly of this.fireflies) fly.setScale(this.pix);
 
+    if (this.logoArt) this.layoutLogoArt(width, height, this.logoArt);
+    else this.layoutLogoBoard(width, height);
+  }
+
+  /** The logo picture: whole-number scale, the title written on its ribbon, the subtitle under it. */
+  private layoutLogoArt(width: number, height: number, art: { image: Phaser.GameObjects.Image; factor: number }): void {
+    const artW = art.image.width / art.factor;
+    const artH = art.image.height / art.factor;
+    const k = menuLogoScale(height, artH);
+    art.image.setScale(k / art.factor);
+    this.title.setFontSize(32);
+    const perPx = this.title.width / 32;
+    this.title.setFontSize(ribbonTitleSize(MENU_LOGO_RIBBON.w * k, MENU_LOGO_RIBBON.h * k, perPx));
+    this.title.setShadow(0, 0, 'transparent', 0);
+    this.subtitle.setWordWrapWidth(Math.min(520, width - 32));
+    this.subtitle.setColor(toCss(UI_PALETTE.creamLight)).setStroke(toCss(UI_PALETTE.outline), 3);
+    const logoW = artW * k;
+    // room under the subtitle for the wooden board's padding round the buttons
+    const logoH = artH * k + 4 + this.subtitle.height + MENU_BOARD_PAD;
+    const m = layoutMenu({ w: width, h: height }, { w: logoW, h: logoH }, this.buttons.length);
+    const top = Math.round(m.logo.y - logoH / 2);
+    art.image.setPosition(Math.round(m.logo.x), top);
+    this.title.setPosition(
+      Math.round(m.logo.x + (MENU_LOGO_RIBBON.cx - artW / 2) * k),
+      Math.round(top + MENU_LOGO_RIBBON.cy * k),
+    );
+    this.subtitle.setPosition(m.logo.x, top + artH * k + 4);
+    this.layoutButtons(m, width);
+  }
+
+  private layoutLogoBoard(width: number, height: number): void {
     // Logo board size from its text (title size: same clamp as before).
     const inset = frameBorder(this, 'panel') + 16;
     const titleSize = Phaser.Math.Clamp(Math.floor(width / 14), 28, 64);
@@ -202,6 +252,10 @@ export class MainMenuScene extends Phaser.Scene {
     const logoTop = m.logo.y - logoH / 2;
     this.title.setPosition(m.logo.x, logoTop + inset + this.title.height / 2);
     this.subtitle.setPosition(m.logo.x, logoTop + inset + this.title.height + 4);
+    this.layoutButtons(m, width);
+  }
+
+  private layoutButtons(m: ReturnType<typeof layoutMenu>, width: number): void {
     this.buttons.forEach((button, i) => {
       const at = m.buttons[i]!;
       button.container.setPosition(at.x, at.y);

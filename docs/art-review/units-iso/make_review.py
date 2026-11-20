@@ -147,7 +147,8 @@ def main_block(cell):
 
 # 17/11/2026: units whose own colours sit inside make_poses' loose magenta key (r > 150, b > 150, g < 110): the pink
 # wraith cloak lost its darker shades and showed holes. For them the key is only the near-pure #FF00FF background.
-TIGHT_KEY = {'wraith', 'moon_reaper'}
+# 20/11/2026: the Crownless King's wine-plum cape sits next to the same key.
+TIGHT_KEY = {'wraith', 'moon_reaper', 'boss_crownless_king'}
 
 
 def tight_key(rgb):
@@ -158,9 +159,25 @@ def tight_key(rgb):
 _LOOSE = mp.magenta_mask
 
 
+# 20/11/2026: the Hornet Queen SE sheet left pale pink background blends in the small gaps between the antennae and
+# the head (a soft pink halo the approved sheet does not have); for her the key also takes light pink pixels, red
+# well above green and blue above green (her palette has no pink or violet: blush, wings and fur have blue below green).
+WIDE_KEY = {'boss_hornet_queen'}
+
+
+def wide_key(rgb):
+    r, g, b = (rgb[..., k].astype(int) for k in range(3))
+    return _LOOSE(rgb) | ((r > 170) & (b > g + 5) & (r > g + 50))
+
+
+def _key_for(unit):
+    return tight_key if unit in TIGHT_KEY else wide_key if unit in WIDE_KEY else None
+
+
 def rows_frames_of(unit, d):
-    if unit in TIGHT_KEY:
-        mp.magenta_mask = tight_key
+    key = _key_for(unit)
+    if key is not None:
+        mp.magenta_mask = key
         try:
             return _rows_frames_of(unit, d)
         finally:
@@ -199,8 +216,9 @@ def rows_game_frames(unit, d, density):
             return mp.place(twins)
         m = density // 2
         return mp.place_twin([mp.outline(mp.reduce(rgb, solid, factor / m)) for rgb, solid in figures], twins, m)
-    if unit in TIGHT_KEY:
-        mp.magenta_mask = tight_key
+    key = _key_for(unit)
+    if key is not None:
+        mp.magenta_mask = key
         try:
             return cut()
         finally:
