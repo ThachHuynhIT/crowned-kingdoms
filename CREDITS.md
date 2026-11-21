@@ -7,6 +7,8 @@
 
 ## Art & audio
 
+- Portfolio kingdom illustration (`public/assets/portfolio/kingdom.webp`): captured from this game's renderer with an in-memory sample Wheat kingdom (seed 1847, year 12), HUD hidden. Uses the project's registered art below; no new external or AI-generated image. See `docs/art-review/portfolio/capture.md`.
+
 Most art is procedurally generated placeholder art (`src/render/*Art.ts`).
 
 - UI frames (panel, tooltip, button, card): [Pixel UI Pack](https://kenney.nl/assets/pixel-ui-pack) by Kenney — CC0 (credit not required, given with thanks). Unmodified; see `docs/licenses/kenney-pixel-ui-pack/`.

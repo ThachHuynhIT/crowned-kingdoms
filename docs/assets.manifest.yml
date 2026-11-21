@@ -1,6 +1,15 @@
 # Machine-readable asset register. Schema and rules: docs/ASSET_MANIFEST.md
 # Add an entry only after the license check in docs/ASSET_LICENSES.md passes.
 assets:
+  - id: portfolio_kingdom_capture
+    path: public/assets/portfolio/kingdom.webp
+    category: ui
+    origin: custom
+    attribution: false
+    modified: false
+    nativeSize: 1440x900
+    finalSize: 1440x900
+    notes: In-game renderer capture of an in-memory Wheat sample kingdom, seed 1847, year 12, HUD hidden; existing registered project art only. Portfolio use, not a world-atlas sprite. See docs/art-review/portfolio/capture.md.
   - id: ui_kenney_ancient_tan
     path: public/assets/ui/kenney-pixel-ui/ancient_tan.png
     category: ui

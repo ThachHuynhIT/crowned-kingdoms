@@ -11,6 +11,9 @@ npm install
 npm run dev        # http://localhost:5173 (cũng mở được từ điện thoại cùng mạng LAN)
 ```
 
+Trang giới thiệu dự án: [http://localhost:5173/portfolio/](http://localhost:5173/portfolio/).
+Trang này được build cùng game tại `dist/portfolio/index.html`; các nút chơi dẫn về game ở thư mục cha, kể cả khi triển khai dưới đường dẫn con.
+
 | Lệnh                | Việc                                                                                           |
 | ------------------- | ---------------------------------------------------------------------------------------------- |
 | `npm run dev`       | Dev server (Vite)                                                                              |

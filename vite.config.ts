@@ -28,6 +28,12 @@ export default defineConfig({
     __APP_VERSION__: JSON.stringify(pkg.version),
   },
   build: {
+    rollupOptions: {
+      input: {
+        game: resolve(import.meta.dirname, 'index.html'),
+        portfolio: resolve(import.meta.dirname, 'portfolio/index.html'),
+      },
+    },
     target: 'es2022',
     // Phaser alone is ~1.2 MB minified; that's expected for a game bundle.
     chunkSizeWarningLimit: 2000,

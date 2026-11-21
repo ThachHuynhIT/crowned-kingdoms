@@ -1,0 +1,594 @@
+<!doctype html>
+<html lang="vi">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="theme-color" content="#132e29" />
+    <meta
+      name="description"
+      content="Một vương quốc nhỏ. Một triều đại của riêng bạn. Khám phá Crowned Kingdoms, web game roguelite xây vương quốc, kết hợp thẻ bài và những trận chiến tự động."
+    />
+    <meta property="og:title" content="Crowned Kingdoms — Viết nên triều đại của bạn" />
+    <meta
+      property="og:description"
+      content="Chín vị vua. Ba mươi năm trị vì. Một vương quốc do bạn định đoạt. Chơi ngay trong trình duyệt."
+    />
+    <meta property="og:type" content="website" />
+    <title>Crowned Kingdoms — Viết nên triều đại của bạn</title>
+    <link rel="icon" href="../icons/crown-192.png" />
+    <link rel="preload" as="image" href="../assets/portfolio/kingdom.webp" />
+    <link rel="stylesheet" href="../src/portfolio/style.css" />
+  </head>
+  <body>
+    <a class="skip-link" href="#noi-dung">Đến nội dung chính</a>
+    <svg class="svg-library" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+      <symbol id="crown" viewBox="0 0 32 32">
+        <path
+          d="M3 8h4v4h4V5h4v4h2V5h4v7h4V8h4v16H3zM7 27h18"
+          fill="none"
+          stroke="currentColor"
+          stroke-width="2.5"
+          stroke-linejoin="miter"
+        />
+        <path d="M13 17h6v4h-6z" fill="currentColor" />
+      </symbol>
+      <symbol id="arrow" viewBox="0 0 24 24">
+        <path d="M5 12h14m-6-6 6 6-6 6" fill="none" stroke="currentColor" stroke-width="1.6" />
+      </symbol>
+      <symbol id="spark" viewBox="0 0 24 24">
+        <path
+          d="m12 2 2.5 7.5L22 12l-7.5 2.5L12 22l-2.5-7.5L2 12l7.5-2.5z"
+          fill="none"
+          stroke="currentColor"
+          stroke-width="1.2"
+        />
+      </symbol>
+    </svg>
+
+    <header class="site-header wrap">
+      <a class="brand" href="#" aria-label="Crowned Kingdoms, đầu trang">
+        <svg width="35" height="35" aria-hidden="true"><use href="#crown" /></svg>
+        <span>Crowned<br />Kingdoms</span>
+      </a>
+      <button
+        class="menu-toggle"
+        type="button"
+        aria-expanded="false"
+        aria-controls="navigation"
+        hidden
+      >
+        <span>Menu</span><span class="menu-bars" aria-hidden="true"></span>
+      </button>
+      <nav id="navigation" aria-label="Điều hướng chính">
+        <a href="#cach-choi">Cách chơi</a>
+        <a href="#chinh-vi-vua">Chín vị vua</a>
+        <a href="#cau-chuyen">Về dự án</a>
+        <a class="button button-small" href="../"
+          >Vào vương quốc <svg aria-hidden="true"><use href="#arrow" /></svg
+        ></a>
+      </nav>
+    </header>
+
+    <main id="noi-dung">
+      <section class="hero wrap" aria-labelledby="hero-title">
+        <div class="hero-copy">
+          <p class="genre">
+            <span class="status-dot" aria-hidden="true"></span> Roguelite xây vương quốc
+          </p>
+          <h1 id="hero-title">
+            Crowned<br />Kingdoms<span class="title-star" aria-hidden="true">✧</span>
+          </h1>
+          <p class="hero-line">Vương quốc nhỏ.<br />Tham vọng lớn.</p>
+          <p class="hero-description">
+            Từ một ngai vàng giữa đồng hoang, xây nên vương quốc của riêng bạn. Chọn thẻ, dựng quân
+            và viết tiếp câu chuyện qua từng năm trị vì.
+          </p>
+          <div class="hero-actions">
+            <a class="button" href="../"
+              ><svg aria-hidden="true"><use href="#crown" /></svg> Chơi ngay</a
+            >
+            <a class="text-link" href="#cach-choi"
+              >Khám phá lối chơi <span aria-hidden="true">↓</span></a
+            >
+          </div>
+          <p class="play-note">
+            Chơi trên trình duyệt <span aria-hidden="true">·</span> Không cần tài khoản
+          </p>
+        </div>
+        <figure class="hero-art">
+          <div class="art-topline">
+            <span>Những trang đầu của một triều đại</span
+            ><svg aria-hidden="true"><use href="#spark" /></svg>
+          </div>
+          <div class="kingdom-frame">
+            <img
+              class="kingdom-image"
+              src="../assets/portfolio/kingdom.webp"
+              alt="Vương quốc Lúa Mì trong game: ruộng vàng, cối xay và tháp canh trên bàn cờ isometric, giữa rừng và dòng sông."
+              width="1440"
+              height="900"
+              fetchpriority="high"
+            />
+            <div class="map-label">
+              <svg aria-hidden="true"><use href="#crown" /></svg
+              ><span>Vương quốc Lúa Mì<small>Mỗi ô đất, một quyết định.</small></span>
+            </div>
+            <span class="map-compass" aria-hidden="true">N<br /><span>✧</span></span>
+          </div>
+          <div class="art-bottomline">
+            <span>Hình ảnh trong game · Bố trí minh họa</span><span aria-hidden="true">✦</span>
+          </div>
+          <div class="hero-cards" aria-hidden="true">
+            <div class="mini-card">
+              <img
+                src="../assets/art/ai-v1/cards/wheat_field-128.png"
+                alt=""
+                width="128"
+                height="96"
+              /><span>Ruộng Lúa</span>
+            </div>
+            <div class="mini-card">
+              <img
+                src="../assets/art/ai-v1/cards/wheat_militia-128.png"
+                alt=""
+                width="128"
+                height="96"
+              /><span>Dân Quân</span>
+            </div>
+            <div class="mini-card">
+              <img
+                src="../assets/art/ai-v1/cards/wheat_windmill-128.png"
+                alt=""
+                width="128"
+                height="96"
+              /><span>Cối Xay Gió</span>
+            </div>
+          </div>
+        </figure>
+      </section>
+
+      <div class="realm-facts wrap" aria-label="Điểm nổi bật">
+        <div><strong>09</strong><span>vị vua với lối chơi riêng</span></div>
+        <div><strong>30</strong><span>năm để làm nên lịch sử</span></div>
+        <div><strong>5 × 5</strong><span>ô đất, vô vàn cách sắp đặt</span></div>
+        <a href="#cach-choi" class="scroll-cue" aria-label="Cuộn xuống xem cách chơi"
+          ><svg aria-hidden="true"><use href="#arrow" /></svg
+        ></a>
+      </div>
+
+      <section id="cach-choi" class="paper-section section-pad" aria-labelledby="gameplay-title">
+        <div class="wrap">
+          <div class="section-heading">
+            <div>
+              <p class="section-label">
+                <svg aria-hidden="true"><use href="#spark" /></svg> Nghệ thuật trị vì
+              </p>
+              <h2 id="gameplay-title">Một lá bài hôm nay.<br />Một triều đại ngày mai.</h2>
+            </div>
+            <p>
+              Không cần điều khiển từng người lính. Sức mạnh của bạn nằm ở những lựa chọn trước khi
+              trận chiến bắt đầu.
+            </p>
+          </div>
+          <div class="gameplay-grid">
+            <article class="gameplay-step">
+              <div class="step-art card-fan" aria-hidden="true">
+                <img
+                  src="../assets/art/ai-v1/cards/wheat_fertilizer-128.png"
+                  alt=""
+                  width="128"
+                  height="96"
+                  loading="lazy"
+                /><img
+                  src="../assets/art/ai-v1/cards/wheat_militia-128.png"
+                  alt=""
+                  width="128"
+                  height="96"
+                  loading="lazy"
+                /><img
+                  src="../assets/art/ai-v1/cards/wheat_field-128.png"
+                  alt=""
+                  width="128"
+                  height="96"
+                  loading="lazy"
+                />
+              </div>
+              <div class="step-title">
+                <span>01</span>
+                <h3>Chọn nước đi của bạn</h3>
+              </div>
+              <p>
+                Giữ lá bài cho kế hoạch dài hơi, xây ngay để mạnh hơn, hay bán lấy vàng? Mỗi năm là
+                một lần cân nhắc.
+              </p>
+            </article>
+            <article class="gameplay-step">
+              <div class="step-art building-art" aria-hidden="true">
+                <img
+                  src="../assets/art/ai-v1/iso/wheat_windmill.png"
+                  alt=""
+                  width="128"
+                  height="128"
+                  loading="lazy"
+                /><img
+                  src="../assets/art/ai-v1/iso/wheat_throne.png"
+                  alt=""
+                  width="128"
+                  height="128"
+                  loading="lazy"
+                /><img
+                  src="../assets/art/ai-v1/iso/wheat_field.png"
+                  alt=""
+                  width="128"
+                  height="128"
+                  loading="lazy"
+                />
+              </div>
+              <div class="step-title">
+                <span>02</span>
+                <h3>Dựng xây vương quốc</h3>
+              </div>
+              <p>
+                Đặt công trình, nâng cấp và kết hợp hiệu ứng lân cận. Một ô đất đúng chỗ có thể thay
+                đổi cả đội quân.
+              </p>
+            </article>
+            <article class="gameplay-step">
+              <div class="step-art battle-art" aria-hidden="true">
+                <span class="battle-line"></span
+                ><img
+                  src="../assets/art/ai-v1/militia_0.png"
+                  alt=""
+                  width="64"
+                  height="64"
+                  loading="lazy"
+                /><img
+                  src="../assets/art/ai-v1/militia_1.png"
+                  alt=""
+                  width="64"
+                  height="64"
+                  loading="lazy"
+                /><svg><use href="#spark" /></svg
+                ><img
+                  src="../assets/art/ai-v1/iso/stone_throne.png"
+                  alt=""
+                  width="128"
+                  height="128"
+                  loading="lazy"
+                />
+              </div>
+              <div class="step-title">
+                <span>03</span>
+                <h3>Để chiến thuật lên tiếng</h3>
+              </div>
+              <p>
+                Quân đội tự động giao chiến. Theo dõi đội hình vận hành và tung Can Thiệp khi vương
+                quốc cần đến bạn.
+              </p>
+            </article>
+          </div>
+          <div class="loop-note">
+            <svg aria-hidden="true"><use href="#crown" /></svg>
+            <p>Thắng một trận để đi tiếp. Học từ một thất bại để xây lại tốt hơn.</p>
+            <span>Đó là tinh thần roguelite.</span>
+          </div>
+        </div>
+      </section>
+
+      <section id="chinh-vi-vua" class="kings-section section-pad" aria-labelledby="kings-title">
+        <div class="wrap">
+          <div class="section-heading">
+            <div>
+              <p class="section-label">
+                <svg aria-hidden="true"><use href="#spark" /></svg> Chín ngai vàng
+              </p>
+              <h2 id="kings-title">Bạn sẽ trị vì<br />theo cách nào?</h2>
+            </div>
+            <p>
+              Từ ruộng lúa trù phú đến phép thuật tinh tú, mỗi vị vua mở ra một cách xây dựng và
+              chiến đấu khác biệt.
+            </p>
+          </div>
+          <div class="king-gallery">
+            <div class="king-portrait-stage">
+              <span class="portrait-halo" aria-hidden="true"></span>
+              <svg class="portrait-crown" aria-hidden="true"><use href="#crown" /></svg>
+              <img
+                id="king-portrait"
+                src="../assets/art/ai-v1/portraits/wheat-144.png"
+                alt="Chân dung Vua Lúa Mì"
+                width="144"
+                height="216"
+                loading="lazy"
+              />
+              <span class="portrait-caption" aria-hidden="true"
+                >Một chiếc vương miện.<br />Một cá tính.</span
+              >
+            </div>
+            <div class="king-detail">
+              <div class="king-select" role="group" aria-label="Khám phá chín vị vua">
+                <button type="button" data-king="wheat" aria-pressed="true" aria-label="Vua Lúa Mì">
+                  <img
+                    src="../assets/art/ai-v1/portraits/wheat.png"
+                    alt=""
+                    width="48"
+                    height="72"
+                    loading="lazy"
+                  />
+                </button>
+                <button
+                  type="button"
+                  data-king="stone"
+                  aria-pressed="false"
+                  aria-label="Vua Đá Núi"
+                >
+                  <img
+                    src="../assets/art/ai-v1/portraits/stone.png"
+                    alt=""
+                    width="48"
+                    height="72"
+                    loading="lazy"
+                  />
+                </button>
+                <button
+                  type="button"
+                  data-king="arcane"
+                  aria-pressed="false"
+                  aria-label="Vua Phép Thuật"
+                >
+                  <img
+                    src="../assets/art/ai-v1/portraits/arcane.png"
+                    alt=""
+                    width="48"
+                    height="72"
+                    loading="lazy"
+                  />
+                </button>
+                <button
+                  type="button"
+                  data-king="grove"
+                  aria-pressed="false"
+                  aria-label="Vua Rừng Xanh"
+                >
+                  <img
+                    src="../assets/art/ai-v1/portraits/grove.png"
+                    alt=""
+                    width="48"
+                    height="72"
+                    loading="lazy"
+                  />
+                </button>
+                <button
+                  type="button"
+                  data-king="tide"
+                  aria-pressed="false"
+                  aria-label="Vua Thuỷ Triều"
+                >
+                  <img
+                    src="../assets/art/ai-v1/portraits/tide.png"
+                    alt=""
+                    width="48"
+                    height="72"
+                    loading="lazy"
+                  />
+                </button>
+                <button
+                  type="button"
+                  data-king="forge"
+                  aria-pressed="false"
+                  aria-label="Vua Lò Rèn"
+                >
+                  <img
+                    src="../assets/art/ai-v1/portraits/forge.png"
+                    alt=""
+                    width="48"
+                    height="72"
+                    loading="lazy"
+                  />
+                </button>
+                <button
+                  type="button"
+                  data-king="clock"
+                  aria-pressed="false"
+                  aria-label="Vua Đồng Hồ"
+                >
+                  <img
+                    src="../assets/art/ai-v1/portraits/clock.png"
+                    alt=""
+                    width="48"
+                    height="72"
+                    loading="lazy"
+                  />
+                </button>
+                <button
+                  type="button"
+                  data-king="moon"
+                  aria-pressed="false"
+                  aria-label="Vua Ánh Trăng"
+                >
+                  <img
+                    src="../assets/art/ai-v1/portraits/moon.png"
+                    alt=""
+                    width="48"
+                    height="72"
+                    loading="lazy"
+                  />
+                </button>
+                <button
+                  type="button"
+                  data-king="nomad"
+                  aria-pressed="false"
+                  aria-label="Vua Du Mục"
+                >
+                  <img
+                    src="../assets/art/ai-v1/portraits/nomad.png"
+                    alt=""
+                    width="48"
+                    height="72"
+                    loading="lazy"
+                  />
+                </button>
+              </div>
+              <div class="king-story" aria-live="polite" aria-atomic="true">
+                <p id="king-trait" class="king-trait">Đồng ruộng &amp; đoàn quân</p>
+                <h3 id="king-name">Vua Lúa Mì</h3>
+                <p id="king-description">
+                  Một vương quốc lớn lên từ những mùa gặt. Biến ruộng đồng thành nguồn vàng, rồi dẫn
+                  đội quân nông dân đông đảo bảo vệ từng tấc đất.
+                </p>
+                <dl class="king-strengths">
+                  <div>
+                    <dt>Thế mạnh</dt>
+                    <dd id="king-strength">Kinh tế và quân số</dd>
+                  </div>
+                  <div>
+                    <dt>Phong cách</dt>
+                    <dd id="king-style">Tích lũy, phát triển, áp đảo</dd>
+                  </div>
+                </dl>
+              </div>
+              <p class="gallery-note">
+                Chọn một chân dung để khám phá. Các vua được mở khóa dần trong game.
+              </p>
+              <noscript
+                ><p class="gallery-note">
+                  Bật JavaScript để xem giới thiệu từng vua. Bạn vẫn có thể đọc cách chơi và mở game
+                  từ trang này.
+                </p></noscript
+              >
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <section id="cau-chuyen" class="paper-section section-pad" aria-labelledby="project-title">
+        <div class="wrap project-layout">
+          <div class="project-copy">
+            <p class="section-label">
+              <svg aria-hidden="true"><use href="#spark" /></svg> Câu chuyện của dự án
+            </p>
+            <h2 id="project-title">Nhỏ trên bản đồ.<br />Sâu trong từng lựa chọn.</h2>
+            <p>
+              Crowned Kingdoms bắt đầu từ một ý tưởng: điều gì xảy ra khi niềm vui xây dựng một
+              vương quốc gặp sự bất ngờ của thẻ bài?
+            </p>
+            <p>
+              Câu trả lời là một web game pixel art, nơi bạn có thời gian để suy tính trước mỗi
+              trận, rồi nhìn những quyết định của mình trở thành một đội quân sống động.
+            </p>
+            <div class="project-tags" aria-label="Công nghệ của dự án">
+              <span>Phaser 4</span><span>TypeScript</span><span>Pixel art 2.5D</span
+              ><span>Web-first</span>
+            </div>
+          </div>
+          <div class="project-features">
+            <article>
+              <span class="feature-symbol" aria-hidden="true">♜</span>
+              <div>
+                <h3>Một triều đại có thăng trầm</h3>
+                <p>
+                  Hội đồng, sắc lệnh, nhiệm vụ và ba cột mốc boss. Ba mươi năm không chỉ là ba mươi
+                  trận đánh.
+                </p>
+              </div>
+            </article>
+            <article>
+              <span class="feature-symbol" aria-hidden="true">♛</span>
+              <div>
+                <h3>Mỗi lần chơi đều để lại điều gì đó</h3>
+                <p>
+                  Tích lũy Điểm Vương Miện, tăng thông thạo và mở thêm vua, đặc quyền cùng những thử
+                  thách mới.
+                </p>
+              </div>
+            </article>
+            <article>
+              <span class="feature-symbol infinity" aria-hidden="true">∞</span>
+              <div>
+                <h3>Qua năm 30, câu chuyện vẫn tiếp tục</h3>
+                <p>
+                  Mở khóa Vô tận để xây trên bàn 7 × 7, nhận phúc lành và thử xem vương quốc của bạn
+                  đi được bao xa.
+                </p>
+              </div>
+            </article>
+          </div>
+        </div>
+      </section>
+
+      <section class="faq-section section-pad wrap" aria-labelledby="faq-title">
+        <div>
+          <p class="section-label">
+            <svg aria-hidden="true"><use href="#spark" /></svg> Trước khi lên ngôi
+          </p>
+          <h2 id="faq-title">Một vài điều<br />bạn muốn biết.</h2>
+        </div>
+        <div class="faq-list">
+          <details>
+            <summary>
+              Tôi có cần tải hay cài đặt game không?<span aria-hidden="true">+</span>
+            </summary>
+            <p>
+              Không. Bấm “Chơi ngay” để mở game trực tiếp trong trình duyệt. Trên trình duyệt hỗ trợ
+              PWA, bạn cũng có thể cài game để mở lại thuận tiện hơn.
+            </p>
+          </details>
+          <details>
+            <summary>Game có lưu tiến trình không?<span aria-hidden="true">+</span></summary>
+            <p>
+              Có. Game tự lưu trên trình duyệt đang dùng và hỗ trợ các bản lưu có tên. Nếu tải lại
+              giữa trận, trận đó bắt đầu lại với cùng đội hình. Dữ liệu chưa đồng bộ giữa thiết bị;
+              xóa dữ liệu trang web cũng sẽ xóa bản lưu.
+            </p>
+          </details>
+          <details>
+            <summary>
+              Tôi có phải thao tác nhanh trong trận không?<span aria-hidden="true">+</span>
+            </summary>
+            <p>
+              Quân đội chiến đấu tự động. Bạn tập trung vào thẻ bài, công trình và đội hình trước
+              trận; trong trận có thể dùng Can Thiệp, đổi tốc độ hoặc tạm dừng.
+            </p>
+          </details>
+          <details>
+            <summary>Nên bắt đầu trên thiết bị nào?<span aria-hidden="true">+</span></summary>
+            <p>
+              Máy tính với chuột là lựa chọn phù hợp để khám phá bàn cờ, kéo thả thẻ và đọc thông
+              tin công trình. Game có bố cục cảm ứng; trải nghiệm và hiệu năng trên điện thoại vẫn
+              đang được hoàn thiện.
+            </p>
+          </details>
+        </div>
+      </section>
+
+      <section class="final-invitation" aria-labelledby="invitation-title">
+        <img
+          src="../assets/art/ai-v1/menu/hills_mid.png"
+          alt=""
+          class="closing-landscape"
+          width="256"
+          height="90"
+          loading="lazy"
+        />
+        <div class="wrap invitation-content">
+          <svg class="invitation-crown" aria-hidden="true"><use href="#crown" /></svg>
+          <p>Ngai vàng còn trống.</p>
+          <h2 id="invitation-title">Triều đại tiếp theo<br />mang dấu ấn của bạn.</h2>
+          <a class="button" href="../"
+            >Bắt đầu trị vì <svg aria-hidden="true"><use href="#arrow" /></svg></a
+          ><span class="play-note">Mở trình duyệt. Chọn một vị vua. Viết nên câu chuyện.</span>
+        </div>
+      </section>
+    </main>
+
+    <footer class="site-footer wrap">
+      <a class="brand" href="#" aria-label="Crowned Kingdoms, đầu trang"
+        ><svg width="28" height="28" aria-hidden="true"><use href="#crown" /></svg
+        ><span>Crowned Kingdoms</span></a
+      >
+      <p>Một vương quốc nhỏ, được xây bằng những ý tưởng lớn.</p>
+      <a href="#noi-dung">Về đầu trang <span aria-hidden="true">↑</span></a>
+    </footer>
+    <script type="module" src="../src/portfolio/main.ts"></script>
+  </body>
+</html>
