@@ -10,7 +10,7 @@ import type { RunState } from '../game/run/state';
 import { CONTENT } from '../game/cards/registry';
 import type { GameEvents } from '../game/events';
 import type { RunController } from '../game/run/RunController';
-import { SPRITES_KEY, iconFrame } from '../render/atlas';
+import { SPRITES_KEY, frameDensityFactor, iconFrame } from '../render/atlas';
 import { ToastStack } from '../ui/ToastStack';
 import { Tooltip } from '../ui/Tooltip';
 import {
@@ -226,14 +226,14 @@ export class BattleHudScene extends Phaser.Scene {
     const tex = this.textures;
     this.livesIcon =
       tex.exists(SPRITES_KEY) && tex.get(SPRITES_KEY).has(iconFrame('crown'))
-        ? this.add.image(0, 0, SPRITES_KEY, iconFrame('crown')).setScale(2).setOrigin(0, 0.5)
+        ? this.add.image(0, 0, SPRITES_KEY, iconFrame('crown')).setScale(2 * frameDensityFactor(iconFrame('crown'))).setOrigin(0, 0.5)
         : null;
     this.livesText = addUiText(this, 0, 0, '', 18).setOrigin(0, 0.5).setFontStyle('bold');
     // Gold, right of the lives (as in planning).
     this.goldBox = createPanel(this, 'panel', this.lay.gold.w, this.lay.gold.h);
     this.goldIcon =
       tex.exists(SPRITES_KEY) && tex.get(SPRITES_KEY).has(iconFrame('gold'))
-        ? this.add.image(0, 0, SPRITES_KEY, iconFrame('gold')).setScale(2).setOrigin(0, 0.5)
+        ? this.add.image(0, 0, SPRITES_KEY, iconFrame('gold')).setScale(2 * frameDensityFactor(iconFrame('gold'))).setOrigin(0, 0.5)
         : null;
     this.goldText = addUiText(this, 0, 0, '', 18).setOrigin(0, 0.5).setFontStyle('bold');
 
@@ -283,7 +283,7 @@ export class BattleHudScene extends Phaser.Scene {
       height: this.lay.intervene.h,
       fontSize: 11,
       icon: tex.exists(SPRITES_KEY)
-        ? { key: SPRITES_KEY, frame: iconFrame('boulder'), scale: 2 }
+        ? { key: SPRITES_KEY, frame: iconFrame('boulder'), scale: 2 * frameDensityFactor(iconFrame('boulder')) }
         : undefined,
       onClick: () => this.toggleAim(),
       tooltip: tip([

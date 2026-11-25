@@ -29522,6 +29522,188 @@ L4x216 copy (2026-11-10) made by tools/prepare_king_portraits.py --size 144x216 
     finalSize: 96x70
     anchor: feet
     notes: HiDPI twin of public/assets/art/ai-v1/frost_mage_foe_5.png: same approved source and pipeline at 4 art px per world unit, exactly 2x its twin (same footprint and anchor), by docs/art-review/g3e/units/make_poses.py --export --density 4 (11/11/2026); loaded instead of the twin at display density >= 2 and drawn at 0.25 (src/render/imageArt.ts IMAGE_ART_HD_FILES). Twin: Arcane frost_mage (Pháp Sư Băng) foe recolour, pose 5 (attack 1); reduced and outlined by docs/art-review/g3e/units/make_poses.py --export (approved 2026-11-09 by Claude under the owner's delegation); drawn at scale 0.5 (src/render/imageArt.ts)
+  - id: fx_arrow_e_image_hd
+    path: public/assets/art/ai-v1-hd/fx/fx_arrow_e.png
+    category: fx
+    origin: custom
+    source: docs/art-review/g5/fx/arrows/source.png
+    creator: Project owner (OpenAI imagegen via Codex; prompt beside the source)
+    license: project-owned
+    attribution: false
+    redistribute: true
+    evidence: docs/art-review/g5/fx/arrows/preview.png
+    modified: true
+    nativeSize: 1024x1024 sheet
+    finalSize: 32x32
+    notes: HiDPI twin of public/assets/art/ai-v1/fx/fx_arrow_e.png: same approved source and pipeline at twice the pixels, exactly 2x its twin, by docs/art-review/g5/fx/make_arrows.py --density 2 (11/11/2026); loaded instead of the twin at display density >= 2, packed into the sprites atlas and drawn at half its scale (src/render/imageArt.ts IMAGE_ART_HD_ICONS / IMAGE_ART_HD_FX, src/render/atlas.ts frameDensityFactor), so its size on screen is unchanged. Twin: Arrow in flight, direction e (approved 2026-11-09 by Claude under the owner's delegation); cut from the 3x3 sheet by docs/art-review/g5/fx/make_arrows.py (src/render/imageArt.ts IMAGE_FX)
+  - id: fx_arrow_n_image_hd
+    path: public/assets/art/ai-v1-hd/fx/fx_arrow_n.png
+    category: fx
+    origin: custom
+    source: docs/art-review/g5/fx/arrows/source.png
+    creator: Project owner (OpenAI imagegen via Codex; prompt beside the source)
+    license: project-owned
+    attribution: false
+    redistribute: true
+    evidence: docs/art-review/g5/fx/arrows/preview.png
+    modified: true
+    nativeSize: 1024x1024 sheet
+    finalSize: 32x32
+    notes: HiDPI twin of public/assets/art/ai-v1/fx/fx_arrow_n.png: same approved source and pipeline at twice the pixels, exactly 2x its twin, by docs/art-review/g5/fx/make_arrows.py --density 2 (11/11/2026); loaded instead of the twin at display density >= 2, packed into the sprites atlas and drawn at half its scale (src/render/imageArt.ts IMAGE_ART_HD_ICONS / IMAGE_ART_HD_FX, src/render/atlas.ts frameDensityFactor), so its size on screen is unchanged. Twin: Arrow in flight, direction n (approved 2026-11-09 by Claude under the owner's delegation); cut from the 3x3 sheet by docs/art-review/g5/fx/make_arrows.py (src/render/imageArt.ts IMAGE_FX)
+  - id: fx_arrow_ne_image_hd
+    path: public/assets/art/ai-v1-hd/fx/fx_arrow_ne.png
+    category: fx
+    origin: custom
+    source: docs/art-review/g5/fx/arrows/source.png
+    creator: Project owner (OpenAI imagegen via Codex; prompt beside the source)
+    license: project-owned
+    attribution: false
+    redistribute: true
+    evidence: docs/art-review/g5/fx/arrows/preview.png
+    modified: true
+    nativeSize: 1024x1024 sheet
+    finalSize: 32x32
+    notes: HiDPI twin of public/assets/art/ai-v1/fx/fx_arrow_ne.png: same approved source and pipeline at twice the pixels, exactly 2x its twin, by docs/art-review/g5/fx/make_arrows.py --density 2 (11/11/2026); loaded instead of the twin at display density >= 2, packed into the sprites atlas and drawn at half its scale (src/render/imageArt.ts IMAGE_ART_HD_ICONS / IMAGE_ART_HD_FX, src/render/atlas.ts frameDensityFactor), so its size on screen is unchanged. Twin: Arrow in flight, direction ne (approved 2026-11-09 by Claude under the owner's delegation); cut from the 3x3 sheet by docs/art-review/g5/fx/make_arrows.py (src/render/imageArt.ts IMAGE_FX)
+  - id: fx_arrow_nw_image_hd
+    path: public/assets/art/ai-v1-hd/fx/fx_arrow_nw.png
+    category: fx
+    origin: custom
+    source: docs/art-review/g5/fx/arrows/source.png
+    creator: Project owner (OpenAI imagegen via Codex; prompt beside the source)
+    license: project-owned
+    attribution: false
+    redistribute: true
+    evidence: docs/art-review/g5/fx/arrows/preview.png
+    modified: true
+    nativeSize: 1024x1024 sheet
+    finalSize: 32x32
+    notes: HiDPI twin of public/assets/art/ai-v1/fx/fx_arrow_nw.png: same approved source and pipeline at twice the pixels, exactly 2x its twin, by docs/art-review/g5/fx/make_arrows.py --density 2 (11/11/2026); loaded instead of the twin at display density >= 2, packed into the sprites atlas and drawn at half its scale (src/render/imageArt.ts IMAGE_ART_HD_ICONS / IMAGE_ART_HD_FX, src/render/atlas.ts frameDensityFactor), so its size on screen is unchanged. Twin: Arrow in flight, direction nw (approved 2026-11-09 by Claude under the owner's delegation); cut from the 3x3 sheet by docs/art-review/g5/fx/make_arrows.py (src/render/imageArt.ts IMAGE_FX)
+  - id: fx_arrow_s_image_hd
+    path: public/assets/art/ai-v1-hd/fx/fx_arrow_s.png
+    category: fx
+    origin: custom
+    source: docs/art-review/g5/fx/arrows/source.png
+    creator: Project owner (OpenAI imagegen via Codex; prompt beside the source)
+    license: project-owned
+    attribution: false
+    redistribute: true
+    evidence: docs/art-review/g5/fx/arrows/preview.png
+    modified: true
+    nativeSize: 1024x1024 sheet
+    finalSize: 32x32
+    notes: HiDPI twin of public/assets/art/ai-v1/fx/fx_arrow_s.png: same approved source and pipeline at twice the pixels, exactly 2x its twin, by docs/art-review/g5/fx/make_arrows.py --density 2 (11/11/2026); loaded instead of the twin at display density >= 2, packed into the sprites atlas and drawn at half its scale (src/render/imageArt.ts IMAGE_ART_HD_ICONS / IMAGE_ART_HD_FX, src/render/atlas.ts frameDensityFactor), so its size on screen is unchanged. Twin: Arrow in flight, direction s (approved 2026-11-09 by Claude under the owner's delegation); cut from the 3x3 sheet by docs/art-review/g5/fx/make_arrows.py (src/render/imageArt.ts IMAGE_FX)
+  - id: fx_arrow_se_image_hd
+    path: public/assets/art/ai-v1-hd/fx/fx_arrow_se.png
+    category: fx
+    origin: custom
+    source: docs/art-review/g5/fx/arrows/source.png
+    creator: Project owner (OpenAI imagegen via Codex; prompt beside the source)
+    license: project-owned
+    attribution: false
+    redistribute: true
+    evidence: docs/art-review/g5/fx/arrows/preview.png
+    modified: true
+    nativeSize: 1024x1024 sheet
+    finalSize: 32x32
+    notes: HiDPI twin of public/assets/art/ai-v1/fx/fx_arrow_se.png: same approved source and pipeline at twice the pixels, exactly 2x its twin, by docs/art-review/g5/fx/make_arrows.py --density 2 (11/11/2026); loaded instead of the twin at display density >= 2, packed into the sprites atlas and drawn at half its scale (src/render/imageArt.ts IMAGE_ART_HD_ICONS / IMAGE_ART_HD_FX, src/render/atlas.ts frameDensityFactor), so its size on screen is unchanged. Twin: Arrow in flight, direction se (approved 2026-11-09 by Claude under the owner's delegation); cut from the 3x3 sheet by docs/art-review/g5/fx/make_arrows.py (src/render/imageArt.ts IMAGE_FX)
+  - id: fx_arrow_sw_image_hd
+    path: public/assets/art/ai-v1-hd/fx/fx_arrow_sw.png
+    category: fx
+    origin: custom
+    source: docs/art-review/g5/fx/arrows/source.png
+    creator: Project owner (OpenAI imagegen via Codex; prompt beside the source)
+    license: project-owned
+    attribution: false
+    redistribute: true
+    evidence: docs/art-review/g5/fx/arrows/preview.png
+    modified: true
+    nativeSize: 1024x1024 sheet
+    finalSize: 32x32
+    notes: HiDPI twin of public/assets/art/ai-v1/fx/fx_arrow_sw.png: same approved source and pipeline at twice the pixels, exactly 2x its twin, by docs/art-review/g5/fx/make_arrows.py --density 2 (11/11/2026); loaded instead of the twin at display density >= 2, packed into the sprites atlas and drawn at half its scale (src/render/imageArt.ts IMAGE_ART_HD_ICONS / IMAGE_ART_HD_FX, src/render/atlas.ts frameDensityFactor), so its size on screen is unchanged. Twin: Arrow in flight, direction sw (approved 2026-11-09 by Claude under the owner's delegation); cut from the 3x3 sheet by docs/art-review/g5/fx/make_arrows.py (src/render/imageArt.ts IMAGE_FX)
+  - id: fx_arrow_w_image_hd
+    path: public/assets/art/ai-v1-hd/fx/fx_arrow_w.png
+    category: fx
+    origin: custom
+    source: docs/art-review/g5/fx/arrows/source.png
+    creator: Project owner (OpenAI imagegen via Codex; prompt beside the source)
+    license: project-owned
+    attribution: false
+    redistribute: true
+    evidence: docs/art-review/g5/fx/arrows/preview.png
+    modified: true
+    nativeSize: 1024x1024 sheet
+    finalSize: 32x32
+    notes: HiDPI twin of public/assets/art/ai-v1/fx/fx_arrow_w.png: same approved source and pipeline at twice the pixels, exactly 2x its twin, by docs/art-review/g5/fx/make_arrows.py --density 2 (11/11/2026); loaded instead of the twin at display density >= 2, packed into the sprites atlas and drawn at half its scale (src/render/imageArt.ts IMAGE_ART_HD_ICONS / IMAGE_ART_HD_FX, src/render/atlas.ts frameDensityFactor), so its size on screen is unchanged. Twin: Arrow in flight, direction w (approved 2026-11-09 by Claude under the owner's delegation); cut from the 3x3 sheet by docs/art-review/g5/fx/make_arrows.py (src/render/imageArt.ts IMAGE_FX)
+  - id: fx_boulder_image_hd
+    path: public/assets/art/ai-v1-hd/fx/fx_boulder.png
+    category: fx
+    origin: custom
+    source: docs/art-review/g5/fx/boulder/source.png
+    creator: Project owner (OpenAI imagegen via Codex; prompt in docs/art-review/g5/fx/boulder/prompt.md)
+    license: project-owned
+    attribution: false
+    redistribute: true
+    evidence: docs/art-review/g5/fx/sheet.png
+    modified: true
+    nativeSize: 1024x1024
+    finalSize: 64x64
+    notes: HiDPI twin of public/assets/art/ai-v1/fx/fx_boulder.png: same approved source and pipeline at twice the pixels, exactly 2x its twin, by docs/art-review/g5/fx/make_assets.py --density 2 boulder (11/11/2026); loaded instead of the twin at display density >= 2, packed into the sprites atlas and drawn at half its scale (src/render/imageArt.ts IMAGE_ART_HD_ICONS / IMAGE_ART_HD_FX, src/render/atlas.ts frameDensityFactor), so its size on screen is unchanged. Twin: Battle effect "Đá tảng rơi" (approved 2026-11-09 by Claude under the owner's delegation); magenta keyed out and box-reduced by docs/art-review/g5/fx/make_assets.py at 2 art px per world px (src/render/imageArt.ts IMAGE_FX)
+  - id: fx_pulse_image_hd
+    path: public/assets/art/ai-v1-hd/fx/fx_pulse.png
+    category: fx
+    origin: custom
+    source: docs/art-review/g5/fx/pulse/source.png
+    creator: Project owner (OpenAI imagegen via Codex; prompt in docs/art-review/g5/fx/pulse/prompt.md)
+    license: project-owned
+    attribution: false
+    redistribute: true
+    evidence: docs/art-review/g5/fx/sheet.png
+    modified: true
+    nativeSize: 1024x1024
+    finalSize: 64x64
+    notes: HiDPI twin of public/assets/art/ai-v1/fx/fx_pulse.png: same approved source and pipeline at twice the pixels, exactly 2x its twin, by docs/art-review/g5/fx/make_assets.py --density 2 pulse (11/11/2026); loaded instead of the twin at display density >= 2, packed into the sprites atlas and drawn at half its scale (src/render/imageArt.ts IMAGE_ART_HD_ICONS / IMAGE_ART_HD_FX, src/render/atlas.ts frameDensityFactor), so its size on screen is unchanged. Twin: Battle effect "Xung lực công trình" (approved 2026-11-09 by Claude under the owner's delegation); magenta keyed out and box-reduced by docs/art-review/g5/fx/make_assets.py at 2 art px per world px (src/render/imageArt.ts IMAGE_FX)
+  - id: fx_shield_image_hd
+    path: public/assets/art/ai-v1-hd/fx/fx_shield.png
+    category: fx
+    origin: custom
+    source: docs/art-review/g5/fx/shield/source.png
+    creator: Project owner (OpenAI imagegen via Codex; prompt in docs/art-review/g5/fx/shield/prompt.md)
+    license: project-owned
+    attribution: false
+    redistribute: true
+    evidence: docs/art-review/g5/fx/sheet.png
+    modified: true
+    nativeSize: 1024x1024
+    finalSize: 64x64
+    notes: HiDPI twin of public/assets/art/ai-v1/fx/fx_shield.png: same approved source and pipeline at twice the pixels, exactly 2x its twin, by docs/art-review/g5/fx/make_assets.py --density 2 shield (11/11/2026); loaded instead of the twin at display density >= 2, packed into the sprites atlas and drawn at half its scale (src/render/imageArt.ts IMAGE_ART_HD_ICONS / IMAGE_ART_HD_FX, src/render/atlas.ts frameDensityFactor), so its size on screen is unchanged. Twin: Battle effect "Khiên bảo hộ (lòng khoét trong suốt)" (approved 2026-11-09 by Claude under the owner's delegation); magenta keyed out and box-reduced by docs/art-review/g5/fx/make_assets.py at 2 art px per world px (src/render/imageArt.ts IMAGE_FX)
+  - id: fx_spark_image_hd
+    path: public/assets/art/ai-v1-hd/fx/fx_spark.png
+    category: fx
+    origin: custom
+    source: docs/art-review/g5/fx/spark/source.png
+    creator: Project owner (OpenAI imagegen via Codex; prompt in docs/art-review/g5/fx/spark/prompt.md)
+    license: project-owned
+    attribution: false
+    redistribute: true
+    evidence: docs/art-review/g5/fx/sheet.png
+    modified: true
+    nativeSize: 1024x1024
+    finalSize: 16x16
+    notes: HiDPI twin of public/assets/art/ai-v1/fx/fx_spark.png: same approved source and pipeline at twice the pixels, exactly 2x its twin, by docs/art-review/g5/fx/make_assets.py --density 2 spark (11/11/2026); loaded instead of the twin at display density >= 2, packed into the sprites atlas and drawn at half its scale (src/render/imageArt.ts IMAGE_ART_HD_ICONS / IMAGE_ART_HD_FX, src/render/atlas.ts frameDensityFactor), so its size on screen is unchanged. Twin: Battle effect "Tia lửa trúng đòn" (approved 2026-11-09 by Claude under the owner's delegation); magenta keyed out and box-reduced by docs/art-review/g5/fx/make_assets.py at 2 art px per world px (src/render/imageArt.ts IMAGE_FX)
+  - id: fx_stun_image_hd
+    path: public/assets/art/ai-v1-hd/fx/fx_stun.png
+    category: fx
+    origin: custom
+    source: docs/art-review/g5/fx/stun/source.png
+    creator: Project owner (OpenAI imagegen via Codex; prompt in docs/art-review/g5/fx/stun/prompt.md)
+    license: project-owned
+    attribution: false
+    redistribute: true
+    evidence: docs/art-review/g5/fx/sheet.png
+    modified: true
+    nativeSize: 1024x1024
+    finalSize: 32x32
+    notes: HiDPI twin of public/assets/art/ai-v1/fx/fx_stun.png: same approved source and pipeline at twice the pixels, exactly 2x its twin, by docs/art-review/g5/fx/make_assets.py --density 2 stun (11/11/2026); loaded instead of the twin at display density >= 2, packed into the sprites atlas and drawn at half its scale (src/render/imageArt.ts IMAGE_ART_HD_ICONS / IMAGE_ART_HD_FX, src/render/atlas.ts frameDensityFactor), so its size on screen is unchanged. Twin: Battle effect "Sao choáng" (approved 2026-11-09 by Claude under the owner's delegation); magenta keyed out and box-reduced by docs/art-review/g5/fx/make_assets.py at 2 art px per world px (src/render/imageArt.ts IMAGE_FX)
   - id: world_ai_v1_gear_gunner_0_hd
     path: public/assets/art/ai-v1-hd/gear_gunner_0.png
     category: unit
@@ -30520,6 +30702,20 @@ L4x216 copy (2026-11-10) made by tools/prepare_king_portraits.py --size 144x216 
     nativeSize: 1254x1254
     finalSize: 64x64
     notes: HiDPI twin of public/assets/art/ai-v1/icons/icon_attack.png: same approved source and pipeline at twice the pixels, exactly 2x its twin, by docs/art-review/g3e/icons/make_assets.py --density 2 (11/11/2026); loaded beside the twin at display density >= 2 and drawn at half its scale, so its logical size is unchanged (src/render/hudArtHd.ts). Twin: Stat icon (approved 2026-11-10 by Claude under the owner's delegation, docs/art-review/g3e/icons/review-2026-11-10.md); magenta keyed out and box-reduced by docs/art-review/g3e/icons/make_assets.py; 32 px copy; registered 2026-11-11 (shipped earlier without an entry)
+  - id: icon_boulder_16_hd
+    path: public/assets/art/ai-v1-hd/icons/icon_boulder-16.png
+    category: icon
+    origin: custom
+    source: docs/art-review/g3e/icons/icon_boulder/source.png
+    creator: Project owner (OpenAI imagegen via Codex; prompt in docs/art-review/g3e/icons/icon_boulder/prompt.md)
+    license: project-owned
+    attribution: false
+    redistribute: true
+    evidence: docs/art-review/g3e/icons/icon_boulder/preview.png
+    modified: true
+    nativeSize: 1024x1024
+    finalSize: 32x32
+    notes: HiDPI twin of public/assets/art/ai-v1/icons/icon_boulder-16.png: same approved source and pipeline at twice the pixels, exactly 2x its twin, by docs/art-review/g3e/icons/make_assets.py --density 2 icon_boulder (11/11/2026); loaded instead of the twin at display density >= 2, packed into the sprites atlas and drawn at half its scale (src/render/imageArt.ts IMAGE_ART_HD_ICONS / IMAGE_ART_HD_FX, src/render/atlas.ts frameDensityFactor), so its size on screen is unchanged. Twin: Đá Tảng icon (approved 2026-11-09 by Claude under the owner's delegation); magenta keyed out and box-reduced by docs/art-review/g3e/icons/make_assets.py; 16 px frame in the world atlas (src/render/imageArt.ts IMAGE_ICONS)
   - id: icon_burn_16_hd
     path: public/assets/art/ai-v1-hd/icons/icon_burn-16.png
     category: icon
@@ -30548,6 +30744,20 @@ L4x216 copy (2026-11-10) made by tools/prepare_king_portraits.py --size 144x216 
     nativeSize: 1254x1254
     finalSize: 64x64
     notes: HiDPI twin of public/assets/art/ai-v1/icons/icon_burn.png: same approved source and pipeline at twice the pixels, exactly 2x its twin, by docs/art-review/g3e/icons/make_assets.py --density 2 (11/11/2026); loaded beside the twin at display density >= 2 and drawn at half its scale, so its logical size is unchanged (src/render/hudArtHd.ts). Twin: Stat icon (approved 2026-11-10 by Claude under the owner's delegation, docs/art-review/g3e/icons/review-2026-11-10.md); magenta keyed out and box-reduced by docs/art-review/g3e/icons/make_assets.py; 32 px copy; registered 2026-11-11 (shipped earlier without an entry)
+  - id: icon_conquer_16_hd
+    path: public/assets/art/ai-v1-hd/icons/icon_conquer-16.png
+    category: icon
+    origin: custom
+    source: docs/art-review/g3e/icons/icon_conquer/source.png
+    creator: Project owner (OpenAI imagegen via Codex; prompt in docs/art-review/g3e/icons/icon_conquer/prompt.md)
+    license: project-owned
+    attribution: false
+    redistribute: true
+    evidence: docs/art-review/g3e/icons/icon_conquer/preview.png
+    modified: true
+    nativeSize: 1024x1024
+    finalSize: 32x32
+    notes: HiDPI twin of public/assets/art/ai-v1/icons/icon_conquer-16.png: same approved source and pipeline at twice the pixels, exactly 2x its twin, by docs/art-review/g3e/icons/make_assets.py --density 2 icon_conquer (11/11/2026); loaded instead of the twin at display density >= 2, packed into the sprites atlas and drawn at half its scale (src/render/imageArt.ts IMAGE_ART_HD_ICONS / IMAGE_ART_HD_FX, src/render/atlas.ts frameDensityFactor), so its size on screen is unchanged. Twin: Chinh phục icon (approved 2026-11-09 by Claude under the owner's delegation); magenta keyed out and box-reduced by docs/art-review/g3e/icons/make_assets.py; 16 px frame in the world atlas (src/render/imageArt.ts IMAGE_ICONS)
   - id: icon_cooldown_16_hd
     path: public/assets/art/ai-v1-hd/icons/icon_cooldown-16.png
     category: icon
@@ -30576,6 +30786,20 @@ L4x216 copy (2026-11-10) made by tools/prepare_king_portraits.py --size 144x216 
     nativeSize: 1254x1254
     finalSize: 64x64
     notes: HiDPI twin of public/assets/art/ai-v1/icons/icon_cooldown.png: same approved source and pipeline at twice the pixels, exactly 2x its twin, by docs/art-review/g3e/icons/make_assets.py --density 2 (11/11/2026); loaded beside the twin at display density >= 2 and drawn at half its scale, so its logical size is unchanged (src/render/hudArtHd.ts). Twin: Stat icon (approved 2026-11-10 by Claude under the owner's delegation, docs/art-review/g3e/icons/review-2026-11-10.md); magenta keyed out and box-reduced by docs/art-review/g3e/icons/make_assets.py; 32 px copy; registered 2026-11-11 (shipped earlier without an entry)
+  - id: icon_crown_16_hd
+    path: public/assets/art/ai-v1-hd/icons/icon_crown-16.png
+    category: icon
+    origin: custom
+    source: docs/art-review/g3e/icons/icon_crown/source.png
+    creator: Project owner (OpenAI imagegen via Codex; prompt in docs/art-review/g3e/icons/icon_crown/prompt.md)
+    license: project-owned
+    attribution: false
+    redistribute: true
+    evidence: docs/art-review/g3e/icons/icon_crown/preview.png
+    modified: true
+    nativeSize: 1024x1024
+    finalSize: 32x32
+    notes: HiDPI twin of public/assets/art/ai-v1/icons/icon_crown-16.png: same approved source and pipeline at twice the pixels, exactly 2x its twin, by docs/art-review/g3e/icons/make_assets.py --density 2 icon_crown (11/11/2026); loaded instead of the twin at display density >= 2, packed into the sprites atlas and drawn at half its scale (src/render/imageArt.ts IMAGE_ART_HD_ICONS / IMAGE_ART_HD_FX, src/render/atlas.ts frameDensityFactor), so its size on screen is unchanged. Twin: Vương Miện icon (approved 2026-11-09 by Claude under the owner's delegation); magenta keyed out and box-reduced by docs/art-review/g3e/icons/make_assets.py; 16 px frame in the world atlas (src/render/imageArt.ts IMAGE_ICONS)
   - id: icon_decree_16_hd
     path: public/assets/art/ai-v1-hd/icons/icon_decree-16.png
     category: icon
@@ -30660,6 +30884,20 @@ L4x216 copy (2026-11-10) made by tools/prepare_king_portraits.py --size 144x216 
     nativeSize: 1254x1254
     finalSize: 64x64
     notes: HiDPI twin of public/assets/art/ai-v1/icons/icon_economy.png: same approved source and pipeline at twice the pixels, exactly 2x its twin, by docs/art-review/g3e/icons/make_assets.py --density 2 (11/11/2026); loaded beside the twin at display density >= 2 and drawn at half its scale, so its logical size is unchanged (src/render/hudArtHd.ts). Twin: Stat icon (approved 2026-11-10 by Claude under the owner's delegation, docs/art-review/g3e/icons/review-2026-11-10.md); magenta keyed out and box-reduced by docs/art-review/g3e/icons/make_assets.py; 32 px copy; registered 2026-11-11 (shipped earlier without an entry)
+  - id: icon_enchant_stack_16_hd
+    path: public/assets/art/ai-v1-hd/icons/icon_enchant_stack-16.png
+    category: icon
+    origin: custom
+    source: docs/art-review/g3e/icons/icon_enchant_stack/source.png
+    creator: Project owner (OpenAI imagegen via Codex; prompt in docs/art-review/g3e/icons/icon_enchant_stack/prompt.md)
+    license: project-owned
+    attribution: false
+    redistribute: true
+    evidence: docs/art-review/g3e/icons/icon_enchant_stack/preview.png
+    modified: true
+    nativeSize: 1024x1024
+    finalSize: 32x32
+    notes: HiDPI twin of public/assets/art/ai-v1/icons/icon_enchant_stack-16.png: same approved source and pipeline at twice the pixels, exactly 2x its twin, by docs/art-review/g3e/icons/make_assets.py --density 2 icon_enchant_stack (11/11/2026); loaded instead of the twin at display density >= 2, packed into the sprites atlas and drawn at half its scale (src/render/imageArt.ts IMAGE_ART_HD_ICONS / IMAGE_ART_HD_FX, src/render/atlas.ts frameDensityFactor), so its size on screen is unchanged. Twin: Chồng bùa icon (approved 2026-11-09 by Claude under the owner's delegation); magenta keyed out and box-reduced by docs/art-review/g3e/icons/make_assets.py; 16 px frame in the world atlas (src/render/imageArt.ts IMAGE_ICONS)
   - id: icon_enchantment_16_hd
     path: public/assets/art/ai-v1-hd/icons/icon_enchantment-16.png
     category: icon
@@ -30716,6 +30954,20 @@ L4x216 copy (2026-11-10) made by tools/prepare_king_portraits.py --size 144x216 
     nativeSize: 1254x1254
     finalSize: 64x64
     notes: HiDPI twin of public/assets/art/ai-v1/icons/icon_flying.png: same approved source and pipeline at twice the pixels, exactly 2x its twin, by docs/art-review/g3e/icons/make_assets.py --density 2 (11/11/2026); loaded beside the twin at display density >= 2 and drawn at half its scale, so its logical size is unchanged (src/render/hudArtHd.ts). Twin: Stat icon (approved 2026-11-10 by Claude under the owner's delegation, docs/art-review/g3e/icons/review-2026-11-10.md); magenta keyed out and box-reduced by docs/art-review/g3e/icons/make_assets.py; 32 px copy; registered 2026-11-11 (shipped earlier without an entry)
+  - id: icon_gold_16_hd
+    path: public/assets/art/ai-v1-hd/icons/icon_gold-16.png
+    category: icon
+    origin: custom
+    source: docs/art-review/g3e/icons/icon_gold/source.png
+    creator: Project owner (OpenAI imagegen via Codex; prompt in docs/art-review/g3e/icons/icon_gold/prompt.md)
+    license: project-owned
+    attribution: false
+    redistribute: true
+    evidence: docs/art-review/g3e/icons/icon_gold/preview.png
+    modified: true
+    nativeSize: 1024x1024
+    finalSize: 32x32
+    notes: HiDPI twin of public/assets/art/ai-v1/icons/icon_gold-16.png: same approved source and pipeline at twice the pixels, exactly 2x its twin, by docs/art-review/g3e/icons/make_assets.py --density 2 icon_gold (11/11/2026); loaded instead of the twin at display density >= 2, packed into the sprites atlas and drawn at half its scale (src/render/imageArt.ts IMAGE_ART_HD_ICONS / IMAGE_ART_HD_FX, src/render/atlas.ts frameDensityFactor), so its size on screen is unchanged. Twin: Vàng icon (approved 2026-11-09 by Claude under the owner's delegation); magenta keyed out and box-reduced by docs/art-review/g3e/icons/make_assets.py; 16 px frame in the world atlas (src/render/imageArt.ts IMAGE_ICONS)
   - id: icon_heal_16_hd
     path: public/assets/art/ai-v1-hd/icons/icon_heal-16.png
     category: icon
@@ -30996,6 +31248,20 @@ L4x216 copy (2026-11-10) made by tools/prepare_king_portraits.py --size 144x216 
     nativeSize: 1024x1024
     finalSize: 64x64
     notes: HiDPI twin of public/assets/art/ai-v1/icons/icon_king_wheat.png: same approved source and pipeline at twice the pixels, exactly 2x its twin, by docs/art-review/g3e/icons/make_assets.py --density 2 (11/11/2026); loaded beside the twin at display density >= 2 and drawn at half its scale, so its logical size is unchanged (src/render/hudArtHd.ts). Twin: Wheat king badge (shield with a wheat sheaf) on the year calendar; magenta keyed out and box-reduced by docs/art-review/g3e/icons/make_assets.py (src/ui/realm/kingBadge.ts, 2026-11-06)
+  - id: icon_level_16_hd
+    path: public/assets/art/ai-v1-hd/icons/icon_level-16.png
+    category: icon
+    origin: custom
+    source: docs/art-review/g3e/icons/icon_level/source.png
+    creator: Project owner (OpenAI imagegen via Codex; prompt in docs/art-review/g3e/icons/icon_level/prompt.md)
+    license: project-owned
+    attribution: false
+    redistribute: true
+    evidence: docs/art-review/g3e/icons/icon_level/preview.png
+    modified: true
+    nativeSize: 1024x1024
+    finalSize: 32x32
+    notes: HiDPI twin of public/assets/art/ai-v1/icons/icon_level-16.png: same approved source and pipeline at twice the pixels, exactly 2x its twin, by docs/art-review/g3e/icons/make_assets.py --density 2 icon_level (11/11/2026); loaded instead of the twin at display density >= 2, packed into the sprites atlas and drawn at half its scale (src/render/imageArt.ts IMAGE_ART_HD_ICONS / IMAGE_ART_HD_FX, src/render/atlas.ts frameDensityFactor), so its size on screen is unchanged. Twin: Cấp icon (approved 2026-11-09 by Claude under the owner's delegation); magenta keyed out and box-reduced by docs/art-review/g3e/icons/make_assets.py; 16 px frame in the world atlas (src/render/imageArt.ts IMAGE_ICONS)
   - id: icon_life_16_hd
     path: public/assets/art/ai-v1-hd/icons/icon_life-16.png
     category: icon
@@ -31024,6 +31290,20 @@ L4x216 copy (2026-11-10) made by tools/prepare_king_portraits.py --size 144x216 
     nativeSize: 1254x1254
     finalSize: 64x64
     notes: HiDPI twin of public/assets/art/ai-v1/icons/icon_life.png: same approved source and pipeline at twice the pixels, exactly 2x its twin, by docs/art-review/g3e/icons/make_assets.py --density 2 (11/11/2026); loaded beside the twin at display density >= 2 and drawn at half its scale, so its logical size is unchanged (src/render/hudArtHd.ts). Twin: Stat icon (approved 2026-11-10 by Claude under the owner's delegation, docs/art-review/g3e/icons/review-2026-11-10.md); magenta keyed out and box-reduced by docs/art-review/g3e/icons/make_assets.py; 32 px copy; registered 2026-11-11 (shipped earlier without an entry)
+  - id: icon_lock_16_hd
+    path: public/assets/art/ai-v1-hd/icons/icon_lock-16.png
+    category: icon
+    origin: custom
+    source: docs/art-review/g3e/icons/icon_lock/source.png
+    creator: Project owner (OpenAI imagegen via Codex; prompt in docs/art-review/g3e/icons/icon_lock/prompt.md)
+    license: project-owned
+    attribution: false
+    redistribute: true
+    evidence: docs/art-review/g3e/icons/icon_lock/preview.png
+    modified: true
+    nativeSize: 1024x1024
+    finalSize: 32x32
+    notes: HiDPI twin of public/assets/art/ai-v1/icons/icon_lock-16.png: same approved source and pipeline at twice the pixels, exactly 2x its twin, by docs/art-review/g3e/icons/make_assets.py --density 2 icon_lock (11/11/2026); loaded instead of the twin at display density >= 2, packed into the sprites atlas and drawn at half its scale (src/render/imageArt.ts IMAGE_ART_HD_ICONS / IMAGE_ART_HD_FX, src/render/atlas.ts frameDensityFactor), so its size on screen is unchanged. Twin: Khoá icon (approved 2026-11-09 by Claude under the owner's delegation); magenta keyed out and box-reduced by docs/art-review/g3e/icons/make_assets.py; 16 px frame in the world atlas (src/render/imageArt.ts IMAGE_ICONS)
   - id: icon_move_16_hd
     path: public/assets/art/ai-v1-hd/icons/icon_move-16.png
     category: icon
@@ -31164,6 +31444,20 @@ L4x216 copy (2026-11-10) made by tools/prepare_king_portraits.py --size 144x216 
     nativeSize: 1254x1254
     finalSize: 64x64
     notes: HiDPI twin of public/assets/art/ai-v1/icons/icon_range.png: same approved source and pipeline at twice the pixels, exactly 2x its twin, by docs/art-review/g3e/icons/make_assets.py --density 2 (11/11/2026); loaded beside the twin at display density >= 2 and drawn at half its scale, so its logical size is unchanged (src/render/hudArtHd.ts). Twin: Stat icon (approved 2026-11-10 by Claude under the owner's delegation, docs/art-review/g3e/icons/review-2026-11-10.md); magenta keyed out and box-reduced by docs/art-review/g3e/icons/make_assets.py; 32 px copy; registered 2026-11-11 (shipped earlier without an entry)
+  - id: icon_reroll_16_hd
+    path: public/assets/art/ai-v1-hd/icons/icon_reroll-16.png
+    category: icon
+    origin: custom
+    source: docs/art-review/g3e/icons/icon_reroll/source.png
+    creator: Project owner (OpenAI imagegen via Codex; prompt in docs/art-review/g3e/icons/icon_reroll/prompt.md)
+    license: project-owned
+    attribution: false
+    redistribute: true
+    evidence: docs/art-review/g3e/icons/icon_reroll/preview.png
+    modified: true
+    nativeSize: 1024x1024
+    finalSize: 32x32
+    notes: HiDPI twin of public/assets/art/ai-v1/icons/icon_reroll-16.png: same approved source and pipeline at twice the pixels, exactly 2x its twin, by docs/art-review/g3e/icons/make_assets.py --density 2 icon_reroll (11/11/2026); loaded instead of the twin at display density >= 2, packed into the sprites atlas and drawn at half its scale (src/render/imageArt.ts IMAGE_ART_HD_ICONS / IMAGE_ART_HD_FX, src/render/atlas.ts frameDensityFactor), so its size on screen is unchanged. Twin: Đổi bài icon (approved 2026-11-09 by Claude under the owner's delegation); magenta keyed out and box-reduced by docs/art-review/g3e/icons/make_assets.py; 16 px frame in the world atlas (src/render/imageArt.ts IMAGE_ICONS)
   - id: icon_revive_16_hd
     path: public/assets/art/ai-v1-hd/icons/icon_revive-16.png
     category: icon
@@ -31248,6 +31542,20 @@ L4x216 copy (2026-11-10) made by tools/prepare_king_portraits.py --size 144x216 
     nativeSize: 1254x1254
     finalSize: 64x64
     notes: HiDPI twin of public/assets/art/ai-v1/icons/icon_save.png: same approved source and pipeline at twice the pixels, exactly 2x its twin, by docs/art-review/g3e/icons/make_assets.py --density 2 (11/11/2026); loaded beside the twin at display density >= 2 and drawn at half its scale, so its logical size is unchanged (src/render/hudArtHd.ts). Twin: Stat icon (approved 2026-11-10 by Claude under the owner's delegation, docs/art-review/g3e/icons/review-2026-11-10.md); magenta keyed out and box-reduced by docs/art-review/g3e/icons/make_assets.py; 32 px copy; registered 2026-11-11 (shipped earlier without an entry)
+  - id: icon_sell_16_hd
+    path: public/assets/art/ai-v1-hd/icons/icon_sell-16.png
+    category: icon
+    origin: custom
+    source: docs/art-review/g3e/icons/icon_sell/source.png
+    creator: Project owner (OpenAI imagegen via Codex; prompt in docs/art-review/g3e/icons/icon_sell/prompt.md)
+    license: project-owned
+    attribution: false
+    redistribute: true
+    evidence: docs/art-review/g3e/icons/icon_sell/preview.png
+    modified: true
+    nativeSize: 1024x1024
+    finalSize: 32x32
+    notes: HiDPI twin of public/assets/art/ai-v1/icons/icon_sell-16.png: same approved source and pipeline at twice the pixels, exactly 2x its twin, by docs/art-review/g3e/icons/make_assets.py --density 2 icon_sell (11/11/2026); loaded instead of the twin at display density >= 2, packed into the sprites atlas and drawn at half its scale (src/render/imageArt.ts IMAGE_ART_HD_ICONS / IMAGE_ART_HD_FX, src/render/atlas.ts frameDensityFactor), so its size on screen is unchanged. Twin: Bán bài icon (approved 2026-11-09 by Claude under the owner's delegation); magenta keyed out and box-reduced by docs/art-review/g3e/icons/make_assets.py; 16 px frame in the world atlas (src/render/imageArt.ts IMAGE_ICONS)
   - id: icon_shield_16_hd
     path: public/assets/art/ai-v1-hd/icons/icon_shield-16.png
     category: icon
@@ -31276,6 +31584,20 @@ L4x216 copy (2026-11-10) made by tools/prepare_king_portraits.py --size 144x216 
     nativeSize: 1254x1254
     finalSize: 64x64
     notes: HiDPI twin of public/assets/art/ai-v1/icons/icon_shield.png: same approved source and pipeline at twice the pixels, exactly 2x its twin, by docs/art-review/g3e/icons/make_assets.py --density 2 (11/11/2026); loaded beside the twin at display density >= 2 and drawn at half its scale, so its logical size is unchanged (src/render/hudArtHd.ts). Twin: Stat icon (approved 2026-11-10 by Claude under the owner's delegation, docs/art-review/g3e/icons/review-2026-11-10.md); magenta keyed out and box-reduced by docs/art-review/g3e/icons/make_assets.py; 32 px copy; registered 2026-11-11 (shipped earlier without an entry)
+  - id: icon_skull_16_hd
+    path: public/assets/art/ai-v1-hd/icons/icon_skull-16.png
+    category: icon
+    origin: custom
+    source: docs/art-review/g3e/icons/icon_skull/source.png
+    creator: Project owner (OpenAI imagegen via Codex; prompt in docs/art-review/g3e/icons/icon_skull/prompt.md)
+    license: project-owned
+    attribution: false
+    redistribute: true
+    evidence: docs/art-review/g3e/icons/icon_skull/preview.png
+    modified: true
+    nativeSize: 1024x1024
+    finalSize: 32x32
+    notes: HiDPI twin of public/assets/art/ai-v1/icons/icon_skull-16.png: same approved source and pipeline at twice the pixels, exactly 2x its twin, by docs/art-review/g3e/icons/make_assets.py --density 2 icon_skull (11/11/2026); loaded instead of the twin at display density >= 2, packed into the sprites atlas and drawn at half its scale (src/render/imageArt.ts IMAGE_ART_HD_ICONS / IMAGE_ART_HD_FX, src/render/atlas.ts frameDensityFactor), so its size on screen is unchanged. Twin: Thổ Phỉ icon (approved 2026-11-09 by Claude under the owner's delegation); magenta keyed out and box-reduced by docs/art-review/g3e/icons/make_assets.py; 16 px frame in the world atlas (src/render/imageArt.ts IMAGE_ICONS)
   - id: icon_slow_16_hd
     path: public/assets/art/ai-v1-hd/icons/icon_slow-16.png
     category: icon
@@ -31416,6 +31738,62 @@ L4x216 copy (2026-11-10) made by tools/prepare_king_portraits.py --size 144x216 
     nativeSize: 1254x1254
     finalSize: 64x64
     notes: HiDPI twin of public/assets/art/ai-v1/icons/icon_support.png: same approved source and pipeline at twice the pixels, exactly 2x its twin, by docs/art-review/g3e/icons/make_assets.py --density 2 (11/11/2026); loaded beside the twin at display density >= 2 and drawn at half its scale, so its logical size is unchanged (src/render/hudArtHd.ts). Twin: Stat icon (approved 2026-11-10 by Claude under the owner's delegation, docs/art-review/g3e/icons/review-2026-11-10.md); magenta keyed out and box-reduced by docs/art-review/g3e/icons/make_assets.py; 32 px copy; registered 2026-11-11 (shipped earlier without an entry)
+  - id: icon_throne_16_hd
+    path: public/assets/art/ai-v1-hd/icons/icon_throne-16.png
+    category: icon
+    origin: custom
+    source: docs/art-review/g3e/icons/icon_throne/source.png
+    creator: Project owner (OpenAI imagegen via Codex; prompt in docs/art-review/g3e/icons/icon_throne/prompt.md)
+    license: project-owned
+    attribution: false
+    redistribute: true
+    evidence: docs/art-review/g3e/icons/icon_throne/preview.png
+    modified: true
+    nativeSize: 1024x1024
+    finalSize: 32x32
+    notes: HiDPI twin of public/assets/art/ai-v1/icons/icon_throne-16.png: same approved source and pipeline at twice the pixels, exactly 2x its twin, by docs/art-review/g3e/icons/make_assets.py --density 2 icon_throne (11/11/2026); loaded instead of the twin at display density >= 2, packed into the sprites atlas and drawn at half its scale (src/render/imageArt.ts IMAGE_ART_HD_ICONS / IMAGE_ART_HD_FX, src/render/atlas.ts frameDensityFactor), so its size on screen is unchanged. Twin: Ngai icon (approved 2026-11-09 by Claude under the owner's delegation); magenta keyed out and box-reduced by docs/art-review/g3e/icons/make_assets.py; 16 px frame in the world atlas (src/render/imageArt.ts IMAGE_ICONS)
+  - id: icon_tome_16_hd
+    path: public/assets/art/ai-v1-hd/icons/icon_tome-16.png
+    category: icon
+    origin: custom
+    source: docs/art-review/g3e/icons/icon_tome/source.png
+    creator: Project owner (OpenAI imagegen via Codex; prompt in docs/art-review/g3e/icons/icon_tome/prompt.md)
+    license: project-owned
+    attribution: false
+    redistribute: true
+    evidence: docs/art-review/g3e/icons/icon_tome/preview.png
+    modified: true
+    nativeSize: 1024x1024
+    finalSize: 32x32
+    notes: HiDPI twin of public/assets/art/ai-v1/icons/icon_tome-16.png: same approved source and pipeline at twice the pixels, exactly 2x its twin, by docs/art-review/g3e/icons/make_assets.py --density 2 icon_tome (11/11/2026); loaded instead of the twin at display density >= 2, packed into the sprites atlas and drawn at half its scale (src/render/imageArt.ts IMAGE_ART_HD_ICONS / IMAGE_ART_HD_FX, src/render/atlas.ts frameDensityFactor), so its size on screen is unchanged. Twin: Sách phép icon (approved 2026-11-09 by Claude under the owner's delegation); magenta keyed out and box-reduced by docs/art-review/g3e/icons/make_assets.py; 16 px frame in the world atlas (src/render/imageArt.ts IMAGE_ICONS)
+  - id: icon_tower_16_hd
+    path: public/assets/art/ai-v1-hd/icons/icon_tower-16.png
+    category: icon
+    origin: custom
+    source: docs/art-review/g3e/icons/icon_tower/source.png
+    creator: Project owner (OpenAI imagegen via Codex; prompt in docs/art-review/g3e/icons/icon_tower/prompt.md)
+    license: project-owned
+    attribution: false
+    redistribute: true
+    evidence: docs/art-review/g3e/icons/icon_tower/preview.png
+    modified: true
+    nativeSize: 1024x1024
+    finalSize: 32x32
+    notes: HiDPI twin of public/assets/art/ai-v1/icons/icon_tower-16.png: same approved source and pipeline at twice the pixels, exactly 2x its twin, by docs/art-review/g3e/icons/make_assets.py --density 2 icon_tower (11/11/2026); loaded instead of the twin at display density >= 2, packed into the sprites atlas and drawn at half its scale (src/render/imageArt.ts IMAGE_ART_HD_ICONS / IMAGE_ART_HD_FX, src/render/atlas.ts frameDensityFactor), so its size on screen is unchanged. Twin: Tháp icon (approved 2026-11-09 by Claude under the owner's delegation); magenta keyed out and box-reduced by docs/art-review/g3e/icons/make_assets.py; 16 px frame in the world atlas (src/render/imageArt.ts IMAGE_ICONS)
+  - id: icon_troop_16_hd
+    path: public/assets/art/ai-v1-hd/icons/icon_troop-16.png
+    category: icon
+    origin: custom
+    source: docs/art-review/g3e/icons/icon_troop/source.png
+    creator: Project owner (OpenAI imagegen via Codex; prompt in docs/art-review/g3e/icons/icon_troop/prompt.md)
+    license: project-owned
+    attribution: false
+    redistribute: true
+    evidence: docs/art-review/g3e/icons/icon_troop/preview.png
+    modified: true
+    nativeSize: 1024x1024
+    finalSize: 32x32
+    notes: HiDPI twin of public/assets/art/ai-v1/icons/icon_troop-16.png: same approved source and pipeline at twice the pixels, exactly 2x its twin, by docs/art-review/g3e/icons/make_assets.py --density 2 icon_troop (11/11/2026); loaded instead of the twin at display density >= 2, packed into the sprites atlas and drawn at half its scale (src/render/imageArt.ts IMAGE_ART_HD_ICONS / IMAGE_ART_HD_FX, src/render/atlas.ts frameDensityFactor), so its size on screen is unchanged. Twin: Lính icon (approved 2026-11-09 by Claude under the owner's delegation); magenta keyed out and box-reduced by docs/art-review/g3e/icons/make_assets.py; 16 px frame in the world atlas (src/render/imageArt.ts IMAGE_ICONS)
   - id: icon_unlock_16_hd
     path: public/assets/art/ai-v1-hd/icons/icon_unlock-16.png
     category: icon

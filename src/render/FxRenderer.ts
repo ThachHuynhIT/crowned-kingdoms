@@ -11,7 +11,7 @@ import { showsFloatingDamage } from './juiceModel';
 import type { BattleEvent } from '../game/battle/types';
 import type { BattleWorld } from '../game/battle/world';
 import { ISO_SPRITE_SCALE, iso } from './isoView';
-import { SPRITES_KEY, buildingFrame, fxFrame, imageFrameScale } from './atlas';
+import { SPRITES_KEY, buildingFrame, frameDensityFactor, fxFrame, imageFrameScale } from './atlas';
 import { arrowDir } from './fxArt';
 import { CODE_FX, type CodeFxDef } from './codeFx';
 import { statusFxFor } from './fxCues';
@@ -228,7 +228,7 @@ export class FxRenderer {
       }
       const img = this.image(this.projectiles, used, shotFrame);
       img
-        .setScale(def === undefined ? 1 : ISO_SPRITE_SCALE)
+        .setScale(def === undefined ? frameDensityFactor(shotFrame) : ISO_SPRITE_SCALE)
         .setPosition(Math.round(at.x), Math.round(at.y - offset))
         .setDepth(at.y);
       used += 1;
@@ -413,7 +413,7 @@ export class FxRenderer {
     }
     const b = img;
     this.scene.tweens.killTweensOf(b);
-    b.setPosition(Math.round(x), Math.round(y)).setDepth(depth).setAlpha(alpha).setVisible(true);
+    b.setPosition(Math.round(x), Math.round(y)).setDepth(depth).setAlpha(alpha).setScale(frameDensityFactor(fxFrame(frame))).setVisible(true);
     this.scene.tweens.add({
       targets: b,
       alpha: 0,

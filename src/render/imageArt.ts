@@ -532,6 +532,25 @@ const HD_WORLD_FILES: Readonly<Record<(typeof IMAGE_ART_HD_WORLD)[number], reado
   ground: [...GRASS_FILES, ...GROUND_TEXTURES_APPROVED.map((t) => GROUND_TEXTURE_FILES[t])],
 };
 
+/**
+ * Atlas icons with an HD twin (11/11/2026): the `IMAGE_ICONS` ids whose 16 px frame was re-exported at 32 px
+ * (`docs/art-review/g3e/icons/make_assets.py --density 2`). Every site that draws an icon frame multiplies its scale by
+ * `frameDensityFactor`, so the icon keeps its size. Rollback = remove ids.
+ */
+export const IMAGE_ART_HD_ICONS: readonly string[] = [
+  'troop', 'tower', 'tome', 'throne', 'gold', 'level', 'enchant', 'crown', 'boulder', 'skull', 'reroll', 'sell', 'lock',
+  'conquer',
+];
+/**
+ * Battle effects with an HD twin (11/11/2026): the `IMAGE_FX` ids re-exported at twice the pixels
+ * (`docs/art-review/g5/fx/make_assets.py --density 2`, `make_arrows.py --density 2`), drawn at half the scale through
+ * `imageFrameScale` / `frameDensityFactor`. Rollback = remove ids.
+ */
+export const IMAGE_ART_HD_FX: readonly string[] = [
+  'boulder', 'pulse', 'shield', 'stun', 'spark', 'arrow_e', 'arrow_ne', 'arrow_n', 'arrow_nw', 'arrow_w', 'arrow_sw',
+  'arrow_s', 'arrow_se',
+];
+
 /** Every PNG of the set (file name without `.png`). */
 export const IMAGE_ART_FILES: readonly string[] = [
   ...Object.values(IMAGE_UNITS).flatMap((prefix) => [
@@ -562,7 +581,7 @@ export const IMAGE_ART_FILES: readonly string[] = [
 
 /**
  * Files with an HD twin in `IMAGE_ART_HD_DIR`: the twelve poses of each HD unit, each HD building's base, L2 and L3, the
- * four plot skins of each HD king, the world pictures of each `IMAGE_ART_HD_WORLD` group.
+ * four plot skins of each HD king, the world pictures of each `IMAGE_ART_HD_WORLD` group, the HD atlas icons and fx.
  */
 export const IMAGE_ART_HD_FILES: ReadonlySet<string> = new Set([
   ...IMAGE_ART_HD_UNITS.flatMap((unit) => {
@@ -579,6 +598,8 @@ export const IMAGE_ART_HD_FILES: ReadonlySet<string> = new Set([
     return prefix === undefined ? [] : PLOT_STATES.map((s) => `${prefix}_${s}`);
   }),
   ...IMAGE_ART_HD_WORLD.flatMap((group) => HD_WORLD_FILES[group]),
+  ...IMAGE_ART_HD_ICONS.flatMap((icon) => IMAGE_ICONS[icon] ?? []),
+  ...IMAGE_ART_HD_FX.flatMap((fx) => IMAGE_FX[fx] ?? []),
 ]);
 
 /**

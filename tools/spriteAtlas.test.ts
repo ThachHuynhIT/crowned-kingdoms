@@ -1,10 +1,20 @@
 import { existsSync, readFileSync } from 'node:fs';
 import { describe, expect, it } from 'vitest';
 import { CONTENT } from '../src/game/cards/registry';
-import { SPRITES_MAX_SIDE, isoPlots, packSpritePages, spriteList, withImageArtFrom } from '../src/render/atlas';
+import {
+  SPRITES_MAX_SIDE,
+  frameDensityFactor,
+  imageFrameScale,
+  isoPlots,
+  packSpritePages,
+  spriteList,
+  withImageArtFrom,
+} from '../src/render/atlas';
 import {
   IMAGE_ART_FILES,
   IMAGE_ART_HD_FILES,
+  IMAGE_ART_HD_FX,
+  IMAGE_ART_HD_ICONS,
   IMAGE_ART_HD_SCALE,
   IMAGE_ART_SCALE,
   imageArtLoads,
@@ -51,6 +61,23 @@ describe('the sprites texture with the real image art', () => {
     expect(pages.flatMap((p) => p.placed.map((s) => s.name)).sort()).toEqual(list.map((s) => s.name).sort());
     if (hd) expect(hdFrames).toBeGreaterThan(0);
     else expect(hdFrames).toBe(0);
+  });
+
+  it('HD atlas icons and fx keep their size: frame px × frameDensityFactor = the ai-v1 frame px', () => {
+    const sd = new Map(pagesAt(false).list.map((s) => [s.name, s.art]));
+    const { list } = pagesAt(true);
+    const hdFrames = new Set([...IMAGE_ART_HD_ICONS.map((i) => `icon_${i}`), ...IMAGE_ART_HD_FX.map((f) => `fx_${f}`)]);
+    let checked = 0;
+    for (const s of list) {
+      if (!hdFrames.has(s.name)) continue;
+      const base = sd.get(s.name)!;
+      expect(s.art.width, s.name).toBe(base.width * 2);
+      expect(s.art.height, s.name).toBe(base.height * 2);
+      expect(frameDensityFactor(s.name), s.name).toBe(0.5);
+      expect(imageFrameScale(s.name), s.name).toBe(IMAGE_ART_HD_SCALE);
+      checked++;
+    }
+    expect(checked).toBe(hdFrames.size);
   });
 
   it('every HD twin listed in the runtime exists on disk', () => {

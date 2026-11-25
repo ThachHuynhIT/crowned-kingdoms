@@ -3,7 +3,7 @@ import type Phaser from 'phaser';
 import type { KingId } from '../../data/types';
 import { describeCard } from '../../game/cards/describe';
 import type { Content } from '../../game/cards/registry';
-import { addPixelTexture, iconFrame, imageFile, SPRITES_KEY, textureArt } from '../../render/atlas';
+import { addPixelTexture, frameDensityFactor, iconFrame, imageFile, SPRITES_KEY, textureArt } from '../../render/atlas';
 import { hudTexture } from '../../render/hudArtHd';
 import { imageArtKey, kingCardFile } from '../../render/imageArt';
 import { KING_CARD_NATIVE, KING_CARD_WINDOW, kingCardDensity, lockedShade, paintKingCard } from '../../render/kingCardArt';
@@ -155,7 +155,7 @@ export class KingPortraitView {
     this.card.setPosition(this.rect.x, this.rect.y).setScale(scale / this.cardFactor);
     if (this.lock) {
       const at = lockedCardLayout({ x: this.rect.x, y: this.rect.y, w: KING_CARD_NATIVE.w * scale, h: KING_CARD_NATIVE.h * scale }).lock;
-      this.lock.setPosition(at.x, at.y).setScale(at.scale);
+      this.lock.setPosition(at.x, at.y).setScale(at.scale * frameDensityFactor(iconFrame('lock')));
     }
     if (!this.portrait) return;
     this.pickPortraitTexture(scale);

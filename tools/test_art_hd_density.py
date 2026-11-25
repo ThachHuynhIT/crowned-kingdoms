@@ -64,7 +64,7 @@ class HdDensityTest(unittest.TestCase):
     def test_the_runtime_lists_exactly_the_hd_files(self):
         """The HD set is exactly the ai-v1 twins of the listed ids: twelve poses per unit (prefix = unit id), each
         card's base image (`iso/` or `iso-neutral/`) with every published L2/L3, four plot skins per king, and the world
-        pictures of each `IMAGE_ART_HD_WORLD` group."""
+        pictures of each `IMAGE_ART_HD_WORLD` group, and the `IMAGE_ART_HD_FX` battle effects (`fx/fx_<id>`)."""
         text = (ROOT / 'src/render/imageArt.ts').read_text(encoding='utf-8')
 
         def listed(name: str) -> list[str]:
@@ -78,6 +78,7 @@ class HdDensityTest(unittest.TestCase):
             expected |= {f'{bases[0]}/{card}{s}.png' for s in ('', '_l2', '_l3') if (SD / bases[0] / f'{card}{s}.png').exists()}
         expected |= {f'iso/plots/{k}_{s}.png' for k in listed('IMAGE_ART_HD_PLOTS') for s in ('open', 'locked', 'throne', 'built')}
         expected |= world_hd_files(text, listed)
+        expected |= {f'fx/fx_{fx}.png' for fx in listed('IMAGE_ART_HD_FX')}
         found = {f.relative_to(HD).as_posix() for f in hd_files()} - hud_hd_files()
         self.assertEqual(found, expected)
 
@@ -96,6 +97,17 @@ class HdDensityTest(unittest.TestCase):
         expected |= {f'icons/icon_king_{k}{s}.png' for k in kings for s in ('', '-16')}
         expected |= {'menu/sky.png', 'menu/hills_far.png', 'menu/hills_mid.png'}
         self.assertEqual(expected - hud_hd_files(), set())
+
+    def test_atlas_icons_have_their_twin(self):
+        """Each `IMAGE_ART_HD_ICONS` id's 16 px atlas icon (`IMAGE_ICONS`) has its 32 px twin."""
+        text = (ROOT / 'src/render/imageArt.ts').read_text(encoding='utf-8')
+        ids = re.findall(r"'([a-z_]+)'", re.search(r'IMAGE_ART_HD_ICONS[^=]*=\s*\[(.*?)\]', text, re.S).group(1))
+        body = re.search(r'IMAGE_ICONS[^=]*=\s*\{(.*?)\}', text, re.S).group(1)
+        icons = dict(re.findall(r"(\w+): '(icons/icon_[a-z_]+-16)'", body))
+        self.assertTrue(ids)
+        for icon in ids:
+            self.assertIn(icon, icons)
+            self.assertTrue((HD / f'{icons[icon]}.png').exists(), icons[icon])
 
     def test_footman_has_no_hd_twin(self):
         """footman has no pose source (front-view barracks sheet): it stays ai-v1 at every density."""

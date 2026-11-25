@@ -18,7 +18,7 @@ import { canPlayCard } from '../game/run/playable';
 import { rerollPrice } from '../game/run/decrees';
 import { cardOffer } from '../game/run/flow';
 import type { IllegalReason, RunState } from '../game/run/state';
-import { SPRITES_KEY, iconFrame } from '../render/atlas';
+import { SPRITES_KEY, frameDensityFactor, iconFrame } from '../render/atlas';
 import { ContentBox } from '../ui/ContentBox';
 import { ToastStack } from '../ui/ToastStack';
 import { Tooltip } from '../ui/Tooltip';
@@ -233,7 +233,7 @@ export class PlanningHudScene extends Phaser.Scene {
     const tex = this.textures;
     this.livesIcon =
       tex.exists(SPRITES_KEY) && tex.get(SPRITES_KEY).has(iconFrame('crown'))
-        ? this.add.image(0, 0, SPRITES_KEY, iconFrame('crown')).setScale(2).setOrigin(0, 0.5)
+        ? this.add.image(0, 0, SPRITES_KEY, iconFrame('crown')).setScale(2 * frameDensityFactor(iconFrame('crown'))).setOrigin(0, 0.5)
         : null;
     this.livesText = addUiText(this, 0, 0, '', 18).setOrigin(0, 0.5).setFontStyle('bold');
     // Year label and the two status rows float over the world (light text, dark shadow) instead of sitting in frames.
@@ -249,7 +249,7 @@ export class PlanningHudScene extends Phaser.Scene {
     this.goldBox = createPanel(this, 'panel', 120, 52);
     this.goldIcon =
       tex.exists(SPRITES_KEY) && tex.get(SPRITES_KEY).has(iconFrame('gold'))
-        ? this.add.image(0, 0, SPRITES_KEY, iconFrame('gold')).setScale(2).setOrigin(0, 0.5)
+        ? this.add.image(0, 0, SPRITES_KEY, iconFrame('gold')).setScale(2 * frameDensityFactor(iconFrame('gold'))).setOrigin(0, 0.5)
         : null;
     this.goldText = addUiText(this, 0, 0, '', 18).setOrigin(0, 0.5).setFontStyle('bold');
     this.calendar = new CalendarStrip(this, CONTENT, this.tooltip, () =>

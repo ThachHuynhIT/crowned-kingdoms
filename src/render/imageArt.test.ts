@@ -75,7 +75,10 @@ describe('HD image art (4 art px per world unit)', () => {
     expect(hd).toContainEqual({ key: imageArtHdKey('militia_0'), url: `${IMAGE_ART_HD_DIR}militia_0.png` });
     expect(hd).toContainEqual({ key: imageArtKey('footman_0'), url: `${IMAGE_ART_DIR}footman_0.png` });
     expect(hd).toContainEqual({ key: imageArtHdKey(WALL_FILE), url: `${IMAGE_ART_HD_DIR}${WALL_FILE}.png` });
-    expect(hd).toContainEqual({ key: imageArtKey('icons/icon_gold-16'), url: `${IMAGE_ART_DIR}icons/icon_gold-16.png` });
+    expect(hd).toContainEqual({ key: imageArtHdKey('icons/icon_gold-16'), url: `${IMAGE_ART_HD_DIR}icons/icon_gold-16.png` });
+    expect(hd).toContainEqual({ key: imageArtHdKey('fx/fx_arrow_ne'), url: `${IMAGE_ART_HD_DIR}fx/fx_arrow_ne.png` });
+    // the inspection stat icons keep their ai-v1 atlas load; their HUD twins load beside them (hudArtHd.ts)
+    expect(hd).toContainEqual({ key: imageArtKey('icons/icon_life-16'), url: `${IMAGE_ART_DIR}icons/icon_life-16.png` });
     expect(hd.filter((l) => l.url.startsWith(IMAGE_ART_HD_DIR)).length).toBe(IMAGE_ART_HD_FILES.size);
   });
 
