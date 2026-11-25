@@ -826,6 +826,15 @@ describe('Endless overview', () => {
 });
 
 describe('desktop zoom limits and shop', () => {
+  it('close-up art raises only the top zoom (12/11/2026); the overview zoom stays', () => {
+    for (const screen of [DESKTOP, { w: 375, h: 812 }]) {
+      for (const phase of ['planning', 'battle'] as const) {
+        const base = realmZoomLimits(screen, phase);
+        expect(realmZoomLimits(screen, phase, 'normal', 6)).toEqual({ min: base.min, max: 6 });
+        expect(realmZoomLimits(screen, phase, 'normal', null)).toEqual(base);
+      }
+    }
+  });
   it('uses stable five-slot legacy context for each phase', () => {
     expect(realmZoomLimits(DESKTOP, 'planning')).toEqual({ max: 1.19375, min: 0.74609375 });
     expect(realmZoomLimits(DESKTOP, 'battle')).toEqual({ max: 1.3, min: 0.8125 });

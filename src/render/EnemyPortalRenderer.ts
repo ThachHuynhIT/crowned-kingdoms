@@ -23,7 +23,7 @@ export class EnemyPortalRenderer {
       ? scene.add
           .image(Math.round(at.x), Math.round(at.y), art.key)
           .setOrigin(PORTAL_ART.foot.x / PORTAL_ART.width, PORTAL_ART.foot.y / PORTAL_ART.height)
-          .setScale(imageArtScale(1, art.hd))
+          .setScale(imageArtScale(1, art.factor))
           .setDepth(at.y)
       : scene.add
           .image(Math.round(at.x), Math.round(at.y), ensurePortalTexture(scene.textures))

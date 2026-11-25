@@ -122,9 +122,10 @@ export function buildDigest(dir: string, files: readonly string[]): string {
 /**
  * Build folders NOT precached but cached at runtime, cache-first, on their first fetch: the HiDPI art twins
  * (`IMAGE_ART_HD_DIR` in src/render/imageArt.ts) are only loaded at display density ≥ 2, so precaching them would make
- * every density-1 device download art it never shows. A DPR-2 device keeps them offline after its first load.
+ * every density-1 device download art it never shows. A DPR-2 device keeps them offline after its first load. The
+ * close-up twins (`ai-v1-uhd`, desktop graphics 'high' only) are cached the same way.
  */
-export const RUNTIME_CACHED_DIRS: readonly string[] = ['assets/art/ai-v1-hd/'];
+export const RUNTIME_CACHED_DIRS: readonly string[] = ['assets/art/ai-v1-hd/', 'assets/art/ai-v1-uhd/'];
 
 /** Whether build file `file` (relative URL path) is cached at runtime instead of precached. */
 export const isRuntimeCached = (file: string): boolean => RUNTIME_CACHED_DIRS.some((d) => file.startsWith(d));

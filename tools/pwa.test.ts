@@ -83,7 +83,8 @@ describe('service worker', () => {
     expect(first).toMatchObject({ files: 1, runtimeFiles: 2 });
     const sw = readFileSync(join(dir, 'sw.js'), 'utf-8');
     expect(sw).not.toContain('ai-v1-hd/militia_0.png');
-    expect(sw).toContain('const RUNTIME_DIRS = ["./assets/art/ai-v1-hd/"]');
+    expect(sw).toContain('const RUNTIME_DIRS = ["./assets/art/ai-v1-hd/","./assets/art/ai-v1-uhd/"]');
+    expect(isRuntimeCached('assets/art/ai-v1-uhd/militia_0.png')).toBe(true);
     expect(sw).toContain('cache.put(req, res.clone())');
     expect(sw).toContain('k !== RUNTIME_CACHE');
     const cacheName = /const RUNTIME_CACHE = '(ck-hd-[0-9a-f]{16})'/.exec(sw)?.[1];

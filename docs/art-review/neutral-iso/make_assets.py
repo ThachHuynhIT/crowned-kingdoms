@@ -3,6 +3,7 @@
     python docs/art-review/neutral-iso/make_assets.py <cardId> [<cardId> ...]
     python docs/art-review/neutral-iso/make_assets.py --preview      # sheet.png of every source, not published
     python docs/art-review/neutral-iso/make_assets.py --density 4 <cardId> [...]   # HiDPI twins -> ai-v1-hd/iso-neutral/
+    python docs/art-review/neutral-iso/make_assets.py --density 8 <cardId> [...]   # close-up -> ai-v1-uhd/iso-neutral/
 
 Refuses a building that `review.md` does not list as `<cardId>: ĐÃ DUYỆT`. Same cutter and scale as the Wheat and G5
 sets (`docs/art-review/iso-board/make_assets.py`: black keyed to alpha 0/255, box-reduced so the approved Reapers
@@ -10,7 +11,8 @@ source is 64 px wide). Writes `public/assets/art/ai-v1/iso-neutral/<cardId>.png`
 
 `--density 4` (HiDPI, drawn at scale 0.25) writes the same cut at EXACTLY twice the published image's size
 (`iso.reduce_hd`) into `public/assets/art/ai-v1-hd/iso-neutral/`; it needs the density-2 file and leaves the manifest
-alone (HD twins are registered by `docs/art-review/hd/register_hd.py`).
+alone (HD twins are registered by `docs/art-review/hd/register_hd.py`). `--density 8` (close-up, scale 0.125) writes
+it at EXACTLY four times the published size into `public/assets/art/ai-v1-uhd/iso-neutral/`.
 """
 import importlib.util
 import re
@@ -22,7 +24,6 @@ from PIL import Image
 ROOT = Path(__file__).resolve().parents[3]
 HERE = ROOT / 'docs/art-review/neutral-iso'
 OUT = ROOT / 'public/assets/art/ai-v1/iso-neutral'
-OUT_HD = ROOT / 'public/assets/art/ai-v1-hd/iso-neutral'
 MANIFEST = ROOT / 'docs/assets.manifest.yml'
 IDS = ['neutral_barracks', 'neutral_archer_tower', 'neutral_well', 'neutral_mercenary_camp']
 
@@ -84,9 +85,12 @@ def preview() -> None:
     print(HERE / 'sheet.png')
 
 
-def main_hd(cards: list[str], m: int = 2) -> None:
+def main_hd(cards: list[str], density: int = 4) -> None:
+    """Twins at m = density / 2 times the published image, into the density's art set."""
     k = scale()
-    OUT_HD.mkdir(parents=True, exist_ok=True)
+    m = density // 2
+    out_hd = iso.art_root(density) / 'iso-neutral'
+    out_hd.mkdir(parents=True, exist_ok=True)
     for card in cards:
         if card not in IDS or not approved(card):
             raise SystemExit(f'{card}: unknown or not approved')
@@ -94,7 +98,7 @@ def main_hd(cards: list[str], m: int = 2) -> None:
         if not twin.exists():
             raise SystemExit(f'{card}: publish the density-2 file first')
         img = iso.reduce_hd(iso.keyed(HERE / card / 'source.png'), k, m)
-        img.save(OUT_HD / f'{card}.png')
+        img.save(out_hd / f'{card}.png')
         with Image.open(twin) as t:
             ok = img.size == (t.width * m, t.height * m)
         print(f'{card}: {img.width}x{img.height}{"" if ok else "  SIZE MISMATCH"}')
@@ -125,7 +129,7 @@ def main(cards: list[str]) -> None:
 if __name__ == '__main__':
     if sys.argv[1:] == ['--preview']:
         preview()
-    elif sys.argv[1:3] == ['--density', '4']:
-        main_hd(sys.argv[3:])
+    elif sys.argv[1:3] in (['--density', '4'], ['--density', '8']):
+        main_hd(sys.argv[3:], int(sys.argv[2]))
     else:
         main(sys.argv[1:])

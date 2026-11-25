@@ -14,6 +14,12 @@ next to 54-71 px isometric Wheat buildings).
 the same pieces box-reduced 2x (not 4x) to EXACTLY twice the density-2 cut (`cut_hd`: twice its uncropped size, cut to
 twice its crop box, so the foot and the footprint do not move), then the dark rim peeled by
 `tools/strip_decor_outline.py` with twice its passes (the rim is twice as wide), as the shipped wilds were.
+
+    python docs/art-review/iso-board/wilds/make_wilds.py --density 8   # close-up twins -> public/assets/art/ai-v1-uhd/iso/wilds/
+
+`--density 8` (12/11/2026, close-up tier) is the same path with m = density / 2 = 4: the pieces box-reduced 1x (the
+sheet's own pixels, so no extra detail beyond the source), EXACTLY four times the density-2 cut, peeled with 4x the
+passes.
 """
 import sys
 from collections import deque
@@ -32,6 +38,8 @@ NAMES = ['tree_pine_dark', 'tree_pine_light', 'tree_oak', 'tree_autumn', 'mounta
 TALL = {'tree_pine_dark', 'tree_pine_light', 'tree_oak', 'tree_autumn', 'mountain_snow', 'cliff_mossy', 'boulders_big'}
 REDUCE = 4
 OUT_HD = ROOT / 'public/assets/art/ai-v1-hd/iso/wilds'
+DENSITIES = (2, 4, 8)
+OUT_DIRS = {4: OUT_HD, 8: ROOT / 'public/assets/art/ai-v1-uhd/iso/wilds'}
 
 
 def components(img: np.ndarray) -> list[tuple[int, int, int, int]]:
@@ -86,16 +94,18 @@ def cut_hd(img: np.ndarray, box: tuple[int, int, int, int], m: int = 2) -> Image
     return reduced(img, box, m).crop(tuple(v * m for v in bbox))
 
 
-def export_hd() -> None:
-    """The HiDPI twins of the shipped wilds: `cut_hd`, then the dark rim peeled like the shipped files."""
+def export_hd(density: int = 4) -> None:
+    """The HiDPI (4) / close-up (8) twins of the shipped wilds: `cut_hd` at m = density / 2, then the dark rim peeled
+    like the shipped files with m times the passes."""
     sys.path.insert(0, str(ROOT / 'tools'))
     from strip_decor_outline import DEFAULT_PASSES, strip_outline
 
     img = np.array(Image.open(SRC).convert('RGB')).astype(int)
-    OUT_HD.mkdir(parents=True, exist_ok=True)
+    m, out_dir = density // 2, OUT_DIRS[density]
+    out_dir.mkdir(parents=True, exist_ok=True)
     for name, box in zip(NAMES, components(img)):
-        out, removed = strip_outline(cut_hd(img, box), 2 * DEFAULT_PASSES)
-        out.save(OUT_HD / f'{name}.png')
+        out, removed = strip_outline(cut_hd(img, box, m), m * DEFAULT_PASSES)
+        out.save(out_dir / f'{name}.png')
         print(f'{name}: {out.width}x{out.height}, {removed} outline px removed')
 
 
@@ -146,8 +156,9 @@ def main() -> None:
 
 if __name__ == '__main__':
     if '--density' in sys.argv:
-        if sys.argv[sys.argv.index('--density') + 1] != '4':
-            raise SystemExit('usage: make_wilds.py [--density 4]')
-        export_hd()
+        density = sys.argv[sys.argv.index('--density') + 1]
+        if density not in ('4', '8'):
+            raise SystemExit('usage: make_wilds.py [--density 4|8]')
+        export_hd(int(density))
     else:
         main()

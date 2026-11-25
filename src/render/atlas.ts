@@ -1,3 +1,4 @@
+import { artQuality, nextPow2 } from './artQuality';
 import { CODE_FX } from './codeFx';
 import { codeFxFrame } from './projectileFx';
 import type Phaser from 'phaser';
@@ -40,6 +41,8 @@ import {
   IMAGE_UNITS,
   PLOT_STATES,
   imageArtHdKey,
+  imageArtUhdKey,
+  IMAGE_ART_UHD_SCALE,
   imageArtKey,
   unitPoseFile,
 } from './imageArt';
@@ -330,12 +333,15 @@ const IMAGE_FRAMES = new Map<string, number>();
 /** Display scale of a sprite frame: 0.5 for image art (0.25 for its HD twin), 1 for generated art. */
 export const imageFrameScale = (frame: string): number => IMAGE_FRAMES.get(frame) ?? 1;
 
+/** An image frame's scale against the `ai-v1` one: 0.5 for HD, 0.25 for UHD, else 1 (`ai-v1` and generated art). */
+const frameScaleFactor = (scale: number | undefined): number =>
+  scale !== undefined && scale < IMAGE_ART_SCALE ? scale / IMAGE_ART_SCALE : 1;
+
 /**
- * Frame px → px of the frame's standard (`ai-v1`, density-2) export: 0.5 for an HD frame, else 1. HUD code that sizes
- * a sprite frame by its pixel size multiplies by this so an HD frame shows at the same size as before.
+ * Frame px → px of the frame's standard (`ai-v1`, density-2) export: 0.5 for an HD frame, 0.25 for a UHD one, else 1.
+ * HUD code that sizes a sprite frame by its pixel size multiplies by this so the frame shows at the same size as before.
  */
-export const frameDensityFactor = (frame: string): number =>
-  IMAGE_FRAMES.get(frame) === IMAGE_ART_HD_SCALE ? IMAGE_ART_HD_SCALE / IMAGE_ART_SCALE : 1;
+export const frameDensityFactor = (frame: string): number => frameScaleFactor(IMAGE_FRAMES.get(frame));
 
 /** Pixels of a loaded image texture by file name, or null when it did not load. */
 export const imageFile = (textures: Phaser.Textures.TextureManager, file: string): PixelCanvas | null =>
@@ -349,6 +355,8 @@ export const imageFileScaled = (
   textures: Phaser.Textures.TextureManager,
   file: string,
 ): { art: PixelCanvas; scale: number } | null => {
+  const uhd = textureArt(textures, imageArtUhdKey(file));
+  if (uhd !== null) return { art: uhd, scale: IMAGE_ART_UHD_SCALE };
   const hd = textureArt(textures, imageArtHdKey(file));
   if (hd !== null) return { art: hd, scale: IMAGE_ART_HD_SCALE };
   const art = imageFile(textures, file);
@@ -460,7 +468,9 @@ export const buildSpritesTexture = (
   if (textures.exists(SPRITES_KEY)) return;
   const pages = packSpritePages(isoPlots(withImageArt(textures, spriteList(content))));
   const canvases = pages.map((page) => {
-    const sheet = new PixelCanvas(page.width, Math.max(1, page.height));
+    // Smooth sampling (graphics 'high') mipmaps the pages: a power-of-two height lets WebGL1 do it too.
+    const height = Math.max(1, page.height);
+    const sheet = new PixelCanvas(page.width, artQuality().smooth ? nextPow2(height) : height);
     for (const p of page.placed) sheet.blit(p.art, p.x, p.y);
     return toCanvas(sheet);
   });

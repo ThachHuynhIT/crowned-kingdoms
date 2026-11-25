@@ -1,3 +1,4 @@
+import { artQuality } from './artQuality';
 import { CARD_ART_FILES } from '../ui/cards/cardImage';
 import { KING_BADGE_FILES } from '../ui/realm/kingBadge';
 import {
@@ -56,7 +57,7 @@ export const HUD_ART_HD_FILES: readonly { key: string; url: string; base: string
 }));
 
 /** Whether the HUD uses HD twins at display density `density`. */
-export const useHudArtHd = (density: number): boolean => density >= HD_ART_MIN_DENSITY;
+export const useHudArtHd = (density: number): boolean => density >= HD_ART_MIN_DENSITY || artQuality().smooth;
 
 /** Queue the HD twins of the HUD pictures on `load` (nothing at density < 2). Call from `PreloadScene.preload`. */
 export const queueHudArtHd = (load: { image: (key: string, url: string) => unknown }, density: number): void => {

@@ -247,8 +247,8 @@ describe('devDisplaySnapshot', () => {
 });
 
 describe('worldTextBucket', () => {
-  it('is 1 up to zoom 1, then the zoom rounded up, capped at 3', () => {
-    expect([0.8, 1, 1.0000000001, 1.2, 2, 2.01, 3, 4].map(worldTextBucket)).toEqual([1, 1, 1, 2, 2, 3, 3, 3]);
+  it('is 1 up to zoom 1, then the zoom rounded up, capped at 6 (the close-up camera)', () => {
+    expect([0.8, 1, 1.0000000001, 1.2, 2, 2.01, 3, 4, 5.5, 6, 9].map(worldTextBucket)).toEqual([1, 1, 1, 2, 2, 3, 3, 4, 6, 6, 6]);
   });
 });
 

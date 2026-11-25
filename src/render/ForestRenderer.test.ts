@@ -64,7 +64,7 @@ describe('ForestRenderer (spec 2026-11-08 §6)', () => {
   });
 
   it('draws the HD twin (density >= 2) at half scale on the same raised foot', () => {
-    const sd = scene((key) => !key.startsWith('imgart-hd-'));
+    const sd = scene((key) => !key.startsWith('imgart-hd-') && !key.startsWith('imgart-uhd-'));
     const hd = scene((key) => key.startsWith('imgart-hd-'));
     new ForestRenderer(sd.s, 9, 150);
     new ForestRenderer(hd.s, 9, 150);

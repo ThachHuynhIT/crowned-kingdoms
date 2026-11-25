@@ -33,7 +33,7 @@ export class ForestRenderer {
         scene.add
           .image(Math.round(at.x), Math.round(at.y - lift), tex.key)
           .setOrigin(0.5, 1)
-          .setScale(imageArtScale(1, tex.hd))
+          .setScale(imageArtScale(1, tex.factor))
           .setDepth(DEPTH_BASE + (DEPTH_SPAN * (at.y - lo)) / (hi - lo + 1)),
       );
     });

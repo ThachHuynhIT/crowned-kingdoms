@@ -46,7 +46,7 @@ export class IsoWallRenderer {
     const [a, b] = p.x <= q.x ? [p, q] : [q, p];
     const art = imageArtTexture((k) => scene.textures.exists(k), WALL_FILE);
     if (art) {
-      this.tileArt(scene, art.key, imageArtScale(1, art.hd), a, b);
+      this.tileArt(scene, art.key, imageArtScale(1, art.factor), a, b);
       return;
     }
     const h = ISO_WALL_HEIGHT;

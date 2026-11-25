@@ -75,9 +75,12 @@ const densityOf = (env: DisplayEnv, cap?: number): number =>
 export const readInitialDisplayMetrics = (parent: HTMLElement, env: DisplayEnv = browserDisplayEnv()): DisplayMetrics =>
   makeDisplayMetrics(boxOf(parent), densityOf(env));
 
-/** The world-text zoom bucket: text in the realm is rasterised at D × bucket (1, 2 or 3) so zooming in stays sharp. */
+/**
+ * The world-text zoom bucket: text in the realm is rasterised at D × bucket (1 to 6, the close-up camera's top zoom)
+ * so zooming in stays sharp.
+ */
 export const worldTextBucket = (logicalZoom: number): number =>
-  Math.min(3, Math.max(1, Math.ceil(logicalZoom - 1e-9)));
+  Math.min(6, Math.max(1, Math.ceil(logicalZoom - 1e-9)));
 
 interface Binding {
   readonly scene: Phaser.Scene;

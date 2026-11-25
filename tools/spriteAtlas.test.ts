@@ -17,8 +17,12 @@ import {
   IMAGE_ART_HD_ICONS,
   IMAGE_ART_HD_SCALE,
   IMAGE_ART_SCALE,
+  IMAGE_ART_UHD_DIR,
+  IMAGE_ART_UHD_FILES,
+  IMAGE_ART_UHD_SCALE,
   imageArtLoads,
 } from '../src/render/imageArt';
+import type { ArtTier } from '../src/render/artQuality';
 import { PixelCanvas } from '../src/render/pixel';
 
 /** Width and height of a PNG from its IHDR chunk. */
@@ -28,11 +32,11 @@ const pngSize = (path: string): { width: number; height: number } => {
 };
 
 /**
- * The `sprites` pages the game builds at display density 1 (`hd` false) or ≥ 2 (`hd` true), from the real file list
- * and the real PNG sizes (blank pixels of the right size: only the packing is under test).
+ * The `sprites` pages the game builds at art tier `tier` ('sd' density 1, 'hd' density ≥ 2, 'uhd' close-up), from the
+ * real file list and the real PNG sizes (blank pixels of the right size: only the packing is under test).
  */
-const pagesAt = (hd: boolean) => {
-  const loads = imageArtLoads(hd);
+const pagesAt = (tier: ArtTier) => {
+  const loads = imageArtLoads(tier);
   const url = new Map(IMAGE_ART_FILES.map((file, i) => [file, loads[i]!.url]));
   let hdFrames = 0;
   const list = isoPlots(
@@ -40,9 +44,13 @@ const pagesAt = (hd: boolean) => {
       const u = url.get(file);
       if (u === undefined || !existsSync(`public/${u}`)) return null;
       const { width, height } = pngSize(`public/${u}`);
+      const isUhd = u.includes('ai-v1-uhd/');
       const isHd = u.includes('ai-v1-hd/');
-      if (isHd) hdFrames++;
-      return { art: new PixelCanvas(width, height), scale: isHd ? IMAGE_ART_HD_SCALE : IMAGE_ART_SCALE };
+      if (isHd || isUhd) hdFrames++;
+      return {
+        art: new PixelCanvas(width, height),
+        scale: isUhd ? IMAGE_ART_UHD_SCALE : isHd ? IMAGE_ART_HD_SCALE : IMAGE_ART_SCALE,
+      };
     }, spriteList(CONTENT)),
   );
   return { list, pages: packSpritePages(list), hdFrames };
@@ -50,10 +58,12 @@ const pagesAt = (hd: boolean) => {
 
 describe('the sprites texture with the real image art', () => {
   it.each([
-    ['density 1 (ai-v1)', false],
-    ['density 2 (ai-v1-hd twins)', true],
-  ] as const)('%s: every page is at most 4096 px per side and holds each frame once', (_, hd) => {
-    const { list, pages, hdFrames } = pagesAt(hd);
+    ['density 1 (ai-v1)', 'sd'],
+    ['density 2 (ai-v1-hd twins)', 'hd'],
+    ['close-up (ai-v1-uhd twins)', 'uhd'],
+  ] as const)('%s: every page is at most 4096 px per side and holds each frame once', (_, tier) => {
+    const hd = tier !== 'sd';
+    const { list, pages, hdFrames } = pagesAt(tier);
     for (const page of pages) {
       expect(page.width).toBeLessThanOrEqual(SPRITES_MAX_SIDE);
       expect(page.height).toBeLessThanOrEqual(SPRITES_MAX_SIDE);
@@ -64,8 +74,8 @@ describe('the sprites texture with the real image art', () => {
   });
 
   it('HD atlas icons and fx keep their size: frame px × frameDensityFactor = the ai-v1 frame px', () => {
-    const sd = new Map(pagesAt(false).list.map((s) => [s.name, s.art]));
-    const { list } = pagesAt(true);
+    const sd = new Map(pagesAt('sd').list.map((s) => [s.name, s.art]));
+    const { list } = pagesAt('hd');
     const hdFrames = new Set([...IMAGE_ART_HD_ICONS.map((i) => `icon_${i}`), ...IMAGE_ART_HD_FX.map((f) => `fx_${f}`)]);
     let checked = 0;
     for (const s of list) {
@@ -83,5 +93,18 @@ describe('the sprites texture with the real image art', () => {
   it('every HD twin listed in the runtime exists on disk', () => {
     for (const file of IMAGE_ART_HD_FILES)
       expect(existsSync(`public/assets/art/ai-v1-hd/${file}.png`), file).toBe(true);
+  });
+});
+
+describe('close-up art files (ai-v1-uhd, 12/11/2026)', () => {
+  it('every UHD file the game loads exists and is exactly 4x its ai-v1 twin', () => {
+    expect(IMAGE_ART_UHD_FILES.size).toBeGreaterThan(700);
+    for (const file of IMAGE_ART_UHD_FILES) {
+      const uhd = `public/${IMAGE_ART_UHD_DIR}${file}.png`;
+      expect(existsSync(uhd), file).toBe(true);
+      const a = pngSize(uhd);
+      const b = pngSize(`public/assets/art/ai-v1/${file}.png`);
+      expect([a.width, a.height], file).toEqual([b.width * 4, b.height * 4]);
+    }
   });
 });

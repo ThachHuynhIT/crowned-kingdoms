@@ -67,7 +67,7 @@ describe('DecorationRenderer', () => {
   });
 
   it('draws the ai-v1 PNG at scale 1 and its HD twin (density >= 2) at 0.5, on the same foot', () => {
-    const sd = scene((key) => !key.startsWith('imgart-hd-'));
+    const sd = scene((key) => !key.startsWith('imgart-hd-') && !key.startsWith('imgart-uhd-'));
     const hd = scene((key) => key.startsWith('imgart-hd-'));
     new DecorationRenderer(sd.s, 9);
     new DecorationRenderer(hd.s, 9);

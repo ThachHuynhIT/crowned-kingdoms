@@ -60,10 +60,16 @@ export const legacyOverviewZoom = (
 };
 
 /** The hand context of the camera is fixed even after purchases. */
-export const realmZoomLimits = (screen: Size, phase: RealmPhase, mode: RunMode = 'normal'): { min: number; max: number } => {
-  if (!isDesktop(screen.w)) return { min: PLANNING_ZOOM, max: ZOOM_MAX };
+export const realmZoomLimits = (
+  screen: Size,
+  phase: RealmPhase,
+  mode: RunMode = 'normal',
+  closeUpMax: number | null = null,
+): { min: number; max: number } => {
+  if (!isDesktop(screen.w)) return { min: PLANNING_ZOOM, max: Math.max(ZOOM_MAX, closeUpMax ?? 0) };
   const max = legacyOverviewZoom(screen, phase, RUN.handSize, mode);
-  return { min: max / 1.6, max };
+  // Close-up art (12/11/2026): the camera may zoom on to `closeUpMax`; the overview zoom (`min`) does not move.
+  return { min: max / 1.6, max: Math.max(max, closeUpMax ?? 0) };
 };
 
 export const overviewZoom = (screen: Size, phase: RealmPhase, _handSize: number = RUN.handSize, mode: RunMode = 'normal'): number =>
